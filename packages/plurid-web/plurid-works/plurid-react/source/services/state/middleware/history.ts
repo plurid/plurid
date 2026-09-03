@@ -18,6 +18,9 @@
 // #region module
 const UNDO = 'space/undo';
 const REDO = 'space/redo';
+const BEGIN = 'space/historyBegin';
+const END = 'space/historyEnd';
+const STATUS = 'space/setHistoryStatus';
 
 /** Bound stack depth. Snapshots hold tree/link references, so this is cheap; the cap just bounds memory. */
 const HISTORY_LIMIT = 100;
@@ -36,25 +39,65 @@ interface ArrangementSnapshot {
  * Records one snapshot per change in the shared `arrangementSignature` (structure + pinned positions +
  * links) — so a single user action is one entry, while the relayout reflows it triggers are ignored
  * (they don't change the signature), which is what lets a restore stick instead of being re-reconciled
- * away. It is STATELESS: it compares THIS action's before/after signatures rather than tracking a
- * running `lastSignature` — a tracked signature would go stale across a skipped (`meta.remote`) remote
- * apply and mis-record the next relayout as a phantom entry. Watching the state before/after each
- * action (not specific action types) covers both the `setTree`/`setSpaceField` paths AND the direct-
- * mutation reducers (`transformSelectedPlanes`, `snapSelection`, `addPlaneLink`, …). Restore re-sets
- * tree + links atomically via `restoreArrangement` (raw, exact, no reconcile). Snapshots are references
- * to the immutable state slices, so the stacks are memory-cheap; history is closure-local (never
- * persisted, never serialized, never renders). Remote collaboration mutations (`meta.remote`) are
- * skipped — a peer's change isn't in YOUR undo.
+ * away. It is STATELESS between actions: it compares THIS action's before/after signatures rather than
+ * tracking a running `lastSignature`. Watching the state before/after each action (not specific action
+ * types) covers both the `setTree`/`setSpaceField` paths AND the direct-mutation reducers
+ * (`transformSelectedPlanes`, `snapSelection`, `addPlaneLink`, …).
+ *
+ * TRANSACTIONS: `space/historyBegin` … `space/historyEnd` (ref-counted) fold every change in between
+ * into ONE entry — a drag that dispatches per frame is one undo, not sixty. `meta.history === 'skip'`
+ * bypasses recording for one action. Restore re-sets tree + links atomically via `restoreArrangement`
+ * (raw, exact, no reconcile). Remote collaboration mutations (`meta.remote`) are skipped — a peer's
+ * change isn't in YOUR undo. After every stack change the availability is written to
+ * `state.space.history` (`setHistoryStatus`) so hosts can render undo/redo controls.
  */
 export const createHistoryMiddleware = (): Middleware => {
     const undoStack: ArrangementSnapshot[] = [];
     let redoStack: ArrangementSnapshot[] = [];
     let applying = false;
+    let transactionDepth = 0;
+    let transactionBefore: ArrangementSnapshot | null = null;
 
     const snapshotOf = (state: any): ArrangementSnapshot => ({
         tree: state.space.tree,
         links: state.space.links,
     });
+
+    const publishStatus = (store: any) => {
+        const current = store.getState().space.history;
+        const next = {
+            canUndo: undoStack.length > 0,
+            canRedo: redoStack.length > 0,
+            undoDepth: undoStack.length,
+            redoDepth: redoStack.length,
+        };
+        if (
+            !current
+            || current.canUndo !== next.canUndo
+            || current.canRedo !== next.canRedo
+            || current.undoDepth !== next.undoDepth
+            || current.redoDepth !== next.redoDepth
+        ) {
+            store.dispatch({ type: STATUS, payload: next });
+        }
+    };
+
+    const record = (store: any, before: ArrangementSnapshot, after: ArrangementSnapshot) => {
+        if (before.tree === after.tree && before.links === after.links) {
+            return;
+        }
+        const previousSignature = arrangementSignature(before.tree as any, before.links as any);
+        const nextSignature = arrangementSignature(after.tree as any, after.links as any);
+        if (previousSignature === nextSignature) {
+            return;
+        }
+        undoStack.push(before);
+        if (undoStack.length > HISTORY_LIMIT) {
+            undoStack.shift();
+        }
+        redoStack = []; // a fresh user action invalidates the redo branch
+        publishStatus(store);
+    };
 
     const restore = (dispatch: any, snapshot: ArrangementSnapshot) => {
         applying = true;
@@ -73,6 +116,7 @@ export const createHistoryMiddleware = (): Middleware => {
             const previous = undoStack.pop() as ArrangementSnapshot;
             redoStack.push(snapshotOf(store.getState()));
             restore(store.dispatch, previous);
+            publishStatus(store);
             return undefined;
         }
 
@@ -83,39 +127,44 @@ export const createHistoryMiddleware = (): Middleware => {
             const future = redoStack.pop() as ArrangementSnapshot;
             undoStack.push(snapshotOf(store.getState()));
             restore(store.dispatch, future);
+            publishStatus(store);
             return undefined;
         }
 
-        const previousState = store.getState() as any;
-        const previousTree = previousState.space.tree;
-        const previousLinks = previousState.space.links;
+        if (action.type === BEGIN) {
+            if (transactionDepth === 0) {
+                transactionBefore = snapshotOf(store.getState());
+            }
+            transactionDepth += 1;
+            return next(action);
+        }
 
+        if (action.type === END) {
+            const result = next(action);
+            if (transactionDepth > 0) {
+                transactionDepth -= 1;
+                if (transactionDepth === 0 && transactionBefore) {
+                    record(store, transactionBefore, snapshotOf(store.getState()));
+                    transactionBefore = null;
+                }
+            }
+            return result;
+        }
+
+        if (action.type === STATUS) {
+            return next(action);
+        }
+
+        const before = snapshotOf(store.getState());
         const result = next(action);
 
-        // Don't record our own restores, or a peer's remotely-applied change.
-        if (applying || action.meta?.remote) {
+        // Don't record our own restores, a peer's remotely-applied change, an explicitly skipped
+        // action, or anything inside a transaction (recorded once at its end).
+        if (applying || action.meta?.remote || action.meta?.history === 'skip' || transactionDepth > 0) {
             return result;
         }
 
-        const nextState = store.getState() as any;
-        // Fast path: neither slice changed reference (e.g. the per-frame orbit transform actions).
-        if (nextState.space.tree === previousTree
-            && nextState.space.links === previousLinks) {
-            return result;
-        }
-
-        // Compare THIS action's before/after arrangement. A relayout reflow leaves the signature
-        // unchanged (it only moves auto-layout positions) and is ignored; a real authoring change
-        // (plane added/removed/shown/hidden/moved, link edited) flips it and is recorded.
-        const previousSignature = arrangementSignature(previousTree, previousLinks);
-        const nextSignature = arrangementSignature(nextState.space.tree, nextState.space.links);
-        if (previousSignature !== nextSignature) {
-            undoStack.push({ tree: previousTree, links: previousLinks });
-            if (undoStack.length > HISTORY_LIMIT) {
-                undoStack.shift();
-            }
-            redoStack = []; // a fresh user action invalidates the redo branch
-        }
+        record(store, before, snapshotOf(store.getState()));
 
         return result;
     };

@@ -11,8 +11,9 @@
     } from '@reduxjs/toolkit';
 
     import {
-        TRANSFORM_MODES,
         PluridConfigurationSpace,
+        CameraDelta,
+        Vec3,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -22,42 +23,129 @@
     import { AppState } from '~services/state/store';
 
     import {
-        DispatchAction,
-    } from '~data/interfaces';
+        interaction,
+        space as spaceEngine,
+    } from '~services/engine';
+
+    import {
+        dragWorldDelta,
+        cameraForward,
+        cameraDepthOf,
+        planeWorldCenter,
+    } from '~services/logic/selection';
+
+    import {
+        snapSelectionNow,
+        selectInScreenRect,
+    } from '~services/state/thunks/selection';
+
+    import {
+        isEditableTarget,
+        isEngineControl,
+        planeElementOf,
+    } from '~services/logic/input/guard';
+
+    import {
+        resolveGestureIntent,
+        applyLocks,
+        GestureIntent,
+        GestureContext,
+    } from '~services/logic/input/gesture';
+
+    import {
+        createFrameBatcher,
+    } from '~services/logic/input/frame';
+
+    import {
+        framePlaneByID,
+        fitToView,
+        resolvePlaneFallbackSize,
+    } from '~services/logic/camera';
     // #endregion external
+
+
+    // #region internal
+    import type {
+        CameraMotionController,
+    } from './useCameraMotion';
+    // #endregion internal
 // #endregion imports
 
 
 
 // #region module
+const {
+    camera: cameraEngine,
+} = interaction;
+
 export interface UsePointerGesturesParameters {
     viewElement: React.RefObject<HTMLDivElement>;
     /** `stateConfiguration.space` — mirrored into a ref so the handlers read live values. */
     spaceConfiguration: PluridConfigurationSpace;
     grabModeRef: React.MutableRefObject<boolean>;
-    /** Always-latest app state — the handlers read `selectedPlaneIDs` + `scale` for drag-to-move. */
+    /** Always-latest app state — the handlers read the camera, the tree, the selection. */
     stateRef: React.MutableRefObject<AppState>;
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     setNavDragging: (value: boolean) => void;
-
-    dispatchRotateXWith: DispatchAction<typeof actions.space.rotateXWith>;
-    dispatchRotateYWith: DispatchAction<typeof actions.space.rotateYWith>;
-    dispatchTranslateXWith: DispatchAction<typeof actions.space.translateXWith>;
-    dispatchTranslateYWith: DispatchAction<typeof actions.space.translateYWith>;
-    dispatchTranslateZWith: DispatchAction<typeof actions.space.translateZWith>;
-    dispatchScaleUpWith: DispatchAction<typeof actions.space.scaleUpWith>;
-    dispatchScaleDownWith: DispatchAction<typeof actions.space.scaleDownWith>;
+    motion: CameraMotionController;
 }
+
+interface Sample {
+    x: number;
+    y: number;
+    time: number;
+}
+
+interface Gesture {
+    intent: GestureIntent;
+    button: number;
+    pointerType: string;
+    primary: number;
+    startX: number;
+    startY: number;
+    lastX: number;
+    lastY: number;
+    dragging: boolean;
+    samples: Sample[];
+    historyOpen: boolean;
+    /** Camera-space depth of the dragged plane's center (move-selection): the drag maps to that plane. */
+    dragDepth: number;
+    /** Two-pointer state (pinch zoom + two-finger pan), engaged when a second pointer lands. */
+    pinch: {
+        distance: number;
+        midX: number;
+        midY: number;
+        angle: number;
+    } | null;
+}
+
+const MAX_SAMPLES = 24;
+
+/** Development trace: when a host sets `window.__pluridGestureLog = []`, every decision is pushed to it. */
+const trace = (entry: Record<string, unknown>) => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+    const log = (window as any).__pluridGestureLog;
+    if (Array.isArray(log)) {
+        log.push(entry);
+    }
+};
+/** px of drag per doubling of the zoom, for drag-to-zoom (scaled by `scaleSensitivity`). */
+const DRAG_ZOOM_PX_PER_DOUBLING = 250;
 
 
 /**
- * Native Pointer-Events gestures (replaces HammerJS). Single-pointer drag rotates / translates /
- * scales by continuous signed deltas (smooth, both axes at once); two-pointer pinch zooms at the
- * pinch midpoint; releasing a rotate with residual velocity spins on with decaying momentum.
+ * Native Pointer-Events gestures. A press resolves to ONE intent through the mapping table
+ * (`resolveGestureIntent`: planes-are-pages on content, orbit on empty space, right / middle /
+ * Shift pan, Alt dolly, modes and `buttonMap` override); a second pointer turns the gesture into a
+ * pinch (zoom at the midpoint, two-finger pan). Every input of a frame is coalesced into ONE camera
+ * commit (`createFrameBatcher`), the orbit pivots about the point under the cursor
+ * (`navigation.orbitPivot`), and a release with velocity hands a time-based fling to the motion
+ * controller. Clicks below the drag threshold pass through untouched; a right-drag suppresses the
+ * context menu it would otherwise open; a double click frames the plane (or everything).
  *
- * Owns all the live pointer/momentum refs + a `spaceConfigRef` (mirrored from `spaceConfiguration`
- * every render) and a `grabModeRef` passed in from `useGrabMode`, so the listeners attach ONCE and
- * read the latest mode/locks/grab without re-binding on every config tick.
+ * Listeners attach once: the handlers read the live configuration / state through refs.
  */
 export const usePointerGestures = (
     {
@@ -67,34 +155,15 @@ export const usePointerGestures = (
         stateRef,
         dispatch,
         setNavDragging,
-        dispatchRotateXWith,
-        dispatchRotateYWith,
-        dispatchTranslateXWith,
-        dispatchTranslateYWith,
-        dispatchTranslateZWith,
-        dispatchScaleUpWith,
-        dispatchScaleDownWith,
+        motion,
     }: UsePointerGesturesParameters,
 ) => {
-    // Native Pointer-Events gesture state. Tracks live pointers for single-pointer drag +
-    // two-pointer pinch, plus a decaying-velocity momentum spin.
-    const activePointers = useRef<Map<number, { x: number; y: number }>>(new Map());
-    const lastPointer = useRef<{ x: number; y: number } | null>(null);
-    const pinchDistance = useRef<number | null>(null);
-    // Drag-threshold: a pointerdown only becomes an orbit once it moves past a few px. Below that
-    // it's a click, which must pass through to UI controls (plane header icons, toolbar buttons).
-    const pointerDragging = useRef<boolean>(false);
-    const pointerDownAt = useRef<{ x: number; y: number } | null>(null);
-    // True for the duration of a drag that MOVES the current selection (vs orbits/pans the camera).
-    const movingSelection = useRef<boolean>(false);
-    const momentum = useRef<{ vx: number; vy: number }>({ vx: 0, vy: 0 });
-    const momentumFrame = useRef<number | null>(null);
-    // The mouse button that started the current drag — lets `applySingle` resolve the `buttonMap`.
-    const navButton = useRef<number>(-1);
-    // Always-latest space config (transformMode/locks/firstPerson) for the pointer handlers, so
-    // they can attach once instead of re-binding on every config change.
     const spaceConfigRef = useRef(spaceConfiguration);
     spaceConfigRef.current = spaceConfiguration;
+
+    const pointers = useRef<Map<number, { x: number; y: number; type: string }>>(new Map());
+    const gesture = useRef<Gesture | null>(null);
+    const suppressContextMenu = useRef(false);
 
     useEffect(() => {
         const element = viewElement.current;
@@ -102,366 +171,596 @@ export const usePointerGestures = (
             return;
         }
 
-        // Gesture feel is read LIVE from `space.gestures` (each field with its default) so a host can
-        // retune sensitivities/threshold/momentum mid-session without re-binding the listeners.
+        const cfg = () => spaceConfigRef.current;
         const gx = () => {
-            const g = spaceConfigRef.current.gestures || {};
+            const g = cfg().gestures || {};
             return {
                 rotate: g.rotateSensitivity ?? 0.22,        // deg per px
                 translate: g.translateSensitivity ?? 1,     // px per px
                 scale: g.scaleSensitivity ?? 0.004,
-                pinch: g.pinchSensitivity ?? 0.01,
-                flyLook: g.flyLookSensitivity ?? 0.18,      // deg per px (fly-mode look)
-                dragThreshold: g.dragThreshold ?? 4,        // px before a press becomes an orbit
-                momentumDecay: g.momentumDecay ?? 0.92,
-                momentumMin: g.momentumMin ?? 0.05,
-                disableMomentum: g.disableMomentum ?? false,
+                flyLook: g.flyLookSensitivity ?? 0.15,      // deg per px (fly-mode look)
+                dragThreshold: g.dragThreshold ?? 4,        // px before a press becomes a drag
+                touchTwist: g.touchTwist ?? false,
+                doubleClickFrame: g.doubleClickFrame ?? true,
             };
         };
 
-        // Resolve the `gestures.buttonMap` action for an initiating button — ONLY in the default (ALL)
-        // mode and not fly mode. `undefined` (no map / unmapped button) means "use the CAD defaults".
-        const buttonOverrideFor = (
-            button: number,
-        ): 'orbit' | 'pan' | 'zoom' | 'disabled' | undefined => {
-            const map = spaceConfigRef.current.gestures?.buttonMap;
-            if (!map
-                || spaceConfigRef.current.firstPerson
-                || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL
-            ) {
-                return undefined;
-            }
-            if (button === 0) { return map.left; }
-            if (button === 1) { return map.middle; }
-            return undefined;
+        const batcher = createFrameBatcher((delta: CameraDelta) => {
+            dispatch(actions.space.applyCameraDelta(
+                applyLocks(delta, cfg().transformLocks),
+            ));
+        });
+
+        const viewPoint = (clientX: number, clientY: number) => {
+            const rect = element.getBoundingClientRect();
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top,
+            };
         };
 
-        const stopMomentum = () => {
-            if (momentumFrame.current !== null) {
-                cancelAnimationFrame(momentumFrame.current);
-                momentumFrame.current = null;
-            }
+        const contextFor = (event: PointerEvent): GestureContext => {
+            const target = event.target;
+            const planeElement = planeElementOf(target);
+            const planeID = planeElement?.getAttribute('data-plurid-plane') || '';
+            const selection = stateRef.current?.space?.selectedPlaneIDs || [];
+            const pointerType = event.pointerType === 'touch' || event.pointerType === 'pen'
+                ? event.pointerType
+                : 'mouse';
+
+            return {
+                pointerType,
+                button: event.button,
+                buttons: event.buttons,
+                shift: event.shiftKey,
+                alt: event.altKey,
+                ctrl: event.ctrlKey,
+                meta: event.metaKey,
+                onPlane: !!planeElement,
+                onSelectedPlane: !!planeID && selection.includes(planeID),
+                onEditable: isEditableTarget(target),
+                onControl: isEngineControl(target),
+                grabMode: grabModeRef.current,
+                firstPerson: cfg().firstPerson,
+                transformMode: cfg().transformMode as GestureContext['transformMode'],
+                buttonMap: cfg().gestures?.buttonMap,
+                touchOne: cfg().gestures?.touchOne,
+            };
         };
 
-        // Whether the most recent drag was an orbit (so momentum only flings on orbit).
-        let navWasOrbit = false;
-
-        const rotateByDelta = (dx: number, dy: number) => {
-            const sensitivity = gx().rotate;
-            if (dx !== 0) {
-                dispatchRotateYWith(dx * sensitivity);
-            }
-            if (dy !== 0) {
-                dispatchRotateXWith(-dy * sensitivity);
-            }
-        };
-
-        const panByDelta = (dx: number, dy: number, altKey: boolean) => {
-            if (dx !== 0) {
-                dispatchTranslateXWith(dx * gx().translate);
-            }
-            if (dy !== 0) {
-                if (altKey) {
-                    dispatchTranslateZWith(dy);
-                } else {
-                    dispatchTranslateYWith(dy);
-                }
-            }
-        };
-
-        const scaleByDrag = (dy: number) => {
-            const amount = Math.abs(dy) * gx().scale;
-            if (amount > 0) {
-                if (dy < 0) {
-                    dispatchScaleUpWith(amount);
-                } else {
-                    dispatchScaleDownWith(amount);
-                }
-            }
-        };
-
-        // CAD-style navigation. The explicit rotate/scale/translate modes pin what a drag does;
-        // otherwise (the default ALL mode) a plain drag orbits and a shift- or middle-button drag
-        // pans — so you can navigate the space without first choosing a mode.
-        const applySingle = (dx: number, dy: number, event: PointerEvent) => {
-            const mode = spaceConfigRef.current.transformMode;
-            navWasOrbit = false;
-            // Drag-to-move the selection: convert the screen delta to space-local units (÷ scale) and
-            // shift every selected plane. No camera change, no momentum fling. (Head-on is exact; under
-            // a heavy orbit the X/Y mapping is approximate — a known v1 limitation.)
-            if (movingSelection.current) {
-                const scale = stateRef.current?.space?.scale || 1;
-                if (event.altKey) {
-                    // Alt-drag moves the selection in DEPTH (Z) instead of the X-Y plane.
-                    dispatch(actions.space.transformSelectedPlanes({
-                        deltaZ: dy / scale,
-                    }));
-                } else {
-                    dispatch(actions.space.transformSelectedPlanes({
-                        deltaX: dx / scale,
-                        deltaY: dy / scale,
-                    }));
-                }
+        // #region auto-pivot
+        /**
+         * Orbit about the point under the cursor: the hit on the plane under the pointer, else the
+         * point on the pivot-depth plane under the pointer; `selection` orbits about the selection's
+         * center; `view` keeps the current pivot. A lossless re-parameterization — no visible change.
+         */
+        const autoPivot = (clientX: number, clientY: number) => {
+            const policy = cfg().navigation?.orbitPivot ?? 'cursor';
+            if (policy === 'view') {
                 return;
             }
-            if (spaceConfigRef.current.firstPerson) {
-                // Fly mode: dragging looks around (yaw/pitch). When the pointer is locked the
-                // dedicated mouse-look listener takes over (clientX/Y frozen, so dx/dy here are ~0).
-                const flyLook = gx().flyLook;
-                dispatch(actions.space.flyMove({
-                    yaw: dx * flyLook,
-                    pitch: -dy * flyLook,
-                }));
-                return;
+
+            const state = stateRef.current;
+            const spaceState = state.space;
+            const camera = spaceState.camera;
+            const view = spaceState.viewSize;
+            const fallback = resolvePlaneFallbackSize(state.configuration, view);
+            let pivot: Vec3 | undefined;
+
+            if (policy === 'selection' && spaceState.selectedPlaneIDs.length > 0) {
+                const selected = new Set(spaceState.selectedPlaneIDs);
+                const planes: any[] = [];
+                const walk = (nodes: any[]) => {
+                    for (const node of nodes) {
+                        if (selected.has(node.planeID)) {
+                            planes.push({ ...node, children: undefined });
+                        }
+                        if (node.children) {
+                            walk(node.children);
+                        }
+                    }
+                };
+                walk(spaceState.tree);
+                const box = cameraEngine.worldBounds(planes, {
+                    fallbackWidth: fallback.width,
+                    fallbackHeight: fallback.height,
+                });
+                if (box) {
+                    pivot = cameraEngine.boxCenter(box);
+                }
             }
-            if (mode === TRANSFORM_MODES.ROTATION) {
-                navWasOrbit = true;
-                rotateByDelta(dx, dy);
-            } else if (mode === TRANSFORM_MODES.TRANSLATION) {
-                panByDelta(dx, dy, event.altKey);
-            } else if (mode === TRANSFORM_MODES.SCALE) {
-                scaleByDrag(dy);
-            } else {
-                // Default (ALL) mode. A `buttonMap` entry (when set) is authoritative for the
-                // initiating button; otherwise the CAD defaults: in grab mode a left-drag orbits;
-                // shift- or middle-drag pans. (In normal mode only middle/shift drags are tracked.)
-                const override = buttonOverrideFor(navButton.current);
-                if (override === 'orbit') {
-                    navWasOrbit = true;
-                    rotateByDelta(dx, dy);
-                } else if (override === 'pan') {
-                    panByDelta(dx, dy, event.altKey);
-                } else if (override === 'zoom') {
-                    scaleByDrag(dy);
-                } else if (override === 'disabled') {
-                    // The host claimed this button — plurid does nothing with the drag.
-                } else {
-                    const wantsPan = event.shiftKey || (event.buttons & 4) === 4;
-                    if (grabModeRef.current && !wantsPan) {
-                        navWasOrbit = true;
-                        rotateByDelta(dx, dy);
-                    } else {
-                        panByDelta(dx, dy, event.altKey);
+
+            const screen = viewPoint(clientX, clientY);
+
+            if (!pivot) {
+                const under = typeof document.elementFromPoint === 'function'
+                    ? document.elementFromPoint(clientX, clientY)
+                    : null;
+                const planeElement = under ? planeElementOf(under) : null;
+                const planeID = planeElement?.getAttribute('data-plurid-plane');
+                if (planeID) {
+                    const plane = spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, planeID);
+                    if (plane) {
+                        const pick = cameraEngine.pickPlanePoint(
+                            camera,
+                            view,
+                            {
+                                location: plane.location,
+                                width: plane.width || fallback.width,
+                                height: plane.height || fallback.height,
+                            },
+                            screen,
+                        );
+                        if (pick && pick.inside) {
+                            pivot = pick.world;
+                        }
                     }
                 }
             }
-        };
 
-        const runMomentum = () => {
-            const { momentumDecay, momentumMin } = gx();
-            const m = momentum.current;
-            rotateByDelta(m.vx, m.vy);
-            m.vx *= momentumDecay;
-            m.vy *= momentumDecay;
-            if (Math.abs(m.vx) < momentumMin && Math.abs(m.vy) < momentumMin) {
-                stopMomentum();
-                return;
+            if (!pivot) {
+                pivot = cameraEngine.unprojectAtCameraZ(camera, view, screen, camera.offset.z);
             }
-            momentumFrame.current = requestAnimationFrame(runMomentum);
-        };
 
-        const twoPointerDistance = (): number => {
-            const pts = Array.from(activePointers.current.values());
-            return Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-        };
-
-        const onPointerDown = (event: PointerEvent) => {
-            // Only skip form fields (a drag inside them should select/scrub, not orbit). Everything
-            // else — including the engine's <div>-based controls — is allowed: a click (no movement)
-            // passes straight through to the control's onClick; only a drag past DRAG_THRESHOLD
-            // starts an orbit (see onPointerMove). We must NOT setPointerCapture or preventDefault
-            // here, or control clicks get swallowed.
-            const target = event.target as HTMLElement | null;
-            // Form fields AND rich-text editors (contentEditable, e.g. TipTap/Lexical/ProseMirror):
-            // a drag inside them should select/scrub text, not orbit. `isContentEditable` resolves
-            // inheritance (a drag on a text node inside an editable host), matching `useGrabMode`.
-            if (target && ((target.closest && target.closest('input, textarea, select')) || target.isContentEditable)) {
-                return;
+            if (pivot && [pivot.x, pivot.y, pivot.z].every(Number.isFinite)) {
+                dispatch(actions.space.applyCameraDelta({ pivot }));
             }
-            // Only engage navigation for a deliberate nav gesture; otherwise leave the press to the
-            // browser (text selection, clicks, links) — planes are pages. Nav = fly mode, grab mode
-            // (G), the middle mouse button, or an explicit rotate/scale/translate mode.
-            // Drag-to-move: a plain left-drag on an ALREADY-SELECTED plane (normal mode only) moves the
-            // whole selection. Orbit requires grab mode, so this never competes with it; shift is left
-            // to pan, and a no-drag click still reaches the plane's shift-click selection toggle.
-            // When a `buttonMap` claims the initiating button, it is authoritative — it overrides BOTH
-            // the selection-move and the default nav decision for that button.
-            const override = buttonOverrideFor(event.button);
+        };
+        // #endregion auto-pivot
 
-            let moveIntent = false;
-            const selection = stateRef.current?.space?.selectedPlaneIDs;
-            if (
-                override === undefined
-                && selection && selection.length > 0
-                && event.button === 0
-                && !event.shiftKey
-                && !spaceConfigRef.current.firstPerson
-                && !grabModeRef.current
-                && spaceConfigRef.current.transformMode === TRANSFORM_MODES.ALL
-            ) {
-                const planeEl = target && target.closest
-                    ? target.closest('[data-plurid-plane]')
-                    : null;
-                const planeID = planeEl && planeEl.getAttribute('data-plurid-plane');
-                if (planeID && selection.includes(planeID)) {
-                    moveIntent = true;
+        const beginDrag = (current: Gesture, event: PointerEvent) => {
+            current.dragging = true;
+            current.lastX = event.clientX;
+            current.lastY = event.clientY;
+
+            if (current.intent === 'move-selection') {
+                dispatch(actions.space.historyBegin());
+                current.historyOpen = true;
+                dispatch(actions.space.setDraggingSelection(true));
+                // The drag lives on the pressed plane: its center's depth maps screen px to world.
+                const state = stateRef.current;
+                const pressedID = planeElementOf(event.target)?.getAttribute('data-plurid-plane') || '';
+                const pressed = pressedID
+                    ? spaceEngine.tree.logic.getTreePlaneByID(state.space.tree, pressedID)
+                    : undefined;
+                const fallback = resolvePlaneFallbackSize(state.configuration, state.space.viewSize);
+                current.dragDepth = pressed
+                    ? cameraDepthOf(state.space.camera, state.space.viewSize, planeWorldCenter(pressed, fallback))
+                    : state.space.camera.offset.z;
+            } else if (current.intent === 'marquee') {
+                const start = viewPoint(current.startX, current.startY);
+                dispatch(actions.ui.setMarquee({ left: start.x, top: start.y, right: start.x, bottom: start.y }));
+            } else {
+                setNavDragging(true);
+                if (current.intent === 'orbit') {
+                    autoPivot(event.clientX, event.clientY);
                 }
             }
 
-            // A `buttonMap` of `disabled` releases the button to the host (no nav, even in grab mode);
-            // a mapped action (orbit/pan/zoom) engages nav directly (no grab mode needed).
-            const navIntent = override === 'disabled'
-                ? false
-                : (spaceConfigRef.current.firstPerson
-                    || grabModeRef.current
-                    || event.button === 1
-                    || spaceConfigRef.current.transformMode !== TRANSFORM_MODES.ALL
-                    || override !== undefined);
-            if (!navIntent && !moveIntent) {
+            try {
+                element.setPointerCapture(event.pointerId);
+            } catch (_) { /* capture unsupported */ }
+        };
+
+        const applyMove = (current: Gesture, dx: number, dy: number, event: PointerEvent) => {
+            const sensitivities = gx();
+            switch (current.intent) {
+                case 'orbit':
+                    batcher.add({
+                        yaw: dx * sensitivities.rotate,
+                        pitch: -dy * sensitivities.rotate,
+                    });
+                    break;
+                case 'pan':
+                    batcher.add({
+                        pan: {
+                            x: dx * sensitivities.translate,
+                            y: dy * sensitivities.translate,
+                        },
+                    });
+                    break;
+                case 'dolly':
+                    batcher.add({ dolly: dy });
+                    break;
+                case 'zoom': {
+                    const perDoubling = DRAG_ZOOM_PX_PER_DOUBLING * (0.004 / Math.max(sensitivities.scale, 1e-6));
+                    batcher.add({
+                        zoom: {
+                            factor: Math.pow(2, -dy / perDoubling),
+                            anchor: viewPoint(current.startX, current.startY),
+                        },
+                    });
+                    break;
+                }
+                case 'look':
+                    batcher.add({
+                        look: {
+                            yaw: dx * sensitivities.flyLook,
+                            pitch: -dy * sensitivities.flyLook,
+                        },
+                    });
+                    break;
+                case 'move-selection': {
+                    // Screen delta → world delta on the dragged plane's depth (exact at any
+                    // orientation); Alt moves along the camera's forward direction instead.
+                    const state = stateRef.current;
+                    const camera = state.space.camera;
+                    const view = state.space.viewSize;
+                    if (event.altKey) {
+                        const forward = cameraForward(camera, view);
+                        const amount = dy / (camera.scale || 1);
+                        dispatch(actions.space.transformSelectedPlanes({
+                            deltaX: forward.x * amount,
+                            deltaY: forward.y * amount,
+                            deltaZ: forward.z * amount,
+                        }));
+                    } else {
+                        const delta = dragWorldDelta(
+                            camera,
+                            view,
+                            { x: current.lastX - dx, y: current.lastY - dy },
+                            { x: current.lastX, y: current.lastY },
+                            current.dragDepth,
+                        );
+                        dispatch(actions.space.transformSelectedPlanes({
+                            deltaX: delta.x,
+                            deltaY: delta.y,
+                            deltaZ: delta.z,
+                        }));
+                    }
+                    break;
+                }
+                case 'marquee': {
+                    const start = viewPoint(current.startX, current.startY);
+                    const now = viewPoint(current.lastX, current.lastY);
+                    dispatch(actions.ui.setMarquee({ left: start.x, top: start.y, right: now.x, bottom: now.y }));
+                    break;
+                }
+                default:
+                    break;
+            }
+        };
+
+        const twoPointers = () => {
+            const points = Array.from(pointers.current.values());
+            const a = points[0];
+            const b = points[1];
+            return {
+                distance: Math.hypot(a.x - b.x, a.y - b.y),
+                midX: (a.x + b.x) / 2,
+                midY: (a.y + b.y) / 2,
+                angle: Math.atan2(b.y - a.y, b.x - a.x),
+            };
+        };
+
+        const applyPinch = (current: Gesture) => {
+            if (!current.pinch) {
                 return;
             }
-            navButton.current = event.button;
-            movingSelection.current = moveIntent;
-            stopMomentum();
-            momentum.current = { vx: 0, vy: 0 };
-            pointerDragging.current = false;
-            pointerDownAt.current = { x: event.clientX, y: event.clientY };
-            activePointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-            lastPointer.current = { x: event.clientX, y: event.clientY };
-            if (activePointers.current.size === 2) {
-                // A two-finger gesture is unambiguous — engage pinch immediately.
-                pointerDragging.current = true;
-                pinchDistance.current = twoPointerDistance();
+            const now = twoPointers();
+            const previous = current.pinch;
+            const delta: CameraDelta = {};
+
+            if (previous.distance > 0 && now.distance > 0) {
+                const factor = now.distance / previous.distance;
+                if (factor !== 1) {
+                    delta.zoom = {
+                        factor,
+                        anchor: viewPoint(now.midX, now.midY),
+                    };
+                }
+            }
+
+            const panX = now.midX - previous.midX;
+            const panY = now.midY - previous.midY;
+            if (panX !== 0 || panY !== 0) {
+                delta.pan = { x: panX, y: panY };
+            }
+
+            if (gx().touchTwist) {
+                let twist = (now.angle - previous.angle) * (180 / Math.PI);
+                if (twist > 180) { twist -= 360; }
+                if (twist < -180) { twist += 360; }
+                if (twist !== 0) {
+                    delta.yaw = twist;
+                }
+            }
+
+            current.pinch = now;
+            if (Object.keys(delta).length > 0) {
+                batcher.add(delta);
+            }
+        };
+
+        const finish = (event: PointerEvent | null) => {
+            const current = gesture.current;
+            gesture.current = null;
+            pointers.current.clear();
+            if (!current) {
+                return;
+            }
+
+            batcher.flushNow();
+
+            if (event) {
+                try {
+                    element.releasePointerCapture(event.pointerId);
+                } catch (_) { /* capture unsupported */ }
+            }
+
+            if (current.intent === 'move-selection') {
+                dispatch(actions.space.setDraggingSelection(false));
+                if (current.dragging) {
+                    dispatch(snapSelectionNow() as any);
+                }
+                if (current.historyOpen) {
+                    dispatch(actions.space.historyEnd());
+                }
+                return;
+            }
+            if (current.intent === 'marquee') {
+                dispatch(actions.ui.setMarquee(null));
+                if (current.dragging) {
+                    const start = viewPoint(current.startX, current.startY);
+                    const end = viewPoint(current.lastX, current.lastY);
+                    const mode = event?.shiftKey ? 'add' : (event?.altKey ? 'subtract' : 'set');
+                    dispatch(selectInScreenRect(
+                        { left: start.x, top: start.y, right: end.x, bottom: end.y },
+                        mode,
+                    ) as any);
+                } else if (!event?.shiftKey && !event?.altKey) {
+                    // a ⌘/Ctrl-click on empty space clears the selection
+                    dispatch(actions.space.clearSelection());
+                }
+                return;
+            }
+
+            setNavDragging(false);
+
+            if (
+                current.dragging
+                && (current.intent === 'orbit' || current.intent === 'pan')
+                && !current.pinch
+            ) {
+                const now = event?.timeStamp || performance.now();
+                const velocity = cameraEngine.estimateVelocity(current.samples, now);
+                motion.fling(velocity, current.intent);
+            }
+        };
+
+        const onPointerDown = (event: PointerEvent) => {
+            const current = gesture.current;
+
+            // A second pointer during a gesture → pinch (zoom at the midpoint + two-finger pan).
+            if (current && pointers.current.size === 1 && !pointers.current.has(event.pointerId)) {
+                pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY, type: event.pointerType });
+                current.pinch = twoPointers();
+                current.dragging = true;
+                current.samples = [];
+                if (current.intent === 'move-selection') {
+                    // a pinch is navigation — end the move cleanly first
+                    dispatch(actions.space.setDraggingSelection(false));
+                    if (current.historyOpen) {
+                        dispatch(actions.space.historyEnd());
+                        current.historyOpen = false;
+                    }
+                    current.intent = 'pan';
+                }
+                setNavDragging(true);
+                try {
+                    element.setPointerCapture(event.pointerId);
+                } catch (_) { /* capture unsupported */ }
+                event.preventDefault();
+                return;
+            }
+
+            if (current) {
+                return;
+            }
+
+            // A touch that the browser will scroll natively still reaches us; the intent table
+            // decides whether the engine wants it.
+            const context = contextFor(event);
+            const intent = resolveGestureIntent(context);
+            trace({ phase: 'down', intent, pointerType: context.pointerType, button: context.button, onPlane: context.onPlane, onControl: context.onControl, onEditable: context.onEditable, pointerId: event.pointerId });
+            if (intent === 'none') {
+                return;
+            }
+
+            motion.cancel();
+            pointers.current.clear();
+            pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY, type: event.pointerType });
+            // A right press that navigates owns the button: the context menu (which some platforms
+            // open on press, others on release) is suppressed for this press.
+            suppressContextMenu.current = event.button === 2;
+            gesture.current = {
+                intent,
+                button: event.button,
+                pointerType: event.pointerType,
+                primary: event.pointerId,
+                startX: event.clientX,
+                startY: event.clientY,
+                lastX: event.clientX,
+                lastY: event.clientY,
+                dragging: false,
+                samples: [{ x: event.clientX, y: event.clientY, time: event.timeStamp || performance.now() }],
+                historyOpen: false,
+                dragDepth: 0,
+                pinch: null,
+            };
+            // Middle / right presses would otherwise auto-scroll or select; a left press below the
+            // threshold must still click, so it is left alone here.
+            if (event.button === 1 || event.button === 2) {
+                event.preventDefault();
             }
         };
 
         const onPointerMove = (event: PointerEvent) => {
-            if (!activePointers.current.has(event.pointerId)) {
+            const current = gesture.current;
+            if (!current || !pointers.current.has(event.pointerId)) {
+                trace({ phase: 'move-ignored', hasGesture: !!current, known: pointers.current.has(event.pointerId), pointerId: event.pointerId });
                 return;
             }
-            activePointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+            pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY, type: event.pointerType });
 
-            if (activePointers.current.size >= 2) {
-                if (!spaceConfigRef.current.transformLocks.scale) {
-                    return;
+            if (current.pinch) {
+                if (pointers.current.size >= 2) {
+                    applyPinch(current);
+                    event.preventDefault();
                 }
-                const pts = Array.from(activePointers.current.values());
-                const dist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
-                if (pinchDistance.current !== null) {
-                    const deltaScale = (dist - pinchDistance.current) * gx().pinch;
-                    if (deltaScale !== 0) {
-                        const rect = element.getBoundingClientRect();
-                        const originX = (pts[0].x + pts[1].x) / 2 - rect.left;
-                        const originY = (pts[0].y + pts[1].y) / 2 - rect.top;
-                        dispatch(actions.space.zoomAtPoint({ deltaScale, originX, originY }));
-                    }
-                }
-                pinchDistance.current = dist;
-                lastPointer.current = null;
                 return;
             }
 
-            if (!lastPointer.current) {
-                lastPointer.current = { x: event.clientX, y: event.clientY };
+            if (event.pointerId !== current.primary) {
                 return;
             }
 
-            // Below the threshold this press is still a (potential) click — let it pass through to
-            // whatever control is under the pointer. Once it moves far enough, commit to an orbit:
-            // capture the pointer and start applying deltas.
-            if (!pointerDragging.current) {
-                const origin = pointerDownAt.current;
-                const moved = origin
-                    ? Math.hypot(event.clientX - origin.x, event.clientY - origin.y)
-                    : 0;
+            const coalesced: PointerEvent[] = typeof (event as any).getCoalescedEvents === 'function'
+                ? ((event as any).getCoalescedEvents() as PointerEvent[])
+                : [];
+            const events = coalesced.length > 0 ? coalesced : [event];
+            for (const sample of events) {
+                current.samples.push({
+                    x: sample.clientX,
+                    y: sample.clientY,
+                    time: sample.timeStamp || performance.now(),
+                });
+            }
+            if (current.samples.length > MAX_SAMPLES) {
+                current.samples.splice(0, current.samples.length - MAX_SAMPLES);
+            }
+
+            if (!current.dragging) {
+                const moved = Math.hypot(event.clientX - current.startX, event.clientY - current.startY);
                 if (moved < gx().dragThreshold) {
                     return;
                 }
-                pointerDragging.current = true;
-                setNavDragging(true);
-                // A selection move begins — turn on the live alignment-guide overlay.
-                if (movingSelection.current) {
-                    dispatch(actions.space.setDraggingSelection(true));
-                }
-                lastPointer.current = { x: event.clientX, y: event.clientY };
-                try {
-                    element.setPointerCapture(event.pointerId);
-                } catch (_) { /* capture unsupported */ }
+                trace({ phase: 'drag-begin', intent: current.intent, pointerId: event.pointerId });
+                beginDrag(current, event);
                 return;
             }
 
-            const dx = event.clientX - lastPointer.current.x;
-            const dy = event.clientY - lastPointer.current.y;
-            lastPointer.current = { x: event.clientX, y: event.clientY };
-            // Momentum tracks per-move velocity, capped so one large delta (e.g. a
-            // synthetic/teleporting pointer) can't launch a runaway spin on release.
-            const cap = 40;
-            momentum.current = {
-                vx: Math.max(-cap, Math.min(cap, dx)),
-                vy: Math.max(-cap, Math.min(cap, dy)),
-            };
+            const dx = event.clientX - current.lastX;
+            const dy = event.clientY - current.lastY;
+            current.lastX = event.clientX;
+            current.lastY = event.clientY;
+            if (dx !== 0 || dy !== 0) {
+                applyMove(current, dx, dy, event);
+            }
             event.preventDefault();
-            applySingle(dx, dy, event);
         };
 
-        const endPointer = (event: PointerEvent) => {
-            activePointers.current.delete(event.pointerId);
-            try {
-                element.releasePointerCapture(event.pointerId);
-            } catch (_) { /* capture unsupported */ }
-
-            if (activePointers.current.size < 2) {
-                pinchDistance.current = null;
+        const onPointerEnd = (event: PointerEvent) => {
+            const current = gesture.current;
+            if (!current) {
+                pointers.current.delete(event.pointerId);
+                return;
+            }
+            if (!pointers.current.has(event.pointerId)) {
+                return;
             }
 
-            if (activePointers.current.size === 0) {
-                lastPointer.current = null;
-                pointerDownAt.current = null;
-                setNavDragging(false);
-                const wasDragging = pointerDragging.current;
-                const wasMoving = movingSelection.current;
-                pointerDragging.current = false;
-                movingSelection.current = false;
-                // Always drop the guide overlay when the last pointer lifts — covers an interrupted
-                // move (pointercancel / a second pointer) too, not just the clean snap path below.
-                // Idempotent: the reducer no-ops when the flag is already false.
-                dispatch(actions.space.setDraggingSelection(false));
-                // Edge-snap the group only on the clean release of a real (past-threshold) move.
-                if (wasDragging && wasMoving) {
-                    dispatch(actions.space.snapSelection(undefined));
+            pointers.current.delete(event.pointerId);
+
+            if (current.pinch) {
+                if (pointers.current.size >= 2) {
+                    current.pinch = twoPointers();
+                    return;
                 }
-                // Only fling momentum if this was an actual orbit drag (not a click), and the host
-                // hasn't disabled the fling.
-                const m = momentum.current;
-                const { momentumMin, disableMomentum } = gx();
-                if (wasDragging
-                    && navWasOrbit
-                    && !disableMomentum
-                    && (Math.abs(m.vx) > momentumMin || Math.abs(m.vy) > momentumMin)) {
-                    stopMomentum();
-                    momentumFrame.current = requestAnimationFrame(runMomentum);
+                current.pinch = null;
+                if (pointers.current.size === 1) {
+                    // continue as a single-pointer pan with the remaining finger
+                    const [id, remaining] = Array.from(pointers.current.entries())[0];
+                    current.primary = id;
+                    current.intent = 'pan';
+                    current.lastX = remaining.x;
+                    current.lastY = remaining.y;
+                    current.samples = [];
+                    return;
                 }
+            }
+
+            if (pointers.current.size > 0) {
+                return;
+            }
+
+            finish(event);
+        };
+
+        const onWindowPointerEnd = (event: PointerEvent) => {
+            if (gesture.current && pointers.current.has(event.pointerId)) {
+                onPointerEnd(event);
+            }
+        };
+
+        const onLostCapture = (event: PointerEvent) => {
+            // A touch is implicitly captured by the element it landed on; taking the capture for
+            // the view makes THAT element lose it (a bubbling `lostpointercapture` that is not the
+            // end of the gesture). Only the view losing its own capture ends the gesture.
+            if (event.target !== element) {
+                return;
+            }
+            if (gesture.current && pointers.current.has(event.pointerId) && !gesture.current.pinch) {
+                onPointerEnd(event);
+            }
+        };
+
+        const onBlur = () => {
+            if (gesture.current) {
+                finish(null);
+            }
+        };
+
+        const onContextMenu = (event: MouseEvent) => {
+            if (suppressContextMenu.current) {
+                suppressContextMenu.current = false;
+                event.preventDefault();
+            }
+        };
+
+        const onDoubleClick = (event: MouseEvent) => {
+            if (!gx().doubleClickFrame) {
+                return;
+            }
+            if (isEditableTarget(event.target) || isEngineControl(event.target)) {
+                return;
+            }
+            const planeElement = planeElementOf(event.target);
+            const planeID = planeElement?.getAttribute('data-plurid-plane');
+            motion.cancel();
+            if (planeID) {
+                dispatch(framePlaneByID(planeID, true) as any);
             } else {
-                const remaining = Array.from(activePointers.current.values())[0];
-                lastPointer.current = remaining ? { x: remaining.x, y: remaining.y } : null;
+                dispatch(fitToView({ animate: true }) as any);
             }
+            event.preventDefault();
         };
 
         element.addEventListener('pointerdown', onPointerDown);
         element.addEventListener('pointermove', onPointerMove, { passive: false });
-        element.addEventListener('pointerup', endPointer);
-        element.addEventListener('pointercancel', endPointer);
+        element.addEventListener('pointerup', onPointerEnd);
+        element.addEventListener('pointercancel', onPointerEnd);
+        element.addEventListener('lostpointercapture', onLostCapture);
+        element.addEventListener('contextmenu', onContextMenu);
+        element.addEventListener('dblclick', onDoubleClick);
+        window.addEventListener('pointerup', onWindowPointerEnd);
+        window.addEventListener('pointercancel', onWindowPointerEnd);
+        window.addEventListener('blur', onBlur);
 
         return () => {
-            stopMomentum();
+            batcher.cancel();
             element.removeEventListener('pointerdown', onPointerDown);
             element.removeEventListener('pointermove', onPointerMove);
-            element.removeEventListener('pointerup', endPointer);
-            element.removeEventListener('pointercancel', endPointer);
+            element.removeEventListener('pointerup', onPointerEnd);
+            element.removeEventListener('pointercancel', onPointerEnd);
+            element.removeEventListener('lostpointercapture', onLostCapture);
+            element.removeEventListener('contextmenu', onContextMenu);
+            element.removeEventListener('dblclick', onDoubleClick);
+            window.removeEventListener('pointerup', onWindowPointerEnd);
+            window.removeEventListener('pointercancel', onWindowPointerEnd);
+            window.removeEventListener('blur', onBlur);
         };
-    }, [
-        viewElement.current,
-    ]);
+    }, []);
 }
 // #endregion module
 

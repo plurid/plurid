@@ -111,6 +111,11 @@
             "types": "./distribution/index.d.ts",
             "import": "./distribution/index.mjs",
             "require": "./distribution/index.js"
+        },
+        "./testing": {
+            "types": "./distribution/testing.d.ts",
+            "import": "./distribution/testing.mjs",
+            "require": "./distribution/testing.js"
         }
     }
 }

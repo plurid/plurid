@@ -17,6 +17,10 @@
     import {
         getRegisteredPlanes,
     } from '~modules/planes';
+
+    import {
+        camera as cameraEngine,
+    } from '~modules/interaction';
     // #endregion external
 // #endregion imports
 
@@ -50,11 +54,21 @@ const resolveSpace = <C>(
     // console.log('resolveSpace > computedTree', computedTree);
 
 
+    const perspective = configuration.space.perspective || cameraEngine.DEFAULT_PERSPECTIVE;
+    const cameraLimits = cameraEngine.resolveCameraLimits(configuration.space.navigation);
+    const initialViewSize = {
+        width: 771,
+        height: 764,
+    };
+
     const stateSpace: PluridStateSpace = {
         loading: true,
         resolvedLayout: false,
         animatedTransform: false,
         transformTime: 450,
+        camera: cameraEngine.identityCamera(initialViewSize, perspective),
+        cameraLimits,
+        motion: 'idle',
         scale: 1,
         rotationX: 0,
         rotationY: 0,
@@ -63,15 +77,7 @@ const resolveSpace = <C>(
         translationZ: 0,
         transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
         activeUniverseID: '',
-        camera: {
-            x: 0,
-            y: 0,
-            z: 0,
-        },
-        viewSize: {
-            width: 771,
-            height: 764,
-        },
+        viewSize: initialViewSize,
         spaceSize: {
             width: 771,
             height: 764,
@@ -88,9 +94,21 @@ const resolveSpace = <C>(
         lastClosedPlane: '',
         selectedPlaneIDs: [],
         draggingSelection: false,
+        history: {
+            canUndo: false,
+            canRedo: false,
+            undoDepth: 0,
+            redoDepth: 0,
+        },
 
         tree: computedTree,
         links: [],
+        bookmarks: {},
+        layoutTransition: 0,
+        culled: {
+            hidden: [],
+            frozen: [],
+        },
 
         ...precomputedState?.space,
         ...contextState?.space,
@@ -125,8 +143,53 @@ const resolveSpace = <C>(
         stateSpace.scale = localState.space.scale;
     }
 
+    // The camera is the source of truth; the scalars and the matrix are derived from it. A snapshot
+    // (or a legacy caller) may carry only the scalars — derive the camera from them in that case.
+    // Always re-commit so `transform` matches THIS view size and the mirrors are consistent.
+    const restoredCamera = (currentState?.space.camera && cameraEngine.isCameraState(currentState.space.camera))
+        ? currentState.space.camera
+        : (localState?.space.camera && cameraEngine.isCameraState(localState.space.camera))
+            ? localState.space.camera
+            : undefined;
+
+    const resolvedCamera = cameraEngine.clampCamera(
+        restoredCamera
+            ? {
+                ...restoredCamera,
+                perspective,
+            }
+            : cameraEngine.fromLegacy(
+                {
+                    rotationX: stateSpace.rotationX,
+                    rotationY: stateSpace.rotationY,
+                    translationX: stateSpace.translationX,
+                    translationY: stateSpace.translationY,
+                    translationZ: stateSpace.translationZ,
+                    scale: stateSpace.scale,
+                },
+                stateSpace.viewSize,
+                perspective,
+                cameraLimits,
+            ),
+        cameraLimits,
+    );
+
+    const legacy = cameraEngine.toLegacy(resolvedCamera, stateSpace.viewSize);
+
+    stateSpace.camera = resolvedCamera;
+    stateSpace.cameraLimits = cameraLimits;
+    stateSpace.motion = 'idle';
+    stateSpace.rotationX = legacy.rotationX;
+    stateSpace.rotationY = legacy.rotationY;
+    stateSpace.translationX = legacy.translationX;
+    stateSpace.translationY = legacy.translationY;
+    stateSpace.translationZ = legacy.translationZ;
+    stateSpace.scale = legacy.scale;
+    stateSpace.transform = cameraEngine.cameraMatrix3d(resolvedCamera, stateSpace.viewSize);
+
     return stateSpace;
 }
+
 // #endregion module
 
 

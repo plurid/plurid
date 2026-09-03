@@ -42,6 +42,7 @@ export async function loadPluridConfig(
         .find((file) => fs.existsSync(file));
 
     if (!configPath) {
+        process.stdout.write('[plurid] no plurid.config.ts found — using the conventions (add one for bundle.* knobs)\n');
         return {};
     }
 

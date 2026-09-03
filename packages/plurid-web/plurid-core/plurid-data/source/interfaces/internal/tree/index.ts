@@ -40,6 +40,18 @@ export interface TreePlane {
      * only the un-pinned planes around it. Persisted with the tree, so manual arrangement survives reload.
      */
     manuallyPositioned?: boolean;
+    /**
+     * How `width`/`height` are determined: `measured` (a ResizeObserver on the rendered plane keeps
+     * them current, the default) or `manual` (the user resized the plane; the measured size is
+     * ignored and the tree value renders).
+     */
+    sizeMode?: 'measured' | 'manual';
+    /**
+     * The stable id of the `PluridLink` that spawned this plane (`<parentPlaneID>#<route>#<ordinal>`
+     * unless the link declares its own `linkID`). The link derives its open/closed state from the
+     * tree through this id instead of keeping local state.
+     */
+    spawnedByLinkID?: string;
 }
 
 

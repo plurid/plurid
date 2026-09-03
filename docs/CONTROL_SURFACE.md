@@ -1,6 +1,6 @@
 # Plurid Developer-Control Surface
 
-Verified: **2026-07-13** against the current public types and source. Engine delivery does not imply product adoption; see [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the consumer status.
+Verified: **2026-09-02** against the current public types and source (camera core: `navigation`, `viewpointURLVersion`, `space.cameraDelta`, `space.frame`). Engine delivery does not imply product adoption; see [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the consumer status.
 
 Plurid is **transparent infrastructure**: it facilitates 3D spatial navigation and arrangement, and otherwise stays out of your way — _you_ decide what the app is for. So every imposed behavior has an opt-out, every engine action a programmatic trigger, every state change an observation seam, and there is one master escape hatch for the things we didn't anticipate.
 
@@ -51,6 +51,42 @@ let plurid: PluridApi;
 
 ---
 
+## Tier 0.5 — the imperative handle (`ref`)
+
+`PluridApplication` takes a `ref`: a `PluridApplicationHandle` — the `onReady` api plus TYPED commands, for the host's own code (a command palette, a sidebar) without threading the api around.
+
+```tsx
+const plurid = useRef<PluridApplicationHandle>(null);
+<PluridApplication ref={plurid} … />
+
+plurid.current?.camera.frame({ planeID });               // tween; { animate: false } jumps
+plurid.current?.camera.moveBy({ yaw: 15 });              // one delta
+plurid.current?.camera.bookmark('desk', 'save');         // 'go' | 'save' | 'remove'
+plurid.current?.selection.set([a, b]); .align('left'); .distribute('x'); .duplicate();
+plurid.current?.history.undo(); .get().canRedo;
+plurid.current?.tree.spawn('/detail', parentPlaneID);    // a child plane with a bridge
+plurid.current?.tree.setView(['/a', '/b']);              // relayout (animated), children kept
+plurid.current?.tree.close(planeID); .open(planeID); .remove(planeID);
+plurid.current?.focus();                                 // keyboard shortcuts apply
+```
+
+## Hooks — for anything rendered under the application
+
+Plane content, a render-slot, a custom overlay: the hooks read the ENCLOSING application's engine (never the host's own Redux) and are typed end to end.
+
+```tsx
+import { useCamera, useSelection, usePluridHistory, usePluridPubSub, usePluridApi, usePluridPlane } from '@plurid/plurid-react';
+
+const camera = useCamera();          // camera (per frame!), motion, viewpoint, bookmarks, moveBy/moveTo/frame/fit/reset/home/preset/bookmark
+const selection = useSelection();    // selected, activePlaneID, isSelected, select/toggle/add/clear/selectAll/invert/align/distribute/duplicate
+const history = usePluridHistory();  // canUndo/canRedo/depths, undo/redo, begin/end (one entry for a batch)
+usePluridPubSub('space.changed', ({ kind, value }) => …); // one typed topic, the latest callback always called
+const api = usePluridApi();          // the `onReady` api, stable
+const plane = usePluridPlane();      // inside plane content: active/selected/isolation/shown/culled/frozen/location
+```
+
+`useCamera().camera` changes on every orbit frame — a component using it re-renders per frame (fine for a HUD; use `onViewpointChange` for anything debounced).
+
 ## Tier 1 — declarative control & observe
 
 The instance **pubsub** bus (the same one `onReady` hands back) is the stable, decoupled control + observe surface.
@@ -65,9 +101,25 @@ plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.RESET_TRANSFORM }); // camera
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.UNDO }); // spatial undo
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.REDO });
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_TREE, data: { tree } });
-plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT, data: { viewpoint: 'v…' } });
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT, data: { viewpoint: 'v…', animated: true } }); // v1 or v2
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME, data: { planeID } });   // or { selection: true }, or {} for everything
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA, data: {          // one camera mutation
+    yaw: 15, pan: { x: 40, y: 0 }, zoom: { factor: 1.2, anchor: { x: 300, y: 200 } },
+    animate: true,                                                                     // tween to the result
+} });
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_HOME });                       // the home viewpoint
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_SET_HOME });                   // make the current camera home ({ viewpoint } to set one)
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_PRESET, data: { name: 'overview' } });
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK, data: { name: 'desk', action: 'save' } }); // then { name: 'desk' } to go, 'remove' to drop
+// Every one of these is an interruptible tween (`navigation.motion`); pass `animate: false` to jump.
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_ALIGN, data: { edge: 'left' } });        // …'right' | 'top' | 'bottom' | 'centerX' | 'centerY'
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_DISTRIBUTE, data: { axis: 'x' } });    // equal gaps (3+ selected)
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE, data: { offset: 40 } });   // copies of the selected roots
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_SELECT_ALL });                        // and SPACE_INVERT_SELECTION
 // plus the prior link / selection / collaboration topics.
 ```
+
+Every topic is TYPED: `publish({ topic: 'space.frame', data: … })` and `subscribe({ topic: 'space.changed', callback: ({ kind, value }) => … })` narrow `data` per topic through `PluridPubSubPayloads` (derived from the message union, so it cannot drift); a wrong payload is a compile error.
 
 ### Observe — react to engine state changes
 
@@ -78,6 +130,7 @@ plurid.pubsub.subscribe({
     topic: PLURID_PUBSUB_TOPIC.CHANGED, // 'space.changed'
     callback: ({ kind, value }) => {
         // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved' | 'loading'
+        //     | 'history' | 'motion' ('idle' | 'gesture' | 'fling' | 'tween') | 'bookmarks'
         if (kind === 'selection') highlightInSidebar(value);
     },
 });
@@ -87,6 +140,10 @@ plurid.pubsub.subscribe({
 ```
 
 ---
+
+### Development warnings
+
+In development the engine warns ONCE per page about the mistakes it can see: a `planes` array rebuilt on every render (memoize it), a `view` route with no registered plane, a container with a width but no height, a `space.perspective` outside 500–5000. `{ extend: { development: { warnings: false } } }` mutes them; production never prints.
 
 ## Tier 2 — opt out the always-on
 
@@ -127,27 +184,83 @@ definePluridConfiguration({
 });
 ```
 
+### Camera navigation (`space.navigation`) and the viewpoint encoding
+
+```tsx
+definePluridConfiguration({
+    perspective: 1600,              // the CSS lens (px); the camera reads it
+    navigation: {
+        pitchLimit: 89,             // the orbit never flips past vertical
+        zoomMin: 0.1, zoomMax: 4,   // scale range
+        dollyLimitFraction: 0.6,    // the pivot stops this fraction of `perspective` from the eye
+        orbitPivot: 'cursor',       // 'cursor' | 'selection' | 'view' — what an orbit rotates about
+        motion: { duration: 380, easing: 'out-cubic', reducedMotion: 'respect' },
+        home: 'v2|…',               // the Home viewpoint (default: the initial camera)
+        presets: { overview: '0,0,0,0,0,0.5' },
+    },
+    viewpointURLVersion: 2,         // write full-camera (pivot + pan) viewpoints; v1 stays the default
+});
+
+api.getViewpoint();                 // v1 `rX,rY,tX,tY,tZ,s` (unless configured otherwise)
+api.getViewpoint({ version: 2 });   // `v2|yaw|pitch|scale|pivot…|offset…|perspective`
+```
+
+The camera itself is `api.getSnapshot().space.camera` (`CameraState`: `yaw`, `pitch`, `scale`, `pivot`, `offset`, `perspective`); the legacy `rotationX/Y`, `translationX/Y/Z`, `scale` fields remain as read-only mirrors. `encodeCameraViewpoint` / `decodeCameraViewpoint` are exported next to the v1 `encodeViewpoint` / `decodeViewpoint`.
+
 ---
 
 ## Tier 3 — granular knobs, UI, exports
 
 ### Gestures (`space.gestures`) — read live, retune any time
 
+The default mapping (planes are pages: content interaction always wins over a plane unless grab mode is on):
+
+| Input | On empty space | Over a plane |
+| --- | --- | --- |
+| Left drag | orbit (about the point under the cursor) | the page's (text selection, drag-scroll); orbit in grab mode (G / hold Space) |
+| Right drag | pan (the context menu is suppressed for the press) | the page's context menu; pan in grab mode |
+| Middle drag / Shift + left drag | pan | pan |
+| Alt + left drag | dolly | dolly (grab mode) |
+| Wheel | zoom at the cursor | zoom, unless the content under the cursor can scroll (then it scrolls); Ctrl/Cmd + wheel always zooms |
+| Two-finger trackpad scroll | pan (`trackpadScroll`) | the page scrolls |
+| Pinch (trackpad or touch) | zoom at the fingers | zoom at the fingers |
+| One finger (touch) | orbit (`touchOne`) | the page scrolls |
+| Two fingers (touch) | pinch zoom + pan | pinch zoom + pan |
+| Double click / tap | frame everything | frame that plane |
+
+Every input of a frame is coalesced into one camera commit; a release with velocity flings (orbit and pan) with a time-based, frame-rate-independent decay; any input stops a fling or a tween.
+
 ```tsx
 definePluridConfiguration({
     gestures: {
         rotateSensitivity: 0.22, // deg/px   (translate/scale/pinch/flyLook sensitivities too)
-        dragThreshold: 4, // px before a press becomes an orbit (vs a click)
-        momentumDecay: 0.92,
+        dragThreshold: 4, // px before a press becomes a drag (vs a click)
+        momentumDecay: 0.92, // per 60 Hz frame; applied per real frame duration
+        momentum: { orbit: true, pan: true, zoom: false },
         disableMomentum: false, // true = release stops dead
-        flySpeed: 9, // fly-mode planar speed (px/frame)
+        wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'disabled'
+        wheelZoomStep: 1.1, // zoom factor per mouse notch
+        trackpadScroll: 'pan', // 'pan' | 'zoom' | 'orbit' | 'disabled'
+        touchOne: 'orbit', // 'orbit' | 'pan' | 'disabled' — one finger on empty space
+        touchTwist: false, // two-finger twist rotates the yaw
+        doubleClickFrame: true,
+        flySpeed: 9, // fly-mode speed, px per 60 Hz frame (time-based)
+        flySprintMultiplier: 2.5, // Shift while flying
 
-        // Remap what each pointer input does in the default mode. Only consulted when set —
-        // omit to keep the CAD defaults (left orbits ONLY in grab mode, middle/shift pans).
+        // (⌘/Ctrl is the SELECTION modifier: ⌘-click toggles a plane, ⌘-drag on empty space is the
+        // marquee — Shift adds, Alt subtracts; a plain drag on a selected plane moves the selection.)
+
+        // Gamepad (opt-in): sticks pan / orbit (fly / look in first person), triggers zoom (dolly),
+        // A fits, Y goes home, B undoes. Frame-rate independent.
+        gamepad: { enabled: true, deadZone: 0.15, curve: 2, panSpeed: 14, orbitSpeed: 2.4, zoomSpeed: 1.02 },
+
+        // Remap what each pointer input does in the default mode. Only consulted when set.
         buttonMap: {
-            left: 'orbit', // 'orbit' | 'pan' | 'zoom' | 'disabled' — left-drag orbits directly
+            left: 'orbit', // 'orbit' | 'pan' | 'zoom' | 'dolly' | 'disabled' — orbit everywhere, no grab mode needed
             middle: 'pan',
-            wheel: 'disabled', // 'zoom' | 'disabled' — leave scrolling to the page
+            right: 'menu', // … | 'menu' — give the right button back to the page entirely
+            wheel: 'disabled', // 'zoom' | 'disabled' — leave the wheel to the page
+            touchOne: 'pan',
         },
     },
 });
@@ -165,7 +278,29 @@ definePluridConfiguration({
 });
 ```
 
-`PluridShortcutID` = `undo · clearSelection · fitToView · toggleFirstPerson · modeRotation · modeTranslation · modeScale · transformNudge · focusPlane · focusParent · refreshPlane · isolatePlane · openClosedPlane · closePlane · focusPreviousRoot · focusNextRoot · cycleRoot · focusRootIndex`.
+`PluridShortcutID` = `undo · clearSelection · fitToView · frameSelection · home · navigateLeft · navigateRight · navigateUp · navigateDown · frameActive · selectAll · invertSelection · duplicateSelection · grabMode · grabHold · exitGrabMode · help · toggleFirstPerson · flyForward · flyBack · flyLeft · flyRight · flyUp · flyDown · flySprint · modeRotation · modeTranslation · modeScale · transformNudge · focusPlane · focusParent · refreshPlane · isolatePlane · openClosedPlane · closePlane · focusPreviousRoot · focusNextRoot · cycleRoot · focusRootIndex`.
+
+The full table, generated from the data: [`SHORTCUTS.md`](./SHORTCUTS.md). The bindings are ONE data table (`PLURID_SHORTCUTS` in plurid-data): the keyboard dispatcher, the `?` help overlay and the toolbar's shortcuts drawer are all generated from it with your `keymap`/`disabled` applied, so they cannot drift. Hold-keys (Space = grab, the fly keys) are part of the same system. Typing into any field, editor or ARIA textbox never triggers a shortcut or a gesture.
+
+### Snapping and resizing (`space.snap`, `elements.plane.resizable`)
+
+```tsx
+definePluridConfiguration({
+    snap: { enabled: true, threshold: 12, grid: 50 }, // drag-release snapping: edges/centers, else the grid; the guides preview it
+    planeResizable: true,                             // right / bottom / corner handles on selected planes (hand-sized planes keep their size)
+});
+```
+
+### Culling, depth cues, backfaces (`space.culling`, `elements.plane.depthFade`, `elements.plane.backface`)
+
+```tsx
+definePluridConfiguration({
+    culling: { enabled: true, distance: 6000, freezeDistance: 3500, frustumMargin: 0.25, hysteresis: 0.15 }, // far / off-screen planes stop painting (state kept)
+    planeDepthFade: { enabled: true, start: 800, end: 2500, minOpacity: 0.35, blur: 0 },              // planes fade with distance
+    planeBackface: 'hidden',                                                                              // planes seen from behind stop painting
+});
+// inside a plane: const { culled, frozen } = usePluridPlane(); — pause video / polling while unseen
+```
 
 ### UI — replace overlays or hide elements
 
@@ -175,6 +310,7 @@ Render-slots **substitute** an engine overlay with your own (rendered at the sam
 <PluridApplication
     …
     renderToolbar={() => <MyToolbar />}    // also renderViewcube / renderMinimap / renderShortcuts
+    renderEmpty={() => <MyEmptyState />}   // shown in place of the space when it holds no planes
 />
 
 definePluridConfiguration({
@@ -207,6 +343,27 @@ import { space, interaction } from '@plurid/plurid-engine'; // space.tree, space
 
 ---
 
+## Testing your integration — `@plurid/plurid-react/testing`
+
+Render an application in jsdom (vitest / jest + jsdom), drive it with synthetic input, step a deterministic frame clock, assert on the camera:
+
+```tsx
+import { renderPlurid, gestures, flushFrames, installFrameClock, expectCamera } from '@plurid/plurid-react/testing';
+
+const clock = installFrameClock();                       // before the input it should drive
+const app = await renderPlurid({ planes, view, configuration });
+app.handle.camera.moveBy({ yaw: 30 });
+expectCamera(app.api.getSnapshot().space.camera).toBeNear({ yaw: 30 });
+await gestures.key(app.view, 'KeyG');                    // grab mode
+await gestures.drag(app.view, { x: 100, y: 500 }, { x: 260, y: 500 }); // orbits
+await gestures.wheel(app.view, { deltaY: -100, ctrlKey: true });        // zooms
+await gestures.pinch(app.view, { x: 500, y: 300 }, 100, 200);
+await flushFrames(3);                                    // tweens / flings / batchers advance
+await app.unmount(); clock.restore();
+```
+
+`renderPlurid` polyfills `PointerEvent`, pointer capture and `matchMedia` for jsdom; `app.rerender(props)` re-renders with new props (a layout switch, a new view).
+
 ## Quick reference
 
 | Want to… | Use |
@@ -214,6 +371,21 @@ import { space, interaction } from '@plurid/plurid-engine'; // space.tree, space
 | Do something the seams don't expose | `onReady` → `api.store.dispatch(...)` |
 | Read state synchronously | `api.getSnapshot()` / `api.getViewpoint()` / `pluridSelectors` |
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
+| Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
+| Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
+| Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
+| Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
+| Show something when the space is empty | `renderEmpty` slot |
+| Align / distribute / duplicate / select all | `SPACE_ALIGN` · `SPACE_DISTRIBUTE` · `SPACE_DUPLICATE` · `SPACE_SELECT_ALL` · `SPACE_INVERT_SELECTION`; the Transform drawer buttons |
+| Tune snapping, let users resize planes | `{ snap: { threshold, grid } }` · `{ planeResizable: true }` |
+| Read undo/redo availability | `pluridSelectors.getHistory` · `space.changed` kind `history` |
+| Stop painting far / off-screen planes, fade with depth | `{ culling: { enabled: true } }` · `{ planeDepthFade: { enabled: true } }` · `usePluridPlane().culled` |
+| Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `focus`) |
+| Read or drive the engine from a component under it | `useCamera` · `useSelection` · `usePluridHistory` · `usePluridPubSub` · `usePluridApi` |
+| Test the integration in jsdom | `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `flushFrames`, `expectCamera`) |
+| Mute the development warnings | `extend.development.warnings: false` |
+| See fps / dispatches / culled counts | `extend.development.spaceDebugger` (+ `planeDebugger`) |
+| Tune orbit limits, pivot policy, motion, home | `{ navigation: { … } }` |
 | React to selection / tree / links changes | `pubsub.subscribe({ topic: …CHANGED })` |
 | React to camera moves | `onViewpointChange` (debounced) |
 | Turn off undo | `{ undo: false }` |
@@ -223,6 +395,9 @@ import { space, interaction } from '@plurid/plurid-engine'; // space.tree, space
 | Disable / remap / extend keyboard | `{ shortcuts: { … } }` |
 | Replace the toolbar / viewcube / minimap | `renderToolbar` / `renderViewcube` / `renderMinimap` |
 | Hide link beams / alignment guides | `extend.elements.{planeLinks,alignmentGuides}.show: false` |
+| Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
+| Fan nested spawns, or keep one angle | `extend.space.bridge.fan: 'alternate' \| 'fixed'` (+ `bridgeLength` / `planeAngle`) |
+| Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |
 | Go fully headless | `{ micro: true }` |
 
 See [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the design rationale and the engine⟷product boundary, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for how the machinery under this surface actually works.

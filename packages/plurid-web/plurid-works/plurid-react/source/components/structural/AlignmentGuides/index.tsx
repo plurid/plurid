@@ -10,6 +10,7 @@
 
     import {
         TreePlane,
+        PluridConfigurationSpaceSnap,
 
         PLURID_ENTITY_ALIGNMENT_GUIDES,
     } from '@plurid/plurid-data';
@@ -20,6 +21,14 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+
+    import {
+        space as spaceEngine,
+    } from '~services/engine';
+
+    import {
+        resolvePlaneFallbackSize,
+    } from '~services/logic/camera';
     // #endregion external
 
 
@@ -34,7 +43,6 @@
 
 
 // #region module
-const THRESHOLD = 12;   // px — same as the release snap, so the guide previews exactly where it lands
 const SPAN = 8000;      // px — guide line length (covers the working space)
 
 
@@ -43,37 +51,18 @@ export interface AlignmentGuidesStateProperties {
     stateTree: TreePlane[];
     stateSelectedPlaneIDs: string[];
     stateGeneralTheme: Theme;
+    stateSnap: PluridConfigurationSpaceSnap | undefined;
+    stateFallback: { width: number; height: number };
 }
 
 export type AlignmentGuidesProperties = AlignmentGuidesStateProperties;
 
 
-interface Guide {
-    axis: 'x' | 'y';
-    position: number;
-}
-
-/** The nearest left/top-edge alignment of any selected plane to any other plane, within THRESHOLD. */
-const nearestEdge = (
-    sel: TreePlane[],
-    others: TreePlane[],
-    axis: 'translateX' | 'translateY',
-): number | null => {
-    let position: number | null = null;
-    let bestAbs = THRESHOLD;
-    for (const s of sel) {
-        for (const o of others) {
-            const distance = Math.abs(o.location[axis] - s.location[axis]);
-            if (distance <= bestAbs) {
-                bestAbs = distance;
-                position = o.location[axis];
-            }
-        }
-    }
-    return position;
-}
-
-
+/**
+ * The lines a drag release would snap to — computed by the SAME `computeSnap` the release uses,
+ * with the same threshold, edges and grid, so the preview is exactly what lands. Rendered only
+ * mid-drag, inside the camera container (the guides ride the transform).
+ */
 const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
     properties,
 ) => {
@@ -82,42 +71,29 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
         stateTree,
         stateSelectedPlaneIDs,
         stateGeneralTheme,
+        stateSnap,
+        stateFallback,
     } = properties;
 
-
     // #region render
-    // Only ever rendered mid-drag, and only the lines a release would actually snap to.
-    if (!stateDraggingSelection || stateSelectedPlaneIDs.length === 0) {
+    if (!stateDraggingSelection || stateSelectedPlaneIDs.length === 0 || stateSnap?.enabled === false) {
         return null;
     }
 
-    const all: TreePlane[] = [];
-    const collect = (nodes: TreePlane[]) => {
-        for (const node of nodes) {
-            all.push(node);
-            if (node.children) {
-                collect(node.children);
-            }
-        }
-    };
-    collect(stateTree);
-
-    const selected = new Set(stateSelectedPlaneIDs);
-    const sel = all.filter(p => selected.has(p.planeID) && p.show !== false);
-    const others = all.filter(p => !selected.has(p.planeID) && p.show !== false);
-    if (sel.length === 0 || others.length === 0) {
+    const {
+        selection,
+        others,
+    } = spaceEngine.snap.collectSnapBoxes(stateTree, new Set(stateSelectedPlaneIDs), stateFallback);
+    if (selection.length === 0) {
         return null;
     }
 
-    const guides: Guide[] = [];
-    const x = nearestEdge(sel, others, 'translateX');
-    if (x !== null) {
-        guides.push({ axis: 'x', position: x });
-    }
-    const y = nearestEdge(sel, others, 'translateY');
-    if (y !== null) {
-        guides.push({ axis: 'y', position: y });
-    }
+    const {
+        guides,
+    } = spaceEngine.snap.computeSnap(selection, others, {
+        threshold: stateSnap?.threshold,
+        grid: stateSnap?.grid,
+    });
     if (guides.length === 0) {
         return null;
     }
@@ -131,6 +107,7 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
                     key={guide.axis + index}
                     theme={stateGeneralTheme}
                     data-plurid-guide={guide.axis}
+                    data-plurid-guide-edge={guide.edge}
                     style={guide.axis === 'x'
                         ? {
                             width: '1px',
@@ -158,6 +135,8 @@ const mapStateToProperties = (
     stateTree: selectors.space.getTree(state),
     stateSelectedPlaneIDs: selectors.space.getSelectedPlaneIDs(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateSnap: state.configuration.space.snap,
+    stateFallback: resolvePlaneFallbackSize(state.configuration, state.space.viewSize),
 });
 
 
@@ -168,7 +147,7 @@ const ConnectedAlignmentGuides = connect(
     {
         context: StateContext,
     },
-)(React.memo(AlignmentGuides));
+)(AlignmentGuides);
 // #endregion module
 
 

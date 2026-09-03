@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -27,7 +31,7 @@ export const StyledPluridPlanePreview = styled.div<IStyledPreview>`
     position: absolute;
     min-width: 600px;
     min-height: 300px;
-    z-index: 99999;
+    z-index: ${Z_INDEX.PREVIEW};
 
     top: ${({
         linkCoordinates,

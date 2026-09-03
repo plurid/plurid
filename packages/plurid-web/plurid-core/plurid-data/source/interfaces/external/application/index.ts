@@ -80,8 +80,12 @@ export interface PluridApi {
     pubsub: PluridPubSub;
     /** Read the full current engine state synchronously. */
     getSnapshot(): PluridState;
-    /** Read the current camera viewpoint as the encoded string (the same `v` value the URL/seam use). */
-    getViewpoint(): string;
+    /**
+     * Read the current camera viewpoint as the encoded string (the same `v` value the URL/seam use):
+     * v1 (the legacy six scalars) by default, or v2 (the full camera, preserving pivot and pan)
+     * with `{ version: 2 }` / `space.viewpointURLVersion: 2`.
+     */
+    getViewpoint(options?: { version?: 1 | 2 }): string;
 }
 
 
@@ -239,6 +243,8 @@ export interface PluridApplication<C> {
     renderViewcube?: PluridRenderSlot;
     renderMinimap?: PluridRenderSlot;
     renderShortcuts?: PluridRenderSlot;
+    /** Rendered in place of the space when it holds no planes (the layout resolved to nothing). */
+    renderEmpty?: PluridRenderSlot;
 
     matchedRoute?: IsoMatcherRouteResult<C>;
 

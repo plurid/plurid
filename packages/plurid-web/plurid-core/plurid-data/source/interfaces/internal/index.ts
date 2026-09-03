@@ -1,4 +1,5 @@
 // #region exports
+export * from './camera';
 export * from './context';
 export * from './shortcuts';
 export * from './state';

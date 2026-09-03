@@ -5,13 +5,14 @@
         PluridConfiguration,
 
         defaultConfiguration,
+        ViewSize,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
     import {
-        recomputeChildrenLocation,
+        recomputeSubtree,
     } from '../location';
     // #endregion external
 
@@ -28,35 +29,42 @@ const computeZigZagLayout = (
     pages: TreePlane[],
     angle: number = 45,
     configuration: PluridConfiguration = defaultConfiguration,
+    viewSize?: ViewSize,
 ): TreePlane[] => {
-    const windowInnerWidth = typeof window === 'undefined'
-        ? 1440
-        : window.innerWidth;
-    const windowInnerHeight = typeof window === 'undefined'
-        ? 840
-        : window.innerHeight;
+    const windowInnerWidth = viewSize?.width
+        ?? (typeof window === 'undefined' ? 1440 : window.innerWidth);
+    const windowInnerHeight = viewSize?.height
+        ?? (typeof window === 'undefined' ? 840 : window.innerHeight);
 
     const tree: TreePlane[] = [];
 
-    const singleColumnedRoots = computeColumnLayout(pages, 1);
+    const singleColumnedRoots = computeColumnLayout(
+        pages,
+        1,
+        undefined,
+        undefined,
+        configuration,
+        viewSize,
+    );
 
-    for (const [index, page] of singleColumnedRoots.entries()) {
+    for (const [index, root] of singleColumnedRoots.entries()) {
         const value = index % 2 === 0
             ? 1
             : -1;
-        page.location.rotateY = value * angle;
 
-        const children = recomputeChildrenLocation(page);
+        const page: TreePlane = {
+            ...root,
+            location: {
+                ...root.location,
+                rotateY: value * angle,
+            },
+        };
 
-        const treePageWithChildren = {
-            ...page,
-            children,
-        }
-
-        tree.push(
-            {...treePageWithChildren}
-        );
+        tree.push(recomputeSubtree(page));
     }
+
+    void windowInnerWidth;
+    void windowInnerHeight;
 
     return tree;
 }

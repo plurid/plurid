@@ -11,10 +11,16 @@
 
 // #region module
 /**
- * Bump when the persisted shape changes. A stored snapshot with a different version is
- * ignored on load (falls back to a fresh space) rather than risking a partial mis-merge.
+ * Bump when the persisted shape changes. A stored snapshot with an UNKNOWN version is ignored on
+ * load (falls back to a fresh space) rather than risking a partial mis-merge; known older versions
+ * are upgraded in `upgradeSnapshot`.
+ *
+ * - v2: the six legacy camera scalars + `transform`, `camera` was a dead `{x,y,z}`.
+ * - v3: `camera` is the `CameraState`; the scalars are mirrors (still stored, still readable).
  */
-const PERSISTED_STATE_VERSION = 2;
+const PERSISTED_STATE_VERSION = 3;
+
+const UPGRADABLE_VERSIONS = [2];
 
 const STORAGE_PREFIX = 'pluridState-';
 
@@ -44,6 +50,8 @@ const PERSISTED_SPACE_FIELDS = [
     'lastClosedPlane',
     'tree',
     'links',
+    'bookmarks',
+    'home',
 ] as const;
 
 interface PersistedSnapshot {
@@ -177,18 +185,36 @@ const load = (
 
         const snapshot: PersistedSnapshot = JSON.parse(stateData);
 
-        if (!snapshot || snapshot.version !== PERSISTED_STATE_VERSION) {
+        if (!snapshot || !snapshot.space) {
             return;
         }
 
-        if (!snapshot.space) {
-            return;
+        if (snapshot.version !== PERSISTED_STATE_VERSION) {
+            if (!UPGRADABLE_VERSIONS.includes(snapshot.version)) {
+                return;
+            }
+            upgradeSnapshot(snapshot);
         }
 
         // Partial state: only `space` is restored; the rest comes from props/defaults.
         return { space: snapshot.space } as PluridState;
     } catch (_error) {
         return;
+    }
+}
+
+
+/**
+ * In-place upgrade of an older snapshot to the current shape. v2 → v3: the old `camera` field was
+ * an unused `{x,y,z}`; drop it so `resolveSpace` derives the real camera from the legacy scalars.
+ */
+const upgradeSnapshot = (
+    snapshot: PersistedSnapshot,
+) => {
+    if (snapshot.version === 2) {
+        const space = snapshot.space as Record<string, unknown>;
+        delete space.camera;
+        snapshot.version = 3;
     }
 }
 

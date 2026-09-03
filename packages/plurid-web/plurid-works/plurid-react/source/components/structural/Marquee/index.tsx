@@ -1,0 +1,105 @@
+// #region imports
+    // #region libraries
+    import React from 'react';
+
+    import { connect } from 'react-redux';
+
+    import styled from 'styled-components';
+
+    import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
+    import {
+        Theme,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+
+
+    // #region external
+    import { AppState } from '~services/state/store';
+    import StateContext from '~services/state/context';
+    import selectors from '~services/state/selectors';
+    import {
+        MarqueeRect,
+    } from '~services/state/modules/ui';
+    // #endregion external
+// #endregion imports
+
+
+
+// #region module
+export const PLURID_ENTITY_MARQUEE = 'PluridMarquee';
+
+
+const StyledPluridMarquee = styled.div<{ theme: Theme }>`
+    position: absolute;
+    pointer-events: none;
+    border: 1px dashed ${({ theme }) => theme.colorPrimary};
+    background-color: ${({ theme }) => theme.backgroundColorPrimaryAlpha};
+    z-index: ${Z_INDEX.MARQUEE};
+`;
+
+
+export interface PluridMarqueeStateProperties {
+    stateMarquee: MarqueeRect | null;
+    stateInteractionTheme: Theme;
+}
+
+export type PluridMarqueeProperties = PluridMarqueeStateProperties;
+
+
+/** The rubber-band selection rectangle, in view px (not in the camera transform). */
+const PluridMarquee: React.FC<PluridMarqueeProperties> = (
+    {
+        stateMarquee,
+        stateInteractionTheme,
+    },
+) => {
+    if (!stateMarquee) {
+        return null;
+    }
+
+    const left = Math.min(stateMarquee.left, stateMarquee.right);
+    const top = Math.min(stateMarquee.top, stateMarquee.bottom);
+    const width = Math.abs(stateMarquee.right - stateMarquee.left);
+    const height = Math.abs(stateMarquee.bottom - stateMarquee.top);
+
+    return (
+        <StyledPluridMarquee
+            theme={stateInteractionTheme}
+            style={{
+                left,
+                top,
+                width,
+                height,
+            }}
+            data-plurid-entity={PLURID_ENTITY_MARQUEE}
+        />
+    );
+};
+
+
+const mapStateToProperties = (
+    state: AppState,
+): PluridMarqueeStateProperties => ({
+    stateMarquee: state.ui.marquee,
+    stateInteractionTheme: selectors.themes.getInteractionTheme(state),
+});
+
+
+const ConnectedPluridMarquee = connect(
+    mapStateToProperties,
+    null,
+    null,
+    {
+        context: StateContext,
+    },
+)(PluridMarquee);
+// #endregion module
+
+
+
+// #region exports
+export default ConnectedPluridMarquee;
+// #endregion exports

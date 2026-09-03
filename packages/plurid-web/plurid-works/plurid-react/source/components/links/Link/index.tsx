@@ -4,6 +4,7 @@
         useContext,
         useState,
         useRef,
+        useMemo,
         useCallback,
         useEffect,
     } from 'react';
@@ -19,27 +20,18 @@
     } from '@plurid/plurid-themes';
 
     import {
-        objects,
-    } from '@plurid/plurid-functions';
-
-    import {
-        useDebouncedCallback,
-    } from '@plurid/plurid-functions-react';
-
-    import {
         // #region constants
-        PLURID_PUBSUB_TOPIC,
         PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
         PLURID_ENTITY_LINK,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT,
-        PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME,
         // #endregion constants
 
         // #region interfaces
         PluridLink as PluridLinkOwnProperties,
         TreePlane,
         PluridConfiguration,
+        LinkCoordinates,
         // #endregion interfaces
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -48,7 +40,6 @@
     // #region external
     import {
         PluridReactComponent,
-        PluridLinkCoordinates,
     } from '~data/interfaces';
 
     import {
@@ -65,19 +56,27 @@
     import actions from '~services/state/actions';
     import {
         ViewSize,
-        UpdateSpaceLinkCoordinatesPayload,
     } from '~services/state/modules/space/types';
+
     import {
-        DispatchAction,
-    } from '~data/interfaces';
+        toggleLinkPlane,
+    } from '~services/state/thunks/planes';
 
     import {
         navigateToPluridPlane,
     } from '~services/logic/animation';
 
     import {
+        measureLinkCoordinates,
+        resolveLinkID,
+    } from '~services/logic/link/measure';
+
+    import {
+        planeElementOf,
+    } from '~services/logic/input/guard';
+
+    import {
         getPlanesRegistrar,
-        getPluridPlaneIDByData,
 
         resolveRoute,
         computePlaneAddress,
@@ -103,7 +102,6 @@
 // #region module
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
-    stateLastClosedPlane: string;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
     stateViewSize: ViewSize;
@@ -111,10 +109,6 @@ export interface PluridLinkStateProperties {
 
 export interface PluridLinkDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
-    dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
-    dispatchUpdateSpaceLinkCoordinates: DispatchAction<typeof actions.space.updateSpaceLinkCoordinates>;
-    dispatchRemovePlane: DispatchAction<typeof actions.space.removePlane>;
 }
 
 export type PluridLinkProperties =
@@ -123,25 +117,22 @@ export type PluridLinkProperties =
     & PluridLinkDispatchProperties;
 
 
+/**
+ * The in-space anchor: clicking spawns (or toggles) the target plane next to this one, joined by a
+ * bridge. The TREE is the single source of truth for the link's state — the spawned plane is found
+ * by the link's stable id (`spawnedByLinkID`), so undo, host `setTree`, collaboration and relayouts
+ * all keep the link in step; nothing is held in local state that could go stale. The link measures
+ * where it sits on its plane (layout offsets, not transformed rects) and re-measures only when the
+ * plane, the view, or the link itself changes size.
+ */
 const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     properties,
 ) => {
     // #region context
     const context = useContext(Context);
-    if (!context) {
-        return (<>{properties.children}</>);
-    }
-
-    const {
-        hostname,
-        planesRegistrar,
-        defaultPubSub,
-    } = context;
-
+    const hostname = context?.hostname;
+    const planesRegistrar = context?.planesRegistrar;
     const planesRegistry = getPlanesRegistrar(planesRegistrar);
-    if (!planesRegistry) {
-        return (<>{properties.children}</>);
-    }
     // #endregion context
 
 
@@ -161,11 +152,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         previewFadeOut,
         previewOffsetX,
         previewOffsetY,
+        linkID: linkIDProperty,
         // #endregion own
 
         // #region state
         stateTree,
-        stateLastClosedPlane,
         stateGeneralTheme,
         stateConfiguration,
         stateViewSize,
@@ -173,27 +164,20 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         // #region dispatch
         dispatch,
-        dispatchSetTree,
-        dispatchSetSpaceField,
-        dispatchUpdateSpaceLinkCoordinates,
-        dispatchRemovePlane,
         // #endregion dispatch
     } = properties;
-
-    const planeControls = stateConfiguration.elements.plane.controls.show;
 
     const previewAppearTime = previewFadeIn || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = previewFadeOut || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
     const planeRouteResolved = computePlaneAddress(planeRoute);
-    // console.log('planeRouteResolved', planeRouteResolved);
 
     const absolutePlaneRoute = resolveRoute(
         planeRouteResolved,
         stateConfiguration.network.protocol,
         hostname || stateConfiguration.network.host,
     );
-    // console.log('absolutePlaneRoute', absolutePlaneRoute);
+    const route = absolutePlaneRoute?.route || planeRouteResolved;
 
     const suffix = suffixProperty ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
     const devisible = devisibleProperty ?? false;
@@ -202,20 +186,42 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
     // #region references
     const linkElement: React.RefObject<HTMLAnchorElement> = useRef(null);
+    /** The coordinates the tree holds for the spawned plane (mirrors `childPlane.linkCoordinates`). */
+    const storedCoordinates = useRef<LinkCoordinates | undefined>(undefined);
     // #endregion references
 
 
     // #region state
     const [mouseOver, setMouseOver] = useState(false);
-    const [showLink, setShowLink] = useState(false);
-    const [pluridPlaneID, setPluridPlaneID] = useState('');
-    const [parentPlaneID, setParentPlaneID] = useState(getPluridPlaneIDByData(linkElement.current));
-    const [linkCoordinates, setLinkCoordinates] = useState(defaultLinkCoordinates);
+    const [parentPlaneID, setParentPlaneID] = useState('');
+    const [linkID, setLinkID] = useState('');
+    const [linkCoordinates, setLinkCoordinates] = useState<LinkCoordinates>(defaultLinkCoordinates);
+
+    // Derived from the tree — never held locally.
+    const childPlane = useMemo(
+        () => (parentPlaneID && linkID
+            ? space.tree.fields.findPlaneByLinkID(stateTree, parentPlaneID, linkID)
+            : undefined),
+        [
+            stateTree,
+            parentPlaneID,
+            linkID,
+        ],
+    );
+    const parentPlane = useMemo(
+        () => (parentPlaneID ? space.tree.logic.getTreePlaneByID(stateTree, parentPlaneID) : undefined),
+        [
+            stateTree,
+            parentPlaneID,
+        ],
+    );
+    const showLink = !!childPlane && childPlane.show !== false;
+    const pluridPlaneID = childPlane?.planeID || '';
+    storedCoordinates.current = childPlane?.linkCoordinates;
     // #endregion state
 
 
-    // Hover-preview state machine (timers + showPreview) lives in `useLinkPreview`; the lifecycle
-    // handlers below use `setShowPreview` to hide the preview when the plane spawns/toggles.
+    // Hover-preview state machine (timers + showPreview) lives in `useLinkPreview`.
     const {
         showPreview,
         setShowPreview,
@@ -228,300 +234,19 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
 
     // #region handlers
-    const getPluridLinkCoordinates = (): PluridLinkCoordinates => {
-        const link = linkElement.current;
-        // console.log('getPluridLinkCoordinates', link);
-
-        if (!link) {
-            return {
-                ...defaultLinkCoordinates,
-            };
+    const measure = useCallback((): LinkCoordinates | undefined => {
+        const element = linkElement.current;
+        const planeElement = element ? planeElementOf(element) : null;
+        if (!element || !planeElement) {
+            return undefined;
         }
-
-        let partialTop = 0;
-        let partialLeft = 0;
-        let staticSet = false;
-
-        let element: HTMLElement = link;
-        let searching = true;
-        let top = 0;
-        let left = 0;
-        while (searching) {
-            // console.log('in while loop', element);
-            // console.log('in while loop top', element.offsetTop);
-            // console.log('in while loop left', element.offsetLeft);
-
-            if (window.getComputedStyle(element).position === 'static'
-                && !staticSet
-            ) {
-                // console.log('static set', element);
-
-                partialTop += element.offsetTop;
-                partialLeft += element.offsetLeft;
-                staticSet = true;
-            }
-
-            if (window.getComputedStyle(element).position === 'relative') {
-                // console.log('partial added', element);
-
-                top += partialTop;
-                left += partialLeft;
-                partialTop = 0;
-                partialLeft = 0;
-                staticSet = false;
-            }
-
-            if (element.scrollLeft) {
-                left += -element.scrollLeft;
-            }
-
-            if (element.scrollTop) {
-                top += -element.scrollTop;
-            }
-
-            if (
-                element.parentElement
-            ) {
-                const pluridEntity = element.parentElement.dataset.pluridEntity;
-                if (pluridEntity === 'PluridPlane') {
-                    searching = false;
-                }
-                element = element.parentElement;
-            } else {
-                searching = false;
-            }
-        }
-
-        // console.log('element', element);
-        // console.log('link', link);
-        // console.log('top', top);
-        // console.log('left', left);
-
-        const planeControlsHeight = planeControls ? 56 : 0;
-        const x = left + link.offsetWidth;
-        const y = top + planeControlsHeight;
-
-        // console.log('x', x);
-        // console.log('y', y);
-        // console.log('---------');
-
-        return {
-            x,
-            y,
-        };
-    }
-
-    const updateLinkCoordinates = () => {
-        const newLinkCoordinates = getPluridLinkCoordinates();
-
-        const payload: UpdateSpaceLinkCoordinatesPayload = {
-            planeID: pluridPlaneID,
-            linkCoordinates: newLinkCoordinates,
-        };
-        dispatchUpdateSpaceLinkCoordinates(payload);
-
-        const updatedTree = space.tree.logic.updatePlaneLocation(
-            stateTree,
-            parentPlaneID,
-            pluridPlaneID,
-            objects.clone((newLinkCoordinates)),
-        );
-        dispatchSetTree(updatedTree);
-    }
-
-    const debouncedUpdateLinkCoordinates = useDebouncedCallback(() => {
-        updateLinkCoordinates();
-    }, PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME);
-
-    const assignTreePlaneToLink = (
-        parentPlane: TreePlane | undefined,
-        linkCoordinates: PluridLinkCoordinates,
-    ) => {
-        if (!parentPlane || !parentPlane.children) {
-            return;
-        }
-
-        for (const plane of parentPlane.children) {
-            if (!plane.linkCoordinates) {
-                continue;
-            }
-
-            // Require BOTH axes to match (the child at the SAME point), not either — with `||`
-            // a plane merely sharing a row (same y) or column (same x) in a grid layout would
-            // be wrongly attached to this link.
-            if (
-                plane.linkCoordinates.x === linkCoordinates.x
-                && plane.linkCoordinates.y === linkCoordinates.y
-            ) {
-                if (pluridPlaneID === plane.planeID) {
-                    continue;
-                }
-
-                setShowLink(true);
-                setPluridPlaneID(plane.planeID);
-            }
-        }
-    }
-
-
-    const updateTreeWithLink = (
-        event: React.MouseEvent<HTMLAnchorElement>,
-    ) => {
-        if (!parentPlaneID || !absolutePlaneRoute) {
-            return;
-        }
-
-        const {
-            route,
-        } = absolutePlaneRoute;
-
-        const linkCoordinates = getPluridLinkCoordinates();
-        const {
-            pluridPlaneID,
-            updatedTree,
-            updatedTreePlane,
-        } = space.tree.logic.updateTreeWithNewPlane(
-            route,
-            parentPlaneID,
-            linkCoordinates,
-            stateTree,
-            planesRegistry.getAll(),
-            stateConfiguration,
-            hostname,
-        );
-        // console.log({
-        //     route,
-        //     parentPlaneID,
-        //     linkCoordinates,
-        //     stateTree,
-        //     planesRegistry: planesRegistry.getAll(),
-        //     stateConfiguration,
-        //     hostname,
-        // });
-        // console.log({updatedTree});
-
-        if (pluridPlaneID) {
-            handlePlaneNavigation(
-                event,
-                updatedTreePlane,
-            );
-
-            dispatchSetTree(updatedTree);
-            setShowLink(true);
-            setPluridPlaneID(pluridPlaneID);
-        }
-    }
-
-    const togglePlane = (
-        forceShow?: boolean,
-    ) => {
-        const {
-            updatedTree,
-            updatedPlane,
-        } = space.tree.logic.togglePlaneFromTree(
-            stateTree,
-            pluridPlaneID,
-            forceShow,
-        );
-        // console.log({
-        //     pluridPlaneID,
-        //     forceShow,
-        //     updatedTree,
-        //     updatedPlane,
-        // });
-
-        dispatchSetTree(updatedTree);
-        setShowLink(show => !show);
-        setShowPreview(false);
-
-        return {
-            updatedPlane,
-        };
-    }
-
-    const toggleLinkFromTree = (
-        event: React.MouseEvent<HTMLAnchorElement>,
-    ) => {
-        const {
-            updatedPlane,
-        } = togglePlane();
-
-        handlePlaneNavigation(
-            event,
-            updatedPlane,
-        );
-    }
-
-    const handlePlaneNavigation = (
-        event: React.MouseEvent<HTMLAnchorElement>,
-        updatedPlane: TreePlane | undefined,
-    ) => {
-        if (!updatedPlane) {
-            return;
-        }
-
-        if (showLink) {
-            // Link already clicked.
-            return;
-        }
-
-        // Clear plane isolation if any.
-        dispatchSetSpaceField({
-            field: 'isolatePlane',
-            value: '',
-        });
-
-        navigateToPluridPlane(
-            dispatch,
-            updatedPlane,
-            event,
-        );
-    }
-
-    const handleShowPluridPlane = (
-        event: React.MouseEvent<HTMLAnchorElement>,
-    ) => {
-        if (event.altKey) {
-            if (showLink && pluridPlaneID) {
-                const plane = space.tree.logic.getTreePlaneByID(
-                    stateTree,
-                    pluridPlaneID,
-                );
-
-                navigateToPluridPlane(
-                    dispatch,
-                    plane,
-                    event,
-                );
-
-                return;
-            }
-        }
-
-        if (!showLink && !pluridPlaneID) {
-            updateTreeWithLink(event);
-        } else {
-            toggleLinkFromTree(event);
-        }
-    }
+        return measureLinkCoordinates(element, planeElement);
+    }, []);
 
     const defocusLink = () => {
         if (linkElement.current) {
             linkElement.current.blur();
         }
-    }
-
-    const removePlane = () => {
-        const pluridPlane = document.getElementById(pluridPlaneID);
-        if (!pluridPlane) {
-            // already removed
-            return;
-        }
-
-        dispatchRemovePlane(pluridPlaneID);
-
-        setShowLink(false);
-        setShowPreview(false);
     }
 
     const handleClick = useCallback((
@@ -533,162 +258,142 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             atClick(event);
         }
 
-        handleShowPluridPlane(event);
+        // Ctrl/Cmd-click is the host's (a new tab, a multi-select); Alt-click re-navigates to the
+        // plane this link already opened.
+        if (event.ctrlKey || event.metaKey) {
+            return;
+        }
+        if (event.altKey) {
+            if (childPlane && childPlane.show !== false) {
+                navigateToPluridPlane(dispatch, childPlane, event);
+            }
+            return;
+        }
+
+        if (!parentPlaneID || !linkID || !planesRegistry) {
+            return;
+        }
+
+        const coordinates = measure() || linkCoordinates;
+        setLinkCoordinates(coordinates);
+        setShowPreview(false);
+
+        dispatch(toggleLinkPlane({
+            parentPlaneID,
+            linkID,
+            route,
+            linkCoordinates: coordinates,
+            planesRegistry: planesRegistry.getAll(),
+            hostname,
+        }) as any);
 
         defocusLink();
     }, [
+        atClick,
+        childPlane,
         parentPlaneID,
-        // The tree REFERENCE (not `JSON.stringify(stateTree)`): the space reducer replaces
-        // `state.tree` with a new array on every mutation, so the ref changes at exactly the
-        // same frequency as a content-stringify would — but the comparison is O(1) instead of
-        // re-serializing the whole tree on each of this component's (frequent) re-renders.
-        stateTree,
-        linkElement.current,
+        linkID,
+        route,
+        planesRegistry,
+        hostname,
+        linkCoordinates,
+        measure,
     ]);
 
     const handleKeyUp = (
         event: React.KeyboardEvent,
     ) => {
         if (event.code === 'Enter') {
-            // FORCED any
+            // The link is an anchor without an `href`, so Enter has no native click: run ours.
             handleClick(event as any);
-
-            defocusLink();
-            return;
         }
-
-        return;
     }
     // #endregion handlers
 
 
     // #region effects
-    /**
-     * Get Parent Plane ID
-     * Get Plurid Link Coordinates
-     */
+    /** Identity + first measurement: which plane hosts this link, and where it sits on it. */
     useEffect(() => {
-        const newParentPlaneID = getPluridPlaneIDByData(linkElement.current);
-        setParentPlaneID(newParentPlaneID);
+        const element = linkElement.current;
+        const planeElement = element ? planeElementOf(element) : null;
+        if (!element || !planeElement) {
+            return;
+        }
 
-        const linkCoordinates = getPluridLinkCoordinates();
-        setLinkCoordinates(linkCoordinates);
-
-        const parentPlane = space.tree.logic.getTreePlaneByID(
-            stateTree,
-            newParentPlaneID,
-        );
-
-        assignTreePlaneToLink(
-            parentPlane,
-            linkCoordinates,
-        );
+        setParentPlaneID(planeElement.getAttribute('data-plurid-plane') || '');
+        setLinkID(resolveLinkID(element, planeElement, route, linkIDProperty));
+        setLinkCoordinates(measureLinkCoordinates(element, planeElement));
     }, [
-        // JSON.stringify(stateTree),
+        route,
+        linkIDProperty,
     ]);
 
     /**
-     * Update Link Coordinates
+     * Keep the spawned plane attached to the link as the link moves within its plane: re-measure
+     * when the plane's measured size, the view, or the link element itself changes — through the
+     * equality-gated reducer, so an unchanged measurement dispatches nothing.
      */
     useEffect(() => {
-        if (showLink) {
-            debouncedUpdateLinkCoordinates();
+        if (!showLink || !pluridPlaneID) {
+            return;
         }
-    }, [
-        showLink,
-        JSON.stringify(stateViewSize),
-        stateTree,
-    ]);
+        const element = linkElement.current;
+        const planeElement = element ? planeElementOf(element) : null;
+        if (!element || !planeElement) {
+            return;
+        }
 
-    /** PubSub Open Closed Plane */
-    useEffect(() => {
-        const openClosedPlaneIndex = defaultPubSub.subscribe({
-            topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
-            callback: () => {
-                if (stateLastClosedPlane === pluridPlaneID) {
-                    togglePlane();
+        const update = () => {
+            const coordinates = measureLinkCoordinates(element, planeElement);
+            setLinkCoordinates((previous) => (
+                previous.x === coordinates.x && previous.y === coordinates.y
+                    ? previous
+                    : coordinates
+            ));
+            // Dispatch only when the tree holds something else: the reducer is equality-gated
+            // too, but a no-op dispatch still notifies every store subscriber.
+            const stored = storedCoordinates.current;
+            if (stored && stored.x === coordinates.x && stored.y === coordinates.y) {
+                return;
+            }
+            storedCoordinates.current = coordinates;
+            dispatch(actions.space.updateLinkCoordinates({
+                planeID: pluridPlaneID,
+                linkCoordinates: coordinates,
+            }));
+        };
 
-                    dispatchSetSpaceField({
-                        field: 'lastClosedPlane',
-                        value: '',
-                    });
-                }
-            },
-        });
+        update();
+
+        let observer: ResizeObserver | undefined;
+        if (typeof ResizeObserver !== 'undefined') {
+            observer = new ResizeObserver(() => {
+                update();
+            });
+            observer.observe(element);
+        }
 
         return () => {
-            defaultPubSub.unsubscribe(
-                openClosedPlaneIndex,
-            );
-        }
+            if (observer) {
+                observer.disconnect();
+            }
+        };
     }, [
         showLink,
         pluridPlaneID,
-        stateTree,
-    ]);
-
-    /** PubSub Close Plane */
-    useEffect(() => {
-        const closePlaneIndex = defaultPubSub.subscribe({
-            topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
-            callback: (data) => {
-                const {
-                    id,
-                } = data;
-
-                if (id === pluridPlaneID) {
-                    if (showLink) {
-                        const show = false;
-                        togglePlane(show);
-
-                        dispatchSetSpaceField({
-                            field: 'lastClosedPlane',
-                            value: id,
-                        });
-                    }
-                }
-            },
-        });
-
-        return () => {
-            defaultPubSub.unsubscribe(
-                closePlaneIndex,
-            );
-        }
-    }, [
-        showLink,
-        pluridPlaneID,
-        stateTree,
-    ]);
-
-    /**
-     * Unmount cleanup. The short timeout is deliberate: on unmount React may immediately
-     * remount the link during reconciliation, which re-sets `linkElement.current`. If the
-     * ref is STILL null on the next tick, the link is genuinely gone from the DOM and its
-     * spawned plane should be removed. Deps are only the values the cleanup reads
-     * (`pluridPlaneID`, `showLink`) — NOT `JSON.stringify(stateTree)`, which re-ran this
-     * effect (and scheduled a throwaway timer) on every tree mutation.
-     */
-    useEffect(() => {
-        return () => {
-            setTimeout(() => {
-                if (
-                    pluridPlaneID
-                    && showLink
-                    && linkElement.current === null
-                ) {
-                    removePlane();
-                }
-            }, 10);
-        }
-    }, [
-        showLink,
-        pluridPlaneID,
+        parentPlane?.width,
+        parentPlane?.height,
+        stateViewSize.width,
+        stateViewSize.height,
     ]);
     // #endregion effects
 
 
     // #region render
+    if (!context || !planesRegistry) {
+        return (<>{children}</>);
+    }
+
     return (
         <StyledPluridLink
             ref={linkElement}
@@ -704,6 +409,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             }}
             className={className}
             data-plurid-entity={PLURID_ENTITY_LINK}
+            data-plurid-link={linkID || undefined}
+            data-plurid-link-route={route}
+            data-plurid-link-open={showLink ? 'true' : undefined}
             tabIndex={0}
         >
             {children}
@@ -734,7 +442,6 @@ const mapStateToProperties = (
     state: AppState,
 ): PluridLinkStateProperties => ({
     stateTree: selectors.space.getTree(state),
-    stateLastClosedPlane: selectors.space.getLastClosedPlane(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
@@ -745,26 +452,6 @@ const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridLinkDispatchProperties => ({
     dispatch,
-    dispatchSetTree: (
-        payload,
-    ) => dispatch(
-        actions.space.setTree(payload),
-    ),
-    dispatchSetSpaceField: (
-        payload,
-    ) => dispatch(
-        actions.space.setSpaceField(payload),
-    ),
-    dispatchUpdateSpaceLinkCoordinates: (
-        payload,
-    ) => dispatch(
-        actions.space.updateSpaceLinkCoordinates(payload)
-    ),
-    dispatchRemovePlane: (
-        payload,
-    ) => dispatch(
-        actions.space.removePlane(payload)
-    ),
 });
 
 

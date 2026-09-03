@@ -2,10 +2,12 @@
  * Developer-Control Surface — a runnable reference.
  *
  * A tiny "spatial notes" skeleton that exercises EVERY tier of the control surface in one place:
- *   Tier 0  onReady(api) ............ the escape hatch (store + pubsub + synchronous reads)
- *   Tier 1  pubsub control/observe .. fit-to-view button + react to selection changes
+ *   Tier 0  onReady(api) / ref ...... the escape hatch (store + pubsub + synchronous reads) and the
+ *                                     typed imperative handle (camera / selection / history / tree)
+ *   Tier 1  pubsub control/observe .. typed topics; `usePluridPubSub` for one-line observers
+ *   Hooks   useCamera / useSelection / usePluridHistory — for anything rendered under the app
  *   Tier 2  opt-outs ................ a sessionStorage adapter + tuned timings (undo left ON)
- *   Tier 3  knobs/UI/exports ........ gestures.buttonMap, shortcuts, a custom toolbar render-slot
+ *   Tier 3  knobs/UI/exports ........ gestures.buttonMap, shortcuts, presets, a custom toolbar slot
  *
  * Companion to docs/CONTROL_SURFACE.md. Type-correct against the public `@plurid/plurid-react` API.
  */
@@ -13,12 +15,16 @@
 import React, { useRef, useState } from 'react';
 import {
     PluridApplication,
+    PluridApplicationHandle,
     PluridReactPlane,
-    PluridApi,
     PluridStorageAdapter,
     PLURID_PUBSUB_TOPIC,
     definePluridConfiguration,
     SPACE_LAYOUT,
+    useCamera,
+    useSelection,
+    usePluridHistory,
+    usePluridPubSub,
 } from '@plurid/plurid-react';
 
 
@@ -52,6 +58,12 @@ const configuration = definePluridConfiguration({
         buttonMap: { left: 'orbit', wheel: 'disabled' },
     },
 
+    // Tier 3 — named viewpoints and a home; every programmatic move is an interruptible tween.
+    navigation: {
+        home: '0,0,0,0,0,1',
+        presets: { overview: '25,0,0,0,0,0.6', side: '0,90,0,0,0,1' },
+    },
+
     // Tier 3 — the app owns Cmd/Ctrl+K for its own palette; everything else stays default.
     shortcuts: {
         onUnhandledKey: (event) => {
@@ -64,23 +76,61 @@ const configuration = definePluridConfiguration({
 });
 
 
-const App: React.FC = () => {
-    const apiRef = useRef<PluridApi | null>(null);
-    const [selectionCount, setSelectionCount] = useState(0);
+// The planes are a module constant: a `planes` array rebuilt on every render would recompute the
+// store on every render (the engine warns about that in development).
+const planes: PluridReactPlane[] = NOTES.map((note) => ({
+    route: note.route,
+    component: () => (
+        <article style={{ padding: 16, background: '#0d0f12', color: '#cfe6ff', height: '100%' }}>
+            <h3>{note.title}</h3>
+            <p>{note.body}</p>
+        </article>
+    ),
+}));
+const view = NOTES.map((n) => n.route);
 
-    const planes: PluridReactPlane[] = NOTES.map((note) => ({
-        route: note.route,
-        component: () => (
-            <article style={{ padding: 16, background: '#0d0f12', color: '#cfe6ff', height: '100%' }}>
-                <h3>{note.title}</h3>
-                <p>{note.body}</p>
-            </article>
-        ),
-    }));
-    const view = NOTES.map((n) => n.route);
+
+/**
+ * The app's own chrome, rendered through the `renderToolbar` slot — INSIDE the application, so
+ * the hooks read the engine directly: no ref threading, no snapshot diffing.
+ */
+const Toolbar: React.FC = () => {
+    const camera = useCamera();
+    const selection = useSelection();
+    const history = usePluridHistory();
+    const [lastKind, setLastKind] = useState('');
+
+    // Tier 1 OBSERVE — one typed subscription, kept current across renders.
+    usePluridPubSub(PLURID_PUBSUB_TOPIC.CHANGED, ({ kind }) => {
+        setLastKind(kind);
+    });
+
+    return (
+        <div style={{ position: 'absolute', top: 16, left: 16, zIndex: 50, display: 'flex', gap: 8, alignItems: 'center' }}>
+            <button onClick={() => camera.fit()}>Fit all</button>
+            <button onClick={() => camera.home()}>Home</button>
+            <button onClick={() => camera.preset('overview')}>Overview</button>
+            <button onClick={() => camera.bookmark('desk', 'save')}>Save desk</button>
+            <button onClick={() => camera.bookmark('desk')} disabled={!camera.bookmarks.desk}>Go desk</button>
+            <button onClick={() => history.undo()} disabled={!history.canUndo}>Undo</button>
+            <button onClick={() => history.redo()} disabled={!history.canRedo}>Redo</button>
+            <button onClick={() => selection.selectAll()}>Select all</button>
+            <button onClick={() => selection.align('top')} disabled={selection.selected.length < 2}>Align top</button>
+            <span style={{ color: '#7ee787' }}>
+                {selection.selected.length} selected · {camera.motion} · last change: {lastKind || '-'}
+            </span>
+        </div>
+    );
+};
+
+
+const App: React.FC = () => {
+    // Tier 0 — the typed imperative handle: the `onReady` api plus camera / selection / history / tree.
+    const plurid = useRef<PluridApplicationHandle>(null);
 
     return (
         <PluridApplication
+            ref={plurid}
             configuration={configuration}
             planes={planes}
             view={view}
@@ -96,40 +146,15 @@ const App: React.FC = () => {
                 void viewpoint;
             }}
 
-            // Tier 0 — the escape hatch. Wire control + observe once the engine is live.
+            // Tier 0 — the escape hatch. The same api the ref's handle extends.
             onReady={(api) => {
-                apiRef.current = api;
-
-                // Tier 1 OBSERVE — react to selection changes with ONE subscription.
-                api.pubsub.subscribe({
-                    topic: PLURID_PUBSUB_TOPIC.CHANGED, // 'space.changed'
-                    callback: ({ kind, value }) => {
-                        if (kind === 'selection') {
-                            setSelectionCount((value as string[]).length);
-                        }
-                    },
-                });
+                // e.g. frame the first note once the layout resolved, without animation
+                api.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME, data: { animate: false } });
+                // later, from anywhere: plurid.current?.camera.frame({ planeID }), .tree.spawn(route, parentID) …
             }}
 
-            // Tier 3 — replace the engine toolbar with the app's own chrome.
-            renderToolbar={() => (
-                <div style={{ position: 'fixed', top: 16, left: 16, zIndex: 9999, display: 'flex', gap: 8 }}>
-                    <button
-                        // Tier 1 CONTROL — drive the engine declaratively over the pubsub bus.
-                        onClick={() => apiRef.current?.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW })}
-                    >
-                        Fit all
-                    </button>
-                    <button
-                        onClick={() => apiRef.current?.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.UNDO })}
-                    >
-                        Undo
-                    </button>
-                    <span style={{ color: '#7ee787', alignSelf: 'center' }}>
-                        {selectionCount} selected
-                    </span>
-                </div>
-            )}
+            // Tier 3 — replace the engine toolbar with the app's own chrome (hooks inside).
+            renderToolbar={() => <Toolbar />}
         />
     );
 };

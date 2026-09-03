@@ -64,4 +64,31 @@ export interface TransformSelectedPlanesPayload {
     deltaY?: number;
     deltaZ?: number;
 }
+
+export interface ZoomAtPointPayload {
+    /** Multiplicative zoom factor (preferred). */
+    factor?: number;
+    /** Additive scale delta — the legacy payload; ignored when `factor` is given. */
+    deltaScale?: number;
+    /** Anchor in view px. */
+    originX: number;
+    originY: number;
+}
+
+export interface FitToViewPayload {
+    /** Look at the space front-on (yaw 0, pitch 0). Default `true`. */
+    faceOn?: boolean;
+    /** Fraction of the view the content may fill. Default `0.85`. */
+    margin?: number;
+    /** Size assumed for planes that have not been measured yet. */
+    fallbackWidth?: number;
+    fallbackHeight?: number;
+}
+
+export interface SetPlaneSizePayload {
+    planeID: string;
+    width: number;
+    height: number;
+    sizeMode?: 'measured' | 'manual';
+}
 // #endregion module

@@ -19,3 +19,5 @@ export {
     view,
 };
 // #endregion exports
+
+export * as snap from './snap';

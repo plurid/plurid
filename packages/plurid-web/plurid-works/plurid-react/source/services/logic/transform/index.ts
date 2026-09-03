@@ -19,73 +19,15 @@
 
 // #region module
 const {
-    quaternion,
-    matrix,
+    camera: cameraEngine,
 } = interaction;
 
-const {
-    degToRad,
-} = quaternion;
 
-const {
-    matrixArrayToCSSMatrix,
-    rotateMatrix,
-    multiplyArrayOfMatrices,
-    scaleMatrix,
-    translateMatrix,
-} = matrix;
-
-
-
-export const computeMatrix = (
-    spaceState: PluridStateSpace,
-) => {
-    const {
-        translationX,
-        translationY,
-        translationZ,
-        rotationX,
-        rotationY,
-        scale,
-    } = spaceState;
-
-    // Pivot rotation/scale about the center of the *view container* (tracked in state),
-    // not the raw window. This keeps the pivot correct when the space is embedded,
-    // resized, or rendered server-side — `window` is only a last-resort fallback.
-    const viewWidth = spaceState.viewSize?.width
-        ?? (typeof window === 'undefined' ? 1440 : window.innerWidth);
-    const viewHeight = spaceState.viewSize?.height
-        ?? (typeof window === 'undefined' ? 800 : window.innerHeight);
-
-    const innerWidth = viewWidth / 2;
-    const innerHeight = viewHeight / 2;
-
-    const transformOriginX = translationX * -1 + innerWidth;
-    const transformOriginY = translationY * -1 + innerHeight;
-    const transformOriginZ = translationZ * -1;
-
-
-    const rotationMatrix = rotateMatrix(degToRad(-rotationX), degToRad(-rotationY));
-    const translationMatrix = translateMatrix(translationX, translationY, translationZ);
-    const scalationMatrix = scaleMatrix(scale);
-
-    const transformMatrix = multiplyArrayOfMatrices([
-        translationMatrix,
-
-        translateMatrix(transformOriginX, transformOriginY, transformOriginZ),
-        rotationMatrix,
-        translateMatrix(-transformOriginX, -transformOriginY, -transformOriginZ),
-
-        scalationMatrix,
-    ]);
-
-    const transform = matrixArrayToCSSMatrix(transformMatrix);
-
-
-    return transform;
-}
-
-
+/**
+ * @deprecated The camera core (`interaction.camera` in `@plurid/plurid-engine`) owns the matrix;
+ * the space slice commits through `cameraMatrix3d`. Kept as an exact shim over the legacy six
+ * scalars for any external caller.
+ */
 export const focusPluridPlaneAnchor = (
     planeID: string,
 ) => {
@@ -93,7 +35,9 @@ export const focusPluridPlaneAnchor = (
     const focusAnchor: HTMLAnchorElement | null = document.querySelector(selector);
 
     if (focusAnchor) {
-        focusAnchor.focus();
+        focusAnchor.focus({
+            preventScroll: true,
+        });
     }
 }
 // #endregion module

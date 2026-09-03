@@ -77,6 +77,18 @@ export const useEngineEvents = (
     useEffect(() => {
         emit('loading', space.loading);
     }, [pubsub, space.loading]);
+
+    useEffect(() => {
+        emit('motion', space.motion);
+    }, [pubsub, space.motion]);
+
+    useEffect(() => {
+        emit('history', space.history);
+    }, [pubsub, space.history]);
+
+    useEffect(() => {
+        emit('bookmarks', space.bookmarks);
+    }, [pubsub, space.bookmarks]);
 }
 // #endregion module
 

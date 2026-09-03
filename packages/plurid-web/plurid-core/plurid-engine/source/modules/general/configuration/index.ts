@@ -119,6 +119,10 @@ export const definePluridConfiguration = (
     if (flat.viewpointURLRestore !== undefined) { space.viewpointURLRestore = flat.viewpointURLRestore; }
     if (flat.viewpointURLParam !== undefined) { space.viewpointURLParam = flat.viewpointURLParam; }
     if (flat.viewpointURLDebounce !== undefined) { space.viewpointURLDebounce = flat.viewpointURLDebounce; }
+    if (flat.viewpointURLVersion !== undefined) { space.viewpointURLVersion = flat.viewpointURLVersion; }
+    if (flat.snap !== undefined) { space.snap = flat.snap; }
+    if (flat.culling !== undefined) { space.culling = flat.culling; }
+    if (flat.navigation !== undefined) { space.navigation = flat.navigation; }
     if (flat.timings !== undefined) { space.timings = flat.timings; }
     if (flat.gestures !== undefined) { space.gestures = flat.gestures; }
     if (flat.shortcuts !== undefined) { space.shortcuts = flat.shortcuts; }
@@ -129,7 +133,10 @@ export const definePluridConfiguration = (
     if (flat.transformMode !== undefined) { space.transformMode = flat.transformMode; }
     if (flat.transformMultimode !== undefined) { space.transformMultimode = flat.transformMultimode; }
     if (flat.transformTouch !== undefined) { space.transformTouch = flat.transformTouch; }
-    if (flat.cullingDistance !== undefined) { space.cullingDistance = flat.cullingDistance; }
+    if (flat.cullingDistance !== undefined) {
+        space.cullingDistance = flat.cullingDistance;
+        space.culling = { ...(space.culling || {}), distance: flat.cullingDistance };
+    }
     if (flat.fadeInTime !== undefined) { space.fadeInTime = flat.fadeInTime; }
     if (flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
         space.bridge = {};
@@ -145,6 +152,9 @@ export const definePluridConfiguration = (
     if (flat.planeWidth !== undefined) { plane.width = flat.planeWidth; }
     if (flat.planeOpacity !== undefined) { plane.opacity = flat.planeOpacity; }
     if (flat.planeControls !== undefined) { plane.controls = { show: flat.planeControls }; }
+    if (flat.planeResizable !== undefined) { plane.resizable = flat.planeResizable; }
+    if (flat.planeDepthFade !== undefined) { plane.depthFade = flat.planeDepthFade; }
+    if (flat.planeBackface !== undefined) { plane.backface = flat.planeBackface; }
     if (Object.keys(plane).length > 0) { elements.plane = plane; }
     if (flat.toolbar !== undefined) { elements.toolbar = { show: flat.toolbar }; }
     if (flat.viewcube !== undefined) { elements.viewcube = { show: flat.viewcube }; }

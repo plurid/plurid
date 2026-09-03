@@ -48,15 +48,14 @@
 // #region module
 const {
     matrixArrayToCSSMatrix,
-    rotateMatrix,
     multiplyArrayOfMatrices,
     scaleMatrix,
     translateMatrix,
 } = interaction.matrix;
 
 const {
-    degToRad,
-} = interaction.quaternion;
+    cameraRotation,
+} = interaction.camera;
 
 
 export interface PluridViewcubeModelOwnProperties {
@@ -67,7 +66,7 @@ export interface PluridViewcubeModelStateProperties {
     stateLanguage: InternationalizationLanguageType;
     spaceRotationX: number;
     spaceRotationY: number;
-    stateAnimatedTransform: boolean;
+    stateMotion: string;
     stateTransformTime: number;
 }
 
@@ -93,7 +92,7 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         stateLanguage,
         spaceRotationX,
         spaceRotationY,
-        stateAnimatedTransform,
+        stateMotion,
         stateTransformTime,
         // #endregion state
     } = properties;
@@ -124,7 +123,9 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         };
         const scale = 1;
 
-        const rotationMatrix = rotateMatrix(degToRad(-spaceRotationX), degToRad(-spaceRotationY));
+        // The SAME turntable rotation the scene renders with (`Rx(pitch) · Ry(yaw)`), so the cube
+        // always agrees with the space's orientation.
+        const rotationMatrix = cameraRotation(spaceRotationX, spaceRotationY);
         const translationMatrix = translateMatrix(offsets.x, offsets.y, offsets.z);
         const scalationMatrix = scaleMatrix(scale);
 
@@ -167,7 +168,9 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
                     suppressHydrationWarning={true}
                     style={{
                         transform,
-                        transition: mouseOver || stateAnimatedTransform
+                        // The cube follows the camera per frame during a tween; a short easing
+                        // only softens the hover reveal.
+                        transition: mouseOver && stateMotion === 'idle'
                             ? `transform ${stateTransformTime}ms ease-in-out`
                             : '',
                     }}
@@ -241,7 +244,7 @@ const mapStateToProperties = (
     stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
-    stateAnimatedTransform: selectors.space.getAnimatedTransform(state),
+    stateMotion: selectors.space.getMotion(state),
     stateTransformTime: selectors.space.getTransformTime(state),
 });
 

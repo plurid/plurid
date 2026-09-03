@@ -65,6 +65,13 @@ export interface PluridPlaneLens {
      */
     shown: boolean;
     /**
+     * The culling pass's verdict (`space.culling`): `hidden` planes stop painting (state intact),
+     * `frozen` ones paint but skip layout-affecting work — a plane can pause video, polling or
+     * animation while it is not seen.
+     */
+    culled: 'visible' | 'hidden' | 'frozen';
+    frozen: boolean;
+    /**
      * The space zoom factor.
      */
     scale: number;
@@ -149,6 +156,20 @@ export const usePluridPlane = (): PluridPlaneLens => {
             ? getTreePlane(state, planeID)?.location
             : undefined,
     );
+    const culled = useEngineSelector(
+        (state: AppState): 'visible' | 'hidden' | 'frozen' => {
+            if (planeID === undefined || !state.space.culled) {
+                return 'visible';
+            }
+            if (state.space.culled.hidden.includes(planeID)) {
+                return 'hidden';
+            }
+            if (state.space.culled.frozen.includes(planeID)) {
+                return 'frozen';
+            }
+            return 'visible';
+        },
+    );
 
     return {
         planeID,
@@ -159,6 +180,8 @@ export const usePluridPlane = (): PluridPlaneLens => {
         scale,
         viewSize,
         location,
+        culled,
+        frozen: culled === 'frozen',
     };
 };
 // #endregion module

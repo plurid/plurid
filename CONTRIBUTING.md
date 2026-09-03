@@ -68,6 +68,7 @@ Run from the root. These four are what CI enforces (plus `check`):
 | `pnpm test` | `jest` across the workspace | jest 30. Hook/DOM tests use jsdom. |
 | `pnpm lint` | one flat-config ESLint 10 pass over the live source | Single root `eslint.config.mjs` — there are no per-package eslint configs. |
 | `pnpm format` / `pnpm format.check` | Prettier write / check | |
+| `pnpm --filter plurid-render-test e2e` | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. |
 
 Because **build ≠ type-check**, a change can build and ship a broken `.d.ts` or a type error that only `tsc`
 catches. Before opening a PR: `pnpm build && pnpm test && pnpm lint`, plus `pnpm --filter <pkg> check` for
@@ -158,6 +159,31 @@ Docs are part of the checklist: a new topic, knob, or export also updates
      `…/View/hooks/useEngineEvents.ts` when the relevant slice changes (publishing to a no-subscriber topic
      is free).
 
+### A keyboard shortcut
+
+Add ONE entry to `PLURID_SHORTCUTS` (plurid-data `constants/shortcuts/table.ts`: id, default `code`,
+modifiers, `press` or `hold`, group, label) and, for a `press` shortcut, its binding in
+`plurid-react/source/services/logic/shortcuts/index.ts` (the `match` + `run`). `hold` keys are read by
+the hook that owns them (`useFlyControls`, `useGrabMode`) through `resolveHoldShortcuts`. The `?` overlay,
+the toolbar drawer, `keymap` and `disabled` follow automatically; `registry.test.ts` fails if the table and
+the ids drift. Pointer gestures are not shortcuts: change the intent table in
+`services/logic/input/gesture.ts` (with its truth-table test) and the wheel policy in `input/wheel.ts`.
+
+### A camera behavior
+
+The camera is a pure engine module (`plurid-engine/source/modules/interaction/camera/`): state, matrix,
+deltas, projection, framing, the legacy mapping, and the motion math, each with a `__tests__/` file. A
+new camera behavior is a new `CameraDelta` field (plurid-data `interfaces/internal/camera`) applied in
+`delta.ts` `applyCameraDelta`, with a unit test that pins the geometry (the golden test in
+`__tests__/legacy.test.ts` must keep passing — it proves the rendered matrix is unchanged for the legacy
+parameterization). The React side never computes a matrix: every reducer in the space slice ends in
+`commitCamera`, and a host-facing entry is a thunk in `plurid-react/source/services/logic/camera` plus a
+pubsub topic. Verify it in the browser suite (`pnpm --filter plurid-render-test e2e`, scenarios in
+`fixtures/render-test/e2e/`), which drives the real harness through Playwright.
+
+
+A programmatic camera MOVE (something that goes somewhere: a framing, a preset, a bookmark, an animated delta) is a `cameraCommand` kind, never a bespoke `setCamera` call: add the kind to `CameraCommand` and its target to `resolveCameraTarget` in `plurid-react source/services/logic/camera/index.ts` (pure — unit-test it against the reducer), expose it through a topic in `usePluridPubSub` and, if it has a key, a `PLURID_SHORTCUTS` entry; the tween-or-jump, reduced-motion and interruption behavior come for free from `commitCameraTarget`. A Playwright scenario in `fixtures/render-test/e2e/navigation.spec.ts` pins the user-visible motion (mid-tween sample, exact landing, interruption).
+
 ### A public export
 
 Add it to `plurid-react/source/index.tsx` — values in the `export { … }` block, **types in the
@@ -165,6 +191,19 @@ Add it to `plurid-react/source/index.tsx` — values in the `export { … }` blo
 selector, a logic helper), document it inline like the existing `pluridSelectors` / `arrangementSignature`.
 
 
+
+
+### A pubsub topic's payload type
+
+Nothing to add by hand: `PluridPubSubPayloads` is DERIVED from the publish-message union. Declare the `PluridPubSubMessage<Name>` / `PluridPubSubPublishMessage<Name>` / `PluridPubSubSubscribeMessage<Name>` interfaces in `plurid-data interfaces/external/pubsub/message.ts`, add them to the two unions, and `publish` / `subscribe` / `usePluridPubSub` are typed for the new topic.
+
+### A hook or a handle command
+
+A hook lives in `plurid-react source/services/hooks/<name>/index.ts` on `useEngineSelector` / `useEngineDispatch` (the engine's private context — never `react-redux`'s default hooks), returns memoized commands built on the SAME thunks the gestures and topics use, and is exported from `services/hooks/index.ts` and `source/index.tsx`. A handle command is a line in `PluridApplicationShell.getHandle()` (`containers/Application/index.tsx`) plus its type in `containers/Application/handle.ts`.
+
+### A user-visible behavior
+
+Gets a Playwright scenario in `fixtures/render-test/e2e/*.spec.ts` (camera / input / links / navigation / selection / rendering / bench), driven through the harness's `?flag=` surface and `window.__rt*` helpers — the browser suite is the gate that jsdom cannot be. Host-side tests use `@plurid/plurid-react/testing`.
 
 ## Tests
 

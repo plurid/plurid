@@ -1,15 +1,24 @@
 // #region imports
     // #region libraries
     import React, {
-        useState,
         useEffect,
+        useMemo,
+        useRef,
     } from 'react';
 
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        PluridConfigurationSpaceShortcuts,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -17,14 +26,15 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+    import actions from '~services/state/actions';
+
+    import {
+        describeShortcuts,
+    } from '~services/logic/shortcuts/registry';
     // #endregion external
 
 
     // #region internal
-    import {
-        SHORTCUT_GROUPS,
-    } from './data';
-
     import {
         StyledShortcutsTrigger,
         StyledShortcutsBackdrop,
@@ -45,14 +55,25 @@
 // #region module
 export interface PluridShortcutsStateProperties {
     theme: Theme;
+    visible: boolean;
+    shortcuts?: PluridConfigurationSpaceShortcuts;
 }
 
-export type PluridShortcutsProperties = PluridShortcutsStateProperties;
+export interface PluridShortcutsDispatchProperties {
+    setVisible: (visible: boolean) => void;
+}
+
+export type PluridShortcutsProperties =
+    & PluridShortcutsStateProperties
+    & PluridShortcutsDispatchProperties;
+
+const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 /**
- * Self-contained help overlay listing the engine's keyboard/pointer vocabulary.
- * Toggled with `?` (and dismissed with `?`, `Escape`, or a backdrop click) — owns its
- * own visibility so it needs no wiring into the View, matching the Toolbar/Viewcube pattern.
+ * The help overlay: the engine's keyboard / pointer vocabulary, GENERATED from the shortcut table
+ * with the host's `keymap` / `disabled` applied (so it can never drift from the bindings). Toggled
+ * with `?` (a registry shortcut) or its trigger button; a real modal dialog — focus moves in,
+ * Tab is trapped, Escape and the backdrop close it, focus returns to where it was.
  */
 const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
     properties,
@@ -60,45 +81,85 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
     // #region properties
     const {
         theme,
+        visible,
+        shortcuts,
+        setVisible,
     } = properties;
     // #endregion properties
 
 
+    // #region references
+    const panel = useRef<HTMLDivElement>(null);
+    const restoreFocus = useRef<HTMLElement | null>(null);
+    // #endregion references
+
+
     // #region state
-    const [visible, setVisible] = useState(false);
+    const groups = useMemo(
+        () => describeShortcuts(shortcuts),
+        [
+            JSON.stringify(shortcuts?.keymap || null),
+            JSON.stringify(shortcuts?.disabled ?? null),
+        ],
+    );
     // #endregion state
 
 
     // #region effects
     useEffect(() => {
-        if (typeof window === 'undefined') {
+        if (!visible) {
             return;
         }
+        if (typeof document !== 'undefined') {
+            restoreFocus.current = document.activeElement as HTMLElement | null;
+        }
+        const element = panel.current;
+        if (element) {
+            element.focus({ preventScroll: true });
+        }
 
-        const onKeyDown = (event: KeyboardEvent) => {
-            const target = event.target as HTMLElement | null;
-            if (target && (
-                target.tagName === 'INPUT'
-                || target.tagName === 'TEXTAREA'
-                || target.isContentEditable
-            )) {
-                return;
-            }
-
-            if (event.key === '?') {
-                event.preventDefault();
-                setVisible((value) => !value);
-            } else if (event.key === 'Escape') {
-                setVisible((value) => (value ? false : value));
-            }
-        };
-
-        window.addEventListener('keydown', onKeyDown);
         return () => {
-            window.removeEventListener('keydown', onKeyDown);
+            const previous = restoreFocus.current;
+            restoreFocus.current = null;
+            if (previous && typeof previous.focus === 'function' && previous.isConnected) {
+                previous.focus({ preventScroll: true });
+            }
         };
-    }, []);
+    }, [
+        visible,
+    ]);
     // #endregion effects
+
+
+    // #region handlers
+    const onKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === 'Escape') {
+            event.stopPropagation();
+            setVisible(false);
+            return;
+        }
+        if (event.key !== 'Tab' || !panel.current) {
+            return;
+        }
+        // Trap Tab inside the dialog.
+        const focusable = Array.from(panel.current.querySelectorAll<HTMLElement>(FOCUSABLE))
+            .filter((node) => !node.hasAttribute('disabled'));
+        if (focusable.length === 0) {
+            event.preventDefault();
+            return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        if (event.shiftKey && (active === first || active === panel.current)) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && active === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    };
+    // #endregion handlers
 
 
     // #region render
@@ -109,7 +170,10 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
             type="button"
             title="Keyboard shortcuts (?)"
             aria-label="Keyboard shortcuts"
-            onClick={() => setVisible((value) => !value)}
+            aria-haspopup="dialog"
+            aria-expanded={visible}
+            data-plurid-control="shortcuts"
+            onClick={() => setVisible(!visible)}
         >
             ?
         </StyledShortcutsTrigger>
@@ -117,26 +181,34 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
         {visible && (
         <StyledShortcutsBackdrop
             onClick={() => setVisible(false)}
+            onWheel={(event: React.WheelEvent) => event.stopPropagation()}
             data-plurid-entity="shortcuts-overlay"
+            data-plurid-control="shortcuts-overlay"
         >
             <StyledShortcutsPanel
+                ref={panel}
                 theme={theme}
-                onClick={(event) => event.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="plurid-shortcuts-title"
+                tabIndex={-1}
+                onClick={(event: React.MouseEvent) => event.stopPropagation()}
+                onKeyDown={onKeyDown}
             >
                 <StyledShortcutsHeader>
-                    <h2>Keyboard Shortcuts</h2>
+                    <h2 id="plurid-shortcuts-title">Keyboard Shortcuts</h2>
                     <span>? or Esc to close</span>
                 </StyledShortcutsHeader>
 
                 <StyledShortcutsGroups>
-                    {SHORTCUT_GROUPS.map((group) => (
-                        <StyledShortcutsGroup key={group.title}>
+                    {groups.map((group) => (
+                        <StyledShortcutsGroup key={group.id}>
                             <StyledShortcutsGroupTitle>
                                 {group.title}
                             </StyledShortcutsGroupTitle>
 
                             {group.items.map((item, itemIndex) => (
-                                <StyledShortcutsRow key={item.label + itemIndex}>
+                                <StyledShortcutsRow key={(item.id || item.label) + itemIndex}>
                                     <span className="label">{item.label}</span>
 
                                     <StyledShortcutsKeys>
@@ -167,12 +239,23 @@ const mapStateToProperties = (
     state: AppState,
 ): PluridShortcutsStateProperties => ({
     theme: selectors.themes.getGeneralTheme(state),
+    visible: selectors.ui.getShortcutsOverlayVisible(state),
+    shortcuts: selectors.configuration.getConfiguration(state).space.shortcuts,
+});
+
+
+const mapDispatchToProperties = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+): PluridShortcutsDispatchProperties => ({
+    setVisible: (visible) => dispatch(
+        actions.ui.setShortcutsOverlayVisible(visible),
+    ),
 });
 
 
 const ConnectedPluridShortcuts = connect(
     mapStateToProperties,
-    null,
+    mapDispatchToProperties,
     null,
     {
         context: StateContext,

@@ -11,6 +11,8 @@
     import {
         PlaneLink,
         TreePlane,
+        PluridConfiguration,
+        ViewSize,
 
         PLURID_ENTITY_PLANE_LINKS,
     } from '@plurid/plurid-data';
@@ -21,6 +23,14 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+
+    import {
+        interaction,
+    } from '~services/engine';
+
+    import {
+        resolvePlaneFallbackSize,
+    } from '~services/logic/camera';
     // #endregion external
 
 
@@ -47,39 +57,27 @@ export interface PluridPlaneLinksStateProperties {
     stateLinks: PlaneLink[];
     statePlaneIndex: Map<string, TreePlane>;
     stateGeneralTheme: Theme;
+    stateConfiguration: PluridConfiguration;
+    stateViewSize: ViewSize;
 }
 
 export type PluridPlaneLinksProperties = PluridPlaneLinksStateProperties;
 
 
 /**
- * The world-space anchor of a plane: its centre, in the shared `StyledPluridRoots` frame.
- *
- * `location.translate*` is the plane's top-left corner; the centre is offset by half its size. The
- * tree node doesn't carry a measured size (its `width`/`height` are 0 under the current layout), so
- * we fall back to the rendered element's box. This runs only when the edges layer re-renders (a link
- * or tree change) — never per orbit frame — so the DOM read is cheap and off the hot path.
+ * The world-space anchor of a plane: its centre, in the shared `StyledPluridRoots` frame, through
+ * the plane's rotated basis (`location.translate*` is the top-left corner; a rotated plane's centre
+ * is NOT corner + half size along the world axes). Sizes come from the tree (measured by the plane's
+ * `ResizeObserver`), with the configured fallback before the first measurement — no DOM reads.
  */
 const planeAnchor = (
     plane: TreePlane,
-): EdgePoint => {
-    let width = plane.width;
-    let height = plane.height;
-
-    if ((!width || !height) && typeof document !== 'undefined') {
-        const element = document.getElementById(plane.planeID);
-        if (element) {
-            width = width || element.offsetWidth;
-            height = height || element.offsetHeight;
-        }
-    }
-
-    return {
-        x: plane.location.translateX + width / 2,
-        y: plane.location.translateY + height / 2,
-        z: plane.location.translateZ,
-    };
-}
+    fallback: { width: number; height: number },
+): EdgePoint => interaction.camera.planeCenter({
+    location: plane.location,
+    width: plane.width || fallback.width,
+    height: plane.height || fallback.height,
+});
 
 
 const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
@@ -90,7 +88,11 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         stateLinks,
         statePlaneIndex,
         stateGeneralTheme,
+        stateConfiguration,
+        stateViewSize,
     } = properties;
+
+    const fallbackSize = resolvePlaneFallbackSize(stateConfiguration, stateViewSize);
     // #endregion properties
 
 
@@ -116,8 +118,8 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
             transform,
             length,
         } = computeEdgeTransform(
-            planeAnchor(source),
-            planeAnchor(target),
+            planeAnchor(source, fallbackSize),
+            planeAnchor(target, fallbackSize),
             THICKNESS,
         );
 
@@ -152,6 +154,8 @@ const mapStateToProperties = (
     stateLinks: selectors.space.getPlaneLinks(state),
     statePlaneIndex: selectors.space.getPlaneIndex(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateConfiguration: selectors.configuration.getConfiguration(state),
+    stateViewSize: selectors.space.getViewSize(state),
 });
 
 

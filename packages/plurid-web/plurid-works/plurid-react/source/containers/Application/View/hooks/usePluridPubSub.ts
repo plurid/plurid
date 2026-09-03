@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import {
+        useRef,
         useState,
         useCallback,
         useEffect,
@@ -36,17 +37,35 @@
     } from '~data/interfaces';
 
     import {
+        closePlane,
+        openLastClosed,
+    } from '~services/state/thunks/planes';
+
+    import {
+        alignSelection,
+        distributeSelection,
+        duplicateSelection,
+    } from '~services/state/thunks/selection';
+
+    import {
         navigateToPluridPlane,
         focusPreviousRoot,
         focusNextRoot,
         focusRootIndex,
         focusRootID,
-        useAnimatedTransform,
     } from '~services/logic/animation';
 
     import {
-        decodeViewpoint,
-    } from '~services/logic/viewpoint';
+        setViewpoint,
+        resetCamera,
+        goHome,
+        goPreset,
+        bookmarkCommand,
+        setHome,
+        fitToView,
+        frameCommand,
+        applyCameraDeltaCommand,
+    } from '~services/logic/camera';
 
     import {
         generalEngine,
@@ -92,6 +111,7 @@ export interface UsePluridPubSubParameters {
         view: PluridApplicationView,
         configuration?: PluridConfiguration,
         layout?: boolean,
+        options?: { transition?: boolean },
     ) => void;
 
     dispatchers: UsePluridPubSubDispatchers;
@@ -102,9 +122,9 @@ export interface UsePluridPubSubParameters {
  * The View's pubsub bridge: owns the `pluridPubSub` registry + `registerPubSub`, subscribes every
  * pubsub instance to the ~23 engine topics (configuration / space transforms / view add-remove /
  * navigate / isolate / open-close / root focus), and re-publishes the current transform + config
- * (internal-flagged) so late subscribers sync. The handler bodies + the subscribe/publish lifecycle
- * + the exact effect dependencies are a verbatim move from the View — DO NOT change them: the deps
- * gate the (intentional) re-subscription cadence, and the `internal: true` flag prevents feedback.
+ * (internal-flagged) so late subscribers sync. Subscriptions are made ONCE per pubsub instance and
+ * read live state through a ref; plane lookups are deep (`getTreePlaneByID`), so spawned children
+ * answer to CLOSE/OPEN/NAVIGATE too. The `internal: true` flag prevents feedback.
  */
 export const usePluridPubSub = (
     {
@@ -127,6 +147,24 @@ export const usePluridPubSub = (
             ? [pubsub]
             : [new PluridPubSub()]
     );
+
+    // Handlers read the LATEST state through a ref, so every pubsub instance is subscribed ONCE
+    // (per instance) instead of re-subscribed on each tree/config change — which raced in-flight
+    // publishes against the unsubscribe and kept stale closures alive.
+    const latest = useRef({
+        state,
+        stateConfiguration,
+        stateSpaceView,
+        stateTree,
+        treeUpdate,
+    });
+    latest.current = {
+        state,
+        stateConfiguration,
+        stateSpaceView,
+        stateTree,
+        treeUpdate,
+    };
 
     const {
         dispatchSetConfiguration,
@@ -161,7 +199,7 @@ export const usePluridPubSub = (
 
                     const computedConfiguration = generalEngine.configuration.merge(
                         data,
-                        stateConfiguration,
+                        latest.current.stateConfiguration,
                     );
 
                     // Handle themes
@@ -324,7 +362,7 @@ export const usePluridPubSub = (
                     ];
                     dispatchSpaceSetView(updatedView);
 
-                    treeUpdate(updatedView, undefined, true);
+                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true });
                 },
             },
             {
@@ -338,7 +376,7 @@ export const usePluridPubSub = (
                         ...view,
                     ]);
 
-                    treeUpdate(view, undefined, true);
+                    latest.current.treeUpdate(view, undefined, true, { transition: true });
                 },
             },
             {
@@ -351,7 +389,7 @@ export const usePluridPubSub = (
                     /** TODO
                      * a less naive filtering
                      */
-                    const updatedView = stateSpaceView.filter(view => {
+                    const updatedView = latest.current.stateSpaceView.filter(view => {
                         if (typeof view === 'string') {
                             // REMOVE the matching plane — keep everything else. The old
                             // `view === plane` did the inverse (kept only the plane that was
@@ -364,7 +402,9 @@ export const usePluridPubSub = (
 
                     dispatchSpaceSetView(updatedView);
 
-                    treeUpdate(updatedView);
+                    // A relayout, like `VIEW_ADD_PLANE`: without `layout = true` the remaining
+                    // planes collapsed to the origin.
+                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true });
                 },
             },
 
@@ -376,7 +416,7 @@ export const usePluridPubSub = (
                     } = data;
 
                     const plane = space.tree.logic.getTreePlaneByID(
-                        stateTree,
+                        latest.current.stateTree,
                         id,
                     );
 
@@ -406,24 +446,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.OPEN_CLOSED_PLANE,
                 callback: () => {
-                    const treePlane = stateTree.find(plane => plane.planeID === state.space.lastClosedPlane);
-                    if (treePlane) {
-                        const forceShow = true;
-                        const {
-                            updatedTree,
-                        } = space.tree.logic.togglePlaneFromTree(
-                            stateTree,
-                            treePlane.planeID,
-                            forceShow,
-                        );
-
-                        dispatchSetTree(updatedTree);
-
-                        dispatchSetSpaceField({
-                            field: 'lastClosedPlane',
-                            value: '',
-                        });
-                    }
+                    dispatch(openLastClosed() as any);
                 },
             },
             {
@@ -433,28 +456,9 @@ export const usePluridPubSub = (
                         id,
                     } = data;
 
-                    const treePlane = stateTree.find(plane => plane.planeID === id);
-                    if (treePlane) {
-                        const forceShow = false;
-                        const {
-                            updatedTree,
-                        } = space.tree.logic.togglePlaneFromTree(
-                            stateTree,
-                            treePlane.planeID,
-                            forceShow,
-                        );
-
-                        // Single dispatch — `togglePlaneFromTree` now returns a NEW
-                        // immutable tree, so this update is detected on the first dispatch.
-                        // (Previously a 50 ms re-dispatch HACK forced the update because the
-                        // old mutating toggle left the tree identity unchanged.)
-                        dispatchSetTree(updatedTree);
-
-                        dispatchSetSpaceField({
-                            field: 'lastClosedPlane',
-                            value: id,
-                        });
-                    }
+                    // Deep lookup (children included) through the thunk — the old flat `find`
+                    // never matched a spawned plane.
+                    dispatch(closePlane(id) as any);
                 },
             },
             {
@@ -462,7 +466,7 @@ export const usePluridPubSub = (
                 callback: () => {
                     focusPreviousRoot(
                         dispatch,
-                        state,
+                        latest.current.state,
                     );
                 },
             },
@@ -471,7 +475,7 @@ export const usePluridPubSub = (
                 callback: () => {
                     focusNextRoot(
                         dispatch,
-                        state,
+                        latest.current.state,
                     );
                 },
             },
@@ -482,7 +486,7 @@ export const usePluridPubSub = (
                     if (typeof index !== 'undefined') {
                         focusRootIndex(
                             dispatch,
-                            state,
+                            latest.current.state,
                             index,
                         );
                         return;
@@ -491,7 +495,7 @@ export const usePluridPubSub = (
                     const id = (data as any).id;
                     focusRootID(
                         dispatch,
-                        state,
+                        latest.current.state,
                         id,
                     );
                 },
@@ -559,33 +563,127 @@ export const usePluridPubSub = (
                 },
             },
             {
-                // Programmatic camera control: decode the host-supplied viewpoint and move the camera
-                // there. `setSpaceLocation` sets the 6 scalars + recomputes the matrix; `animated`
-                // routes it through the transform animation (otherwise it jumps). Invalid encodings
-                // are ignored, never corrupting the view.
+                // Programmatic camera control: decode the host-supplied viewpoint (v1 scalars or a v2
+                // camera) and move the camera there; `animated` routes it through the transform
+                // animation (otherwise it jumps). Invalid encodings are ignored, never corrupting the
+                // view. Reads the live latest.current.state inside the thunk (no stale closure).
                 topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT,
                 callback: (data) => {
-                    const viewpoint = decodeViewpoint((data as any)?.viewpoint);
-                    if (!viewpoint) {
+                    const encoded = (data as any)?.viewpoint;
+                    if (typeof encoded !== 'string') {
                         return;
                     }
-                    if ((data as any)?.animated) {
-                        useAnimatedTransform(dispatch);
-                    }
-                    dispatchSetSpaceLocation(viewpoint);
+                    dispatch(setViewpoint(encoded, !!(data as any)?.animated) as any);
                 },
             },
             {
                 // High-value declarative control. The niche actions stay on the `onReady` api.
                 topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW,
+                callback: (data) => {
+                    dispatch(fitToView({
+                        animate: (data as any)?.animate ?? true,
+                        faceOn: (data as any)?.faceOn,
+                    }) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA,
+                callback: (data) => {
+                    if (!data || typeof data !== 'object') {
+                        return;
+                    }
+                    const {
+                        animate,
+                        ...delta
+                    } = data as any;
+                    dispatch(applyCameraDeltaCommand(delta, !!animate) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME,
+                callback: (data) => {
+                    dispatch(frameCommand(data as any) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_HOME,
+                callback: (data) => {
+                    dispatch(goHome((data as any)?.animate ?? true) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SET_HOME,
+                callback: (data) => {
+                    const viewpoint = (data as any)?.viewpoint;
+                    dispatch(setHome(typeof viewpoint === 'string' ? viewpoint : undefined) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_PRESET,
+                callback: (data) => {
+                    const name = (data as any)?.name;
+                    if (typeof name !== 'string') {
+                        return;
+                    }
+                    dispatch(goPreset(name, (data as any)?.animate ?? true) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK,
+                callback: (data) => {
+                    const name = (data as any)?.name;
+                    if (typeof name !== 'string') {
+                        return;
+                    }
+                    dispatch(bookmarkCommand({
+                        name,
+                        action: (data as any)?.action,
+                        animate: (data as any)?.animate ?? true,
+                    }) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_ALIGN,
+                callback: (data) => {
+                    const edge = (data as any)?.edge;
+                    if (typeof edge !== 'string') {
+                        return;
+                    }
+                    dispatch(alignSelection(edge as any) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_DISTRIBUTE,
+                callback: (data) => {
+                    const axis = (data as any)?.axis;
+                    if (axis !== 'x' && axis !== 'y') {
+                        return;
+                    }
+                    dispatch(distributeSelection(axis) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE,
+                callback: (data) => {
+                    dispatch(duplicateSelection((data as any)?.offset) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SELECT_ALL,
                 callback: () => {
-                    dispatch(actions.space.spaceFitToView());
+                    dispatch(actions.space.selectAll());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_INVERT_SELECTION,
+                callback: () => {
+                    dispatch(actions.space.invertSelection());
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.RESET_TRANSFORM,
-                callback: () => {
-                    dispatch(actions.space.spaceResetTransform());
+                callback: (data) => {
+                    dispatch(resetCamera((data as any)?.animate ?? true) as any);
                 },
             },
             {
@@ -634,6 +732,7 @@ export const usePluridPubSub = (
             value: {
                 ...stateTransform,
             },
+            camera: state.space.camera,
             internal: true,
         };
         pubsub.publish({
@@ -682,14 +781,8 @@ export const usePluridPubSub = (
             }
         }
     }, [
-        state.space.lastClosedPlane,
+        // Once per pubsub instance: the handlers read live state through `latest`.
         pluridPubSub.length,
-        // Tree ref (the slice is untouched by transform gestures, so it only changes on
-        // real tree mutations) instead of an O(n) stringify on every re-render. Config is
-        // left stringified on purpose: it may be regenerated by `compute()`, so its
-        // reference is not a reliable change signal, and it is a far smaller object.
-        stateTree,
-        JSON.stringify(stateConfiguration),
     ]);
 
     /** PubSub Publish */
@@ -699,7 +792,10 @@ export const usePluridPubSub = (
         }
     }, [
         pluridPubSub.length,
-        JSON.stringify(stateConfiguration),
+        // Reference equality: the configuration object only changes on `setConfiguration` /
+        // `SET_STATE` (and `Application` now recomputes the store only when its inputs change),
+        // so no per-frame `JSON.stringify`.
+        stateConfiguration,
         stateTransform,
     ]);
     // #endregion effects pubsub

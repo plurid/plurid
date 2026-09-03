@@ -91,21 +91,31 @@ export const StyledPluridViewcubeFace = styled.div<IStyledPluridViewcubeFace>`
 
 export interface IStyledPluridViewcubeFaceZone {
     theme: Theme;
-    type: string;
+    zone: string;
     hovered: boolean;
     transparentUI: boolean;
     active: boolean;
 }
 
-export const StyledPluridViewcubeFaceZone = styled.div<IStyledPluridViewcubeFaceZone>`
+export const StyledPluridViewcubeFaceZone = styled.button<IStyledPluridViewcubeFaceZone>`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    background: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+    }
     display: grid;
     place-content: center;
     cursor: pointer;
     pointer-events: all;
 
     grid-area: ${({
-        type,
-    }) => `PVF${type}`};
+        zone,
+    }) => `PVF${zone}`};
     color: ${({
         theme,
         hovered,

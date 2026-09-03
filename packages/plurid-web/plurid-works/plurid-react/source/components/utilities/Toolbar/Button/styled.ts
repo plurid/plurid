@@ -19,8 +19,19 @@ export interface IStyledToolbarButton {
     scaleImage?: boolean;
 }
 
-export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
+export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
     position: relative;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+    }
     cursor: pointer;
     height: 40px;
     display: grid;

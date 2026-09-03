@@ -8,6 +8,7 @@
         PluridApplicationView,
         PluridConfiguration,
         TreePlane,
+        ViewSize,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -27,19 +28,32 @@ export interface UseTreeUpdateParameters {
     view: PluridApplicationView;
     configuration: PluridConfiguration;
     tree: TreePlane[];
+    /** The measured view the layouts space planes by. */
+    viewSize: ViewSize;
     // The View prop is optional; the `space.tree.Tree` constructor's `origin` param is
     // defaulted (`= 'origin'`), so `undefined` is accepted at runtime — match that here.
     hostname: string | undefined;
     planesRegistrar: Parameters<typeof getRegisteredPlanes>[0];
     dispatchSetTree: (tree: TreePlane[]) => void;
+    /** Arm an animated relayout (`space.layoutTransition`) before a transitioned tree write. */
+    dispatchSetLayoutTransition?: (milliseconds: number) => void;
+    /** ms for animated relayouts; 0 (reduced motion) makes them instant. */
+    layoutTransitionDuration?: number;
+}
+
+
+export interface TreeUpdateOptions {
+    /** Glide the planes to their new placements (a layout switch, a view add/remove). */
+    transition?: boolean;
 }
 
 
 /**
- * Recompute the space tree (layout) and dispatch it. `treeUpdate` rebuilds the tree from the view +
- * registered planes, then re-attaches the runtime `planeID` + spawned children from the existing
- * tree onto the freshly-laid-out one (keyed by route + a ROUNDED location — the rounding absorbs
- * sub-pixel relayout drift that would otherwise silently close spawned planes). `treeUpdateCallback`
+ * Recompute the space tree (layout) and dispatch it. `treeUpdate` rebuilds the roots from the view +
+ * registered planes, then carries the RUNTIME state of each root across from the existing tree —
+ * its `planeID`, spawned children, visibility, measured size, manual pin — keyed by IDENTITY
+ * (`sourceID` + route, in order for duplicates), never by location (a relayout exists to move
+ * things), and re-places every spawned subtree from its root's new location. `treeUpdateCallback`
  * is the memoized version for resize listeners; `resolveLayout` is the one-shot initial layout.
  */
 export const useTreeUpdate = (
@@ -47,15 +61,19 @@ export const useTreeUpdate = (
         view,
         configuration,
         tree,
+        viewSize,
         hostname,
         planesRegistrar,
         dispatchSetTree,
+        dispatchSetLayoutTransition,
+        layoutTransitionDuration = 0,
     }: UseTreeUpdateParameters,
 ) => {
     const treeUpdate = (
         treeView: PluridApplicationView,
         treeConfiguration: PluridConfiguration = configuration,
         layout?: boolean,
+        options: TreeUpdateOptions = {},
     ) => {
         const planes = getRegisteredPlanes(planesRegistrar);
 
@@ -65,41 +83,60 @@ export const useTreeUpdate = (
                 configuration: treeConfiguration,
                 view: treeView,
                 layout,
+                viewSize,
             },
             hostname,
         );
 
         const computedTree = spaceTree.compute();
 
-        // Re-attach the runtime planeID + spawned children from the existing tree onto the
-        // freshly-computed (relaid-out) tree. Keyed by route + a ROUNDED location in an O(n)
-        // Map: the old code did an O(roots²) scan with an EXACT `objects.equals(location)`, so
-        // a sub-pixel relayout drift (100 vs 100.0001) dropped the match and silently closed
-        // spawned planes. Rounding absorbs that drift; roots sit hundreds of px apart, so it
-        // can't cause a false match.
-        const locationKey = (location: any) =>
-            Math.round(location.translateX) + ',' +
-            Math.round(location.translateY) + ',' +
-            Math.round(location.translateZ) + ',' +
-            Math.round(location.rotateX) + ',' +
-            Math.round(location.rotateY);
-        const stateByKey = new Map<string, typeof tree[number]>();
-        for (const statePlane of tree) {
-            stateByKey.set(statePlane.route + '@' + locationKey(statePlane.location), statePlane);
-        }
-        for (const computedPlane of computedTree) {
-            const statePlane = stateByKey.get(
-                computedPlane.route + '@' + locationKey(computedPlane.location),
-            );
-            if (statePlane) {
-                computedPlane.planeID = statePlane.planeID;
-                if (statePlane.children) {
-                    computedPlane.children = statePlane.children;
-                }
-            }
+        const previousByKey = new Map<string, TreePlane[]>();
+        for (const root of tree) {
+            const key = root.sourceID + '@' + root.route;
+            const list = previousByKey.get(key) || [];
+            list.push(root);
+            previousByKey.set(key, list);
         }
 
-        dispatchSetTree(computedTree);
+        const nextTree = computedTree.map((computed) => {
+            const candidates = previousByKey.get(computed.sourceID + '@' + computed.route);
+            const previous = candidates && candidates.length > 0
+                ? candidates.shift()
+                : undefined;
+            if (!previous) {
+                return computed;
+            }
+
+            const merged: TreePlane = {
+                ...computed,
+                planeID: previous.planeID,
+                show: previous.show,
+                width: previous.width || computed.width,
+                height: previous.height || computed.height,
+                ...(previous.sizeMode ? { sizeMode: previous.sizeMode } : {}),
+                ...(previous.manuallyPositioned
+                    ? { manuallyPositioned: true, location: previous.location }
+                    : {}),
+                ...(previous.children ? { children: previous.children } : {}),
+            };
+
+            return space.location.recomputeSubtree(merged);
+        });
+
+        // An animated relayout: arm the transition window BEFORE the tree write so the planes'
+        // first paint at the new placements is the transition's start, never a jump. Only for a
+        // live space (a first layout has nothing to glide from).
+        if (
+            options.transition
+            && layout
+            && layoutTransitionDuration > 0
+            && tree.length > 0
+            && dispatchSetLayoutTransition
+        ) {
+            dispatchSetLayoutTransition(layoutTransitionDuration);
+        }
+
+        dispatchSetTree(nextTree);
     }
 
     const treeUpdateCallback = useCallback(() => {
@@ -112,6 +149,7 @@ export const useTreeUpdate = (
         hostname,
         view,
         configuration,
+        viewSize,
         // Tree REFERENCE, not a per-render `JSON.stringify` of the whole tree — the reducer
         // swaps `state.tree` for a new array on every mutation, so the ref already changes at
         // the same cadence a content hash would, at O(1) instead of O(n).

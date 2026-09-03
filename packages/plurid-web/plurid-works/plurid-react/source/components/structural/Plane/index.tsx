@@ -24,10 +24,6 @@
     } from '@plurid/plurid-functions';
 
     import {
-        useDebouncedCallback,
-    } from '@plurid/plurid-functions-react';
-
-    import {
         PLURID_PUBSUB_TOPIC,
         FOCUS_ANCHOR_SUFFIX,
         PLURID_ENTITY_PLANE,
@@ -53,6 +49,10 @@
     import StateContext from '~services/state/context';
     // import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
+    import {
+        makeGetPlaneCulling,
+        PlaneCullingState,
+    } from '~services/state/modules/space/selectors';
     import actions from '~services/state/actions';
     import {
         DispatchAction,
@@ -72,6 +72,8 @@
     } from './styled';
 
     import PlaneBridge from './components/PlaneBridge';
+    import PlaneResizeHandles from './components/PlaneResizeHandles';
+    import PlaneDebugger from './components/PlaneDebugger';
     import PlaneControls from './components/PlaneControls';
     import PlaneContent from './components/PlaneContent';
     // #endregion internal
@@ -104,6 +106,10 @@ export interface PluridPlaneStateProperties {
     // planes whose active-state actually changes.
     stateIsActivePlane: boolean;
     stateIsolatePlane: string;
+    /** ms of an animated relayout in flight (0 = none): the placement transition. */
+    stateLayoutTransition: number;
+    /** The culling pass's verdict for this plane. */
+    stateCulled: PlaneCullingState;
     // A per-instance DERIVED boolean (this plane is in `selectedPlaneIDs`), same memoization
     // rationale as `stateIsActivePlane` — only flips for the plane whose selection actually changes.
     stateIsSelected: boolean;
@@ -113,7 +119,7 @@ export interface PluridPlaneStateProperties {
 
 export interface PluridPlaneDispatchProperties {
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
-    dispatchUpdateSpaceTreePlane: DispatchAction<typeof actions.space.updateSpaceTreePlane>;
+    dispatchSetPlaneSize: DispatchAction<typeof actions.space.setPlaneSize>;
     dispatchToggleSelection: DispatchAction<typeof actions.space.toggleSelection>;
 }
 
@@ -127,15 +133,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     properties,
 ) => {
     // #region context
+    // Read through optional chaining so every hook below runs on every render; the context
+    // guard sits at the render step.
     const context = useContext(Context);
-    if (!context) {
-        return (<></>);
-    }
-
-    const {
-        planeRenderError,
-        defaultPubSub,
-    } = context;
+    const planeRenderError = context?.planeRenderError;
+    const defaultPubSub = context?.defaultPubSub;
     // #endregion context
 
 
@@ -155,6 +157,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateParentPlane,
         stateViewSize,
         stateIsActivePlane,
+        stateLayoutTransition,
+        stateCulled,
         stateIsolatePlane,
         stateIsSelected,
         stateGeneralTheme,
@@ -163,7 +167,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
         // #region dispatch
         dispatchSetSpaceField,
-        dispatchUpdateSpaceTreePlane,
+        dispatchSetPlaneSize,
         dispatchToggleSelection,
         // #endregion dispatch
     } = properties;
@@ -220,18 +224,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region handlers
-    const updatePlaneSize = (
-        size: any,
-    ) => {
-        const updatedTreePlane = {
-            ...treePlane,
-        };
-        updatedTreePlane.width = size.width;
-        updatedTreePlane.height = size.height;
-
-        dispatchUpdateSpaceTreePlane(updatedTreePlane);
-    }
-
     const refreshPlane = () => {
         const REFRESH_TIMEOUT = 250;
         setRefreshing(true);
@@ -247,7 +239,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             ? planeID
             : '';
 
-        defaultPubSub.publish({
+        defaultPubSub?.publish({
             topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
             data: {
                 id,
@@ -256,7 +248,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     }
 
     const closePlane = () => {
-        defaultPubSub.publish({
+        defaultPubSub?.publish({
             topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
             data: {
                 id: planeID,
@@ -264,13 +256,28 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         });
     }
 
-    const setActivePlane = () => {
-        const payload = {
-            field: 'activePlaneID' as const,
-            value: mouseOver ? planeID : '',
-        };
+    // Hover → the space's active plane. Enter activates immediately (no debounce: a stale
+    // deferred closure used to re-activate a plane the pointer had already left); leave clears
+    // only if THIS plane is still the active one, so entering the next plane never loses its
+    // activation to the previous plane's leave.
+    const activatePlane = () => {
+        setMouseOver(true);
+        if (!stateIsActivePlane) {
+            dispatchSetSpaceField({
+                field: 'activePlaneID' as const,
+                value: planeID,
+            });
+        }
+    }
 
-        dispatchSetSpaceField(payload);
+    const deactivatePlane = () => {
+        setMouseOver(false);
+        if (stateIsActivePlane) {
+            dispatchSetSpaceField({
+                field: 'activePlaneID' as const,
+                value: '',
+            });
+        }
     }
 
     const handlePlaneClick = (
@@ -282,24 +289,14 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         if (event.shiftKey) {
             event.preventDefault();
             dispatchToggleSelection(planeID);
+            return;
+        }
+        // ⌘/Ctrl+click toggles too (the selection modifier; ⌘/Ctrl-drag on empty space is the
+        // marquee). The default is kept so a host's ⌘-click behaviors (open in a new tab) run.
+        if (event.ctrlKey || event.metaKey) {
+            dispatchToggleSelection(planeID);
         }
     }
-
-    const debouncedSetActivePlane = useDebouncedCallback(
-        () => {
-            if (stateIsActivePlane) {
-                return;
-            }
-
-            const payload = {
-                field: 'activePlaneID' as const,
-                value: planeID,
-            };
-
-            dispatchSetSpaceField(payload);
-        },
-        500,
-    );
 
     const computeIsolatePlaneOpacity = () => {
         if (!treePlane.show || !stateIsolatePlane) {
@@ -328,15 +325,59 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region effects
+    /**
+     * Measure the rendered plane and write its size into the tree (`treePlane.width/height`) —
+     * the source every geometry consumer reads (fit-to-view, framing, link beams, minimap, bounds).
+     * `offsetWidth/Height` are the untransformed layout box, so the CSS 3D transform never leaks
+     * into the measurement. The reducer is equality-gated, so a re-report costs nothing. A plane the
+     * user resized by hand (`sizeMode: 'manual'`) is left alone.
+     */
     useEffect(() => {
-        setActivePlane();
+        const element = planeRef.current;
+        if (
+            !element
+            || typeof ResizeObserver === 'undefined'
+            || treePlane.sizeMode === 'manual'
+            || stateCulled !== 'visible'
+        ) {
+            return;
+        }
+
+        const report = () => {
+            const width = Math.round(element.offsetWidth * 2) / 2;
+            const height = Math.round(element.offsetHeight * 2) / 2;
+            if (width <= 0 || height <= 0) {
+                return;
+            }
+            dispatchSetPlaneSize({
+                planeID,
+                width,
+                height,
+            });
+        };
+
+        report();
+        const observer = new ResizeObserver(() => {
+            report();
+        });
+        observer.observe(element);
+
+        return () => {
+            observer.disconnect();
+        };
     }, [
         planeID,
-        mouseOver,
+        remountKey,
+        treePlane.sizeMode,
+        stateCulled,
     ]);
 
     /** PubSub refresh plane */
     useEffect(() => {
+        if (!defaultPubSub) {
+            return;
+        }
+
         const refreshPlaneIndex = defaultPubSub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
             callback: (data) => {
@@ -363,13 +404,22 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
 
     // #region render
+    if (!context) {
+        return (<></>);
+    }
+
     // console.log('Render plane');
     const key = planeID + '-' + remountKey;
     const focusAnchorID = planeID + FOCUS_ANCHOR_SUFFIX;
     // Render the plane at its computed width (matches the layout's translateX spacing,
     // which is derived from the same `width`). A hardcoded 100% made every plane span the
     // full viewport, so fractional widths and multi-column layouts overlapped.
-    const renderWidth = width + 'px';
+    // A hand-resized plane renders the size the tree holds; otherwise the configured width and
+    // the content's own height.
+    const manualSize = treePlane.sizeMode === 'manual' && treePlane.width > 0;
+    const renderWidth = (manualSize ? treePlane.width : width) + 'px';
+    const renderHeight = manualSize && treePlane.height > 0 ? treePlane.height + 'px' : undefined;
+    const resizable = !!stateConfiguration.elements.plane.resizable && stateIsSelected && treePlane.show;
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const isolatePointerEvents = computeIsolatePointerEvents();
     const transform = cleanTemplate(`
@@ -380,9 +430,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         rotateY(${treePlane.location.rotateY}deg)
     `);
 
-    const planeContentProperties = {
-        // updatePlaneSize,
-    };
+    const planeContentProperties = {};
 
     return (
         <StyledPluridPlane
@@ -395,20 +443,28 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             id={planeID}
             style={{
                 width: renderWidth,
+                height: renderHeight,
                 transform,
+                // Animated relayout (FLIP): planes glide to their new placements only while the
+                // View holds the transition window open — never during a spawn or a drag.
+                transition: stateLayoutTransition > 0
+                    ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1)`
+                    : undefined,
                 opacity: isolatePlaneOpacity,
                 pointerEvents: isolatePointerEvents,
             }}
-            onMouseEnter={() => setMouseOver(true)}
-            onMouseLeave={() => setMouseOver(false)}
-            onMouseOver={() => debouncedSetActivePlane()}
-            onMouseMove={() => debouncedSetActivePlane()}
+            onPointerEnter={activatePlane}
+            onPointerLeave={deactivatePlane}
+            onFocusCapture={activatePlane}
             onClick={handlePlaneClick}
             selected={stateIsSelected}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
+            data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
+            backface={stateConfiguration.elements.plane.backface}
+            depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
             <StyledFocusAnchor
                 tabIndex={0}
@@ -420,6 +476,21 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                     {treePlane.parentPlaneID && (
                         <PlaneBridge
                             mouseOver={mouseOver}
+                            bridgeLength={treePlane.bridgeLength}
+                        />
+                    )}
+
+                    {resizable && (
+                        <PlaneResizeHandles
+                            planeID={planeID}
+                            width={treePlane.width || width}
+                            height={treePlane.height || (planeRef.current?.offsetHeight ?? 0)}
+                        />
+                    )}
+
+                    {stateConfiguration.development?.planeDebugger && (
+                        <PlaneDebugger
+                            treePlane={treePlane}
                         />
                     )}
 
@@ -471,6 +542,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 const makeMapStateToProps = () => {
     const getParentPlane = selectors.space.makeGetTreePlaneByID();
     const getIsSelected = selectors.space.makeGetIsPlaneSelected();
+    const getPlaneCulling = makeGetPlaneCulling();
 
     return (
         state: AppState,
@@ -479,6 +551,8 @@ const makeMapStateToProps = () => {
         stateParentPlane: getParentPlane(state, ownProps.treePlane?.parentPlaneID),
         stateViewSize: selectors.space.getViewSize(state),
         stateIsActivePlane: selectors.space.getActivePlaneID(state) === ownProps.planeID,
+        stateLayoutTransition: state.space.layoutTransition || 0,
+        stateCulled: getPlaneCulling(state, ownProps.planeID),
         stateIsolatePlane: selectors.space.getIsolatePlane(state),
         stateIsSelected: getIsSelected(state, ownProps.planeID),
         stateGeneralTheme: selectors.themes.getGeneralTheme(state),
@@ -495,10 +569,10 @@ const mapDispatchToProps = (
     ) => dispatch(
         actions.space.setSpaceField(payload),
     ),
-    dispatchUpdateSpaceTreePlane: (
+    dispatchSetPlaneSize: (
         payload,
     ) => dispatch(
-        actions.space.updateSpaceTreePlane(payload),
+        actions.space.setPlaneSize(payload),
     ),
     dispatchToggleSelection: (
         payload,

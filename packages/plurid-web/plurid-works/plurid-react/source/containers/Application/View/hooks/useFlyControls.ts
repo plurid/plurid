@@ -2,18 +2,47 @@
     // #region libraries
     import React, {
         useEffect,
+        useRef,
     } from 'react';
 
     import {
         AnyAction,
         ThunkDispatch,
     } from '@reduxjs/toolkit';
+
+    import {
+        PluridConfigurationSpace,
+        PluridShortcutID,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
     import actions from '~services/state/actions';
+
+    import {
+        isEditableTarget,
+    } from '~services/logic/input/guard';
+
+    import {
+        applyLocks,
+    } from '~services/logic/input/gesture';
+
+    import {
+        createFrameBatcher,
+    } from '~services/logic/input/frame';
+
+    import {
+        resolveHoldShortcuts,
+    } from '~services/logic/shortcuts/registry';
     // #endregion external
+
+
+    // #region internal
+    import type {
+        CameraMotionController,
+    } from './useCameraMotion';
+    // #endregion internal
 // #endregion imports
 
 
@@ -22,74 +51,165 @@
 export interface UseFlyControlsParameters {
     viewElement: React.RefObject<HTMLDivElement>;
     firstPerson: boolean;
-    /** `space.gestures.flySpeed` — planar move speed, px/frame. Default 9. */
-    flySpeed?: number;
-    /** `space.gestures.flyLookSensitivity` — pointer-locked mouse-look, deg/px. Default 0.12. */
-    flyLook?: number;
+    spaceConfiguration: PluridConfigurationSpace;
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
+    motion: CameraMotionController;
 }
+
+const REFERENCE_FRAME_MS = 1000 / 60;
+
+const FLY_IDS: PluridShortcutID[] = [
+    'flyForward',
+    'flyBack',
+    'flyLeft',
+    'flyRight',
+    'flyUp',
+    'flyDown',
+    'flySprint',
+];
 
 
 /**
- * First-person "fly" controls, active only in `firstPerson` mode. Continuous, frame-rate-independent
- * movement from held keys (WASD = move, E/Space = up, Q/Shift = down) via a `requestAnimationFrame`
- * loop, plus mouse-look: click the view to lock the pointer and steer with the mouse (Esc releases).
- * (Drag-to-look while NOT pointer-locked is handled in the pointer-gesture hook, not here.)
+ * First-person "fly" controls, active only in `firstPerson` mode. The held keys come from the
+ * shortcut registry (WASD move, E up, Q down, Shift sprint — remappable / disableable like every
+ * other shortcut), movement is TIME-based (`flySpeed` is px per 60 Hz frame, applied per real
+ * frame duration) with normalized diagonals, and the loop runs only while a key is down. Typing in
+ * a field never flies. Mouse-look: click the view to lock the pointer and steer (Esc releases);
+ * the look rotates about the EYE. Drag-to-look while not locked lives in the pointer hook.
  */
 export const useFlyControls = (
     {
         viewElement,
         firstPerson,
-        flySpeed,
-        flyLook,
+        spaceConfiguration,
         dispatch,
+        motion,
     }: UseFlyControlsParameters,
 ) => {
+    const configRef = useRef(spaceConfiguration);
+    configRef.current = spaceConfiguration;
+
     useEffect(() => {
         const element = viewElement.current;
-        if (!element || typeof window === 'undefined') {
-            return;
-        }
-        if (!firstPerson) {
+        if (!element || typeof window === 'undefined' || !firstPerson) {
             return;
         }
 
-        const FLY_SPEED = flySpeed ?? 9;            // px per frame (planar)
-        const FLY_VERTICAL = (flySpeed ?? 9) * (7 / 9); // up/down scales with planar speed (default 7)
-        const FLY_LOOK = flyLook ?? 0.12;           // deg per px (locked mouse-look)
-        const FLY_KEYS = new Set([
-            'KeyW', 'KeyA', 'KeyS', 'KeyD',
-            'KeyE', 'KeyQ', 'Space', 'ShiftLeft',
-        ]);
+        const batcher = createFrameBatcher((delta) => {
+            dispatch(actions.space.applyCameraDelta(
+                applyLocks(delta, configRef.current.transformLocks),
+            ));
+        });
 
-        const held = new Set<string>();
+        const held = new Map<PluridShortcutID, true>();
         let frame: number | null = null;
+        let last = 0;
+
+        const codeToID = () => {
+            const map = new Map<string, PluridShortcutID>();
+            for (const entry of resolveHoldShortcuts(configRef.current.shortcuts)) {
+                if (FLY_IDS.includes(entry.id)) {
+                    map.set(entry.code, entry.id);
+                }
+            }
+            return map;
+        };
+
+        const loop = (now: number) => {
+            frame = null;
+            const dt = last === 0 ? REFERENCE_FRAME_MS : Math.min(Math.max(now - last, 0), 64);
+            last = now;
+
+            const gestures = configRef.current.gestures || {};
+            const speed = (gestures.flySpeed ?? 9) * (dt / REFERENCE_FRAME_MS);
+            const sprint = held.has('flySprint') ? (gestures.flySprintMultiplier ?? 2.5) : 1;
+
+            let forward = 0;
+            let strafe = 0;
+            let vertical = 0;
+            if (held.has('flyForward')) { forward += 1; }
+            if (held.has('flyBack')) { forward -= 1; }
+            if (held.has('flyRight')) { strafe += 1; }
+            if (held.has('flyLeft')) { strafe -= 1; }
+            if (held.has('flyUp')) { vertical += 1; }
+            if (held.has('flyDown')) { vertical -= 1; }
+
+            const planar = Math.hypot(forward, strafe);
+            if (planar > 1) {
+                forward /= planar;
+                strafe /= planar;
+            }
+
+            if (forward !== 0 || strafe !== 0 || vertical !== 0) {
+                batcher.add({
+                    fly: {
+                        forward: forward * speed * sprint,
+                        strafe: strafe * speed * sprint,
+                        vertical: vertical * speed * sprint * (7 / 9),
+                    },
+                });
+            }
+
+            if (held.size > 0) {
+                frame = requestAnimationFrame(loop);
+            } else {
+                last = 0;
+            }
+        };
+
+        const start = () => {
+            if (frame === null) {
+                last = 0;
+                frame = requestAnimationFrame(loop);
+            }
+        };
 
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.metaKey || event.ctrlKey || event.altKey) {
                 return;
             }
-            if (FLY_KEYS.has(event.code)) {
-                held.add(event.code);
-                event.preventDefault();
+            if (isEditableTarget(event.target)) {
+                return;
+            }
+            const id = codeToID().get(event.code);
+            if (!id) {
+                return;
+            }
+            event.preventDefault();
+            if (!held.has(id)) {
+                held.set(id, true);
+                motion.cancel();
+                start();
             }
         };
+
         const onKeyUp = (event: KeyboardEvent) => {
-            held.delete(event.code);
+            const id = codeToID().get(event.code);
+            if (id) {
+                held.delete(id);
+            }
+        };
+
+        const clearHeld = () => {
+            held.clear();
         };
 
         const onMouseMove = (event: MouseEvent) => {
             if (document.pointerLockElement !== element) {
                 return;
             }
-            const yaw = event.movementX * FLY_LOOK;
-            const pitch = -event.movementY * FLY_LOOK;
+            const look = configRef.current.gestures?.flyLookSensitivity ?? 0.15;
+            const yaw = event.movementX * look;
+            const pitch = -event.movementY * look;
             if (yaw !== 0 || pitch !== 0) {
-                dispatch(actions.space.flyMove({ yaw, pitch }));
+                batcher.add({ look: { yaw, pitch } });
             }
         };
 
-        const onClick = () => {
+        const onClick = (event: MouseEvent) => {
+            if (isEditableTarget(event.target)) {
+                return;
+            }
             // Guard cross-document/detached contexts (iframes throw `WrongDocumentError`)
             // and swallow the rejection of the now-Promise-returning API — a denied or
             // unavailable pointer lock must never bubble as an unhandled error.
@@ -109,25 +229,9 @@ export const useFlyControls = (
             }
         };
 
-        const loop = () => {
-            let forward = 0;
-            let strafe = 0;
-            let vertical = 0;
-            if (held.has('KeyW')) { forward += FLY_SPEED; }
-            if (held.has('KeyS')) { forward -= FLY_SPEED; }
-            if (held.has('KeyA')) { strafe += FLY_SPEED; }
-            if (held.has('KeyD')) { strafe -= FLY_SPEED; }
-            if (held.has('KeyE') || held.has('Space')) { vertical += FLY_VERTICAL; }
-            if (held.has('KeyQ') || held.has('ShiftLeft')) { vertical -= FLY_VERTICAL; }
-            if (forward !== 0 || strafe !== 0 || vertical !== 0) {
-                dispatch(actions.space.flyMove({ forward, strafe, vertical }));
-            }
-            frame = requestAnimationFrame(loop);
-        };
-        frame = requestAnimationFrame(loop);
-
-        window.addEventListener('keydown', onKeyDown);
+        element.addEventListener('keydown', onKeyDown);
         window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('blur', clearHeld);
         document.addEventListener('mousemove', onMouseMove);
         element.addEventListener('click', onClick);
 
@@ -135,8 +239,10 @@ export const useFlyControls = (
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }
-            window.removeEventListener('keydown', onKeyDown);
+            batcher.cancel();
+            element.removeEventListener('keydown', onKeyDown);
             window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('blur', clearHeld);
             document.removeEventListener('mousemove', onMouseMove);
             element.removeEventListener('click', onClick);
             if (document.pointerLockElement === element && document.exitPointerLock) {
@@ -145,9 +251,6 @@ export const useFlyControls = (
         };
     }, [
         firstPerson,
-        viewElement.current,
-        flySpeed,
-        flyLook,
     ]);
 }
 // #endregion module

@@ -22,6 +22,8 @@
 
 
 // #region module
+export * from './table';
+
 const {
     fields: internationalizationFields,
 } = internationalization;

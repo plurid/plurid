@@ -21,10 +21,15 @@
     } from '../tree';
 
     import {
-        Coordinates,
         ViewSize,
         SpaceSize,
     } from '../utilities';
+
+    import {
+        CameraState,
+        CameraLimits,
+        CameraMotion,
+    } from '../camera';
     // #endregion external
 // #endregion imports
 
@@ -51,18 +56,33 @@ export interface PluridStateSpace {
     resolvedLayout: boolean;
     animatedTransform: boolean;
     transformTime: number;
+    /**
+     * The camera proper — the single source of truth for where the viewer is. Every camera
+     * mutation commits through it; the six scalars below are mirrors derived from it.
+     */
+    camera: CameraState;
+    /** Pitch / zoom / dolly limits the camera is clamped to (from `space.navigation`). */
+    cameraLimits: CameraLimits;
+    /** What is currently driving the camera: a gesture, a fling, a tween, or nothing. */
+    motion: CameraMotion;
+    /** @deprecated mirror of `camera` (legacy parameterization); read-only for consumers. */
     scale: number;
+    /** @deprecated mirror of `camera.pitch`. */
     rotationX: number;
+    /** @deprecated mirror of `camera.yaw`. */
     rotationY: number;
+    /** @deprecated mirror of `camera` (legacy parameterization). */
     translationX: number;
+    /** @deprecated mirror of `camera` (legacy parameterization). */
     translationY: number;
+    /** @deprecated mirror of `camera` (legacy parameterization). */
     translationZ: number;
+    /** The rendered `matrix3d(...)`, derived from `camera` + `viewSize`. */
     transform: string;
     tree: TreePlane[];
     /** Arbitrary plane↔plane relationships, independent of the parent→child `tree`. */
     links: PlaneLink[];
     activeUniverseID: string;
-    camera: Coordinates;
     viewSize: ViewSize;
     spaceSize: SpaceSize;
     view: PluridApplicationView;
@@ -74,6 +94,33 @@ export interface PluridStateSpace {
     selectedPlaneIDs: string[];
     /** True while the selection is being drag-moved — drives the live alignment-guide overlay. */
     draggingSelection: boolean;
+    /** Spatial undo/redo availability, maintained by the history middleware. */
+    history: PluridStateHistory;
+    /** Runtime bookmarks: name → encoded viewpoint (persisted with the space). */
+    bookmarks: Record<string, string>;
+    /**
+     * The runtime home viewpoint (encoded), set through `space.setHome`; falls back to
+     * `navigation.home`, then to the identity camera.
+     */
+    home?: string;
+    /**
+     * While > 0 (ms), plane placements transition to their new locations (an animated relayout);
+     * the View clears it once the transition has run.
+     */
+    layoutTransition: number;
+    /** The culling pass's result: planes that stop painting, planes that are contained (both kept mounted). */
+    culled: {
+        hidden: string[];
+        frozen: string[];
+    };
+}
+
+
+export interface PluridStateHistory {
+    canUndo: boolean;
+    canRedo: boolean;
+    undoDepth: number;
+    redoDepth: number;
 }
 
 
@@ -85,5 +132,13 @@ export interface PluridStateThemes {
 
 export interface PluridStateUI {
     toolbarScrollPosition: number;
+    /** Grab / navigate mode toggled with G. */
+    grabMode: boolean;
+    /** Grab mode held down with Space. */
+    grabHold: boolean;
+    /** The keyboard-shortcuts help overlay. */
+    shortcutsOverlayVisible: boolean;
+    /** The rubber-band selection rectangle (view px) while a marquee drag is in progress. */
+    marquee: { left: number; top: number; right: number; bottom: number } | null;
 }
 // #endregion module

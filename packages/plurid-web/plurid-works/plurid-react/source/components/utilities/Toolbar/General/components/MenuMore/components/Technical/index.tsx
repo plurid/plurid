@@ -92,9 +92,8 @@ const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
         dispatchSetConfigurationSpaceCullingDistance,
     } = properties;
 
-    const {
-        cullingDistance,
-    } = stateConfiguration.space;
+    const cullingDistance = stateConfiguration.space.culling?.distance
+        ?? stateConfiguration.space.cullingDistance;
 
 
     /** state */

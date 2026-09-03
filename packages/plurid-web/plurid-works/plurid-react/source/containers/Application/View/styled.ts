@@ -107,12 +107,10 @@ export const StyledView: any = styled.div`
             || props.transformMode !== 'ALL';
         return navActive ? 'none' : 'auto';
     }};
-    touch-action: ${(props: any) => {
-        const navActive = props.firstPerson
-            || props.grabNavigation
-            || props.transformMode !== 'ALL';
-        return navActive ? 'none' : 'auto';
-    }};
+    /* The view owns every touch on empty space (one finger orbits, two pan / pinch); plane
+       CONTENT re-enables native panning for itself (see PlaneContent), so a finger on a page
+       still scrolls it. */
+    touch-action: none;
     -webkit-user-drag: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 `;

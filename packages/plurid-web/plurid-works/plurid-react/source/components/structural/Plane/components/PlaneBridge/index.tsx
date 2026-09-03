@@ -43,6 +43,8 @@
 // #region module
 export interface PluridPlaneBridgeOwnProperties {
     mouseOver: boolean;
+    /** The plane's own bridge length (from the tree); falls back to the configured length. */
+    bridgeLength?: number;
 }
 
 export interface PluridPlaneBridgeStateProperties {
@@ -66,6 +68,7 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     const {
         // #region own
         mouseOver,
+        bridgeLength: bridgeLengthProperty,
         // #endregion own
 
         // #region state
@@ -83,8 +86,9 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
         transparentUI,
     } = stateConfiguration.global;
 
-    // Configurable bridge geometry (defaults to the original 100).
-    const bridgeLength = stateConfiguration.space.bridge?.length ?? 100;
+    // The bridge is drawn at the length the plane was SPAWNED with (stored on the tree node), so a
+    // later configuration change never detaches existing bridges from their link points.
+    const bridgeLength = bridgeLengthProperty ?? stateConfiguration.space.bridge?.length ?? 100;
     // #endregion properties
 
 

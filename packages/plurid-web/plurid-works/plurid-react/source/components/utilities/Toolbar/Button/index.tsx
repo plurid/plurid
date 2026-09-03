@@ -84,6 +84,10 @@ const PluridToolbarButton: React.FC<PluridToolbarButtonProperties> = (
     // #region render
     return (
         <StyledToolbarButton
+            type="button"
+            aria-label={typeof text === 'string' ? text : undefined}
+            title={typeof text === 'string' ? text : undefined}
+            data-plurid-control="toolbar-button"
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onClick={atClick}

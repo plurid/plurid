@@ -49,8 +49,10 @@ const LAYOUTS: { key: string; label: string; layout: any }[] = [
 ];
 
 
-// A larger generated set to stress-test performance (many planes in one space).
-const STRESS_COUNT = 40;
+// A larger generated set to stress-test performance (many planes in one space). `?planes=N`
+// sets the size (and turns stress mode on).
+const stressParam = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('planes') : null;
+const STRESS_COUNT = stressParam ? Math.max(1, Number(stressParam)) : 40;
 const STRESS_ACCENTS = ['#4da3ff', '#ffb454', '#7ee787', '#d2a8ff', '#ff7b72'];
 const STRESS_PANELS: (PanelProps & { route: string })[] = Array.from(
     { length: STRESS_COUNT },
@@ -71,7 +73,7 @@ const STRESS_PANELS: (PanelProps & { route: string })[] = Array.from(
 
 const App = () => {
     const [layoutKey, setLayoutKey] = useState('columns');
-    const [stress, setStress] = useState(false);
+    const [stress, setStress] = useState(!!stressParam);
     // PERSIST toggle is itself persisted so it survives a reload (needed to verify the
     // save→reload→restore round-trip). Each layout gets its own storage slot via `id`.
     const [persist, setPersist] = useState(
@@ -95,15 +97,62 @@ const App = () => {
     const rotateSens = params.get('rotateSens') ? Number(params.get('rotateSens')) : undefined;
     const dragThreshold = params.get('dragThreshold') !== null ? Number(params.get('dragThreshold')) : undefined;
     const btnLeft = params.get('btnLeft') as any;       // orbit|pan|zoom|disabled
+    const btnRight = params.get('btnRight') as any;     // orbit|pan|zoom|dolly|disabled|menu
     const btnWheel = params.get('btnWheel') as any;     // zoom|disabled
-    const buttonMap = (btnLeft || btnWheel)
-        ? { ...(btnLeft ? { left: btnLeft } : {}), ...(btnWheel ? { wheel: btnWheel } : {}) }
-        : undefined;
-    const gestures = (rotateSens !== undefined || dragThreshold !== undefined || buttonMap)
+    const buttonMap = (btnLeft || btnRight || btnWheel)
         ? {
+            ...(btnLeft ? { left: btnLeft } : {}),
+            ...(btnRight ? { right: btnRight } : {}),
+            ...(btnWheel ? { wheel: btnWheel } : {}),
+        }
+        : undefined;
+    // Input-layer flags (Phase 2): ?touchOne=pan|orbit|disabled · ?trackpad=pan|zoom|orbit|disabled
+    //   ?momentum=0 (no fling) · ?wheel=zoom|scroll-first|disabled · ?dblclick=0
+    const touchOne = params.get('touchOne') as any;
+    const trackpadScroll = params.get('trackpad') as any;
+    const momentumOff = params.get('momentum') === '0';
+    const wheelPolicy = params.get('wheel') as any;
+    const doubleClickOff = params.get('dblclick') === '0';
+    // Navigation-feel surface (Phase 4):
+    //   ?home=<viewpoint>  → navigation.home (v1 `rX,rY,tX,tY,tZ,s` or v2)
+    //   ?presets=1         → navigation.presets { front, side, top }
+    //   ?gamepad=1         → gestures.gamepad.enabled (tests stub navigator.getGamepads)
+    //   Layout buttons now switch the layout on the LIVE instance (no remount): children stay
+    //   attached and the planes glide (animated relayout).
+    const homeParam = params.get('home') || undefined;
+    const presets = params.get('presets') === '1'
+        ? { front: '0,0,0,0,0,1', side: '0,90,0,0,0,1', top: '80,0,0,0,0,1' }
+        : undefined;
+    const gamepad = params.get('gamepad') === '1';
+    //   ?empty=1 → an empty view (the empty state)
+    const emptyView = params.get('empty') === '1';
+    // Rendering / perf surface (Phase 6):
+    //   ?planes=N     → N generated planes (stress mode on)
+    //   ?bench=1      → after boot, a scripted orbit + pan + zoom over 240 frames → window.__rtBench
+    //   ?debug=1      → development.spaceDebugger + planeDebugger (the perf HUD)
+    //   ?culling=1    → space.culling.enabled (+ ?cullDistance=<n>, ?freezeDistance=<n>)
+    //   ?depthFade=1  → elements.plane.depthFade.enabled
+    const bench = params.get('bench') === '1';
+    const debug = params.get('debug') === '1';
+    const cullingOn = params.get('culling') === '1';
+    const cullDistance = params.get('cullDistance') ? Number(params.get('cullDistance')) : undefined;
+    const freezeDistance = params.get('freezeDistance') ? Number(params.get('freezeDistance')) : undefined;
+    const depthFade = params.get('depthFade') === '1';
+    // Selection / editing surface (Phase 5): ?resizable=1 → elements.plane.resizable · ?snapGrid=50
+    const resizable = params.get('resizable') === '1';
+    const snapGrid = params.get('snapGrid') ? Number(params.get('snapGrid')) : undefined;
+    const gestures = (rotateSens !== undefined || dragThreshold !== undefined || buttonMap
+        || touchOne || trackpadScroll || momentumOff || wheelPolicy || doubleClickOff || gamepad)
+        ? {
+            ...(gamepad ? { gamepad: { enabled: true } } : {}),
             ...(rotateSens !== undefined ? { rotateSensitivity: rotateSens } : {}),
             ...(dragThreshold !== undefined ? { dragThreshold } : {}),
             ...(buttonMap ? { buttonMap } : {}),
+            ...(touchOne ? { touchOne } : {}),
+            ...(trackpadScroll ? { trackpadScroll } : {}),
+            ...(momentumOff ? { disableMomentum: true } : {}),
+            ...(wheelPolicy ? { wheel: wheelPolicy } : {}),
+            ...(doubleClickOff ? { doubleClickFrame: false } : {}),
         }
         : undefined;
     // Shortcut config (Tier 3): ?scDisable=all | ?scDisable=modeRotation,modeScale | ?scRemap=modeRotation:KeyP
@@ -134,6 +183,25 @@ const App = () => {
     const media = params.get('media') === '1';
     const spaceW = params.get('spaceW') ? Number(params.get('spaceW')) : undefined;
     const spaceH = params.get('spaceH') ? Number(params.get('spaceH')) : undefined;
+    // Camera-core verification surface (default OFF):
+    //   ?perspective=1300   → space.perspective (the CSS lens; read by the camera now)
+    //   ?pitchLimit=60      → space.navigation.pitchLimit (orbit never flips past it)
+    //   ?vp=2               → space.viewpointURLVersion 2 (full-camera viewpoints in the URL/callback)
+    const perspectiveParam = params.get('perspective') ? Number(params.get('perspective')) : undefined;
+    const pitchLimitParam = params.get('pitchLimit') ? Number(params.get('pitchLimit')) : undefined;
+    const viewpointVersion = params.get('vp') === '2' ? 2 as const : undefined;
+    //   ?reducedMotion=1 → navigation.motion.reducedMotion 'respect' is the default; this forces
+    //   every tween/fling instant regardless of the OS setting (for deterministic tests).
+    const reducedMotion = params.get('reducedMotion') === '1';
+    //   ?pivot=view|selection|cursor → navigation.orbitPivot
+    const orbitPivot = params.get('pivot') as any;
+    // Link/tree verification surface (Phase 3):
+    //   ?links=dense → the GEOMETRY plane carries six links (two to the same route)
+    //   ?nested=3    → registers a chain of N planes, each linking to the next; GEOMETRY links to
+    //                  the first, so a test can spawn a 3-deep chain and check the fan angles
+    //   window.__rtTree() → the live space tree
+    const denseLinks = params.get('links') === 'dense';
+    const nested = params.get('nested') ? Number(params.get('nested')) : 0;
     const spaceDimensions = (spaceW !== undefined || spaceH !== undefined)
         ? {
             ...(spaceW !== undefined ? { width: spaceW } : {}),
@@ -182,9 +250,30 @@ const App = () => {
         // Tier 3 shortcut control (onUnhandledKey always on; disabled/keymap via params).
         shortcuts,
         // Tier 3 element show-flags (nested via `extend`).
-        ...(hideLinks ? { extend: { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } } : {}),
+        ...((hideLinks || debug) ? {
+            extend: {
+                ...(hideLinks ? { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } : {}),
+                ...(debug ? { development: { spaceDebugger: true, planeDebugger: true } } : {}),
+            },
+        } : {}),
         // Opt-in roots-container sizing (the E2/D2 substrate seam).
         ...(spaceDimensions ? { spaceDimensions } : {}),
+        // Camera core knobs.
+        ...(perspectiveParam !== undefined ? { perspective: perspectiveParam } : {}),
+        ...((pitchLimitParam !== undefined || reducedMotion || orbitPivot || homeParam || presets) ? {
+            navigation: {
+                ...(pitchLimitParam !== undefined ? { pitchLimit: pitchLimitParam } : {}),
+                ...(orbitPivot ? { orbitPivot } : {}),
+                ...(reducedMotion ? { motion: { duration: 0 } } : {}),
+                ...(homeParam ? { home: homeParam } : {}),
+                ...(presets ? { presets } : {}),
+            },
+        } : {}),
+        ...(viewpointVersion ? { viewpointURLVersion: viewpointVersion } : {}),
+        ...(resizable ? { planeResizable: true } : {}),
+        ...(snapGrid ? { snap: { enabled: true, threshold: 12, grid: snapGrid } } : {}),
+        ...(cullingOn ? { culling: { enabled: true, ...(cullDistance ? { distance: cullDistance } : {}), ...(freezeDistance ? { freezeDistance } : {}) } } : {}),
+        ...(depthFade ? { planeDepthFade: { enabled: true } } : {}),
     });
 
     // A plane registered but NOT in the initial `view` — a plurid link spawns it into the
@@ -202,6 +291,32 @@ const App = () => {
         ),
     };
 
+    const geometryLinks = [
+        ...(denseLinks ? [
+            { route: '/material', label: 'material' },
+            { route: '/topology', label: 'topology' },
+            { route: DETAIL_ROUTE, label: 'detail again' },
+            { route: '/tessellation', label: 'tessellation' },
+            { route: '/transform', label: 'transform' },
+        ] : []),
+        ...(nested > 0 ? [{ route: '/chain-1', label: 'chain' }] : []),
+    ];
+    const chainPlanes: PluridReactPlane[] = Array.from({ length: nested }, (_, i) => {
+        const index = i + 1;
+        return {
+            route: `/chain-${index}`,
+            component: () => (
+                <Panel
+                    title={`CHAIN · ${index}`}
+                    code={`C-${String(index).padStart(2, '0')}`}
+                    accent="#ffb454"
+                    rows={[['depth', `${index}`], ['next', index < nested ? `/chain-${index + 1}` : 'none']]}
+                    link={index < nested ? { route: `/chain-${index + 1}`, label: 'next' } : undefined}
+                />
+            ),
+        };
+    });
+
     const planes: PluridReactPlane[] = [
         ...source.map((panel) => ({
             route: panel.route,
@@ -212,20 +327,24 @@ const App = () => {
                     accent={panel.accent}
                     rows={panel.rows}
                     link={panel.route === '/geometry' ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
+                    links={panel.route === '/geometry' ? geometryLinks : undefined}
                 />
             ),
         })),
         detailPlane,
+        ...chainPlanes,
         // ?media=1 - the consumer-built media plane (the substrate-seam proof).
         ...(media ? [{ route: '/media', component: MediaPlane }] : []),
     ];
 
     // `view` = the initially-visible roots. DETAIL_ROUTE is intentionally absent → it only
     // appears when the link is clicked.
-    const view = [
-        ...source.map((panel) => panel.route),
-        ...(media ? ['/media'] : []),
-    ];
+    const view = emptyView
+        ? []
+        : [
+            ...source.map((panel) => panel.route),
+            ...(media ? ['/media'] : []),
+        ];
 
     return (
         <>
@@ -285,17 +404,88 @@ const App = () => {
             </div>
 
             <PluridApplication
-                key={layoutKey + (stress ? '-stress' : '') + (persist ? '-p' : '')}
+                key={(stress ? 'stress' : 'base') + (persist ? '-p' : '')}
                 configuration={configuration}
                 planes={planes}
                 view={view}
                 useLocalStorage={persist || memoryStore}
                 storageAdapter={memoryAdapter}
-                id={'rt-' + layoutKey + (stress ? '-stress' : '')}
+                id={'rt' + (stress ? '-stress' : '')}
                 onPersistContent={() => (window as any).__rtContent}
                 onRestoreContent={(c) => { (window as any).__rtRestored = c; }}
                 onViewpointChange={(v) => { (window as any).__rtViewpoint = v; }}
-                onReady={(api) => { (window as any).__pluridApi = api; }}
+                onReady={(api) => {
+                    (window as any).__pluridApi = api;
+                    // Camera assertion helpers: the live camera, the v2 viewpoint, and a
+                    // dispatch/frame counter for perf assertions.
+                    (window as any).__rtCamera = () => api.store.getState().space.camera;
+                    (window as any).__rtTree = () => api.store.getState().space.tree;
+                    (window as any).__rtViewpoint2 = () => api.getViewpoint({ version: 2 });
+                    const perf = ((window as any).__rtPerf = { dispatches: 0, frames: 0 });
+                    // Which top-level slice keys changed on each notification (a no-op dispatch
+                    // logs `[]`) — for "nothing dispatches while idle" assertions.
+                    const changes: string[][] = ((window as any).__rtChanges = []);
+                    let previous = api.store.getState();
+                    api.store.subscribe(() => {
+                        perf.dispatches += 1;
+                        const next = api.store.getState();
+                        const changed: string[] = [];
+                        for (const slice of Object.keys(next)) {
+                            if (next[slice] !== previous[slice]) {
+                                const keys = Object.keys(next[slice] || {}).filter((key) => next[slice][key] !== (previous[slice] || {})[key]);
+                                changed.push(slice + ':' + keys.join('|'));
+                            }
+                        }
+                        changes.push(changed);
+                        if (changes.length > 200) changes.shift();
+                        previous = next;
+                    });
+                    const tick = () => { perf.frames += 1; requestAnimationFrame(tick); };
+                    requestAnimationFrame(tick);
+
+                    // ?bench=1: a scripted orbit + pan + zoom, 240 frames, one camera delta per
+                    // frame; frame times from rAF deltas → window.__rtBench.
+                    if (new URLSearchParams(location.search).get('bench') === '1') {
+                        const bootMs = performance.now();
+                        const frameTimes: number[] = [];
+                        let dispatchesAtStart = 0;
+                        let index = 0;
+                        let last = 0;
+                        const total = 240;
+                        const run = (now: number) => {
+                            if (index === 0) {
+                                dispatchesAtStart = perf.dispatches;
+                                last = now;
+                            } else {
+                                frameTimes.push(now - last);
+                                last = now;
+                            }
+                            const phase = Math.floor(index / 80);
+                            const delta = phase === 0
+                                ? { yaw: 0.9, pitch: index % 2 ? 0.3 : -0.3 }
+                                : (phase === 1
+                                    ? { pan: { x: index % 40 < 20 ? 6 : -6, y: 2 } }
+                                    : { zoom: { factor: index % 40 < 20 ? 1.01 : 1 / 1.01 } });
+                            api.store.dispatch({ type: 'space/applyCameraDelta', payload: delta });
+                            index += 1;
+                            if (index < total) {
+                                requestAnimationFrame(run);
+                                return;
+                            }
+                            const sorted = [...frameTimes].sort((a, b) => a - b);
+                            const at = (q: number) => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * q))];
+                            (window as any).__rtBench = {
+                                bootMs: Math.round(bootMs),
+                                firstFrameMs: Math.round(frameTimes[0] ?? 0),
+                                p50FrameMs: Math.round(at(0.5) * 100) / 100,
+                                p95FrameMs: Math.round(at(0.95) * 100) / 100,
+                                dispatches: perf.dispatches - dispatchesAtStart,
+                                frames: frameTimes.length,
+                            };
+                        };
+                        setTimeout(() => requestAnimationFrame(run), 500);
+                    }
+                }}
                 renderToolbar={slotToolbar
                     ? () => (
                         <div

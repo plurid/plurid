@@ -9,14 +9,13 @@
 
     import {
         TRANSFORM_MODES,
-        directions,
 
         PluridConfigurationSpaceTransformLocks,
         PluridConfigurationSpaceShortcuts,
         PluridShortcutID,
 
         PluridPubSub as IPluridPubSub,
-        TransformModes,
+        FOCUS_ANCHOR_SUFFIX,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -34,8 +33,21 @@
     } from '~services/logic/animation';
 
     import {
-        interaction,
-    } from '~services/engine';
+        isEditableTarget,
+    } from '~services/logic/input/guard';
+
+    import {
+        fitToView,
+        frameSelection,
+        goHome,
+    } from '~services/logic/camera';
+
+    import {
+        navigateDirection,
+        duplicateSelection,
+    } from '~services/state/thunks/selection';
+
+
     // #endregion external
 
 
@@ -52,6 +64,20 @@
 
 
 // #region module
+/** The key came from inside a plane's CONTENT (not the view, not a plane's focus anchor). */
+const insidePlaneContent = (
+    event: KeyboardEvent,
+): boolean => {
+    const target = event.target as HTMLElement | null;
+    if (!target || typeof target.closest !== 'function') {
+        return false;
+    }
+    if (typeof target.id === 'string' && target.id.endsWith(FOCUS_ANCHOR_SUFFIX)) {
+        return false;
+    }
+    return !!target.closest('[data-plurid-plane]');
+};
+
 /**
  * One keyboard shortcut. `match` replicates the original `if`-condition verbatim (so ORDER + the
  * loose modifier checks are preserved exactly); `code` is the default `event.code` a `keymap` entry
@@ -112,13 +138,41 @@ const runTransformNudge = (ctx: ShortcutContext): boolean => {
 // disable / remap / unhandled-key plumbing is new.
 const SHORTCUTS: ShortcutBinding[] = [
     {
-        // Cmd/Ctrl+Z = undo, +Shift = redo. The `inputOnPath` guard lets an editor keep its own undo.
+        // Cmd/Ctrl+Z = undo, +Shift = redo. The editable-target guard lets an editor keep its own undo.
         id: 'undo', code: 'KeyZ',
         match: (e, code) => (e.metaKey || e.ctrlKey) && e.code === code,
         run: ({ dispatch, event, prevent }) => {
             prevent();
             dispatch(event.shiftKey ? actions.space.redo() : actions.space.undo());
         },
+    },
+    {
+        // `?` (Shift+/ on most layouts, or the key character itself) toggles the help overlay;
+        // Escape closes it while it is open.
+        id: 'help', code: 'Slash',
+        match: (e, code, ctx) => e.key === '?'
+            || (e.shiftKey && e.code === code)
+            || (e.code === 'Escape' && !!ctx.state.ui?.shortcutsOverlayVisible),
+        run: ({ dispatch, state, event, prevent }) => {
+            prevent();
+            if (event.code === 'Escape') {
+                dispatch(actions.ui.setShortcutsOverlayVisible(false));
+            } else {
+                dispatch(actions.ui.toggleShortcutsOverlay());
+            }
+            void state;
+        },
+    },
+    {
+        // G toggles grab / navigate mode (left drag orbits everywhere, the wheel zooms).
+        id: 'grabMode', code: 'KeyG',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.ui.toggleUIGrabMode()); },
+    },
+    {
+        id: 'exitGrabMode', code: 'Escape',
+        match: (e, code, ctx) => e.code === code && !!ctx.state.ui?.grabMode,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.ui.setUIGrabMode(false)); },
     },
     {
         // Escape clears the selection — only when something is selected, so an empty Escape still
@@ -128,10 +182,65 @@ const SHORTCUTS: ShortcutBinding[] = [
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.clearSelection()); },
     },
     {
-        // Frame all planes (CAD "fit"): Home or 0.
+        // Frame all planes (CAD "fit"): 0 — animated, from the measured extents.
         id: 'fitToView', code: 'Digit0',
-        match: (e, code, ctx) => (e.key === 'Home' || e.code === code) && ctx.noModifiers,
-        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.spaceFitToView()); },
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(fitToView({ animate: true }) as any); },
+    },
+    {
+        // The home viewpoint (`space.setHome` / `navigation.home` / identity): Home.
+        id: 'home', code: 'Home',
+        match: (e, code, ctx) => (e.code === code || e.key === 'Home') && ctx.noModifiers,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(goHome(true) as any); },
+    },
+    // Keyboard plane navigation: plain arrows walk to the nearest plane in that screen direction,
+    // Enter frames the active plane. Never from inside plane CONTENT (a focused field, list or link
+    // keeps its own arrows/Enter) — only from the view itself or a plane's focus anchor.
+    {
+        id: 'navigateLeft', code: 'ArrowLeft',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(navigateDirection('left') as any); },
+    },
+    {
+        id: 'navigateRight', code: 'ArrowRight',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(navigateDirection('right') as any); },
+    },
+    {
+        id: 'navigateUp', code: 'ArrowUp',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(navigateDirection('up') as any); },
+    },
+    {
+        id: 'navigateDown', code: 'ArrowDown',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(navigateDirection('down') as any); },
+    },
+    {
+        id: 'frameActive', code: 'Enter',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && !!ctx.state.space.activePlaneID,
+        run: ({ dispatch, state, prevent }) => { prevent(); focusActivePlane(dispatch, state); },
+    },
+    {
+        id: 'selectAll', code: 'KeyA',
+        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.selectAll()); },
+    },
+    {
+        id: 'invertSelection', code: 'KeyI',
+        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.invertSelection()); },
+    },
+    {
+        id: 'duplicateSelection', code: 'KeyD',
+        match: (e, code, ctx) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && ctx.state.space.selectedPlaneIDs.length > 0,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(duplicateSelection() as any); },
+    },
+    {
+        // Frame the selection: `.` (the CAD "zoom to selection").
+        id: 'frameSelection', code: 'Period',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && ctx.state.space.selectedPlaneIDs.length > 0,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(frameSelection(true) as any); },
     },
     {
         id: 'toggleFirstPerson', code: 'KeyF',
@@ -237,7 +346,7 @@ export const handleGlobalShortcuts = (
 
     const inputOnPath = dom.verifyPathInputElement(
         dom.getEventPath(event),
-    );
+    ) || isEditableTarget(event.target);
     if (inputOnPath) {
         // The engine never consumes keys typed into inputs / editors; `onUnhandledKey` is deliberately
         // NOT fired here either, so a host doesn't react to ordinary typing.
@@ -286,198 +395,4 @@ export const handleGlobalShortcuts = (
 
 
 
-// Smooth-zoom tuning: the scale delta is proportional to wheel/trackpad magnitude
-// (continuous, CAD-like) instead of a fixed quantized step, clamped so a single
-// aggressive notch can't jump across the whole scale range.
-const SCALE_WHEEL_SENSITIVITY = 0.0015;
-const SCALE_WHEEL_MAX_STEP = 0.2;
-
-export const handleGlobalWheel = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    event: WheelEvent,
-    modes: TransformModes,
-    locks: PluridConfigurationSpaceTransformLocks,
-    grabMode: boolean = false,
-    wheelDisabled: boolean = false,
-) => {
-    // `gestures.buttonMap.wheel: 'disabled'` hands the wheel entirely back to the page — plurid
-    // neither zooms nor preventDefaults, so native scrolling works everywhere.
-    if (wheelDisabled) {
-        return;
-    }
-
-    // The wheel only zooms the space while navigating (grab mode, scale mode, or
-    // ⌘/Ctrl+wheel). Otherwise it's left alone so page/plane content scrolls normally.
-    const wheelZooms = grabMode;
-    if (event.shiftKey
-        || event.metaKey
-        || event.altKey
-        || event.ctrlKey
-        || modes.rotation
-        || modes.translation
-        || modes.scale
-        || wheelZooms
-    ) {
-        event.preventDefault();
-    }
-
-    const deltas = {
-        deltaX: event.deltaX,
-        deltaY: event.deltaY,
-    };
-    const absoluteThreshold = 100;
-    const direction = interaction.direction.getWheelDirection(deltas, absoluteThreshold);
-
-    if (modes.rotation) {
-        if (direction === directions.left && locks.rotationY) {
-            return dispatch(actions.space.rotateLeft());
-        }
-
-        if (direction === directions.right && locks.rotationY) {
-            return dispatch(actions.space.rotateRight());
-        }
-
-        if (direction === directions.up && locks.rotationX) {
-            return dispatch(actions.space.rotateUp());
-        }
-
-        if (direction === directions.down && locks.rotationX) {
-            return dispatch(actions.space.rotateDown());
-        }
-    }
-
-    if (event.shiftKey && !event.altKey) {
-        if (direction === directions.up && locks.rotationX) {
-            return dispatch(actions.space.rotateUp());
-        }
-
-        if (direction === directions.down && locks.rotationX) {
-            return dispatch(actions.space.rotateDown());
-        }
-
-        if (direction === directions.left && locks.rotationY) {
-            return dispatch(actions.space.rotateLeft());
-        }
-
-        if (direction === directions.right && locks.rotationY) {
-            return dispatch(actions.space.rotateRight());
-        }
-    }
-
-    if (modes.translation) {
-        if (event.metaKey || event.ctrlKey) {
-            if (direction === directions.up) {
-                return dispatch(actions.space.translateDown());
-            }
-
-            if (direction === directions.down) {
-                return dispatch(actions.space.translateUp());
-            }
-
-            return;
-        }
-
-        if (event.altKey) {
-            if (direction === directions.up && locks.translationZ) {
-                return dispatch(actions.space.translateIn());
-            }
-
-            if (direction === directions.down && locks.translationZ) {
-                return dispatch(actions.space.translateOut());
-            }
-        }
-
-        if (direction === directions.up && locks.translationY) {
-            return dispatch(actions.space.translateDown());
-        }
-
-        if (direction === directions.down && locks.translationY) {
-            return dispatch(actions.space.translateUp());
-        }
-
-        if (direction === directions.left && locks.translationX) {
-            return dispatch(actions.space.translateRight());
-        }
-
-        if (direction === directions.right && locks.translationX) {
-            return dispatch(actions.space.translateLeft());
-        }
-    }
-
-    if (event.altKey && event.shiftKey) {
-        if (direction === directions.up && locks.translationZ) {
-            return dispatch(actions.space.translateIn());
-        }
-
-        if (direction === directions.down && locks.translationZ) {
-            return dispatch(actions.space.translateOut());
-        }
-    }
-
-    if (event.altKey && !event.shiftKey) {
-        if (event.metaKey || event.ctrlKey) {
-            if (direction === directions.up) {
-                return dispatch(actions.space.translateDown());
-            }
-
-            if (direction === directions.down) {
-                return dispatch(actions.space.translateUp());
-            }
-
-            return;
-        }
-
-        if (direction === directions.up && locks.translationY) {
-            return dispatch(actions.space.translateDown());
-        }
-
-        if (direction === directions.down && locks.translationY) {
-            return dispatch(actions.space.translateUp());
-        }
-
-        if (direction === directions.left && locks.translationX) {
-            return dispatch(actions.space.translateRight());
-        }
-
-        if (direction === directions.right && locks.translationX) {
-            return dispatch(actions.space.translateLeft());
-        }
-    }
-
-    // Smooth, proportional zoom toward the cursor. The wheel/trackpad magnitude drives
-    // the scale delta directly (continuous, not a quantized fixed step), and ⌘/Ctrl+wheel
-    // zooms from any mode — matching trackpad pinch. Convention: wheel up (deltaY < 0) =
-    // zoom in. The point under the cursor stays anchored (CAD-standard).
-    if (modes.scale || event.metaKey || event.ctrlKey || wheelZooms) {
-        if (!locks.scale) {
-            return;
-        }
-
-        const zoomAmount = Math.min(
-            Math.abs(event.deltaY) * SCALE_WHEEL_SENSITIVITY,
-            SCALE_WHEEL_MAX_STEP,
-        );
-
-        if (zoomAmount === 0) {
-            return;
-        }
-
-        const deltaScale = event.deltaY < 0 ? zoomAmount : -zoomAmount;
-
-        const target = event.currentTarget as HTMLElement | null;
-        const rect = target && target.getBoundingClientRect
-            ? target.getBoundingClientRect()
-            : null;
-        const originX = rect ? event.clientX - rect.left : event.clientX;
-        const originY = rect ? event.clientY - rect.top : event.clientY;
-
-        return dispatch(actions.space.zoomAtPoint({
-            deltaScale,
-            originX,
-            originY,
-        }));
-    }
-
-    return;
-}
 // #endregion module

@@ -3,6 +3,10 @@
     import styled, { keyframes } from 'styled-components';
 
     import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -22,9 +26,9 @@ const riseIn = keyframes`
 `;
 
 export const StyledShortcutsBackdrop = styled.div`
-    position: fixed;
+    position: absolute;
     inset: 0;
-    z-index: 10001;
+    z-index: ${Z_INDEX.SHORTCUTS_DIALOG};
     display: grid;
     place-items: center;
     padding: 40px;
@@ -111,10 +115,10 @@ export const StyledShortcutsKeys = styled.div`
 `;
 
 export const StyledShortcutsTrigger = styled.button<{ theme: Theme }>`
-    position: fixed;
+    position: absolute;
     bottom: 18px;
     left: 18px;
-    z-index: 10000;
+    z-index: ${Z_INDEX.SHORTCUTS_TRIGGER};
     width: 30px;
     height: 30px;
     display: grid;

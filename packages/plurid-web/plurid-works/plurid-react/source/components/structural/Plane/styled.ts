@@ -13,6 +13,8 @@
 
 // #region module
 export interface IStyledPluridPlane {
+    backface?: 'visible' | 'hidden';
+    depthFade?: boolean;
     theme: Theme;
     mouseOver: boolean;
     show: boolean;
@@ -23,6 +25,21 @@ export interface IStyledPluridPlane {
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
+    backface-visibility: ${({ backface }) => (backface === 'hidden' ? 'hidden' : 'visible')};
+    ${({ depthFade }) => (depthFade
+        ? 'opacity: var(--plurid-plane-fade, 1); filter: blur(var(--plurid-plane-blur, 0px));'
+        : '')}
+
+    /* Culled: kept mounted (state intact), not painted, not interactive. Frozen: painted, contained. */
+    &[data-plurid-culled='hidden'] {
+        visibility: hidden;
+        pointer-events: none;
+        contain: layout paint style;
+    }
+    &[data-plurid-culled='frozen'] {
+        contain: layout paint style;
+    }
+
     background-color: ${({
         transparentUI,
         mouseOver,

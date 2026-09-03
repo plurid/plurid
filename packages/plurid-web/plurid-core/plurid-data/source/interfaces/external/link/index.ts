@@ -105,6 +105,14 @@ export interface PluridLink<C, S, M> {
     route: string;
 
     /**
+     * A stable identity for this link within its plane, recorded on the plane it spawns
+     * (`TreePlane.spawnedByLinkID`). Optional: by default a link is identified by its route and its
+     * ordinal among the links to the same route inside the plane, which is stable across re-renders
+     * but not across reorderings of same-route links.
+     */
+    linkID?: string;
+
+    /**
      * Format the link as a simple anchor element. Default `false`.
      */
     devisible?: boolean;

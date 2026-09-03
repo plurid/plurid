@@ -5,6 +5,7 @@
         PluridConfiguration,
 
         defaultConfiguration,
+        ViewSize,
     } from '@plurid/plurid-data';
 
     import {
@@ -19,7 +20,7 @@
     } from '../utilities';
 
     import {
-        recomputeChildrenLocation,
+        recomputeSubtree,
     } from '../location';
     // #endregion external
 // #endregion imports
@@ -81,13 +82,12 @@ const computeFaceToFaceLayout = (
     gap: number = 0,
     middle: number = 0,
     configuration: PluridConfiguration = defaultConfiguration,
+    viewSize?: ViewSize,
 ): TreePlane[] => {
-    const windowInnerWidth = typeof window === 'undefined'
-        ? 1440
-        : window.innerWidth;
-    const windowInnerHeight = typeof window === 'undefined'
-        ? 840
-        : window.innerHeight;
+    const windowInnerWidth = viewSize?.width
+        ?? (typeof window === 'undefined' ? 1440 : window.innerWidth);
+    const windowInnerHeight = viewSize?.height
+        ?? (typeof window === 'undefined' ? 840 : window.innerHeight);
 
     const tree: TreePlane[] = [];
     const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
@@ -144,14 +144,7 @@ const computeFaceToFaceLayout = (
                 },
             };
 
-            const children = recomputeChildrenLocation(treePage);
-
-            const treePageWithChildren = {
-                ...treePage,
-                children,
-            }
-
-            tree.push(treePageWithChildren);
+            tree.push(recomputeSubtree(treePage));
         }
     }
 

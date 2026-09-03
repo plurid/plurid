@@ -17,6 +17,8 @@
     import {
         PluridConfiguration,
         TreePlane,
+        CameraState,
+        ViewSize,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -29,6 +31,14 @@
     import {
         navigateToPluridPlane,
     } from '~services/logic/animation';
+
+    import {
+        interaction,
+    } from '~services/engine';
+
+    import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
     // #endregion external
 // #endregion imports
 
@@ -50,7 +60,7 @@ interface StyledMinimapProperties extends ThemedProperties {
 }
 
 const StyledMinimap = styled.div<StyledMinimapProperties>`
-    position: fixed;
+    position: absolute;
     top: 16px;
     right: 16px;
     width: ${WIDTH}px;
@@ -58,7 +68,7 @@ const StyledMinimap = styled.div<StyledMinimapProperties>`
     border-radius: 6px;
     color: ${({ theme }) => theme.colorPrimary};
     overflow: hidden;
-    z-index: 999;
+    z-index: ${Z_INDEX.MINIMAP};
     user-select: none;
     transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 
@@ -94,9 +104,21 @@ const StyledMinimapDot = styled.div<StyledMinimapDotProperties>`
     transition: opacity 120ms ease, width 120ms ease, height 120ms ease;
 `;
 
-/** A generous transparent hit target centered on the plane's projected point. */
-const StyledMinimapHit = styled.div`
+/** A generous transparent hit target centered on the plane's projected point — a real button. */
+const StyledMinimapHit = styled.button`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: none;
+    font: inherit;
+    color: inherit;
     position: absolute;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+        border-radius: 50%;
+    }
     width: ${HIT}px;
     height: ${HIT}px;
     display: grid;
@@ -134,7 +156,21 @@ export interface PluridMinimapStateProperties {
     stateTree: TreePlane[];
     stateActivePlaneID: string;
     stateGeneralTheme: Theme;
+    stateCamera: CameraState;
+    stateViewSize: ViewSize;
 }
+
+/** The camera's eye, a small ring on the map. */
+const StyledMinimapEye = styled.div<ThemedProperties>`
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    margin: -4.5px 0 0 -4.5px;
+    border-radius: 50%;
+    border: 2px solid ${({ theme }) => theme.colorPrimary};
+    pointer-events: none;
+    box-sizing: border-box;
+`;
 
 export interface PluridMinimapDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
@@ -162,6 +198,8 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
         stateTree,
         stateActivePlaneID,
         stateGeneralTheme,
+        stateCamera,
+        stateViewSize,
         dispatch,
     } = properties;
 
@@ -185,37 +223,64 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
         );
     }
 
-    // Project onto the two world axes with the most spread, so the overview fits the actual layout:
-    // a wall-style layout (COLUMNS/ROWS — X/Y spread, Z flat) reads as a front elevation, a
-    // depth-style layout (X/Z spread) reads as a top-down plan. Avoids collapsing rows onto each other.
-    const AXES = ['translateX', 'translateY', 'translateZ'] as const;
-    const stats = AXES.map(axis => {
-        const values = planes.map(plane => plane.location[axis]);
-        const min = Math.min(...values);
-        const max = Math.max(...values);
-        return { axis, min, span: (max - min) || 1 };
-    }).sort((a, b) => b.span - a.span);
-    const [hAxis, vAxis] = stats;
+    // A DETERMINISTIC projection: world X runs horizontally; the vertical axis is Z (a top-down
+    // plan) when the space has depth, else Y (a front elevation for the wall-style layouts). The
+    // choice depends only on whether any plane is off the Z = 0 wall, never on which axis happens
+    // to span more — so the map cannot swap its axes as planes move.
+    const hasDepth = planes.some(plane => Math.abs(plane.location.translateZ) > 1);
+    const vertical: 'translateY' | 'translateZ' = hasDepth ? 'translateZ' : 'translateY';
+    const eye = interaction.camera.eyeWorld(stateCamera, stateViewSize);
+    const points = [
+        ...planes.map(plane => ({ x: plane.location.translateX, y: plane.location[vertical] })),
+        { x: eye.x, y: vertical === 'translateZ' ? eye.z : eye.y },
+    ];
+    const minX = Math.min(...points.map(point => point.x));
+    const maxX = Math.max(...points.map(point => point.x));
+    const minY = Math.min(...points.map(point => point.y));
+    const maxY = Math.max(...points.map(point => point.y));
+    const spanX = (maxX - minX) || 1;
+    const spanY = (maxY - minY) || 1;
+    // one scale for both axes, so the map keeps the space's proportions
+    const scale = Math.min((WIDTH - 2 * PADDING) / spanX, (HEIGHT - 2 * PADDING) / spanY);
+    const offsetX = PADDING + ((WIDTH - 2 * PADDING) - spanX * scale) / 2;
+    const offsetY = PADDING + ((HEIGHT - 2 * PADDING) - spanY * scale) / 2;
 
-    const project = (plane: TreePlane) => ({
-        x: PADDING + ((plane.location[hAxis.axis] - hAxis.min) / hAxis.span) * (WIDTH - 2 * PADDING),
-        y: PADDING + ((plane.location[vAxis.axis] - vAxis.min) / vAxis.span) * (HEIGHT - 2 * PADDING),
+    const project = (point: { x: number; y: number }) => ({
+        x: offsetX + (point.x - minX) * scale,
+        y: offsetY + (point.y - minY) * scale,
     });
+    const eyePoint = project(points[points.length - 1]);
 
     return (
         <StyledMinimap
             data-plurid-minimap={true}
+            data-plurid-overlay="minimap"
+            data-plurid-control="minimap"
+            role="group"
+            aria-label="space overview"
             theme={stateGeneralTheme}
             transparent={transparent}
         >
+            <StyledMinimapEye
+                theme={stateGeneralTheme}
+                style={{
+                    left: eyePoint.x,
+                    top: eyePoint.y,
+                }}
+                data-plurid-minimap-eye={true}
+            />
+
             {planes.map(plane => {
-                const { x, y } = project(plane);
+                const { x, y } = project({ x: plane.location.translateX, y: plane.location[vertical] });
                 const active = plane.planeID === stateActivePlaneID;
 
                 return (
                     <StyledMinimapHit
                         key={plane.planeID}
+                        type="button"
                         title={plane.route}
+                        aria-label={'go to plane ' + plane.route}
+                        data-plurid-control="minimap-plane"
                         onClick={() => navigateToPluridPlane(dispatch, plane)}
                         style={{
                             left: x - HIT / 2,
@@ -242,6 +307,8 @@ const mapStateToProperties = (
     stateTree: selectors.space.getTree(state),
     stateActivePlaneID: selectors.space.getActivePlaneID(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateCamera: selectors.space.getCamera(state),
+    stateViewSize: selectors.space.getViewSize(state),
 });
 
 const mapDispatchToProperties = (

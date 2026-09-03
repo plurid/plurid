@@ -162,10 +162,17 @@ const PluridRouterLink: React.FC<PluridRouterLinkOwnProperties> = (
         );
     }
 
+    // A real anchor fires a native click on Enter, so no `onKeyUp` handler here — with both,
+    // Enter navigated twice.
+    const anchorProperties = {
+        ...renderProperties,
+        onKeyUp: undefined,
+    };
+
     return (
         <StyledPluridRouterLinkAnchor
             href={route}
-            {...renderProperties}
+            {...anchorProperties}
         >
             {children}
         </StyledPluridRouterLinkAnchor>

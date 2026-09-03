@@ -22,6 +22,10 @@
     import {
         computeApplication,
     } from '../computing';
+
+    import {
+        interaction,
+    } from '~services/engine';
     // #endregion external
 // #endregion imports
 
@@ -83,6 +87,9 @@ export const serverComputeMetastate = async (
             },
             ui: {
                 toolbarScrollPosition: 50,
+                grabMode: false,
+                grabHold: false,
+                shortcutsOverlayVisible: false,
             },
             space: {
                 loading: false,
@@ -97,11 +104,12 @@ export const serverComputeMetastate = async (
                 translationZ: 0,
                 tree: computedTree,
                 activeUniverseID: '',
-                camera: {
-                    x: 0,
-                    y: 0,
-                    z: 0,
-                },
+                camera: interaction.camera.identityCamera(
+                    { width: 1440, height: 821 },
+                    appConfiguration.space.perspective,
+                ),
+                cameraLimits: interaction.camera.resolveCameraLimits(appConfiguration.space.navigation),
+                motion: 'idle',
                 viewSize: {
                     width: 1440,
                     height: 821,
@@ -118,6 +126,14 @@ export const serverComputeMetastate = async (
                 },
                 view,
                 culledView: [],
+                selectedPlaneIDs: [],
+                draggingSelection: false,
+                history: {
+                    canUndo: false,
+                    canRedo: false,
+                    undoDepth: 0,
+                    redoDepth: 0,
+                },
             },
         };
 

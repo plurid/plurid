@@ -27,16 +27,19 @@ module.exports = {
         },
     },
     collectCoverageFrom: [
-        'source/*.{js,ts}',
+        'source/**/*.{ts,tsx}',
+        '!source/**/__tests__/**',
     ],
     moduleDirectories: [
         'node_modules',
         'source',
     ],
+    // The `~` path aliases, ANCHORED — unanchored patterns swallowed relative imports such as
+    // `./components/PlaneBridge` and mapped them to the wrong directory.
     moduleNameMapper: {
-        "data/(.*)": "<rootDir>/source/data/$1",
-        "components/(.*)": "<rootDir>/source/components/$1",
-        "containers/(.*)": "<rootDir>/source/containers/$1",
-        "services/(.*)": "<rootDir>/source/services/$1",
+        '^~data/(.*)$': '<rootDir>/source/data/$1',
+        '^~components/(.*)$': '<rootDir>/source/components/$1',
+        '^~containers/(.*)$': '<rootDir>/source/containers/$1',
+        '^~services/(.*)$': '<rootDir>/source/services/$1',
     },
 }

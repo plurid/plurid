@@ -113,7 +113,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
             const item = items[i];
             rows.current.push(
                 <PluridVirtualListItem
-                    key={i + Math.random()}
+                    key={i}
                     index={i}
                     top={mathematics.arithmetic.sum(heights.current, i)}
                     element={item}
@@ -134,7 +134,7 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
     }, [
         start,
         end,
-        heights.current,
+        items.length,
     ]);
 
     useEffect(() => {
@@ -165,14 +165,19 @@ const PluridVirtualList: React.FC<PluridVirtualListProperties> = (
     useEffect(() => {
         setResizing(true);
 
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             const elementHeight = mathematics.arithmetic.sum(heights.current, heights.current.length);
             setElementHeight(elementHeight);
 
             setResizing(false);
         }, 400);
+
+        return () => {
+            clearTimeout(timer);
+        };
     }, [
-        viewSize,
+        viewSize.width,
+        viewSize.height,
     ]);
 
 

@@ -1,6 +1,6 @@
 # Plurid Engine Architecture
 
-Verified: 2026-07-13 against source, package manifests, workspace configuration, and the applications consumer inventory.
+Verified: 2026-07-13 against source, package manifests, workspace configuration, and the applications consumer inventory; section 4 (camera), the wire catalog and Appendix A re-verified 2026-09-02 for the camera core.
 
 This is the descriptive reference: how the system works today; roadmaps and knob how-tos live elsewhere - see Appendix B. Every path, export name, count, and behavior below was checked against the source on the date above. Claims are anchored to `file:symbol` wherever possible so they survive line drift; when files move, this document is re-anchored, not trusted.
 
@@ -129,16 +129,17 @@ StyleSheetManager shouldForwardProp={isPropValid}     (@emotion/is-prop-valid)
 
 ### 3.3 PluridView and the nine hooks
 
-`containers/Application/View/index.tsx` is a connected function component: it subscribes the full state plus derived slices (`mapStateToProperties`), binds ~20 dispatchers, attaches the raw `keydown` + `wheel` listeners (passive: false) on the view element, and memoizes the `pluridContext` value (registrar, plane context, `defaultPubSub`, `registerPubSub`) so that planes
+`containers/Application/View/index.tsx` is a connected function component: it subscribes the full state plus derived slices (`mapStateToProperties`), binds ~20 dispatchers, attaches the raw `keydown` + `wheel` listeners (passive: false) on the view element — the keydown runs the shortcut dispatcher (`services/logic/shortcuts`, generated from the `PLURID_SHORTCUTS` table), the wheel runs `services/logic/input/wheel.ts` (`normalizeWheel` for `deltaMode`/trackpad classification, `wheelToDelta` for the policy: pinch/Ctrl zoom at the cursor, modes and modifiers, `scroll-first` over scrollable plane content, `trackpadScroll` on empty space) into the same per-frame batcher — and memoizes the `pluridContext` value (registrar, plane context, `defaultPubSub`, `registerPubSub`) so that planes
 
 - which read it via `useContext` - do not re-render on every per-frame View render. The behavior lives in nine hooks, `containers/Application/View/hooks/` (the directory holds exactly these):
 
 | Hook | Responsibility | File |
 | --- | --- | --- |
-| `useGrabMode` | grab/navigate mode: G toggles, Escape exits; `grabModeRef` mirrors state for live pointer/wheel handlers | `hooks/useGrabMode.ts` |
-| `useFlyControls` | first-person fly: held-key movement + pointer-lock mouse-look; on when `space.firstPerson`; `gestures.flySpeed` / `flyLookSensitivity` | `hooks/useFlyControls.ts` |
-| `useViewResize` | window-resize handling: debounced view-size measure (`setViewSize`) + tree recompute | `hooks/useViewResize.ts` |
-| `usePointerGestures` | native Pointer Events: orbit/pan/zoom drags per `gestures.buttonMap`, two-pointer pinch about the midpoint, decaying-momentum spin on a rAF loop (`momentumDecay` 0.92, `momentumMin` 0.05 defaults) | `hooks/usePointerGestures.ts` |
+| `useGrabMode` | grab/navigate mode: G toggles (a registry shortcut), Space holds (tracked here), Escape exits; both flags live in the `ui` slice; `grabModeRef` mirrors the effective value for live pointer/wheel handlers | `hooks/useGrabMode.ts` |
+| `useCameraMotion` | the ONE rAF loop for programmatic motion: interruptible tweens (`interpolateCamera`, eased, reduced-motion aware) and time-based flings (velocity px/ms, `decay^(dt/16.67)`); every input calls `cancel()`; writes `state.space.motion` | `hooks/useCameraMotion.ts` |
+| `useFlyControls` | first-person fly: registry hold-keys (WASD, E/Q, Shift sprint), time-based movement with normalized diagonals, loop only while a key is down, editable-target guard; pointer-lock look rotates about the EYE | `hooks/useFlyControls.ts` |
+| `useViewResize` | `ResizeObserver` on the view (window `resize` fallback): debounced `setViewSize` + tree recompute | `hooks/useViewResize.ts` |
+| `usePointerGestures` | native Pointer Events: a press resolves to ONE intent through `services/logic/input/gesture.ts` (`resolveGestureIntent`: planes-are-pages on content, orbit on empty space, right/middle/Shift pan, Alt dolly, modes and `buttonMap`); per-frame coalescing (`input/frame.ts`); auto-pivot under the cursor (`navigation.orbitPivot`); two-pointer pinch + pan; window-level pointerup/blur safety net; right-drag menu suppression; double-click frame; drag-to-move as ONE history transaction; release velocity → `motion.fling` | `hooks/usePointerGestures.ts` |
 | `useTreeUpdate` | `treeUpdate`/`treeUpdateCallback`/`resolveLayout`: rebuild the tree from view + registered planes, re-attach runtime `planeID` + spawned children onto the relaid-out tree (keyed by route + ROUNDED location, so sub-pixel relayout drift cannot silently close spawned planes) | `hooks/useTreeUpdate.ts` |
 | `usePluridPubSub` | the pubsub bridge: the bus registry + `registerPubSub`, subscribes the 35 control topics, re-publishes `space.transform` + `configuration` with `internal: true` (section 7) | `hooks/usePluridPubSub.ts` |
 | `useCollaboration` | collaboration seam (on when `space.collaboration === true`): emits `COLLABORATION_MUTATION` on shared-arrangement change, applies `APPLY_REMOTE_MUTATION` with `meta.remote` | `hooks/useCollaboration.ts` |
@@ -159,44 +160,60 @@ PluridViewContainer
       PluridPlaneLinks        components/structural/PlaneLinks link beams (ride the camera)
       AlignmentGuides         components/structural/AlignmentGuides (ride the camera)
   PluridOrigin                transform-origin indicator
-  Toolbar | Viewcube | Minimap | Shortcuts                     each replaceable
+  Toolbar | Viewcube | Minimap | Shortcuts                     each replaceable (the minimap: world X horizontal, Z vertical when the space has depth else Y, a ring for the camera's eye)
 ```
 
+- OVERLAYS are `position: absolute` INSIDE the `position: relative` view (an embedded space keeps its minimap, viewcube, toolbar, shortcuts dialog and HUD inside its container; nothing is `position: fixed`), stacked by the one ladder in `plurid-react data/constants/zIndex.ts` (`Z_INDEX`), and marked `data-plurid-overlay` so a wheel over them never reaches the camera (the toolbar's button strip deliberately is NOT an overlay: a drag or a wheel on its background is the space's, as it always was; its drawer menu is). ACCESSIBILITY: the view is `role="application"` with an `aria-roledescription`; every engine control — toolbar buttons, viewcube arrows, fit button and face zones, minimap dots, the plane controls — is a real `<button>` with an `aria-label` and a `:focus-visible` ring (the viewcube's controls stay in the DOM and show on hover or keyboard focus); `PluridLiveRegion` announces the active plane, the selection size and the end of a camera move politely. The `SpaceDebugger` (`development.spaceDebugger`) is the performance HUD — fps, dispatches/s, planes mounted / hidden / frozen, camera, motion — and `PlaneDebugger` (`development.planeDebugger`) the per-plane readout (id, route, placement, size, depth, link).
 - SLOTS: `renderToolbar` / `renderViewcube` / `renderMinimap` / `renderShortcuts` - when provided, each REPLACES the engine's default overlay at the same spot; the `elements.*.show` flags and `global.micro` still govern the defaults but a slot bypasses them (the host owns that element).
-- `Roots` applies ONE inline style: `transform: spaceTransformMatrix` (from `selectors.space.getTransformMatrix`) plus a `transform <transformTime>ms ease-in-out` transition when `animatedTransform` is set. It sizes itself via the opt-in `space.dimensions` (`resolveDimension`: number -> px, string passthrough; defaults width `'100%'`, height `window.innerHeight` - the historical behavior). It hosts `PluridPlaneLinks` and `AlignmentGuides` INSIDE the transformed container so beams and guides ride the camera.
-- `Root` (per `TreePlane` in `state.space.tree`) deliberately subscribes to NOTHING (`mapStateToProperties` is empty) and is wrapped `connect(...)(React.memo(PluridRoot))`: with the tree immutable + structurally shared, an unchanged root's `plane` ownProp is referentially stable and the memo bails the re-render - this is what keeps per-frame work off the planes. It renders the root plane and recursively the spawned children, and provides `PluridPlaneIDContext` at BOTH injection sites (the root plane and each child plane) - the context `usePluridPlane` reads. Each plane component receives the injected `plurid` prop: `{ plane: { value, planeID, parentPlaneID, fragments, parameters, query }, route, pubSub }`.
-- `Plane` positions itself with a per-plane CSS transform built from `treePlane.location` (`translateX/Y/Z` px + `rotateX/Y` deg, `transform-origin: 0 0 0`). Width comes from `elements.plane.width`: a value `<= 1` is a fraction of the measured view width, `> 1` is absolute px. It subscribes to DERIVED per-instance booleans (`stateIsActivePlane`, `stateIsSelected`) rather than the raw shared strings - the raw `activePlaneID` changes on every hover over ANY plane, so subscribing to the string re-rendered all planes per hover; the boolean flips only for the two planes whose state changed. Its chrome: `PlaneControls` (address bar, isolate/refresh/close), `PlaneContent` (the consumer component), `PlaneBridge` (the visual parent->child bridge).
+- `Roots` applies ONE inline style: `transform: spaceTransformMatrix` (from `selectors.space.getTransformMatrix`) and NO CSS transition — programmatic camera moves tween through the View's motion controller (one commit per frame, interruptible by any input), which a CSS transition on the camera would fight. It sizes itself via the opt-in `space.dimensions` (`resolveDimension`: number -> px, string passthrough; defaults width `'100%'`, height `window.innerHeight` - the historical behavior). It hosts `PluridPlaneLinks` and `AlignmentGuides` INSIDE the transformed container so beams and guides ride the camera.
+- `Root` (per `TreePlane` in `state.space.tree`) deliberately subscribes to NOTHING (`mapStateToProperties` is empty) and is wrapped `connect(...)(React.memo(PluridRoot))`: with the tree immutable + structurally shared, an unchanged root's `plane` ownProp is referentially stable and the memo bails the re-render - this is what keeps per-frame work off the planes. It renders the root plane and recursively the SHOWN spawned children (a closed child takes its subtree out of the DOM; nothing hidden is mounted), and provides `PluridPlaneIDContext` at BOTH injection sites (the root plane and each child plane) - the context `usePluridPlane` reads. Each plane component receives the injected `plurid` prop: `{ plane: { value, planeID, parentPlaneID, fragments, parameters, query }, route, pubSub }`.
+- `Plane` positions itself with a per-plane CSS transform built from `treePlane.location` (`translateX/Y/Z` px + `rotateX/Y` deg, `transform-origin: 0 0 0`). Width comes from `elements.plane.width`: a value `<= 1` is a fraction of the measured view width, `> 1` is absolute px. It subscribes to DERIVED per-instance booleans (`stateIsActivePlane`, `stateIsSelected`) rather than the raw shared strings - the raw `activePlaneID` changes on every hover over ANY plane, so subscribing to the string re-rendered all planes per hover; the boolean flips only for the two planes whose state changed. Its chrome: `PlaneControls` (address bar, isolate/refresh/close), `PlaneContent` (the consumer component), `PlaneBridge` (the visual parent->child bridge). During an ANIMATED RELAYOUT (`state.space.layoutTransition` > 0: a layout switch, a `view.addPlane`/`view.removePlane`, a `view` prop change) the plane's placement transform carries a CSS transition for that window — the one place a CSS transition is right (many independent plane transforms, not the camera) — instant under reduced motion.
+- `PluridEmpty` (`components/structural/Empty`) renders in place of the space when the layout resolved to no planes; the `renderEmpty` slot replaces it.
 
 ## 4. The camera and transform model
 
-The camera is state: `state.space` holds the six scalars `rotationX`, `rotationY`, `translationX`, `translationY`, `translationZ`, `scale`, plus the CACHED matrix string `transform` (initial `matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)`), `animatedTransform` (transition on/off) and `transformTime` (default 450 ms).
+The camera is a first-class value, `state.space.camera` (`CameraState`, defined in plurid-data `interfaces/internal/camera`), and the pure math lives in the engine's `modules/interaction/camera/` (`interaction.camera`):
 
-`computeMatrix` (`plurid-react source/services/logic/transform` : `computeMatrix`) composes the matrix from the scalars using the engine's matrix primitives (`interaction.matrix`: `rotateMatrix`, `translateMatrix`, `scaleMatrix`, `multiplyArrayOfMatrices`, `matrixArrayToCSSMatrix`):
+```
+CameraState = { yaw, pitch, scale, pivot: Vec3, offset: Vec3, perspective }
+M = T(C + offset) · Rx(pitch) · Ry(yaw) · S(scale) · T(−pivot)        C = view center
+```
 
-1. The pivot is the CENTER OF THE VIEW CONTAINER (`spaceState.viewSize`, tracked in state; `window` inner size is only the fallback, and 1440x800 under SSR) - so rotation/scale pivot correctly when the space is embedded or resized.
-2. `transformOrigin{X,Y,Z} = -translation + half-view` (Z: `-translationZ`).
-3. Composition order: `[ translation, translate(origin), rotation(-rotX, -rotY in radians), translate(-origin), scale ]`, multiplied and serialized to a CSS `matrix3d(...)` string.
+- `pivot` is the WORLD point orbit and zoom act about; `offset` is where that pivot sits in camera space relative to the view center — `x`/`y` are the screen-space pan, `z` the dolly (positive = closer to the eye).
+- Pan is applied AFTER the rotation, so it is screen-exact at any orientation (`panBy` scales the delta by the perspective factor at the pivot depth so the content on that plane follows the pointer 1:1). Orbit changes only `yaw`/`pitch` and leaves the pivot fixed on screen. `setPivot` is a lossless re-parameterization (`offset' = offset + R·s·(pivot' − pivot)`), which is how "orbit about the point under the cursor" works: re-pivot, then rotate.
+- Zoom is multiplicative through ONE function, `zoomAt(anchor, factor)`, exact for everything on the pivot-depth plane at any yaw/pitch/dolly (the wheel, the pinch, the drag-zoom, the toolbar and the keys all reduce to it). `yaw` is wrapped to (−180, 180], `pitch` clamped to ±`navigation.pitchLimit` (89), `scale` to [`zoomMin`, `zoomMax`], the dolly kept in front of the eye (`clampCamera`).
+- The rotation is the explicit CSS turntable `Rx(pitch) · Ry(yaw)` (`rotationXMatrix`/`rotationYMatrix` are pinned to the CSS `rotateX`/`rotateY` definitions by tests); no quaternion on the camera path.
+- The CSS `perspective` on `Space` is `camera.perspective` (config `space.perspective`, finally read), with `perspective-origin: 50% 50%` — the vanishing point is the view center, which is also the pivot frame, so an orbit pivots instead of shearing. `project`/`unprojectAtCameraZ`/`pickPlanePoint` reproduce the browser's projection for hit-testing and framing; `framePlane`/`fitAll` compute a framing camera from the MEASURED plane extents (a bisection on the zoom, so perspective is honored).
 
-The reducers that move the camera (`rotateXWith`, `translateZWith`, `zoomAtPoint`, `flyMove`, `setSpaceLocation`, ...) all end with `state.transform = computeMatrix(state)` - the matrix is computed IN the reducer, once per action, and stored. `Roots` just applies the string.
+THE COMMIT PATH: every camera mutation in the space slice ends in `commitCamera(state, next)` (`services/state/modules/space/index.ts`): clamp → store `camera` → mirror the six legacy scalars → render `transform` via `cameraMatrix3d`. Nothing else writes `transform` or the scalars. The legacy reducers (`rotateXWith`, `translateYWith`, `zoomAtPoint`, `setSpaceLocation`, `spaceFitToView`, …) are thin wrappers that build a `CameraDelta` (or re-derive the camera from the scalars) and commit; the new reducers are `applyCameraDelta`, `setCamera`, `setCameraFromLegacy`, `setPerspective`, `setCameraLimits`, `setMotion`, and `setPlaneSize`.
 
-THE PER-FRAME PATH: pointer event -> `usePointerGestures` dispatches a `*With` action -> the space reducer mutates the scalars and recomputes the matrix -> react-redux notifies -> ONLY `PluridRoots` re-renders (it is the only component subscribed to the matrix); `Root` is memo-bailed, planes untouched. Zero per-frame JS on planes, zero per-frame layout work - the browser composites one transformed layer. Momentum continues the dispatch loop on `requestAnimationFrame` until the velocity decays below `momentumMin`.
+THE LEGACY SCALARS (`rotationX/Y`, `translationX/Y/Z`, `scale`) remain on state as READ-ONLY MIRRORS (an exact alternative parameterization with the pivot at the view center — `interaction.camera.toLegacy`/`fromLegacy`, proven equivalent to the historical matrix by a golden test). `setViewSize` re-derives the camera from them about the new center, so a resize keeps the picture anchored at rotation 0 exactly as before.
 
-Notable reducers (`services/state/modules/space/index.ts`):
+THE PER-FRAME PATH: pointer event → a camera action → the space reducer commits the camera and the matrix → react-redux notifies → ONLY `PluridRoots` re-renders (it is the only component subscribed to the matrix); `Root` is memo-bailed, planes untouched. Zero per-frame JS on planes, zero per-frame layout work. `Roots` carries `will-change: transform` only while `state.space.motion` is not idle.
 
-- `zoomAtPoint` - zoom toward a screen point (the cursor / pinch midpoint) instead of the view center: for scale `s -> s'` it shifts translation by `(origin - translation) * (1 - s'/s)`, clamped to the scale limits; exact at rotation 0 (the common zoom case), close otherwise.
-- `flyMove` - one camera-relative step per animation frame (forward/strafe/vertical + yaw/pitch), with pitch clamped to +-85 deg so the view cannot flip past vertical.
-- `spaceFitToView` / `spaceResetTransform` - frame all planes / return to identity (also reachable as pubsub topics, section 7).
-- `setAnimatedTransform` + `setTransformTime` - flip the CSS transition on `Roots` for smooth programmatic moves (the `space.animatedTransform` topic).
+CULLING AND DEPTH CUES (`useCulling`, at most one pass per 100 ms after a camera commit or a tree change): `plurid-engine modules/space/view/culling.ts` : `cullPlanes` decides which shown planes stop painting — every projected corner outside the view expanded by `space.culling.frustumMargin`, or the center farther from the EYE than `space.culling.distance` — and which are frozen (farther than `freezeDistance`, still painted, contained); both thresholds carry hysteresis against the previous result, and the active, selected, isolated and focused planes are never culled. The result is `state.space.culled` (written only when it changes); a hidden plane keeps its React state and gets `data-plurid-culled="hidden"` (`visibility: hidden`, `pointer-events: none`, `contain: layout paint style`), a frozen one `data-plurid-culled="frozen"` (`contain: layout paint style`, its `ResizeObserver` stops reporting); `usePluridPlane()` exposes `culled` / `frozen` so a plane can pause video or polling while unseen. Distances are camera-space from the eye, so a plane at the pivot depth sits at `perspective` (2000) — defaults `freezeDistance` 3500, `distance` 6000; off unless `space.culling.enabled`. With `elements.plane.depthFade` the same pass writes `--plurid-plane-depth` / `--plurid-plane-fade` / `--plurid-plane-blur` on each plane element (no store churn) and the plane's stylesheet fades/blurs with them; `elements.plane.backface: 'hidden'` stops painting planes seen from behind.
 
-Modes: grab mode (G / Escape, `useGrabMode`) turns the primary drag into pan-navigation; fly mode (`space.firstPerson`) enables `useFlyControls`. Gesture mapping, sensitivities, drag threshold and momentum are all `space.gestures` knobs (see CONTROL_SURFACE).
+BENCHMARK (`?planes=N&bench=1`, `fixtures/render-test/e2e/bench.spec.ts`): a scripted orbit + pan + zoom of 240 frames with one camera delta per frame; the harness reports `__rtBench = { bootMs, firstFrameMs, p50FrameMs, p95FrameMs, dispatches, frames }` and the suite asserts one dispatch per frame and a p95 ceiling per size (40 → 40 ms, 100 → 50 ms, 500 → 100 ms — regression ceilings for headless CI). Measured 2026-09-03 in headless Chromium on the development machine: 40 planes p95 17 ms (p50 8.4), 100 planes p95 17.5 ms (p50 8.4), 500 planes p95 33 ms (p50 16.7).
 
-THE VIEWPOINT CODEC (`services/logic/viewpoint`): a "viewpoint" is the six camera scalars as a first-class encodable value.
+MEASUREMENT: every `Plane` runs a `ResizeObserver` and writes its untransformed `offsetWidth/Height` into the tree through `setPlaneSize` (equality-gated, structurally shared via `space.tree.fields.updateTreePlaneFields`), so `TreePlane.width/height` are real — fit-to-view, framing, the link beams and the minimap read them. The view element is observed too (`useViewResize`), so an embedded space re-centers when its container resizes.
 
-- `encodeViewpoint(transform)` -> `"rX,rY,tX,tY,tZ,s"` in the fixed order `rotationX, rotationY, translationX, translationY, translationZ, scale`, each rounded to 4 decimals.
-- `decodeViewpoint(string)` -> `SpaceTransform | null`; STRICT: anything that is not exactly 6 finite numbers with `scale > 0` returns `null`, so a malformed `?v=` is ignored rather than corrupting the view.
-- Restore dispatches `setSpaceLocation`, which sets the scalars AND recomputes the matrix.
+THE MOTION PATH: every NON-GESTURE camera move is `cameraCommand(kind, options)` (`services/logic/camera`, also under `services/state/thunks/camera.ts`) — `frame` (a plane / the selection / everything), `fit`, `reset`, `home`, `preset`, `bookmark`, `viewpoint`, `delta` — which resolves the target camera from the live state (pure `resolveCameraTarget`) and commits it through `commitCameraTarget`: an interruptible tween on the View's motion controller (`useCameraMotion`: one rAF loop for tweens AND momentum flings, `interpolateCamera` with shortest-arc yaw and geometric zoom, easing/duration from `navigation.motion`, instant under reduced motion) or, without a mounted View or with `animate: false`, one `setCamera` jump. Thunks reach the controller through the store's THUNK EXTRA ARGUMENT (`services/state/extra.ts`: `PluridThunkExtra.motion`, created with the store by `PluridApplication`, filled in by the View while mounted). Navigation (`navigatePlane`: link spawn, Alt+F/B, roots, minimap, `navigateToPlane`), the viewcube faces/arrows/fit, the toolbar, the shortcuts, double-click and the `space.frame` / `space.cameraDelta` (`animate`) / `space.fitToView` / `space.resetTransform` / `space.setViewpoint` (`animated`) topics all go through it; any pointer, wheel, key or gamepad input cancels the tween where it is (no snap). `state.space.motion` (`idle | gesture | fling | tween`) is observable as `space.changed` kind `motion`.
 
-URL binding (`useViewpointURL`, config knobs on `space.*`): `viewpointURLWrite` and `viewpointURLRestore` BOTH default false (no URL pollution unless asked); `viewpointURLParam` defaults `'v'`; `viewpointURLDebounce` defaults 400 ms for the `replaceState` write (path, other query params and hash preserved; no history spam). The first write is skipped so the pre-restore default transform never clobbers the `?v=` the user arrived with. Programmatic control rides the `space.setViewpoint` topic (SET_VIEWPOINT -> `setSpaceLocation`); programmatic observation rides the debounced `onViewpointChange(viewpoint)` prop and the synchronous `api.getViewpoint()` - deliberately NOT the `space.changed` channel, because the camera changes per orbit frame.
+HOME, PRESETS, BOOKMARKS: `navigation.home` / `navigation.presets` (configured, encoded viewpoints), `state.space.home` (runtime, `space.setHome` — the current camera when no viewpoint is given) and `state.space.bookmarks` (runtime, name -> encoded v2 viewpoint; both persisted in the space snapshot); topics `space.home`, `space.setHome`, `space.preset` `{ name }`, `space.bookmark` `{ name, action: go | save | remove }`; the `home` shortcut (Home; `0` fits); the viewcube fit button: click fits, ⌘/Ctrl-click goes home, Alt-click sets home, Shift-click resets. `space.changed` kind `bookmarks`.
+
+GAMEPAD (`gestures.gamepad`, opt-in, `useGamepad`): left stick pans (flies in first person), right stick orbits (looks), triggers zoom (dolly), A fits, Y goes home, B undoes; dead zone + response curve, dt-based so the speed is frame-rate independent; polled only while enabled and a pad is connected.
+
+Navigation modes: grab mode (G / Escape, `useGrabMode`) turns the primary drag into pan-navigation; fly mode (`space.firstPerson`) enables `useFlyControls`, whose look rotates about the EYE (`lookBy`) and whose movement is camera-relative (`flyBy`, forward respects pitch). Gesture mapping, sensitivities, drag threshold and momentum are `space.gestures` knobs (see CONTROL_SURFACE).
+
+THE VIEWPOINT CODEC (`services/logic/viewpoint`): two encodings, both always accepted on decode.
+
+- v1 — `encodeViewpoint(transform)` → `"rX,rY,tX,tY,tZ,s"` (the six legacy scalars, 4 decimals): what existing share links carry, exact for the rendered picture with the pivot at the view center. The DEFAULT output of `getViewpoint()`, `onViewpointChange` and the URL binding.
+- v2 — `encodeCameraViewpoint(camera, view, 2)` → `"v2|yaw|pitch|scale|px|py|pz|ox|oy|oz|d"`: the full camera, preserving the orbit pivot and the pan. Opt in with `space.viewpointURLVersion: 2` or `getViewpoint({ version: 2 })`.
+- `decodeViewpoint(string, view?)` → legacy scalars (a v2 string is reduced through `toLegacy`); `decodeCameraViewpoint(string, view, perspective?, limits?)` → `CameraState` for either version (the application's own perspective wins over a v2 string's). Malformed strings decode to `null` and are ignored.
+
+URL binding (`useViewpointURL`, config knobs on `space.*`): `viewpointURLWrite` and `viewpointURLRestore` BOTH default false; `viewpointURLParam` defaults `'v'`; `viewpointURLDebounce` defaults 400 ms for the `replaceState` write (path, other query params and hash preserved; no history spam). Programmatic control rides the `space.setViewpoint` topic (v1 or v2, `animated` optional), `space.cameraDelta` (one `CameraDelta`, `animate` optional) and `space.frame` (`{ planeID? | selection? }`, everything when neither); programmatic observation rides the debounced `onViewpointChange(viewpoint)` prop and the synchronous `api.getViewpoint()` - deliberately NOT the `space.changed` channel, because the camera changes per orbit frame.
+
+Persistence: the camera, the bookmarks and the runtime home are stored in the versioned space snapshot (`PERSISTED_STATE_VERSION = 3`); a v2 snapshot (scalars only) is upgraded on load by deriving the camera from its scalars.
 
 ## 5. Plane lifecycle: registration -> tree -> layout -> render
 
@@ -208,20 +225,20 @@ Matching is the engine's `routing` module: `IsoMatcher` (exported as `PluridIsoM
 
 ### 5.2 The plane tree
 
-The space's content is `state.space.tree: TreePlane[]` - roots with recursive `children`. It is computed by the engine (`plurid-engine source/modules/space/tree`): a `Tree` class (`object.ts`) over pure functions (`logic.ts`: `computeSpaceTree`, `updateTreeWithNewPlane`, `updatePlaneLocation`, `togglePlaneFromTree`, `getTreePlaneByID`, `removePlaneFromTree`, `reconcileTree`, ...). Tree mutations are IMMUTABLE + STRUCTURALLY SHARED (`reconcileTree`): untouched subtrees keep their references, which is the invariant the whole render-perf model (3.4's memo bailouts) and the history middleware's cheap snapshots (6) lean on.
+The space's content is `state.space.tree: TreePlane[]` - roots with recursive `children`. It is computed by the engine (`plurid-engine source/modules/space/tree`): a `Tree` class (`object.ts`) over pure functions (`logic.ts`: `computeSpaceTree`, `updateTreeWithNewPlane`, `updateLinkCoordinates`, `togglePlaneFromTree`, `getTreePlaneByID`, `removePlaneFromTree`, `reconcileTree`, ...; `fields.ts`: `updateTreePlaneFields`, `findPlaneByLinkID`, `collectPlaneIDs`, `pruneLinks`; `location/child.ts`: `childLocation`, `resolvePlaneAngle`, `recomputeSubtree`, `recomputeTree`, `planeDepth`). Tree mutations are IMMUTABLE + STRUCTURALLY SHARED (`reconcileTree`): untouched subtrees keep their references, which is the invariant the whole render-perf model (3.4's memo bailouts) and the history middleware's cheap snapshots (6) lean on.
 
-`TreePlane` essentials (`plurid-data source/interfaces/internal/tree` : `TreePlane`): `sourceID` (the registered plane it instantiates), `planeID` (the runtime instance id), `parentPlaneID`, `route`, measured `width`/`height`, `location` (`translateX/Y/Z`, `rotateX/Y`), `show`, `children`, `bridgeLength`/`planeAngle` (spawn geometry), and `manuallyPositioned` - set when the user drags a plane; auto-layout then leaves it pinned (its location carries across relayouts) and arranges only the un-pinned planes.
+`TreePlane` essentials (`plurid-data source/interfaces/internal/tree` : `TreePlane`): `sourceID` (the registered plane it instantiates), `planeID` (the runtime instance id), `parentPlaneID`, `route`, measured `width`/`height` (+ `sizeMode`), `location` (`translateX/Y/Z`, `rotateX/Y`), `show`, `children`, `bridgeLength`/`planeAngle`/`linkCoordinates`/`spawnedByLinkID` (spawn geometry and the identity of the link that spawned it), and `manuallyPositioned` - set when the user drags a plane; auto-layout then leaves it pinned (its location carries across relayouts) and arranges only the un-pinned planes.
 
 ### 5.3 Layout algorithms
 
-`plurid-engine source/modules/space/layout/` contains exactly five algorithms plus the index: `column.ts`, `row.ts`, `sheaves.ts`, `faceToFace.ts`, `zigZag.ts` (exported as `computeColumnLayout`, `computeRowLayout`, `computeSheavesLayout`, `computeFaceToFaceLayout`, `computeZigZagLayout`). They are selected by `configuration.space.layout.type` against the `SPACE_LAYOUT` enum (`plurid-data enumerations` : `LAYOUT_TYPES`): `COLUMNS`, `ROWS`, `FACE_TO_FACE`, `ZIG_ZAG`, `SHEAVES`, plus `META` (layout carried by the route metadata rather than one of the five). Each algorithm reads its own fields off the layout object (e.g. `columns` + `gap`; `angle`; `depth` + offsets) and computes plane spacing FROM THE MEASURED VIEW SIZE - which is why `space.dimensions` (8) sizes the container only.
+`plurid-engine source/modules/space/layout/` contains exactly five algorithms plus the index: `column.ts`, `row.ts`, `sheaves.ts`, `faceToFace.ts`, `zigZag.ts` (exported as `computeColumnLayout`, `computeRowLayout`, `computeSheavesLayout`, `computeFaceToFaceLayout`, `computeZigZagLayout`). They are selected by `configuration.space.layout.type` against the `SPACE_LAYOUT` enum (`plurid-data enumerations` : `LAYOUT_TYPES`): `COLUMNS`, `ROWS`, `FACE_TO_FACE`, `ZIG_ZAG`, `SHEAVES`, plus `META` (layout carried by the route metadata rather than one of the five). Each algorithm reads its own fields off the layout object (e.g. `columns` + `gap`; `angle`; `depth` + offsets) and computes plane spacing FROM THE MEASURED VIEW SIZE (`state.space.viewSize`, passed in as `viewSize` - never `window.innerWidth`) - which is why `space.dimensions` (8) sizes the container only.
 
 ### 5.4 Spawn, close, links, selection
 
-- SPAWN: `PluridLink` (`components/links/Link`) - the in-space anchor. A click computes the child plane via `space.tree.logic.updateTreeWithNewPlane` / toggles via `togglePlaneFromTree`, joined to its parent by a bridge (`space.bridge.length` drives BOTH the parent->child gap and the rendered bridge, so they stay aligned). `useTreeUpdate`'s reconcile carries spawned children across relayouts (route + rounded-location key).
-- CLOSE / REOPEN: `space.closePlane` / `space.openClosedPlane` topics or the plane controls; `lastClosedPlane` is tracked for reopen.
-- LINKS: `state.space.links: PlaneLink[]` is an adjacency list, edited by the `addPlaneLink`/`removePlaneLink`/`updatePlaneLink`/`setPlaneLinks` reducers; `PluridPlaneLinks` renders them as beams positioned from the two planes' locations, inside the camera container. `elements.planeLinks.show` gates rendering.
-- SELECTION: `selectedPlaneIDs` + `setSelection`/`toggleSelection`/`addToSelection`/ `clearSelection`/`setDraggingSelection`; `transformSelectedPlanes` drag-moves the working set (setting `manuallyPositioned`); `snapSelection` snaps a released drag to the nearest edge-alignment within a 12 px threshold; `AlignmentGuides` previews exactly those snap lines mid-drag (same 12 px `THRESHOLD`, guide span 8000 px), rendering only the lines a release would actually snap to.
+- SPAWN: `PluridLink` (`components/links/Link`) - the in-space anchor. THE TREE IS THE SINGLE SOURCE OF TRUTH for a link's state: a link has a stable identity (`linkID` prop, else `<parentPlaneID>#<route>#<ordinal>`, the ordinal being its index among the links to the same route inside the plane, DOM order), the plane it spawns records it as `TreePlane.spawnedByLinkID`, and the link's open/closed state and target plane are DERIVED from the tree (`space.tree.fields.findPlaneByLinkID`) - never held in component state, so undo, a host `setTree`, a relayout or a collaboration apply keep every link in step. A click dispatches the `toggleLinkPlane` thunk (`services/state/thunks/planes.ts`): absent -> `updateTreeWithNewPlane` (the spawned plane id is `<route>@<digest of the link id>`, deterministic and uniqued against the tree) then navigate; present -> `togglePlaneFromTree`. Geometry is ONE function, `space.location.childLocation(parentLocation, linkCoordinates, bridgeLength, planeAngle)`: the child sits at the end of a bridge from the link point, turned by `planeAngle`, whose sign FANS by generation (`space.bridge.fan: 'alternate'` (default) | `'fixed'`) so a 3-deep chain never faces away; `bridgeLength`/`planeAngle`/`linkCoordinates` are stored on the node and `recomputeSubtree` re-places a whole subtree from its (moved) root - after a drag, a snap, a relayout, or a re-measured link. The link measures where it sits on its plane through the `offsetParent` chain (`services/logic/link/measure.ts`; layout offsets, never transformed rects) and re-measures on plane-size, view-size and link-size changes through the equality-gated `updateLinkCoordinates` reducer (an unchanged measurement dispatches nothing). `useTreeUpdate` carries spawned children across relayouts keyed by IDENTITY (`sourceID@route`, in order for duplicates) and re-places them from the root's new location. The rendered bridge reads the node's own `bridgeLength`, so a configuration change never detaches existing bridges.
+- CLOSE / REOPEN: `space.closePlane` / `space.openClosedPlane` topics or the plane controls, through the `closePlane` / `openPlane` / `openLastClosed` thunks (deep lookups - spawned children answer too) and the `setPlaneShow` reducer; hiding a plane hides its subtree and records `lastClosedPlane`; the toggle path-copies (siblings keep their references).
+- LINKS: `state.space.links: PlaneLink[]` is an adjacency list, edited by the `addPlaneLink`/`removePlaneLink`/`updatePlaneLink`/`setPlaneLinks` reducers; `PluridPlaneLinks` renders them as beams between the two planes' CENTERS (`interaction.camera.planeCenter` through each plane's rotated basis, sizes from the tree with the configured fallback - no DOM reads), inside the camera container. Links are PRUNED whenever the tree is written (`setTree`, `restoreArrangement`, `removePlane`): an edge whose plane is gone disappears with it; self-links are rejected and a link's `id` cannot be rewritten through `updatePlaneLink`. `elements.planeLinks.show` gates rendering.
+- SELECTION: `selectedPlaneIDs` + `setSelection`/`toggleSelection`/`addToSelection`/`clearSelection`/`selectAll`/`invertSelection`/`setDraggingSelection`. The selection MODIFIER is ⌘/Ctrl: ⌘-click a plane toggles it (Shift-click too), a ⌘-drag on EMPTY SPACE draws the marquee (`state.ui.marquee`, `PluridMarquee`; Shift adds, Alt subtracts, through `selectInScreenRect` on the planes' projected rects), a plain ⌘-click on empty space clears. DRAG-TO-MOVE (a plain drag on a selected plane) maps the screen delta to a WORLD delta on the dragged plane's camera depth (`dragWorldDelta`: exact at any orientation, no `1/scale` drift); Alt moves along the camera's forward direction; spawned subtrees ride along (`recomputeTree`); one history transaction per drag. SNAPPING is ONE engine (`plurid-engine modules/space/snap.ts`: `computeSnap` — the nearest edge/center of another plane within `space.snap.threshold` (12), else the `space.snap.grid`, deterministic first-wins on ties): the release snap (`snapSelection`) and the mid-drag `AlignmentGuides` both call it with the same inputs, so the preview is exactly what lands. `alignSelection(edge)` / `distributeSelection(axis)` / `duplicateSelection()` (offset copies of the selected roots, pinned, selected afterwards) edit the selection (topics `space.align` / `space.distribute` / `space.duplicate` / `space.selectAll` / `space.invertSelection`; the toolbar's Transform drawer has the buttons). KEYBOARD: plain arrows walk to the nearest plane in that screen direction (`navigateDirection`: projected centers, a 60° cone, straight-ahead preferred) and Enter frames the active plane — never from inside plane content; ⌘/Ctrl+A / +I / +D select all / invert / duplicate. RESIZE: with `elements.plane.resizable`, a selected plane shows right/bottom/corner handles (`PlaneResizeHandles`) writing `setPlaneSize({ sizeMode: 'manual' })` — the plane keeps that size (its observer's reports are ignored), its children reflow, one history entry per drag; manual sizes are part of the arrangement signature (undoable). `pluridSelectors.getHistory` and the `space.changed` kind `history` expose undo/redo availability.
 
 ## 6. The state model
 
@@ -243,7 +260,7 @@ The SPACE SLICE (`modules/space/index.ts`, RTK `createSlice` named `'space'`) gr
 - arrangement restore: `restoreArrangement` (raw, exact tree+links set - no reconcile);
 - undo/redo MARKERS: `undo: (_state) => {}` and `redo: (_state) => {}` - deliberate no-op reducers; the actual work happens in the middleware, which intercepts the action types.
 
-THE HISTORY MIDDLEWARE (`services/state/middleware/history.ts` : `createHistoryMiddleware`) is spatial undo/redo over the AUTHORED arrangement (structure, pinned positions, links), keyed on `arrangementSignature` (`services/logic/arrangement/signature`, also a public export):
+THE HISTORY MIDDLEWARE (`services/state/middleware/history.ts` : `createHistoryMiddleware`) is spatial undo/redo over the AUTHORED arrangement (structure, pinned positions, links), keyed on `arrangementSignature` (`services/logic/arrangement/signature`, also a public export). `space/historyBegin` … `space/historyEnd` (ref-counted) fold everything in between into ONE entry (a drag is one undo, not sixty); `meta.history: 'skip'` bypasses one action; after every stack change the availability is written to `state.space.history` (`{ canUndo, canRedo, undoDepth, redoDepth }`) for host controls:
 
 - One snapshot per SIGNATURE change: a relayout reflow moves auto-layout positions but leaves the signature unchanged, so it is ignored - which is what lets a restore stick instead of being re-reconciled away. A real authoring change (plane added/removed/shown/hidden/moved, link edited) flips it and is recorded.
 - STATELESS: it compares THIS action's before/after signatures (a tracked `lastSignature` would go stale across a skipped remote apply). Fast path: neither `tree` nor `links` changed reference.
@@ -267,7 +284,7 @@ THE STABILITY CONTRACT: the pubsub topics (7) and the public export list (Append
 
 The bus (`plurid-pubsub source/objects/PluridPubSub`) is minimal by design: `publish({ topic, data })`, `subscribe({ topic, callback }) -> selector`, `unsubscribe(selector)`. Per topic it holds a callback map; publish iterates the callbacks in a try/catch and SWALLOWS handler errors unless the bus was constructed with `{ debug: true }` (then `console.log`s them) - when verifying handlers, turn `debug` on. The bus is PER-INSTANCE (one per `PluridApplication`, host-injectable via the `pubsub` prop, handed out via `onReady(api).pubsub` and injected into every plane as `plurid.pubSub`); topics are instance-scoped, not global.
 
-The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PUBSUB_TOPIC` - exactly 51 constants (counted 2026-07-02). Directions: `host -> engine` = a control topic the engine subscribes; `engine -> host` = the engine publishes, hosts subscribe; `declared` = in the catalog + typed message shapes, but NO in-repo subscriber today (kept for wire compatibility; directional nudges ride the shortcut/dispatch paths instead). Unless noted, subscription happens in the View bridge `usePluridPubSub` (35 topics).
+The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PUBSUB_TOPIC` - exactly 62 constants (counted 2026-09-02). Directions: `host -> engine` = a control topic the engine subscribes; `engine -> host` = the engine publishes, hosts subscribe; `declared` = in the catalog + typed message shapes, but NO in-repo subscriber today (kept for wire compatibility; directional nudges ride the shortcut/dispatch paths instead). Unless noted, subscription happens in the View bridge `usePluridPubSub` (46 topics).
 
 | Constant | Topic string | Direction | Handled in |
 | --- | --- | --- | --- |
@@ -320,6 +337,17 @@ The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PU
 | UNDO | `space.undo` | host -> engine | usePluridPubSub |
 | REDO | `space.redo` | host -> engine | usePluridPubSub |
 | SET_TREE | `space.setTree` (data: `{ tree }`) | host -> engine | usePluridPubSub |
+| SPACE_CAMERA_DELTA | `space.cameraDelta` (data: `CameraDelta & { animate? }`) | host -> engine | usePluridPubSub |
+| SPACE_FRAME | `space.frame` (data: `{ planeID?, selection?, animate? }`) | host -> engine | usePluridPubSub |
+| SPACE_HOME | `space.home` | host -> engine | usePluridPubSub |
+| SPACE_SET_HOME | `space.setHome` | host -> engine | usePluridPubSub |
+| SPACE_PRESET | `space.preset` | host -> engine | usePluridPubSub |
+| SPACE_BOOKMARK | `space.bookmark` | host -> engine | usePluridPubSub |
+| SPACE_ALIGN | `space.align` | host -> engine | usePluridPubSub |
+| SPACE_DISTRIBUTE | `space.distribute` | host -> engine | usePluridPubSub |
+| SPACE_DUPLICATE | `space.duplicate` | host -> engine | usePluridPubSub |
+| SPACE_SELECT_ALL | `space.selectAll` | host -> engine | usePluridPubSub |
+| SPACE_INVERT_SELECTION | `space.invertSelection` | host -> engine | usePluridPubSub |
 | CHANGED | `space.changed` | engine -> host (emit) | useEngineEvents |
 | SET_PLANE_PATH | `plane.setPath` | declared | - |
 
@@ -344,9 +372,11 @@ Three ways in, one merge path:
 
 The merge itself (`configuration/index.ts` : `merge`) clones the defaults and the target (cycle-safe `objects.clone` - the default path is a deep clone handling Date/Map/Set/RegExp and cyclic references, never the throw-on-cycle JSON round-trip), then runs `objects.merge` (`plurid-functions source/functions/objects` : `merge`) with a `'global.theme'` resolver that normalizes a theme name or `{ general, interaction }` object. `objects.merge` is UNION-KEYED: it recurses on sub-nodes and unions BOTH sides' keys at each level, so a field present in the partial but absent from the defaults is KEPT (the historical merge iterated only the base's keys and silently dropped such fields); it recurses into PLAIN objects only (class instances/Date/Map are leaf values merged by reference), honors dot-path `resolvers` (including falsy resolver values), and is O(total keys).
 
-LIVE RECONFIGURATION: publishing on the `configuration` topic dispatches `setConfiguration` with the new (partial) configuration - the same merge applies, and dependent hooks re-read their knobs from the store.
+LIVE RECONFIGURATION: publishing on the `configuration` topic dispatches `setConfiguration` with the new (partial) configuration - the same merge applies, and dependent hooks re-read their knobs from the store. A CHANGED `configuration` PROP is the host's authority: `PluridApplication.componentDidUpdate` recomputes the store only when an input prop (`view`, `planes`, `configuration`, `space`, `id`, `hostname`, `precomputedState`, `useLocalStorage`) changed identity, `state.compute` merges the changed prop ON TOP of the current configuration (`configurationAuthoritative`), and the root reducer's `SET_STATE` handler replaces the host-owned slices (`configuration`, `themes`, `shortcuts`) while the live `space` keeps the camera, tree, selection and history and takes only the `view` and the camera limits. (Until this round `SET_STATE` had no reducer at all — prop changes never reached the store, which is why hosts remounted to switch a layout.) A layout change relays the live space with an animated relayout; a `view` change relays with the new roots.
 
 NEW this round: `space.dimensions` (`PluridConfigurationSpaceDimensions`, flat alias `spaceDimensions`) - opt-in explicit sizing of the roots container, consumed in `plurid-react components/structural/Roots` via `resolveDimension` (number = px, string passes through: `'100%'`, `'60vh'`); defaults preserve the historical behavior (width `'100%'`, height `window.innerHeight`). LIMITATION (by design, stated in the interface doc): the layout algorithms still compute plane spacing from the MEASURED view size; `dimensions` sizes the container only.
+
+DEPRECATED (2026-09-03, read nowhere, kept so existing configurations type-check): `space.transformMultimode`, `space.transformTouch` (see `gestures.touchOne`), `space.cullingDistance` (an alias of `space.culling.distance` for one release — the flat key and the Technical drawer write both). The toolbar's Transform drawer no longer shows the two dead toggles. The keyboard and pointer tables are GENERATED into [`SHORTCUTS.md`](./SHORTCUTS.md) by `scripts/generate-tables.mjs` (`pnpm docs.tables`, `--check` in CI) from the data tables, so they cannot drift.
 
 Knob-by-knob reference (every `space.*`/`elements.*` option with a snippet): [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md).
 
@@ -420,6 +450,15 @@ The canonical per-knob reference is [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md)
 
 Design rule (the granular-control principle): every imposed behavior has an opt-out, every engine action a programmatic trigger, every state change an observation seam, and the escape hatch covers the unanticipated rest.
 
+### 11.1 The typed seams (2026-09-03)
+
+- TYPED PUBSUB: `plurid-data interfaces/external/pubsub/payloads.ts` : `PluridPubSubPayloads` is a mapped type over the publish-message union keyed by topic string; the `PluridPubSub` interface carries generic `publish` / `subscribe` overloads on top of the message-union signatures, so every topic's `data` and callback argument is checked without a second hand-written table.
+- HOOKS (`plurid-react services/hooks/{engine,camera,selection,history,pubsub,api}`): `useEngineSelector` / `useEngineDispatch` / `useEngineStore` bind react-redux's `createSelectorHook` / `createDispatchHook` / `createStoreHook` to the engine's private `StateContext`, so `useCamera`, `useSelection`, `usePluridHistory`, `usePluridPubSub` and `usePluridApi` work anywhere under an application (plane content, render-slots, overlays) and never touch a host's own Redux.
+- THE HANDLE: `containers/Application/index.tsx` is now `PluridApplicationShell` (the class) wrapped by a `forwardRef` `PluridApplication` whose ref is a `PluridApplicationHandle` (`containers/Application/handle.ts`): the `onReady` api plus `camera` / `selection` / `history` / `tree` command groups and `focus()` — all built on the same thunks the gestures, shortcuts and topics use (`cameraCommand`, the selection thunks, `toggleLinkPlane` / `closePlane` / `openPlane`). The View registers its element in the thunk extra (`PluridThunkExtra.view`) for `focus()`.
+- DEVELOPMENT WARNINGS (`services/logic/development/warn.ts` : `warnOnce`, gated by `development.warnings`, never in production): an unstable `planes` identity (same routes, new array), a view route with no registered plane, a container with a width but no height, a perspective outside 500–5000.
+- THE TESTING ENTRY (`source/testing/index.tsx` → `@plurid/plurid-react/testing`, a second tsup entry with its own `exports` subpath): `renderPlurid` (jsdom render, resolves on `onReady`, hands back the api + handle + the view element), `gestures` (pointer drag / pinch / wheel / key as real DOM events), `installFrameClock` + `flushFrames` (a deterministic rAF + `performance.now`), `expectCamera(...).toBeNear`; polyfills for `PointerEvent`, pointer capture and `matchMedia`. The package's own jest suite uses it (`source/testing/__tests__`); its `moduleNameMapper` aliases are now ANCHORED to the `~` prefix (the unanchored patterns swallowed relative `./components/…` imports).
+- THE KIT DEV LOOP (`plurid-kit source/cli/process.ts`): `createRestarter` (a debounced, SERIALIZED kill → wait-for-exit → spawn of the server child, driven by an esbuild `onEnd` plugin on the server context) and `isPortFree` (a pre-flight bind check with a clear message); `loadPluridConfig` says when no config file was found; the help text is honest about what `--watch` does.
+
 ## 12. Consumption modes
 
 ### 12.1 Mode A - route planes + exterior via PluridServer
@@ -491,7 +530,7 @@ Where NOT to extend: action/state SHAPES (exported as a power seam, not a stable
 
 ## 14. Verification harness and gates
 
-`fixtures/render-test` - the CAD verification harness: Vite + React 19 against the workspace engine, port 5273 (verified: `"dev": "vite --port 5273"` in `fixtures/render-test/package.json`). Content: 5 CAD instrument panels (GEOMETRY, TRANSFORM, MATERIAL, TOPOLOGY, TESSELLATION), a 40-plane stress set, a link-spawned detail plane (`/geometry/detail`, registered but NOT in the initial view - spawned by the PluridLink), and the 5 layout toggles + STRESS + PERSIST buttons.
+`fixtures/render-test` - the CAD verification harness: Vite + React 19 against the workspace engine, port 5273 (verified: `"dev": "vite --port 5273"` in `fixtures/render-test/package.json`). Content: 5 CAD instrument panels (GEOMETRY, TRANSFORM, MATERIAL, TOPOLOGY, TESSELLATION), a 40-plane stress set, a link-spawned detail plane (`/geometry/detail`, registered but NOT in the initial view - spawned by the PluridLink), and the 5 layout toggles (switching the layout on the LIVE instance — an animated relayout, children attached) + STRESS + PERSIST buttons.
 
 Every verification feature is DEFAULT-OFF behind a query param (`src/App.tsx`, complete list):
 
@@ -510,8 +549,22 @@ Every verification feature is DEFAULT-OFF behind a query param (`src/App.tsx`, c
 | `?hideLinks=1` | `elements.planeLinks.show` + `alignmentGuides.show` false via `extend` |
 | `?media=1` (NEW) | the consumer media plane - `usePluridPlane` lens, lazy image, button video |
 | `?spaceW=<n>` / `?spaceH=<n>` (NEW) | `space.dimensions` roots-container sizing |
+| `?links=dense` | six links in the GEOMETRY plane, two to the same route (link ordinals, distinct children) |
+| `?nested=<n>` | a chain of n planes each linking to the next; GEOMETRY links to the first (fan angles) |
+| `?home=<viewpoint>` | `navigation.home` (v1 or v2 encoded) |
+| `?presets=1` | `navigation.presets` `{ front, side, top }` |
+| `?gamepad=1` | `gestures.gamepad.enabled` (tests stub `navigator.getGamepads`) |
+| `?empty=1` | an empty `view` (the empty state) |
+| `?reducedMotion=1` | `navigation.motion.duration: 0` — every tween / fling / relayout instant |
+| `?resizable=1` | `elements.plane.resizable` (resize handles on selected planes) |
+| `?snapGrid=<n>` | `space.snap.grid` |
+| `?planes=<n>` | n generated planes (stress mode) |
+| `?bench=1` | the scripted orbit + pan + zoom → `__rtBench` |
+| `?debug=1` | `development.spaceDebugger` + `planeDebugger` (the perf HUD) |
+| `?culling=1` (+ `?cullDistance=`, `?freezeDistance=`) | `space.culling` |
+| `?depthFade=1` | `elements.plane.depthFade` |
 
-Assertion globals published on `window` for tests: `__pluridApi` (the `onReady` api), `__rtViewpoint` (last `onViewpointChange`), `__rtContent`/`__rtRestored` (the content persistence round-trip), `__rtStore` (the memory adapter's map), `__rtUnhandled` (unhandled key codes), `__rtRootsSize()` (the applied roots container size), `__rtPlaneLens` (the live lens values), `__rtMediaImageLoaded`. The harness is also the reference for driving the REAL topic strings against a live instance - remember publish swallows handler errors unless the bus has `debug: true` (7).
+Assertion globals published on `window` for tests: `__pluridApi` (the `onReady` api), `__rtViewpoint` (last `onViewpointChange`), `__rtContent`/`__rtRestored` (the content persistence round-trip), `__rtStore` (the memory adapter's map), `__rtUnhandled` (unhandled key codes), `__rtRootsSize()` (the applied roots container size), `__rtPlaneLens` (the live lens values), `__rtMediaImageLoaded`, `__rtCamera()` / `__rtViewpoint2()` / `__rtTree()` (the live camera, v2 viewpoint and tree), `__rtPerf` (store notifications + frames) and `__rtChanges` (which slice keys each notification changed - the "nothing dispatches while idle" assertions). The harness is also the reference for driving the REAL topic strings against a live instance - remember publish swallows handler errors unless the bus has `debug: true` (7).
 
 `examples/{minimal,control-surface}` - copy-pasteable single-file references, type-correct against the public API: `minimal` is three planes / zero configuration; `control-surface` exercises every tier in one component.
 
@@ -522,6 +575,8 @@ Gates (root `package.json`): `pnpm build` = `pnpm -r build`; `pnpm test` = `pnpm
 The verbatim export lists, transcribed from the sources on 2026-07-02 and spot-checked during the 2026-07-13 documentation pass. THIS APPENDIX IS THE LIST EVERY OTHER DOC MUST AGREE WITH; when an export changes, this section re-anchors first.
 
 ### @plurid/plurid-react (`source/index.tsx`)
+
+Regenerated 2026-09-03 from the source export blocks (a script-assisted transcription; the source order is kept). New this round: the hooks (`useCamera`, `useSelection`, `usePluridHistory`, `usePluridPubSub`, `usePluridApi`), the `PluridApplicationHandle` type (the `ref` of `PluridApplication`, which is now a `forwardRef` around `PluridApplicationShell`), `CameraMotionOptions` / `CameraCommand`, and the second entry `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `installFrameClock`, `flushFrames`, `expectCamera`, `installPointerEvents`, `installMatchMedia`). Removed: the `general` state slice (so `pluridStateModules.general` and `pluridSelectors.general` are gone), the `computeMatrix` shim, `beginAnimatedTransform` / `useAnimatedTransform` (the `animatedTransform` state field, its reducer and the `space.animatedTransform` topic remain for wire compatibility but nothing renders from them).
 
 Value exports (the named `export { ... }` block, in source order):
 
@@ -552,56 +607,32 @@ serverComputeMetastate
 pluridRouterNavigate
 usePluridRouter
 usePluridPlane
+useCamera
+useSelection
+usePluridHistory
+usePluridPubSub
+usePluridApi
 getDirectPlaneMatch
 encodeViewpoint
 decodeViewpoint
+encodeCameraViewpoint
+decodeCameraViewpoint
 pluridStateModules
 pluridSelectors
 arrangementSignature
 internals
 ```
 
-plus `export default Plurid` (the aggregate object mirroring the above: `Plurid.Application`, `.Link`, `.PubSub`, `.PUBSUB_TOPIC`, `.IsoMatcher`, `.routerNavigate`, `.encodeViewpoint`/`.decodeViewpoint`, `.selectors`, `.arrangementSignature`, `.internals`, ...).
+Type exports (`export type { ... } from`), by source module:
 
-Type exports (`export type { ... }` blocks, in source order):
+- `./services/hooks/plane`: `PluridPlaneLens`, `PluridPlaneIsolation`
+- `./services/hooks/camera`: `PluridCameraHandle`
+- `./services/hooks/selection`: `PluridSelectionHandle`
+- `./services/hooks/history`: `PluridHistoryHandle`
+- `./containers/Application/handle`: `PluridApplicationHandle`
+- `./services/logic/camera`: `CameraMotionOptions`, `CameraCommand`
 
-```
-PluridPlaneLens
-PluridPlaneIsolation
-Theme
-PluridPlane
-PluridView
-PluridUniverse
-PluridRouterProperties
-PluridRouterPartialProperties
-PluridRoute
-PluridRouteSpace
-PluridRouteUniverse
-PluridRoutePlane
-ComponentWithPlurid
-PluridPlaneComponentProperty
-PluridRouteComponentProperty
-PluridReactComponent
-PluridReactPlane
-PluridReactPlaneComponent
-PluridReactRouteComponent
-PluridReactRoute
-PluridReactRoutePlane
-PluridRouteMatch
-PluridPreserve
-PluridPreserveTransmission
-PluridPubSubPublishMessage
-PluridPubSubSubscribeMessage
-PluridApi
-PluridStore
-PluridStorageAdapter
-PluridConfiguration
-PluridPartialConfiguration
-FlatPluridConfiguration
-RecursivePartial
-```
-
-(`PluridPlaneLens` / `PluridPlaneIsolation` are NEW this round, from `./services/hooks/plane`; the type-only blocks use `export type` so esbuild's per-file transpile elides them at runtime.)
+The default export `Plurid` object carries: `Application`, `RouterStatic`, `RouterBrowser`, `Provider`, `Link`, `RouterLink`, `ApplicationConfigurator`, `PlaneConfigurator`, `ExternalPlane`, `IframePlane`, `VirtualList`, `SPACE_LAYOUT`, `SIZES`, `TRANSFORM_MODES`, `TRANSFORM_TOUCHES`, `PubSub`, `PUBSUB_TOPIC`, `serverComputeMetastate`, `IsoMatcher`, `routerNavigate`, `encodeViewpoint`, `decodeViewpoint`, `encodeCameraViewpoint`, `decodeCameraViewpoint`, `selectors`, `arrangementSignature`, `internals`.
 
 ### @plurid/plurid-react-server (`source/index.ts`)
 

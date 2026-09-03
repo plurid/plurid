@@ -31,6 +31,12 @@
 
 
 // #region module
+export interface ComputeOptions {
+    /** The `configuration` argument changed since the last compute: it overrides the current state's. */
+    configurationAuthoritative?: boolean;
+}
+
+
 const compute = <C>(
     view: PluridApplicationView,
     configuration: RecursivePartial<PluridConfiguration> | undefined,
@@ -40,12 +46,8 @@ const compute = <C>(
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
     hostname = 'origin',
+    options: ComputeOptions = {},
 ) => {
-    // TODO
-    // the compute call also needs to make clear the nature of the change
-    // i.e. if any of the states overwrite the current state
-    // or if the current state takes precedence.
-
     let stateConfiguration = generalEngine.configuration.merge(configuration);
 
     // Each subsequent state layer is merged ON TOP of the accumulated configuration
@@ -65,6 +67,14 @@ const compute = <C>(
         if (layer) {
             stateConfiguration = generalEngine.configuration.merge(layer, stateConfiguration);
         }
+    }
+
+    // A CHANGED `configuration` prop is the host's authority: it lands on top of the current
+    // state's configuration (which otherwise wins, so runtime changes made through the pubsub
+    // survive unrelated store recomputes). Without this a host could never change the
+    // configuration at runtime — a layout switch, a theme change — except by remounting.
+    if (options.configurationAuthoritative && configuration) {
+        stateConfiguration = generalEngine.configuration.merge(configuration, stateConfiguration);
     }
 
     const stateSpace = resolveSpace(
@@ -100,6 +110,10 @@ const compute = <C>(
         },
         ui: {
             toolbarScrollPosition: 0,
+            grabMode: false,
+            grabHold: false,
+            shortcutsOverlayVisible: false,
+            marquee: null,
             ...precomputedState?.ui,
             ...contextState?.ui,
         },

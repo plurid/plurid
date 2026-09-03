@@ -3,6 +3,7 @@
     import {
         PluridConfiguration,
         TreePlane,
+        ViewSize,
 
         ROOTS_GAP,
         defaultConfiguration,
@@ -16,7 +17,7 @@
 
     // #region external
     import {
-        recomputeChildrenLocation,
+        recomputeSubtree,
     } from '../location';
     // #endregion external
 // #endregion imports
@@ -30,13 +31,12 @@ const computeRowLayout = (
     rowLength?: number,
     gap: number = ROOTS_GAP,
     configuration: PluridConfiguration = defaultConfiguration,
+    viewSize?: ViewSize,
 ): TreePlane[] => {
-    const windowInnerWidth = typeof window === 'undefined'
-        ? 1440
-        : window.innerWidth;
-    const windowInnerHeight = typeof window === 'undefined'
-        ? 840
-        : window.innerHeight;
+    const windowInnerWidth = viewSize?.width
+        ?? (typeof window === 'undefined' ? 1440 : window.innerWidth);
+    const windowInnerHeight = viewSize?.height
+        ?? (typeof window === 'undefined' ? 840 : window.innerHeight);
 
     const tree: TreePlane[] = [];
     const configurationWidth = configuration.elements.plane.width;
@@ -73,12 +73,7 @@ const computeRowLayout = (
             },
         };
 
-        const children = recomputeChildrenLocation(treePage);
-
-        const treePageWithChildren = {
-            ...treePage,
-            children,
-        };
+        const treePageWithChildren = recomputeSubtree(treePage);
 
         tree.push(treePageWithChildren);
     }

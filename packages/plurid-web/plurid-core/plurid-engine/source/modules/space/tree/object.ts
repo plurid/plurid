@@ -5,6 +5,7 @@
         RegisteredPluridPlane,
         PluridConfiguration,
         PluridApplicationView,
+        ViewSize,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -25,6 +26,8 @@ export interface TreeData<C> {
     configuration: PluridConfiguration;
     layout?: boolean;
     previousTree?: TreePlane[];
+    /** The measured view the layouts space planes by (falls back to the window / an SSR default). */
+    viewSize?: ViewSize;
 }
 
 export default class Tree<C> {
@@ -48,6 +51,7 @@ export default class Tree<C> {
             view,
             configuration,
             layout,
+            viewSize,
         } = this.data;
 
         return computeSpaceTree(
@@ -57,6 +61,7 @@ export default class Tree<C> {
             layout,
             this.origin,
             this.getCount.bind(this),
+            viewSize,
         );
     }
 

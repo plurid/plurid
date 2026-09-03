@@ -15,6 +15,7 @@
  * relayout touches on its own. It folds together:
  *   - structure: each plane's `planeID:show`
  *   - manual positions: a `manuallyPositioned` plane's rounded location
+ *   - manual sizes: a hand-resized (`sizeMode: 'manual'`) plane's rounded size
  *   - the link graph: each link's `id:source>target:kind`
  *
  * It DELIBERATELY excludes auto-layout positions. That single choice powers two features:
@@ -37,6 +38,10 @@ export const arrangementSignature = (
                     entry += ':' + Math.round(node.location.translateX)
                         + ',' + Math.round(node.location.translateY)
                         + ',' + Math.round(node.location.translateZ);
+                }
+                // A hand-resized plane's size is part of the arrangement too (undoable).
+                if (node.sizeMode === 'manual') {
+                    entry += ':' + Math.round(node.width) + 'x' + Math.round(node.height);
                 }
                 parts.push(entry);
             }

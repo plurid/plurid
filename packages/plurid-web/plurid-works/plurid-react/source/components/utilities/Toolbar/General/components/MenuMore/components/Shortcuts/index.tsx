@@ -1,11 +1,9 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useMemo,
+    } from 'react';
 
-    import {
-        AnyAction,
-        ThunkDispatch,
-    } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
 
@@ -14,15 +12,8 @@
     } from '@plurid/plurid-themes';
 
     import {
-        defaultShortcuts,
-        shortcutsNames,
-
         PluridConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        internatiolate,
-    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -34,10 +25,10 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
-    // import actions from '~services/state/actions';
+
     import {
-        DispatchAction,
-    } from '~data/interfaces';
+        describeShortcuts,
+    } from '~services/logic/shortcuts/registry';
     // #endregion external
 // #endregion imports
 
@@ -52,13 +43,14 @@ export interface PluridMenuMoreShortcutsStateProperties {
     configuration: PluridConfiguration;
 }
 
-export interface PluridMenuMoreShortcutsDispatchProperties {
-}
-
 export type PluridMenuMoreShortcutsProperties = PluridMenuMoreShortcutsOwnProperties
-    & PluridMenuMoreShortcutsStateProperties
-    & PluridMenuMoreShortcutsDispatchProperties;
+    & PluridMenuMoreShortcutsStateProperties;
 
+
+/**
+ * The toolbar's shortcuts drawer, generated from the SAME shortcut table as the `?` overlay (with
+ * the host's `keymap` / `disabled` applied) — it used to render a separate, stale copy.
+ */
 const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     properties,
 ) => {
@@ -67,68 +59,49 @@ const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
         /** state */
         interactionTheme,
         configuration,
-
-        /** dispatch */
     } = properties;
 
-    const {
-        global,
-    } = configuration;
+    const shortcuts = configuration.space.shortcuts;
 
-    const {
-        language,
-    } = global;
+    const rows = useMemo(() => {
+        const groups = describeShortcuts(shortcuts);
+        const flat: { key: string; label: string; keys: string; afterline: boolean }[] = [];
+        groups.forEach((group) => {
+            group.items.forEach((item, index) => {
+                flat.push({
+                    key: group.id + '-' + (item.id || index),
+                    label: item.label,
+                    keys: item.keys.join(' + '),
+                    afterline: index === group.items.length - 1,
+                });
+            });
+        });
+        return flat;
+    }, [
+        JSON.stringify(shortcuts?.keymap || null),
+        JSON.stringify(shortcuts?.disabled ?? null),
+    ]);
 
 
     /** render */
     return (
         <>
-            {defaultShortcuts.map((shortcut, index) => {
-                const {
-                    type,
-                } = shortcut;
-                const shortcutData = shortcutsNames[type];
-                const {
-                    name,
-                    internationalizedKey,
-                    key,
-                    modifier,
-                } = shortcutData;
-                const modifierString = Array.isArray(modifier)
-                    ? modifier.reduce((total, element) => total + ' + ' + element) + ' +'
-                    : typeof modifier === 'string'
-                        ? modifier + ' +'
-                        : '';
+            {rows.map((row, index) => (
+                <StyledPluridMoreMenuItem
+                    key={row.key}
+                    theme={interactionTheme}
+                    afterline={row.afterline && index !== rows.length - 1}
+                    last={index === rows.length - 1}
+                >
+                    <div>
+                        {row.label}
+                    </div>
 
-                const internationalizedName = internatiolate(language, name);
-
-                const keyAsAny: any = key;
-                const keyName = internationalizedKey
-                    ? internatiolate(language, keyAsAny)
-                    : key;
-
-                const afterline = type === 'TURN_DOWN'
-                    || type === 'TOGGLE_ROTATE'
-                    || type === 'TOGGLE_TRANSLATE'
-                    || type === 'TOGGLE_SCALE';
-
-                return (
-                    <StyledPluridMoreMenuItem
-                        key={name}
-                        theme={interactionTheme}
-                        afterline={afterline}
-                        last={index === defaultShortcuts.length - 1 ? true : false}
-                    >
-                        <div>
-                            {internationalizedName}
-                        </div>
-
-                        <div>
-                            {modifierString} {keyName}
-                        </div>
-                    </StyledPluridMoreMenuItem>
-                );
-            })}
+                    <div>
+                        {row.keys}
+                    </div>
+                </StyledPluridMoreMenuItem>
+            ))}
         </>
     );
 }
@@ -142,15 +115,9 @@ const mapStateToProps = (
 });
 
 
-const mapDispatchToProps = (
-    dispatch: ThunkDispatch<{}, {}, AnyAction>
-): PluridMenuMoreShortcutsDispatchProperties => ({
-});
-
-
 const ConnectedPluridMenuMoreShortcuts = connect(
     mapStateToProps,
-    mapDispatchToProps,
+    null,
     null,
     {
         context: StateContext,

@@ -105,7 +105,7 @@ const PluridIcon: React.FC<PluridIconProperties> = (
     // #region effects
     /** Show title */
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
             const canHover = window.matchMedia('(hover: hover)').matches;
             if (!canHover) {
                 return;

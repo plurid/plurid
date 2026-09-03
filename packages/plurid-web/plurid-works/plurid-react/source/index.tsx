@@ -38,6 +38,13 @@
         PluridApi,
         PluridStore,
         PluridStorageAdapter,
+
+        CameraState,
+        CameraDelta,
+        CameraLimits,
+        CameraMotion,
+        Vec2,
+        Vec3,
         // #endregion interfaces
 
 
@@ -106,11 +113,18 @@
     import {
         encodeViewpoint,
         decodeViewpoint,
+        encodeCameraViewpoint,
+        decodeCameraViewpoint,
     } from './services/logic/viewpoint';
 
     import {
         usePluridRouter,
         usePluridPlane,
+        useCamera,
+        useSelection,
+        usePluridHistory,
+        usePluridPubSub,
+        usePluridApi,
     } from './services/hooks';
 
     // Escape-hatch primitives (Tier 3): the same building blocks the engine uses internally, so a
@@ -179,6 +193,8 @@ const Plurid = {
     /** Viewpoint */
     encodeViewpoint,
     decodeViewpoint,
+    encodeCameraViewpoint,
+    decodeCameraViewpoint,
 
     /** Escape-hatch primitives */
     selectors: pluridSelectors,
@@ -239,12 +255,21 @@ export {
 
     /** Plane lens - live per-plane signals for plane content (the substrate seam) */
     usePluridPlane,
+    /** Hooks over the engine, for anything rendered under an application */
+    useCamera,
+    useSelection,
+    usePluridHistory,
+    usePluridPubSub,
+    usePluridApi,
 
     getDirectPlaneMatch,
 
     /** Viewpoint — encode/decode the camera ↔ the `v`-style string, for full host control */
     encodeViewpoint,
     decodeViewpoint,
+    /** The camera-aware codec: v1 (legacy scalars) or v2 (full camera: pivot + pan preserved) */
+    encodeCameraViewpoint,
+    decodeCameraViewpoint,
 
     /** state */
     pluridStateModules,
@@ -270,6 +295,22 @@ export type {
     PluridPlaneLens,
     PluridPlaneIsolation,
 } from './services/hooks/plane';
+export type {
+    PluridCameraHandle,
+} from './services/hooks/camera';
+export type {
+    PluridSelectionHandle,
+} from './services/hooks/selection';
+export type {
+    PluridHistoryHandle,
+} from './services/hooks/history';
+export type {
+    PluridApplicationHandle,
+} from './containers/Application/handle';
+export type {
+    CameraMotionOptions,
+    CameraCommand,
+} from './services/logic/camera';
 
 export type {
     Theme,
@@ -307,6 +348,13 @@ export type {
     PluridApi,
     PluridStore,
     PluridStorageAdapter,
+
+    CameraState,
+    CameraDelta,
+    CameraLimits,
+    CameraMotion,
+    Vec2,
+    Vec3,
 
     PluridConfiguration,
     PluridPartialConfiguration,

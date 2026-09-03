@@ -3,6 +3,7 @@
     import Tree from './object';
 
     import * as logic from './logic';
+    import * as fields from './fields';
     // #endregion internal
 // #endregion imports
 
@@ -12,5 +13,6 @@
 export {
     Tree,
     logic,
+    fields,
 };
 // #endregion exports

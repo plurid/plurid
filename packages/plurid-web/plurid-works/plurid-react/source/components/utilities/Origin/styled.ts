@@ -2,6 +2,10 @@
     // #region libraries
     import styled from 'styled-components';
 
+    import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
 
     import {
         Theme,
@@ -49,7 +53,7 @@ export const StyledOrigin = styled.div<IStyledOrigin>`
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
-    z-index: 99999;
+    z-index: ${Z_INDEX.ORIGIN};
     border-radius: 100px;
     user-select: none;
     pointer-events: none;

@@ -140,6 +140,10 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
 
             <StyledToolbarButton
                 theme={interactionTheme}
+                type="button"
+                aria-label="Translate mode"
+                title="Translate mode"
+                data-plurid-control="toolbar-button"
                 onClick={() => toggleTransform(TRANSFORM_MODES.TRANSLATION)}
                 active={transformMode === TRANSFORM_MODES.TRANSLATION}
                 showIcons={showIcons}

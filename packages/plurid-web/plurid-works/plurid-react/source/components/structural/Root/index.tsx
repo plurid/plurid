@@ -93,22 +93,16 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     // #region context
+    // Read through optional chaining so every hook below runs on every render (the context
+    // guard is at the render step, not before the hooks).
     const context = useContext(Context);
-    if (!context) {
-        return (<></>);
-    }
+    const planesRegistrar = context?.planesRegistrar;
+    const PlaneContext = context?.planeContext;
+    const planeContextValue = context?.planeContextValue;
+    const matchedRoute = context?.matchedRoute;
+    const defaultPubSub = context?.defaultPubSub;
 
-    const {
-        planesRegistrar,
-        planeContext: PlaneContext,
-        planeContextValue,
-        customPlane,
-        matchedRoute,
-
-        defaultPubSub,
-    } = context;
-
-    const CustomPluridPlane = customPlane as any; // hack
+    const CustomPluridPlane = context?.customPlane as any; // hack
     // #endregion context
 
 
@@ -123,11 +117,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
         const children: JSX.Element[] = [];
         const planesRegistry = getPlanesRegistrar(planesRegistrar);
+        if (!planesRegistry || !defaultPubSub) {
+            return children;
+        }
 
         plane.children.forEach(child => {
-            // console.log('child', child);
-
-            if (!planesRegistry) {
+            // A closed plane takes its whole subtree with it: nothing to mount (and no hidden
+            // focus anchors) until it is shown again.
+            if (child.show === false) {
                 return;
             }
 
@@ -254,6 +251,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     // #region render
+    if (!context || !defaultPubSub) {
+        return (<></>);
+    }
+
     const pluridPlaneID = plane.sourceID;
     // console.log('Root pluridPlaneID', pluridPlaneID);
     if (!pluridPlaneID) {

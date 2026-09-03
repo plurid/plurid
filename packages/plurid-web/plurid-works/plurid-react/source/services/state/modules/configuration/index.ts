@@ -284,7 +284,12 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<number>,
         ) => {
+            // The legacy scalar stays in step; the culling pass reads `space.culling.distance`.
             state.space.cullingDistance = action.payload;
+            state.space.culling = {
+                ...(state.space.culling || {}),
+                distance: action.payload,
+            };
         },
     },
 });

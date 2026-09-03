@@ -8,6 +8,8 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import styled from 'styled-components';
+
 
     import {
         Theme,
@@ -16,7 +18,6 @@
     import {
         internationalization,
 
-        TRANSFORM_TOUCHES,
 
         PluridConfiguration,
         InternationalizationLanguageType,
@@ -38,6 +39,12 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+
+    import {
+        alignSelection,
+        distributeSelection,
+        duplicateSelection,
+    } from '~services/state/thunks/selection';
     import {
         DispatchAction,
     } from '~data/interfaces';
@@ -47,6 +54,47 @@
 
 
 // #region module
+const StyledSelectionActions = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: flex-end;
+
+    button {
+        font: inherit;
+        font-size: 0.7rem;
+        line-height: 1;
+        padding: 4px 6px;
+        border-radius: 4px;
+        border: 1px solid currentColor;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        opacity: 0.85;
+    }
+
+    button:hover,
+    button:focus-visible {
+        opacity: 1;
+        outline: none;
+        box-shadow: 0 0 0 2px currentColor inset;
+    }
+`;
+
+/** The selection editing actions (align on an edge, distribute, duplicate, select all). */
+const SELECTION_ACTIONS: { id: string; label: string; title: string; run: () => unknown }[] = [
+    { id: 'align-left', label: '⇤', title: 'Align left edges', run: () => alignSelection('left') },
+    { id: 'align-center-x', label: '⇹', title: 'Align horizontal centers', run: () => alignSelection('centerX') },
+    { id: 'align-right', label: '⇥', title: 'Align right edges', run: () => alignSelection('right') },
+    { id: 'align-top', label: '⤒', title: 'Align top edges', run: () => alignSelection('top') },
+    { id: 'align-center-y', label: '⇳', title: 'Align vertical centers', run: () => alignSelection('centerY') },
+    { id: 'align-bottom', label: '⤓', title: 'Align bottom edges', run: () => alignSelection('bottom') },
+    { id: 'distribute-x', label: '↔', title: 'Distribute horizontally', run: () => distributeSelection('x') },
+    { id: 'distribute-y', label: '↕', title: 'Distribute vertically', run: () => distributeSelection('y') },
+    { id: 'duplicate', label: '⧉', title: 'Duplicate (⌘/Ctrl+D)', run: () => duplicateSelection() },
+    { id: 'select-all', label: 'all', title: 'Select every plane (⌘/Ctrl+A)', run: () => actions.space.selectAll() },
+];
+
 const {
     inputs: {
         Switch: PluridSwitch,
@@ -63,9 +111,8 @@ export interface PluridMenuMoreTransformStateProperties {
 }
 
 export interface PluridMenuMoreTransformDispatchProperties {
-    dispatchToggleConfigurationSpaceTransformMultimode: DispatchAction<typeof actions.configuration.toggleConfigurationSpaceTransformMultimode>;
-    dispatchSetConfigurationSpaceTransformTouch: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformTouch>;
     dispatchSetConfigurationSpaceTransformLocks: DispatchAction<typeof actions.configuration.setConfigurationSpaceTransformLocks>;
+    dispatchThunk: (thunk: unknown) => void;
 }
 
 export type PluridMenuMoreTransformProperties = PluridMenuMoreTransformOwnProperties
@@ -84,15 +131,12 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
         configuration,
 
         /** dispatch */
-        dispatchToggleConfigurationSpaceTransformMultimode,
-        dispatchSetConfigurationSpaceTransformTouch,
         dispatchSetConfigurationSpaceTransformLocks,
+        dispatchThunk,
     } = properties;
 
     const {
-        transformMultimode,
         transformLocks,
-        transformTouch,
     } = configuration.space;
 
 
@@ -101,16 +145,22 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
         <>
             <StyledPluridMoreMenuItem>
                 <div>
-                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformMultiModeTransform)}
+                    selection
                 </div>
 
-                <PluridSwitch
-                    theme={interactionTheme}
-                    checked={transformMultimode}
-                    atChange={() => dispatchToggleConfigurationSpaceTransformMultimode(!transformMultimode)}
-                    exclusive={true}
-                    level={2}
-                />
+                <StyledSelectionActions>
+                    {SELECTION_ACTIONS.map((action) => (
+                        <button
+                            key={action.id}
+                            type="button"
+                            title={action.title}
+                            data-plurid-control={'selection-' + action.id}
+                            onClick={() => dispatchThunk(action.run())}
+                        >
+                            {action.label}
+                        </button>
+                    ))}
+                </StyledSelectionActions>
             </StyledPluridMoreMenuItem>
 
             <StyledPluridMoreMenuItem>
@@ -197,27 +247,6 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 />
             </StyledPluridMoreMenuItem>
 
-            <StyledPluridMoreMenuItem
-                last={true}
-            >
-                <div>
-                    {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformTouchTransform)}
-                    :&nbsp;{transformTouch === TRANSFORM_TOUCHES.PAN
-                        ? 'pan'
-                        : 'swipe'
-                    }
-                </div>
-
-                <PluridSwitch
-                    theme={interactionTheme}
-                    checked={transformTouch === TRANSFORM_TOUCHES.PAN}
-                    atChange={() => transformTouch === TRANSFORM_TOUCHES.PAN
-                        ? dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.SWIPE)
-                        : dispatchSetConfigurationSpaceTransformTouch(TRANSFORM_TOUCHES.PAN)
-                    }
-                    level={2}
-                />
-            </StyledPluridMoreMenuItem>
         </>
     );
 }
@@ -235,16 +264,7 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMenuMoreTransformDispatchProperties => ({
-    dispatchToggleConfigurationSpaceTransformMultimode: (
-        multimode,
-    ) => dispatch(
-        actions.configuration.toggleConfigurationSpaceTransformMultimode(multimode),
-    ),
-    dispatchSetConfigurationSpaceTransformTouch: (
-        touch: keyof typeof TRANSFORM_TOUCHES,
-    ) => dispatch(
-        actions.configuration.setConfigurationSpaceTransformTouch(touch as any),
-    ),
+    dispatchThunk: (thunk) => dispatch(thunk as any),
     dispatchSetConfigurationSpaceTransformLocks: (
         lock: string,
     ) => dispatch(

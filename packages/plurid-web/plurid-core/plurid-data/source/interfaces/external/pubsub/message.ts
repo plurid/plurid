@@ -12,6 +12,11 @@
         PlaneLink,
         TreePlane,
     } from '~interfaces/internal/tree';
+
+    import {
+        CameraDelta,
+        CameraState,
+    } from '~interfaces/internal/camera';
     // #endregion external
 // #endregion imports
 
@@ -245,6 +250,8 @@ export interface SpaceTransform {
 }
 export interface PluridPubSubMessageSpaceTransformData {
     value: Partial<SpaceTransform>;
+    /** The full camera, published alongside the legacy scalars on the internal re-publish. */
+    camera?: CameraState;
     internal?: boolean;
 }
 export interface PluridPubSubPublishMessageSpaceTransform {
@@ -497,7 +504,7 @@ export interface PluridPubSubSubscribeMessageApplyRemoteMutation {
 
 
 export interface PluridPubSubMessageSetViewpoint {
-    /** An encoded viewpoint, e.g. the `v` value `rotationX,rotationY,tX,tY,tZ,scale`. */
+    /** An encoded viewpoint: the v1 `rotationX,rotationY,tX,tY,tZ,scale` tuple or a `v2|…` camera string. */
     viewpoint: string;
     /** Smoothly animate the camera to it (vs jump instantly). Default `false`. */
     animated?: boolean;
@@ -558,6 +565,159 @@ export interface PluridPubSubSubscribeMessageSetTree {
     callback: PluridPubSubCallback<PluridPubSubMessageSetTree>;
 }
 
+export interface PluridPubSubMessageCameraDelta extends CameraDelta {
+    /** Tween to the result instead of jumping. Default `false`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageCameraDelta {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA;
+    data: PluridPubSubMessageCameraDelta;
+}
+export interface PluridPubSubSubscribeMessageCameraDelta {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA;
+    callback: PluridPubSubCallback<PluridPubSubMessageCameraDelta>;
+}
+
+export interface PluridPubSubMessageFrame {
+    /** Frame this plane; omit (and `selection` false) to frame everything. */
+    planeID?: string;
+    /** Frame the current selection. */
+    selection?: boolean;
+    /** Tween to the framing instead of jumping. Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageFrame {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_FRAME;
+    data?: PluridPubSubMessageFrame;
+}
+export interface PluridPubSubSubscribeMessageFrame {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_FRAME;
+    callback: PluridPubSubCallback<PluridPubSubMessageFrame | undefined>;
+}
+
+export interface PluridPubSubMessageHome {
+    /** Tween to the home viewpoint instead of jumping. Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageHome {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_HOME;
+    data?: PluridPubSubMessageHome;
+}
+export interface PluridPubSubSubscribeMessageHome {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_HOME;
+    callback: PluridPubSubCallback<PluridPubSubMessageHome | undefined>;
+}
+
+export interface PluridPubSubMessageSetHome {
+    /** The encoded viewpoint (v1 or v2) to make home; omit for the current camera. */
+    viewpoint?: string;
+}
+export interface PluridPubSubPublishMessageSetHome {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SET_HOME;
+    data?: PluridPubSubMessageSetHome;
+}
+export interface PluridPubSubSubscribeMessageSetHome {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SET_HOME;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetHome | undefined>;
+}
+
+export interface PluridPubSubMessagePreset {
+    /** A key of `space.navigation.presets`. */
+    name: string;
+    /** Tween instead of jumping. Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessagePreset {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PRESET;
+    data: PluridPubSubMessagePreset;
+}
+export interface PluridPubSubSubscribeMessagePreset {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PRESET;
+    callback: PluridPubSubCallback<PluridPubSubMessagePreset>;
+}
+
+export type PluridBookmarkAction =
+    | 'go'
+    | 'save'
+    | 'remove';
+export interface PluridPubSubMessageBookmark {
+    name: string;
+    /** `go` (default) moves the camera to the bookmark; `save` stores the current camera; `remove` deletes it. */
+    action?: PluridBookmarkAction;
+    /** Tween instead of jumping (`go`). Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageBookmark {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK;
+    data: PluridPubSubMessageBookmark;
+}
+export interface PluridPubSubSubscribeMessageBookmark {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK;
+    callback: PluridPubSubCallback<PluridPubSubMessageBookmark>;
+}
+
+export type PluridAlignEdge =
+    | 'left'
+    | 'right'
+    | 'top'
+    | 'bottom'
+    | 'centerX'
+    | 'centerY';
+export interface PluridPubSubMessageAlign {
+    edge: PluridAlignEdge;
+}
+export interface PluridPubSubPublishMessageAlign {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ALIGN;
+    data: PluridPubSubMessageAlign;
+}
+export interface PluridPubSubSubscribeMessageAlign {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ALIGN;
+    callback: PluridPubSubCallback<PluridPubSubMessageAlign>;
+}
+
+export interface PluridPubSubMessageDistribute {
+    axis: 'x' | 'y';
+}
+export interface PluridPubSubPublishMessageDistribute {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DISTRIBUTE;
+    data: PluridPubSubMessageDistribute;
+}
+export interface PluridPubSubSubscribeMessageDistribute {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DISTRIBUTE;
+    callback: PluridPubSubCallback<PluridPubSubMessageDistribute>;
+}
+
+export interface PluridPubSubMessageDuplicate {
+    /** Space units the copies are offset by (x and y). Default `40`. */
+    offset?: number;
+}
+export interface PluridPubSubPublishMessageDuplicate {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE;
+    data?: PluridPubSubMessageDuplicate;
+}
+export interface PluridPubSubSubscribeMessageDuplicate {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE;
+    callback: PluridPubSubCallback<PluridPubSubMessageDuplicate | undefined>;
+}
+
+export interface PluridPubSubPublishMessageSelectAll {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SELECT_ALL;
+    data?: undefined;
+}
+export interface PluridPubSubSubscribeMessageSelectAll {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SELECT_ALL;
+    callback: PluridPubSubCallback<undefined>;
+}
+export interface PluridPubSubPublishMessageInvertSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_INVERT_SELECTION;
+    data?: undefined;
+}
+export interface PluridPubSubSubscribeMessageInvertSelection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_INVERT_SELECTION;
+    callback: PluridPubSubCallback<undefined>;
+}
+
+
 export type PluridChangeKind =
     | 'selection'
     | 'tree'
@@ -565,7 +725,10 @@ export type PluridChangeKind =
     | 'activePlane'
     | 'isolate'
     | 'layoutResolved'
-    | 'loading';
+    | 'loading'
+    | 'history'
+    | 'motion'
+    | 'bookmarks';
 export interface PluridPubSubMessageChanged {
     kind: PluridChangeKind;
     value: any;
@@ -631,6 +794,17 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageUndo
     | PluridPubSubPublishMessageRedo
     | PluridPubSubPublishMessageSetTree
+    | PluridPubSubPublishMessageCameraDelta
+    | PluridPubSubPublishMessageFrame
+    | PluridPubSubPublishMessageHome
+    | PluridPubSubPublishMessageSetHome
+    | PluridPubSubPublishMessagePreset
+    | PluridPubSubPublishMessageBookmark
+    | PluridPubSubPublishMessageAlign
+    | PluridPubSubPublishMessageDistribute
+    | PluridPubSubPublishMessageDuplicate
+    | PluridPubSubPublishMessageSelectAll
+    | PluridPubSubPublishMessageInvertSelection
     | PluridPubSubPublishMessageChanged
     ;
 
@@ -686,6 +860,17 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageUndo
     | PluridPubSubSubscribeMessageRedo
     | PluridPubSubSubscribeMessageSetTree
+    | PluridPubSubSubscribeMessageCameraDelta
+    | PluridPubSubSubscribeMessageFrame
+    | PluridPubSubSubscribeMessageHome
+    | PluridPubSubSubscribeMessageSetHome
+    | PluridPubSubSubscribeMessagePreset
+    | PluridPubSubSubscribeMessageBookmark
+    | PluridPubSubSubscribeMessageAlign
+    | PluridPubSubSubscribeMessageDistribute
+    | PluridPubSubSubscribeMessageDuplicate
+    | PluridPubSubSubscribeMessageSelectAll
+    | PluridPubSubSubscribeMessageInvertSelection
     | PluridPubSubSubscribeMessageChanged
     ;
 // #endregion module

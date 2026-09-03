@@ -113,3 +113,20 @@ Before implementing a new engine capability, record:
 ## Definition of done
 
 A capability is done when its domain behavior is tested, its public control/observation surface is documented, the render harness verifies it, at least one product consumes it, performance/accessibility consequences are measured where relevant, and no undocumented product workaround remains.
+
+## Deferred after the 2026-09 engine pass
+
+Landed 2026-09-02/03 (see ARCHITECTURE.md): the camera core and motion controller, the input layer v2, links/tree v2, navigation (home / presets / bookmarks / gamepad / animated relayout), selection and editing (marquee, snap engine, align / distribute / duplicate, resize handles, keyboard plane navigation), culling / depth cues / overlays / accessibility / perf HUD / benchmarks, and the DX surface (typed pubsub, hooks, the imperative handle, the testing entry, the kit dev loop). Consciously left for later:
+
+- A command palette over the shortcut table (the table and the hooks make it a thin component).
+- A roll / free-look camera (the quaternion path is tested and off the camera path; the turntable has no roll by design).
+- Bookmarks UI beyond the toolbar drawer and the topics (a bookmark bar / thumbnails).
+- Copy / paste of planes across instances (needs a serialization of a plane subtree + link identity).
+- A history scrubber UI (the middleware exposes depths; a timeline needs snapshot labels).
+- Collision against planes when flying (no physics today).
+- Opt-in virtualized UNMOUNTING of culled planes (today culled planes keep their React state; `space.culling.unmount` is reserved).
+- `content-visibility` for culled planes (needs intrinsic sizes; `visibility: hidden` + containment is used).
+- A gallery / docs site generated from the harness scenarios.
+- A screen-reader 2D fallback (a linear list of the planes with the same commands).
+- State-preserving HMR for the kit (the dev loop restarts the server; client state survives only via persistence).
+- Query / fragment preservation on link routes (`resolveViewItem` strips them; the IsoMatcher parametric route-plane test stays skipped).

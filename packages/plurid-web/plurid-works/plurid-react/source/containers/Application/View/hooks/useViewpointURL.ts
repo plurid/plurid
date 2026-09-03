@@ -6,14 +6,18 @@
     } from 'react';
 
     import {
-        SpaceTransform,
+        CameraState,
+        CameraLimits,
+        ViewSize,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
     import {
-        readViewpointFromURL,
+        readEncodedViewpointFromURL,
+        decodeCameraViewpoint,
+        encodeCameraViewpoint,
         writeViewpointToURL,
     } from '~services/logic/viewpoint';
     // #endregion external
@@ -23,16 +27,20 @@
 
 // #region module
 export interface UseViewpointURLParameters {
-    stateTransform: SpaceTransform;
-    /** `setSpaceLocation` — sets the 6 scalars AND recomputes the rendered matrix. */
-    dispatchSetSpaceLocation: (payload: SpaceTransform) => void;
+    stateCamera: CameraState;
+    stateViewSize: ViewSize;
+    stateCameraLimits: CameraLimits;
+    /** `setCamera` — sets the camera AND recomputes the rendered matrix. */
+    dispatchSetCamera: (camera: CameraState) => void;
     /** `configuration.space.viewpointURLWrite` — reflect the camera into the URL. Default off. */
     write: boolean;
     /** `configuration.space.viewpointURLRestore` — restore the camera from the URL on load. Default off. */
     restore: boolean;
     /** `configuration.space.viewpointURLParam` — the query-param name. Default `v`. */
     param: string;
-    /** Debounce (ms) before reflecting a changed transform into the URL. Default 400. */
+    /** `configuration.space.viewpointURLVersion` — the encoding written. Default `1`. */
+    version?: 1 | 2;
+    /** Debounce (ms) before reflecting a changed camera into the URL. Default 400. */
     debounce?: number;
 }
 
@@ -40,24 +48,39 @@ export interface UseViewpointURLParameters {
 /**
  * Optionally bind the camera viewpoint and the URL's `?<param>=` — both directions are OPT-IN and
  * INDEPENDENT, and the engine touches the URL ONLY when asked:
- * - `restore`: ON MOUNT, if the URL carries a viewpoint, restore it (instant — a deep-link overrides
- *   any persisted camera).
- * - `write`: ON TRANSFORM CHANGE, reflect it back via debounced `replaceState` (preserves path/query/
- *   hash, no history spam).
+ * - `restore`: ON MOUNT, if the URL carries a viewpoint (v1 or v2), restore it (instant — a
+ *   deep-link overrides any persisted camera).
+ * - `write`: ON CAMERA CHANGE, reflect it back via debounced `replaceState` (preserves path/query/
+ *   hash, no history spam), in the configured encoding.
  *
  * Default config has BOTH off → no URL pollution. The first write is skipped so the pre-restore
- * default transform never clobbers the `?<param>=` the user arrived with.
+ * default camera never clobbers the `?<param>=` the user arrived with.
  */
 export const useViewpointURL = (
     {
-        stateTransform,
-        dispatchSetSpaceLocation,
+        stateCamera,
+        stateViewSize,
+        stateCameraLimits,
+        dispatchSetCamera,
         write,
         restore,
         param,
+        version = 1,
         debounce = 400,
     }: UseViewpointURLParameters,
 ) => {
+    // Always-latest values for the deferred writer / restorer without re-binding the effects.
+    const latest = useRef({
+        stateCamera,
+        stateViewSize,
+        stateCameraLimits,
+    });
+    latest.current = {
+        stateCamera,
+        stateViewSize,
+        stateCameraLimits,
+    };
+
     // #region restore once on mount
     const restored = useRef(false);
     useEffect(() => {
@@ -66,15 +89,21 @@ export const useViewpointURL = (
         }
         restored.current = true;
 
-        const viewpoint = readViewpointFromURL(param);
-        if (viewpoint) {
-            dispatchSetSpaceLocation(viewpoint);
+        const encoded = readEncodedViewpointFromURL(param);
+        const camera = decodeCameraViewpoint(
+            encoded,
+            latest.current.stateViewSize,
+            latest.current.stateCamera.perspective,
+            latest.current.stateCameraLimits,
+        );
+        if (camera) {
+            dispatchSetCamera(camera);
         }
     }, [restore, param]);
     // #endregion restore once on mount
 
 
-    // #region reflect transform → URL
+    // #region reflect camera → URL
     const writeTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
     const skipFirstWrite = useRef(true);
     useEffect(() => {
@@ -82,7 +111,7 @@ export const useViewpointURL = (
             return;
         }
         // Don't write on the first run — let the restore above apply first, so we never overwrite
-        // the incoming `?<param>=` with the default transform.
+        // the incoming `?<param>=` with the default camera.
         if (skipFirstWrite.current) {
             skipFirstWrite.current = false;
             return;
@@ -92,7 +121,14 @@ export const useViewpointURL = (
             clearTimeout(writeTimeout.current);
         }
         writeTimeout.current = setTimeout(() => {
-            writeViewpointToURL(stateTransform, param);
+            writeViewpointToURL(
+                encodeCameraViewpoint(
+                    latest.current.stateCamera,
+                    latest.current.stateViewSize,
+                    version,
+                ),
+                param,
+            );
         }, debounce);
 
         return () => {
@@ -100,8 +136,8 @@ export const useViewpointURL = (
                 clearTimeout(writeTimeout.current);
             }
         };
-    }, [write, param, stateTransform, debounce]);
-    // #endregion reflect transform → URL
+    }, [write, param, version, stateCamera, debounce]);
+    // #endregion reflect camera → URL
 }
 // #endregion module
 

@@ -19,6 +19,7 @@
         PathParameters,
         PluridRoute,
         PluridPlane,
+        ViewSize,
     } from '@plurid/plurid-data';
 
     import {
@@ -37,8 +38,13 @@
     } from '../layout';
 
     import {
-        computePluridPlaneLocation,
-    } from '../location';
+        childLocation,
+        resolvePlaneAngle,
+        recomputeSubtree,
+        planeDepth,
+        DEFAULT_BRIDGE_LENGTH,
+        DEFAULT_PLANE_ANGLE,
+    } from '../location/child';
 
     import {
         getTreePlaneByPlaneID,
@@ -280,7 +286,7 @@ export const resolveViewItem = <C>(
     view: string | PluridView,
     configuration: PluridConfiguration,
     origin = 'origin',
-    getCount?: () => number,
+    getCount?: () => number | string,
 ): TreePlane | undefined => {
     // console.log('resolveViewItem', planes);
 
@@ -474,6 +480,7 @@ export const computeSpaceTree = <C>(
     layout: boolean | undefined,
     origin = 'origin',
     getCount: () => number,
+    viewSize?: ViewSize,
 ): TreePlane[] => {
     // console.log('computeSpaceTree');
     // console.log('planes', planes);
@@ -528,6 +535,7 @@ export const computeSpaceTree = <C>(
                     columnLength,
                     gap,
                     configuration,
+                    viewSize,
                 );
                 return columnLayoutTree;
             }
@@ -544,6 +552,7 @@ export const computeSpaceTree = <C>(
                     rowLength,
                     gap,
                     configuration,
+                    viewSize,
                 );
                 return rowLayoutTree;
             }
@@ -556,6 +565,7 @@ export const computeSpaceTree = <C>(
                     treePlanes,
                     angle,
                     configuration,
+                    viewSize,
                 );
                 return zigzagLayoutTree;
             }
@@ -572,6 +582,7 @@ export const computeSpaceTree = <C>(
                     gap,
                     middle,
                     configuration,
+                    viewSize,
                 );
                 return faceToFaceLayoutTree;
             }
@@ -588,6 +599,7 @@ export const computeSpaceTree = <C>(
                     offsetX,
                     offsetY,
                     configuration,
+                    viewSize,
                 );
                 return sheavesLayoutTree;
             }
@@ -653,6 +665,38 @@ export interface UpdatedTreeWithNewPlane {
     updatedTreePlane?: TreePlane;
 }
 
+export interface UpdateTreeWithNewPlaneOptions {
+    /** The stable id of the spawning link (`<parentPlaneID>#<route>#<ordinal>`); stored on the child. */
+    linkID?: string;
+}
+
+
+/** A short FNV-1a hex digest, for deterministic plane ids derived from link ids. */
+const digest = (
+    value: string,
+): string => {
+    let hash = 2166136261;
+    for (let index = 0; index < value.length; index += 1) {
+        hash ^= value.charCodeAt(index);
+        hash = Math.imul(hash, 16777619) >>> 0;
+    }
+    return hash.toString(16).padStart(8, '0');
+};
+
+
+/** `base`, or `base-2`, `base-3`, … — the first id not yet in the tree. */
+const uniquePlaneID = (
+    tree: TreePlane[],
+    base: string,
+): string => {
+    let counter = 2;
+    while (getTreePlaneByPlaneID(tree, `${base}-${counter}`)) {
+        counter += 1;
+    }
+    return `${base}-${counter}`;
+};
+
+
 export const updateTreeWithNewPlane = <C>(
     planeRoute: string,
     parentPlaneID: string,
@@ -661,9 +705,9 @@ export const updateTreeWithNewPlane = <C>(
     planesRegistry: Map<string, RegisteredPluridPlane<C>>,
     configuration: PluridConfiguration,
     hostname = 'origin',
+    options: UpdateTreeWithNewPlaneOptions = {},
 ): UpdatedTreeWithNewPlane => {
     const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
-    // console.log('updateTreeWithNewPlane parentPlane', parentPlane);
 
     if (!parentPlane) {
         return {
@@ -672,104 +716,60 @@ export const updateTreeWithNewPlane = <C>(
         };
     }
 
-    const location = computePluridPlaneLocation(
-        linkCoordinates,
-        parentPlane,
-        // Couple the parent→child GAP to the same configured length the bridge renders at,
-        // otherwise the bridge visual (width) overshoots/undershoots the actual gap.
-        configuration.space.bridge?.length ?? 100,
-    );
-    // console.log('location', location);
-    // console.log('planeRoute', planeRoute);
-
-    const treePlane = resolveViewItem(
+    // The spawned plane's id is `<route>@<suffix>`: a digest of the link id when the link has one
+    // (stable across undo/redo and re-spawns, so a link always owns the same plane id), else a
+    // random id — and always unique within the tree (a second instance gets `-2`, `-3`, …).
+    const suffix = options.linkID
+        ? digest(options.linkID)
+        : (uuid.generate() || digest(String(Math.random()) + String(Date.now())));
+    const resolvedPlane = resolveViewItem(
         planesRegistry,
         planeRoute,
         configuration,
         hostname,
+        () => suffix,
     );
-    // console.log('updateTreeWithNewPlane treePlane', treePlane);
 
-    if (!treePlane) {
+    if (!resolvedPlane) {
         return {
             pluridPlaneID: '',
             updatedTree: tree,
         };
     }
 
-    const updatedTreePlane = {
+    const treePlane = getTreePlaneByPlaneID(tree, resolvedPlane.planeID)
+        ? {
+            ...resolvedPlane,
+            planeID: uniquePlaneID(tree, resolvedPlane.planeID),
+        }
+        : resolvedPlane;
+
+    // ONE geometry: the bridge vector AND the child's facing come from the same signed angle,
+    // fanned by generation so nested spawns never turn back-to-front.
+    const bridgeLength = configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH;
+    const depth = planeDepth(tree, parentPlaneID) + 1;
+    const siblingIndex = parentPlane.children ? parentPlane.children.length : 0;
+    const planeAngle = resolvePlaneAngle(
+        depth,
+        siblingIndex,
+        configuration.space.bridge?.planeAngle ?? DEFAULT_PLANE_ANGLE,
+        configuration.space.bridge?.fan ?? 'alternate',
+    );
+
+    const updatedTreePlane: TreePlane = {
         ...treePlane,
         parentPlaneID,
-        location: {
-            translateX: location.x,
-            translateY: location.y,
-            translateZ: location.z,
-            rotateX: 0,
-            rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
-        },
-        // Configurable bridge geometry (defaults preserve the original 100 / 90).
-        bridgeLength: configuration.space.bridge?.length ?? 100,
-        planeAngle: configuration.space.bridge?.planeAngle ?? 90,
+        location: childLocation(
+            parentPlane.location,
+            linkCoordinates,
+            bridgeLength,
+            planeAngle,
+        ),
+        bridgeLength,
+        planeAngle,
         linkCoordinates,
+        ...(options.linkID ? { spawnedByLinkID: options.linkID } : {}),
     };
-    // console.log('updatedTreePlane', updatedTreePlane);
-
-
-    // const newPlane: TreePlane = {
-    //     sourceID: '',
-    //     route: planePath,
-    //     routeDivisions: {
-    //         protocol: '',
-    //         host: {
-    //             value: '',
-    //             controlled: false,
-    //         },
-    //         path: {
-    //             value: '',
-    //             parameters: {},
-    //             query: {},
-    //         },
-    //         space: {
-    //             value: '',
-    //             parameters: {},
-    //             query: {},
-    //         },
-    //         universe: {
-    //             value: '',
-    //             parameters: {},
-    //             query: {},
-    //         },
-    //         cluster: {
-    //             value: '',
-    //             parameters: {},
-    //             query: {},
-    //         },
-    //         plane: {
-    //             value: '',
-    //             parameters: {},
-    //             query: {},
-    //         },
-    //         valid: false,
-    //     },
-    //     // parameters: extractedParameters,
-    //     // parameters: {},
-    //     planeID,
-    //     width: 0,
-    //     height: 0,
-    //     parentPlaneID,
-    //     location: {
-    //         translateX: location.x,
-    //         translateY: location.y,
-    //         translateZ: location.z,
-    //         rotateX: 0,
-    //         rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
-    //     },
-    //     show: true,
-    //     bridgeLength: 100,
-    //     planeAngle: 90,
-    //     linkCoordinates,
-    // };
-    // console.log('newPlane', newPlane);
 
     // New children array (don't `.push` into the shared `parentPlane.children`, which mutates
     // the input tree).
@@ -790,159 +790,56 @@ export const updateTreeWithNewPlane = <C>(
 }
 
 
-export const updatePlaneLocation = (
+const sameCoordinates = (
+    a: LinkCoordinates | undefined,
+    b: LinkCoordinates,
+): boolean => !!a && a.x === b.x && a.y === b.y;
+
+
+/**
+ * A link re-measured where it sits on its parent: store the coordinates and re-place the child
+ * (and its subtree) from the LIVE parent. Returns the same tree reference when the coordinates
+ * are unchanged — the equality gate that stops a measure → dispatch → re-measure loop.
+ */
+export const updateLinkCoordinates = (
     tree: TreePlane[],
-    parentPlaneID: string,
     planeID: string,
     linkCoordinates: LinkCoordinates,
-) => {
-    const parentPlane = getTreePlaneByPlaneID(tree, parentPlaneID);
+): TreePlane[] => {
     const plane = getTreePlaneByPlaneID(tree, planeID);
-
-    if (!parentPlane || !plane) {
+    if (!plane || sameCoordinates(plane.linkCoordinates, linkCoordinates)) {
         return tree;
     }
 
-    const location = computePluridPlaneLocation(
-        linkCoordinates,
-        parentPlane,
-        // Use the plane's STORED bridge geometry (set at spawn from config), otherwise this
-        // recompute resets the gap to the default 100 and the bridge visual overshoots.
-        plane.bridgeLength,
-        plane.planeAngle,
-    );
-
-    // New plane object (don't mutate the live tree node in place); `updateTreePlane` then
-    // swaps it in immutably with structural sharing.
-    const updatedPlane: TreePlane = {
-        ...plane,
-        location: {
-            translateX: location.x,
-            translateY: location.y,
-            translateZ: location.z,
-            rotateX: 0,
-            rotateY: parentPlane.location.rotateY + PLANE_DEFAULT_ANGLE,
-        },
-    };
-
-    const updatedTree = updateTreePlane(
-        tree,
-        updatedPlane,
-    );
-
-    return updatedTree;
-}
-
-
-
-export const updateTreeWithNewPage = (
-    tree: TreePlane[],
-    treePageParentPlaneID: string,
-    pagePath: string,
-    pageID: string,
-    linkCoordinates: LinkCoordinates,
-    parameters?: PathParameters,
-): UpdatedTreeWithNewPlane => {
-    // to receive parameters and composePath from pagePath and parameters
-
-    const treePageParent = getTreePlaneByPlaneID(tree, treePageParentPlaneID);
-    // console.log('tree page parent', treePageParent);
-
-    if (treePageParent) {
-        const location = computePluridPlaneLocation(
-            linkCoordinates,
-            treePageParent,
-        );
-
-        // const extractedParameters = extractParameters(
-        //     pagePath,
-        //     parameters,
-        // );
-
-        const planeID = uuid.generate();
-        const newTreePlane: TreePlane = {
-            sourceID: pageID,
-            route: pagePath,
-            routeDivisions: {
-                protocol: {
-                    value: '',
-                    secure: false,
-                },
-                host: {
-                    value: '',
-                    controlled: false,
-                },
-                path: {
-                    value: '',
-                    parameters: {},
-                    query: {},
-                },
-                space: {
-                    value: '',
-                    parameters: {},
-                    query: {},
-                },
-                universe: {
-                    value: '',
-                    parameters: {},
-                    query: {},
-                },
-                cluster: {
-                    value: '',
-                    parameters: {},
-                    query: {},
-                },
-                plane: {
-                    value: '',
-                    parameters: {},
-                    query: {},
-                    fragments: {
-                        texts: [],
-                        elements: [],
-                    },
-                },
-                valid: false,
-            },
-            // parameters: extractedParameters,
-            // parameters: {},
-            planeID,
-            width: 0,
-            height: 0,
-            parentPlaneID: treePageParentPlaneID,
-            location: {
-                translateX: location.x,
-                translateY: location.y,
-                translateZ: location.z,
-                rotateX: 0,
-                rotateY: treePageParent.location.rotateY + PLANE_DEFAULT_ANGLE,
-            },
-            show: true,
-            bridgeLength: 100,
-            planeAngle: 90,
-            linkCoordinates,
-        };
-
-        // New children array instead of `.push` into the shared `treePageParent.children`.
-        const updatedTreePlaneParent = {
-            ...treePageParent,
-            children: treePageParent.children
-                ? [...treePageParent.children, newTreePlane]
-                : [newTreePlane],
-        };
-
-        const updatedTree = updateTreePlane(tree, updatedTreePlaneParent);
-
-        return {
-            pluridPlaneID: planeID,
-            updatedTree,
-        };
+    const parentPlane = plane.parentPlaneID
+        ? getTreePlaneByPlaneID(tree, plane.parentPlaneID)
+        : undefined;
+    if (!parentPlane) {
+        return updateTreePlane(tree, { ...plane, linkCoordinates });
     }
 
-    return {
-        pluridPlaneID: '',
-        updatedTree: tree,
-    };
+    const relocated = recomputeSubtree({
+        ...plane,
+        linkCoordinates,
+        location: childLocation(
+            parentPlane.location,
+            linkCoordinates,
+            plane.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
+            plane.planeAngle ?? DEFAULT_PLANE_ANGLE,
+        ),
+    });
+
+    return updateTreePlane(tree, relocated);
 }
+
+
+/** @deprecated use `updateLinkCoordinates` (reads the parent from the live tree). */
+export const updatePlaneLocation = (
+    tree: TreePlane[],
+    _parentPlaneID: string,
+    planeID: string,
+    linkCoordinates: LinkCoordinates,
+) => updateLinkCoordinates(tree, planeID, linkCoordinates);
 
 
 // `removePageFromTree` was a byte-for-byte duplicate of `removePlaneFromTree` (below) — same
@@ -950,45 +847,29 @@ export const updateTreeWithNewPage = (
 // caller (only its own test), so it was deleted and its test repointed at `removePlaneFromTree`.
 
 
-export const toggleChildren = (
-    children: TreePlane[],
-): TreePlane[] => {
-    const updatedChildren = children.map(child => {
-        if (child.children) {
-            const updatedChild = {
-                ...child,
-                show: !child.show,
-                children: toggleChildren(child.children),
-            }
-            return updatedChild;
-        }
-
-        const updatedChild: TreePlane = {
-            ...child,
-            show: !child.show,
-        };
-        return updatedChild;
-    });
-
-    return updatedChildren;
-}
-
-
 export const toggleAllChildren = (
     tree: TreePlane[],
     show: boolean,
 ): TreePlane[] => {
-    // Fully immutable: each plane becomes a NEW node with the toggled `show` and recursively
-    // toggled children. The previous version mutated `plane.show`/`plane.children` in place —
-    // which now throws, since callers (e.g. `togglePlaneFromTree`, post clone-removal) pass the
-    // frozen Redux tree directly.
-    return tree.map((plane) => ({
-        ...plane,
-        show,
-        children: plane.children
+    // Structurally shared: a node whose `show` (and subtree) already matches keeps its reference,
+    // and the array is only replaced when some node changed. Never mutates the input.
+    let changed = false;
+    const next = tree.map((plane) => {
+        const children = plane.children
             ? toggleAllChildren(plane.children, show)
-            : plane.children,
-    }));
+            : plane.children;
+        if (plane.show === show && children === plane.children) {
+            return plane;
+        }
+        changed = true;
+        return {
+            ...plane,
+            show,
+            children,
+        };
+    });
+
+    return changed ? next : tree;
 }
 
 
@@ -1002,65 +883,57 @@ export const togglePlaneFromTree = (
     pluridPlaneID: string,
     forceShow?: boolean,
 ): TogglePlaneFromTree => {
-    const updatedTree: TreePlane[] = [];
-
+    // Path-copy: only the nodes on the way to the target plane get new references (siblings and
+    // unrelated roots keep theirs, so their renders bail out); the tree reference itself is kept
+    // when the plane is not found. Hiding a plane hides its whole subtree; showing it shows the
+    // subtree again.
     let updatedPlane: TreePlane | undefined;
 
-    for (const plane of tree) {
-        if (plane.planeID === pluridPlaneID) {
-            const show = forceShow ?? !plane.show;
-
-            const treeUpdatedPlane: TreePlane = {
-                ...plane,
-                show,
-            };
-
-            if (treeUpdatedPlane.children) {
-                const children = toggleAllChildren(
-                    treeUpdatedPlane.children,
-                    show,
-                );
-                treeUpdatedPlane.children = children;
+    const visit = (
+        nodes: TreePlane[],
+    ): TreePlane[] => {
+        let changed = false;
+        const next = nodes.map((plane) => {
+            if (updatedPlane) {
+                return plane;
             }
 
-            updatedTree.push(treeUpdatedPlane);
-            updatedPlane = {
-                ...treeUpdatedPlane,
-            };
-
-            continue;
-        }
-
-
-        if (plane.children) {
-            const {
-                updatedTree: childrenUpdatedTree,
-                updatedPlane: childrenUpdatedPlane,
-            } = togglePlaneFromTree(
-                plane.children,
-                pluridPlaneID,
-                forceShow,
-            );
-
-            // New node with the recursively-updated children (don't reassign
-            // `plane.children`, which mutates the input tree).
-            updatedTree.push({
-                ...plane,
-                children: [ ...childrenUpdatedTree ],
-            });
-
-            if (childrenUpdatedPlane) {
+            if (plane.planeID === pluridPlaneID) {
+                const show = forceShow ?? !plane.show;
+                const children = plane.children
+                    ? toggleAllChildren(plane.children, show)
+                    : plane.children;
+                if (show === plane.show && children === plane.children) {
+                    updatedPlane = plane;
+                    return plane;
+                }
                 updatedPlane = {
-                    ...childrenUpdatedPlane,
+                    ...plane,
+                    show,
+                    children,
                 };
+                changed = true;
+                return updatedPlane;
             }
 
-            continue;
-        }
+            if (plane.children) {
+                const children = visit(plane.children);
+                if (children !== plane.children) {
+                    changed = true;
+                    return {
+                        ...plane,
+                        children,
+                    };
+                }
+            }
 
+            return plane;
+        });
 
-        updatedTree.push(plane);
-    }
+        return changed ? next : nodes;
+    };
+
+    const updatedTree = visit(tree);
 
     return {
         updatedTree,
@@ -1213,9 +1086,13 @@ function reconcileNodeList(
 
     let everyReused = previous.length === next.length;
     const reconciled = next.map((nextNode, index) => {
-        // Pair by stable runtime identity (planeID), falling back to position.
-        const previousNode = (nextNode.planeID && previousByID.get(nextNode.planeID))
-            || previous[index];
+        // Pair by stable runtime identity (planeID). A positional fallback only for an id-less
+        // node whose route matches — never for a genuinely new plane, which would otherwise inherit
+        // an unrelated node's pinned location / measured size.
+        const byID = nextNode.planeID ? previousByID.get(nextNode.planeID) : undefined;
+        const positional = previous[index];
+        const previousNode = byID
+            || ((!nextNode.planeID && positional && positional.route === nextNode.route) ? positional : undefined);
         const result = reconcileNode(previousNode, nextNode);
         if (result !== previous[index]) {
             everyReused = false;

@@ -10,6 +10,8 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
+    import styled from 'styled-components';
+
 
     import {
         Theme,
@@ -70,6 +72,25 @@
 
 
 // #region module
+/** An icon control as a real button: focusable, labelled, keyboard-activatable. */
+const StyledPlaneControlButton = styled.button`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+        border-radius: 3px;
+    }
+`;
+
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane<PluridReactComponent>;
     treePlane: TreePlane;
@@ -215,21 +236,31 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         >
             <StyledPluridPlaneControlsLeft>
                 {parentTreePlane && (
-                    <PluridIconArrowLeft
-                        atClick={(event) => {
+                    <StyledPlaneControlButton
+                        type="button"
+                        aria-label="back to the parent plane"
+                        title="back"
+                        data-plurid-control="plane-back"
+                        onClick={(event) => {
                             navigateToPluridPlane(
                                 dispatch,
                                 parentTreePlane,
                                 event,
                             );
                         }}
-                        theme={stateGeneralTheme}
-                        title="back"
-                    />
+                    >
+                        <PluridIconArrowLeft
+                            theme={stateGeneralTheme}
+                        />
+                    </StyledPlaneControlButton>
                 )}
 
-                <PluridIconFrame
-                    atClick={(event) => {
+                <StyledPlaneControlButton
+                    type="button"
+                    aria-label="frame this plane"
+                    title="focus"
+                    data-plurid-control="plane-focus"
+                    onClick={(event) => {
                         const deisolate = false;
 
                         navigateToPluridPlane(
@@ -239,9 +270,11 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                             deisolate,
                         );
                     }}
-                    theme={stateGeneralTheme}
-                    title="focus"
-                />
+                >
+                    <PluridIconFrame
+                        theme={stateGeneralTheme}
+                    />
+                </StyledPlaneControlButton>
 
                 <ControlRefresh
                     theme={stateGeneralTheme}
@@ -289,13 +322,19 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
                     atClick={() => setShowAddress(show => !show)}
                 /> */}
 
-                <PluridIconDelete
-                    atClick={() => {
+                <StyledPlaneControlButton
+                    type="button"
+                    aria-label="close this plane"
+                    title="close"
+                    data-plurid-control="plane-close"
+                    onClick={() => {
                         closePlane();
                     }}
-                    theme={stateGeneralTheme}
-                    title="close"
-                />
+                >
+                    <PluridIconDelete
+                        theme={stateGeneralTheme}
+                    />
+                </StyledPlaneControlButton>
             </StyledPluridPlaneControlsRight>
         </StyledPluridPlaneControls>
     );

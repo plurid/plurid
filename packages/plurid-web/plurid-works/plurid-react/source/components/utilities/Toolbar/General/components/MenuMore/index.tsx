@@ -189,7 +189,9 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
         <StyledPluridMoreMenu
             theme={stateInteractionTheme}
             transparentUI={transparentUI}
-        >
+        
+            data-plurid-overlay="toolbar-menu"
+            data-plurid-control="toolbar-menu">
             <StyledPluridMoreMenuScroll
                 ref={moreMenuScrollElement}
             >

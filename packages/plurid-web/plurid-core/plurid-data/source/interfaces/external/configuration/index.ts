@@ -76,6 +76,20 @@ export interface FlatPluridConfiguration {
     viewpointURLParam?: string;
     /** `space.viewpointURLDebounce` — ms to coalesce URL writes during an orbit. */
     viewpointURLDebounce?: number;
+    /** `space.viewpointURLVersion` — viewpoint encoding written to the URL / `onViewpointChange` (`1` default, `2` = full camera). */
+    viewpointURLVersion?: 1 | 2;
+    /** `space.navigation` — camera limits, orbit pivot policy, motion (tween) settings, home and presets. */
+    navigation?: PluridConfigurationSpaceNavigation;
+    /** `space.snap` — drag-release snapping: edges/centers within a threshold, optional grid. */
+    snap?: PluridConfigurationSpaceSnap;
+    /** `space.culling` — far / off-screen planes stop painting (kept mounted). */
+    culling?: PluridConfigurationSpaceCulling;
+    /** `elements.plane.depthFade` — planes fade (and optionally blur) with camera distance. */
+    planeDepthFade?: PluridConfigurationElementsPlaneDepthFade;
+    /** `elements.plane.backface` — hide planes seen from behind. */
+    planeBackface?: 'visible' | 'hidden';
+    /** `elements.plane.resizable` — resize handles on selected planes. */
+    planeResizable?: boolean;
     /** `space.timings` — tunable debounce windows (persist, viewpoint-change). */
     timings?: PluridConfigurationSpaceTimings;
     /** `space.gestures` — pointer-navigation sensitivities, drag threshold, momentum. */
@@ -96,11 +110,11 @@ export interface FlatPluridConfiguration {
     transformOrigin?: RecursivePartial<PluridConfigurationSpaceTransformOrigin>;
     /** `space.transformMode` — restrict to one transform type, or all. */
     transformMode?: keyof typeof TRANSFORM_MODES;
-    /** `space.transformMultimode` — allow multiple simultaneous transforms. */
+    /** @deprecated Read nowhere since the input layer v2 (2026-09); kept so existing configurations type-check. */
     transformMultimode?: boolean;
-    /** `space.transformTouch` — touch-gesture → transform mapping. */
+    /** @deprecated Read nowhere since the input layer v2 (2026-09; see `gestures.touchOne`); kept so existing configurations type-check. */
     transformTouch?: keyof typeof TRANSFORM_TOUCHES;
-    /** `space.cullingDistance` — distance beyond which planes are culled. */
+    /** @deprecated Use `culling.distance` (`space.culling`); kept as an alias for one release. */
     cullingDistance?: number;
     /** `space.fadeInTime` — plane fade-in duration (ms). */
     fadeInTime?: number;
@@ -292,6 +306,34 @@ export interface PluridConfigurationSpace {
     viewpointURLDebounce?: number;
 
     /**
+     * Which viewpoint encoding the engine WRITES (to the URL and `onViewpointChange`): `1` — the
+     * six-scalar `rX,rY,tX,tY,tZ,s` tuple (default, what existing share links carry); `2` — the
+     * full camera (`v2|yaw|pitch|scale|pivot…|offset…|perspective`), which preserves the orbit
+     * pivot and pan exactly. Both versions are always ACCEPTED on restore. Default `1`.
+     */
+    viewpointURLVersion?: 1 | 2;
+
+    /**
+     * Camera navigation: limits (pitch, zoom, dolly), the orbit-pivot policy, motion (tween)
+     * settings, and the home / preset viewpoints; see {@link PluridConfigurationSpaceNavigation}.
+     */
+    navigation?: PluridConfigurationSpaceNavigation;
+
+    /**
+     * Drag-release snapping of the selection: edges and centers attract within `threshold`, else
+     * an optional `grid`. The alignment guides preview exactly what the release will snap to.
+     */
+    snap?: PluridConfigurationSpaceSnap;
+
+    /**
+     * Culling: planes far from the eye or fully outside the (margined) view stop painting — they
+     * stay mounted with their state; planes beyond `freezeDistance` keep painting but are
+     * contained. Hysteresis on every threshold, so nothing flickers on a boundary. The active,
+     * selected, isolated and focused planes are never culled. Off by default.
+     */
+    culling?: PluridConfigurationSpaceCulling;
+
+    /**
      * Tunable debounce windows (persist, viewpoint-change). Each field defaults independently; see
      * {@link PluridConfigurationSpaceTimings}.
      */
@@ -319,6 +361,12 @@ export interface PluridConfigurationSpace {
     bridge?: {
         length?: number;
         planeAngle?: number;
+        /**
+         * How nested spawns turn: `alternate` (default) flips the angle's sign every generation so
+         * a grandchild faces the way its grandparent does instead of ending up back-to-front;
+         * `fixed` keeps turning the same way.
+         */
+        fan?: 'alternate' | 'fixed';
     };
 
     /**
@@ -359,6 +407,89 @@ export interface PluridConfigurationSpaceTransformOrigin {
 }
 
 
+/**
+ * Camera navigation settings. Every field defaults independently; omit the object to keep the
+ * defaults. Read live — a host can retune limits or motion mid-session through the
+ * `configuration` topic.
+ */
+export interface PluridConfigurationSpaceNavigation {
+    /** Maximum |pitch| in degrees, so the orbit never flips past vertical. Default `89`. */
+    pitchLimit?: number;
+    /** Minimum zoom (`scale`). Default `0.1`. */
+    zoomMin?: number;
+    /** Maximum zoom (`scale`). Default `4`. */
+    zoomMax?: number;
+    /** The pivot may dolly no closer to the eye than this fraction of the perspective distance. Default `0.6`. */
+    dollyLimitFraction?: number;
+    /**
+     * What an orbit rotates about: the point under the cursor at gesture start (`cursor`, the
+     * default — CAD-style), the center of the current selection (`selection`), or the world point at
+     * the view center (`view`).
+     */
+    orbitPivot?: 'cursor' | 'selection' | 'view';
+    /** Programmatic camera moves (frame, fit, navigate, presets). */
+    motion?: PluridConfigurationSpaceNavigationMotion;
+    /**
+     * The home viewpoint (an encoded viewpoint string, v1 or v2). Defaults to the initial camera of
+     * the space (identity: no rotation, unit zoom, pivot at the view center).
+     */
+    home?: string;
+    /** Named preset viewpoints (encoded strings), reachable through the `space.preset` topic and the camera hooks. */
+    presets?: Record<string, string>;
+}
+
+
+export interface PluridConfigurationSpaceCulling {
+    /** Default `false`. */
+    enabled?: boolean;
+    /** Camera-space distance from the eye beyond which a plane stops painting (a plane at the pivot depth is at `perspective`, 2000). Default `6000`. */
+    distance?: number;
+    /** Hysteresis fraction on the thresholds. Default `0.15`. */
+    hysteresis?: number;
+    /** Frustum margin as a fraction of the view size. Default `0.25`. */
+    frustumMargin?: number;
+    /** Distance beyond which a painted plane is contained (no measurements). Default `3500`. */
+    freezeDistance?: number;
+}
+
+
+export interface PluridConfigurationElementsPlaneDepthFade {
+    /** Default `false`. */
+    enabled?: boolean;
+    /** Distance at which the fade starts. Default `800`. */
+    start?: number;
+    /** Distance at which the fade reaches `minOpacity`. Default `2500`. */
+    end?: number;
+    /** Default `0.35`. */
+    minOpacity?: number;
+    /** Max blur in px at `end`. Default `0`. */
+    blur?: number;
+}
+
+
+export interface PluridConfigurationSpaceSnap {
+    /** Default `true`. */
+    enabled?: boolean;
+    /** Attraction distance in space units. Default `12`. */
+    threshold?: number;
+    /** Grid pitch in space units when no edge attracts; unset = no grid. */
+    grid?: number;
+}
+
+
+export interface PluridConfigurationSpaceNavigationMotion {
+    /** Tween duration in ms for programmatic camera moves. Default `380`. */
+    duration?: number;
+    /** Easing curve. Default `out-cubic`. */
+    easing?: 'linear' | 'out-cubic' | 'out-quint' | 'in-out-cubic' | 'spring';
+    /**
+     * `respect` (default) collapses every camera tween, momentum fling and layout transition to an
+     * instant change when the user prefers reduced motion; `ignore` keeps them.
+     */
+    reducedMotion?: 'respect' | 'ignore';
+}
+
+
 export interface PluridConfigurationSpaceTransformLocks {
     rotationX: boolean;
     rotationY: boolean;
@@ -377,7 +508,28 @@ export type PluridShortcutID =
     | 'undo'
     | 'clearSelection'
     | 'fitToView'
+    | 'frameSelection'
+    | 'home'
+    | 'selectAll'
+    | 'invertSelection'
+    | 'duplicateSelection'
+    | 'navigateLeft'
+    | 'navigateRight'
+    | 'navigateUp'
+    | 'navigateDown'
+    | 'frameActive'
+    | 'grabMode'
+    | 'grabHold'
+    | 'exitGrabMode'
+    | 'help'
     | 'toggleFirstPerson'
+    | 'flyForward'
+    | 'flyBack'
+    | 'flyLeft'
+    | 'flyRight'
+    | 'flyUp'
+    | 'flyDown'
+    | 'flySprint'
     | 'modeRotation'
     | 'modeTranslation'
     | 'modeScale'
@@ -425,6 +577,22 @@ export interface PluridConfigurationSpaceTimings {
  * post-orbit momentum fling. Each field defaults independently (read live, so a host can retune
  * mid-session); omit the object entirely to keep every default.
  */
+export interface PluridConfigurationSpaceGesturesGamepad {
+    /** Poll `navigator.getGamepads()` and drive the camera. Default `false`. */
+    enabled?: boolean;
+    /** Stick magnitude below which input is ignored. Default `0.15`. */
+    deadZone?: number;
+    /** Response curve exponent applied to the stick magnitude (1 = linear). Default `2`. */
+    curve?: number;
+    /** Pan / fly speed in px per 16.7 ms at full deflection. Default `14`. */
+    panSpeed?: number;
+    /** Orbit / look speed in degrees per 16.7 ms at full deflection. Default `2.4`. */
+    orbitSpeed?: number;
+    /** Zoom factor per 16.7 ms at full trigger. Default `1.02`. */
+    zoomSpeed?: number;
+}
+
+
 export interface PluridConfigurationSpaceGestures {
     /** Orbit rotation sensitivity, degrees per pixel of drag. Default `0.22`. */
     rotateSensitivity?: number;
@@ -449,6 +617,32 @@ export interface PluridConfigurationSpaceGestures {
     momentumMin?: number;
     /** Disable the post-orbit momentum fling entirely (release stops dead). Default `false`. */
     disableMomentum?: boolean;
+    /** Per-gesture momentum: orbit and pan fling by default, zoom does not. */
+    momentum?: {
+        orbit?: boolean;
+        pan?: boolean;
+        zoom?: boolean;
+    };
+    /**
+     * What a mouse wheel does: `scroll-first` (default) zooms at the cursor unless the content under
+     * it can scroll along the wheel axis (then the page scrolls); `zoom` always zooms; `disabled`
+     * leaves the wheel to the page. Ctrl/Cmd + wheel and pinch always zoom.
+     */
+    wheel?: 'zoom' | 'scroll-first' | 'disabled';
+    /** Zoom factor per mouse-wheel notch. Default `1.1`. */
+    wheelZoomStep?: number;
+    /** What a two-finger trackpad scroll does on empty space. Default `pan`. */
+    trackpadScroll?: 'pan' | 'zoom' | 'orbit' | 'disabled';
+    /** What one finger does on empty space (over a plane it scrolls the content). Default `orbit`. */
+    touchOne?: 'orbit' | 'pan' | 'disabled';
+    /** Two-finger twist rotates the yaw. Default `false`. */
+    touchTwist?: boolean;
+    /** Double-click / double-tap frames the plane under the pointer (or everything). Default `true`. */
+    doubleClickFrame?: boolean;
+    /** Fly-mode sprint multiplier while Shift is held. Default `2.5`. */
+    flySprintMultiplier?: number;
+    /** Gamepad navigation (opt-in): sticks orbit/pan (fly in first person), triggers zoom/dolly, buttons frame/home/undo. */
+    gamepad?: PluridConfigurationSpaceGesturesGamepad;
     /**
      * Remap what each pointer input does in the default (ALL) transform mode — so a host can make
      * left-drag orbit directly (no grab mode), claim left-drag for itself (`disabled`), or stop the
@@ -461,12 +655,16 @@ export interface PluridConfigurationSpaceGestures {
 
 
 export interface PluridConfigurationSpaceGesturesButtonMap {
-    /** Left-button drag. Default: orbit, but only while grab mode is on. */
-    left?: 'orbit' | 'pan' | 'zoom' | 'disabled';
+    /** Left-button drag. Default: orbit on empty space, the page's over a plane (orbit everywhere in grab mode). */
+    left?: 'orbit' | 'pan' | 'zoom' | 'dolly' | 'disabled';
     /** Middle-button drag. Default: pan. */
-    middle?: 'orbit' | 'pan' | 'zoom' | 'disabled';
-    /** Wheel / trackpad. Default: zoom (in grab / scale / ⌘). `disabled` leaves scrolling to the page. */
+    middle?: 'orbit' | 'pan' | 'zoom' | 'dolly' | 'disabled';
+    /** Right-button drag. Default: pan (a plain right-click still opens the menu); `menu` releases it. */
+    right?: 'orbit' | 'pan' | 'zoom' | 'dolly' | 'disabled' | 'menu';
+    /** Wheel / trackpad. Default: zoom at the cursor. `disabled` leaves scrolling to the page. */
     wheel?: 'zoom' | 'disabled';
+    /** One finger on empty space. Default: orbit. */
+    touchOne?: 'orbit' | 'pan' | 'disabled';
 }
 
 
@@ -539,6 +737,15 @@ export interface PluridConfigurationElementsPlane {
     opacity: number;
 
     controls: PluridConfigurationElementsPlaneControls;
+
+    /** Resize handles on SELECTED planes; a hand-resized plane keeps its size (`sizeMode: 'manual'`). Default `false`. */
+    resizable?: boolean;
+
+    /** Fade (and optionally blur) planes with their distance from the eye; see {@link PluridConfigurationElementsPlaneDepthFade}. */
+    depthFade?: PluridConfigurationElementsPlaneDepthFade;
+
+    /** `hidden` stops painting planes seen from behind (`backface-visibility`). Default `visible`. */
+    backface?: 'visible' | 'hidden';
 }
 
 
@@ -615,5 +822,12 @@ export interface PluridConfigurationDevelopment {
      * Show debugging information for the space.
      */
     spaceDebugger: boolean;
+
+    /**
+     * Development-only warnings for host mistakes (an unstable `planes` identity, a view route
+     * that is not registered, a container with no height, an out-of-range perspective). Never in
+     * production. Default `true`.
+     */
+    warnings?: boolean;
 }
 // #endregion module

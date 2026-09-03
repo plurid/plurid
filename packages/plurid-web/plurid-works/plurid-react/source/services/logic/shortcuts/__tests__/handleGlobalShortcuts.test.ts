@@ -115,9 +115,13 @@ describe('handleGlobalShortcuts — default bindings (regression)', () => {
         expect(run(makeEvent({ code: 'KeyZ', metaKey: true, shiftKey: true })).types).toContain(actions.space.redo().type);
     });
 
-    it('Home / 0 fit to view', () => {
-        expect(run(makeEvent({ code: 'Digit0', key: '0' })).types).toContain(actions.space.spaceFitToView().type);
-        expect(run(makeEvent({ code: 'Home', key: 'Home' })).types).toContain(actions.space.spaceFitToView().type);
+    it('Home / 0 fit to view (an animated thunk through the camera core)', () => {
+        const digit = run(makeEvent({ code: 'Digit0', key: '0' }));
+        expect(digit.dispatched).toHaveLength(1);
+        expect(typeof digit.dispatched[0]).toBe('function');
+        expect(digit.prevented).toBe(true);
+        const home = run(makeEvent({ code: 'Home', key: 'Home' }));
+        expect(typeof home.dispatched[0]).toBe('function');
     });
 
     it('Escape clears the selection only when something is selected', () => {

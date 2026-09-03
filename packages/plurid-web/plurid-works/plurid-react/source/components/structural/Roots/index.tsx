@@ -48,10 +48,11 @@ export interface PluridRootsOwnProperties {
 export interface PluridRootsStateProperties {
     stateConfiguration: PluridConfiguration;
     spaceTransformMatrix: string;
-    spaceAnimatedTransform: boolean;
     stateResolvedLayout: boolean;
-    spaceTransformTime: number;
     stateTree: TreePlane[];
+    stateViewHeight: number;
+    /** `will-change: transform` only while the camera is in motion (a tween or a fling). */
+    stateMotion: string;
 }
 
 export interface PluridRootsDispatchProperties {
@@ -71,10 +72,10 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         // #region state
         stateConfiguration,
         spaceTransformMatrix,
-        spaceAnimatedTransform,
-        spaceTransformTime,
         stateTree,
         stateResolvedLayout,
+        stateViewHeight,
+        stateMotion,
         // #endregion state
     } = properties;
     // #endregion properties
@@ -91,16 +92,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         ? fallback
         : typeof value === 'number' ? value + 'px' : value;
 
+    // The default height is the MEASURED view height (the camera's pivot frame), not the raw
+    // window — so an embedded space sizes to its container, and SSR never touches `window`.
     const width = resolveDimension(dimensions?.width, '100%');
     const height = stateResolvedLayout
-        ? resolveDimension(dimensions?.height, window.innerHeight + 'px')
+        ? resolveDimension(dimensions?.height, stateViewHeight + 'px')
         : 0;
 
-    const transition = spaceAnimatedTransform
-        ? `transform ${spaceTransformTime}ms ease-in-out`
-        // : firstPerson
-        //     ? 'transform 100ms linear'
-        : 'initial';
+    // No CSS transition on the camera: programmatic moves tween through the motion controller (one
+    // commit per frame, interruptible), and a transition would fight live input.
+    const transition = 'none';
 
     return (
         <StyledPluridRoots
@@ -109,6 +110,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 height,
                 transition,
                 transform: spaceTransformMatrix,
+                willChange: stateMotion !== 'idle' ? 'transform' : undefined,
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
         >
@@ -136,10 +138,10 @@ const mapStateToProperties = (
 ): PluridRootsStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     spaceTransformMatrix: selectors.space.getTransformMatrix(state),
-    spaceAnimatedTransform: selectors.space.getAnimatedTransform(state),
-    spaceTransformTime: selectors.space.getTransformTime(state),
     stateTree: selectors.space.getTree(state),
     stateResolvedLayout: selectors.space.getResolvedLayout(state),
+    stateViewHeight: selectors.space.getViewSize(state).height,
+    stateMotion: selectors.space.getMotion(state),
 });
 
 

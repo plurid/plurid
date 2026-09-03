@@ -29,6 +29,11 @@ export const getTransformMatrix = (state: AppState) => state.space.transform;
 export const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
 export const getTransformTime = (state: AppState): number => state.space.transformTime;
 
+export const getCamera = (state: AppState) => state.space.camera;
+export const getCameraLimits = (state: AppState) => state.space.cameraLimits;
+export const getMotion = (state: AppState) => state.space.motion;
+export const getPerspective = (state: AppState): number => state.space.camera.perspective;
+
 export const getRotationX = (state: AppState): number => state.space.rotationX;
 export const getRotationY = (state: AppState): number => state.space.rotationY;
 export const getTranslationX = (state: AppState): number => state.space.translationX;
@@ -75,6 +80,32 @@ export const getLastClosedPlane = (state: AppState) => state.space.lastClosedPla
 
 export const getSelectedPlaneIDs = (state: AppState): string[] => state.space.selectedPlaneIDs;
 export const getDraggingSelection = (state: AppState): boolean => state.space.draggingSelection;
+/** Spatial undo/redo availability (`canUndo`, `canRedo`, depths), maintained by the history middleware. */
+export const getHistory = (state: AppState) => state.space.history;
+export const getBookmarks = (state: AppState) => state.space.bookmarks;
+export const getHome = (state: AppState) => state.space.home;
+export const getLayoutTransition = (state: AppState): number => state.space.layoutTransition;
+export const getCulled = (state: AppState) => state.space.culled;
+export type PlaneCullingState = 'visible' | 'hidden' | 'frozen';
+/** Factory: one memoized "how is THIS plane culled" selector per plane. */
+export const makeGetPlaneCulling = () => createSelector(
+    [
+        getCulled,
+        (_state: AppState, planeID: string | undefined) => planeID,
+    ],
+    (culled, planeID): PlaneCullingState => {
+        if (!planeID || !culled) {
+            return 'visible';
+        }
+        if (culled.hidden.includes(planeID)) {
+            return 'hidden';
+        }
+        if (culled.frozen.includes(planeID)) {
+            return 'frozen';
+        }
+        return 'visible';
+    },
+);
 
 /**
  * Factory for a memoized "is THIS plane selected" selector. One per connected plane (via `connect`'s

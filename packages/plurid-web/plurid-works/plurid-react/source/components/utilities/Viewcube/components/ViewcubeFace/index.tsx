@@ -23,12 +23,12 @@
     } from './styled';
 
     import { AppState } from '~services/state/store';
+    import {
+        cameraCommand,
+        CameraCommand,
+    } from '~services/logic/camera';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
-    import actions from '~services/state/actions';
-    import {
-        DispatchAction,
-    } from '~data/interfaces';
     // #endregion libraries
 
 
@@ -37,7 +37,6 @@
         faceTransform,
         faceTypes,
         zoneCodes,
-        zoneClickTransforms,
     } from './data';
     // #endregion internal
 // #endregion imports
@@ -62,9 +61,7 @@ export interface PluridViewcubeFaceStateProperties {
 }
 
 export interface PluridViewcubeFaceDispatchProperties {
-    dispatchRotateX: DispatchAction<typeof actions.space.rotateX>;
-    dispatchRotateY: DispatchAction<typeof actions.space.rotateY>;
-    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
+    dispatchCameraCommand: (command: CameraCommand) => void;
 }
 
 export type PluridViewcubeFaceProperties =
@@ -93,9 +90,7 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
         configuration,
 
         /** dispatch */
-        dispatchRotateX,
-        dispatchRotateY,
-        dispatchSetAnimatedTransform,
+        dispatchCameraCommand,
     } = properties;
 
     const {
@@ -122,12 +117,17 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
         // console.log(transform);
         setActiveZone(zoneCode);
 
-        dispatchSetAnimatedTransform(true);
-        dispatchRotateX(transform.rotateX);
-        dispatchRotateY(transform.rotateY);
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, 450);
+        // ONE tween to the exact face pose (both angles at once), through the motion controller —
+        // interruptible, shortest arc on yaw, one commit per frame.
+        dispatchCameraCommand({
+            kind: 'delta',
+            delta: {
+                absolute: {
+                    pitch: transform.rotateX,
+                    yaw: transform.rotateY,
+                },
+            },
+        });
     }
     // #endregion handlers
 
@@ -142,7 +142,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
         >
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.topLeft}
+                zone={faceTypes.topLeft}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} topLeft`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topLeft}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topLeft}`]}
                 onClick={() => handleClick(faceTypes.topLeft)}
@@ -151,7 +154,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             />
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.topCenter}
+                zone={faceTypes.topCenter}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} topCenter`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topCenter}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topCenter}`]}
                 onClick={() => handleClick(faceTypes.topCenter)}
@@ -160,7 +166,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             />
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.topRight}
+                zone={faceTypes.topRight}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} topRight`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.topRight}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.topRight}`]}
                 onClick={() => handleClick(faceTypes.topRight)}
@@ -171,7 +180,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
 
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.middleLeft}
+                zone={faceTypes.middleLeft}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} middleLeft`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleLeft}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleLeft}`]}
                 onClick={() => handleClick(faceTypes.middleLeft)}
@@ -180,7 +192,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             />
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.middleCenter}
+                zone={faceTypes.middleCenter}
+                type="button"
+                tabIndex={0}
+                aria-label={`view from ${face} middleCenter`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleCenter}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleCenter}`]}
                 onClick={() => handleClick(faceTypes.middleCenter)}
@@ -191,7 +206,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             </StyledPluridViewcubeFaceZone>
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.middleRight}
+                zone={faceTypes.middleRight}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} middleRight`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.middleRight}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.middleRight}`]}
                 onClick={() => handleClick(faceTypes.middleRight)}
@@ -202,7 +220,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
 
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.bottomLeft}
+                zone={faceTypes.bottomLeft}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} bottomLeft`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomLeft}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomLeft}`]}
                 onClick={() => handleClick(faceTypes.bottomLeft)}
@@ -211,7 +232,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             />
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.bottomCenter}
+                zone={faceTypes.bottomCenter}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} bottomCenter`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomCenter}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomCenter}`]}
                 onClick={() => handleClick(faceTypes.bottomCenter)}
@@ -220,7 +244,10 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
             />
             <StyledPluridViewcubeFaceZone
                 theme={interactionTheme}
-                type={faceTypes.bottomRight}
+                zone={faceTypes.bottomRight}
+                type="button"
+                tabIndex={-1}
+                aria-label={`view from ${face} bottomRight`}
                 active={activeZone === (zoneCodes as any)[`${face}${faceTypes.bottomRight}`]}
                 hovered={hoveredZone === (zoneCodes as any)[`${face}${faceTypes.bottomRight}`]}
                 onClick={() => handleClick(faceTypes.bottomRight)}
@@ -245,14 +272,8 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridViewcubeFaceDispatchProperties => ({
-    dispatchRotateX: (angleX: number) => dispatch(
-        actions.space.rotateX(angleX),
-    ),
-    dispatchRotateY: (angleY: number) => dispatch(
-        actions.space.rotateY(angleY),
-    ),
-    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
-        actions.space.setAnimatedTransform(animated),
+    dispatchCameraCommand: (command) => dispatch(
+        cameraCommand(command, { animate: true }) as any,
     ),
 });
 

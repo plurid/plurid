@@ -72,6 +72,7 @@ export const StyledPluridMoreMenuItem: any = styled.div`
 export const StyledPluridMoreMenuScroll = styled.div`
     height: 240px;
     overflow: scroll;
+    overscroll-behavior: contain;
     padding: 0 5px;
 
     /* Hide Scrollbar */

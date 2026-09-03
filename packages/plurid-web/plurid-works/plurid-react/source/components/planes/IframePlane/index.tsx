@@ -46,6 +46,8 @@ export interface IframePlaneOwnProperties {
 export interface IframePlaneStateProperties {
     stateGeneralTheme: Theme;
     stateInteractionTheme: Theme;
+    /** G / Space held: a transparent overlay takes the pointer so a drag over the iframe orbits. */
+    stateGrabMode: boolean;
 }
 
 export interface IframePlaneDispatchProperties {
@@ -70,10 +72,9 @@ const IframePlane: PluridReactFunctionalComponent<
             // #endregion values
         // #endregion required
 
-        // // #region state
-        // stateGeneralTheme,
-        // stateInteractionTheme,
-        // // #endregion state
+        // #region state
+        stateGrabMode,
+        // #endregion state
     } = properties;
 
     const route = plurid.value;
@@ -83,7 +84,20 @@ const IframePlane: PluridReactFunctionalComponent<
     // #region render
     return (
         <StyledIframePlane>
-            <iframe src={route} />
+            <iframe
+                src={route}
+                title={route}
+            />
+            {/* An iframe swallows pointer events; in grab mode the overlay hands the drag to the space. */}
+            {stateGrabMode && (
+                <div
+                    style={{
+                        position: 'absolute',
+                        inset: 0,
+                    }}
+                    data-plurid-iframe-overlay={true}
+                />
+            )}
         </StyledIframePlane>
     );
     // #endregion render
@@ -95,6 +109,7 @@ const mapStateToProperties = (
 ): IframePlaneStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
+    stateGrabMode: state.ui.grabMode || state.ui.grabHold,
 });
 
 

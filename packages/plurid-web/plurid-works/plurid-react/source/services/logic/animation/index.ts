@@ -4,8 +4,6 @@
 
 
     import {
-        PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT,
-
         TreePlane,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -15,52 +13,63 @@
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
     import {
-        DispatchAction,
-    } from '~data/interfaces';
-
-    import {
         space,
     } from '~services/engine';
 
     import {
-        computePlaneLocation,
-    } from '../computing';
-
-    import {
         focusPluridPlaneAnchor,
     } from '../transform';
+
+    import {
+        framePlaneNode,
+        CameraThunk,
+    } from '../camera';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export const factoryUseAnimatedTransform = () => {
-    let timeout: ReturnType<typeof setTimeout> | undefined;
+/**
+ * Navigate to a plane: frame it face-on (an interruptible tween through the motion controller),
+ * de-isolate, make it the active plane, and move keyboard focus to its anchor once the tween has
+ * landed (`preventScroll`, so the focus never scrolls the view).
+ */
+export const navigatePlane = (
+    plane: TreePlane,
+    options: { deisolate?: boolean; animate?: boolean } = {},
+): CameraThunk => (dispatch, getState) => {
+    const {
+        deisolate = true,
+        animate = true,
+    } = options;
 
-    return (
-        dispatch: ThunkDispatch<{}, {}, AnyAction>,
-    ) => {
-        const dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform> = (
-            payload,
-        ) => dispatch(
-            actions.space.setAnimatedTransform(payload),
-        );
+    dispatch(framePlaneNode(plane, animate) as any);
 
-        dispatchSetAnimatedTransform(true);
-
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-
-        timeout = setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
+    if (deisolate) {
+        dispatch(actions.space.setSpaceField({
+            field: 'isolatePlane',
+            value: '',
+        }));
     }
-}
 
-export const useAnimatedTransform = factoryUseAnimatedTransform();
+    dispatch(actions.space.setSpaceField({
+        field: 'activePlaneID',
+        value: plane.planeID,
+    }));
 
+    const duration = animate
+        ? (getState().configuration.space.navigation?.motion?.duration ?? 380)
+        : 0;
+    const focus = () => {
+        focusPluridPlaneAnchor(plane.planeID);
+    };
+    if (duration > 0) {
+        setTimeout(focus, duration + 16);
+    } else {
+        focus();
+    }
+};
 
 
 export const navigateToPluridPlane = (
@@ -78,49 +87,7 @@ export const navigateToPluridPlane = (
         return;
     }
 
-
-    const dispatchSetTransform: DispatchAction<typeof actions.space.setTransform> = (
-        payload,
-    ) => dispatch(
-        actions.space.setTransform(payload),
-    );
-    const dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField> = (
-        payload,
-    ) => dispatch(
-        actions.space.setSpaceField(payload),
-    );
-
-    const {
-        matrix3d,
-        transform,
-    } = computePlaneLocation(plane);
-
-    useAnimatedTransform(dispatch);
-
-    dispatchSetSpaceField({
-        field: 'transform',
-        value: matrix3d,
-    });
-
-    dispatchSetTransform({
-        ...transform,
-    });
-
-    if (deisolate) {
-        dispatchSetSpaceField({
-            field: 'isolatePlane',
-            value: '',
-        });
-    }
-
-    setTimeout(() => {
-        focusPluridPlaneAnchor(plane.planeID);
-
-        dispatchSetSpaceField({
-            field: 'activePlaneID',
-            value: plane.planeID,
-        });
-    }, PLURID_DEFAULT_ANIMATED_TRANSFORM_TIMEOUT);
+    dispatch(navigatePlane(plane, { deisolate }) as any);
 }
 
 

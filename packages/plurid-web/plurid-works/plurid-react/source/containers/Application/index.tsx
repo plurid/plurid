@@ -5,6 +5,9 @@
         // useState,
         // useEffect,
         Component,
+        forwardRef,
+        useImperativeHandle,
+        useRef,
     } from 'react';
 
     import {
@@ -43,10 +46,36 @@
     // import PluridProviderContext from '~containers/Provider/context';
 
     import store from '~services/state/store';
+    import actions from '~services/state/actions';
+    import {
+        PluridThunkExtra,
+        createThunkExtra,
+    } from '~services/state/extra';
+
+    import {
+        cameraCommand,
+        applyCameraDeltaCommand,
+        setHome,
+    } from '~services/logic/camera';
+    import {
+        alignSelection,
+        distributeSelection,
+        duplicateSelection,
+    } from '~services/state/thunks/selection';
+    import {
+        toggleLinkPlane,
+        closePlane,
+        openPlane,
+    } from '~services/state/thunks/planes';
+    import { warnOnce } from '~services/logic/development/warn';
+
+    import {
+        PluridApplicationHandle,
+    } from './handle';
     import StateContext from '~services/state/context';
 
     import {
-        encodeViewpoint,
+        encodeCameraViewpoint,
     } from '~services/logic/viewpoint';
 
     // import {
@@ -56,6 +85,7 @@
     import {
         state,
         registerPlanes,
+        getPlanesRegistrar,
         PluridPlanesRegistrar,
     } from '~services/engine';
     // #endregion external
@@ -68,9 +98,13 @@
 
 
 // #region module
+/** A registered plane's identity for the stability check (route, else id). */
+const planeIdentity = (
+    plane: any,
+): string => String(plane?.route ?? plane?.id ?? plane?.path ?? '');
 
 
-class PluridApplication extends Component<
+class PluridApplicationShell extends Component<
     PluridApplicationProperties<PluridReactComponent>
     // any,
     // any
@@ -92,8 +126,11 @@ class PluridApplication extends Component<
     private viewpointTimeout: ReturnType<typeof setTimeout> | undefined;
     private lastViewpoint: string | undefined;
     // Resolved `space.timings` debounce windows (ms), captured once from the merged configuration.
+    private thunkExtra: PluridThunkExtra = createThunkExtra();
+    private appliedConfiguration: PluridApplicationProperties<PluridReactComponent>['configuration'];
     private persistDebounceMs = 300;
     private viewpointDebounceMs = 250;
+    private readyFired = false;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -115,8 +152,19 @@ class PluridApplication extends Component<
         // an explicit `space.undo: false` drops it (no per-action signature cost / snapshot memory).
         const preloadedState = this.computeStore();
         const resolvedSpace = (preloadedState as any)?.configuration?.space;
+        const perspective = resolvedSpace?.perspective;
+        if (typeof perspective === 'number' && (perspective < 500 || perspective > 5000)) {
+            warnOnce(
+                'perspective-range',
+                `space.perspective is ${perspective}px — below 500 the space distorts, above 5000 it flattens; 1200–2500 reads as a camera.`,
+                resolvedSpace?.development?.warnings !== false,
+            );
+        }
         const historyEnabled = resolvedSpace?.undo !== false;
-        this.store = store(preloadedState, { history: historyEnabled });
+        this.store = store(preloadedState, {
+            history: historyEnabled,
+            extra: this.thunkExtra,
+        });
 
         // Resolve the tunable debounce windows once (default 300 / 250 if unset).
         const timings = resolvedSpace?.timings;
@@ -146,33 +194,66 @@ class PluridApplication extends Component<
         // The master escape hatch. Fired here (post-mount) so the View has already subscribed the
         // pubsub control/emit topics — a host can publish on `api.pubsub` immediately. The `store`
         // is structurally a `PluridStore` (getState/dispatch/subscribe).
-        if (this.props.onReady) {
-            this.props.onReady({
-                store: this.store,
-                pubsub: this.pubsub,
-                getSnapshot: () => this.store.getState(),
-                getViewpoint: () => {
-                    const space = this.store.getState().space;
-                    return encodeViewpoint({
-                        rotationX: space.rotationX,
-                        rotationY: space.rotationY,
-                        translationX: space.translationX,
-                        translationY: space.translationY,
-                        translationZ: space.translationZ,
-                        scale: space.scale,
-                    });
-                },
-            });
+        // Once per instance: StrictMode double-invokes mount effects in development, and a host
+        // that wires its app up in `onReady` must not be wired twice.
+        if (this.props.onReady && !this.readyFired) {
+            this.readyFired = true;
+            this.props.onReady(this.getApi());
         }
     }
 
-    public componentDidUpdate() {
+    public componentDidUpdate(
+        previousProperties: PluridApplicationProperties<PluridReactComponent>,
+    ) {
+        // Recompute the store only when one of its INPUTS changed identity. A host re-render that
+        // passes the same view/planes/configuration/space (the common case: unrelated parent
+        // state) is a no-op — previously every update rebuilt the whole store, re-registered the
+        // planes, and clobbered the live `view` (planes added through `VIEW_ADD_PLANE`) with the
+        // prop.
+        const inputs: (keyof PluridApplicationProperties<PluridReactComponent>)[] = [
+            'view',
+            'planes',
+            'configuration',
+            'space',
+            'id',
+            'hostname',
+            'precomputedState',
+            'useLocalStorage',
+        ];
+        const changed = inputs.some((key) => this.props[key] !== previousProperties[key]);
+        if (!changed) {
+            return;
+        }
+
+        // A `planes` array rebuilt on every host render (same routes, new identity) recomputes the
+        // store on every render — a memoization the host should own.
+        const planes = this.props.planes;
+        const previousPlanes = previousProperties.planes;
+        if (
+            planes && previousPlanes && planes !== previousPlanes
+            && planes.length === previousPlanes.length
+            && planes.every((plane, index) => planeIdentity(plane) === planeIdentity(previousPlanes[index]))
+        ) {
+            warnOnce(
+                'planes-identity',
+                'the `planes` prop is a new array with the same routes on every render — memoize it (useMemo / a module constant), or the store is recomputed on every host render.',
+                this.props.configuration?.development?.warnings !== false,
+            );
+        }
+
+        const previousPerspective = this.store.getState().space.camera.perspective;
         const updatedStore = this.computeStore();
 
         this.store.dispatch({
             type: 'SET_STATE',
             payload: updatedStore,
         });
+
+        // A changed `space.perspective` re-derives the camera matrix.
+        const perspective = updatedStore.space.camera.perspective;
+        if (perspective !== previousPerspective) {
+            this.store.dispatch(actions.space.setPerspective(perspective));
+        }
     }
 
     public componentWillUnmount() {
@@ -218,10 +299,88 @@ class PluridApplication extends Component<
                         {...this.props}
                         planesRegistrar={this.planesRegistrar}
                         pubsub={this.pubsub}
+                        thunkExtra={this.thunkExtra}
                     />
                 </ReduxProvider>
             </StyleSheetManager>
         );
+    }
+
+
+    /** The `onReady` api: the store, the bus, and synchronous reads. */
+    public getApi(): PluridApi {
+        return {
+            store: this.store,
+            pubsub: this.pubsub,
+            getSnapshot: () => this.store.getState(),
+            getViewpoint: (options) => this.encodeViewpoint(options?.version),
+        };
+    }
+
+    /** The imperative handle (`ref`): the api plus typed camera / selection / history / tree commands. */
+    public getHandle(): PluridApplicationHandle {
+        const dispatch = (action: unknown) => this.store.dispatch(action as any);
+        const getState = () => this.store.getState();
+
+        return {
+            ...this.getApi(),
+            camera: {
+                get: () => getState().space.camera,
+                motion: () => getState().space.motion,
+                moveBy: (delta, options = {}) => dispatch(applyCameraDeltaCommand(delta, options.animate ?? false)),
+                moveTo: (viewpoint, options = {}) => dispatch(cameraCommand({ kind: 'viewpoint', viewpoint }, { animate: true, ...options })),
+                frame: (target = {}, options = {}) => dispatch(cameraCommand({ kind: 'frame', planeID: target.planeID, selection: target.selection }, { animate: true, ...options })),
+                fit: (options = {}) => dispatch(cameraCommand({ kind: 'fit' }, { animate: true, ...options })),
+                reset: (options = {}) => dispatch(cameraCommand({ kind: 'reset' }, { animate: true, ...options })),
+                home: (options = {}) => dispatch(cameraCommand({ kind: 'home' }, { animate: true, ...options })),
+                setHome: (viewpoint) => dispatch(setHome(viewpoint)),
+                preset: (name, options = {}) => dispatch(cameraCommand({ kind: 'preset', name }, { animate: true, ...options })),
+                bookmark: (name, action = 'go', options = {}) => dispatch(cameraCommand({ kind: 'bookmark', name, action }, { animate: true, ...options })),
+            },
+            selection: {
+                get: () => getState().space.selectedPlaneIDs,
+                set: (planeIDs) => dispatch(actions.space.setSelection(planeIDs)),
+                toggle: (planeID) => dispatch(actions.space.toggleSelection(planeID)),
+                clear: () => dispatch(actions.space.clearSelection()),
+                all: () => dispatch(actions.space.selectAll()),
+                invert: () => dispatch(actions.space.invertSelection()),
+                align: (edge) => dispatch(alignSelection(edge)),
+                distribute: (axis) => dispatch(distributeSelection(axis)),
+                duplicate: (offset) => dispatch(duplicateSelection(offset)),
+            },
+            history: {
+                get: () => getState().space.history,
+                undo: () => dispatch(actions.space.undo()),
+                redo: () => dispatch(actions.space.redo()),
+            },
+            tree: {
+                get: () => getState().space.tree,
+                setView: (view) => dispatch(actions.space.spaceSetView(view)),
+                spawn: (route, parentPlaneID, linkCoordinates = { x: 0, y: 0 }) => {
+                    const registrar = getPlanesRegistrar(this.planesRegistrar);
+                    if (!registrar) {
+                        return;
+                    }
+                    dispatch(toggleLinkPlane({
+                        parentPlaneID,
+                        linkID: parentPlaneID + '#' + route + '#api',
+                        route,
+                        linkCoordinates,
+                        planesRegistry: registrar.getAll(),
+                        hostname: this.props.hostname,
+                    }));
+                },
+                close: (planeID) => dispatch(closePlane(planeID)),
+                open: (planeID) => dispatch(openPlane(planeID)),
+                remove: (planeID) => dispatch(actions.space.removePlane(planeID)),
+            },
+            focus: () => {
+                const view = this.thunkExtra.view;
+                if (view && typeof view.focus === 'function') {
+                    view.focus({ preventScroll: true });
+                }
+            },
+        };
     }
 
 
@@ -273,6 +432,11 @@ class PluridApplication extends Component<
         //     contextState,
         // });
 
+        // A changed `configuration` prop overrides the store's (the host's authority); an unchanged
+        // one leaves runtime configuration changes (pubsub `configuration` topic) in place.
+        const configurationAuthoritative = !!this.store && configuration !== this.appliedConfiguration;
+        this.appliedConfiguration = configuration;
+
         const store = state.compute(
             view,
             configuration,
@@ -282,6 +446,9 @@ class PluridApplication extends Component<
             precomputedState,
             contextState,
             hostname,
+            {
+                configurationAuthoritative,
+            },
         );
         // console.log({
         //     store: store.space,
@@ -295,7 +462,8 @@ class PluridApplication extends Component<
             return;
         }
 
-        if (typeof localStorage === 'undefined') {
+        // A custom `storageAdapter` works without `localStorage` (SSR, React Native, tests).
+        if (typeof localStorage === 'undefined' && !this.props.storageAdapter) {
             return;
         }
 
@@ -362,15 +530,7 @@ class PluridApplication extends Component<
                 if (!this.store || !this.props.onViewpointChange) {
                     return;
                 }
-                const space = this.store.getState().space;
-                const viewpoint = encodeViewpoint({
-                    rotationX: space.rotationX,
-                    rotationY: space.rotationY,
-                    translationX: space.translationX,
-                    translationY: space.translationY,
-                    translationZ: space.translationZ,
-                    scale: space.scale,
-                });
+                const viewpoint = this.encodeViewpoint();
                 // Fire only when the viewpoint actually changed — store updates fire for unrelated
                 // state too (a spawn, a selection), which don't move the camera.
                 if (viewpoint !== this.lastViewpoint) {
@@ -379,6 +539,25 @@ class PluridApplication extends Component<
                 }
             }, this.viewpointDebounceMs);
         });
+    }
+
+    /**
+     * The camera as an encoded viewpoint — v1 (the legacy scalars) by default, or v2 (the full
+     * camera) when asked or configured (`space.viewpointURLVersion`).
+     */
+    private encodeViewpoint(
+        version?: 1 | 2,
+    ): string {
+        const state = this.store.getState();
+        const resolvedVersion = version
+            ?? state.configuration?.space?.viewpointURLVersion
+            ?? 1;
+
+        return encodeCameraViewpoint(
+            state.space.camera,
+            state.space.viewSize,
+            resolvedVersion,
+        );
     }
 
     private persistState() {
@@ -407,9 +586,42 @@ class PluridApplication extends Component<
         this.persistDirty = false;
     }
 }
+
+
+/**
+ * The application, with an imperative handle on `ref` (`PluridApplicationHandle`: the `onReady`
+ * api plus typed camera / selection / history / tree commands and `focus()`).
+ */
+const PluridApplication = forwardRef<
+    PluridApplicationHandle,
+    PluridApplicationProperties<PluridReactComponent>
+>((properties, reference) => {
+    const shell = useRef<PluridApplicationShell>(null);
+
+    useImperativeHandle(reference, () => (shell.current
+        ? shell.current.getHandle()
+        : (undefined as unknown as PluridApplicationHandle)), []);
+
+    return (
+        <PluridApplicationShell
+            ref={shell}
+            {...properties}
+        />
+    );
+});
+PluridApplication.displayName = 'PluridApplication';
 // #endregion module
 
 
+
 // #region exports
+export {
+    PluridApplicationShell,
+};
+
+export type {
+    PluridApplicationHandle,
+};
+
 export default PluridApplication;
 // #endregion exports

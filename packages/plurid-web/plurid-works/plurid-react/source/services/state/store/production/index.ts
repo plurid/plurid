@@ -13,6 +13,7 @@
     } from '../reducer';
 
     import createHistoryMiddleware from '../../middleware/history';
+    import { PluridThunkExtra } from '../../extra';
     // #endregion external
 // #endregion imports
 
@@ -22,6 +23,8 @@
 export interface PluridStoreOptions {
     /** Include the spatial undo/redo history middleware. Default `true`. */
     history?: boolean;
+    /** The thunk extra argument (the View's motion controller holder). */
+    extra?: PluridThunkExtra;
 }
 
 
@@ -40,8 +43,8 @@ const store: (
     // arrangement.
     middleware: (getDefaultMiddleware) =>
         options?.history === false
-            ? getDefaultMiddleware()
-            : getDefaultMiddleware().concat(createHistoryMiddleware()),
+            ? getDefaultMiddleware({ thunk: { extraArgument: options?.extra } })
+            : getDefaultMiddleware({ thunk: { extraArgument: options?.extra } }).concat(createHistoryMiddleware()),
 });
 
 

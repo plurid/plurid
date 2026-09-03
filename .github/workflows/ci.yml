@@ -38,3 +38,31 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+  # The engine's browser suite: Playwright drives the render-test harness (fixtures/render-test/e2e).
+  browser:
+    runs-on: ubuntu-latest
+    needs: gates
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        run: pnpm build
+      - name: Install Chromium
+        run: pnpm --filter plurid-render-test exec playwright install --with-deps chromium
+      - name: Browser suite
+        run: pnpm --filter plurid-render-test e2e
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: fixtures/render-test/test-results

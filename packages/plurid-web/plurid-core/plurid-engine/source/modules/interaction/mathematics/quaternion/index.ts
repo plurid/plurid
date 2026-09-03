@@ -226,6 +226,90 @@ export function rotatePointViaQuaternion(
 }
 
 /**
+ * Rotation matrix for a unit quaternion in COLUMN-MAJOR layout (the layout `matrix3d(...)` and
+ * the `matrix` module's `multiplyMatrices` consume). `makeRotationMatrixFromQuaternion` below is
+ * the historical ROW-MAJOR variant, kept for the legacy `rotateMatrix` composition.
+ */
+export function quaternionToColumnMajorMatrix(
+    quaternion: Quaternion,
+): number[] {
+    const rowMajor = makeRotationMatrixFromQuaternion(quaternion);
+
+    return [
+        rowMajor[0], rowMajor[4], rowMajor[8], 0,
+        rowMajor[1], rowMajor[5], rowMajor[9], 0,
+        rowMajor[2], rowMajor[6], rowMajor[10], 0,
+        0, 0, 0, 1,
+    ];
+}
+
+
+/** Unit-length copy of a quaternion (the identity for a zero quaternion). */
+export function normalizeQuaternion(
+    quaternion: Quaternion,
+): Quaternion {
+    const length = Math.hypot(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+    if (length === 0) {
+        return makeQuaternion(0, 0, 0, 1);
+    }
+
+    return makeQuaternion(
+        quaternion.x / length,
+        quaternion.y / length,
+        quaternion.z / length,
+        quaternion.w / length,
+    );
+}
+
+
+/**
+ * Spherical linear interpolation between two unit quaternions along the SHORTEST arc; `t` in [0, 1].
+ */
+export function slerp(
+    from: Quaternion,
+    to: Quaternion,
+    t: number,
+): Quaternion {
+    if (t <= 0) {
+        return { ...from };
+    }
+    if (t >= 1) {
+        return { ...to };
+    }
+
+    let cosine = from.x * to.x + from.y * to.y + from.z * to.z + from.w * to.w;
+    let target = to;
+    if (cosine < 0) {
+        cosine = -cosine;
+        target = makeQuaternion(-to.x, -to.y, -to.z, -to.w);
+    }
+
+    if (cosine > 0.9995) {
+        return normalizeQuaternion(makeQuaternion(
+            from.x + (target.x - from.x) * t,
+            from.y + (target.y - from.y) * t,
+            from.z + (target.z - from.z) * t,
+            from.w + (target.w - from.w) * t,
+        ));
+    }
+
+    const angle = Math.acos(cosine);
+    const sine = Math.sin(angle);
+    const weightFrom = Math.sin((1 - t) * angle) / sine;
+    const weightTo = Math.sin(t * angle) / sine;
+
+    return makeQuaternion(
+        from.x * weightFrom + target.x * weightTo,
+        from.y * weightFrom + target.y * weightTo,
+        from.z * weightFrom + target.z * weightTo,
+        from.w * weightFrom + target.w * weightTo,
+    );
+}
+
+
+/**
+ * ROW-MAJOR rotation matrix for a unit quaternion (historical layout; see
+ * `quaternionToColumnMajorMatrix` for the `matrix3d` layout).
  *
  * @param quaternion
  */

@@ -266,9 +266,13 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 mouseIn={mouseIn}
                 opaque={opaque}
                 transparentUI={transparentUI}
-            >
+>
                 <StyledToolbarButton
                     theme={theme}
+                    type="button"
+                    aria-label="Toggle fly mode"
+                    title="Toggle fly mode"
+                    data-plurid-control="toolbar-button"
                     onClick={() => dispatchToggleConfigurationSpaceFirstPerson(undefined)}
                     active={firstPerson}
                     button={true}
@@ -318,6 +322,10 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
                 <StyledToolbarButton
                     theme={theme}
+                    type="button"
+                    aria-label="More"
+                    title="More"
+                    data-plurid-control="toolbar-button"
                     onClick={() => handleShowMenu(MENUS.MORE)}
                     active={showMenu === MENUS.MORE}
                     button={true}

@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -83,7 +87,7 @@ export const StyledToolbar = styled.div<IStyledToolbar>`
     left: 0;
     right: 0;
     height: 75px;
-    z-index: 9999;
+    z-index: ${Z_INDEX.TOOLBAR};
     transition: bottom 300ms ease-in-out;
 `;
 
@@ -159,7 +163,7 @@ export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
         return '1';
     }};
 
-    z-index: 9999;
+    z-index: ${Z_INDEX.TOOLBAR};
     user-select: none;
     /* height: 75px; */
     display: grid;
@@ -203,7 +207,19 @@ export interface IStyledToolbarButton {
     showTransformButtons: boolean;
 }
 
-export const StyledToolbarButton = styled.div<IStyledToolbarButton>`
+export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
+    border: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: -2px;
+    }
+
     padding: ${({
         button,
         showIcons,

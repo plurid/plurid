@@ -34,6 +34,7 @@
 
 
     // #region internal
+    import PluridSpaceDebugger from './components/SpaceDebugger';
     import {
         StyledPluridSpace,
     } from './styled';
@@ -80,6 +81,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
     const {
         opaque,
         fadeInTime,
+        perspective,
     } = space;
     // #endregion properties
 
@@ -106,12 +108,17 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             opaque={opaque}
             isMounted={isMounted}
             fadeInTime={fadeInTime}
+            perspective={perspective || 2000}
             data-plurid-entity={PLURID_ENTITY_SPACE}
             style={{
                 opacity: stateResolvedLayout ? 1 : 0
             }}
         >
             <PluridRoots />
+
+            {stateConfiguration.development?.spaceDebugger && (
+                <PluridSpaceDebugger />
+            )}
         </StyledPluridSpace>
     );
     // #endregion render

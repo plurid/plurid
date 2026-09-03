@@ -1,60 +1,115 @@
 // #region imports
     // #region libraries
-    import {
-        useState,
+    import React, {
         useRef,
         useEffect,
     } from 'react';
+
+    import {
+        AnyAction,
+        ThunkDispatch,
+    } from '@reduxjs/toolkit';
+
+    import {
+        PluridConfigurationSpaceShortcuts,
+        PluridStateUI,
+    } from '@plurid/plurid-data';
     // #endregion libraries
+
+
+    // #region external
+    import actions from '~services/state/actions';
+
+    import {
+        isEditableTarget,
+    } from '~services/logic/input/guard';
+
+    import {
+        resolveShortcutCode,
+        isShortcutDisabled,
+    } from '~services/logic/shortcuts/registry';
+    // #endregion external
 // #endregion imports
 
 
 
 // #region module
+export interface UseGrabModeParameters {
+    viewElement: React.RefObject<HTMLDivElement>;
+    stateUI: PluridStateUI;
+    shortcuts?: PluridConfigurationSpaceShortcuts;
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
+}
+
+
 /**
- * Grab/navigate mode (toggle with **G**, **Escape** exits). When OFF (default) the space behaves
- * like a normal page — text is selectable, content is clickable, the wheel scrolls. When ON a
- * left-drag orbits / pans the 3D space (a hand tool); middle-drag pans in any mode. The keydown is
- * ignored while typing in a field or with a modifier held.
+ * Grab / navigate mode. Two ways in: **G** toggles it (a registry shortcut, handled by the keydown
+ * dispatcher), **Space** holds it (tracked here: down → on, up / window blur → off). When ON a left
+ * drag orbits everywhere — over plane content too — and the wheel always zooms; when OFF the space
+ * behaves like a page over planes and orbits only on empty space. Both flags live in the `ui` slice
+ * so every listener (pointer, wheel, cursor) reads one source of truth.
  *
- * `grabModeRef` mirrors `grabMode` on every render so the pointer + wheel event handlers can read
- * the live value without re-binding their listeners.
+ * `grabModeRef` mirrors the effective value on every render for the pointer/wheel handlers.
  */
-export const useGrabMode = () => {
-    const [grabMode, setGrabMode] = useState(false);
+export const useGrabMode = (
+    {
+        viewElement,
+        stateUI,
+        shortcuts,
+        dispatch,
+    }: UseGrabModeParameters,
+) => {
+    const grabMode = stateUI.grabMode || stateUI.grabHold;
     const grabModeRef = useRef(grabMode);
     grabModeRef.current = grabMode;
 
+    const shortcutsRef = useRef(shortcuts);
+    shortcutsRef.current = shortcuts;
+
     useEffect(() => {
-        if (typeof window === 'undefined') {
+        const element = viewElement.current;
+        if (!element || typeof window === 'undefined') {
             return;
         }
 
+        const holdCode = () => (isShortcutDisabled('grabHold', shortcutsRef.current)
+            ? undefined
+            : resolveShortcutCode('grabHold', shortcutsRef.current));
+
         const onKeyDown = (event: KeyboardEvent) => {
-            const target = event.target as HTMLElement | null;
-            if (target && (
-                target.tagName === 'INPUT'
-                || target.tagName === 'TEXTAREA'
-                || target.isContentEditable
-            )) {
+            const code = holdCode();
+            if (!code || event.code !== code) {
                 return;
             }
-
-            if (event.metaKey || event.ctrlKey || event.altKey) {
+            if (isEditableTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
                 return;
             }
-
-            if (event.code === 'KeyG') {
-                event.preventDefault();
-                setGrabMode((value) => !value);
-            } else if (event.code === 'Escape' && grabModeRef.current) {
-                setGrabMode(false);
+            // Space would scroll the page / activate a focused button; the hold is a navigation gesture.
+            event.preventDefault();
+            if (!event.repeat) {
+                dispatch(actions.ui.setUIGrabHold(true));
             }
         };
 
-        window.addEventListener('keydown', onKeyDown);
+        const release = () => {
+            dispatch(actions.ui.setUIGrabHold(false));
+        };
+
+        const onKeyUp = (event: KeyboardEvent) => {
+            const code = holdCode();
+            if (code && event.code === code) {
+                release();
+            }
+        };
+
+        element.addEventListener('keydown', onKeyDown);
+        window.addEventListener('keyup', onKeyUp);
+        window.addEventListener('blur', release);
+
         return () => {
-            window.removeEventListener('keydown', onKeyDown);
+            element.removeEventListener('keydown', onKeyDown);
+            window.removeEventListener('keyup', onKeyUp);
+            window.removeEventListener('blur', release);
         };
     }, []);
 

@@ -10,6 +10,8 @@ export interface PanelProps {
     rows: [string, string][];
     /** Optional plurid link — clicking it spawns the target plane into the space. */
     link?: { route: string; label: string };
+    /** More links (dense-link and nested-chain harness modes); rendered after `link`. */
+    links?: { route: string; label: string }[];
 }
 
 
@@ -17,7 +19,10 @@ export interface PanelProps {
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link }) => (
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links }) => {
+    const allLinks = [...(link ? [link] : []), ...(links ?? [])];
+
+    return (
     <div
         style={{
             height: 360,
@@ -73,23 +78,26 @@ const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link }) => (
             ))}
         </div>
 
-        {link && (
-            <div style={{ padding: '0 16px 14px' }}>
-                <PluridLink
-                    route={link.route}
-                    style={{
-                        display: 'inline-block',
-                        fontSize: 11,
-                        letterSpacing: '0.06em',
-                        color: accent,
-                        cursor: 'pointer',
-                        textDecoration: 'none',
-                        borderBottom: `1px dashed ${accent}66`,
-                        paddingBottom: 2,
-                    }}
-                >
-                    {link.label} →
-                </PluridLink>
+        {allLinks.length > 0 && (
+            <div style={{ padding: '0 16px 14px', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>
+                {allLinks.map((entry, index) => (
+                    <PluridLink
+                        key={entry.route + '#' + index}
+                        route={entry.route}
+                        style={{
+                            display: 'inline-block',
+                            fontSize: 11,
+                            letterSpacing: '0.06em',
+                            color: accent,
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            borderBottom: `1px dashed ${accent}66`,
+                            paddingBottom: 2,
+                        }}
+                    >
+                        {entry.label} →
+                    </PluridLink>
+                ))}
             </div>
         )}
 
@@ -105,7 +113,8 @@ const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link }) => (
             PLURID · SPATIAL UNIT
         </div>
     </div>
-);
+    );
+};
 
 
 export default Panel;

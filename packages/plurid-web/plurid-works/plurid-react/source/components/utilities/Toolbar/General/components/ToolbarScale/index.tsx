@@ -115,6 +115,10 @@ const PluridToolbarScale: React.FC<PluridToolbarScaleProperties> = (
 
             <StyledToolbarButton
                 theme={interactionTheme}
+                type="button"
+                aria-label="Scale mode"
+                title="Scale mode"
+                data-plurid-control="toolbar-button"
                 onClick={() => toggleTransform(TRANSFORM_MODES.SCALE)}
                 active={transformMode === TRANSFORM_MODES.SCALE}
                 showIcons={showIcons}

@@ -42,17 +42,20 @@ export const useLinkPreview = (
             return;
         }
 
-        if (mouseOver && hoverOutTimeout.current) {
+        if (mouseOver) {
+            // Hover-in: cancel a pending fade-out and schedule the fade-in. (The previous guard
+            // required a pending fade-out, so the preview never showed on the FIRST hover.)
+            if (hoverOutTimeout.current) {
+                clearTimeout(hoverOutTimeout.current);
+                hoverOutTimeout.current = null;
+            }
             hoverInTimeout.current = setTimeout(
                 () => {
                     setShowPreview(true);
                 },
                 appearTime,
             );
-
-            clearTimeout(hoverOutTimeout.current);
         }
-
         if (!mouseOver) {
             hoverOutTimeout.current = setTimeout(
                 () => {

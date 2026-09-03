@@ -2,9 +2,17 @@
     // #region internal
     import {
         computePath,
-        computePluridPlaneLocation,
-        recomputeChildrenLocation,
     } from './logic';
+
+    import {
+        childLocation,
+        resolvePlaneAngle,
+        recomputeSubtree,
+        recomputeTree,
+        planeDepth,
+        DEFAULT_BRIDGE_LENGTH,
+        DEFAULT_PLANE_ANGLE,
+    } from './child';
     // #endregion internal
 // #endregion imports
 
@@ -13,7 +21,13 @@
 // #region exports
 export {
     computePath,
-    computePluridPlaneLocation,
-    recomputeChildrenLocation,
+
+    childLocation,
+    resolvePlaneAngle,
+    recomputeSubtree,
+    recomputeTree,
+    planeDepth,
+    DEFAULT_BRIDGE_LENGTH,
+    DEFAULT_PLANE_ANGLE,
 };
 // #endregion exports

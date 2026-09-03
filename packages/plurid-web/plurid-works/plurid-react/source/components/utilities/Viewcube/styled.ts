@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        Z_INDEX,
+    } from '~data/constants/zIndex';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -26,6 +30,15 @@ export interface IStyledPluridViewcube {
 }
 
 export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
+    /* The arrows and the fit button stay in the DOM (focusable, labelled) and only SHOW while the
+       cube is hovered or holds keyboard focus. */
+    &[data-plurid-hover='false']:not(:focus-within) button {
+        opacity: 0;
+    }
+    button {
+        transition: opacity 150ms ease;
+    }
+
     position: absolute;
     @media (max-width: 800px) {
         top: ${({
@@ -59,7 +72,7 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     position: absolute;
     user-select: none;
     transition: all 300ms ease-in-out;
-    z-index: 9998;
+    z-index: ${Z_INDEX.VIEWCUBE};
     height: 175px;
     display: grid;
     grid-template-areas: "PVScale           PVScale         PVScale          PVScale"
@@ -118,7 +131,18 @@ export interface IStyledPluridViewcubeArrowIcon {
     theme: Theme;
 }
 
-export const StyledPluridViewcubeArrowIcon = styled.div<IStyledPluridViewcubeArrowIcon>`
+export const StyledPluridViewcubeArrowIcon = styled.button<IStyledPluridViewcubeArrowIcon>`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+    }
     user-select: none;
     font-size: 0.6rem;
     width: 1.2rem;
@@ -141,7 +165,18 @@ export const StyledPluridViewcubeArrowIcon = styled.div<IStyledPluridViewcubeArr
 export interface IStyledFitView {
 }
 
-export const StyledFitView = styled.div<IStyledFitView>`
+export const StyledFitView = styled.button<IStyledFitView>`
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+    }
     grid-area: PVFitview;
     display: grid;
     place-content: center;

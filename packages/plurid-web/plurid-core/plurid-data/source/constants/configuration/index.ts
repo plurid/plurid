@@ -124,6 +124,30 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     viewpointURLRestore: false,
     viewpointURLParam: 'v',
     viewpointURLDebounce: 400,
+    viewpointURLVersion: 1,
+    navigation: {
+        pitchLimit: 89,
+        zoomMin: 0.1,
+        zoomMax: 4,
+        dollyLimitFraction: 0.6,
+        orbitPivot: 'cursor',
+        motion: {
+            duration: 380,
+            easing: 'out-cubic',
+            reducedMotion: 'respect',
+        },
+    },
+    snap: {
+        enabled: true,
+        threshold: 12,
+    },
+    culling: {
+        enabled: false,
+        distance: 6000,
+        hysteresis: 0.15,
+        frustumMargin: 0.25,
+        freezeDistance: 3500,
+    },
     timings: {
         persistDebounce: 300,
         viewpointChangeDebounce: 250,
@@ -132,6 +156,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     bridge: {
         length: 100,
         planeAngle: 90,
+        fan: 'alternate',
     },
 };
 

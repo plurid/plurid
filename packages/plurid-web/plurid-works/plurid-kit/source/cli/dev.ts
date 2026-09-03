@@ -20,6 +20,11 @@
         loadEnvironment,
         DEFAULT_DEV_PORT,
     } from './environment';
+
+    import {
+        createRestarter,
+        isPortFree,
+    } from './process';
     // #endregion internal
 // #endregion imports
 
@@ -34,13 +39,11 @@
  * `PORT` / `ENV_MODE`. esbuild auto-reads the app's `tsconfig.json` for the `~`
  * path aliases (the load-bearing detail).
  *
- * Matches denote's proven flow: a SINGLE node child. `--watch` keeps the client
- * + server BUNDLES rebuilding on change (the browser picks up client changes on
- * refresh); the node process is not auto-restarted on a server-bundle change
- * (restart `plurid dev` for server changes - same as `dev.cjs` today). Auto
- * server-restart is a deferred enhancement (a serialized relaunch on a
- * `build/index.js` file-watch), intentionally omitted here to avoid a
- * spawn/port race.
+ * ONE node child at a time. `--watch` keeps the client + server BUNDLES rebuilding on change
+ * (the browser picks up client changes on refresh) and RESTARTS the node process when the
+ * server bundle is rebuilt — serialized (kill → wait for exit → spawn) and debounced, so two
+ * servers never race for the port. A pre-flight check refuses to start on a port that is
+ * already taken, with a clear message instead of a crash from the child.
  */
 export async function dev(
     argv: string[],
@@ -82,18 +85,72 @@ export async function dev(
 
     const link = `http://localhost:${port}`;
 
+    if (!(await isPortFree(Number(port)))) {
+        process.stderr.write(`[plurid dev] port ${port} is already in use — stop the other server or pass --port <n>\n`);
+        process.exit(1);
+    }
+
+    const spawnChild = (): ChildProcess => {
+        const child = spawn('node', ['build/index.js'], {
+            stdio: 'inherit',
+            env: {
+                ...process.env,
+                PORT: String(port),
+                ENV_MODE: environmentMode,
+                NODE_ENV: mode,
+            },
+        });
+        return child;
+    };
+
     if (watch) {
-        // Watch contexts rebuild the bundles on change; node is spawned once below
-        // (matches dev.cjs: watch() then rebuild() to guarantee the first build).
+        // Watch contexts rebuild the bundles on change; the server child is restarted (serialized,
+        // debounced) after each server-bundle rebuild.
+        const restarter = createRestarter<ChildProcess>({
+            spawnChild,
+            debounceMs: 150,
+            log: (message) => process.stdout.write(`[plurid dev] ${message}\n`),
+        });
+        let firstBuild = true;
         const clientContext = await esbuild.context(clientOptions);
-        const serverContext = await esbuild.context(serverOptions);
+        const serverContext = await esbuild.context({
+            ...serverOptions,
+            plugins: [
+                ...(serverOptions.plugins || []),
+                {
+                    name: 'plurid-dev-restart',
+                    setup(build) {
+                        build.onEnd((result) => {
+                            if (firstBuild || result.errors.length > 0) {
+                                return;
+                            }
+                            restarter.restart();
+                        });
+                    },
+                },
+            ],
+        });
 
         await clientContext.watch();
         await serverContext.watch();
         await clientContext.rebuild();
         await serverContext.rebuild();
+        firstBuild = false;
 
-        process.stdout.write('[plurid dev] watching client + server\n');
+        process.stdout.write('[plurid dev] watching client + server (the server restarts on server changes)\n');
+        process.stdout.write(`[plurid dev] starting server on ${link}\n`);
+
+        const child = restarter.start();
+        const shutdown = async () => {
+            await restarter.stop();
+            await clientContext.dispose();
+            await serverContext.dispose();
+            process.exit(0);
+        };
+        process.once('SIGINT', shutdown);
+        process.once('SIGTERM', shutdown);
+        child.on('exit', () => { /* restarts are expected; the restarter owns the lifecycle */ });
+        return;
     } else {
         await esbuild.build(clientOptions);
         await esbuild.build(serverOptions);
@@ -102,15 +159,7 @@ export async function dev(
 
     process.stdout.write(`[plurid dev] starting server on ${link}\n`);
 
-    const child: ChildProcess = spawn('node', ['build/index.js'], {
-        stdio: 'inherit',
-        env: {
-            ...process.env,
-            PORT: String(port),
-            ENV_MODE: environmentMode,
-            NODE_ENV: mode,
-        },
-    });
+    const child = spawnChild();
     child.on('exit', (code) => {
         process.exit(code || 0);
     });

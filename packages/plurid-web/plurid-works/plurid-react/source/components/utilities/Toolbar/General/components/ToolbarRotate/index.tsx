@@ -126,6 +126,10 @@ const PluridToolbarRotate: React.FC<PluridToolbarRotateProperties> = (
 
             <StyledToolbarButton
                 theme={interactionTheme}
+                type="button"
+                aria-label="Rotate mode"
+                title="Rotate mode"
+                data-plurid-control="toolbar-button"
                 onClick={() => toggleTransform(TRANSFORM_MODES.ROTATION)}
                 active={transformMode === TRANSFORM_MODES.ROTATION}
                 showIcons={showIcons}

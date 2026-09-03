@@ -73,6 +73,34 @@ export const PLURID_PUBSUB_TOPIC = {
     SET_TREE: 'space.setTree',          // data: { tree }
 
     /**
+     * One camera mutation (`CameraDelta`: pivot / orbit / look / pan / dolly / fly / zoom /
+     * absolute), optionally animated. The single control topic every camera input reduces to.
+     */
+    SPACE_CAMERA_DELTA: 'space.cameraDelta',
+    /** Frame a plane (`planeID`), the selection, or everything (no target), optionally animated. */
+    SPACE_FRAME: 'space.frame',
+    /** Go to the home viewpoint (`space.setHome` / `navigation.home` / identity). data?: { animate? } */
+    SPACE_HOME: 'space.home',
+    /** Set the home viewpoint: data `{ viewpoint }` (encoded), or no data for the current camera. */
+    SPACE_SET_HOME: 'space.setHome',
+    /** Go to a named preset viewpoint (`navigation.presets`). data: { name, animate? } */
+    SPACE_PRESET: 'space.preset',
+    /** Bookmarks: data `{ name, action?: 'go' | 'save' | 'remove', animate? }` (default `go`). */
+    SPACE_BOOKMARK: 'space.bookmark',
+
+    // Selection editing (Phase 5): all act on `selectedPlaneIDs`.
+    /** Line the selection up on an edge: data `{ edge: 'left' | 'right' | 'top' | 'bottom' | 'centerX' | 'centerY' }`. */
+    SPACE_ALIGN: 'space.align',
+    /** Equal gaps between the selected planes along an axis: data `{ axis: 'x' | 'y' }` (3+ planes). */
+    SPACE_DISTRIBUTE: 'space.distribute',
+    /** Duplicate the selected root planes (offset copies, selected afterwards): data? `{ offset }`. */
+    SPACE_DUPLICATE: 'space.duplicate',
+    /** Select every shown plane. */
+    SPACE_SELECT_ALL: 'space.selectAll',
+    /** Invert the selection over the shown planes. */
+    SPACE_INVERT_SELECTION: 'space.invertSelection',
+
+    /**
      * The single engine→host OBSERVE channel: published as `{ kind, value }` whenever a watched slice
      * changes (`selection`/`tree`/`links`/`activePlane`/`isolate`/`layoutResolved`/`loading`). One
      * subscription covers all of them — finer than diffing snapshots, lighter than N topics.

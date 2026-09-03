@@ -26,6 +26,7 @@
 
         /** interfaces */
         PluridConfiguration,
+        CameraDelta,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -34,11 +35,12 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
-    import actions from '~services/state/actions';
+
     import {
-        DispatchAction,
-        DispatchActionWithoutPayload,
-    } from '~data/interfaces';
+        cameraCommand,
+        setHome,
+        CameraCommand,
+    } from '~services/logic/camera';
     // #endregion external
 
 
@@ -68,11 +70,8 @@ export interface PluridViewcubeStateProperties {
 }
 
 export interface PluridViewcubeDispatchProperties {
-    dispatchRotateXWith: DispatchAction<typeof actions.space.rotateXWith>;
-    dispatchRotateYWith: DispatchAction<typeof actions.space.rotateYWith>;
-    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
-    dispatchSpaceResetTransform: DispatchActionWithoutPayload<typeof actions.space.spaceResetTransform>;
-    dispatchSpaceFitToView: DispatchActionWithoutPayload<typeof actions.space.spaceFitToView>;
+    dispatchCameraCommand: (command: CameraCommand) => void;
+    dispatchSetHome: () => void;
 }
 
 export type PluridViewcubeProperties =
@@ -93,11 +92,8 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
         // #endregion state
 
         // #region dispatch
-        dispatchRotateXWith,
-        dispatchRotateYWith,
-        dispatchSetAnimatedTransform,
-        dispatchSpaceResetTransform,
-        dispatchSpaceFitToView,
+        dispatchCameraCommand,
+        dispatchSetHome,
         // #endregion dispatch
     } = properties;
 
@@ -137,36 +133,33 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
 
     // #region handlers
-    const animatedRotate = (
-        type: string,
-        value: number,
+    const rotate = (
+        delta: CameraDelta,
     ) => {
-        dispatchSetAnimatedTransform(true);
-        switch (type) {
-            case 'rotateX':
-                dispatchRotateXWith(value);
-                break;
-            case 'rotateY':
-                dispatchRotateYWith(value);
-                break;
-        }
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, stateTransformTime);
+        dispatchCameraCommand({
+            kind: 'delta',
+            delta,
+        });
     }
 
-    const animatedReset = (event: React.MouseEvent) => {
-        dispatchSetAnimatedTransform(true);
-        if (event.ctrlKey || event.metaKey) {
-            // ⌘/Ctrl-click: hard reset to the identity view.
-            dispatchSpaceResetTransform();
-        } else {
-            // Plain click: fit — frame all planes front-on (the useful default).
-            dispatchSpaceFitToView();
+    /**
+     * Click: fit (frame everything). ⌘/Ctrl-click: the home viewpoint. Alt-click: make the current
+     * camera the home viewpoint. Shift-click: the identity view.
+     */
+    const handleFitView = (event: React.MouseEvent) => {
+        if (event.altKey) {
+            dispatchSetHome();
+            return;
         }
-        setTimeout(() => {
-            dispatchSetAnimatedTransform(false);
-        }, stateTransformTime);
+        if (event.ctrlKey || event.metaKey) {
+            dispatchCameraCommand({ kind: 'home' });
+            return;
+        }
+        if (event.shiftKey) {
+            dispatchCameraCommand({ kind: 'reset' });
+            return;
+        }
+        dispatchCameraCommand({ kind: 'fit' });
     }
     // #endregion handlers
 
@@ -193,13 +186,15 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             isMounted={isMounted}
             fadeInTime={fadeInTime}
             data-plurid-entity={PLURID_ENTITY_VIEWCUBE}
+            data-plurid-overlay="viewcube"
+            data-plurid-control="viewcube"
+            data-plurid-hover={mouseOver ? 'true' : 'false'}
         >
             <PluridViewcubeModel
                 mouseOver={mouseOver}
             />
 
-            {mouseOver
-            && buttons && (
+            {buttons && (
                 <>
                     <StyledPluridViewcubeArrow
                         style={{
@@ -208,7 +203,10 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     >
                         <StyledPluridViewcubeArrowIcon
                             theme={stateInteractionTheme}
-                            onClick={() => animatedRotate('rotateX', -90.1)}
+                            type="button"
+                            aria-label="Rotate up"
+                            title="Rotate up"
+                            onClick={() => rotate({ pitch: -90 })}
                         >
                             ▲
                         </StyledPluridViewcubeArrowIcon>
@@ -222,7 +220,10 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     >
                         <StyledPluridViewcubeArrowIcon
                             theme={stateInteractionTheme}
-                            onClick={() => animatedRotate('rotateX', 90.1)}
+                            type="button"
+                            aria-label="Rotate down"
+                            title="Rotate down"
+                            onClick={() => rotate({ pitch: 90 })}
                         >
                             ▼
                         </StyledPluridViewcubeArrowIcon>
@@ -236,7 +237,10 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     >
                         <StyledPluridViewcubeArrowIcon
                             theme={stateInteractionTheme}
-                            onClick={() => animatedRotate('rotateY', 90.1)}
+                            type="button"
+                            aria-label="Rotate left"
+                            title="Rotate left"
+                            onClick={() => rotate({ yaw: 90 })}
                         >
                             ◀
                         </StyledPluridViewcubeArrowIcon>
@@ -250,14 +254,21 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     >
                         <StyledPluridViewcubeArrowIcon
                             theme={stateInteractionTheme}
-                            onClick={() => animatedRotate('rotateY', -90.1)}
+                            type="button"
+                            aria-label="Rotate right"
+                            title="Rotate right"
+                            onClick={() => rotate({ yaw: -90 })}
                         >
                             ▶
                         </StyledPluridViewcubeArrowIcon>
                     </StyledPluridViewcubeArrow>
 
                     <StyledFitView
-                        onClick={animatedReset}
+                        type="button"
+                        aria-label="Fit everything (⌘ home, ⇧ reset, ⌥ set home)"
+                        onClick={handleFitView}
+                        title="Fit · ⌘ home · ⇧ reset · ⌥ set home"
+                        data-plurid-control="viewcube-fit"
                     >
                         <PluridIconGlobal />
                     </StyledFitView>
@@ -283,20 +294,12 @@ const mapStateToProperties = (
 const mapDispatchToProperties = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
 ): PluridViewcubeDispatchProperties => ({
-    dispatchRotateXWith: (value: number) => dispatch(
-        actions.space.rotateXWith(value)
+    // Every viewcube move is an interruptible tween through the motion controller.
+    dispatchCameraCommand: (command) => dispatch(
+        cameraCommand(command, { animate: true }) as any,
     ),
-    dispatchRotateYWith: (value: number) => dispatch(
-        actions.space.rotateYWith(value)
-    ),
-    dispatchSetAnimatedTransform: (animated: boolean) => dispatch(
-        actions.space.setAnimatedTransform(animated)
-    ),
-    dispatchSpaceResetTransform: () => dispatch(
-        actions.space.spaceResetTransform()
-    ),
-    dispatchSpaceFitToView: () => dispatch(
-        actions.space.spaceFitToView()
+    dispatchSetHome: () => dispatch(
+        setHome() as any,
     ),
 });
 

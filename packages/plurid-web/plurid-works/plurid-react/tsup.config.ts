@@ -5,7 +5,10 @@ import { defineConfig } from 'tsup';
 // React JSX + dual ESM/CJS + dts. All @plurid siblings and the React/redux/styled
 // ecosystem are peers → kept external (not bundled).
 export default defineConfig({
-    entry: ['source/index.tsx'],
+    entry: {
+        index: 'source/index.tsx',
+        testing: 'source/testing/index.tsx',
+    },
     format: ['esm', 'cjs'],
     dts: true,
     outDir: 'distribution',

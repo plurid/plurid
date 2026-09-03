@@ -9,7 +9,6 @@
 // #region exports
 export default {
     configuration: modules.configuration.actions,
-    general: modules.general.actions,
     shortcuts: modules.shortcuts.actions,
     space: modules.space.actions,
     themes: modules.themes.actions,
