@@ -482,6 +482,7 @@ const App = () => {
                                 firstFrameMs: Math.round(frameTimes[0] ?? 0),
                                 p50FrameMs: Math.round(at(0.5) * 100) / 100,
                                 p95FrameMs: Math.round(at(0.95) * 100) / 100,
+                                maxFrameMs: Math.round((sorted[sorted.length - 1] ?? 0) * 100) / 100,
                                 dispatches: perf.dispatches - dispatchesAtStart,
                                 frames: frameTimes.length,
                             };

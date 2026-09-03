@@ -59,7 +59,7 @@ are outside the workspace entirely. See [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) for
 
 ## The quality gates
 
-Run from the root. These four are what CI enforces (plus `check`):
+Run from the root. CI enforces the first three (`build`, `test`, `lint`); the browser suite is a LOCAL gate — `pnpm verify` runs everything in order (build → test → lint → browser) and is what to run at every build:
 
 | Command | What it does | Notes |
 |---|---|---|
@@ -68,10 +68,11 @@ Run from the root. These four are what CI enforces (plus `check`):
 | `pnpm test` | `jest` across the workspace | jest 30. Hook/DOM tests use jsdom. |
 | `pnpm lint` | one flat-config ESLint 10 pass over the live source | Single root `eslint.config.mjs` — there are no per-package eslint configs. |
 | `pnpm format` / `pnpm format.check` | Prettier write / check | |
-| `pnpm --filter plurid-render-test e2e` | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. |
+| `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. `BENCH_STRICT=1` also enforces the absolute frame-time budgets of the benchmark (a development-machine gate; the machine-independent invariants always run). |
+| `pnpm verify` | build → test → lint → browser suite | The full local gate. |
 
 Because **build ≠ type-check**, a change can build and ship a broken `.d.ts` or a type error that only `tsc`
-catches. Before opening a PR: `pnpm build && pnpm test && pnpm lint`, plus `pnpm --filter <pkg> check` for
+catches. Before opening a PR: `pnpm verify` (or `pnpm build && pnpm test && pnpm lint && pnpm e2e`), plus `pnpm --filter <pkg> check` for
 each package you changed (at minimum `@plurid/plurid-data`, `@plurid/plurid-engine`, `@plurid/plurid-react`
 if you touched the core path).
 
