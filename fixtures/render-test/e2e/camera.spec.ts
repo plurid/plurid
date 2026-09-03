@@ -25,10 +25,18 @@ test.describe('camera core', () => {
         expect(planes).toBeGreaterThanOrEqual(5);
 
         const state = await spaceState(page);
-        expect(state.transform).toBe('matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)');
         expect(state.camera.yaw).toBe(0);
         expect(state.camera.pitch).toBe(0);
         expect(state.camera.scale).toBe(1);
+        // `space.center` (the harness sets it): the first root's center sits at the view center
+        const first = state.tree[0];
+        const projected = await projectWorld(page, {
+            x: first.location.translateX + first.width / 2,
+            y: first.location.translateY + first.height / 2,
+            z: 0,
+        });
+        expect(projected.x).toBeCloseTo(state.viewSize.width / 2, 0);
+        expect(projected.y).toBeCloseTo(state.viewSize.height / 2, 0);
         // measured plane sizes flow into the tree
         expect(state.tree[0].width).toBeGreaterThan(100);
         expect(state.tree[0].height).toBeGreaterThan(100);

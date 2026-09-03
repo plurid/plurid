@@ -42,12 +42,9 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
     align-items: center;
     justify-content: center;
     grid-template-rows: 1fr;
-    grid-template-columns: 1fr 2fr 1fr;
+    /* the icon groups keep their size; the path takes what is left and never pushes them */
+    grid-template-columns: auto minmax(0, 1fr) auto;
     transition: background-color 300ms linear;
-
-    @media (max-width: 800px) {
-        grid-template-columns: 1fr 3fr 1fr;
-    }
 `;
 
 
@@ -66,12 +63,25 @@ export const StyledPluridPlaneControlsLeft = styled.div`
 
 
 export const StyledPluridPlaneControlsCenter = styled.div`
-    width: 100%;
+    min-width: 0;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    word-break: break-all;
+    overflow: hidden;
+`;
+
+/** The plane's route on ONE line, its END kept visible (the leading part is elided). */
+export const StyledPluridPlaneControlsPath = styled.span`
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: rtl;
+    text-align: center;
+    unicode-bidi: plaintext;
 `;
 
 

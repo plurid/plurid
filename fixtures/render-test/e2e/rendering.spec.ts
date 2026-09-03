@@ -20,25 +20,39 @@ const tree = (page: Page) => page.evaluate(() => (window as any).__rtTree());
 test.describe('rendering, overlays, accessibility', () => {
     test('culling hides off-screen planes, never the selected one, and shows them again', async ({ page }) => {
         await openHarness(page, '?culling=1&reducedMotion=1&momentum=0');
+        await page.waitForTimeout(250);
         const roots = await tree(page);
         const keep = roots[0];
         await page.evaluate((id) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [id] }), keep.planeID);
+        // the planes on screen at rest (the first root is centered; far columns may legitimately be off-screen)
+        const visibleAtRest: string[] = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-plane]'))
+            .filter((node) => {
+                const rect = node.getBoundingClientRect();
+                return rect.right > 0 && rect.left < window.innerWidth && rect.bottom > 0 && rect.top < window.innerHeight;
+            })
+            .map((node) => node.getAttribute('data-plurid-plane') as string));
+        expect(visibleAtRest.length).toBeGreaterThanOrEqual(2);
 
         // pan the whole space far off to the right: every plane leaves the (margined) view
         await publish(page, 'space.cameraDelta', { pan: { x: 6000, y: 0 } });
-        await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.culled.hidden.length > 0);
+        await page.waitForFunction((ids) => {
+            const hidden = (window as any).__pluridApi.getSnapshot().space.culled.hidden as string[];
+            return ids.filter((id: string) => hidden.includes(id)).length >= ids.length - 1;
+        }, visibleAtRest);
         const culled = (await spaceState(page)).culled;
         expect(culled.hidden).not.toContain(keep.planeID);
-        expect(culled.hidden.length).toBeGreaterThanOrEqual(roots.length - 1);
         // hidden planes stay mounted, unpainted and inert
-        const hiddenID = culled.hidden[0];
+        const hiddenID = visibleAtRest.find((id) => id !== keep.planeID && culled.hidden.includes(id)) as string;
         const element = page.locator(`[data-plurid-plane="${hiddenID}"]`);
         await expect(element).toHaveCount(1);
         await expect(element).toHaveAttribute('data-plurid-culled', 'hidden');
         expect(await element.evaluate((node) => getComputedStyle(node).visibility)).toBe('hidden');
 
         await publish(page, 'space.cameraDelta', { pan: { x: -6000, y: 0 } });
-        await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.culled.hidden.length === 0);
+        await page.waitForFunction((ids) => {
+            const hidden = (window as any).__pluridApi.getSnapshot().space.culled.hidden as string[];
+            return ids.every((id: string) => !hidden.includes(id));
+        }, visibleAtRest);
         await expect(element).not.toHaveAttribute('data-plurid-culled', 'hidden');
     });
 

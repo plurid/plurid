@@ -43,7 +43,13 @@ const computeRowLayout = (
     const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
         ? configurationWidth
         : configurationWidth * windowInnerWidth;
-    const height = windowInnerHeight;
+    // The pitch comes from the planes' MEASURED sizes when they have them (a hand-resized or
+    // wider-than-configured plane never overlaps its neighbor); unmeasured planes fall back to
+    // the configured width and a view-height row.
+    const measuredWidth = Math.max(0, ...roots.map((root) => root.width || 0));
+    const measuredHeight = Math.max(0, ...roots.map((root) => root.height || 0));
+    const pitchWidth = Math.max(width, measuredWidth);
+    const height = measuredHeight > 0 ? measuredHeight : windowInnerHeight;
     const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
         ? gap
         : gap * width;
@@ -59,7 +65,7 @@ const computeRowLayout = (
         const rowIndex = Math.floor(index / length);
         const columnIndex = index % length;
 
-        const translateX = columnIndex * (width + gapValue);
+        const translateX = columnIndex * (pitchWidth + gapValue);
         const translateY = rowIndex * (height + gapValue);
 
         const treePage: TreePlane = {

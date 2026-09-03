@@ -39,7 +39,7 @@ test.describe('input layer', () => {
         const rect = await viewRect(page);
         // empty space: below the planes
         // empty space in the bottom band, clear of the toolbar (center) and the viewcube (right)
-        const start = { x: rect.left + rect.width * 0.3, y: rect.top + rect.height - 60 };
+        const start = { x: rect.left + 120, y: rect.top + rect.height - 60 };
         const before = await camera(page);
         const dispatchesBefore = await page.evaluate(() => (window as any).__rtPerf.dispatches);
         const framesBefore = await page.evaluate(() => (window as any).__rtPerf.frames);
@@ -76,7 +76,7 @@ test.describe('input layer', () => {
         await openHarness(page, '?momentum=0');
         const rect = await viewRect(page);
         // empty space in the bottom band, clear of the toolbar (center) and the viewcube (right)
-        const start = { x: rect.left + rect.width * 0.3, y: rect.top + rect.height - 60 };
+        const start = { x: rect.left + 120, y: rect.top + rect.height - 60 };
         await page.evaluate(() => {
             (window as any).__rtMenus = 0;
             document.addEventListener('contextmenu', (event) => {
@@ -101,7 +101,7 @@ test.describe('input layer', () => {
     test('a fast flick flings and stops; a pause before release does not; the wheel stops a fling', async ({ page }) => {
         await openHarness(page);
         const rect = await viewRect(page);
-        const start = { x: rect.left + rect.width * 0.3 - 100, y: rect.top + rect.height - 60 };
+        const start = { x: rect.left + 120, y: rect.top + rect.height - 60 };
 
         await page.mouse.move(start.x, start.y);
         await page.mouse.down();
@@ -153,9 +153,9 @@ test.describe('input layer', () => {
 
         // one finger on empty space → orbit (dispatched through the CDP touch API)
         const client = await context.newCDPSession(page);
-        // empty space: below the first row of planes, clear of the toolbar at the bottom center
+        // empty space: bottom-left, clear of the centered first plane, the shortcuts trigger and the toolbar
         const y = rect.top + rect.height - 140;
-        const x0 = rect.left + rect.width * 0.5;
+        const x0 = rect.left + 140;
         const touch = async (type: 'touchStart' | 'touchMove' | 'touchEnd', points: { x: number; y: number; id: number }[]) => {
             await client.send('Input.dispatchTouchEvent', { type, touchPoints: points });
         };

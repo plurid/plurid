@@ -42,13 +42,14 @@ test.describe('selection and editing', () => {
         const [first, second] = roots;
         const rect = await viewRect(page);
 
-        // start in the empty strip BELOW the first row (the columns layout wraps far lower), sweep
-        // up and right into the second plane so the rect covers the bottoms of both
+        // start on the empty band ABOVE the first row (the first root is centered; the harness
+        // buttons sit at the very top), sweep down and right into the second plane so the rect
+        // covers the tops of both
         const startX = first.box.x + 10;
-        const startY = Math.min(rect.top + rect.height - 160, first.box.y + first.box.height + 30);
+        const startY = Math.max(rect.top + 70, first.box.y - 24);
         const endX = second.box.x + 40;
-        const endY = first.box.y + first.box.height - 60;
-        expect(startY).toBeGreaterThan(first.box.y + first.box.height);
+        const endY = first.box.y + 60;
+        expect(startY).toBeLessThan(first.box.y);
         await page.keyboard.down(modifier);
         await page.mouse.move(startX, startY);
         await page.mouse.down();

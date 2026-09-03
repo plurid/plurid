@@ -34,20 +34,37 @@ const sameMatrix = (a: number[], b: number[], tolerance = 0.5) => (
 
 test.describe('navigation feel', () => {
     test('an animated absolute yaw from 170 to -170 takes the short way round and lands exactly', async ({ page }) => {
-        await openHarness(page);
+        await openHarness(page, '?motionMs=900');
         await publish(page, 'space.cameraDelta', { absolute: { yaw: 170 } });
         expect((await camera(page)).yaw).toBeCloseTo(170, 6);
 
-        await publish(page, 'space.cameraDelta', { absolute: { yaw: -170 }, animate: true });
-        await page.waitForTimeout(120);
-        const midway = await camera(page);
-        // through ±180, never back through 0
-        expect(Math.abs(midway.yaw)).toBeGreaterThan(170);
-        expect((await spaceState(page)).motion).toBe('tween');
+        // Sample the camera IN the page, every frame, until the tween is over — robust to the
+        // test runner's own latency under load.
+        const samples: number[] = await page.evaluate(() => new Promise((resolve) => {
+            const api = (window as any).__pluridApi;
+            api.pubsub.publish({ topic: 'space.cameraDelta', data: { absolute: { yaw: -170 }, animate: true } });
+            const values: number[] = [];
+            const started = performance.now();
+            const tick = () => {
+                const state = api.getSnapshot().space;
+                values.push(state.camera.yaw);
+                if (state.motion === 'idle' && values.length > 3) {
+                    resolve(values);
+                    return;
+                }
+                if (performance.now() - started > 4000) {
+                    resolve(values);
+                    return;
+                }
+                requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }));
 
-        await page.waitForTimeout(600);
-        const landed = await camera(page);
-        expect(landed.yaw).toBeCloseTo(-170, 6);
+        // through ±180, never back through 0
+        expect(samples.some((yaw) => Math.abs(yaw) > 170)).toBe(true);
+        expect(samples.every((yaw) => Math.abs(yaw) > 160)).toBe(true);
+        expect(samples[samples.length - 1]).toBeCloseTo(-170, 6);
         expect((await spaceState(page)).motion).toBe('idle');
     });
 
@@ -188,28 +205,34 @@ test.describe('navigation feel', () => {
     });
 
     test('a drag interrupts a navigation tween where it is, without a snap', async ({ page }) => {
-        await openHarness(page, '?momentum=0');
+        await openHarness(page, '?momentum=0&motionMs=1500');
         const roots = await tree(page);
         await publish(page, 'space.frame', { planeID: roots[roots.length - 1].planeID, animate: true });
-        await page.waitForTimeout(120);
+        await page.waitForFunction(() => {
+            const state = (window as any).__pluridApi.getSnapshot().space;
+            return state.motion === 'tween' && Math.abs(state.camera.offset.x) + Math.abs(state.camera.pivot.x - state.viewSize.width / 2) > 5;
+        });
         const midway = await camera(page);
         expect((await spaceState(page)).motion).toBe('tween');
 
         const rect = await viewRect(page);
-        const start = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        const start = { x: rect.left + rect.width * 0.3, y: rect.top + rect.height - 60 };
         await page.mouse.move(start.x, start.y);
         await page.mouse.down({ button: 'middle' });
         await page.mouse.move(start.x + 4, start.y);
+        const atPress = await camera(page);
         await page.mouse.move(start.x + 64, start.y, { steps: 6 });
         await page.mouse.up({ button: 'middle' });
-        await page.waitForTimeout(500);
+        await page.waitForTimeout(300);
 
         const after = await camera(page);
         expect((await spaceState(page)).motion).toBe('idle');
-        // the pan applied from the interrupted pose; the tween did not resume or jump to its target
-        expect(after.scale).toBeCloseTo(midway.scale, 1);
-        expect(Math.abs(after.pivot.x - midway.pivot.x)).toBeLessThan(80);
-        expect(after.offset.x - midway.offset.x).toBeGreaterThan(30);
+        // the press stopped the tween where it was (no jump to the target); the pan applied from there
+        expect(atPress.scale).toBeCloseTo(midway.scale, 0);
+        expect(after.scale).toBeCloseTo(atPress.scale, 6);
+        expect(after.pivot).toEqual(atPress.pivot);
+        expect(after.offset.x - atPress.offset.x).toBeCloseTo(60, 0);
+        expect(after.offset.y - atPress.offset.y).toBeCloseTo(0, 0);
     });
 
     test('an empty space renders the empty state', async ({ page }) => {

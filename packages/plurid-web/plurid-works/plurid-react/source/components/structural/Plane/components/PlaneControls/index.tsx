@@ -64,6 +64,7 @@
         StyledPluridPlaneControls,
         StyledPluridPlaneControlsLeft,
         StyledPluridPlaneControlsCenter,
+        StyledPluridPlaneControlsPath,
         StyledPluridPlaneControlsRight,
     } from './styled';
     // #endregion internal
@@ -72,6 +73,9 @@
 
 
 // #region module
+/** Below this plane width (px) the controls bar drops the route. */
+const COMPACT_WIDTH = 340;
+
 /** An icon control as a real button: focusable, labelled, keyboard-activatable. */
 const StyledPlaneControlButton = styled.button`
     border: 0;
@@ -179,6 +183,9 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     const gatewayAddress = `${protocol}://${host.value}/${gateway}?plurid=` + encodeURIComponent(route);
 
     const isolated = stateIsolatePlane === planeID;
+    // A narrow plane has no room for the route between the icon groups: the path collapses
+    // first (the icons stay), instead of wrapping into several lines.
+    const compact = treePlane.width > 0 && treePlane.width < COMPACT_WIDTH;
     // #endregion properties
 
 
@@ -290,9 +297,13 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             </StyledPluridPlaneControlsLeft>
 
             <StyledPluridPlaneControlsCenter>
-                {title && (
+                {title && !compact && (
                     <>
-                        {path}
+                        <StyledPluridPlaneControlsPath
+                            title={path}
+                        >
+                            {path}
+                        </StyledPluridPlaneControlsPath>
 
                         {/* <PluridTextline
                             theme={stateInteractionTheme}

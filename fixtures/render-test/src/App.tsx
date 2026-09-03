@@ -193,6 +193,8 @@ const App = () => {
     //   ?reducedMotion=1 → navigation.motion.reducedMotion 'respect' is the default; this forces
     //   every tween/fling instant regardless of the OS setting (for deterministic tests).
     const reducedMotion = params.get('reducedMotion') === '1';
+    //   ?motionMs=1200 → navigation.motion.duration (a longer tween for timing-tolerant tests)
+    const motionMs = params.get('motionMs') ? Number(params.get('motionMs')) : undefined;
     //   ?pivot=view|selection|cursor → navigation.orbitPivot
     const orbitPivot = params.get('pivot') as any;
     // Link/tree verification surface (Phase 3):
@@ -260,11 +262,12 @@ const App = () => {
         ...(spaceDimensions ? { spaceDimensions } : {}),
         // Camera core knobs.
         ...(perspectiveParam !== undefined ? { perspective: perspectiveParam } : {}),
-        ...((pitchLimitParam !== undefined || reducedMotion || orbitPivot || homeParam || presets) ? {
+        ...((pitchLimitParam !== undefined || reducedMotion || orbitPivot || homeParam || presets || motionMs !== undefined) ? {
             navigation: {
                 ...(pitchLimitParam !== undefined ? { pitchLimit: pitchLimitParam } : {}),
                 ...(orbitPivot ? { orbitPivot } : {}),
                 ...(reducedMotion ? { motion: { duration: 0 } } : {}),
+                ...(!reducedMotion && motionMs !== undefined ? { motion: { duration: motionMs } } : {}),
                 ...(homeParam ? { home: homeParam } : {}),
                 ...(presets ? { presets } : {}),
             },

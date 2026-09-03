@@ -108,6 +108,7 @@
     import PluridLiveRegion from '~components/utilities/LiveRegion';
     import useCulling from './hooks/useCulling';
     import { warnOnce } from '~services/logic/development/warn';
+    import { resolvePlaneFallbackSize } from '~services/logic/camera';
     import { PluridThunkExtra } from '~services/state/extra';
     import useFlyControls from './hooks/useFlyControls';
     import useViewResize from './hooks/useViewResize';
@@ -502,6 +503,13 @@ const PluridView: React.FC<PluridViewProperties> = (
             transformLocks,
         } = stateConfiguration.space;
 
+        // A key on the space is an input: it interrupts any tween / fling in flight — BEFORE the
+        // shortcut runs, so a shortcut that itself starts a tween (frame the active plane, a root
+        // by index, home, the arrows) keeps its motion instead of losing it on the same keystroke.
+        if (!isEditableTarget(event.target)) {
+            motion.cancel();
+        }
+
         handleGlobalShortcuts(
             dispatch,
             stateRef.current,
@@ -511,11 +519,6 @@ const PluridView: React.FC<PluridViewProperties> = (
             transformLocks,
             stateConfiguration.space.shortcuts,
         );
-
-        // A consumed key is an input: it interrupts any tween / fling in flight.
-        if (event.defaultPrevented) {
-            motion.cancel();
-        }
     }, [
         pluridPubSub,
         stateConfiguration.space.firstPerson,
@@ -737,6 +740,71 @@ const PluridView: React.FC<PluridViewProperties> = (
             treeUpdate(stateSpaceView, stateConfiguration, true, { transition: true });
         }, [
             stateSpaceView,
+        ]);
+
+        // The measured view size changed (the first real measurement after the fallback, a
+        // container resize, a sidebar toggle): relay the roots with it. The first layout ran
+        // against whatever size was known then; only a window resize relaid before.
+        const layoutViewSizeRef = useRef(state.space.viewSize);
+        useEffect(() => {
+            const viewSize = state.space.viewSize;
+            const previous = layoutViewSizeRef.current;
+            layoutViewSizeRef.current = viewSize;
+            if (!stateResolvedLayout) {
+                return;
+            }
+            if (previous.width === viewSize.width && previous.height === viewSize.height) {
+                return;
+            }
+            treeUpdateCallback();
+        }, [
+            state.space.viewSize.width,
+            state.space.viewSize.height,
+            stateResolvedLayout,
+        ]);
+
+        // `space.center`: on a FRESH space (identity camera, nothing restored) pan once so the first
+        // root's center sits at the view center, as soon as that root has been measured.
+        const centeredRef = useRef(false);
+        useEffect(() => {
+            if (centeredRef.current || !stateResolvedLayout || !stateConfiguration.space.center) {
+                return;
+            }
+            const spaceState = stateRef.current.space;
+            const root = spaceState.tree[0];
+            const element = viewElement.current;
+            const view = spaceState.viewSize;
+            // Only once the state's view size IS the element's (the fallback size never centers
+            // anything) and the first root has a measured height.
+            if (
+                !root || !(root.height > 0) || !element
+                || element.offsetWidth !== view.width || element.offsetHeight !== view.height
+            ) {
+                return;
+            }
+            const camera = spaceState.camera;
+            const fresh = camera.yaw === 0 && camera.pitch === 0 && camera.scale === 1
+                && camera.offset.x === 0 && camera.offset.y === 0 && camera.offset.z === 0;
+            centeredRef.current = true;
+            if (!fresh) {
+                return;
+            }
+            // The width the root renders at for THIS view (its measurement may still trail).
+            const width = root.sizeMode === 'manual' && root.width > 0
+                ? root.width
+                : resolvePlaneFallbackSize(stateRef.current.configuration, view).width;
+            dispatch(actions.space.applyCameraDelta({
+                pan: {
+                    x: view.width / 2 - (root.location.translateX + width / 2),
+                    y: view.height / 2 - (root.location.translateY + root.height / 2),
+                },
+            }));
+        }, [
+            stateResolvedLayout,
+            stateTree[0]?.width,
+            stateTree[0]?.height,
+            state.space.viewSize.width,
+            state.space.viewSize.height,
         ]);
 
         // Development warning: a view item that matched no registered plane (a typo in a route,

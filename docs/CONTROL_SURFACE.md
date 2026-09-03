@@ -188,6 +188,7 @@ definePluridConfiguration({
 
 ```tsx
 definePluridConfiguration({
+    center: true,                   // on a fresh space, pan once so the first root sits at the view center
     perspective: 1600,              // the CSS lens (px); the camera reads it
     navigation: {
         pitchLimit: 89,             // the orbit never flips past vertical
