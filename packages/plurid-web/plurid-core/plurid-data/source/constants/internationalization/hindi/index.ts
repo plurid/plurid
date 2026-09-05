@@ -54,6 +54,9 @@ const hindi: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'शो ट्रांसफॉर्म बटन',
     toolbarDrawerViewcubeAlwaysOpaque: 'हमेशा अपारदर्शी',
     toolbarDrawerViewcubeConcealViewcube: 'घन छिपाना',
+    toolbarDrawerMinimapTitle: 'मिनीमैप',
+    toolbarDrawerMinimapShowMinimap: 'मिनीमैप दिखाएँ',
+    toolbarDrawerMinimapTransparent: 'पारदर्शी',
 
     toolbarDrawerTechnicalTitle: 'तकनीकी',
     toolbarDrawerTechnicalCullingDistance: 'कलिंग दूरी',

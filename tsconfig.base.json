@@ -2,6 +2,7 @@
     "//": "Shared compiler baseline for every active @plurid package (added 2026-06-20, Phase E).",
     "//target": "ES2024 (bumped from ES2020 → ES2022 → ES2024 on 2026-06-21): tsup/esbuild controls the *runtime* build target per package, so this only governs type-checking + .d.ts emit, where a newer lib is strictly a superset (ADDS globals: Error.cause, Array.at, Object.hasOwn/groupBy, structuredClone, Promise.withResolvers, class fields). ES2024 is the newest lib TypeScript 5.9 ships; ES2025 needs TypeScript 6 (the deferred migration — see //ts6). Matches the Node 22+ floor (engines.node >=22, CI node 24). Each package extends this and adds only its own baseUrl/paths/outDir/include/exclude (path-relative options that must live next to the package).",
     "//ts6": "DONE 2026-06-21: migrated to TypeScript 6.0.3 + lib ES2025. The deferral blockers were resolved minimally: (1) `ignoreDeprecations: 6.0` keeps moduleResolution:node + baseUrl; `downlevelIteration` dropped (redundant at ES2024). (2) TS6 + pnpm's isolated node_modules stops AUTO-discovering ambient @types, so `types: [node, jest]` lists them EXPLICITLY (named resolution still follows the symlinks); `@types/node` + `@types/jest` are devDeps of every active package. (3) `global` → `globalThis` (plurid-functions) and `NodeJS.Timeout` → `ReturnType<typeof setTimeout>` (icons/ui-components/react). moduleResolution stays `node` (bundler would need every pkg's package.json exports/types — a separate cleanup). Toolchain confirmed TS6-ok: ts-jest peers `<7`, tsup `>=4.5`.",
+    "//skipLibCheck": "2026-09-05: third-party declarations are not ours to fix (styled-components@6 imports the untyped `stylis`, which fails every package that reaches its .d.ts); `pnpm check` type-checks OUR sources in every package, tsup emits the declarations.",
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "node",
@@ -19,6 +20,7 @@
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
+        "skipLibCheck": true,
 
         "strict": true,
         "strictNullChecks": true,

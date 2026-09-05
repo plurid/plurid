@@ -39,6 +39,7 @@
         "clean": "rm -rf ./distribution",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build",
         "build.development": "tsup --watch"
     },

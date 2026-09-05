@@ -54,6 +54,9 @@ const german: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'transformationsschaltflächen anzeigen',
     toolbarDrawerViewcubeAlwaysOpaque: 'immer undurchsichtig',
     toolbarDrawerViewcubeConcealViewcube: 'würfel verbergen',
+    toolbarDrawerMinimapTitle: 'Minikarte',
+    toolbarDrawerMinimapShowMinimap: 'Minikarte anzeigen',
+    toolbarDrawerMinimapTransparent: 'transparent',
 
     toolbarDrawerTechnicalTitle: 'technisch',
     toolbarDrawerTechnicalCullingDistance: 'keulungsentfernung',

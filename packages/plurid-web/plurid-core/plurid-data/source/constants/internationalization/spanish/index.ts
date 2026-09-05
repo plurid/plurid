@@ -54,6 +54,9 @@ const spanish: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'mostrar botones de transformación',
     toolbarDrawerViewcubeAlwaysOpaque: 'siempre opaca',
     toolbarDrawerViewcubeConcealViewcube: 'ocultar el cubo',
+    toolbarDrawerMinimapTitle: 'minimapa',
+    toolbarDrawerMinimapShowMinimap: 'mostrar el minimapa',
+    toolbarDrawerMinimapTransparent: 'transparente',
 
     toolbarDrawerTechnicalTitle: 'técnico',
     toolbarDrawerTechnicalCullingDistance: 'distancia de sacrificio',

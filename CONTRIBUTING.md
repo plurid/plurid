@@ -69,7 +69,10 @@ Run from the root. CI enforces the first three (`build`, `test`, `lint`); the br
 | `pnpm lint` | one flat-config ESLint 10 pass over the live source | Single root `eslint.config.mjs` — there are no per-package eslint configs. |
 | `pnpm format` / `pnpm format.check` | Prettier write / check | |
 | `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. `BENCH_STRICT=1` also enforces the absolute frame-time budgets of the benchmark (a development-machine gate; the machine-independent invariants always run). |
-| `pnpm verify` | build → test → lint → browser suite | The full local gate. |
+| `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
+| `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
+| `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways | The consumer's path end to end (needs the network; a minute). `--keep` leaves the project for inspection. |
+| `pnpm verify` | build → check → test → lint → check.modules → browser suite → smoke.pack | The full local gate; what to run before a publish. |
 
 Because **build ≠ type-check**, a change can build and ship a broken `.d.ts` or a type error that only `tsc`
 catches. Before opening a PR: `pnpm verify` (or `pnpm build && pnpm test && pnpm lint && pnpm e2e`), plus `pnpm --filter <pkg> check` for
@@ -205,6 +208,14 @@ A hook lives in `plurid-react source/services/hooks/<name>/index.ts` on `useEngi
 ### A user-visible behavior
 
 Gets a Playwright scenario in `fixtures/render-test/e2e/*.spec.ts` (camera / input / links / navigation / selection / rendering / bench), driven through the harness's `?flag=` surface and `window.__rt*` helpers — the browser suite is the gate that jsdom cannot be. Host-side tests use `@plurid/plurid-react/testing`.
+
+## Publishing
+
+The packages are a dependency CHAIN (`plurid-data → plurid-engine / plurid-pubsub → plurid-react → plurid-react-server → plurid-kit`, with `plurid-icons-react`, `plurid-ui-state-react` and `plurid-ui-components-react` feeding the React adapter). A new React adapter needs the engine APIs of the same round, so:
+
+- Bump and publish the CHANGED CHAIN TOGETHER, never one package alone. The peer ranges are `>=<the version of the sibling this round>` (not `*`), so an old sibling from the registry is refused instead of crashing at runtime; `devDependencies` keep `workspace:*` (pnpm rewrites them to the exact version on pack — `pnpm smoke.pack` fails if one survives).
+- `pnpm verify` first. Its last three steps exist for the release: `check` (a type error in a translation table or a leaf package is invisible to `build`), `check.modules` and `smoke.pack` (the packed ESM + CommonJS entry points, which is how the styled-components / react-helmet-async interop breakage was found).
+- Native Node ESM interop: `styled-components@6` resolves to its CommonJS build under Node, `react-helmet-async` ships CommonJS without an `exports` map — a plain `import styled from 'styled-components'` in our ESM output yields the `module.exports` object. `scripts/tsup/cjs-interop.mjs` (an esbuild plugin wired in the React, server, kit, icons and UI-components tsup configs, together with `noExternal` for those two modules) redirects the import through a shim that resolves the default and named exports for every interop shape, and keeps the real module external. Add a module to `INTEROP_MODULES` if another CommonJS peer is read through a default or named import.
 
 ## Tests
 

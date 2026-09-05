@@ -9,12 +9,15 @@
     },
     "scripts": {
         "build": "pnpm -r build",
+        "check": "pnpm -r check",
+        "check.modules": "node scripts/check-modules.mjs",
+        "smoke.pack": "node scripts/smoke-pack.mjs",
         "test": "pnpm -r test",
         "lint": "eslint packages/plurid-web/plurid-core packages/plurid-web/plurid-works packages/plurid-utilities fixtures/render-test/src",
         "format": "prettier --write \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
         "format.check": "prettier --check \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
         "e2e": "pnpm --filter plurid-render-test e2e",
-        "verify": "pnpm build && pnpm test && pnpm lint && pnpm --filter plurid-render-test e2e",
+        "verify": "pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
         "docs.tables": "node scripts/generate-tables.mjs",
         "docs.tables.check": "node scripts/generate-tables.mjs --check"
     },

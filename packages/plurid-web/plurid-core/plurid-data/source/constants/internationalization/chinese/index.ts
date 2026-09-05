@@ -54,6 +54,9 @@ const chinese: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: '显示转换按钮',
     toolbarDrawerViewcubeAlwaysOpaque: '总是不透明',
     toolbarDrawerViewcubeConcealViewcube: '隐藏视点',
+    toolbarDrawerMinimapTitle: '小地图',
+    toolbarDrawerMinimapShowMinimap: '显示小地图',
+    toolbarDrawerMinimapTransparent: '透明',
 
     toolbarDrawerTechnicalTitle: '技术',
     toolbarDrawerTechnicalCullingDistance: '剔除距离',

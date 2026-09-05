@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.0.0-22",
+    "version": "0.0.0-23",
     "sideEffects": false,
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [
@@ -41,10 +41,11 @@
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-themes": "*"
+        "@plurid/plurid-themes": ">=0.0.0-3"
     },
     "devDependencies": {
         "@plurid/plurid-themes": "workspace:*",

@@ -54,6 +54,9 @@ const russian: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'показать кнопки преобразования',
     toolbarDrawerViewcubeAlwaysOpaque: 'всегда непрозрачный',
     toolbarDrawerViewcubeConcealViewcube: 'скрыть куб',
+    toolbarDrawerMinimapTitle: 'миникарта',
+    toolbarDrawerMinimapShowMinimap: 'показать миникарту',
+    toolbarDrawerMinimapTransparent: 'прозрачная',
 
     toolbarDrawerTechnicalTitle: 'технический',
     toolbarDrawerTechnicalCullingDistance: 'расстояние выбраковки',

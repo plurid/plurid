@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-icons-react",
-    "version": "0.0.0-10",
+    "version": "0.0.0-11",
     "sideEffects": false,
     "description": "Plurid Icons for Plurid Applications based on React.",
     "keywords": [
@@ -39,10 +39,11 @@
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-themes": "*",
+        "@plurid/plurid-themes": ">=0.0.0-3",
         "react": ">=19",
         "react-dom": ">=19",
         "styled-components": ">=6"

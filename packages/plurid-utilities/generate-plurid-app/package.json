@@ -49,6 +49,7 @@
         "build.development": "pnpm clean && pnpm build.run",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "dependencies": {

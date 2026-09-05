@@ -46,6 +46,7 @@
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "devDependencies": {

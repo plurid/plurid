@@ -54,6 +54,9 @@ const romanian: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'arată butoane transformare',
     toolbarDrawerViewcubeAlwaysOpaque: 'mereu opac',
     toolbarDrawerViewcubeConcealViewcube: 'ascunde cub',
+    toolbarDrawerMinimapTitle: 'minihartă',
+    toolbarDrawerMinimapShowMinimap: 'arată minihartă',
+    toolbarDrawerMinimapTransparent: 'transparentă',
 
     toolbarDrawerTechnicalTitle: 'tehnic',
     toolbarDrawerTechnicalCullingDistance: 'distanță ascundere',

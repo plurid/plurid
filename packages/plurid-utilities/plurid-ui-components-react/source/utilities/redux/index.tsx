@@ -28,11 +28,19 @@
  * Without a `context` prop the bridge re-publishes the default context's
  * own value - a no-op, fully backwards compatible.
  */
-export function bridgeReduxContext<P extends { context?: React.Context<any> }>(
-    Connected: React.ComponentType<any>,
+export type BridgedReduxProperties<P> = P & {
+    context?: React.Context<any>;
+};
+
+/**
+ * The bridged component keeps the connected component's OWN props (`P`, inferred from the
+ * `connect`ed component, so `selectors` and the rest stay typed) plus the optional `context`.
+ */
+export function bridgeReduxContext<P extends object>(
+    Connected: React.ComponentType<P>,
     displayName?: string,
-): React.FC<P> {
-    const Bridged: React.FC<P> = (properties) => {
+): React.FC<BridgedReduxProperties<P>> {
+    const Bridged: React.FC<BridgedReduxProperties<P>> = (properties) => {
         const {
             context,
             ...rest
@@ -45,7 +53,7 @@ export function bridgeReduxContext<P extends { context?: React.Context<any> }>(
                 value={value}
             >
                 <Connected
-                    {...rest}
+                    {...(rest as unknown as P)}
                 />
             </ReactReduxContext.Provider>
         );

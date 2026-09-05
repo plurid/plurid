@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-pubsub",
-    "version": "0.0.0-10",
+    "version": "0.0.0-11",
     "sideEffects": false,
     "description": "Plurid Publish/Subscribe",
     "keywords": [
@@ -39,11 +39,12 @@
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-data": "*",
-        "@plurid/plurid-themes": "*"
+        "@plurid/plurid-data": ">=0.0.0-23",
+        "@plurid/plurid-themes": ">=0.0.0-3"
     },
     "devDependencies": {
         "@plurid/plurid-data": "workspace:*",

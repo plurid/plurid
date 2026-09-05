@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-ui-components-react",
-    "version": "0.0.0-34",
+    "version": "0.0.0-35",
     "sideEffects": false,
     "description": "Plurid User Interface Components for React",
     "keywords": [
@@ -40,14 +40,15 @@
         "build.development": "tsup --watch",
         "build.production": "tsup",
         "build": "tsup",
+        "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-functions": "*",
-        "@plurid/plurid-functions-react": "*",
-        "@plurid/plurid-icons-react": "*",
-        "@plurid/plurid-themes": "*",
-        "@plurid/plurid-ui-state-react": "*",
+        "@plurid/plurid-functions": ">=0.0.0-32",
+        "@plurid/plurid-functions-react": ">=0.0.0-6",
+        "@plurid/plurid-icons-react": ">=0.0.0-11",
+        "@plurid/plurid-themes": ">=0.0.0-3",
+        "@plurid/plurid-ui-state-react": ">=0.0.0-14",
         "@reduxjs/toolkit": ">=2",
         "react": ">=19",
         "react-dom": ">=19",

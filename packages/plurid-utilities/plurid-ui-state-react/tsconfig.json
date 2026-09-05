@@ -15,11 +15,14 @@
         "declarationDir": "distribution",
         "preserveSymlinks": true,
         "rootDir": "source",
-        "outDir": "distribution"
+        "outDir": "distribution",
     },
     "exclude": [
         "node_modules",
         "distribution",
         "test"
+    ],
+    "include": [
+        "source"
     ]
 }

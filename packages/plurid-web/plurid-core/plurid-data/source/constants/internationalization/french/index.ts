@@ -54,6 +54,9 @@ const french: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: 'afficher les boutons de transformation',
     toolbarDrawerViewcubeAlwaysOpaque: 'toujours opaque',
     toolbarDrawerViewcubeConcealViewcube: 'cacher le cube',
+    toolbarDrawerMinimapTitle: 'minicarte',
+    toolbarDrawerMinimapShowMinimap: 'afficher la minicarte',
+    toolbarDrawerMinimapTransparent: 'transparente',
 
     toolbarDrawerTechnicalTitle: 'technique',
     toolbarDrawerTechnicalCullingDistance: 'distance d\'abattage',

@@ -54,6 +54,9 @@ const japanese: Internationalization = {
     toolbarDrawerViewcubeShowTransformButtons: '変換ボタンを表示する',
     toolbarDrawerViewcubeAlwaysOpaque: '常に不透明',
     toolbarDrawerViewcubeConcealViewcube: 'ビューキューブを隠す',
+    toolbarDrawerMinimapTitle: 'ミニマップ',
+    toolbarDrawerMinimapShowMinimap: 'ミニマップを表示',
+    toolbarDrawerMinimapTransparent: '透明',
 
     toolbarDrawerTechnicalTitle: 'テクニカル',
     toolbarDrawerTechnicalCullingDistance: 'カリング距離',

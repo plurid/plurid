@@ -94,6 +94,10 @@ Per-package status, gates, and the governance ledger live in [`../CONTEXT-MAP.md
 
 - this document does not duplicate its table.
 
+### 2.1 Packaging and native ESM (2026-09-05)
+
+Every package builds with tsup to ESM (`.mjs`) + CommonJS (`.js`) + declarations, peers external. Two peers break under NATIVE Node ESM only: `styled-components@6` resolves to its CommonJS build (so `import styled from 'styled-components'` in our ESM output is the whole `module.exports`; `styled.default` is the function), and `react-helmet-async` is CommonJS with no `exports` map (Node cannot detect its named exports). Bundlers and CommonJS never see it, which is why the browser suite and jest passed while `node -e "import('@plurid/plurid-react')"` threw `styled.div is not a function`. `scripts/tsup/cjs-interop.mjs` is an esbuild plugin (wired in the React, server, kit, icons and UI-components tsup configs, with `noExternal` for the two modules because tsup's own externals plugin runs first) that redirects the imports through an inlined shim resolving the default and each named export across the interop shapes, keeping the real module external. `pnpm check.modules` and `pnpm smoke.pack` guard it. The React adapter's ESM output is code-split (`index.mjs`, `testing.mjs` and a shared `chunk-*.mjs` — all under `files: distribution/`).
+
 ## 3. The render pipeline, mount to pixels
 
 ### 3.1 PluridApplication, the stateful shell
@@ -572,7 +576,7 @@ Assertion globals published on `window` for tests: `__pluridApi` (the `onReady` 
 
 `examples/{minimal,control-surface}` - copy-pasteable single-file references, type-correct against the public API: `minimal` is three planes / zero configuration; `control-surface` exercises every tier in one component.
 
-Gates (root `package.json`): `pnpm build` = `pnpm -r build`; `pnpm test` = `pnpm -r test`; `pnpm lint` = eslint over core + works + utilities + the harness src. `plurid-react` additionally has `check` (`tsc --project ./configurations/tsconfig.check.json`). CI (`.github/workflows/ci.yml`): Node 24, pnpm from `packageManager`, frozen lockfile, then build + test + lint. The BROWSER suite is deliberately a LOCAL gate, not a CI job (`pnpm verify` = build → test → lint → browser; `pnpm e2e` alone): it drives a real Chromium against the harness and its benchmark is machine-dependent, which a shared runner cannot judge. Type-checks are per package (`pnpm --filter <pkg> check`).
+Gates (root `package.json`): `pnpm build` = `pnpm -r build`; `pnpm check` = `pnpm -r check` (`tsc --noEmit` in EVERY package — added 2026-09-05 after nine translation tables shipped missing fields that `build` cannot see); `pnpm test` = `pnpm -r test`; `pnpm lint` = eslint over core + works + utilities + the harness src; `pnpm check.modules` imports every published entry point under native Node ESM and CommonJS; `pnpm smoke.pack` packs every public package, installs the tarballs with npm into a throwaway ESM project and imports them the consumer's way. `pnpm verify` runs all of it in order. CI (`.github/workflows/ci.yml`): Node 24, pnpm from `packageManager`, frozen lockfile, then build + test + lint. The BROWSER suite is deliberately a LOCAL gate, not a CI job (`pnpm verify` = build → test → lint → browser; `pnpm e2e` alone): it drives a real Chromium against the harness and its benchmark is machine-dependent, which a shared runner cannot judge. Type-checks are per package (`pnpm --filter <pkg> check`).
 
 ## Appendix A - public API inventory
 
