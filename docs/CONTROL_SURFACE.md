@@ -249,6 +249,8 @@ definePluridConfiguration({
         disableMomentum: false, // true = release stops dead
         wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'disabled'
         wheelZoomStep: 1.1, // zoom factor per mouse notch
+        trackpadPinchSensitivity: 0.006, // zoom exponent per px of a trackpad pinch (≈ ×3 over a whole pinch)
+        wheelSmoothing: 0.6, // fraction of the remaining wheel motion released per 60 Hz frame (≈ 90 % in 40 ms); 1 = raw
         trackpadScroll: 'pan', // 'pan' | 'zoom' | 'orbit' | 'disabled'
         touchOne: 'orbit', // 'orbit' | 'pan' | 'disabled' — one finger on empty space
         touchTwist: false, // two-finger twist rotates the yaw
@@ -319,6 +321,9 @@ Render-slots **substitute** an engine overlay with your own (rendered at the sam
 <PluridApplication
     …
     renderToolbar={() => <MyToolbar />}    // also renderViewcube / renderMinimap / renderShortcuts
+    // the built-in minimap is a FIXED FRONT VIEW (world X across, Y down): dots at plane centers, farther = smaller
+    // and dimmer, children joined to their parent, the ring on the VIEWER (the eye, moving with every orbit / pan /
+    // zoom) with a tick toward the pivot, and a small mark on the pivot itself
     renderEmpty={() => <MyEmptyState />}   // shown in place of the space when it holds no planes
 />
 
@@ -345,7 +350,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay`),
-`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye`, `data-plurid-hover`,
+`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-pivot` (the look-at point) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
@@ -462,7 +467,7 @@ await app.unmount(); clock.restore();
 | Replace the toolbar / viewcube / minimap | `renderToolbar` / `renderViewcube` / `renderMinimap` |
 | Hide link beams / alignment guides | `extend.elements.{planeLinks,alignmentGuides}.show: false` |
 | Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
-| Fan nested spawns, or keep one angle | `extend.space.bridge.fan: 'alternate' \| 'fixed'` (+ `bridgeLength` / `planeAngle`) |
+| Fan nested spawns, or keep one angle; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'alternate' \| 'fixed'`, `extend.space.bridge.direction: 'backward' \| 'forward'` (+ `bridgeLength` / `planeAngle`) |
 | Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |
 | Go fully headless | `{ micro: true }` |
 

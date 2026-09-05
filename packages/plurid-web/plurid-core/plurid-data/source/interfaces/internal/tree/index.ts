@@ -35,6 +35,13 @@ export interface TreePlane {
     bridgeLength?: number;
     planeAngle?: number;
     /**
+     * The edge this plane's bridge leaves from: `start` (its left edge; the plane extends away from
+     * the link) or `end` (its right edge; the plane is mirrored to the other side of the link, which
+     * is what keeps a generation BEHIND its parent's face while it faces the way its grandparent
+     * does). Stored with the spawn geometry so a relayout never needs the configuration.
+     */
+    bridgeSide?: 'start' | 'end';
+    /**
      * Set when the user has dragged this plane to a manual position. The auto-layout then leaves it
      * pinned (its `location` is carried across relayouts, like measured `width`/`height`) and arranges
      * only the un-pinned planes around it. Persisted with the tree, so manual arrangement survives reload.

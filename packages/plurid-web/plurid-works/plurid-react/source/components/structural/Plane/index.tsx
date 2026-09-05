@@ -501,6 +501,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         <PlaneBridge
                             mouseOver={mouseOver}
                             bridgeLength={treePlane.bridgeLength}
+                            bridgeSide={treePlane.bridgeSide}
                         />
                     )}
 

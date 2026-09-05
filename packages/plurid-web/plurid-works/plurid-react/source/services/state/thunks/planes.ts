@@ -31,6 +31,7 @@
 
     import {
         planeCoversViewCenter,
+        resolvePlaneFallbackSize,
     } from '~services/logic/camera';
     // #endregion external
 // #endregion imports
@@ -96,6 +97,8 @@ export const toggleLinkPlane = (
             hostname,
             {
                 linkID,
+                // a mirrored child (`bridgeSide: 'end'`) is placed by its width before it is measured
+                fallbackWidth: resolvePlaneFallbackSize(state.configuration, state.space.viewSize).width,
             },
         );
 

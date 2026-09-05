@@ -69,6 +69,7 @@
     import {
         normalizeWheel,
         wheelToDelta,
+        createWheelHistory,
     } from '~services/logic/input/wheel';
 
     import {
@@ -77,6 +78,7 @@
 
     import {
         createFrameBatcher,
+        createSmoothedBatcher,
     } from '~services/logic/input/frame';
 
     import { AppState } from '~services/state/store';
@@ -362,12 +364,22 @@ const PluridView: React.FC<PluridViewProperties> = (
         ? 0
         : (stateConfiguration.space.navigation?.motion?.duration ?? 380);
 
-    // Wheel input is coalesced per frame like the pointer input.
-    const wheelBatcher = useMemo(() => createFrameBatcher((delta) => {
+    // Wheel input is coalesced per frame like the pointer input, and EASED: each frame releases
+    // `gestures.wheelSmoothing` of what is still pending (raw under reduced motion), so a burst of
+    // wheel events glides to its exact total instead of stepping. A press cancels the tail.
+    const wheelBatcher = useMemo(() => createSmoothedBatcher((delta) => {
         dispatch(actions.space.applyCameraDelta(
             applyLocks(delta, stateRef.current.configuration.space.transformLocks),
         ));
-    }), []);
+    }, {
+        rate: () => (motion.reducedMotion()
+            ? 1
+            : (stateRef.current.configuration.space.gestures?.wheelSmoothing ?? 0.6)),
+    }), [
+        motion,
+    ]);
+    // The device of the current wheel stream (a fast trackpad flick must not read as a mouse notch).
+    const wheelHistory = useRef(createWheelHistory());
 
     const [
         preventOverscroll,
@@ -544,7 +556,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             return;
         }
 
-        const normalized = normalizeWheel(event, viewSize.height);
+        const normalized = normalizeWheel(event, viewSize.height, wheelHistory.current);
         const rect = element.getBoundingClientRect();
         const planeElement = planeElementOf(event.target);
         const scrollable = !!planeElement && (
@@ -566,6 +578,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             policy: gestures.buttonMap?.wheel === 'disabled' ? 'disabled' : gestures.wheel,
             trackpadScroll: gestures.trackpadScroll,
             wheelZoomStep: gestures.wheelZoomStep,
+            trackpadPinchSensitivity: gestures.trackpadPinchSensitivity,
             rotateSensitivity: gestures.rotateSensitivity,
             anchor: {
                 x: event.clientX - rect.left,
@@ -665,6 +678,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             dispatch,
             setNavDragging,
             motion,
+            onPress: () => wheelBatcher.cancel(),
         });
         // #endregion effects pointer
 

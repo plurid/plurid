@@ -64,6 +64,39 @@ test.describe('camera core', () => {
         expect(after.pivot).toEqual(before.pivot);
     });
 
+    test('a trackpad scroll glides onto exactly its total; a trackpad pinch is a real zoom', async ({ page }) => {
+        await openHarness(page, '?momentum=0');
+        const rect = await viewRect(page);
+        await page.mouse.move(rect.left + 60, rect.top + rect.height - 160);
+        const before = await camera(page);
+
+        // eight trackpad-sized ticks (12.5 px each): released over a few frames, landing on 100 px
+        for (let i = 0; i < 8; i++) {
+            await page.mouse.wheel(0, 12.5);
+        }
+        const midway = await camera(page);
+        await page.waitForTimeout(400);
+        const panned = await camera(page);
+        const movedMid = Math.hypot(midway.offset.x - before.offset.x, midway.offset.y - before.offset.y);
+        const movedAll = Math.hypot(panned.offset.x - before.offset.x, panned.offset.y - before.offset.y);
+        expect(movedAll).toBeCloseTo(100, 0);
+        expect(movedMid).toBeGreaterThan(0);
+        expect(movedMid).toBeLessThan(movedAll);
+        expect(panned.scale).toBeCloseTo(before.scale, 9);
+
+        // a pinch (ctrl + trackpad-sized deltas), −100 px in all: e^(0.006 · 100) ≈ ×1.82 — the
+        // mouse-notch step would have made it ×1.1
+        await page.keyboard.down('Control');
+        for (let i = 0; i < 10; i++) {
+            await page.mouse.wheel(0, -10);
+        }
+        await page.keyboard.up('Control');
+        await page.waitForTimeout(400);
+        const pinched = await camera(page);
+        expect(pinched.scale / panned.scale).toBeGreaterThan(1.7);
+        expect(pinched.scale / panned.scale).toBeLessThan(1.95);
+    });
+
     test('ctrl+wheel keeps the point under the cursor fixed at yaw 30', async ({ page }) => {
         await openHarness(page);
         await publish(page, 'space.rotateYWith', { value: 30 });

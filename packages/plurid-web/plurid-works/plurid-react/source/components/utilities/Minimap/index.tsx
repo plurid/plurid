@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useMemo,
+    } from 'react';
 
     import {
         AnyAction,
@@ -43,13 +45,18 @@
     } from '~services/logic/animation';
 
     import {
-        interaction,
-    } from '~services/engine';
-
-    import {
         Z_INDEX,
     } from '~data/constants/zIndex';
     // #endregion external
+
+
+    // #region internal
+    import {
+        computeMinimapLayout,
+        computeMinimapRing,
+        MinimapDot,
+    } from './logic';
+    // #endregion internal
 // #endregion imports
 
 
@@ -58,7 +65,6 @@
 const WIDTH = 172;
 const HEIGHT = 120;
 const PADDING = 14;
-const HIT = 26;  // generous click target
 
 
 interface ThemedProperties {
@@ -105,14 +111,22 @@ interface StyledMinimapDotProperties extends ThemedProperties {
 }
 
 const StyledMinimapDot = styled.div<StyledMinimapDotProperties>`
-    width: ${({ active }) => (active ? 13 : 10)}px;
-    height: ${({ active }) => (active ? 13 : 10)}px;
     border-radius: 50%;
     background-color: ${({ theme }) => theme.colorPrimary};
-    opacity: ${({ active }) => (active ? 1 : 0.5)};
     box-shadow: ${({ active, theme }) =>
         active ? `0 0 0 3px ${theme.backgroundColorTertiary}` : 'none'};
     transition: opacity 120ms ease, width 120ms ease, height 120ms ease;
+`;
+
+
+/** The parent → child joins and the ring's heading tick, under the hits. */
+const StyledMinimapLines = styled.svg`
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
 `;
 
 /** A generous transparent hit target centered on the plane's projected point — a real button. */
@@ -131,8 +145,6 @@ const StyledMinimapHit = styled.button`
         outline-offset: -2px;
         border-radius: 50%;
     }
-    width: ${HIT}px;
-    height: ${HIT}px;
     display: grid;
     place-content: center;
     cursor: pointer;
@@ -141,26 +153,6 @@ const StyledMinimapHit = styled.button`
         opacity: 1;
     }
 `;
-
-
-/** Flatten the (visible) tree into a list of planes — minimap shows roots + spawned children. */
-const flattenVisible = (
-    tree: TreePlane[],
-): TreePlane[] => {
-    const planes: TreePlane[] = [];
-    const walk = (nodes: TreePlane[]) => {
-        for (const node of nodes) {
-            if (node.show) {
-                planes.push(node);
-            }
-            if (node.children) {
-                walk(node.children);
-            }
-        }
-    };
-    walk(tree);
-    return planes;
-}
 
 
 export interface PluridMinimapStateProperties {
@@ -172,7 +164,19 @@ export interface PluridMinimapStateProperties {
     stateViewSize: ViewSize;
 }
 
-/** The camera's eye, a small ring on the map. */
+/** The pivot — where the viewer looks — a small mark on the map. */
+const StyledMinimapPivot = styled.div<ThemedProperties>`
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    margin: -2.5px 0 0 -2.5px;
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.colorPrimary};
+    opacity: 0.6;
+    pointer-events: none;
+`;
+
+/** The viewer — the camera's eye — a small ring on the map. */
 const StyledMinimapEye = styled.div<ThemedProperties>`
     position: absolute;
     width: 9px;
@@ -194,12 +198,13 @@ export type PluridMinimapProperties =
 
 
 /**
- * A 2D overview of the space: a dot per visible plane, projected onto the two world axes with the
- * most spread (so a wall-style layout reads as a front elevation, a depth-style one as a top-down
- * plan), the active plane highlighted, click-to-fly via `navigateToPluridPlane`. Themed with the
- * general theme; transparent (see-through) by default and solid only while hovered, so it stays
- * unobtrusive. Opt-in — `configuration.elements.minimap.show`. (A camera position/heading marker
- * is a planned v2.)
+ * A 2D overview of the space — a FIXED FRONT VIEW (world X across, Y down, see `./logic`): a dot per
+ * shown plane at its center, farther planes smaller and dimmer, children smaller and joined to their
+ * parent, the active plane highlighted, the ring on the VIEWER (the camera eye, moving with every
+ * orbit / pan / zoom) with a tick toward the pivot and a small pivot mark; click-to-fly via
+ * `navigateToPluridPlane`. The layout is a function of the tree (memoized); the camera only moves
+ * the ring and the mark. Themed with the general theme; transparent by default and solid
+ * while hovered. Opt-in — `configuration.elements.minimap.show`.
  */
 const PluridMinimap: React.FC<PluridMinimapProperties> = (
     properties,
@@ -221,12 +226,27 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
 
 
     // #region render
+    const layout = useMemo(
+        () => computeMinimapLayout({
+            tree: stateTree,
+            viewSize: stateViewSize,
+            configuration: stateConfiguration,
+            width: WIDTH,
+            height: HEIGHT,
+            padding: PADDING,
+        }),
+        [
+            stateTree,
+            stateViewSize,
+            stateConfiguration,
+        ],
+    );
+
     if (!show) {
         return null;
     }
 
-    const planes = flattenVisible(stateTree);
-    if (planes.length === 0) {
+    if (layout.dots.length === 0) {
         return (
             <StyledMinimap
                 theme={stateGeneralTheme}
@@ -235,33 +255,23 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
         );
     }
 
-    // A DETERMINISTIC projection: world X runs horizontally; the vertical axis is Z (a top-down
-    // plan) when the space has depth, else Y (a front elevation for the wall-style layouts). The
-    // choice depends only on whether any plane is off the Z = 0 wall, never on which axis happens
-    // to span more — so the map cannot swap its axes as planes move.
-    const hasDepth = planes.some(plane => Math.abs(plane.location.translateZ) > 1);
-    const vertical: 'translateY' | 'translateZ' = hasDepth ? 'translateZ' : 'translateY';
-    const eye = interaction.camera.eyeWorld(stateCamera, stateViewSize);
-    const points = [
-        ...planes.map(plane => ({ x: plane.location.translateX, y: plane.location[vertical] })),
-        { x: eye.x, y: vertical === 'translateZ' ? eye.z : eye.y },
-    ];
-    const minX = Math.min(...points.map(point => point.x));
-    const maxX = Math.max(...points.map(point => point.x));
-    const minY = Math.min(...points.map(point => point.y));
-    const maxY = Math.max(...points.map(point => point.y));
-    const spanX = (maxX - minX) || 1;
-    const spanY = (maxY - minY) || 1;
-    // one scale for both axes, so the map keeps the space's proportions
-    const scale = Math.min((WIDTH - 2 * PADDING) / spanX, (HEIGHT - 2 * PADDING) / spanY);
-    const offsetX = PADDING + ((WIDTH - 2 * PADDING) - spanX * scale) / 2;
-    const offsetY = PADDING + ((HEIGHT - 2 * PADDING) - spanY * scale) / 2;
-
-    const project = (point: { x: number; y: number }) => ({
-        x: offsetX + (point.x - minX) * scale,
-        y: offsetY + (point.y - minY) * scale,
+    const ring = computeMinimapRing(layout, stateCamera, stateViewSize, {
+        width: WIDTH,
+        height: HEIGHT,
+        padding: PADDING,
     });
-    const eyePoint = project(points[points.length - 1]);
+
+    // the click hands `navigateToPluridPlane` the very tree node (deep)
+    const planeByID = new Map<string, TreePlane>();
+    const index = (nodes: TreePlane[]) => {
+        for (const node of nodes) {
+            planeByID.set(node.planeID, node);
+            if (node.children) {
+                index(node.children);
+            }
+        }
+    };
+    index(stateTree);
 
     return (
         <StyledMinimap
@@ -274,35 +284,94 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
             theme={stateGeneralTheme}
             transparent={transparent}
         >
+            <StyledMinimapLines
+                aria-hidden="true"
+                viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+            >
+                {layout.links.map((link) => (
+                    <line
+                        key={link.planeID}
+                        data-plurid-minimap-link={link.planeID}
+                        x1={link.from.x}
+                        y1={link.from.y}
+                        x2={link.to.x}
+                        y2={link.to.y}
+                        stroke="currentColor"
+                        strokeWidth={1}
+                        strokeOpacity={0.5}
+                    />
+                ))}
+                {(ring.tickX !== 0 || ring.tickY !== 0) && (
+                    <line
+                        data-plurid-minimap-heading={true}
+                        x1={ring.x}
+                        y1={ring.y}
+                        x2={ring.x + ring.tickX}
+                        y2={ring.y + ring.tickY}
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeOpacity={ring.clamped ? 0.5 : 1}
+                    />
+                )}
+            </StyledMinimapLines>
+
+            <StyledMinimapPivot
+                theme={stateGeneralTheme}
+                style={{
+                    left: ring.pivot.x,
+                    top: ring.pivot.y,
+                    opacity: ring.pivot.clamped ? 0.3 : 0.6,
+                }}
+                data-plurid-minimap-pivot={true}
+            />
+
             <StyledMinimapEye
                 theme={stateGeneralTheme}
                 style={{
-                    left: eyePoint.x,
-                    top: eyePoint.y,
+                    left: ring.x,
+                    top: ring.y,
+                    opacity: ring.clamped ? 0.5 : 1,
                 }}
                 data-plurid-minimap-eye={true}
+                data-plurid-minimap-clamped={ring.clamped ? 'true' : undefined}
             />
 
-            {planes.map(plane => {
-                const { x, y } = project({ x: plane.location.translateX, y: plane.location[vertical] });
-                const active = plane.planeID === stateActivePlaneID;
+            {layout.dots.map((dot: MinimapDot) => {
+                const plane = planeByID.get(dot.planeID);
+                const active = dot.planeID === stateActivePlaneID;
+                const size = active ? dot.size * 1.3 : dot.size;
 
                 return (
                     <StyledMinimapHit
-                        key={plane.planeID}
+                        key={dot.planeID}
                         type="button"
-                        title={plane.route}
-                        aria-label={'go to plane ' + plane.route}
+                        title={dot.route}
+                        aria-label={'go to plane ' + dot.route}
                         data-plurid-control="minimap-plane"
-                        onClick={() => navigateToPluridPlane(dispatch, plane)}
+                        data-plurid-minimap-plane={dot.planeID}
+                        data-plurid-minimap-depth={Math.round(dot.z)}
+                        data-plurid-minimap-child={dot.child ? 'true' : undefined}
+                        onClick={() => {
+                            if (plane) {
+                                navigateToPluridPlane(dispatch, plane);
+                            }
+                        }}
                         style={{
-                            left: x - HIT / 2,
-                            top: y - HIT / 2,
+                            left: dot.x - dot.hit / 2,
+                            top: dot.y - dot.hit / 2,
+                            width: dot.hit,
+                            height: dot.hit,
+                            zIndex: dot.zIndex,
                         }}
                     >
                         <StyledMinimapDot
                             theme={stateGeneralTheme}
                             active={active}
+                            style={{
+                                width: size,
+                                height: size,
+                                opacity: active ? 1 : dot.opacity,
+                            }}
                         />
                     </StyledMinimapHit>
                 );

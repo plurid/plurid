@@ -25,6 +25,8 @@ export interface IStyledPluridPlane {
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
+    /* The wrappers above it are pointer-events: none (see Roots / Root): a plane is interactive. */
+    pointer-events: auto;
     backface-visibility: ${({ backface }) => (backface === 'hidden' ? 'hidden' : 'visible')};
     ${({ depthFade }) => (depthFade
         ? 'opacity: var(--plurid-plane-fade, 1); filter: blur(var(--plurid-plane-blur, 0px));'

@@ -18,6 +18,8 @@ export interface IStyledPluridPlaneBridge {
     transparentUI: boolean;
     mouseOver: boolean;
     bridgeLength: number;
+    /** The plane edge the bridge leaves from (`TreePlane.bridgeSide`). */
+    bridgeSide: 'start' | 'end';
 }
 
 export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
@@ -45,10 +47,15 @@ export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
 
     position: absolute;
     top: 0;
-    left: ${({ bridgeLength }) => -bridgeLength}px;
+    ${({ bridgeLength, bridgeSide }) => (bridgeSide === 'end'
+        ? `right: ${-bridgeLength}px;`
+        : `left: ${-bridgeLength}px;`)}
     height: 30px;
     width: ${({ bridgeLength }) => bridgeLength}px;
     opacity: 0.5;
+    /* Decoration only. Seen nearly edge-on, a bridge's hit box lands over its parent's links
+       (Chrome returned the uv plane's bridge on top of the detail plane's "lod →", 2026-09-05). */
+    pointer-events: none;
 
     display: flex;
     align-items: center;

@@ -40,6 +40,7 @@
     import {
         childLocation,
         resolvePlaneAngle,
+        resolveBridgeSide,
         recomputeSubtree,
         planeDepth,
         DEFAULT_BRIDGE_LENGTH,
@@ -668,6 +669,8 @@ export interface UpdatedTreeWithNewPlane {
 export interface UpdateTreeWithNewPlaneOptions {
     /** The stable id of the spawning link (`<parentPlaneID>#<route>#<ordinal>`); stored on the child. */
     linkID?: string;
+    /** The width the child renders with until measured (a mirrored child is placed by its width). */
+    fallbackWidth?: number;
 }
 
 
@@ -749,12 +752,15 @@ export const updateTreeWithNewPlane = <C>(
     const bridgeLength = configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH;
     const depth = planeDepth(tree, parentPlaneID) + 1;
     const siblingIndex = parentPlane.children ? parentPlane.children.length : 0;
+    const direction = configuration.space.bridge?.direction ?? 'backward';
     const planeAngle = resolvePlaneAngle(
         depth,
         siblingIndex,
         configuration.space.bridge?.planeAngle ?? DEFAULT_PLANE_ANGLE,
         configuration.space.bridge?.fan ?? 'alternate',
+        direction,
     );
+    const bridgeSide = resolveBridgeSide(planeAngle, direction);
 
     const updatedTreePlane: TreePlane = {
         ...treePlane,
@@ -764,9 +770,12 @@ export const updateTreeWithNewPlane = <C>(
             linkCoordinates,
             bridgeLength,
             planeAngle,
+            bridgeSide,
+            treePlane.width || options.fallbackWidth,
         ),
         bridgeLength,
         planeAngle,
+        bridgeSide,
         linkCoordinates,
         ...(options.linkID ? { spawnedByLinkID: options.linkID } : {}),
     };
@@ -826,6 +835,8 @@ export const updateLinkCoordinates = (
             linkCoordinates,
             plane.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
             plane.planeAngle ?? DEFAULT_PLANE_ANGLE,
+            plane.bridgeSide ?? 'start',
+            plane.width,
         ),
     });
 

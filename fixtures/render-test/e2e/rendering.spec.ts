@@ -77,6 +77,39 @@ test.describe('rendering, overlays, accessibility', () => {
         expect(errors).toEqual([]);
     });
 
+    test('a wheel over scrollable plane content only scrolls it — even at the end of its range, mouse or trackpad — while the rest of the plane zooms', async ({ page }) => {
+        await openHarness(page, '?scrollable=1&momentum=0&reducedMotion=1');
+        const list = page.locator('[data-rt-scrollable]').first();
+        await expect(list).toBeVisible();
+        const box = (await list.boundingBox())!;
+        const before = await camera(page);
+
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.wheel(0, 120);
+        await page.waitForTimeout(100);
+        expect(await list.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+        expect((await camera(page)).scale).toBeCloseTo(before.scale, 9);
+
+        // scrolled to the end: further wheel — a mouse notch, then a trackpad-sized tick — neither
+        // zooms nor pans (no scroll chaining into the camera)
+        await list.evaluate((node) => { node.scrollTop = node.scrollHeight; });
+        await page.mouse.wheel(0, 300);
+        await page.mouse.wheel(0, 12.5);
+        await page.waitForTimeout(100);
+        const after = await camera(page);
+        expect(after.scale).toBeCloseTo(before.scale, 9);
+        expect(after.offset.x).toBeCloseTo(before.offset.x, 6);
+        expect(after.offset.y).toBeCloseTo(before.offset.y, 6);
+
+        // the same wheel over the plane's non-scrolling content zooms
+        const footer = page.locator('[data-plurid-plane$="/geometry@0"]').getByText('PLURID · SPATIAL UNIT');
+        const foot = (await footer.boundingBox())!;
+        await page.mouse.move(foot.x + foot.width / 2, foot.y + foot.height / 2);
+        await page.mouse.wheel(0, -300);
+        await page.waitForTimeout(100);
+        expect((await camera(page)).scale).not.toBeCloseTo(before.scale, 3);
+    });
+
     test('a wheel over the minimap never zooms the space; overlays sit inside the view', async ({ page }) => {
         await openHarness(page, '?momentum=0');
         const minimap = page.locator('[data-plurid-overlay="minimap"]');
@@ -99,6 +132,59 @@ test.describe('rendering, overlays, accessibility', () => {
         const positions = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-overlay]')).map((node) => getComputedStyle(node).position));
         expect(positions.length).toBeGreaterThan(0);
         expect(positions.every((position) => position !== 'fixed')).toBe(true);
+    });
+
+    test('the minimap is a fixed front view: opening a child moves no root dot, joins the child to its parent, and its dots frame the right plane', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        const dotsOf = () => page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-minimap-plane]')).map((node) => {
+            const rect = node.getBoundingClientRect();
+            const dot = node.firstElementChild as HTMLElement;
+            return {
+                id: node.getAttribute('data-plurid-minimap-plane'),
+                child: node.getAttribute('data-plurid-minimap-child') === 'true',
+                cx: rect.left + rect.width / 2,
+                cy: rect.top + rect.height / 2,
+                size: dot ? dot.getBoundingClientRect().width : 0,
+            };
+        }));
+        const rest = await dotsOf();
+        expect(rest).toHaveLength(5);
+        expect(new Set(rest.map((dot) => Math.round(dot.cy))).size).toBe(2);
+
+        const geometry = (await tree(page)).find((node: any) => node.route.endsWith('/geometry'));
+        await page.evaluate((planeID) => {
+            (document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-link-route$="/geometry/detail"]`) as HTMLElement).click();
+        }, geometry.planeID);
+        await page.waitForFunction(() => document.querySelectorAll('[data-plurid-minimap-plane]').length === 6);
+        await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.motion === 'idle');
+
+        const opened = await dotsOf();
+        for (const dot of rest) {
+            const after = opened.find((candidate) => candidate.id === dot.id)!;
+            expect(Math.hypot(after.cx - dot.cx, after.cy - dot.cy)).toBeLessThan(1);
+        }
+        const child = opened.find((dot) => dot.child)!;
+        const parent = opened.find((dot) => dot.id === geometry.planeID)!;
+        expect(child.size).toBeLessThan(parent.size);
+        expect(await page.locator('[data-plurid-minimap-link]').count()).toBe(1);
+        const centers = opened.map((dot) => Math.round(dot.cx) + ':' + Math.round(dot.cy));
+        expect(new Set(centers).size).toBe(centers.length);
+
+        // the ring stays inside the map
+        const inside = await page.evaluate(() => {
+            const map = document.querySelector('[data-plurid-overlay="minimap"]')!.getBoundingClientRect();
+            const eye = document.querySelector('[data-plurid-minimap-eye]')!.getBoundingClientRect();
+            return eye.left >= map.left && eye.right <= map.right && eye.top >= map.top && eye.bottom <= map.bottom;
+        });
+        expect(inside).toBe(true);
+
+        // the geometry dot frames GEOMETRY (the camera was on the child)
+        await page.locator(`[data-plurid-minimap-plane="${geometry.planeID}"]`).click();
+        await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.motion === 'idle');
+        const state = await spaceState(page);
+        expect(state.activePlaneID).toBe(geometry.planeID);
+        expect(Math.abs(state.camera.pivot.x - (geometry.location.translateX + geometry.width / 2))).toBeLessThan(2);
+        expect(Math.abs(state.camera.pivot.y - (geometry.location.translateY + geometry.height / 2))).toBeLessThan(2);
     });
 
     test('engine controls are reachable by Tab with a visible focus ring; the view is an application with a live region', async ({ page }) => {

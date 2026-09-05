@@ -3,6 +3,7 @@
     import {
         normalizeWheel,
         wheelToDelta,
+        createWheelHistory,
     } from '../wheel';
 
     import {
@@ -13,6 +14,7 @@
 
     import {
         createFrameBatcher,
+        createSmoothedBatcher,
         mergeCameraDeltas,
     } from '../frame';
     // #endregion external
@@ -78,6 +80,43 @@ describe('normalizeWheel', () => {
 });
 
 
+describe('normalizeWheel with a history', () => {
+    it('a fast flick inside a trackpad stream stays a trackpad; an isolated notch is a mouse', () => {
+        let time = 0;
+        const history = createWheelHistory(() => time);
+        const at = (t: number, deltaY: number, deltaX = 0, ctrlKey = false) => { time = t; return normalizeWheel({ deltaX, deltaY, deltaMode: 0, ctrlKey }, 800, history).source; };
+        expect(at(0, 12.5)).toBe('trackpad');
+        // 87 and 120 px, 30 ms later: the flick of the same two-finger gesture
+        expect(at(30, 87)).toBe('trackpad');
+        expect(at(60, 120)).toBe('trackpad');
+        expect(at(90, 100)).toBe('trackpad');
+        // a real notch, half a second after the stream ended
+        expect(at(600, 100)).toBe('mouse');
+        expect(at(620, 100)).toBe('mouse');
+        // and a fresh trackpad stream after that
+        expect(at(1200, 3)).toBe('trackpad');
+        expect(at(1210, 80)).toBe('trackpad');
+    });
+
+    it('a pinch is trackpad-class whatever its size; a Ctrl + notch outside a stream is a mouse', () => {
+        let time = 0;
+        const history = createWheelHistory(() => time);
+        const at = (t: number, deltaY: number) => { time = t; return normalizeWheel({ deltaX: 0, deltaY, deltaMode: 0, ctrlKey: true }, 800, history); };
+        expect(at(0, -6).source).toBe('trackpad');
+        expect(at(20, -45).source).toBe('trackpad');
+        expect(at(40, -60).source).toBe('trackpad');
+        expect(at(40, -60).pinch).toBe(true);
+        expect(at(900, -100).source).toBe('mouse');
+    });
+
+    it('without a history the magnitude rule holds', () => {
+        expect(normalizeWheel({ deltaX: 0, deltaY: 100, deltaMode: 0, ctrlKey: false }, 800).source).toBe('mouse');
+        expect(normalizeWheel({ deltaX: 0, deltaY: 87, deltaMode: 0, ctrlKey: false }, 800).source).toBe('trackpad');
+        expect(normalizeWheel({ deltaX: 0, deltaY: 3, deltaMode: 1, ctrlKey: false }, 800).source).toBe('mouse');
+    });
+});
+
+
 describe('wheelToDelta', () => {
     const base = {
         transformMode: 'ALL' as const,
@@ -93,6 +132,20 @@ describe('wheelToDelta', () => {
     };
     const mouseDown = { dx: 0, dy: 100, pinch: false, source: 'mouse' as const };
     const trackpad = { dx: -3, dy: 5.5, pinch: false, source: 'trackpad' as const };
+
+    it('a trackpad pinch zooms by an exponent per px; a Ctrl + mouse notch keeps the notch step', () => {
+        const pinch = wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, base);
+        expect(pinch.kind).toBe('camera');
+        // e^(10 · 0.006) — the notch step would have given 1.1^0.1 ≈ 1.0096
+        expect((pinch as any).delta.zoom.factor).toBeCloseTo(Math.exp(0.06), 9);
+        expect((pinch as any).delta.zoom.anchor).toEqual({ x: 10, y: 20 });
+        const outward = wheelToDelta({ dx: 0, dy: 10, pinch: true, source: 'trackpad' }, base);
+        expect((outward as any).delta.zoom.factor).toBeCloseTo(Math.exp(-0.06), 9);
+        const tuned = wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, { ...base, trackpadPinchSensitivity: 0.02 });
+        expect((tuned as any).delta.zoom.factor).toBeCloseTo(Math.exp(0.2), 9);
+        const notch = wheelToDelta({ dx: 0, dy: -100, pinch: false, source: 'mouse' }, { ...base, ctrlOrMeta: true });
+        expect((notch as any).delta.zoom.factor).toBeCloseTo(1.1, 9);
+    });
 
     it('a mouse wheel on empty space zooms at the cursor', () => {
         const resolution = wheelToDelta(mouseDown, base);
@@ -231,3 +284,84 @@ describe('frame batcher', () => {
     });
 });
 // #endregion module
+
+
+describe('smoothed batcher', () => {
+    const harness = (rate = 0.35, frameMs = 1000 / 60) => {
+        const frames: (() => void)[] = [];
+        const flushed: any[] = [];
+        let time = 0;
+        const batcher = createSmoothedBatcher(
+            (delta) => flushed.push(delta),
+            { rate: () => rate, now: () => time },
+            (callback) => { frames.push(callback); return frames.length; },
+            () => { frames.length = 0; },
+        );
+        const tick = () => { time += frameMs; const frame = frames.shift(); if (frame) frame(); };
+        return { batcher, flushed, tick, frames };
+    };
+
+    it('the rate is per 60 Hz frame: a 120 Hz display releases less per frame, the same per unit of time', () => {
+        const fast = harness(0.6, 1000 / 120);
+        fast.batcher.add({ pan: { x: 100, y: 0 } });
+        fast.tick();
+        // the first frame after a burst counts as a full 60 Hz frame: 60 %
+        expect(fast.flushed[0].pan.x).toBeCloseTo(60, 9);
+        fast.tick();
+        // the next, 8.3 ms later, releases the square-root fraction of the remainder: 40 · (1 − √0.4)
+        expect(fast.flushed[1].pan.x).toBeCloseTo(40 * (1 - Math.sqrt(0.4)), 6);
+    });
+
+    it('releases a burst over several frames and lands exactly on the total', () => {
+        const { batcher, flushed, tick, frames } = harness();
+        batcher.add({ pan: { x: 100, y: -40 } });
+        batcher.add({ pan: { x: 0, y: -10 } });
+        tick();
+        expect(flushed[0].pan.x).toBeCloseTo(35, 9);
+        expect(flushed[0].pan.y).toBeCloseTo(-17.5, 9);
+        for (let i = 0; i < 40 && frames.length > 0; i++) {
+            tick();
+        }
+        expect(batcher.pending()).toBe(false);
+        const total = flushed.reduce((sum, delta) => ({ x: sum.x + (delta.pan?.x ?? 0), y: sum.y + (delta.pan?.y ?? 0) }), { x: 0, y: 0 });
+        expect(total.x).toBeCloseTo(100, 9);
+        expect(total.y).toBeCloseTo(-50, 9);
+        expect(flushed.length).toBeGreaterThan(5);
+    });
+
+    it('smooths zoom in log space about the latest anchor; passes the rest of a delta through whole', () => {
+        const { batcher, flushed, tick, frames } = harness();
+        batcher.add({ zoom: { factor: 2, anchor: { x: 1, y: 1 } }, pivot: { x: 5, y: 6, z: 7 } });
+        batcher.add({ zoom: { factor: 2, anchor: { x: 3, y: 4 } } });
+        tick();
+        expect(flushed[0].pivot).toEqual({ x: 5, y: 6, z: 7 });
+        expect(flushed[0].zoom.anchor).toEqual({ x: 3, y: 4 });
+        expect(flushed[0].zoom.factor).toBeCloseTo(Math.exp(Math.log(4) * 0.35), 9);
+        for (let i = 0; i < 60 && frames.length > 0; i++) {
+            tick();
+        }
+        const product = flushed.reduce((all, delta) => all * (delta.zoom?.factor ?? 1), 1);
+        expect(product).toBeCloseTo(4, 6);
+        expect(flushed.filter((delta) => delta.pivot)).toHaveLength(1);
+    });
+
+    it('rate 1 is the plain batcher; flushNow releases everything; cancel drops it', () => {
+        const instant = harness(1);
+        instant.batcher.add({ pan: { x: 30, y: 0 }, yaw: 4 });
+        instant.tick();
+        expect(instant.flushed).toEqual([{ pan: { x: 30, y: 0 }, yaw: 4 }]);
+        expect(instant.batcher.pending()).toBe(false);
+
+        const now = harness();
+        now.batcher.add({ pan: { x: 30, y: 0 }, dolly: 8 });
+        now.batcher.flushNow();
+        expect(now.flushed).toEqual([{ pan: { x: 30, y: 0 }, dolly: 8 }]);
+
+        const dropped = harness();
+        dropped.batcher.add({ pan: { x: 30, y: 0 } });
+        dropped.batcher.cancel();
+        dropped.tick();
+        expect(dropped.flushed).toEqual([]);
+        expect(dropped.batcher.pending()).toBe(false);
+    });
+});

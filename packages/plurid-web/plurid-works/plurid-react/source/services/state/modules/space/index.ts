@@ -807,7 +807,9 @@ export const space = createSlice({
                 patch,
             );
             if (updatedTree !== previousTree) {
-                state.tree = updatedTree;
+                // A plane placed by its own width (a mirrored child, `bridgeSide: 'end'`) moves
+                // with its first measurement; unmoved subtrees keep their references.
+                state.tree = spaceEngine.location.recomputeTree(updatedTree);
             }
         },
         /**

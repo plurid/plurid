@@ -12,15 +12,23 @@ export interface PanelProps {
     link?: { route: string; label: string };
     /** More links (dense-link and nested-chain harness modes); rendered after `link`. */
     links?: { route: string; label: string }[];
+    /** `?scrollable=1`: the readout becomes a scroller (many rows in a short box) — the wheel-over-content case. */
+    scrollable?: boolean;
 }
+
+const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) => [
+    'sample-' + String(index + 1).padStart(2, '0'),
+    (index * 7.25).toFixed(2),
+]);
 
 
 /**
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links }) => {
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable }) => {
     const allLinks = [...(link ? [link] : []), ...(links ?? [])];
+    const readout = scrollable ? [...rows, ...FILLER_ROWS] : rows;
 
     return (
     <div
@@ -59,8 +67,18 @@ const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links })
 
         <div style={{ height: 2, background: accent, opacity: 0.8 }} />
 
-        <div style={{ padding: '16px 16px', display: 'grid', gap: 8, alignContent: 'start', flex: 1 }}>
-            {rows.map(([k, v]) => (
+        <div
+            style={{
+                padding: '16px 16px',
+                display: 'grid',
+                gap: 8,
+                alignContent: 'start',
+                flex: 1,
+                ...(scrollable ? { maxHeight: 120, overflowY: 'auto' as const, flex: 'none' } : {}),
+            }}
+            data-rt-scrollable={scrollable ? 'true' : undefined}
+        >
+            {readout.map(([k, v]) => (
                 <div
                     key={k}
                     style={{

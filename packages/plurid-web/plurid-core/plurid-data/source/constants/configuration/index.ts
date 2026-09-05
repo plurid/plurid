@@ -158,6 +158,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         length: 100,
         planeAngle: 90,
         fan: 'alternate',
+        direction: 'backward',
     },
 };
 

@@ -88,6 +88,8 @@ export interface UsePointerGesturesParameters {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     setNavDragging: (value: boolean) => void;
     motion: CameraMotionController;
+    /** Called at every press, before anything else — the View drops a gliding wheel tail here. */
+    onPress?: () => void;
 }
 
 interface Sample {
@@ -156,6 +158,7 @@ export const usePointerGestures = (
         dispatch,
         setNavDragging,
         motion,
+        onPress,
     }: UsePointerGesturesParameters,
 ) => {
     const spaceConfigRef = useRef(spaceConfiguration);
@@ -562,6 +565,7 @@ export const usePointerGestures = (
             // decides whether the engine wants it.
             const context = contextFor(event);
             const intent = resolveGestureIntent(context);
+            onPress?.();
             trace({ phase: 'down', intent, pointerType: context.pointerType, button: context.button, onPlane: context.onPlane, onControl: context.onControl, onEditable: context.onEditable, pointerId: event.pointerId });
             if (intent === 'none') {
                 return;

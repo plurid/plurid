@@ -93,15 +93,19 @@ const expectedChildLocation = (
     link: { x: number; y: number },
     bridgeLength: number,
     planeAngle: number,
+    bridgeSide: 'start' | 'end' = 'start',
+    childWidth = 0,
 ) => {
     const parentAngle = parent.rotateY * DEG;
     const linkX = parent.translateX + link.x * Math.cos(parentAngle);
     const linkZ = parent.translateZ - link.x * Math.sin(parentAngle);
     const bridgeAngle = (parent.rotateY + planeAngle) * DEG;
+    // a right-edge bridge mirrors the child to the other side of the link, by its own width
+    const reach = bridgeSide === 'end' ? -(bridgeLength + (childWidth || 400)) : bridgeLength;
     return {
-        translateX: linkX + bridgeLength * Math.cos(bridgeAngle),
+        translateX: linkX + reach * Math.cos(bridgeAngle),
         translateY: parent.translateY + link.y,
-        translateZ: linkZ - bridgeLength * Math.sin(bridgeAngle),
+        translateZ: linkZ - reach * Math.sin(bridgeAngle),
         rotateY: parent.rotateY + planeAngle,
     };
 };
@@ -129,7 +133,7 @@ test.describe('links and tree', () => {
         expect(material.planeAngle).toBe(90);
         expect(material.location.rotateY).toBeCloseTo(geometry.location.rotateY + 90, 6);
         for (const child of [material, topology]) {
-            const expected = expectedChildLocation(geometry.location, child.linkCoordinates, child.bridgeLength, child.planeAngle);
+            const expected = expectedChildLocation(geometry.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width);
             expect(child.location.translateX).toBeCloseTo(expected.translateX, 3);
             expect(child.location.translateY).toBeCloseTo(expected.translateY, 3);
             expect(child.location.translateZ).toBeCloseTo(expected.translateZ, 3);
@@ -151,6 +155,39 @@ test.describe('links and tree', () => {
         expect(errors).toEqual([]);
     });
 
+    test('the wrappers and bridges never take a hit: with the uv plane open, every detail link is clickable from the fin\'s front', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1');
+        const root = rootByRoute(await tree(page), '/geometry');
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForChildren(page, root.planeID, 1);
+        const detail = findPlane(await tree(page), root.planeID).children[0];
+        await clickLink(page, detail.planeID, '/geometry/detail/uv');
+        await waitForChildren(page, detail.planeID, 1);
+        await page.waitForTimeout(150);
+
+        const bridge = page.locator('[data-plurid-plane*="/detail/uv@"] [data-plurid-entity="PluridPlaneBridge"]');
+        await expect(bridge).toHaveAttribute('data-plurid-bridge-side', 'end');
+        expect(await bridge.evaluate((node) => getComputedStyle(node).pointerEvents)).toBe('none');
+
+        // yaw −70 / 10 and −60 / 0: the click's ray crosses the wall's EMPTY area before the fin — the
+        // roots wrapper's own box used to take the hit there (the fin's links were dead)
+        for (const [yaw, pitch] of [[-90, 0], [-70, 10], [-60, 0], [-80, 20]]) {
+            await publish(page, 'space.navigateToPlane', { id: detail.planeID });
+            await page.waitForTimeout(80);
+            await publish(page, 'space.cameraDelta', { absolute: { yaw, pitch }, animate: false });
+            await page.waitForTimeout(150);
+            const hits = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-plane*="/geometry/detail@"] [data-plurid-link-route]')).map((link) => {
+                const rect = link.getBoundingClientRect();
+                const top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                const plane = top && top.closest('[data-plurid-plane]');
+                const over = top ? top.tagName.toLowerCase() + (top.getAttribute('data-plurid-entity') ? '#' + top.getAttribute('data-plurid-entity') : '') + (plane ? ' @' + plane.getAttribute('data-plurid-plane')!.split('/').slice(-1)[0].split('@')[0] : '') : 'none';
+                return { route: link.getAttribute('data-plurid-link-route')!.split('/').slice(-1)[0], at: [Math.round(rect.left + rect.width / 2), Math.round(rect.top + rect.height / 2)], hit: !!(top && top.closest('[data-plurid-link-route]') === link), over };
+            }));
+            expect(hits.map((entry) => entry.route)).toEqual(['mesh', 'uv', 'lod']);
+            expect(hits.every((entry) => entry.hit), JSON.stringify({ yaw, pitch, hits })).toBe(true);
+        }
+    });
+
     test('a 3-deep chain alternates the fan angle so no plane faces away', async ({ page }) => {
         await openHarness(page, '?nested=3&reducedMotion=1');
         const root = rootByRoute(await tree(page), '/geometry');
@@ -161,6 +198,12 @@ test.describe('links and tree', () => {
 
         await clickLink(page, chain1.planeID, '/chain-2');
         await waitForChildren(page, chain1.planeID, 1);
+        // a mirrored child is placed by its width: wait for its measurement (the tree re-places it)
+        await page.waitForFunction((parentID) => {
+            const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === parentID) return node; const found = node.children ? find(node.children) : null; if (found) return found; } return null; };
+            const parent = find((window as any).__rtTree());
+            return !!parent && parent.children.length === 1 && parent.children[0].width > 0;
+        }, chain1.planeID);
         const chain2 = findPlane(await tree(page), chain1.planeID).children[0];
 
         await clickLink(page, chain2.planeID, '/chain-3');
@@ -178,7 +221,12 @@ test.describe('links and tree', () => {
         expect(chain3.parentPlaneID).toBe(chain2.planeID);
 
         // the grandchild sits where the geometry says, from its LIVE parent
-        const expected = expectedChildLocation(chain1.location, chain2.linkCoordinates, chain2.bridgeLength, chain2.planeAngle);
+        expect(chain1.bridgeSide).toBe('start');
+        expect(chain2.bridgeSide).toBe('end');
+        expect(chain3.bridgeSide).toBe('start');
+        const expected = expectedChildLocation(chain1.location, chain2.linkCoordinates, chain2.bridgeLength, chain2.planeAngle, chain2.bridgeSide, chain2.width);
+        // mirrored: the grandchild lies BEHIND the fin it hangs from (the fin faces +x)
+        expect(chain2.location.translateX + chain2.width).toBeLessThan(chain1.location.translateX);
         expect(chain2.location.translateX).toBeCloseTo(expected.translateX, 3);
         expect(chain2.location.translateZ).toBeCloseTo(expected.translateZ, 3);
     });
@@ -264,7 +312,7 @@ test.describe('links and tree', () => {
         expect(after.children).toHaveLength(1);
         expect(after.children[0].planeID).toBe(before.children[0].planeID);
         const child = after.children[0];
-        const expected = expectedChildLocation(after.location, child.linkCoordinates, child.bridgeLength, child.planeAngle);
+        const expected = expectedChildLocation(after.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width);
         expect(child.location.translateX).toBeCloseTo(expected.translateX, 2);
         expect(child.location.translateY).toBeCloseTo(expected.translateY, 2);
         expect(child.location.translateZ).toBeCloseTo(expected.translateZ, 2);

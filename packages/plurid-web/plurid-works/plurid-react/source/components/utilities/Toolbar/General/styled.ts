@@ -186,21 +186,21 @@ export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
     padding: 0 22.5px;
     font-size: 12px;
     height: 45px;
+    position: relative;
     transition: opacity 300ms ease-in-out;
 
-    :after {
+    /* A hover bridge under the pill (its bottom margin), so the cursor can slide down to the screen
+       edge without the toolbar concealing — the pill's OWN width. A bare ":after" here is a
+       DESCENDANT selector in styled-components: it gave every button its own invisible strip,
+       800px wide and 20px tall, across the bottom of the view, swallowing the clicks that landed
+       there (2026-09-05). */
+    &::after {
         content: '';
         position: absolute;
-        top: 55px;
-        height: 20px;
+        top: 100%;
         left: 0;
-        right: 20%;
-    }
-
-    @media (max-width: 900px) {
-        :after {
-            right: 0;
-        }
+        right: 0;
+        height: 20px;
     }
 `;
 

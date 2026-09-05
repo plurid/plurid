@@ -367,6 +367,13 @@ export interface PluridConfigurationSpace {
          * `fixed` keeps turning the same way.
          */
         fan?: 'alternate' | 'fixed';
+        /**
+         * Which way a spawned chain grows from the plane it came from: `backward` (default) into
+         * the space behind the parent — the space is explored by going deeper; `forward` toward the
+         * viewer, in front of the parent's face (a chain that never sits behind the roots around
+         * its parent, for a wall of roots explored by orbiting from outside).
+         */
+        direction?: 'backward' | 'forward';
     };
 
     /**
@@ -638,6 +645,18 @@ export interface PluridConfigurationSpaceGestures {
     wheel?: 'zoom' | 'scroll-first' | 'disabled';
     /** Zoom factor per mouse-wheel notch. Default `1.1`. */
     wheelZoomStep?: number;
+    /**
+     * Zoom exponent per px of a trackpad pinch (a ctrl+wheel with trackpad-sized deltas):
+     * factor = e^(−dy · sensitivity). Default `0.006`, about ×3 over a full pinch.
+     */
+    trackpadPinchSensitivity?: number;
+    /**
+     * How wheel and trackpad motion is eased: the fraction of the remaining motion applied per
+     * 60 Hz frame (scaled to the real frame time), 0–1. Default `0.6` — about 90 % within 40 ms,
+     * landing exactly on the total, so a burst of events neither steps nor floats; `1` applies
+     * each frame's input at once. Instant under reduced motion.
+     */
+    wheelSmoothing?: number;
     /** What a two-finger trackpad scroll does on empty space. Default `pan`. */
     trackpadScroll?: 'pan' | 'zoom' | 'orbit' | 'disabled';
     /** What one finger does on empty space (over a plane it scrolls the content). Default `orbit`. */

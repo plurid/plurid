@@ -68,8 +68,13 @@ export const planeElementOf = (
 
 
 /**
- * Whether scrolling `delta` px along `axis` from `target` would move some scrollable ancestor
- * INSIDE the plane — i.e. the wheel belongs to the content, not to the camera.
+ * Whether the wheel over `target` belongs to the CONTENT: some element from the target up to and
+ * including `boundary` (the plane) is a user-scrollable box along `axis` — computed `overflow`
+ * `auto` / `scroll` / `overlay` AND more content than box. The current scroll position is
+ * deliberately NOT consulted: a list scrolled to its end keeps the wheel (the wheel then does
+ * nothing, as it would on a page), because letting the leftover deltas fall through to the camera
+ * turned every scroll-to-the-end — and every trackpad's momentum tail — into a zoom or a pan
+ * (hypod, 2026-09-05). Nothing outside the plane counts: the page behind the space never scrolls.
  */
 export const isScrollableAlong = (
     target: EventTarget | null | undefined,
@@ -81,43 +86,35 @@ export const isScrollableAlong = (
     if (!element || delta === 0) {
         return false;
     }
-
-    while (element && element !== boundary) {
-        const style = typeof getComputedStyle === 'function'
-            ? getComputedStyle(element)
-            : null;
-        const overflow = style
-            ? (axis === 'y' ? style.overflowY : style.overflowX)
-            : 'visible';
-        const scrolls = overflow === 'auto' || overflow === 'scroll' || overflow === 'overlay';
-
-        if (scrolls) {
-            if (axis === 'y') {
-                const room = element.scrollHeight - element.clientHeight;
-                if (room > 1) {
-                    if (delta > 0 && element.scrollTop < room - 1) {
-                        return true;
-                    }
-                    if (delta < 0 && element.scrollTop > 1) {
-                        return true;
-                    }
-                }
-            } else {
-                const room = element.scrollWidth - element.clientWidth;
-                if (room > 1) {
-                    if (delta > 0 && element.scrollLeft < room - 1) {
-                        return true;
-                    }
-                    if (delta < 0 && element.scrollLeft > 1) {
-                        return true;
-                    }
-                }
-            }
+    while (element) {
+        if (scrollsAlong(element, axis)) {
+            return true;
         }
-
+        if (element === boundary) {
+            return false;
+        }
         element = element.parentElement;
     }
-
     return false;
+};
+
+/** A user-scrollable box along `axis`: overflow that scrolls, and content beyond the box. */
+const scrollsAlong = (
+    element: HTMLElement,
+    axis: 'x' | 'y',
+): boolean => {
+    const style = typeof getComputedStyle === 'function'
+        ? getComputedStyle(element)
+        : null;
+    const overflow = style
+        ? (axis === 'y' ? style.overflowY : style.overflowX)
+        : 'visible';
+    if (overflow !== 'auto' && overflow !== 'scroll' && overflow !== 'overlay') {
+        return false;
+    }
+    const room = axis === 'y'
+        ? element.scrollHeight - element.clientHeight
+        : element.scrollWidth - element.clientWidth;
+    return room > 1;
 };
 // #endregion module

@@ -111,7 +111,10 @@ test.describe('input layer', () => {
         const atRelease = await camera(page);
         await page.waitForTimeout(120);
         const later = await camera(page);
-        expect(later.yaw).toBeGreaterThan(atRelease.yaw + 0.5);
+        // the yaw is wrapped to (-180, 180]: a strong fling on a fast machine crosses 180 within the
+        // sample window, so compare the shortest-arc delta, not the raw values
+        const flung = ((later.yaw - atRelease.yaw + 540) % 360) - 180;
+        expect(flung).toBeGreaterThan(0.5);
         expect(await spaceState(page).then((s) => s.motion)).toBe('fling');
         await page.waitForTimeout(1600);
         const settled = await camera(page);
