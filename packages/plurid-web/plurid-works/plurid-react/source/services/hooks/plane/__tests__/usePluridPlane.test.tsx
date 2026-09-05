@@ -195,5 +195,25 @@ describe('usePluridPlane', () => {
         });
         expect(result.current.location).toBe(firstLocation);
     });
+
+    it('exposes the plane\'s size and how it is determined', () => {
+        const store = makeStore();
+        store.dispatch(spaceActions.restoreArrangement({
+            tree: [{
+                sourceID: 'p1', planeID: 'p1', route: '/p1', routeDivisions: {} as any,
+                width: 480, height: 300, sizeMode: 'declared',
+                location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, show: true,
+            }],
+            links: [],
+        }));
+        const { result } = renderHook(() => usePluridPlane(), { wrapper: wrapperFor(store, 'p1') });
+        expect(result.current.width).toBe(480);
+        expect(result.current.height).toBe(300);
+        expect(result.current.sizeMode).toBe('declared');
+        const outside = renderHook(() => usePluridPlane(), { wrapper: wrapperFor(store) });
+        expect(outside.result.current.width).toBe(0);
+        expect(outside.result.current.sizeMode).toBe('measured');
+    });
+
 });
 // #endregion module

@@ -1,0 +1,3 @@
+/* Applied only while a visual baseline is taken: scrollbars differ by platform and theme. */
+*::-webkit-scrollbar { display: none; }
+* { scrollbar-width: none; }

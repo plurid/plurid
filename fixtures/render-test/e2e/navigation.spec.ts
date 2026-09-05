@@ -10,6 +10,7 @@ import {
     spaceState,
     publish,
     viewRect,
+    openSetup,
 } from './helpers';
 
 
@@ -127,6 +128,7 @@ test.describe('navigation feel', () => {
         const mover = roots[roots.length - 1];
         const before = await computedTransform(page, mover.planeID);
 
+        await openSetup(page);
         await page.getByRole('button', { name: 'ROWS' }).click();
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.layoutTransition > 0);
         await page.waitForTimeout(100);

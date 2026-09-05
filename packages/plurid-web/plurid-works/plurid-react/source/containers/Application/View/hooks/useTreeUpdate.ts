@@ -130,9 +130,15 @@ export const useTreeUpdate = (
                 ...computed,
                 planeID: previous.planeID,
                 show: previous.show,
-                width: previous.width || computed.width,
-                height: previous.height || computed.height,
-                ...(previous.sizeMode ? { sizeMode: previous.sizeMode } : {}),
+                // A hand-set size wins over everything; otherwise the recompute's declared size
+                // (a live change of a declaration flows) and the measurement fills the rest.
+                width: previous.sizeMode === 'manual' ? previous.width : (computed.width || previous.width),
+                height: previous.sizeMode === 'manual' ? previous.height : (computed.height || previous.height),
+                ...(previous.sizeMode === 'manual'
+                    ? { sizeMode: 'manual' as const }
+                    : (computed.sizeMode
+                        ? { sizeMode: computed.sizeMode }
+                        : (previous.sizeMode ? { sizeMode: previous.sizeMode } : {}))),
                 ...(previous.manuallyPositioned
                     ? { manuallyPositioned: true, location: previous.location }
                     : {}),

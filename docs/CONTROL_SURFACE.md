@@ -302,6 +302,18 @@ definePluridConfiguration({
 });
 ```
 
+### Plane sizes (`planes[].width` / `height`)
+
+```tsx
+const planes: PluridReactPlane[] = [
+    { route: '/imagene/:id', component: ImagenePlane, width: 480, height: 300 }, // its own box in px: renders as-is, the layouts space by it
+    ['/notes', NotesPlane, { width: 360 }],                                       // a width alone keeps the content-driven height
+    { route: '/log', component: LogPlane },                                       // the configured `elements.plane.width`, the content's height
+];
+```
+
+Content taller than a declared height scrolls inside the plane (the wheel over it stays the content's). A hand resize (`planeResizable`) overrides a declaration; a declared size never enters undo or collaboration (it is not an arrangement change). From content, `usePluridPlane().width / height / sizeMode` (`measured` | `manual` | `declared`).
+
 ### Culling, depth cues, backfaces (`space.culling`, `elements.plane.depthFade`, `elements.plane.backface`)
 
 ```tsx
@@ -443,6 +455,7 @@ await app.unmount(); clock.restore();
 | Read state synchronously | `api.getSnapshot()` / `api.getViewpoint()` / `pluridSelectors` |
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
 | Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
+| Give one plane its own size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |

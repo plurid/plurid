@@ -169,6 +169,11 @@ export interface PluridRoutePlaneOptions {
      */
     link?: string;
 
+    /** The plane's own width in px (see `PluridPlaneOptions.width`). */
+    width?: number;
+    /** The plane's own height in px (see `PluridPlaneOptions.height`). */
+    height?: number;
+
     /**
      * On direct link access (from the browser), show the plane in a `plurid` space,
      * or as the legacy view of an web page.

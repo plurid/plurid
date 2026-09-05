@@ -145,3 +145,108 @@ export const visibleCorners = (page: Page) => page.evaluate(() => {
     walk(s.tree);
     return corners;
 });
+
+
+// #region harness scenes
+/** The live space tree (roots with their spawned children). */
+export const tree = (page: Page) => page.evaluate(() => (window as any).__rtTree());
+
+/** A plane (root or spawned) by its id, anywhere in the tree. */
+export const findPlane = (nodes: any[], planeID: string): any => {
+    for (const node of nodes) {
+        if (node.planeID === planeID) return node;
+        const found = node.children ? findPlane(node.children, planeID) : undefined;
+        if (found) return found;
+    }
+    return undefined;
+};
+
+/** The root registered under `route` (`/geometry`). */
+export const rootByRoute = (roots: any[], route: string): any => {
+    const root = roots.find((node: any) => String(node.route).endsWith(route));
+    if (!root) throw new Error('no root for ' + route);
+    return root;
+};
+
+/** Click the PluridLink to `route` inside the plane `planeID` (the link's own click handler). */
+export const clickLink = (page: Page, planeID: string, route: string) => page.evaluate(({ planeID, route }) => {
+    const link = document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-link-route$="${route}"]`) as HTMLElement | null;
+    if (!link) throw new Error('no link to ' + route + ' in ' + planeID);
+    link.click();
+}, { planeID, route });
+
+/** Wait until the plane has exactly `count` shown children, measured. */
+export const waitForChildren = (page: Page, planeID: string, count: number) => page.waitForFunction(({ planeID, count }) => {
+    const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === planeID) return node; const f = node.children ? find(node.children) : undefined; if (f) return f; } return undefined; };
+    const plane = find((window as any).__rtTree());
+    const children = (plane?.children ?? []).filter((child: any) => child.show !== false);
+    return children.length === count && children.every((child: any) => child.width > 0 && child.height > 0);
+}, { planeID, count });
+
+/** The plane element's COMPUTED transform (mid-flight during an animated relayout). */
+export const computedTransform = (page: Page, planeID: string) => page.evaluate((id) => getComputedStyle(document.querySelector(`[data-plurid-plane="${id}"]`)!).transform, planeID);
+
+/** The plane element's STYLED transform (the target of an animated relayout). */
+export const styledTransform = (page: Page, planeID: string) => page.evaluate((id) => (document.querySelector(`[data-plurid-plane="${id}"]`) as HTMLElement).style.transform, planeID);
+
+/** Open the setup panel (the top-left SETUP button). */
+export const openSetup = async (page: Page) => {
+    await page.locator('[data-rt-setup]').click();
+    await page.locator('[data-rt-setup-panel]').waitFor();
+};
+// #endregion harness scenes
+
+
+// #region fixtures
+import {
+    FixtureDefinition,
+    fixtureByName,
+    fixtureQuery,
+} from '../src/fixtures/catalog';
+
+/** Every shown plane of the tree, roots and spawned children. */
+export const shownPlanes = (nodes: any[]): any[] => nodes.flatMap((node) => (node.show === false
+    ? []
+    : [node, ...shownPlanes(node.children ?? [])]));
+
+/** A shown plane (root or spawned) whose route ends with `route`. */
+export const planeByRoute = (nodes: any[], route: string): any => shownPlanes(nodes).find((node) => String(node.route).endsWith(route));
+
+/**
+ * Open a fixture of the catalog: its URL (deterministic motion), its steps (link clicks), one of
+ * its viewpoints (the first by default), then settle. Waits for every shown plane to be measured.
+ */
+export const openFixture = async (
+    page: Page,
+    name: string,
+    options: { viewpoint?: string; extra?: Record<string, string> } = {},
+): Promise<FixtureDefinition> => {
+    const fixture = fixtureByName(name);
+    if (!fixture) throw new Error('no fixture ' + name);
+    await page.goto('/' + fixtureQuery(name, options.extra));
+    await page.waitForFunction(() => typeof (window as any).__rtCamera === 'function');
+    const measured = () => page.waitForFunction(() => {
+        const shown = (nodes: any[]): any[] => nodes.flatMap((node: any) => (node.show === false ? [] : [node, ...shown(node.children ?? [])]));
+        return shown((window as any).__rtTree()).every((node: any) => node.width > 0 && node.height > 0);
+    });
+    if ((fixture.expect?.planes ?? 1) > 0) {
+        await page.waitForFunction(() => document.querySelectorAll('[data-plurid-plane]').length > 0);
+    }
+    await measured();
+    for (const step of fixture.steps ?? []) {
+        const parent = planeByRoute(await tree(page), step.plane);
+        if (!parent) throw new Error('fixture ' + name + ': no plane ' + step.plane);
+        const before = (parent.children ?? []).filter((child: any) => child.show !== false).length;
+        await clickLink(page, parent.planeID, step.route);
+        await waitForChildren(page, parent.planeID, before + 1);
+        await settle(page);
+    }
+    await measured();
+    const viewpoint = fixture.viewpoints.find((entry) => entry.name === (options.viewpoint ?? fixture.viewpoints[0]?.name));
+    for (const step of viewpoint?.apply ?? []) {
+        await publish(page, step.topic, step.data);
+    }
+    await settle(page);
+    return fixture;
+};
+// #endregion fixtures

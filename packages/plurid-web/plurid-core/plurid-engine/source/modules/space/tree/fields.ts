@@ -109,7 +109,7 @@ export const refreshHiddenPlaneSizes = (
             : undefined;
         const childrenChanged = !!children && children !== plane.children;
 
-        const hidden = plane.show === false && plane.sizeMode !== 'manual';
+        const hidden = plane.show === false && plane.sizeMode !== 'manual' && plane.sizeMode !== 'declared';
         const resize = hidden && plane.width !== fallback.width;
         if (!resize && !childrenChanged) {
             return plane;

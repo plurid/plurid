@@ -804,7 +804,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 return;
             }
             // The width the root renders at for THIS view (its measurement may still trail).
-            const width = root.sizeMode === 'manual' && root.width > 0
+            const width = (root.sizeMode === 'manual' || root.sizeMode === 'declared') && root.width > 0
                 ? root.width
                 : resolvePlaneFallbackSize(stateRef.current.configuration, view).width;
             dispatch(actions.space.applyCameraDelta({

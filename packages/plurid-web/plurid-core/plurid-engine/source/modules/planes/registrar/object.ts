@@ -71,6 +71,8 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 },
                 component: match.data.component,
                 head: match.data.head,
+                width: match.data.width,
+                height: match.data.height,
             };
 
             return registeredPlane;
@@ -100,6 +102,8 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 },
                 component: plane.data.component,
                 head: plane.data.head,
+                width: plane.data.width,
+                height: plane.data.height,
             };
 
             all.set(

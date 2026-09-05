@@ -440,9 +440,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // full viewport, so fractional widths and multi-column layouts overlapped.
     // A hand-resized plane renders the size the tree holds; otherwise the configured width and
     // the content's own height.
+    // A hand-resized plane renders the size the tree holds; a plane that DECLARED a size at
+    // registration renders exactly that (its content scrolls inside a declared height; a
+    // declared width alone keeps the content-driven height); otherwise the configured width and
+    // the content's own height.
     const manualSize = treePlane.sizeMode === 'manual' && treePlane.width > 0;
-    const renderWidth = (manualSize ? treePlane.width : width) + 'px';
-    const renderHeight = manualSize && treePlane.height > 0 ? treePlane.height + 'px' : undefined;
+    const declaredWidth = plane.width && plane.width > 0 ? plane.width : 0;
+    const declaredHeight = plane.height && plane.height > 0 ? plane.height : 0;
+    const renderWidth = (manualSize ? treePlane.width : (declaredWidth || width)) + 'px';
+    const renderHeight = manualSize && treePlane.height > 0
+        ? treePlane.height + 'px'
+        : (declaredHeight ? declaredHeight + 'px' : undefined);
+    const fixedHeight = !!renderHeight;
     const resizable = !!stateConfiguration.elements.plane.resizable && stateIsSelected && treePlane.show;
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const isolatePointerEvents = computeIsolatePointerEvents();
@@ -454,7 +463,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         rotateY(${treePlane.location.rotateY}deg)
     `);
 
-    const planeContentProperties = {};
+    const planeContentProperties = {
+        fixedHeight,
+    };
 
     return (
         <StyledPluridPlane
@@ -463,6 +474,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
             planeOpacity={planeOpacity}
+            fixedHeight={fixedHeight}
             show={treePlane.show}
             id={planeID}
             style={{

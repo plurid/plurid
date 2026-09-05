@@ -25,6 +25,18 @@ export interface PluridPlaneOptions {
      * heads in tree order; below in-render `usePluridDocument` declarations.
      */
     head?: PluridDocumentSource;
+    /**
+     * The plane's own width in px (> 0). It renders at exactly this width and the layouts space
+     * by it; without it the plane takes the configured `elements.plane.width`. A hand resize
+     * (`elements.plane.resizable`) overrides it.
+     */
+    width?: number;
+    /**
+     * The plane's own height in px (> 0). It renders at exactly this height — content taller than
+     * it scrolls inside the plane; without it the height follows the content. A hand resize
+     * overrides it.
+     */
+    height?: number;
 }
 
 
@@ -130,5 +142,8 @@ export interface RegisteredPluridPlane<C> {
     component: C;
     /** The plane's `head` option, carried through registration. */
     head?: PluridDocumentSource;
+    /** The plane's declared `width` / `height` (px), carried through registration. */
+    width?: number;
+    height?: number;
 }
 // #endregion module

@@ -68,7 +68,8 @@ Run from the root. CI enforces the first three (`build`, `test`, `lint`); the br
 | `pnpm test` | `jest` across the workspace | jest 30. Hook/DOM tests use jsdom. |
 | `pnpm lint` | one flat-config ESLint 10 pass over the live source | Single root `eslint.config.mjs` — there are no per-package eslint configs. |
 | `pnpm format` / `pnpm format.check` | Prettier write / check | |
-| `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. `BENCH_STRICT=1` also enforces the absolute frame-time budgets of the benchmark (a development-machine gate; the machine-independent invariants always run). |
+| `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. `BENCH_STRICT=1` also enforces the absolute frame-time budgets of the benchmark (a development-machine gate; the machine-independent invariants always run). Two projects: `chromium` (every scenario, `fixtures.spec.ts` included) and `visual` (a screenshot per fixture × viewpoint against `e2e/__snapshots__/<platform>/`, compared strictly only with `VISUAL_STRICT=1`; the baselines are macOS / headless / DPR 1). |
+| `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
 | `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
 | `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways | The consumer's path end to end (needs the network; a minute). `--keep` leaves the project for inspection. |
@@ -115,6 +116,18 @@ Iteration loop when changing the engine:
 
 The harness src (`fixtures/render-test/src/App.tsx`) is also the easiest place to try an `examples/*` file —
 paste it over `App.tsx`.
+
+**The URL is the fixture.** The SETUP button at the top-left expands into every option of the harness — the
+fixtures of the catalog, the layout (live), the plane set and declared sizes (a remount), every startup flag
+(a reload) — and rewrites the query, so any state is a pasteable link (COPY LINK). The flags are a registry
+(`src/harness/flags.ts`), the fixtures a catalog (`src/fixtures/catalog.ts`); both are documented by the
+generated `docs/HARNESS.md`. `?gallery=1` shows every fixture on one page.
+
+**Adding a fixture** (a scene a feature needs verified): add an entry to `src/fixtures/catalog.ts` (its flags,
+optional link-click steps, 1–2 viewpoints, expectations), run `pnpm docs.tables`, then from `fixtures/render-test`
+run `npx playwright test --config e2e/playwright.config.ts --project visual --update-snapshots` and commit the new
+baselines under `e2e/__snapshots__/`. `fixtures.spec.ts` picks the fixture up by itself. A new flag goes into the
+registry the same way (the panel and the docs follow).
 
 
 
@@ -207,7 +220,7 @@ A hook lives in `plurid-react source/services/hooks/<name>/index.ts` on `useEngi
 
 ### A user-visible behavior
 
-Gets a Playwright scenario in `fixtures/render-test/e2e/*.spec.ts` (camera / input / links / navigation / selection / rendering / bench), driven through the harness's `?flag=` surface and `window.__rt*` helpers — the browser suite is the gate that jsdom cannot be. Host-side tests use `@plurid/plurid-react/testing`.
+Gets a Playwright scenario in `fixtures/render-test/e2e/*.spec.ts` (camera / input / links / navigation / selection / rendering / bench), driven through the harness's `?flag=` surface and `window.__rt*` helpers — and a fixture in the catalog when it needs a scene (the visual baseline and the generic invariants then follow for free) — the browser suite is the gate that jsdom cannot be. Host-side tests use `@plurid/plurid-react/testing`.
 
 ## Publishing
 

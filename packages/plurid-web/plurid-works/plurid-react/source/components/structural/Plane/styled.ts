@@ -22,6 +22,8 @@ export interface IStyledPluridPlane {
     planeControls: boolean;
     planeOpacity: number;
     selected: boolean;
+    /** A declared or hand-set height: the content row takes the rest and scrolls inside it. */
+    fixedHeight?: boolean;
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
@@ -115,11 +117,13 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     grid-template-columns: 1fr;
     grid-template-rows: ${({
         planeControls,
+        fixedHeight,
     }) => {
+        const content = fixedHeight ? 'minmax(0, 1fr)' : 'auto';
         if (planeControls) {
-            return '56px auto';
+            return '56px ' + content;
         }
-        return 'auto';
+        return content;
     }};
 
     transform-origin: 0 0 0;

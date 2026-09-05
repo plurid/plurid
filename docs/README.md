@@ -19,7 +19,7 @@ Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the main
 ## Current priorities
 
 1. Wire and measure real culling/virtualization for large spaces.
-2. Protect rendering and interaction with browser and visual regression tests.
+2. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines; `docs/HARNESS.md`); extend the catalog as features land.
 3. Add explicit repository type-checking to CI.
 4. Move Denote onto the public engine control/persistence/collaboration seams.
 5. Use Depict and Dechat to validate content and interaction generality.

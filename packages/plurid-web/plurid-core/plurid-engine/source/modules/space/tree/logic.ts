@@ -317,14 +317,15 @@ export const resolveViewItem = <C>(
 
     const iPlanes = planes.values();
     const pluridPlanes: PluridPlane<C>[] = [];
+    // The registered entry by absolute route, to carry its declared size onto the tree node.
+    const registeredByRoute = new Map<string, RegisteredPluridPlane<C>>();
     for (const iPlane of iPlanes) {
-        // console.log('iPlane', iPlane);
-
         const plane: PluridPlane<C> = {
             route: iPlane.route.absolute,
             component: iPlane.component,
         };
         pluridPlanes.push(plane);
+        registeredByRoute.set(iPlane.route.absolute, iPlane);
     }
 
     const isoMatcher = new IsoMatcher(
@@ -336,6 +337,11 @@ export const resolveViewItem = <C>(
 
     // const match = isoMatcher.match(resolvedView.route);
     const match = isoMatcher.match(viewData);
+    const registered = match && match.kind === 'Plane'
+        ? registeredByRoute.get(match.data.route)
+        : undefined;
+    const declaredWidth = registered?.width && registered.width > 0 ? registered.width : 0;
+    const declaredHeight = registered?.height && registered.height > 0 ? registered.height : 0;
     // console.log('isoMatcher match', match);
 
     if (match) {
@@ -393,8 +399,11 @@ export const resolveViewItem = <C>(
                 valid: true,
             },
 
-            height: 0,
-            width: 0,
+            // A declared size is the node's size from the start (`sizeMode: 'declared'`); an
+            // undeclared dimension stays 0 until the plane is measured.
+            height: declaredHeight,
+            width: declaredWidth,
+            ...(declaredWidth || declaredHeight ? { sizeMode: 'declared' as const } : {}),
             location: {
                 translateX: 0,
                 translateY: 0,
@@ -1072,7 +1081,8 @@ const sameNodeOwnFieldsExceptLocation = (
     && a.route === b.route
     && a.show === b.show
     && a.bridgeLength === b.bridgeLength
-    && a.planeAngle === b.planeAngle;
+    && a.planeAngle === b.planeAngle
+    && a.sizeMode === b.sizeMode;
 
 const sameNodeOwnFields = (
     a: TreePlane,

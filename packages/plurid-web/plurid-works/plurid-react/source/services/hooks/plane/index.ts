@@ -103,6 +103,11 @@ export interface PluridPlaneLens {
      * when THIS plane moves (structural sharing).
      */
     location: TreePlaneLocation | undefined;
+    /** The plane's size in the tree — declared, measured or hand-set; 0 while unmeasured. */
+    width: number;
+    height: number;
+    /** How that size is determined: `measured` (the default), `manual` (a hand resize), `declared`. */
+    sizeMode: 'measured' | 'manual' | 'declared';
     /**
      * The plane's REGISTERED route — the pattern it was registered under (`/imagene/:id`), the
      * same value as the `plurid` prop's `plane.value`; `undefined` outside plane content.
@@ -211,6 +216,17 @@ export const usePluridPlane = (): PluridPlaneLens => {
             ? getTreePlane(state, planeID)?.location
             : undefined,
     );
+    const width = useEngineSelector(
+        (state: AppState) => (planeID !== undefined ? getTreePlane(state, planeID)?.width : 0) ?? 0,
+    );
+    const height = useEngineSelector(
+        (state: AppState) => (planeID !== undefined ? getTreePlane(state, planeID)?.height : 0) ?? 0,
+    );
+    const sizeMode = useEngineSelector(
+        (state: AppState): 'measured' | 'manual' | 'declared' => (planeID !== undefined
+            ? getTreePlane(state, planeID)?.sizeMode
+            : undefined) ?? 'measured',
+    );
     const culled = useEngineSelector(
         (state: AppState): 'visible' | 'hidden' | 'frozen' => {
             if (planeID === undefined || !state.space.culled) {
@@ -256,6 +272,9 @@ export const usePluridPlane = (): PluridPlaneLens => {
         scale,
         viewSize,
         location,
+        width,
+        height,
+        sizeMode,
         culled,
         frozen: culled === 'frozen',
         route: details?.value,

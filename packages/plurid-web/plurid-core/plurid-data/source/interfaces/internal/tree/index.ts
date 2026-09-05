@@ -49,10 +49,12 @@ export interface TreePlane {
     manuallyPositioned?: boolean;
     /**
      * How `width`/`height` are determined: `measured` (a ResizeObserver on the rendered plane keeps
-     * them current, the default) or `manual` (the user resized the plane; the measured size is
-     * ignored and the tree value renders).
+     * them current, the default), `manual` (the user resized the plane; the measured size is
+     * ignored and the tree value renders), or `declared` (the registered plane declared `width`
+     * and/or `height`: the tree holds those numbers from the start, a measurement only fills an
+     * undeclared dimension, and a hand resize turns the plane `manual`).
      */
-    sizeMode?: 'measured' | 'manual';
+    sizeMode?: 'measured' | 'manual' | 'declared';
     /**
      * The stable id of the `PluridLink` that spawned this plane (`<parentPlaneID>#<route>#<ordinal>`
      * unless the link declares its own `linkID`). The link derives its open/closed state from the

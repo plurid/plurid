@@ -83,5 +83,36 @@ describe('computeSheavesLayout', () => {
         ));
         expect(differs).toBe(true);
     });
+
+describe('computeRowLayout with mixed declared sizes', () => {
+    it('advances each column by the plane before it and makes the row as tall as its tallest plane', () => {
+        const configuration = configurationWith({ type: LAYOUT_TYPES.ROWS, rows: 1, gap: 50 });
+        const sized = (id: string, width: number, height: number): TreePlane => ({
+            ...defaultTreePlane, sourceID: id, route: '/' + id, planeID: id, show: true, width, height, sizeMode: 'declared',
+        });
+        const tree = computeRowLayout(
+            [sized('a', 300, 200), sized('b', 500, 400), sized('c', 300, 300), sized('d', 300, 300)],
+            1,
+            undefined,
+            50,
+            configuration,
+            large,
+        );
+        expect(tree.map((plane) => plane.location.translateX)).toEqual([0, 350, 900, 1250]);
+        expect(tree.map((plane) => plane.location.translateY)).toEqual([0, 0, 0, 0]);
+        // two rows of two: the second row starts after the first row's tallest plane (400) + gap
+        const rows = computeRowLayout(
+            [sized('a', 300, 200), sized('b', 500, 400), sized('c', 300, 300), sized('d', 300, 300)],
+            2,
+            undefined,
+            50,
+            configuration,
+            large,
+        );
+        expect(rows.map((plane) => plane.location.translateY)).toEqual([0, 0, 450, 450]);
+        expect(rows.map((plane) => plane.location.translateX)).toEqual([0, 350, 0, 350]);
+    });
+});
+
 });
 // #endregion module

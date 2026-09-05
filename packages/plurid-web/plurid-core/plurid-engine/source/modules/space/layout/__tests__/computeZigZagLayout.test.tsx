@@ -3,6 +3,7 @@
     import {
         /** constants */
         defaultTreePlane,
+        defaultConfiguration,
 
         /** interfaces */
         TreePlane,
@@ -133,5 +134,18 @@ describe('computeZigZagLayout', () => {
 
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
+
+    it('stacks mixed declared heights without overlap (each row as tall as its plane)', () => {
+        const sized = (id: string, height: number): TreePlane => ({
+            ...defaultTreePlane, sourceID: id, route: '/' + id, planeID: id, show: true, width: 300, height, sizeMode: 'declared',
+        });
+        const tree = computeZigZagLayout([sized('a', 200), sized('b', 400), sized('c', 300)], 30, defaultConfiguration, { width: 1200, height: 800 });
+        const heights = [200, 400, 300];
+        for (let index = 1; index < tree.length; index += 1) {
+            expect(tree[index].location.translateY).toBeGreaterThanOrEqual(tree[index - 1].location.translateY + heights[index - 1]);
+        }
+        expect(tree.map((plane) => Math.abs(plane.location.rotateY))).toEqual([30, 30, 30]);
+    });
+
 });
 // #endregion module

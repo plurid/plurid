@@ -66,7 +66,7 @@ import {
 
 const planes: PluridReactPlane[] = [
     { route: '/',     component: () => <div>Home plane</div> },
-    { route: '/about', component: () => <div>About plane</div> },
+    { route: '/about', component: () => <div>About plane</div>, width: 480, height: 300 }, // its own size in px (optional)
 ];
 
 const view = ['/', '/about'];

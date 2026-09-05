@@ -90,5 +90,26 @@ describe('computeFaceToFaceLayout', () => {
         // a lone plane in the final partial row is the row's first → +angle
         expect(result[4].location.rotateY).toBeCloseTo(planeAngle);
     });
+
+    it('spaces a row by each plane\'s own declared width and stacks rows by their tallest plane', () => {
+        const sized = (id: string, width: number, height: number): TreePlane => ({
+            ...makePlane(id, '/' + id), planeID: id, width, height, sizeMode: 'declared',
+        });
+        // one row of three (middle = 1): the first plane's own width opens the wedge, the third sits
+        // after the SECOND plane's width, not the first's
+        const row = computeFaceToFaceLayout([sized('a', 300, 200), sized('b', 500, 400), sized('c', 300, 300)], DEFAULT_ANGLE, 0, 1);
+        expect(row[0].location.translateZ).toBeCloseTo(300 * Math.sin(planeAngle * Math.PI / 180), 6);
+        expect(row[2].location.translateX - row[1].location.translateX).toBeCloseTo(500, 6);
+        expect(row.map((plane) => plane.location.translateY)).toEqual([0, 0, 0]);
+        // two rows: the second starts after the first row's tallest plane (400) plus the gap (10)
+        const rows = computeFaceToFaceLayout(
+            [sized('a', 300, 200), sized('b', 500, 400), sized('c', 300, 300), sized('d', 300, 250), sized('e', 300, 250), sized('f', 300, 250)],
+            DEFAULT_ANGLE,
+            10,
+            1,
+        );
+        expect(rows[3].location.translateY).toBeCloseTo(410, 6);
+    });
+
 });
 // #endregion module

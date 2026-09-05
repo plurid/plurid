@@ -396,7 +396,11 @@ export const framePlaneNode = (
     if (!extra) {
         return;
     }
-    if (options.awaitMeasure && plane.sizeMode !== 'manual') {
+    // A hand-set size, or a declaration of BOTH dimensions, is already the plane's box: nothing
+    // to wait for. A declared width alone still needs its content-driven height measured.
+    const authoritative = plane.sizeMode === 'manual'
+        || (plane.sizeMode === 'declared' && plane.width > 0 && plane.height > 0);
+    if (options.awaitMeasure && !authoritative) {
         extra.pendingFrame = {
             planeID: plane.planeID,
             animate,

@@ -44,7 +44,9 @@ const computeSheavesLayout = (
         : configuration.elements.plane.width * windowInnerWidth;
     const height = windowInnerHeight;
 
-    // Sheaves = a stack of planes receding into depth. `depth` is the per-sheet Z step
+    // Sheaves = a stack of planes receding into depth. The planes' own sizes do not enter the
+    // placement (a cascade, not a grid): a declared or measured width only matters through the
+    // configured width that sets the depth step. `depth` is the per-sheet Z step
     // (a fraction of the plane width, or an explicit pixel value like the width config),
     // with optional per-sheet X/Y cascade so the stack fans out instead of fully
     // occluding. Earlier this pinned every plane to (0,0,0) — a single visible plane.

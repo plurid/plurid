@@ -3,9 +3,12 @@ import { createRoot } from 'react-dom/client';
 import * as PR from '@plurid/plurid-react';
 import App from './App';
 import RouterDemo from './RouterDemo';
+import Gallery from './harness/Gallery';
 
-// `?router` → exercise PluridRouterBrowser SPA navigation (P3-3); default = the CAD harness.
-const Root = /[?&]router/.test(location.search) ? RouterDemo : App;
+// `?router` → the PluridRouterBrowser SPA demo; `?gallery=1` → every fixture on one page; default = the CAD harness.
+const Root = /[?&]router/.test(location.search)
+  ? RouterDemo
+  : (/[?&]gallery=1/.test(location.search) ? Gallery : App);
 
 console.log('[RT] plurid-react export count =', Object.keys(PR).length,
   '| PluridApplication =', typeof (PR as any).PluridApplication,

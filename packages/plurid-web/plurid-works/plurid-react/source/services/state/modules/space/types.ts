@@ -89,6 +89,6 @@ export interface SetPlaneSizePayload {
     planeID: string;
     width: number;
     height: number;
-    sizeMode?: 'measured' | 'manual';
+    sizeMode?: 'measured' | 'manual' | 'declared';
 }
 // #endregion module

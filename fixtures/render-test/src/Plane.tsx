@@ -14,6 +14,8 @@ export interface PanelProps {
     links?: { route: string; label: string }[];
     /** `?scrollable=1`: the readout becomes a scroller (many rows in a short box) — the wheel-over-content case. */
     scrollable?: boolean;
+    /** The plane declared a height: the panel fills it instead of its own 360px. */
+    fill?: boolean;
 }
 
 const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) => [
@@ -26,14 +28,15 @@ const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) =>
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable }) => {
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable, fill }) => {
     const allLinks = [...(link ? [link] : []), ...(links ?? [])];
     const readout = scrollable ? [...rows, ...FILLER_ROWS] : rows;
 
     return (
     <div
         style={{
-            height: 360,
+            height: fill ? '100%' : 360,
+            minHeight: fill ? 0 : undefined,
             width: '100%',
             boxSizing: 'border-box',
             display: 'flex',

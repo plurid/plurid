@@ -3,6 +3,7 @@
     import {
         /** constants */
         defaultTreePlane,
+        defaultConfiguration,
 
         /** interfaces */
         TreePlane,
@@ -234,5 +235,34 @@ describe('computeColumnLayout', () => {
 
         expect(resultWithEmptyIDs).toStrictEqual(locatedTree);
     });
+
+    it('packs mixed declared sizes per column and per row (each column as wide as its widest plane, each row as tall as its tallest)', () => {
+        const sized = (id: string, width: number, height: number): TreePlane => ({
+            ...defaultTreePlane,
+            sourceID: id,
+            route: '/' + id,
+            planeID: id,
+            show: true,
+            width,
+            height,
+            sizeMode: 'declared',
+        });
+        // 2 columns of 2: column 0 = [a, b], column 1 = [c, d]; row 0 = [a, c], row 1 = [b, d]
+        const tree = computeColumnLayout(
+            [sized('a', 300, 200), sized('b', 500, 400), sized('c', 300, 300), sized('d', 300, 300)],
+            2,
+            undefined,
+            50,
+            defaultConfiguration,
+            { width: 1200, height: 800 },
+        );
+        const at = (id: string) => tree.find((plane) => plane.planeID === id)!.location;
+        expect([at('a').translateX, at('a').translateY]).toEqual([0, 0]);
+        expect([at('b').translateX, at('b').translateY]).toEqual([0, 350]);   // row 0 is 300 tall (c) + gap
+        expect([at('c').translateX, at('c').translateY]).toEqual([550, 0]);   // column 0 is 500 wide (b) + gap
+        expect([at('d').translateX, at('d').translateY]).toEqual([550, 350]);
+        expect(tree.map((plane) => plane.sizeMode)).toEqual(['declared', 'declared', 'declared', 'declared']);
+    });
+
 });
 // #endregion module

@@ -19,6 +19,10 @@
     import {
         recomputeSubtree,
     } from '../location';
+    import {
+        groupSizes,
+        prefixOffsets,
+    } from './pitch';
     // #endregion external
 // #endregion imports
 
@@ -43,13 +47,6 @@ const computeColumnLayout = (
     const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
         ? configurationWidth
         : configurationWidth * windowInnerWidth;
-    // The pitch comes from the planes' MEASURED sizes when they have them (a hand-resized or
-    // wider-than-configured plane never overlaps its neighbor); unmeasured planes fall back to
-    // the configured width and a view-height row.
-    const measuredWidth = Math.max(0, ...roots.map((root) => root.width || 0));
-    const measuredHeight = Math.max(0, ...roots.map((root) => root.height || 0));
-    const pitchWidth = Math.max(width, measuredWidth);
-    const height = measuredHeight > 0 ? measuredHeight : windowInnerHeight;
     const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
         ? gap
         : gap * width;
@@ -61,27 +58,32 @@ const computeColumnLayout = (
     const length = columnLength && columnLength > 0
         ? columnLength
         : Math.ceil(roots.length / safeColumns);
+    const columnOf = (index: number) => Math.floor(index / length);
+    const rowOf = (index: number) => index % length;
+
+    // Per-column widths and per-row heights: each column is as wide as its widest plane (a
+    // declared or measured width; the configured width for an unmeasured one), each row as tall
+    // as its tallest (an unmeasured plane counts as the tallest measured plane, else the view
+    // height) — mixed sizes pack without overlap, and unmeasured planes keep the uniform grid.
+    const columnCount = Math.max(1, Math.ceil(roots.length / Math.max(1, length)));
+    const fallbackHeight = Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
+    const widths = groupSizes(roots, columnCount, columnOf, (root) => root.width, width);
+    const heights = groupSizes(roots, length, rowOf, (root) => root.height, fallbackHeight);
+    const xOffsets = prefixOffsets(widths, gapValue);
+    const yOffsets = prefixOffsets(heights, gapValue);
 
     for (const [index, root] of roots.entries()) {
-        const rowIndex = index % length;
-        const columnIndex = Math.floor(index / length);
-
-        const translateX = columnIndex * (pitchWidth + gapValue);
-        const translateY = rowIndex * (height + gapValue);
-
         const treePage: TreePlane = {
             ...root,
             location: {
-                translateX,
-                translateY,
+                translateX: xOffsets[columnOf(index)] ?? 0,
+                translateY: yOffsets[rowOf(index)] ?? 0,
                 translateZ: 0,
                 rotateX: 0,
                 rotateY: 0,
             },
         };
-
         const treePageWithChildren = recomputeSubtree(treePage);
-
         tree.push(treePageWithChildren);
     }
 

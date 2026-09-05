@@ -25,6 +25,8 @@
 export interface PluridPlaneContentOwnProperties {
     // updatePlaneSize: any;
     children: React.ReactNode;
+    /** The plane has a declared or hand-set height: the content scrolls inside it. */
+    fixedHeight?: boolean;
 }
 
 
@@ -34,8 +36,8 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     // #region properties
     const {
         // updatePlaneSize,
-
         children,
+        fixedHeight,
     } = properties;
     // #endregion properties
 
@@ -75,6 +77,7 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     return (
         <StyledPluridPlaneContent
             ref={planeContentElement}
+            $fixedHeight={fixedHeight}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTENT}
         >
             {children}

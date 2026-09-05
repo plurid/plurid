@@ -31,33 +31,36 @@
 const toRadians = mathematics.geometry.toRadians;
 
 
+/** The first plane of a row is tilted toward the others: its own width sets how far it stands out. */
 const computeFaceToFaceTranslateZ = (
-    width: number,
+    firstWidth: number,
     angle: number,
     first: boolean,
 ) => {
     if (first) {
-        return width * Math.sin(toRadians(angle));
+        return firstWidth * Math.sin(toRadians(angle));
     }
-
     return 0;
 }
 
+/**
+ * Along the row, every plane sits after the ones before it — each by ITS OWN width (a declared
+ * or measured one; the configured width otherwise) — after the tilted first plane's footprint.
+ */
 const computeFaceToFaceTranslateX = (
-    width: number,
+    widths: number[],
     angle: number,
     gap: number,
-    first: boolean,
     index: number,
 ) => {
-    const firstTranslateX = width * Math.cos(toRadians(angle));
-    if (first) {
+    const firstTranslateX = (widths[0] ?? 0) * Math.cos(toRadians(angle));
+    if (index === 0) {
         return firstTranslateX;
     }
-
-    const value = width * (index - 1)
-        + 2 * firstTranslateX
-        + gap * index;
+    let value = 2 * firstTranslateX + gap * index;
+    for (let k = 1; k < index; k += 1) {
+        value += widths[k] ?? 0;
+    }
     return value;
 }
 
@@ -93,7 +96,8 @@ const computeFaceToFaceLayout = (
     const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
         ? configuration.elements.plane.width
         : configuration.elements.plane.width * windowInnerWidth;
-    const height = windowInnerHeight;
+    // An unmeasured plane counts as the tallest measured one, else the view height (see column.ts).
+    const fallbackHeight = Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
     const planeAngle = 90 - angle / 2;
     const columns = 2 + middle;
     const rows = splitIntoGroups(roots, columns);
@@ -105,9 +109,14 @@ const computeFaceToFaceLayout = (
         ? gap
         : gap * width;
 
+    // Rows stack by their own tallest plane, plus the gap so gapped rows never overlap.
+    const rowHeights = rows.map((row) => Math.max(0, ...row.map((page) => page.height || fallbackHeight)));
+    let translateY = 0;
     for (const [rowIndex, row] of rows.entries()) {
-        // Include the gap in row spacing so gapped rows don't overlap (no-op when gap = 0).
-        const translateY = rowIndex * (height + gapValue);
+        if (rowIndex > 0) {
+            translateY += rowHeights[rowIndex - 1] + gapValue;
+        }
+        const widths = row.map((page) => page.width || width);
 
         for (const [index, page] of row.entries()) {
             const first = index === 0;
@@ -116,16 +125,15 @@ const computeFaceToFaceLayout = (
             const last = index === row.length - 1;
 
             const translateZ = computeFaceToFaceTranslateZ(
-                width,
+                widths[0],
                 planeAngle,
                 first,
             );
             const translateX = computeFaceToFaceTranslateX(
-                width,
+                widths,
                 planeAngle,
                 gapValue,
-                first,
-                index
+                index,
             );
             const rotateY = computeFaceToFaceRotateY(
                 planeAngle,
