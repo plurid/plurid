@@ -254,7 +254,7 @@ definePluridConfiguration({
         trackpadScroll: 'pan', // 'pan' | 'zoom' | 'orbit' | 'disabled'
         touchOne: 'orbit', // 'orbit' | 'pan' | 'disabled' — one finger on empty space
         touchTwist: false, // two-finger twist rotates the yaw
-        doubleClickFrame: true,
+        doubleClickFrame: true, // empty space frames everything, a plane's controls bar frames it; plane content is the page's
         flySpeed: 9, // fly-mode speed, px per 60 Hz frame (time-based)
         flySprintMultiplier: 2.5, // Shift while flying
 
@@ -350,7 +350,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay`),
-`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-pivot` (the look-at point) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
+`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
@@ -467,7 +467,7 @@ await app.unmount(); clock.restore();
 | Replace the toolbar / viewcube / minimap | `renderToolbar` / `renderViewcube` / `renderMinimap` |
 | Hide link beams / alignment guides | `extend.elements.{planeLinks,alignmentGuides}.show: false` |
 | Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
-| Fan nested spawns, or keep one angle; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'alternate' \| 'fixed'`, `extend.space.bridge.direction: 'backward' \| 'forward'` (+ `bridgeLength` / `planeAngle`) |
+| The same 90° turn every generation (default), or alternate it; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'fixed' \| 'alternate'`, `extend.space.bridge.direction: 'backward' \| 'forward'`, `extend.space.bridge.keepBehind: true` (mirror the generations that would hang on the side their parent faces) (+ `bridgeLength` / `planeAngle`) |
 | Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |
 | Go fully headless | `{ micro: true }` |
 

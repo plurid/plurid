@@ -518,6 +518,17 @@ export const usePointerGestures = (
                 return;
             }
 
+            // A plain click (no drag, no modifier) on empty space clears the selection — the way out
+            // of ⌘/Ctrl+A without a key (2026-09-05).
+            if (
+                !current.dragging
+                && current.intent === 'orbit'
+                && event
+                && !event.shiftKey && !event.altKey && !event.ctrlKey && !event.metaKey
+                && stateRef.current.space.selectedPlaneIDs.length > 0
+            ) {
+                dispatch(actions.space.clearSelection());
+            }
             setNavDragging(false);
 
             if (
@@ -730,6 +741,14 @@ export const usePointerGestures = (
                 return;
             }
             const planeElement = planeElementOf(event.target);
+            // Over a plane only its chrome (the controls bar) frames it: a double-click on the
+            // CONTENT is the page's — a word selection — never a camera move (2026-09-05).
+            if (
+                planeElement
+                && !(event.target as Element | null)?.closest?.('[data-plurid-entity="PluridPlaneControls"]')
+            ) {
+                return;
+            }
             const planeID = planeElement?.getAttribute('data-plurid-plane');
             motion.cancel();
             if (planeID) {

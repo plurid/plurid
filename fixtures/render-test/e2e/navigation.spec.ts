@@ -174,7 +174,16 @@ test.describe('navigation feel', () => {
             }
         }
         expect(box).not.toBeNull();
-        await page.mouse.dblclick(box!.x + box!.width / 2, box!.y + box!.height / 2);
+        // a double-click on the plane's CONTENT is the page's (a word selection): no camera move
+        const before = await camera(page);
+        await page.mouse.dblclick(box!.x + box!.width / 2, box!.y + box!.height * 0.7);
+        await page.waitForTimeout(150);
+        const untouched = await camera(page);
+        expect(untouched.pivot).toEqual(before.pivot);
+        expect(untouched.scale).toBeCloseTo(before.scale, 9);
+        // the plane's chrome (its controls bar) frames it
+        const bar = (await page.locator(`[data-plurid-plane="${plane.planeID}"] [data-plurid-entity="PluridPlaneControls"]`).boundingBox())!;
+        await page.mouse.dblclick(bar.x + bar.width / 2, bar.y + bar.height / 2);
         await page.waitForTimeout(100);
         const framed = await camera(page);
         expect(framed.pivot.x).toBeCloseTo(plane.location.translateX + plane.width / 2, 0);

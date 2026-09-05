@@ -82,23 +82,22 @@ const StyledMinimap = styled.div<StyledMinimapProperties>`
     right: 16px;
     width: ${WIDTH}px;
     height: ${HEIGHT}px;
-    border-radius: 6px;
+    /* square, like a plane's window and the viewcube's faces */
+    border-radius: 0;
     color: ${({ theme }) => theme.colorPrimary};
     overflow: hidden;
     z-index: ${Z_INDEX.MINIMAP};
     user-select: none;
-    transition: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
-
-    /* When transparent: an unobtrusive see-through overview, solid only on hover. When not: always
-       solid (the hover rule below just resolves to the same values). */
-    background-color: ${({ theme, transparent }) =>
-        transparent ? theme.backgroundColorPrimaryAlpha : theme.backgroundColorSecondary};
-    border: 1px solid ${({ theme, transparent }) =>
-        transparent ? 'transparent' : theme.backgroundColorTertiary};
-    box-shadow: ${({ transparent }) =>
-        transparent ? 'none' : '0 4px 18px rgba(0, 0, 0, 0.35)'};
+    /* At rest exactly like a viewcube face: no fill, a faint 1px outline, 40 % opacity — the
+       overview reads as a hint until the pointer comes over it, then it is the solid panel. */
+    opacity: 0.4;
+    background-color: transparent;
+    border: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
+    box-shadow: none;
+    transition: opacity 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 
     &:hover {
+        opacity: 1;
         background-color: ${({ theme }) => theme.backgroundColorSecondary};
         border-color: ${({ theme }) => theme.backgroundColorTertiary};
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
@@ -164,17 +163,7 @@ export interface PluridMinimapStateProperties {
     stateViewSize: ViewSize;
 }
 
-/** The pivot — where the viewer looks — a small mark on the map. */
-const StyledMinimapPivot = styled.div<ThemedProperties>`
-    position: absolute;
-    width: 5px;
-    height: 5px;
-    margin: -2.5px 0 0 -2.5px;
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.colorPrimary};
-    opacity: 0.6;
-    pointer-events: none;
-`;
+
 
 /** The viewer — the camera's eye — a small ring on the map. */
 const StyledMinimapEye = styled.div<ThemedProperties>`
@@ -201,7 +190,7 @@ export type PluridMinimapProperties =
  * A 2D overview of the space — a FIXED FRONT VIEW (world X across, Y down, see `./logic`): a dot per
  * shown plane at its center, farther planes smaller and dimmer, children smaller and joined to their
  * parent, the active plane highlighted, the ring on the VIEWER (the camera eye, moving with every
- * orbit / pan / zoom) with a tick toward the pivot and a small pivot mark; click-to-fly via
+ * orbit / pan / zoom) with a tick toward the pivot; click-to-fly via
  * `navigateToPluridPlane`. The layout is a function of the tree (memoized); the camera only moves
  * the ring and the mark. Themed with the general theme; transparent by default and solid
  * while hovered. Opt-in — `configuration.elements.minimap.show`.
@@ -314,16 +303,6 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
                     />
                 )}
             </StyledMinimapLines>
-
-            <StyledMinimapPivot
-                theme={stateGeneralTheme}
-                style={{
-                    left: ring.pivot.x,
-                    top: ring.pivot.y,
-                    opacity: ring.pivot.clamped ? 0.3 : 0.6,
-                }}
-                data-plurid-minimap-pivot={true}
-            />
 
             <StyledMinimapEye
                 theme={stateGeneralTheme}

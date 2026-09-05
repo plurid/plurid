@@ -757,10 +757,12 @@ export const updateTreeWithNewPlane = <C>(
         depth,
         siblingIndex,
         configuration.space.bridge?.planeAngle ?? DEFAULT_PLANE_ANGLE,
-        configuration.space.bridge?.fan ?? 'alternate',
+        configuration.space.bridge?.fan ?? 'fixed',
         direction,
     );
-    const bridgeSide = resolveBridgeSide(planeAngle, direction);
+    const bridgeSide = configuration.space.bridge?.keepBehind
+        ? resolveBridgeSide(planeAngle, direction)
+        : 'start';
 
     const updatedTreePlane: TreePlane = {
         ...treePlane,

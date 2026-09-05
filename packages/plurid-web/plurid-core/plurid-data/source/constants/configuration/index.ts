@@ -157,7 +157,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     bridge: {
         length: 100,
         planeAngle: 90,
-        fan: 'alternate',
+        fan: 'fixed',
         direction: 'backward',
     },
 };

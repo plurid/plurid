@@ -122,7 +122,10 @@ describe('childLocation() mirrored', () => {
 });
 
 describe('resolvePlaneAngle()', () => {
-    it('starts behind the parent (positive), alternates the sign by generation, fixed keeps it', () => {
+    it('starts behind the parent (positive); fixed (the default) keeps the same turn, alternate flips it by generation', () => {
+        expect(resolvePlaneAngle(1, 0, 90)).toBe(90);
+        expect(resolvePlaneAngle(2, 0, 90)).toBe(90);
+        expect(resolvePlaneAngle(3, 0, 90)).toBe(90);
         expect(resolvePlaneAngle(1, 0, 90, 'alternate')).toBe(90);
         expect(resolvePlaneAngle(2, 0, 90, 'alternate')).toBe(-90);
         expect(resolvePlaneAngle(3, 0, 60, 'alternate')).toBe(60);
@@ -189,19 +192,48 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(updatedTreePlane!.location.translateZ).toBeCloseTo(-120, 9);
         expect(findPlaneByLinkID(updatedTree, 'a', 'a#/detail#0')).toBe(updatedTree[0].children![0]);
 
-        // a grandchild fans back — mirrored to the fin's back side, placed by the fallback width
+        // a grandchild fans back, hanging off the fin on the side it faces (the default);
+        // `keepBehind` mirrors it to the fin's back side, placed by the fallback width
         const childID = updatedTreePlane!.planeID;
         const second = updateTreeWithNewPlane('/detail', childID, { x: 10, y: 10 }, updatedTree, registry, configuration, 'origin', { linkID: childID + '#/detail#0', fallbackWidth: 300 });
         expect(second.updatedTreePlane!.planeAngle).toBe(-90);
-        expect(second.updatedTreePlane!.bridgeSide).toBe('end');
+        expect(second.updatedTreePlane!.bridgeSide).toBe('start');
         expect(second.updatedTreePlane!.location.rotateY).toBe(0);
-        expect(second.updatedTreePlane!.location.translateX).toBeCloseTo(400 - 120 - 300, 9);
+        expect(second.updatedTreePlane!.location.translateX).toBeCloseTo(400 + 120, 9);
         expect(planeDepth(second.updatedTree, second.updatedTreePlane!.planeID)).toBe(2);
+        const behind = { ...configuration, space: { ...configuration.space, bridge: { ...configuration.space.bridge, keepBehind: true } } };
+        const mirrored = updateTreeWithNewPlane('/detail', childID, { x: 10, y: 10 }, updatedTree, registry, behind, 'origin', { linkID: childID + '#/detail#0', fallbackWidth: 300 });
+        expect(mirrored.updatedTreePlane!.bridgeSide).toBe('end');
+        expect(mirrored.updatedTreePlane!.location.translateX).toBeCloseTo(400 - 120 - 300, 9);
     });
 
-    it('a backward chain grows deeper at every generation; forward grows out of the wall toward the viewer', () => {
+    it('the default fan: every generation turns 90° right of its parent and hangs behind its face, like the first link (the harness numbers)', () => {
+        const root = plane('geometry', {}, { width: 320, height: 416 });
+        const fin = updateTreeWithNewPlane('/detail', 'geometry', { x: 112, y: 361 }, [root], registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'a', fallbackWidth: 320 });
+        const finPlane = fin.updatedTreePlane!;
+        expect(finPlane.planeAngle).toBe(90);
+        expect(finPlane.location.rotateY).toBe(90);
+        expect(finPlane.location.translateX).toBeCloseTo(112, 9);
+        expect(finPlane.location.translateY).toBeCloseTo(361, 9);
+        expect(finPlane.location.translateZ).toBeCloseTo(-160, 9);
+        // the mesh link sits 61 px along the fin: the mesh turns another 90° (faces −z) and hangs
+        // on the fin's back side (x < 112), its bridge along local −X reaching the link
+        const mesh = updateTreeWithNewPlane('/detail', finPlane.planeID, { x: 61, y: 317 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'b', fallbackWidth: 320 }).updatedTreePlane!;
+        expect(mesh.planeAngle).toBe(90);
+        expect(mesh.bridgeSide).toBe('start');
+        expect(mesh.location.rotateY).toBe(180);
+        expect(mesh.location.translateX).toBeCloseTo(112 - 160, 9);
+        expect(mesh.location.translateZ).toBeCloseTo(-221, 9);
+        expect(mesh.location.translateY).toBeCloseTo(678, 9);
+        // a third turn: faces −x, behind the mesh's face (+z side of it)
+        const edges = updateTreeWithNewPlane('/detail', mesh.planeID, { x: 20, y: 300 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'c', fallbackWidth: 320 }).updatedTreePlane;
+        expect(edges).toBeUndefined();
+    });
+
+    it('a backward chain grows deeper at every generation; forward grows out of the wall toward the viewer (keepBehind mirrors the even generations)', () => {
         const root = plane('a', { translateX: 100 });
         const spawn = { fallbackWidth: 400 };
+        const configuration = { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 120, planeAngle: 90, fan: 'alternate' as const, keepBehind: true } } };
         const backward = updateTreeWithNewPlane('/detail', 'a', { x: 300, y: 40 }, [root], registry, configuration, 'origin', { linkID: 'a#/detail#0', ...spawn });
         const deeper = updateTreeWithNewPlane('/detail', backward.updatedTreePlane!.planeID, { x: 50, y: 10 }, backward.updatedTree, registry, configuration, 'origin', { linkID: 'b', ...spawn });
         expect(backward.updatedTreePlane!.bridgeSide).toBe('start');

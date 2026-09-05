@@ -24,8 +24,8 @@ export type BridgeSide =
     | 'end';
 
 export type PlaneFan =
-    | 'alternate'
-    | 'fixed';
+    | 'fixed'
+    | 'alternate';
 
 /** Which way spawned planes grow from their parent: into the space behind it (the default) or toward the viewer. */
 export type PlaneFanDirection =
@@ -97,15 +97,17 @@ export const resolveBridgeSide = (
  * is explored by going DEEPER, a chain opened from a wall of roots grows behind that wall — which
  * is why, in a wall layout, a grandchild can sit behind the neighbouring roots and be seen (and
  * clicked) only through the gaps between them until the camera goes around or in; `forward` starts
- * negative, the chain grows out of the wall toward the eye. `alternate` (the default fan) flips
- * the sign every generation, so a grandchild turns back parallel to its grandparent instead of
- * ending up back-to-front at 180°; `fixed` keeps turning the same way.
+ * negative, the chain grows out of the wall toward the eye. `fixed` (the default fan) applies the
+ * same turn every generation — each child 90° to the right of its parent, behind its parent's
+ * face, exactly like the first link off a root (the user's rule, 2026-09-05); `alternate` flips
+ * the sign every generation, so a grandchild turns back parallel to its grandparent (and then
+ * hangs on the side its parent faces, see `resolveBridgeSide`).
  */
 export const resolvePlaneAngle = (
     depth: number,
     _siblingIndex: number,
     configured: number = DEFAULT_PLANE_ANGLE,
-    fan: PlaneFan = 'alternate',
+    fan: PlaneFan = 'fixed',
     direction: PlaneFanDirection = 'backward',
 ): number => {
     const first = direction === 'forward' ? -configured : configured;

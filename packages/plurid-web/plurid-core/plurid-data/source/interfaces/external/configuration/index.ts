@@ -362,11 +362,13 @@ export interface PluridConfigurationSpace {
         length?: number;
         planeAngle?: number;
         /**
-         * How nested spawns turn: `alternate` (default) flips the angle's sign every generation so
-         * a grandchild faces the way its grandparent does instead of ending up back-to-front;
-         * `fixed` keeps turning the same way.
+         * How nested spawns turn: `fixed` (default) applies the SAME turn every generation — each
+         * child turns `planeAngle` to the right of its parent and hangs behind its parent's face,
+         * exactly like the first link off a root; `alternate` flips the angle's sign every
+         * generation so a grandchild faces the way its grandparent does (it then hangs on the side
+         * its parent faces, unless `keepBehind`).
          */
-        fan?: 'alternate' | 'fixed';
+        fan?: 'fixed' | 'alternate';
         /**
          * Which way a spawned chain grows from the plane it came from: `backward` (default) into
          * the space behind the parent — the space is explored by going deeper; `forward` toward the
@@ -374,6 +376,13 @@ export interface PluridConfigurationSpace {
          * its parent, for a wall of roots explored by orbiting from outside).
          */
         direction?: 'backward' | 'forward';
+        /**
+         * Keep every generation behind its parent's face: the generations whose fanned angle would
+         * hang them on the side their parent faces are MIRRORED to the other side of the link (the
+         * bridge leaves the child's right edge). Default `false` — the chain alternates sides as it
+         * goes deeper, a grandchild hanging off the fin on the side the fin faces.
+         */
+        keepBehind?: boolean;
     };
 
     /**
@@ -663,7 +672,10 @@ export interface PluridConfigurationSpaceGestures {
     touchOne?: 'orbit' | 'pan' | 'disabled';
     /** Two-finger twist rotates the yaw. Default `false`. */
     touchTwist?: boolean;
-    /** Double-click / double-tap frames the plane under the pointer (or everything). Default `true`. */
+    /**
+     * Double-click / double-tap on empty space frames everything; on a plane's controls bar it
+     * frames that plane. A double-click on plane CONTENT is the page's (a word selection). Default `true`.
+     */
     doubleClickFrame?: boolean;
     /** Fly-mode sprint multiplier while Shift is held. Default `2.5`. */
     flySprintMultiplier?: number;

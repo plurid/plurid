@@ -101,7 +101,9 @@ test.describe('rendering, overlays, accessibility', () => {
         expect(after.offset.x).toBeCloseTo(before.offset.x, 6);
         expect(after.offset.y).toBeCloseTo(before.offset.y, 6);
 
-        // the same wheel over the plane's non-scrolling content zooms
+        // the same wheel over the plane's non-scrolling content zooms (after the trackpad stream
+        // above has ended: a notch inside a trackpad stream counts as the trackpad)
+        await page.waitForTimeout(400);
         const footer = page.locator('[data-plurid-plane$="/geometry@0"]').getByText('PLURID · SPATIAL UNIT');
         const foot = (await footer.boundingBox())!;
         await page.mouse.move(foot.x + foot.width / 2, foot.y + foot.height / 2);

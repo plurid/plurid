@@ -242,4 +242,27 @@ test.describe('input layer', () => {
         expect(undone.tree[0].location.translateX).toBeCloseTo(0, 1);
         expect(undone.history.canRedo).toBe(true);
     });
+
+    test('select all, then a plain click on empty space clears the selection; Escape too', async ({ page }) => {
+        await openHarness(page, '?momentum=0&reducedMotion=1');
+        const rect = await viewRect(page);
+        await page.mouse.move(rect.left + 120, rect.top + rect.height - 60);
+        await page.mouse.click(rect.left + 120, rect.top + rect.height - 60);
+        const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
+        await page.keyboard.press(`${modifier}+KeyA`);
+        await page.waitForTimeout(50);
+        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(5);
+
+        await page.mouse.click(rect.left + 120, rect.top + rect.height - 60);
+        await page.waitForTimeout(50);
+        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(0);
+
+        await page.keyboard.press(`${modifier}+KeyA`);
+        await page.waitForTimeout(50);
+        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(5);
+        await page.keyboard.press('Escape');
+        await page.waitForTimeout(50);
+        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(0);
+    });
+
 });
