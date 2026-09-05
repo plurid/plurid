@@ -1,8 +1,5 @@
 import React from 'react';
 
-import {
-    HelmetProvider,
-} from 'react-helmet-async';
 
 import {
     Provider as ReduxProvider,
@@ -31,7 +28,6 @@ import {
     GlobalStyle,
 } from './styled';
 
-import helmetContext from './App/services/helmet';
 
 import reduxStore from './App/services/state/store';
 import graphqlClient from './App/services/graphql/client';
@@ -51,7 +47,6 @@ delete (window as any).__PRELOADED_STATE__;
 
 const Client: React.FC<any> = () => {
     return (
-        <HelmetProvider context={helmetContext}>
             <ReduxProvider store={reduxStore(state)}>
                 <ApolloProvider client={graphqlClient}>
                     {/* <StripeProvider apiKey={stripeAPIKey || ''}> */}
@@ -69,7 +64,6 @@ const Client: React.FC<any> = () => {
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
-        </HelmetProvider>
     );
 }
 

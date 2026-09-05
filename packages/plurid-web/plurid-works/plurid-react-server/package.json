@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react-server",
-    "version": "0.0.0-18",
+    "version": "0.0.0-19",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
         "plurid",
@@ -46,25 +46,10 @@
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/elementql": ">=0.0.0-1",
-        "@plurid/elementql-client-react": ">=0.0.0-1",
-        "@plurid/plurid-data": ">=0.0.0-23",
-        "@plurid/plurid-engine": ">=0.0.0-21",
-        "@plurid/plurid-functions": ">=0.0.0-32",
-        "@plurid/plurid-functions-react": ">=0.0.0-6",
-        "@plurid/plurid-icons-react": ">=0.0.0-11",
-        "@plurid/plurid-pubsub": ">=0.0.0-11",
-        "@plurid/plurid-react": ">=0.0.0-37",
-        "@plurid/plurid-themes": ">=0.0.0-3",
-        "@plurid/plurid-ui-components-react": ">=0.0.0-35",
-        "@plurid/plurid-ui-state-react": ">=0.0.0-14",
-        "cross-fetch": ">=3.1",
+        "@plurid/plurid-react": ">=0.0.0-38",
         "puppeteer": ">=22",
         "react": ">=19",
         "react-dom": ">=19",
-        "react-helmet-async": ">=1",
-        "react-redux": ">=9",
-        "redux": ">=4",
         "styled-components": ">=6"
     },
     "peerDependenciesMeta": {
@@ -73,6 +58,10 @@
         }
     },
     "dependencies": {
+        "@plurid/plurid-data": "workspace:^",
+        "@plurid/plurid-engine": "workspace:^",
+        "@plurid/plurid-functions": "workspace:^",
+        "@plurid/plurid-themes": "workspace:^",
         "compression": "^1.7.4",
         "detect-port": "^1.5.1",
         "express": "^5.1.0",
@@ -84,14 +73,10 @@
         "@babel/core": "^7.23.7",
         "@plurid/elementql": "^0.0.0-1",
         "@plurid/elementql-client-react": "^0.0.0-1",
-        "@plurid/plurid-data": "workspace:*",
-        "@plurid/plurid-engine": "workspace:*",
-        "@plurid/plurid-functions": "workspace:*",
         "@plurid/plurid-functions-react": "workspace:*",
         "@plurid/plurid-icons-react": "workspace:*",
         "@plurid/plurid-pubsub": "workspace:*",
         "@plurid/plurid-react": "workspace:*",
-        "@plurid/plurid-themes": "workspace:*",
         "@plurid/plurid-ui-components-react": "workspace:*",
         "@plurid/plurid-ui-state-react": "workspace:*",
         "@redux-devtools/extension": "^3.3.0",
@@ -112,7 +97,6 @@
         "jest-config": "^30.4.2",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-helmet-async": "^3.0.0",
         "react-redux": "^9.3.0",
         "redux": "^5.0.1",
         "redux-thunk": "^3.1.0",

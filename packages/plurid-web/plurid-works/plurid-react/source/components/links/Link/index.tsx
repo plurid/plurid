@@ -463,10 +463,63 @@ const ConnectedPluridLink = connect(
         context: StateContext,
     },
 )(PluridLink);
+
+
+type PluridLinkPublicProperties = React.PropsWithChildren<
+    PluridLinkOwnProperties<PluridReactComponent, React.CSSProperties, React.MouseEvent>
+>;
+
+
+/**
+ * Outside an application (a host's unit test, a static render of plane content) there is no
+ * engine store for the connected link: render a plain anchor to the route instead of crashing.
+ * The host's `atClick` still runs; the browser keeps the click (no `preventDefault`).
+ */
+const PluridLinkFallback: React.FC<PluridLinkPublicProperties> = ({
+    children,
+    route,
+    atClick,
+    style,
+    className,
+}) => (
+    <a
+        href={computePlaneAddress(route)}
+        style={style}
+        className={className}
+        onClick={atClick ? (event) => atClick(event) : undefined}
+        data-plurid-entity={PLURID_ENTITY_LINK}
+        data-plurid-link-route={route}
+    >
+        {children}
+    </a>
+);
+
+
+/** The link renders through the engine inside an application and as a plain anchor outside one. */
+const PluridLinkGate: React.FC<PluridLinkPublicProperties> = (
+    properties,
+) => {
+    const engine = useContext(Context);
+    const store = useContext(StateContext);
+
+    if (!engine || !store) {
+        return (
+            <PluridLinkFallback
+                {...properties}
+            />
+        );
+    }
+
+    return (
+        <ConnectedPluridLink
+            {...(properties as any)}
+        />
+    );
+};
 // #endregion module
 
 
 
 // #region exports
-export default ConnectedPluridLink;
+export default PluridLinkGate;
 // #endregion exports

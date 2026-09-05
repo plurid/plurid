@@ -12,8 +12,6 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
-    import fetch from 'cross-fetch';
-
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -21,10 +19,6 @@
     import {
         PluridRouteComponentProperty,
     } from '@plurid/plurid-data';
-
-    import {
-        ElementQLClient,
-    } from '@plurid/elementql-client-react';
     // #endregion libraries
 
 
@@ -122,6 +116,8 @@ const elementRequest = async (
             element,
         } = data;
 
+        // The ElementQL client is an OPTIONAL peer, loaded only when an external plane resolves.
+        const { ElementQLClient } = await import('@plurid/elementql-client-react');
         const elementQLClient = new ElementQLClient({
             url: element.url,
         });

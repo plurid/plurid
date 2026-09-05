@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-pubsub",
-    "version": "0.0.0-11",
+    "version": "0.0.0-12",
     "sideEffects": false,
     "description": "Plurid Publish/Subscribe",
     "keywords": [
@@ -42,13 +42,7 @@
         "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
-    "peerDependencies": {
-        "@plurid/plurid-data": ">=0.0.0-23",
-        "@plurid/plurid-themes": ">=0.0.0-3"
-    },
     "devDependencies": {
-        "@plurid/plurid-data": "workspace:*",
-        "@plurid/plurid-themes": "workspace:*",
         "@types/jest": "^30.0.0",
         "@types/node": "^20.10.6",
         "jest": "^30.4.2",
@@ -64,5 +58,9 @@
             "import": "./distribution/index.mjs",
             "require": "./distribution/index.js"
         }
+    },
+    "dependencies": {
+        "@plurid/plurid-data": "workspace:^",
+        "@plurid/plurid-themes": "workspace:^"
     }
 }

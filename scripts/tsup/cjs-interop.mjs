@@ -4,10 +4,9 @@
  * The problem: `import styled from 'styled-components'` is left as-is in our ESM output (the
  * package is a peer). Node resolves styled-components@6 to its CommonJS build, so under native
  * ESM the default import is the whole `module.exports` object — `styled.div` is undefined while
- * `styled.default.div` is the function. `react-helmet-async` ships CommonJS with no `exports`
- * map, so `import { HelmetProvider }` throws: Node cannot detect its named exports. Bundlers
- * (Vite, webpack) and CommonJS consumers never see either problem, which is why the existing
- * gates passed while a plain `node` import of the packed package failed.
+ * `styled.default.div` is the function. Bundlers (Vite, webpack) and CommonJS consumers never see
+ * the problem, which is why the existing gates passed while a plain `node` import of the packed
+ * package failed.
  *
  * The fix: every import of a listed module is redirected to a virtual module that imports the
  * real one as a NAMESPACE and resolves the default and each named export through the possible
@@ -34,13 +33,6 @@ export const INTEROP_MODULES = {
             'createTheme',
             'styled',
             '__PRIVATE__',
-        ],
-    },
-    'react-helmet-async': {
-        named: [
-            'Helmet',
-            'HelmetProvider',
-            'HelmetData',
         ],
     },
 };

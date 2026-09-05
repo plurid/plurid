@@ -153,6 +153,8 @@ export const getComponentFromRoute = (
                     const pluridPlane: PluridPlane<PluridReactComponent> = {
                         component,
                         route: fullPath,
+                        // the route plane's document head travels with the registered plane
+                        ...(planeData.head ? { head: planeData.head } : {}),
                     };
 
                     planes.push(pluridPlane);
@@ -919,6 +921,7 @@ export const gatherPluridPlanes = (
                 const pluridPlane: PluridReactPlane = {
                     route: planeRoute,
                     component: planeData.component,
+                    ...(planeData.head ? { head: planeData.head } : {}),
                 };
                 pluridPlanes.push(pluridPlane);
             }
@@ -936,6 +939,7 @@ export const gatherPluridPlanes = (
             const pluridPlane: PluridReactPlane = {
                 route: planeData.value,
                 component: planeData.component,
+                ...(planeData.head ? { head: planeData.head } : {}),
             };
             pluridPlanes.push(pluridPlane);
         }

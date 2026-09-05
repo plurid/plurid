@@ -64,7 +64,7 @@ export default defineConfig({
     // enter the client bundle:
     // preserves: () => import('./source/server/preserves'),
 
-    head: {
+    head: {                         // the document head's lowest layer (PluridDocument)
         title: 'denote',
     },
     favicon: '/favicon.ico',

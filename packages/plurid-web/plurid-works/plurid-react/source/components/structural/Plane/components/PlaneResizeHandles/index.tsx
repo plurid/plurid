@@ -12,6 +12,13 @@
 
     import styled from 'styled-components';
 
+
+    import {
+
+        chromeRoot,
+
+    } from '~services/styled/chrome';
+
     import {
         Z_INDEX,
     } from '~data/constants/zIndex';
@@ -19,6 +26,10 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        PLURID_ENTITY_PLANE_RESIZE_HANDLE,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -33,7 +44,8 @@
 
 
 // #region module
-export const PLURID_ENTITY_PLANE_RESIZE_HANDLE = 'PluridPlaneResizeHandle';
+/** @deprecated Import `PLURID_ENTITY_PLANE_RESIZE_HANDLE` from `@plurid/plurid-data`. */
+export { PLURID_ENTITY_PLANE_RESIZE_HANDLE };
 
 const MIN_WIDTH = 120;
 const MIN_HEIGHT = 80;
@@ -41,6 +53,7 @@ const HANDLE = 12;
 
 
 const StyledHandle = styled.div<{ theme: Theme; kind: 'right' | 'bottom' | 'corner' }>`
+    ${chromeRoot}
     position: absolute;
     z-index: ${Z_INDEX.PLANE_CHROME};
     touch-action: none;

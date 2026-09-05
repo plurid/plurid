@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.0.0-21",
+    "version": "0.0.0-22",
     "sideEffects": false,
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
@@ -51,16 +51,8 @@
         "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
-    "peerDependencies": {
-        "@plurid/plurid-data": ">=0.0.0-23",
-        "@plurid/plurid-functions": ">=0.0.0-32",
-        "@plurid/plurid-themes": ">=0.0.0-3"
-    },
     "devDependencies": {
-        "@plurid/plurid-data": "workspace:*",
-        "@plurid/plurid-functions": "workspace:*",
         "@plurid/plurid-pubsub": "workspace:*",
-        "@plurid/plurid-themes": "workspace:*",
         "@types/jest": "^30.0.0",
         "@types/node": "^20.10.6",
         "coveralls": "^3.1.1",
@@ -71,5 +63,10 @@
         "ts-jest": "^29.4.11",
         "tsup": "^8.5.1",
         "typescript": "^6.0.3"
+    },
+    "dependencies": {
+        "@plurid/plurid-data": "workspace:^",
+        "@plurid/plurid-functions": "workspace:^",
+        "@plurid/plurid-themes": "workspace:^"
     }
 }

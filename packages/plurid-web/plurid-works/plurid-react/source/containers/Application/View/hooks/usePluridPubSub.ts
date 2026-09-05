@@ -454,11 +454,12 @@ export const usePluridPubSub = (
                 callback: (data) => {
                     const {
                         id,
+                        navigate,
                     } = data;
 
                     // Deep lookup (children included) through the thunk — the old flat `find`
                     // never matched a spawned plane.
-                    dispatch(closePlane(id) as any);
+                    dispatch(closePlane(id, { navigate }) as any);
                 },
             },
             {

@@ -3,6 +3,7 @@ export * from './application';
 export * from './compare';
 export * from './component';
 export * from './configuration';
+export * from './document';
 export * from './internationalization';
 export * from './keys';
 export * from './layout';

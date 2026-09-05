@@ -5,6 +5,8 @@ import {
     PluridLink,
     SPACE_LAYOUT,
     definePluridConfiguration,
+    PluridDocument,
+    usePluridDocument,
 } from '@plurid/plurid-react';
 
 import Panel, { PanelProps } from './Plane';
@@ -195,6 +197,13 @@ const App = () => {
     const reducedMotion = params.get('reducedMotion') === '1';
     //   ?motionMs=1200 → navigation.motion.duration (a longer tween for timing-tolerant tests)
     const motionMs = params.get('motionMs') ? Number(params.get('motionMs')) : undefined;
+    //   ?hostileCss=1 → a HOST stylesheet with aggressive global resets (form-control sizing,
+    //                   typography): the engine's chrome must keep its sizes (the chrome reset)
+    const hostileCss = params.get('hostileCss') === '1';
+    //   ?document=1 → the document model: the GEOMETRY plane declares a title / description / lang /
+    //                 JSON-LD through usePluridDocument, the DETAIL plane a title through the
+    //                 <PluridDocument> children form plus a planes[].head description
+    const documentFlag = params.get('document') === '1';
     //   ?pivot=view|selection|cursor → navigation.orbitPivot
     const orbitPivot = params.get('pivot') as any;
     // Link/tree verification surface (Phase 3):
@@ -285,13 +294,34 @@ const App = () => {
     const detailPlane: PluridReactPlane = {
         route: DETAIL_ROUTE,
         component: () => (
-            <Panel
-                title="GEOMETRY · DETAIL"
-                code="G-01·D"
-                accent="#4da3ff"
-                rows={[['edges', '6 140'], ['normals', 'per-vertex'], ['uv sets', '2'], ['lod', '3']]}
-            />
+            <>
+                {documentFlag && (
+                    <PluridDocument>
+                        <title>DETAIL · rt</title>
+                        <meta name="robots" content="noindex" />
+                    </PluridDocument>
+                )}
+                <Panel
+                    title="GEOMETRY · DETAIL"
+                    code="G-01·D"
+                    accent="#4da3ff"
+                    rows={[['edges', '6 140'], ['normals', 'per-vertex'], ['uv sets', '2'], ['lod', '3']]}
+                />
+            </>
         ),
+        ...(documentFlag ? { head: { meta: [{ name: 'generator', content: 'detail planes[].head' }] } } : {}),
+    };
+
+    // ?document=1: the GEOMETRY plane's document layer (a hook in a plane component)
+    const GeometryDocument = () => {
+        usePluridDocument({
+            title: 'GEOMETRY · rt',
+            titleTemplate: '%s · plurid',
+            description: 'geometry from the plane',
+            lang: 'en-rt',
+            jsonLd: [{ '@type': 'Thing', name: 'geometry' }],
+        });
+        return null;
     };
 
     const geometryLinks = [
@@ -324,14 +354,17 @@ const App = () => {
         ...source.map((panel) => ({
             route: panel.route,
             component: () => (
-                <Panel
-                    title={panel.title}
-                    code={panel.code}
-                    accent={panel.accent}
-                    rows={panel.rows}
-                    link={panel.route === '/geometry' ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
-                    links={panel.route === '/geometry' ? geometryLinks : undefined}
-                />
+                <>
+                    {documentFlag && panel.route === '/geometry' && <GeometryDocument />}
+                    <Panel
+                        title={panel.title}
+                        code={panel.code}
+                        accent={panel.accent}
+                        rows={panel.rows}
+                        link={panel.route === '/geometry' ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
+                        links={panel.route === '/geometry' ? geometryLinks : undefined}
+                    />
+                </>
             ),
         })),
         detailPlane,
@@ -405,6 +438,13 @@ const App = () => {
                     PERSIST
                 </button>
             </div>
+
+            {hostileCss && (
+                <style>{`
+                    button, input, select { min-height: 42px; min-width: 120px; padding: 12px 18px; font-size: 20px; font-family: serif; border: 3px solid red; border-radius: 12px; text-transform: uppercase; letter-spacing: 0.2em; line-height: 2.4; }
+                    body { line-height: 2; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; }
+                `}</style>
+            )}
 
             <PluridApplication
                 key={(stress ? 'stress' : 'base') + (persist ? '-p' : '')}

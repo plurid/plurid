@@ -70,6 +70,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                     query: match.match.query,
                 },
                 component: match.data.component,
+                head: match.data.head,
             };
 
             return registeredPlane;
@@ -98,6 +99,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                     query: {},
                 },
                 component: plane.data.component,
+                head: plane.data.head,
             };
 
             all.set(

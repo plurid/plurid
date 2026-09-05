@@ -18,6 +18,7 @@
 
     import {
         PluridConfigurationSpaceShortcuts,
+        PLURID_ENTITY_SHORTCUTS_OVERLAY,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -182,7 +183,7 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
         <StyledShortcutsBackdrop
             onClick={() => setVisible(false)}
             onWheel={(event: React.WheelEvent) => event.stopPropagation()}
-            data-plurid-entity="shortcuts-overlay"
+            data-plurid-entity={PLURID_ENTITY_SHORTCUTS_OVERLAY}
             data-plurid-control="shortcuts-overlay"
         >
             <StyledShortcutsPanel

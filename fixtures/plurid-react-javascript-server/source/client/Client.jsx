@@ -4,9 +4,6 @@
         useRef,
     } from 'react';
 
-    import {
-        HelmetProvider,
-    } from 'react-helmet-async';
 
     // [START ReduxProvider]
     import {
@@ -34,7 +31,6 @@
 
 
     // #region external
-    import helmetContext from '../shared/kernel/services/helmet';
 
     // [START ReduxStore]
     import reduxStore from '../shared/kernel/services/state/store';
@@ -76,7 +72,6 @@ const Client = () => {
     // #region render
     return (
         // [START ClientReturn]
-        <HelmetProvider context={helmetContext}>
             <ReduxProvider
                 store={store.current}
                 context={reduxContext}
@@ -93,7 +88,6 @@ const Client = () => {
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
-        </HelmetProvider>
         // [END ClientReturn]
     );
     // #endregion render

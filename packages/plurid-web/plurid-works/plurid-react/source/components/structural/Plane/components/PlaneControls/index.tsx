@@ -14,6 +14,13 @@
 
 
     import {
+
+        chromeControl,
+
+    } from '~services/styled/chrome';
+
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
 
@@ -78,6 +85,7 @@ const COMPACT_WIDTH = 340;
 
 /** An icon control as a real button: focusable, labelled, keyboard-activatable. */
 const StyledPlaneControlButton = styled.button`
+    ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;

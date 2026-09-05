@@ -84,6 +84,16 @@
     import PluridRouterBrowser from './containers/RouterBrowser';
     import PluridRouterStatic from './containers/RouterStatic';
     import PluridProvider from './containers/Provider';
+    import PluridDocument, {
+        PluridDocumentScope,
+    } from './components/utilities/Document';
+    import {
+        usePluridDocument,
+        createDocumentRegistry,
+    } from './services/document';
+    import {
+        composePluridProviders,
+    } from './services/utilities/providers';
 
     import PluridLink from './components/links/Link';
     import PluridRouterLink from './components/links/RouterLink';
@@ -217,6 +227,13 @@ export {
     PluridRouterBrowser,
     PluridRouterStatic,
     PluridProvider,
+    /** The document head as data: a component (props and / or Helmet-style children), a hook, the scope, the registry */
+    PluridDocument,
+    PluridDocumentScope,
+    usePluridDocument,
+    createDocumentRegistry,
+    /** Nest service providers identically on the server and the client (`layers[0]` innermost) */
+    composePluridProviders,
 
     PluridLink,
     PluridRouterLink,
@@ -295,6 +312,26 @@ export type {
     PluridPlaneLens,
     PluridPlaneIsolation,
 } from './services/hooks/plane';
+export type {
+    PluridDocumentRegistry,
+    PluridDocumentBaseLayer,
+} from './services/document/registry';
+export type {
+    PluridDocumentProperties,
+} from './components/utilities/Document';
+export type {
+    PluridProviderLayer,
+} from './services/utilities/providers';
+export type {
+    PluridDocument as PluridDocumentDescriptor,
+    PluridDocumentMeta,
+    PluridDocumentLink,
+    PluridDocumentScript,
+    PluridDocumentStyle,
+    PluridDocumentContext,
+    PluridDocumentResolver,
+    PluridDocumentSource,
+} from '@plurid/plurid-data';
 export type {
     PluridCameraHandle,
 } from './services/hooks/camera';

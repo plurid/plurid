@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {
-    Helmet,
-} from 'react-helmet-async';
+    PluridDocument,
+} from '@plurid/plurid-react';
 
 
 
@@ -42,7 +42,7 @@ const Head: React.FC<HeadProperties> = (
 
     /** render */
     return (
-        <Helmet>
+        <PluridDocument>
             <meta charSet="utf-8" />
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -77,7 +77,7 @@ const Head: React.FC<HeadProperties> = (
             <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content={titleValue} />
             <link rel="apple-touch-icon" href="/icon-192x192.png" />
-        </Helmet>
+        </PluridDocument>
     );
 }
 

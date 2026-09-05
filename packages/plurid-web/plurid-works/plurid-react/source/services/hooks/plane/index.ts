@@ -7,16 +7,29 @@
 
     import {
         createSelectorHook,
+        createDispatchHook,
     } from 'react-redux';
 
     import {
         TreePlaneLocation,
+        PluridPubSub as IPluridPubSub,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
+    import Context from '~services/context';
     import StateContext from '~services/state/context';
+
+    import {
+        closePlane,
+        navigateToParent,
+        ClosePlaneOptions,
+    } from '~services/state/thunks/planes';
+
+    import {
+        framePlaneByID,
+    } from '~services/logic/camera';
 
     import selectors from '~services/state/selectors';
 
@@ -31,7 +44,10 @@
 
 
     // #region internal
-    import PluridPlaneIDContext from './context';
+    import PluridPlaneIDContext, {
+        PluridPlaneDetailsContext,
+        PluridPlaneDetails,
+    } from './context';
     // #endregion internal
 // #endregion imports
 
@@ -87,12 +103,48 @@ export interface PluridPlaneLens {
      * when THIS plane moves (structural sharing).
      */
     location: TreePlaneLocation | undefined;
+    /**
+     * The plane's REGISTERED route — the pattern it was registered under (`/imagene/:id`), the
+     * same value as the `plurid` prop's `plane.value`; `undefined` outside plane content.
+     */
+    route: string | undefined;
+    /**
+     * The concrete values of the route (`/imagene/42` → `{ id: '42' }`) and its query.
+     */
+    parameters: Record<string, string>;
+    query: Record<string, string>;
+    fragments: PluridPlaneDetails['fragments'] | undefined;
+    /**
+     * The plane this one was spawned from; `undefined` for roots.
+     */
+    parentPlaneID: string | undefined;
+    /**
+     * The application's pubsub (the same object as the `plurid` prop's `pubSub`);
+     * `undefined` outside an application.
+     */
+    pubsub: IPluridPubSub | undefined;
+    /**
+     * Hide this plane. When it is the one in view the camera returns to its parent
+     * (`space.navigation.onClose`, overridable per call).
+     */
+    close: (options?: ClosePlaneOptions) => void;
+    /**
+     * Frame the parent plane (a child's "back"); no-op for roots.
+     */
+    navigateToParent: () => void;
+    /**
+     * Frame this plane.
+     */
+    frame: () => void;
 }
 
 
 // Bind to the engine's private react-redux context: the per-application store
 // lives ONLY under StateContext (Application provides it), never the default.
 const useEngineSelector = createSelectorHook(StateContext as any);
+const useEngineDispatch = createDispatchHook(StateContext as any);
+
+const EMPTY_RECORD: Record<string, string> = {};
 
 
 /**
@@ -113,6 +165,9 @@ const useEngineSelector = createSelectorHook(StateContext as any);
  */
 export const usePluridPlane = (): PluridPlaneLens => {
     const planeID = useContext(PluridPlaneIDContext);
+    const details = useContext(PluridPlaneDetailsContext);
+    const context = useContext(Context);
+    const dispatch = useEngineDispatch();
 
     const getTreePlane = useMemo(
         () => makeGetTreePlaneByID(),
@@ -171,6 +226,27 @@ export const usePluridPlane = (): PluridPlaneLens => {
         },
     );
 
+    const commands = useMemo(() => ({
+        close: (options?: ClosePlaneOptions) => {
+            if (planeID !== undefined) {
+                dispatch(closePlane(planeID, options) as any);
+            }
+        },
+        navigateToParent: () => {
+            if (planeID !== undefined) {
+                dispatch(navigateToParent(planeID) as any);
+            }
+        },
+        frame: () => {
+            if (planeID !== undefined) {
+                dispatch(framePlaneByID(planeID) as any);
+            }
+        },
+    }), [
+        dispatch,
+        planeID,
+    ]);
+
     return {
         planeID,
         active,
@@ -182,6 +258,13 @@ export const usePluridPlane = (): PluridPlaneLens => {
         location,
         culled,
         frozen: culled === 'frozen',
+        route: details?.value,
+        parameters: details?.parameters ?? EMPTY_RECORD,
+        query: details?.query ?? EMPTY_RECORD,
+        fragments: details?.fragments,
+        parentPlaneID: details?.parentPlaneID,
+        pubsub: context?.defaultPubSub,
+        ...commands,
     };
 };
 // #endregion module
@@ -191,5 +274,6 @@ export const usePluridPlane = (): PluridPlaneLens => {
 // #region exports
 export {
     PluridPlaneIDContext,
+    PluridPlaneDetailsContext,
 };
 // #endregion exports

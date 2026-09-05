@@ -19,6 +19,9 @@
         CameraMotionOptions,
     } from '~services/logic/camera';
     // #endregion external
+    import type {
+        ClosePlaneOptions,
+    } from '~services/state/thunks/planes';
 // #endregion imports
 
 
@@ -64,7 +67,8 @@ export interface PluridApplicationHandle extends PluridApi {
         setView: (view: PluridApplicationView) => void;
         /** Spawn a registered route as a child of `parentPlaneID`, joined by a bridge at `linkCoordinates`. */
         spawn: (route: string, parentPlaneID: string, linkCoordinates?: LinkCoordinates) => void;
-        close: (planeID: string) => void;
+        /** Hide a plane; the one in view hands the camera to its parent (`space.navigation.onClose`). */
+        close: (planeID: string, options?: ClosePlaneOptions) => void;
         open: (planeID: string) => void;
         remove: (planeID: string) => void;
     };

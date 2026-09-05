@@ -10,6 +10,10 @@
 
 
 // #region module
+/** The window globals the server preserve / template emit and the client reads once. */
+export const PRELOADED_REDUX_STATE_KEY = '__PRELOADED_REDUX_STATE__';
+export const PRELOADED_PLURID_METASTATE_KEY = '__PRELOADED_PLURID_METASTATE__';
+
 /**
  * Resolve a {@link ServerOnly} value: call the thunk if given one, await the
  * result, and unwrap a `{ default }` ES-module namespace (so

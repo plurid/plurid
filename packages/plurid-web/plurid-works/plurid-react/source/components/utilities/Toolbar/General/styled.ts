@@ -3,6 +3,11 @@
     import styled from 'styled-components';
 
     import {
+        chromeControl,
+        chromeRoot,
+    } from '~services/styled/chrome';
+
+    import {
         Z_INDEX,
     } from '~data/constants/zIndex';
 
@@ -38,6 +43,7 @@ export interface IStyledToolbar {
 }
 
 export const StyledToolbar = styled.div<IStyledToolbar>`
+    ${chromeRoot}
     bottom: ${({
         conceal,
         mouseIn,
@@ -208,6 +214,7 @@ export interface IStyledToolbarButton {
 }
 
 export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
+    ${chromeControl}
     border: 0;
     margin: 0;
     font: inherit;

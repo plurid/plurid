@@ -5,6 +5,10 @@
     } from 'styled-components';
 
     import {
+        chromeRoot,
+    } from '~services/styled/chrome';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -20,6 +24,7 @@ export interface IStyledPluridPlaneControls {
 }
 
 export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
+    ${chromeRoot}
     background-color: ${({
         transparentUI,
         mouseOver,

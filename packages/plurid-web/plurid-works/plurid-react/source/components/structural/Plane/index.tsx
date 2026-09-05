@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useMemo,
         useContext,
         useRef,
         useState,
@@ -54,6 +55,14 @@
         PlaneCullingState,
     } from '~services/state/modules/space/selectors';
     import actions from '~services/state/actions';
+
+    import {
+        reportPlaneSize,
+    } from '~services/logic/camera';
+
+    import {
+        PluridPlaneDetailsContext,
+    } from '~services/hooks/plane/context';
     import {
         DispatchAction,
     } from '~data/interfaces';
@@ -246,6 +255,21 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             },
         });
     }
+
+    // What `usePluridPlane()` exposes about THIS plane (the `plurid` prop's `plane`, as a context):
+    // a stable object per plane instance, so consumers re-render only when the plane's identity does.
+    const planeDetails = useMemo(() => ({
+        value: plane.route.absolute,
+        planeID,
+        parentPlaneID: treePlane.parentPlaneID,
+        fragments: plane.route.fragments,
+        parameters: plane.route.parameters,
+        query: plane.route.query,
+    }), [
+        plane.route,
+        planeID,
+        treePlane.parentPlaneID,
+    ]);
 
     const closePlane = () => {
         defaultPubSub?.publish({
@@ -517,14 +541,22 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             <PlaneContent
                                 {...planeContentProperties}
                             >
-                                {children}
+                                <PluridPlaneDetailsContext.Provider
+                                    value={planeDetails}
+                                >
+                                    {children}
+                                </PluridPlaneDetailsContext.Provider>
                             </PlaneContent>
                         </ErrorBoundary>
                     ) : (
                         <PlaneContent
                             {...planeContentProperties}
                         >
-                            {children}
+                            <PluridPlaneDetailsContext.Provider
+                                value={planeDetails}
+                            >
+                                {children}
+                            </PluridPlaneDetailsContext.Provider>
                         </PlaneContent>
                     )}
                 </>
@@ -572,7 +604,7 @@ const mapDispatchToProps = (
     dispatchSetPlaneSize: (
         payload,
     ) => dispatch(
-        actions.space.setPlaneSize(payload),
+        reportPlaneSize(payload) as any,
     ),
     dispatchToggleSelection: (
         payload,

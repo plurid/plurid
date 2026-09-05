@@ -4,6 +4,8 @@
         useRef,
         useState,
         useEffect,
+        useContext,
+        useMemo,
     } from 'react';
 
 
@@ -58,6 +60,10 @@
 
     import FadeIn from './FadeIn';
     // #endregion internal
+    import PluridDocumentRegistryContext from '~services/document/context';
+    import {
+        resolvePlaneDocument,
+    } from '~components/utilities/Document/Planes';
 // #endregion imports
 
 
@@ -139,6 +145,24 @@ const PluridRouterBrowser = (
         ),
     );
     // console.log('matchedRoute', matchedRoute);
+
+    // The route layer of the document head: the matched route's (or route plane's) `head`,
+    // resolved synchronously on the client (a Promise result keeps the server-rendered head).
+    const documentRegistry = useContext(PluridDocumentRegistryContext);
+    const routeDocument = useMemo(() => {
+        const source = matchedRoute?.data?.head;
+        return source
+            ? resolvePlaneDocument(source, {
+                route: matchedRoute!.match.value,
+                parameters: matchedRoute!.match.parameters ?? {},
+                query: matchedRoute!.match.query ?? {},
+            })
+            : undefined;
+    }, [matchedRoute]);
+    if (documentRegistry && !documentRegistry.server) {
+        // during render (idempotent by value), so a hydration render already holds the route's head
+        documentRegistry.setBase('route', routeDocument);
+    }
 
     const [
         PluridRoute,

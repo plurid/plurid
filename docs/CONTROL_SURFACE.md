@@ -82,8 +82,15 @@ const selection = useSelection();    // selected, activePlaneID, isSelected, sel
 const history = usePluridHistory();  // canUndo/canRedo/depths, undo/redo, begin/end (one entry for a batch)
 usePluridPubSub('space.changed', ({ kind, value }) => …); // one typed topic, the latest callback always called
 const api = usePluridApi();          // the `onReady` api, stable
-const plane = usePluridPlane();      // inside plane content: active/selected/isolation/shown/culled/frozen/location
+const plane = usePluridPlane();      // inside plane content — see below
 ```
+
+`usePluridPlane()` is the primary plane API (the `plurid` prop stays as the registrar-level contract). Its lens
+holds the plane's identity — `planeID`, `route` (the REGISTERED pattern, `/imagene/:id`), `parameters`
+(`{ id: '42' }`), `query`, `fragments`, `parentPlaneID` — the application's `pubsub`, the live state
+(`active`, `selected`, `isolation`, `shown`, `culled`, `frozen`, `scale`, `viewSize`, `location`) and three
+commands: `close(options?)` (hide this plane; when it is the one in view the camera returns to its parent),
+`navigateToParent()`, `frame()`. A plane closes itself with `plane.close()` — no publish pair needed.
 
 `useCamera().camera` changes on every orbit frame — a component using it re-renders per frame (fine for a HUD; use `onViewpointChange` for anything debounced).
 
@@ -195,6 +202,7 @@ definePluridConfiguration({
         zoomMin: 0.1, zoomMax: 4,   // scale range
         dollyLimitFraction: 0.6,    // the pivot stops this fraction of `perspective` from the eye
         orbitPivot: 'cursor',       // 'cursor' | 'selection' | 'view' — what an orbit rotates about
+        onClose: 'parent',          // 'parent' | 'stay' — where the camera goes when the plane IN VIEW closes
         motion: { duration: 380, easing: 'out-cubic', reducedMotion: 'respect' },
         home: 'v2|…',               // the Home viewpoint (default: the initial camera)
         presets: { overview: '0,0,0,0,0,0.5' },
@@ -323,6 +331,63 @@ definePluridConfiguration({
     },
 });
 ```
+
+### Stable DOM contract (`data-plurid-*`) and chrome isolation
+
+The engine's DOM is addressable through `data-plurid-*` attributes, which are a documented contract: tests,
+host CSS and tooling may rely on them, and their VALUES never change. `data-plurid-entity` names every engine
+surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`, `PluridPlaneControls`,
+`PluridPlaneContent`, `PluridPlaneBridge`, `PluridPlaneLinks`, `PluridPlaneResizeHandle`, `PluridAlignmentGuides`,
+`PluridLink`, `PluridToolbar`, `PluridViewcube`, `PluridMinimap`, `PluridUniverseExplorer`, `PluridTransformOrigin`,
+`PluridMultispace`, `PluridApplicationConfigurator`, `PluridPlaneConfigurator`, `PluridPlaneDebugger`,
+`PluridSpaceDebugger`, `PluridMarquee`, `PluridEmpty`, `PluridLiveRegion` and the shortcuts dialog's historical
+`shortcuts-overlay` (all exported as `PLURID_ENTITY_*` from `@plurid/plurid-data`). Alongside:
+`data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
+`data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
+toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay`),
+`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye`, `data-plurid-hover`,
+`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`.
+
+The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
+host's global resets: every chrome root and every chrome button / input / select starts from the engine's own
+reset (`services/styled/chrome.ts`), so a host `button { min-height: 42px }` or `body { text-transform: uppercase }`
+leaves it untouched (`fixtures/render-test?hostileCss=1` is the proof). Plane CONTENT is yours and is never reset.
+
+### Document head (`<PluridDocument>`, `usePluridDocument`, `planes[].head`, `routes[].head`)
+
+The head is data. Declare a layer from any plane, overlay or route, and the engine renders ONE `<title>` plus
+deduplicated meta / links / JSON-LD (React 19 hoists them; on the server the same document is serialized into the
+template and claimed at hydration — never two titles):
+
+```tsx
+import { PluridDocument, usePluridDocument } from '@plurid/plurid-react';
+
+// as a component: props and / or Helmet-style children (a one-line migration from <Helmet>)
+<PluridDocument title="Imagene 42" titleTemplate="%s · hypod" description="…" canonical="https://…" lang="en"
+    jsonLd={[{ '@type': 'Thing', name: 'imagene 42' }]}>
+    <meta property="og:image" content="/og.png" />
+</PluridDocument>
+
+// as a hook
+usePluridDocument({ title: plane.parameters.id, meta: [{ name: 'robots', content: 'noindex' }] });
+
+// as data on a plane / route (static, or a resolver of the route context — async on the server only)
+planes: [{ route: '/imagene/:id', component: ImagenePlane, head: ({ parameters }) => ({ title: 'Imagene ' + parameters.id }) }]
+```
+
+Precedence, lowest → highest: the kit's / template `head` → `routes[].head` → the shown `planes[].head` (tree
+order) → in-render declarations (render order: deeper wins) → a server preserve's `document` → the server
+`document` hook. Keys: one title; meta by `name` / `property` / `http-equiv` / `charset` (+ `media`); links by
+`rel` (+ `sizes` / `hreflang`); scripts and styles by `id` / `src` / content; JSON-LD by `@id`. `lang`, `dir`,
+`htmlAttributes`, `bodyAttributes` apply to the live `<html>` / `<body>` and are restored on unmount. Outside an
+application / provider a declaration is ignored with a development warning. `createDocumentRegistry` +
+`PluridDocumentScope` are the primitives (a custom SSR pipeline collects into a server registry).
+
+### Using pieces outside an application
+
+`PluridLink` renders as a plain `<a href>` to its route when there is no application above it (a host's unit
+test of a component that happens to contain a link, a static render): no engine store is needed and no mock.
+Inside an application it is the engine's link.
 
 ### Escape-hatch primitives (exports)
 

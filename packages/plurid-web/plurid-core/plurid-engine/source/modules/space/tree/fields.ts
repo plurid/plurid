@@ -91,6 +91,48 @@ export const pruneLinks = (
 
 
 /** Every plane id in the tree, children included. */
+/**
+ * A closed plane is unmounted, so its measured size froze at the moment it closed. When the view
+ * changes size, re-derive every hidden, non-manual plane's size from the fallback (its aspect ratio
+ * kept when known) so bridges, the minimap and a later reopen start from a plausible size rather
+ * than a stale one. Path-copies; the same array comes back when nothing changes.
+ */
+export const refreshHiddenPlaneSizes = (
+    planes: TreePlane[],
+    fallback: { width: number; height: number },
+): TreePlane[] => {
+    let changed = false;
+
+    const next = planes.map((plane) => {
+        const children = plane.children
+            ? refreshHiddenPlaneSizes(plane.children, fallback)
+            : undefined;
+        const childrenChanged = !!children && children !== plane.children;
+
+        const hidden = plane.show === false && plane.sizeMode !== 'manual';
+        const resize = hidden && plane.width !== fallback.width;
+        if (!resize && !childrenChanged) {
+            return plane;
+        }
+
+        changed = true;
+        const height = resize
+            ? (plane.width > 0 && plane.height > 0
+                ? Math.round(fallback.width * plane.height / plane.width)
+                : fallback.height)
+            : plane.height;
+
+        return {
+            ...plane,
+            ...(resize ? { width: fallback.width, height } : {}),
+            ...(childrenChanged ? { children } : {}),
+        };
+    });
+
+    return changed ? next : planes;
+};
+
+
 export const collectPlaneIDs = (
     tree: TreePlane[],
     into: Set<string> = new Set(),

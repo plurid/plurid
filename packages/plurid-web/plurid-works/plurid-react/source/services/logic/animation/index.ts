@@ -35,16 +35,25 @@
  * de-isolate, make it the active plane, and move keyboard focus to its anchor once the tween has
  * landed (`preventScroll`, so the focus never scrolls the view).
  */
+export interface NavigatePlaneOptions {
+    deisolate?: boolean;
+    animate?: boolean;
+    /** Frame again once the plane's first measurement lands (a plane that (re)opens with a stale size). */
+    awaitMeasure?: boolean;
+}
+
+
 export const navigatePlane = (
     plane: TreePlane,
-    options: { deisolate?: boolean; animate?: boolean } = {},
+    options: NavigatePlaneOptions = {},
 ): CameraThunk => (dispatch, getState) => {
     const {
         deisolate = true,
         animate = true,
+        awaitMeasure = false,
     } = options;
 
-    dispatch(framePlaneNode(plane, animate) as any);
+    dispatch(framePlaneNode(plane, animate, { awaitMeasure }) as any);
 
     if (deisolate) {
         dispatch(actions.space.setSpaceField({
@@ -77,6 +86,7 @@ export const navigateToPluridPlane = (
     plane: TreePlane | undefined,
     event?: React.MouseEvent,
     deisolate: boolean = true,
+    options: Pick<NavigatePlaneOptions, 'awaitMeasure'> = {},
 ) => {
     if (event && (event.ctrlKey || event.metaKey)) {
         // Only navigate at pure link click.
@@ -87,7 +97,7 @@ export const navigateToPluridPlane = (
         return;
     }
 
-    dispatch(navigatePlane(plane, { deisolate }) as any);
+    dispatch(navigatePlane(plane, { deisolate, ...options }) as any);
 }
 
 

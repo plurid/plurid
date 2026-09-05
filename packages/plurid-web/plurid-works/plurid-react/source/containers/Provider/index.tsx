@@ -10,6 +10,17 @@
     // #endregion libraries
 
 
+    // #region external
+    import {
+        PluridDocumentRegistry,
+    } from '~services/document/registry';
+
+    import {
+        PluridDocumentScope,
+    } from '~components/utilities/Document';
+    // #endregion external
+
+
     // #region internal
     import PluridProviderContext from './context';
     // #endregion internal
@@ -20,6 +31,11 @@
 // #region module
 export interface PluridProviderProperties {
     metastate: PluridMetastate | undefined;
+    /**
+     * The document registry to collect the head into — the server's per-request one. On the client
+     * the provider owns a registry and renders the document head itself.
+     */
+    documentRegistry?: PluridDocumentRegistry;
 }
 
 
@@ -40,15 +56,20 @@ class PluridProvider extends Component<
     render() {
         const {
             metastate,
+            documentRegistry,
             children,
-        } = this.properties;
+        } = this.props;
 
         return (
-            <PluridProviderContext.Provider
-                value={metastate}
+            <PluridDocumentScope
+                registry={documentRegistry}
             >
-                {children}
-            </PluridProviderContext.Provider>
+                <PluridProviderContext.Provider
+                    value={metastate}
+                >
+                    {children}
+                </PluridProviderContext.Provider>
+            </PluridDocumentScope>
         );
     }
 }

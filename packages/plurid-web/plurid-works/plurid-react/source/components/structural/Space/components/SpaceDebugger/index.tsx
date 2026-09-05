@@ -20,6 +20,7 @@
     import {
         CameraState,
         CameraMotion,
+        PLURID_ENTITY_SPACE_DEBUGGER,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -38,7 +39,8 @@
 
 
 // #region module
-export const PLURID_ENTITY_SPACE_DEBUGGER = 'PluridSpaceDebugger';
+/** @deprecated Import `PLURID_ENTITY_SPACE_DEBUGGER` from `@plurid/plurid-data`. */
+export { PLURID_ENTITY_SPACE_DEBUGGER };
 
 
 const StyledPluridSpaceDebugger = styled.pre<{ theme: Theme }>`

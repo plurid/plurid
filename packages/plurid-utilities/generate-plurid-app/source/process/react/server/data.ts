@@ -18,7 +18,6 @@ export const requiredDependencies = [
     'dotenv',
     'react',
     'react-dom',
-    'react-helmet-async',
     'react-redux',
     'styled-components@^6',
 ];

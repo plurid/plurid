@@ -38,16 +38,36 @@ npm install @plurid/plurid-react-server
 ## Server-side rendering
 
 `PluridServer` is an Express server: it matches the request route, computes the plurid metastate via
-`@plurid/plurid-react`'s `serverComputeMetastate`, renders the React tree to HTML (styled-components +
-`react-helmet-async`), injects the metastate, and responds. Construct it with your routes / planes / helmet
-/ services and `start(port)` — see the server fixtures for a complete setup.
+`@plurid/plurid-react`'s `serverComputeMetastate`, renders the React tree to HTML (styled-components), assembles
+the document head from the DOCUMENT MODEL, injects the metastate, and responds. Construct it with your routes /
+planes / services and `start(port)` — see the server fixtures for a complete setup.
 
 ``` ts
 import PluridServer from '@plurid/plurid-react-server';
 
-const server = new PluridServer({ routes, planes, preserves, helmet, /* … */ });
+const server = new PluridServer({ routes, planes, preserves, /* … */ });
 server.start(3000);
 ```
+
+### The document head
+
+The head is data, not a head-manager library: a `PluridDocument` (`title`, `titleTemplate`, `description`,
+`canonical`, `meta`, `links`, `styles`, `scripts`, `jsonLd`, `lang`, `htmlAttributes`, `bodyAttributes`, …)
+merged from layers, lowest first:
+
+1. `template.head` (+ `template.favicon` / `manifest` / `htmlLanguage`) — the static defaults;
+2. the matched route's `head` (`routes[].head`, static or `(context) => document`, async allowed on the server) and
+   the shown planes' `head` (`planes[].head`);
+3. in-render declarations — `<PluridDocument title="…"><meta … /></PluridDocument>` or `usePluridDocument({ … })`
+   from `@plurid/plurid-react`, anywhere in a plane (the deepest one wins);
+4. the preserve's `document` (per request);
+5. the `document` hook — `document: ({ request, match, metastate, document, preserve }) => PluridDocument`, the
+   post-render layer (also the seam for a head library you keep running inside `services`).
+
+Exactly one `<title>` is written; `<meta>`, `<link>`, scripts and JSON-LD deduplicate by key. The client claims the
+same tags at hydration. `render: 'suspense'` renders through a buffered `renderToPipeableStream` that waits for
+every boundary (`use()` inside a plane) — one document, no streaming. The former `helmet` option is ignored with a
+warning; `react-helmet-async` is no longer a dependency.
 
 
 ## Static stills (optional, Puppeteer)

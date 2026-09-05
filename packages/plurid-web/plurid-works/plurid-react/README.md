@@ -30,28 +30,12 @@ The quickest way to a batteries-included app is the scaffolder:
 npx @plurid/generate-plurid-app
 ```
 
-To add plurid' to an existing **React 19** app, install the adapter with its `@plurid/*` and library peers:
+To add plurid' to an existing **React 19** app, install the adapter and the three libraries it shares
+with your app (everything else — the engine, the data package, the UI kit, redux — comes along as a
+dependency, never as a peer you declare):
 
 ``` bash
-npm install \
-    @plurid/plurid-react \
-    @plurid/plurid-data \
-    @plurid/plurid-engine \
-    @plurid/plurid-pubsub \
-    @plurid/plurid-functions \
-    @plurid/plurid-functions-react \
-    @plurid/plurid-icons-react \
-    @plurid/plurid-themes \
-    @plurid/plurid-ui-components-react \
-    @plurid/plurid-ui-state-react \
-    @plurid/elementql \
-    @plurid/elementql-client-react \
-    @reduxjs/toolkit \
-    react-redux \
-    react \
-    react-dom \
-    styled-components \
-    cross-fetch
+npm install @plurid/plurid-react react react-dom styled-components
 ```
 
 For a TypeScript project, add the dev types:
@@ -62,8 +46,9 @@ npm install -D \
     @types/react-dom
 ```
 
-> `react` / `react-dom` must be **≥ 19**, `@reduxjs/toolkit` ≥ 2, `react-redux` ≥ 9, `styled-components` ≥ 6.
-> (Gestures use native Pointer Events — there is no `hammerjs` dependency.)
+> `react` / `react-dom` must be **≥ 19**, `styled-components` ≥ 6. The engine's redux store is private to
+> it (a store of your own never collides). `@plurid/elementql-client-react` is an optional peer, needed only by
+> `PluridExternalPlane`. (Gestures use native Pointer Events — there is no `hammerjs` dependency.)
 
 
 

@@ -3,8 +3,8 @@
     import React from 'react';
 
     import {
-        Helmet,
-    } from 'react-helmet-async';
+    PluridDocument,
+} from '@plurid/plurid-react';
     // #endregion libraries
 // #endregion imports
 
@@ -38,7 +38,7 @@ const Head = (
 
     // #region render
     return (
-        <Helmet>
+        <PluridDocument>
             <meta charSet="utf-8" />
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -85,7 +85,7 @@ const Head = (
             {/* MICROSOFT */}
             <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#456c77" />
             <meta name="msapplication-TileColor" content="#ffffff" />
-        </Helmet>
+        </PluridDocument>
     );
     // #endregion render
 }

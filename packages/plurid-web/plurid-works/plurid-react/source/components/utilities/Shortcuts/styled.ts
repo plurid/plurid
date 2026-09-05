@@ -3,6 +3,11 @@
     import styled, { keyframes } from 'styled-components';
 
     import {
+        chromeControl,
+        chromeRoot,
+    } from '~services/styled/chrome';
+
+    import {
         Z_INDEX,
     } from '~data/constants/zIndex';
 
@@ -26,6 +31,7 @@ const riseIn = keyframes`
 `;
 
 export const StyledShortcutsBackdrop = styled.div`
+    ${chromeRoot}
     position: absolute;
     inset: 0;
     z-index: ${Z_INDEX.SHORTCUTS_DIALOG};
@@ -39,6 +45,7 @@ export const StyledShortcutsBackdrop = styled.div`
 `;
 
 export const StyledShortcutsPanel = styled.div<{ theme: Theme }>`
+    ${chromeRoot}
     width: 100%;
     max-width: 780px;
     max-height: 82vh;
@@ -115,6 +122,7 @@ export const StyledShortcutsKeys = styled.div`
 `;
 
 export const StyledShortcutsTrigger = styled.button<{ theme: Theme }>`
+    ${chromeControl}
     position: absolute;
     bottom: 18px;
     left: 18px;

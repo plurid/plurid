@@ -88,9 +88,9 @@ export async function createPluridServer(
     // sources, with the raw `template` escape hatch winning.
     const template: PluridServerTemplateConfiguration = {
         root: config.root,
-        favicon: config.favicon as PluridServerTemplateConfiguration['favicon'],
+        favicon: config.favicon,
         manifest: config.manifest,
-        head: config.head as PluridServerTemplateConfiguration['head'],
+        head: config.head,
         // The framework always emits a SINGLE client bundle (no separate vendor
         // chunk) in BOTH dev and prod, so skip the vendor `<script>` in both -
         // this is the `/vendor.js` 404 fix (dev included). The main script
@@ -124,9 +124,9 @@ export async function createPluridServer(
         shell: config.shell,
         exterior: config.exterior,
         routerProperties: config.routerProperties,
-        customPlane: config.customPlane,
-        helmet: (config.helmet ?? {}) as any,
         preserves,
+        document: await resolveServerOnly(config.document),
+        render: config.render,
         styles: config.styles,
         middleware: config.middleware,
         services,

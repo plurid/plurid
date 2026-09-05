@@ -23,8 +23,6 @@ const keep = process.argv.includes('--keep');
 /** Peers the packages declare that live outside this repository (installed from the registry). */
 const EXTERNAL_PEERS = [
     'react@19', 'react-dom@19', 'styled-components@6', '@reduxjs/toolkit@2', 'react-redux@9', 'redux@5',
-    'react-helmet-async@3', 'cross-fetch@4', 'express@4', 'body-parser@1',
-    '@plurid/elementql@0.0.0-1', '@plurid/elementql-client-react@0.0.0-1', '@plurid/deon@0.0.0-10',
 ];
 
 /** The workspace's public projects, from pnpm itself (a directory outside the workspace globs is not published from here). */

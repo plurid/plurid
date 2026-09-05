@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-kit",
-    "version": "0.0.0-4",
+    "version": "0.0.0-5",
     "description": "Batteries-included framework for building and serving plurid apps - the `plurid` CLI + plurid.config.ts + conventions on top of @plurid/plurid-react-server.",
     "keywords": [
         "plurid",
@@ -69,13 +69,10 @@
         "esbuild": "^0.25.0"
     },
     "peerDependencies": {
-        "@plurid/plurid-react": ">=0.0.0-37",
-        "@plurid/plurid-react-server": ">=0.0.0-18",
+        "@plurid/plurid-react": ">=0.0.0-38",
+        "@plurid/plurid-react-server": ">=0.0.0-19",
         "react": ">=19",
         "react-dom": ">=19",
-        "react-helmet-async": ">=1",
-        "react-redux": ">=9",
-        "redux": ">=4",
         "styled-components": ">=6"
     },
     "devDependencies": {
@@ -90,7 +87,6 @@
         "jest": "^30.4.2",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-helmet-async": "^3.0.0",
         "react-redux": "^9.3.0",
         "redux": "^5.0.1",
         "styled-components": "^6.4.2",

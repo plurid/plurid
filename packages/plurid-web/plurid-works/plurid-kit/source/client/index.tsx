@@ -11,12 +11,9 @@
     } from 'react-dom/client';
 
     import {
-        HelmetProvider,
-    } from 'react-helmet-async';
-
-    import {
         PluridProvider,
         PluridRouterBrowser,
+        composePluridProviders,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -29,6 +26,8 @@
     import {
         serviceProperties,
         orderedServices,
+        PRELOADED_REDUX_STATE_KEY,
+        PRELOADED_PLURID_METASTATE_KEY,
     } from '../shared';
     // #endregion internal
 // #endregion imports
@@ -58,11 +57,12 @@ function readPreloaded<T = unknown>(
  * Hydrate a plurid app in the browser from the same `plurid.config.ts`. Replaces
  * every app's hand-written `source/client/{index,Client}.tsx`.
  *
- * Composes the provider stack with the IDENTICAL algorithm the server uses
- * (plurid-react-server `ContentGenerator`): innermost is
- * `PluridProvider > PluridRouterBrowser`, wrapped by `HelmetProvider`, then each
- * service wrapped OUTWARD in `services` order. Context providers emit no DOM, so
- * the hydrated markup matches the server render exactly.
+ * Composes the provider stack with the SAME function the server uses
+ * (`composePluridProviders`, shared with the server render): innermost is
+ * `PluridProvider > PluridRouterBrowser`, then each service wrapped OUTWARD in
+ * `services` order. Context providers emit no DOM, so the hydrated markup
+ * matches the server render exactly. The document head is the provider's: it
+ * claims the server-serialized tags at hydration.
  *
  * Per-request state comes from the globals the server preserve emitted:
  *  - `__PRELOADED_REDUX_STATE__`  -> the service `store` factory
@@ -71,8 +71,8 @@ function readPreloaded<T = unknown>(
 export function createPluridClient(
     config: PluridConfig,
 ): void {
-    const reduxState = readPreloaded('__PRELOADED_REDUX_STATE__');
-    const pluridMetastate = readPreloaded('__PRELOADED_PLURID_METASTATE__');
+    const reduxState = readPreloaded(PRELOADED_REDUX_STATE_KEY);
+    const pluridMetastate = readPreloaded(PRELOADED_PLURID_METASTATE_KEY);
 
     // Build each service's provider element once (the store is created a single
     // time here, equivalent to the previous `useRef(reduxStore(state))`).
@@ -82,11 +82,10 @@ export function createPluridClient(
     }));
 
     const root = config.root || 'root';
-    const helmetContext = config.helmet ?? {};
 
     const App = () => {
         // innermost: PluridProvider > PluridRouterBrowser
-        let tree: ReactNode = createElement(
+        const tree: ReactNode = createElement(
             PluridProvider,
             // metastate is untyped runtime data deserialized from the window global
             { metastate: pluridMetastate } as any,
@@ -97,19 +96,7 @@ export function createPluridClient(
             } as any),
         );
 
-        // wrap with HelmetProvider (matches the server's inner Helmet wrap)
-        tree = createElement(
-            HelmetProvider,
-            { context: helmetContext },
-            tree,
-        );
-
-        // wrap each service OUTWARD, in the same order the server applies them
-        for (const service of services) {
-            tree = createElement(service.Provider, service.properties, tree);
-        }
-
-        return createElement(Fragment, null, tree);
+        return createElement(Fragment, null, composePluridProviders(services, tree));
     };
 
     const application = document.getElementById(root);

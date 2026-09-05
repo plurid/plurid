@@ -5,6 +5,9 @@
         PluridRouteFragments,
     } from '../router';
     // #endregion external
+    import {
+        PluridDocumentSource,
+    } from '../document';
 // #endregion imports
 
 
@@ -15,6 +18,13 @@ export interface PluridPlaneOptions {
      * Constraints for the parameters.
      */
     parameters?: Record<string, PluridRouteParameter>;
+
+    /**
+     * The document head (title, meta, links, JSON-LD) while this plane is shown — a static
+     * document or a resolver of the plane's route context. Merged with the other shown planes'
+     * heads in tree order; below in-render `usePluridDocument` declarations.
+     */
+    head?: PluridDocumentSource;
 }
 
 
@@ -118,5 +128,7 @@ export interface RegisteredPluridPlane<C> {
         query: Record<string, string>;
     };
     component: C;
+    /** The plane's `head` option, carried through registration. */
+    head?: PluridDocumentSource;
 }
 // #endregion module

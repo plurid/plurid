@@ -351,6 +351,8 @@ export interface PluridPubSubSubscribeMessageOpenClosedPlane {
 
 export interface PluridPubSubMessageClosePlane {
     id: string;
+    /** Where the camera goes when the closed plane is in view; defaults to `space.navigation.onClose`. */
+    navigate?: 'parent' | 'stay';
 }
 export interface PluridPubSubPublishMessageClosePlane {
     topic: typeof PLURID_PUBSUB_TOPIC.CLOSE_PLANE;

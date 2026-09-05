@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        chromeControl,
+    } from '~services/styled/chrome';
+
+    import {
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
@@ -98,6 +102,7 @@ export interface IStyledPluridViewcubeFaceZone {
 }
 
 export const StyledPluridViewcubeFaceZone = styled.button<IStyledPluridViewcubeFaceZone>`
+    ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;

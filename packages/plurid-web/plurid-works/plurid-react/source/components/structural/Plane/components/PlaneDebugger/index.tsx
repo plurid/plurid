@@ -14,6 +14,7 @@
         TreePlane,
         CameraState,
         ViewSize,
+        PLURID_ENTITY_PLANE_DEBUGGER,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -37,7 +38,8 @@
 
 
 // #region module
-export const PLURID_ENTITY_PLANE_DEBUGGER = 'PluridPlaneDebugger';
+/** @deprecated Import `PLURID_ENTITY_PLANE_DEBUGGER` from `@plurid/plurid-data`. */
+export { PLURID_ENTITY_PLANE_DEBUGGER };
 
 
 const StyledPluridPlaneDebugger = styled.pre<{ theme: Theme }>`

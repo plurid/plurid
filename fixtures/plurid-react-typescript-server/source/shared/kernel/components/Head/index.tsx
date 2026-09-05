@@ -3,8 +3,8 @@
     import React from 'react';
 
     import {
-        Helmet,
-    } from 'react-helmet-async';
+    PluridDocument,
+} from '@plurid/plurid-react';
     // #endregion libraries
 // #endregion imports
 
@@ -48,7 +48,7 @@ const Head: React.FC<HeadProperties> = (
 
     // #region render
     return (
-        <Helmet>
+        <PluridDocument>
             <meta charSet="utf-8" />
             <meta name="robots" content="index,follow" />
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -98,7 +98,7 @@ const Head: React.FC<HeadProperties> = (
 
 
             <link rel="preload" href="/assets/Ubuntu-Regular.ttf" as="font" type="font/ttf" crossOrigin="anonymous" />
-        </Helmet>
+        </PluridDocument>
     );
     // #endregion render
 }

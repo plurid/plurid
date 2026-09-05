@@ -2,6 +2,7 @@
     // #region libraries
     import {
         useCallback,
+        useRef,
     } from 'react';
 
     import {
@@ -18,6 +19,10 @@
         space,
         getRegisteredPlanes,
     } from '~services/engine';
+
+    import {
+        resolvePlaneFallbackSize,
+    } from '~services/logic/camera';
     // #endregion external
 // #endregion imports
 
@@ -69,12 +74,26 @@ export const useTreeUpdate = (
         layoutTransitionDuration = 0,
     }: UseTreeUpdateParameters,
 ) => {
+    /** The view size of the last layout: a change re-derives the sizes of hidden (unmounted) planes. */
+    const layoutViewSize = useRef<ViewSize | undefined>(undefined);
+
     const treeUpdate = (
         treeView: PluridApplicationView,
         treeConfiguration: PluridConfiguration = configuration,
         layout?: boolean,
         options: TreeUpdateOptions = {},
     ) => {
+        const previousViewSize = layoutViewSize.current;
+        const viewResized = !!layout
+            && !!previousViewSize
+            && (previousViewSize.width !== viewSize.width || previousViewSize.height !== viewSize.height);
+        if (layout) {
+            layoutViewSize.current = viewSize;
+        }
+        const hiddenFallback = viewResized
+            ? resolvePlaneFallbackSize(treeConfiguration, viewSize)
+            : undefined;
+
         const planes = getRegisteredPlanes(planesRegistrar);
 
         const spaceTree = new space.tree.Tree(
@@ -117,7 +136,13 @@ export const useTreeUpdate = (
                 ...(previous.manuallyPositioned
                     ? { manuallyPositioned: true, location: previous.location }
                     : {}),
-                ...(previous.children ? { children: previous.children } : {}),
+                ...(previous.children
+                    ? {
+                        children: hiddenFallback
+                            ? space.tree.fields.refreshHiddenPlaneSizes(previous.children, hiddenFallback)
+                            : previous.children,
+                    }
+                    : {}),
             };
 
             return space.location.recomputeSubtree(merged);

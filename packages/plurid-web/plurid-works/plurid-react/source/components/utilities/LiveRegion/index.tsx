@@ -8,6 +8,17 @@
     import { connect } from 'react-redux';
 
     import styled from 'styled-components';
+
+
+    import {
+
+        chromeRoot,
+
+    } from '~services/styled/chrome';
+
+    import {
+        PLURID_ENTITY_LIVE_REGION,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -25,11 +36,13 @@
 
 
 // #region module
-export const PLURID_ENTITY_LIVE_REGION = 'PluridLiveRegion';
+/** @deprecated Import `PLURID_ENTITY_LIVE_REGION` from `@plurid/plurid-data`. */
+export { PLURID_ENTITY_LIVE_REGION };
 
 
 /** Visually hidden, read by assistive technology. */
 const StyledLiveRegion = styled.div`
+    ${chromeRoot}
     position: absolute;
     width: 1px;
     height: 1px;

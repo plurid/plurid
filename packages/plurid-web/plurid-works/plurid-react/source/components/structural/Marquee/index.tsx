@@ -6,6 +6,13 @@
 
     import styled from 'styled-components';
 
+
+    import {
+
+        chromeRoot,
+
+    } from '~services/styled/chrome';
+
     import {
         Z_INDEX,
     } from '~data/constants/zIndex';
@@ -13,6 +20,10 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
+
+    import {
+        PLURID_ENTITY_MARQUEE,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -29,10 +40,12 @@
 
 
 // #region module
-export const PLURID_ENTITY_MARQUEE = 'PluridMarquee';
+/** @deprecated Import `PLURID_ENTITY_MARQUEE` from `@plurid/plurid-data`. */
+export { PLURID_ENTITY_MARQUEE };
 
 
 const StyledPluridMarquee = styled.div<{ theme: Theme }>`
+    ${chromeRoot}
     position: absolute;
     pointer-events: none;
     border: 1px dashed ${({ theme }) => theme.colorPrimary};

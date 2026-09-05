@@ -10,6 +10,15 @@
 
     import styled from 'styled-components';
 
+
+    import {
+
+        chromeControl,
+
+        chromeRoot,
+
+    } from '~services/styled/chrome';
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -19,6 +28,7 @@
         TreePlane,
         CameraState,
         ViewSize,
+        PLURID_ENTITY_MINIMAP,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -60,6 +70,7 @@ interface StyledMinimapProperties extends ThemedProperties {
 }
 
 const StyledMinimap = styled.div<StyledMinimapProperties>`
+    ${chromeRoot}
     position: absolute;
     top: 16px;
     right: 16px;
@@ -106,6 +117,7 @@ const StyledMinimapDot = styled.div<StyledMinimapDotProperties>`
 
 /** A generous transparent hit target centered on the plane's projected point — a real button. */
 const StyledMinimapHit = styled.button`
+    ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;
@@ -253,6 +265,7 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
 
     return (
         <StyledMinimap
+            data-plurid-entity={PLURID_ENTITY_MINIMAP}
             data-plurid-minimap={true}
             data-plurid-overlay="minimap"
             data-plurid-control="minimap"

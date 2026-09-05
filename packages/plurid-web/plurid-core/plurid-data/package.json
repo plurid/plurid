@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-data",
-    "version": "0.0.0-23",
+    "version": "0.0.0-24",
     "sideEffects": false,
     "description": "Plurid Constants, Interfaces, Enumerations",
     "keywords": [
@@ -44,11 +44,7 @@
         "check": "tsc --noEmit --project tsconfig.json",
         "prepublishOnly": "pnpm build"
     },
-    "peerDependencies": {
-        "@plurid/plurid-themes": ">=0.0.0-3"
-    },
     "devDependencies": {
-        "@plurid/plurid-themes": "workspace:*",
         "@types/jest": "^30.0.0",
         "@types/node": "^20.10.6",
         "jest": "^30.4.2",
@@ -64,5 +60,8 @@
             "import": "./distribution/index.mjs",
             "require": "./distribution/index.js"
         }
+    },
+    "dependencies": {
+        "@plurid/plurid-themes": "workspace:^"
     }
 }

@@ -31,9 +31,6 @@ export interface PluridRouterStaticOwnProperties {
     planes: PluridRoutePlane<PluridReactComponent>[];
     protocol?: string;
     hostname?: string;
-    gateway?: boolean;
-    gatewayQuery?: string;
-    gatewayEndpoint?: string;
     routerProperties?: Partial<PluridRouterProperties<PluridReactComponent>>;
 }
 
@@ -51,16 +48,11 @@ const PluridRouterStatic = (
         shell,
         protocol: protocolProperty,
         hostname: hostnameProperty,
-        gateway,
-        gatewayQuery: gatewayQueryProperty,
-        gatewayEndpoint: gatewayEndpointProperty,
         routerProperties,
     } = properties;
 
     const protocol = protocolProperty || 'http';
     const hostname = hostnameProperty || 'origin';
-    const gatewayQuery = gatewayQueryProperty || '';
-    const gatewayEndpoint = gatewayEndpointProperty || '/gateway';
     // #endregion properties
 
 

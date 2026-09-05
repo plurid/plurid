@@ -94,6 +94,10 @@
     // #region internal
     import PluridView from './View';
     // #endregion internal
+    import {
+        PluridDocumentScope,
+        PluridDocumentPlanes,
+    } from '~components/utilities/Document';
 // #endregion imports
 
 
@@ -290,19 +294,24 @@ class PluridApplicationShell extends Component<
             // styled-components v6 no longer auto-filters props, so engine-internal props
             // (transformMode, show, active, face, …) would leak onto DOM nodes. Forward
             // only valid HTML/SVG attributes; the styled templates still receive them all.
-            <StyleSheetManager shouldForwardProp={isPropValid}>
-                <ReduxProvider
-                    store={this.store}
-                    context={StateContext}
-                >
-                    <PluridView
-                        {...this.props}
-                        planesRegistrar={this.planesRegistrar}
-                        pubsub={this.pubsub}
-                        thunkExtra={this.thunkExtra}
-                    />
-                </ReduxProvider>
-            </StyleSheetManager>
+            <PluridDocumentScope>
+                <StyleSheetManager shouldForwardProp={isPropValid}>
+                    <ReduxProvider
+                        store={this.store}
+                        context={StateContext}
+                    >
+                        <PluridDocumentPlanes
+                            planesRegistrar={this.planesRegistrar}
+                        />
+                        <PluridView
+                            {...this.props}
+                            planesRegistrar={this.planesRegistrar}
+                            pubsub={this.pubsub}
+                            thunkExtra={this.thunkExtra}
+                        />
+                    </ReduxProvider>
+                </StyleSheetManager>
+            </PluridDocumentScope>
         );
     }
 
@@ -370,7 +379,7 @@ class PluridApplicationShell extends Component<
                         hostname: this.props.hostname,
                     }));
                 },
-                close: (planeID) => dispatch(closePlane(planeID)),
+                close: (planeID, options) => dispatch(closePlane(planeID, options)),
                 open: (planeID) => dispatch(openPlane(planeID)),
                 remove: (planeID) => dispatch(actions.space.removePlane(planeID)),
             },

@@ -9,12 +9,12 @@ import { cjsInteropPlugin } from '../../../../scripts/tsup/cjs-interop.mjs';
 export default defineConfig({
     entry: ['source/index.ts'],
     format: ['esm', 'cjs'],
-    // styled-components / react-helmet-async are CommonJS under native Node ESM: read them
-    // through the interop shim (scripts/tsup/cjs-interop.mjs), so the packed ESM entry imports.
+    // styled-components is CommonJS under native Node ESM: read it through the interop shim
+    // (scripts/tsup/cjs-interop.mjs), so the packed ESM entry imports.
     esbuildPlugins: [cjsInteropPlugin()],
-    // tsup's own externals plugin runs BEFORE user plugins; these two must not be pre-externalized
-    // or the shim never sees them (the shim marks the real module external itself).
-    noExternal: ['styled-components', 'react-helmet-async'],
+    // tsup's own externals plugin runs BEFORE user plugins; the module must not be pre-externalized
+    // or the shim never sees it (the shim marks the real module external itself).
+    noExternal: ['styled-components'],
     dts: true,
     outDir: 'distribution',
     platform: 'node',
@@ -25,7 +25,7 @@ export default defineConfig({
     external: [
         /^@plurid\//,
         'react', 'react-dom', 'react/jsx-runtime',
-        'styled-components', 'redux', 'react-redux', 'react-helmet-async',
+        'styled-components', 'redux', 'react-redux',
         'cross-fetch',
     ],
 });

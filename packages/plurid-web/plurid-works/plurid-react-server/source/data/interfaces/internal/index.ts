@@ -1,12 +1,5 @@
 // #region imports
     // #region libraries
-    import {
-        Helmet,
-    } from 'react-helmet-async';
-
-    import {
-        ServerStyleSheet,
-    } from 'styled-components';
 
     import {
         Indexed,
@@ -18,6 +11,7 @@
 
     import {
         PluridReactComponent,
+        PluridDocumentRegistry,
     } from '@plurid/plurid-react';
     // #endregion libraries
 
@@ -88,24 +82,21 @@ export interface StillsGeneratorOptions {
 }
 
 
-export interface PluridContentGeneratorData {
+export interface PluridRequestTreeData {
     services: PluridServerService[];
-    stylesheet: ServerStyleSheet;
-    helmet: Helmet;
     exterior: PluridReactComponent | undefined;
     shell: PluridReactComponent | undefined;
     routerProperties: Partial<PluridRouterProperties<PluridReactComponent>>;
     routes: PluridRoute<PluridReactComponent>[];
     planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;
-    gateway: boolean;
-    gatewayEndpoint: string;
-    gatewayQuery: string;
     preserveResult: PluridPreserveResponse | undefined;
-    matchedPlane: any;
-
+    /** The request's document registry (route / planes / in-render layers). */
+    documentRegistry: PluridDocumentRegistry;
     pathname: string;
     hostname: string;
+    /** The directly accessed plane's route, for a `RoutePlane` match. */
+    directPlane: string | undefined;
 }
 
 

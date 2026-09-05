@@ -3,11 +3,9 @@
     import express from 'express';
 
     import {
-        Helmet,
-    } from 'react-helmet-async';
-
-    import {
         PluridRoute,
+        PluridPreserveResponse,
+        PluridDocument,
         PluridRoutePlane,
         PluridPreserve,
         IsoMatcherRouteResult,
@@ -81,9 +79,7 @@ export interface PluridServerOptions {
      */
     buildDirectory: string;
 
-    /**
-     * Name of the directory where the assets files are bundled.
-     */
+    /** @deprecated Read by nothing; kept for one release. */
     assetsDirectory: string;
 
     /**
@@ -95,9 +91,7 @@ export interface PluridServerOptions {
      */
     publicDirectory: string;
 
-    /**
-     * Default: `/gateway`.
-     */
+    /** @deprecated The gateway render never shipped; read by nothing. Kept for one release. */
     gatewayEndpoint: string;
 
     /**
@@ -139,11 +133,43 @@ export interface PluridServerService<P = any, PP = any> {
 }
 
 
+export type PluridServerRenderMode = 'string' | 'suspense';
+
+
+export interface PluridServerDocumentContext {
+    request: express.Request;
+    match: IsoMatcherRouteResult<PluridReactComponent>;
+    metastate: any;
+    /** The document assembled so far (template → route → planes → in-render → preserve). */
+    document: PluridDocument;
+    preserve: PluridPreserveResponse | undefined;
+}
+
+
+/**
+ * A document layer computed AFTER the render, above every other layer — the seam for a head
+ * library still running inside `services` (read its context here and return a document), or
+ * for request-derived metadata.
+ */
+export type PluridServerDocumentHook = (
+    context: PluridServerDocumentContext,
+) => PluridDocument | undefined | Promise<PluridDocument | undefined>;
+
+
 export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
     planes?: PluridRoutePlane<PluridReactComponent>[];
     preserves: PluridPreserveReact[];
-    helmet: Helmet;
+    /**
+     * @deprecated The head is the document model now (`template.head`, a route's / plane's `head`,
+     * `<PluridDocument>`, a preserve's `document`, the `document` hook); this field is ignored
+     * (a warning is logged once) and will be removed.
+     */
+    helmet?: unknown;
+    /** The post-render document layer (see `PluridServerDocumentHook`). */
+    document?: PluridServerDocumentHook;
+    /** `'string'` (default, `renderToString`) or `'suspense'` (a buffered stream that awaits every boundary). */
+    render?: PluridServerRenderMode;
     styles?: string[];
     middleware?: PluridServerMiddleware[];
 
@@ -152,7 +178,7 @@ export interface PluridServerConfiguration {
     routerProperties?: Partial<PluridRouterProperties<PluridReactComponent>>;
 
     /**
-     * Replace the internal plurid plane with a custom implementation.
+     * @deprecated Never reached the router (a `PluridApplication` prop only); ignored, to be removed.
      */
     customPlane?: PluridReactComponent;
 
@@ -208,13 +234,6 @@ export interface PluridServerTemplateConfiguration {
      */
     root?: string;
 
-    // /**
-    //  * Global variable name to be attached to window on the server-side
-    //  * to preload redux state.
-    //  *
-    //  * Default: `__PRELOADED_REDUX_STATE__`
-    //  */
-    // defaultPreloadedReduxState?: string;
 
     /**
      * Global variable name to be attached to window on the server-side
@@ -246,22 +265,11 @@ export interface PluridServerTemplateConfiguration {
     manifest?: string;
 
     /**
-     * Static `<head>` metadata injected AHEAD of the react-helmet-async output,
-     * so per-route `<Helmet>` tags still override these defaults.
+     * The static document head — the LOWEST layer of the document model (a route's / plane's
+     * `head`, in-render `<PluridDocument>` declarations, a preserve's `document` and the `document`
+     * hook layer above it). The old `{ title, description, meta, links }` shape is a subset.
      */
-    head?: {
-        title?: string;
-        description?: string;
-        meta?: Array<{
-            name?: string;
-            property?: string;
-            content: string;
-        }>;
-        links?: Array<{
-            rel: string;
-            href: string;
-        }>;
-    };
+    head?: PluridDocument;
 
     /**
      * Override the built-in 500 error page HTML (sent on a render failure).
@@ -302,7 +310,17 @@ export type PluridPreserveReact = PluridPreserve<
 
 
 
-export interface PluridLiveServerOptions {
-    server: string;
-}
 // #endregion module
+
+
+export type {
+    PluridDocument,
+    PluridDocumentMeta,
+    PluridDocumentLink,
+    PluridDocumentScript,
+    PluridDocumentStyle,
+    PluridDocumentBase,
+    PluridDocumentContext,
+    PluridDocumentResolver,
+    PluridDocumentSource,
+} from '@plurid/plurid-data';

@@ -8,7 +8,12 @@
         PluridServerService,
         PluridServerMiddleware,
         PluridServerTemplateConfiguration,
+        PluridServerDocumentHook,
+        PluridServerRenderMode,
         PluridPreserveReact,
+        PluridDocument,
+        PluridDocumentMeta,
+        PluridDocumentLink,
     } from '@plurid/plurid-react-server';
     // #endregion external
 // #endregion imports
@@ -31,63 +36,26 @@ export type ServerOnly<T> =
     | (() => T | Promise<T> | Promise<{ default: T }>);
 
 
-/** A single `<meta>` descriptor (name/property + content). */
-export interface PluridHeadMeta {
-    name?: string;
-    property?: string;
-    content: string;
-    [attribute: string]: string | undefined;
-}
-
-/** A single `<link>` descriptor. */
-export interface PluridHeadLink {
-    rel: string;
-    href: string;
-    [attribute: string]: string | undefined;
-}
-
 /**
- * Friendly document-`<head>` description. The framework serializes this into the
- * runtime's helmet/template (P1) - title, language, meta, links, raw scripts.
- * react-helmet-async still composes on top, so per-route `<Helmet>` overrides win.
+ * The document head is DATA (`PluridDocument` from plurid-react-server / plurid-data): title,
+ * `titleTemplate`, description, canonical, meta, links, styles, scripts, JSON-LD, html / body
+ * attributes. The kit's `head` is the LOWEST layer; a route's / plane's `head`, in-render
+ * `<PluridDocument>` declarations, a preserve's `document` and the server `document` hook layer
+ * above it. `PluridHead*` are kept as aliases for one release.
  */
-export interface PluridHead {
-    /** `<html lang>`. */
-    lang?: string;
-    /** Default document title. */
-    title?: string;
-    /** Default meta description (sugar for a `{ name: 'description' }` meta). */
-    description?: string;
-    meta?: PluridHeadMeta[];
-    links?: PluridHeadLink[];
-    htmlAttributes?: Record<string, string>;
-    bodyAttributes?: Record<string, string>;
-    /** Script sources to inject. */
-    scripts?: {
-        head?: string[];
-        body?: string[];
-    };
-}
+export type PluridHead = PluridDocument;
+/** @deprecated Use `PluridDocumentMeta`. */
+export type PluridHeadMeta = PluridDocumentMeta;
+/** @deprecated Use `PluridDocumentLink`. */
+export type PluridHeadLink = PluridDocumentLink;
 
 /**
  * Favicon set. A bare string is shorthand for the primary icon; the object form
  * expands to the standard `<link rel="icon" | "apple-touch-icon" | "mask-icon">`
  * + manifest tags. Paths resolve against the served `public/` directory.
  */
-export interface PluridFaviconSet {
-    /** `/favicon.ico` (rel="icon"). */
-    icon?: string;
-    /** `/apple-touch-icon.png` (rel="apple-touch-icon"). */
-    apple?: string;
-    /** Sized PNGs keyed by `WxH`, e.g. `{ '16x16': '/favicon-16x16.png' }`. */
-    sizes?: Record<string, string>;
-    /** `/safari-pinned-tab.svg` (rel="mask-icon"). */
-    maskIcon?: string;
-    /** Theme color for the mask icon / `<meta name="theme-color">`. */
-    themeColor?: string;
-}
-
-export type PluridFavicon = string | PluridFaviconSet;
+export type PluridFavicon = NonNullable<PluridServerTemplateConfiguration['favicon']>;
+export type PluridFaviconSet = Exclude<PluridFavicon, string>;
 
 
 /**
@@ -125,7 +93,7 @@ export interface PluridServiceConfig<
     store?: (preloadedState?: any) => StoreInstance;
     /** Optional provider context object (e.g. a custom `ReactReduxContext`). */
     context?: unknown;
-    /** Provider nesting order (lower = outer). Defaults to array order. */
+    /** Provider nesting order: lower = INNER (closest to the application), the same on both targets. Defaults to array order. */
     order?: number;
 }
 
@@ -177,16 +145,21 @@ export interface PluridConfig {
     shell?: PluridServerConfiguration['shell'];
     exterior?: PluridServerConfiguration['exterior'];
     routerProperties?: PluridServerConfiguration['routerProperties'];
-    /** Replace the internal plurid plane with a custom implementation. */
-    customPlane?: PluridServerConfiguration['customPlane'];
 
     // --- services (shared provider stack) -----------------------
     services?: PluridServiceConfig[];
     /**
-     * The react-helmet-async context object passed to `HelmetProvider` on both
-     * targets (and to `PluridServer` as `helmet`). Defaults to a fresh `{}`.
+     * A server-side document layer computed AFTER the render, above everything else — the seam
+     * for a head library you still run inside `services` (read its context here and return a
+     * `PluridDocument`). Server only.
      */
-    helmet?: unknown;
+    document?: ServerOnly<PluridServerDocumentHook>;
+    /**
+     * `'string'` (default): `renderToString`. `'suspense'`: a buffered `renderToPipeableStream`
+     * that waits for every Suspense boundary (`use()` / async data inside planes) before the
+     * document is written — still one document, no streaming.
+     */
+    render?: PluridServerRenderMode;
 
     // --- per-request data-loading (SERVER-ONLY) -----------------
     /** Preserves run per request to load data + seed provider/window state. */

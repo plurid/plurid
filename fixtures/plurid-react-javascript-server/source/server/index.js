@@ -5,7 +5,6 @@
 
 
     // #region external
-    import helmet from '../shared/kernel/services/helmet';
 
     /** uncomment to use services */
     // [START redux import]
@@ -140,7 +139,6 @@ const template = {
 /** SERVER */
 // generate server
 const pluridServer = new PluridServer({
-    helmet,
     shell,
     routes,
     planes,

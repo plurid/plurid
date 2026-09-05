@@ -31,6 +31,10 @@ const {
 export const focusPluridPlaneAnchor = (
     planeID: string,
 ) => {
+    if (typeof document === 'undefined') {
+        // Server / node: nothing to focus.
+        return;
+    }
     const selector = `[id='${planeID + FOCUS_ANCHOR_SUFFIX}']`;
     const focusAnchor: HTMLAnchorElement | null = document.querySelector(selector);
 

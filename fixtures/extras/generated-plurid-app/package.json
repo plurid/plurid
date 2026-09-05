@@ -49,7 +49,6 @@
         "hammerjs": "^2.0.8",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
-        "react-helmet-async": "^1.0.5",
         "react-redux": "^7.2.0",
         "react-stripe-elements": "^6.1.2",
         "redux": "^4.0.5",

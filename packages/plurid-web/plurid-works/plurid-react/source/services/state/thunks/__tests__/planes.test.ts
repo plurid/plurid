@@ -17,7 +17,20 @@
         toggleLinkPlane,
         closePlane,
         openLastClosed,
+        navigateToParent,
     } from '../planes';
+
+    import {
+        reportPlaneSize,
+    } from '~services/logic/camera';
+
+    import {
+        navigatePlane,
+    } from '~services/logic/animation';
+
+    import {
+        createThunkExtra,
+    } from '~services/state/extra';
     // #endregion external
 // #endregion imports
 
@@ -51,22 +64,28 @@ const registry = new Map<string, any>([
 ]);
 
 
-/** A minimal store: the space reducer under `state.space`, thunk-aware dispatch. */
-const makeStore = () => {
+/** A minimal store: the space reducer under `state.space`, thunk-aware dispatch (with the thunk extra). */
+const makeStore = (
+    configuration: any = defaultConfiguration,
+) => {
     let space = reducer(reducer(undefined, { type: '@@init' }), actions.setViewSize({ width: 1000, height: 600 }));
     space = reducer(space, actions.restoreArrangement({ tree: [plane('a')], links: [] }));
-    const getState = () => ({ space, configuration: defaultConfiguration } as any);
+    const getState = () => ({ space, configuration } as any);
+    const extra = createThunkExtra();
     const dispatched: any[] = [];
     const dispatch: any = (action: any) => {
         if (typeof action === 'function') {
-            return action(dispatch, getState);
+            return action(dispatch, getState, extra);
         }
         dispatched.push(action);
         space = reducer(space, action);
         return action;
     };
-    return { dispatch, getState, dispatched, tree: () => space.tree, state: () => space };
+    const cameraCommits = () => dispatched.filter((action) => action.type === actions.setCamera.type);
+    return { dispatch, getState, dispatched, extra, cameraCommits, tree: () => space.tree, state: () => space };
 };
+
+const child = (store: ReturnType<typeof makeStore>) => store.tree()[0].children![0];
 
 const parameters = (overrides: Partial<Parameters<typeof toggleLinkPlane>[0]> = {}) => ({
     parentPlaneID: 'a',
@@ -131,6 +150,165 @@ describe('toggleLinkPlane()', () => {
         const store = makeStore();
         toggleLinkPlane(parameters({ route: '/missing', linkID: 'a#/missing#0' }))(store.dispatch, store.getState);
         expect(store.tree()[0].children ?? []).toHaveLength(0);
+    });
+
+    it('reopening relocates the plane from the fresh link coordinates BEFORE framing it', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        toggleLinkPlane(parameters())(store.dispatch, store.getState);
+        expect(child(store).show).toBe(false);
+        const commitsBefore = store.cameraCommits().length;
+
+        // the link moved (a resize): the click measures new coordinates
+        toggleLinkPlane(parameters({ navigate: true, linkCoordinates: { x: 300, y: 240 } }))(store.dispatch, store.getState);
+        expect(child(store).show).toBe(true);
+        expect(child(store).linkCoordinates).toEqual({ x: 300, y: 240 });
+        expect(child(store).location.translateY).toBe(240);
+        // framed once from the best-known geometry, with a re-frame pending on the first measurement
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.extra.pendingFrame).toEqual({ planeID: child(store).planeID, animate: true });
+    });
+
+    it('the first measurement after a reopen re-frames the plane, then the pending frame is spent', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        toggleLinkPlane(parameters())(store.dispatch, store.getState);
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        const planeID = child(store).planeID;
+        const commitsBefore = store.cameraCommits().length;
+
+        store.dispatch(reportPlaneSize({ planeID, width: 900, height: 500 }));
+        expect(child(store).width).toBe(900);
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.extra.pendingFrame).toBeUndefined();
+
+        // a later measurement is just a size
+        store.dispatch(reportPlaneSize({ planeID, width: 910, height: 500 }));
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+    });
+
+    it('a measurement never re-frames while the user drives the camera', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        const planeID = child(store).planeID;
+        store.extra.pendingFrame = { planeID, animate: true };
+        store.dispatch(actions.setMotion('gesture'));
+        const commitsBefore = store.cameraCommits().length;
+
+        store.dispatch(reportPlaneSize({ planeID, width: 900, height: 500 }));
+        expect(store.cameraCommits().length).toBe(commitsBefore);
+        expect(store.extra.pendingFrame).toBeUndefined();
+    });
+});
+
+
+describe('closePlane()', () => {
+    it('closing the ACTIVE child hands the camera to its parent', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        const id = child(store).planeID;
+        store.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: id }));
+        const commitsBefore = store.cameraCommits().length;
+
+        closePlane(id)(store.dispatch, store.getState);
+        expect(child(store).show).toBe(false);
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.state().activePlaneID).toBe('a');
+        // the parent is framed: the pivot sits on the parent plane's center
+        const camera = store.state().camera;
+        expect(camera.pivot.x).toBeCloseTo(100 + 400 / 2, 6);
+        expect(camera.pivot.y).toBeCloseTo(300 / 2, 6);
+    });
+
+    it('closing the child the camera LOOKS AT hands the camera to its parent (no hover needed)', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        const id = child(store).planeID;
+        store.dispatch(reportPlaneSize({ planeID: id, width: 400, height: 300 }));
+        store.dispatch(navigatePlane(child(store), { animate: false }));
+        store.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: '' }));
+        const commitsBefore = store.cameraCommits().length;
+
+        closePlane(id)(store.dispatch, store.getState);
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.state().activePlaneID).toBe('a');
+    });
+
+    it('`navigate: "stay"`, the `space.navigation.onClose` policy, and roots never move the camera', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: true }))(store.dispatch, store.getState);
+        const id = child(store).planeID;
+        store.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: id }));
+        let commits = store.cameraCommits().length;
+
+        closePlane(id, { navigate: 'stay' })(store.dispatch, store.getState);
+        expect(store.cameraCommits().length).toBe(commits);
+        expect(child(store).show).toBe(false);
+
+        const staying = makeStore({
+            ...defaultConfiguration,
+            space: { ...defaultConfiguration.space, navigation: { ...defaultConfiguration.space.navigation, onClose: 'stay' } },
+        });
+        toggleLinkPlane(parameters({ navigate: true }))(staying.dispatch, staying.getState);
+        const stayingID = child(staying).planeID;
+        staying.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: stayingID }));
+        commits = staying.cameraCommits().length;
+        closePlane(stayingID)(staying.dispatch, staying.getState);
+        expect(staying.cameraCommits().length).toBe(commits);
+
+        // a root has no parent to return to
+        store.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: 'a' }));
+        commits = store.cameraCommits().length;
+        closePlane('a')(store.dispatch, store.getState);
+        expect(store.tree()[0].show).toBe(false);
+        expect(store.cameraCommits().length).toBe(commits);
+    });
+
+    it('a child that is neither active nor in view closes in place', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: false }))(store.dispatch, store.getState);
+        const id = child(store).planeID;
+        // the camera sits on the parent: the child (spawned to the right) is not under the view center
+        store.dispatch(navigatePlane(store.tree()[0], { animate: false }));
+        store.dispatch(actions.setSpaceField({ field: 'activePlaneID', value: '' }));
+        const commits = store.cameraCommits().length;
+
+        closePlane(id)(store.dispatch, store.getState);
+        expect(child(store).show).toBe(false);
+        expect(store.cameraCommits().length).toBe(commits);
+    });
+});
+
+
+describe('navigateToParent() / openLastClosed()', () => {
+    it('navigateToParent frames the parent and is a no-op for roots', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: false }))(store.dispatch, store.getState);
+        const commits = store.cameraCommits().length;
+
+        navigateToParent(child(store).planeID)(store.dispatch, store.getState);
+        expect(store.cameraCommits().length).toBe(commits + 1);
+        expect(store.state().activePlaneID).toBe('a');
+
+        navigateToParent('a')(store.dispatch, store.getState);
+        expect(store.cameraCommits().length).toBe(commits + 1);
+    });
+
+    it('openLastClosed brings the plane back into view, re-framed on its first measurement', () => {
+        const store = makeStore();
+        toggleLinkPlane(parameters({ navigate: false }))(store.dispatch, store.getState);
+        const id = child(store).planeID;
+        closePlane(id, { navigate: 'stay' })(store.dispatch, store.getState);
+        const commits = store.cameraCommits().length;
+
+        openLastClosed()(store.dispatch, store.getState);
+        expect(child(store).show).toBe(true);
+        expect(store.cameraCommits().length).toBe(commits + 1);
+        expect(store.extra.pendingFrame?.planeID).toBe(id);
+
+        closePlane(id, { navigate: 'stay' })(store.dispatch, store.getState);
+        openLastClosed({ navigate: false })(store.dispatch, store.getState);
+        expect(store.cameraCommits().length).toBe(commits + 1);
     });
 });
 // #endregion module

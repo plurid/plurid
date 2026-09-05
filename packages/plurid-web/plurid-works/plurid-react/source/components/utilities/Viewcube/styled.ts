@@ -3,6 +3,11 @@
     import styled from 'styled-components';
 
     import {
+        chromeControl,
+        chromeRoot,
+    } from '~services/styled/chrome';
+
+    import {
         Z_INDEX,
     } from '~data/constants/zIndex';
 
@@ -30,6 +35,7 @@ export interface IStyledPluridViewcube {
 }
 
 export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
+    ${chromeRoot}
     /* The arrows and the fit button stay in the DOM (focusable, labelled) and only SHOW while the
        cube is hovered or holds keyboard focus. */
     &[data-plurid-hover='false']:not(:focus-within) button {
@@ -132,6 +138,7 @@ export interface IStyledPluridViewcubeArrowIcon {
 }
 
 export const StyledPluridViewcubeArrowIcon = styled.button<IStyledPluridViewcubeArrowIcon>`
+    ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;
@@ -166,6 +173,7 @@ export interface IStyledFitView {
 }
 
 export const StyledFitView = styled.button<IStyledFitView>`
+    ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;

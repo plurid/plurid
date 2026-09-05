@@ -187,10 +187,11 @@ importers:
         version: 6.0.3
 
   packages/plurid-utilities/plurid-icons-react:
-    devDependencies:
+    dependencies:
       '@plurid/plurid-themes':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../plurid-themes
+    devDependencies:
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -263,25 +264,25 @@ importers:
       '@emotion/is-prop-valid':
         specifier: ^1.3.1
         version: 1.4.0
+      '@plurid/plurid-functions':
+        specifier: workspace:^
+        version: link:../plurid-functions
+      '@plurid/plurid-functions-react':
+        specifier: workspace:^
+        version: link:../plurid-functions-react
+      '@plurid/plurid-icons-react':
+        specifier: workspace:^
+        version: link:../plurid-icons-react
+      '@plurid/plurid-themes':
+        specifier: workspace:^
+        version: link:../plurid-themes
+      '@plurid/plurid-ui-state-react':
+        specifier: workspace:^
+        version: link:../plurid-ui-state-react
     devDependencies:
       '@babel/core':
         specifier: ^7.22.5
         version: 7.29.7
-      '@plurid/plurid-functions':
-        specifier: workspace:*
-        version: link:../plurid-functions
-      '@plurid/plurid-functions-react':
-        specifier: workspace:*
-        version: link:../plurid-functions-react
-      '@plurid/plurid-icons-react':
-        specifier: workspace:*
-        version: link:../plurid-icons-react
-      '@plurid/plurid-themes':
-        specifier: workspace:*
-        version: link:../plurid-themes
-      '@plurid/plurid-ui-state-react':
-        specifier: workspace:*
-        version: link:../plurid-ui-state-react
       '@reduxjs/toolkit':
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
@@ -338,10 +339,11 @@ importers:
         version: 6.0.3
 
   packages/plurid-utilities/plurid-ui-state-react:
-    devDependencies:
+    dependencies:
       '@plurid/plurid-themes':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../plurid-themes
+    devDependencies:
       '@reduxjs/toolkit':
         specifier: ^2.12.0
         version: 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
@@ -371,10 +373,11 @@ importers:
         version: 6.0.3
 
   packages/plurid-web/plurid-core/plurid-data:
-    devDependencies:
+    dependencies:
       '@plurid/plurid-themes':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../../plurid-utilities/plurid-themes
+    devDependencies:
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -398,19 +401,20 @@ importers:
         version: 6.0.3
 
   packages/plurid-web/plurid-core/plurid-engine:
-    devDependencies:
+    dependencies:
       '@plurid/plurid-data':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../plurid-data
       '@plurid/plurid-functions':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../../plurid-utilities/plurid-functions
+      '@plurid/plurid-themes':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-themes
+    devDependencies:
       '@plurid/plurid-pubsub':
         specifier: workspace:*
         version: link:../plurid-pubsub
-      '@plurid/plurid-themes':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-themes
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -443,13 +447,14 @@ importers:
         version: 6.0.3
 
   packages/plurid-web/plurid-core/plurid-pubsub:
-    devDependencies:
+    dependencies:
       '@plurid/plurid-data':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../plurid-data
       '@plurid/plurid-themes':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../../plurid-utilities/plurid-themes
+    devDependencies:
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -517,9 +522,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.7(react@19.2.7)
-      react-helmet-async:
-        specifier: ^3.0.0
-        version: 3.0.0(react@19.2.7)
       react-redux:
         specifier: ^9
         version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1)
@@ -547,46 +549,43 @@ importers:
       '@emotion/is-prop-valid':
         specifier: ^1.3.1
         version: 1.4.0
+      '@plurid/plurid-data':
+        specifier: workspace:^
+        version: link:../../plurid-core/plurid-data
+      '@plurid/plurid-engine':
+        specifier: workspace:^
+        version: link:../../plurid-core/plurid-engine
+      '@plurid/plurid-functions':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-functions
+      '@plurid/plurid-functions-react':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-functions-react
+      '@plurid/plurid-icons-react':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-icons-react
+      '@plurid/plurid-pubsub':
+        specifier: workspace:^
+        version: link:../../plurid-core/plurid-pubsub
+      '@plurid/plurid-themes':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-themes
+      '@plurid/plurid-ui-components-react':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-ui-components-react
+      '@reduxjs/toolkit':
+        specifier: ^2.12.0
+        version: 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
+      react-redux:
+        specifier: ^9
+        version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1)
     devDependencies:
       '@babel/core':
         specifier: ^7.23.7
         version: 7.29.7
-      '@plurid/elementql':
-        specifier: ^0.0.0-1
-        version: 0.0.0-1
       '@plurid/elementql-client-react':
         specifier: ^0.0.0-1
         version: 0.0.0-1
-      '@plurid/plurid-data':
-        specifier: workspace:*
-        version: link:../../plurid-core/plurid-data
-      '@plurid/plurid-engine':
-        specifier: workspace:*
-        version: link:../../plurid-core/plurid-engine
-      '@plurid/plurid-functions':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-functions
-      '@plurid/plurid-functions-react':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-functions-react
-      '@plurid/plurid-icons-react':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-icons-react
-      '@plurid/plurid-pubsub':
-        specifier: workspace:*
-        version: link:../../plurid-core/plurid-pubsub
-      '@plurid/plurid-themes':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-themes
-      '@plurid/plurid-ui-components-react':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-ui-components-react
-      '@plurid/plurid-ui-state-react':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-ui-state-react
-      '@reduxjs/toolkit':
-        specifier: ^2.12.0
-        version: 2.12.0(react-redux@9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1))(react@19.2.7)
       '@testing-library/dom':
         specifier: ^10.4.1
         version: 10.4.1
@@ -614,9 +613,6 @@ importers:
       babel-plugin-styled-components:
         specifier: ^2.1.4
         version: 2.3.0(@babel/core@7.29.7)(styled-components@6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
-      cross-fetch:
-        specifier: ^4.0.0
-        version: 4.1.0
       esbuild:
         specifier: ^0.28.1
         version: 0.28.1
@@ -638,9 +634,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.7(react@19.2.7)
-      react-redux:
-        specifier: ^9
-        version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1)
       styled-components:
         specifier: ^6
         version: 6.4.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -662,6 +655,18 @@ importers:
 
   packages/plurid-web/plurid-works/plurid-react-server:
     dependencies:
+      '@plurid/plurid-data':
+        specifier: workspace:^
+        version: link:../../plurid-core/plurid-data
+      '@plurid/plurid-engine':
+        specifier: workspace:^
+        version: link:../../plurid-core/plurid-engine
+      '@plurid/plurid-functions':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-functions
+      '@plurid/plurid-themes':
+        specifier: workspace:^
+        version: link:../../../plurid-utilities/plurid-themes
       compression:
         specifier: ^1.7.4
         version: 1.8.1
@@ -693,15 +698,6 @@ importers:
       '@plurid/elementql-client-react':
         specifier: ^0.0.0-1
         version: 0.0.0-1
-      '@plurid/plurid-data':
-        specifier: workspace:*
-        version: link:../../plurid-core/plurid-data
-      '@plurid/plurid-engine':
-        specifier: workspace:*
-        version: link:../../plurid-core/plurid-engine
-      '@plurid/plurid-functions':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-functions
       '@plurid/plurid-functions-react':
         specifier: workspace:*
         version: link:../../../plurid-utilities/plurid-functions-react
@@ -714,9 +710,6 @@ importers:
       '@plurid/plurid-react':
         specifier: workspace:*
         version: link:../plurid-react
-      '@plurid/plurid-themes':
-        specifier: workspace:*
-        version: link:../../../plurid-utilities/plurid-themes
       '@plurid/plurid-ui-components-react':
         specifier: workspace:*
         version: link:../../../plurid-utilities/plurid-ui-components-react
@@ -777,9 +770,6 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.7(react@19.2.7)
-      react-helmet-async:
-        specifier: ^3.0.0
-        version: 3.0.0(react@19.2.7)
       react-redux:
         specifier: ^9
         version: 9.3.0(@types/react@18.3.31)(react@19.2.7)(redux@5.0.1)
@@ -3219,9 +3209,6 @@ packages:
     resolution: {integrity: sha512-pFGGdaHrmRKMh4WoDDSowddgjT1Vkl90atobmTeSmcPGdYiwikch/m/Ef5wRaiamHejtw0cUUMMerzDUXCci2w==}
     engines: {node: '>=18'}
 
-  invariant@2.2.4:
-    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
-
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -3949,14 +3936,6 @@ packages:
     peerDependencies:
       react: ^19.2.7
 
-  react-fast-compare@3.2.2:
-    resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
-
-  react-helmet-async@3.0.0:
-    resolution: {integrity: sha512-nA3IEZfXiclgrz4KLxAhqJqIfFDuvzQwlKwpdmzZIuC1KNSghDEIXmyU0TKtbM+NafnkICcwx8CECFrZ/sL/1w==}
-    peerDependencies:
-      react: ^16.6.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -4110,9 +4089,6 @@ packages:
 
   setprototypeof@1.2.0:
     resolution: {integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==}
-
-  shallowequal@1.1.0:
-    resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -7096,10 +7072,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  invariant@2.2.4:
-    dependencies:
-      loose-envify: 1.4.0
-
   ipaddr.js@1.9.1: {}
 
   is-arrayish@0.2.1: {}
@@ -8139,15 +8111,6 @@ snapshots:
       react: 19.2.7
       scheduler: 0.27.0
 
-  react-fast-compare@3.2.2: {}
-
-  react-helmet-async@3.0.0(react@19.2.7):
-    dependencies:
-      invariant: 2.2.4
-      react: 19.2.7
-      react-fast-compare: 3.2.2
-      shallowequal: 1.1.0
-
   react-is@16.13.1: {}
 
   react-is@17.0.2: {}
@@ -8332,8 +8295,6 @@ snapshots:
       - supports-color
 
   setprototypeof@1.2.0: {}
-
-  shallowequal@1.1.0: {}
 
   shebang-command@2.0.0:
     dependencies:

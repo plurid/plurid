@@ -3,6 +3,10 @@
     import styled from 'styled-components';
 
     import {
+        chromeRoot,
+    } from '~services/styled/chrome';
+
+    import {
         Z_INDEX,
     } from '~data/constants/zIndex';
 
@@ -41,6 +45,7 @@ const resolveSize = ({
 }
 
 export const StyledOrigin = styled.div<IStyledOrigin>`
+    ${chromeRoot}
     background-color: ${
         ({
             theme,

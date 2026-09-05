@@ -131,6 +131,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         zoomMax: 4,
         dollyLimitFraction: 0.6,
         orbitPivot: 'cursor',
+        onClose: 'parent',
         motion: {
             duration: 380,
             easing: 'out-cubic',

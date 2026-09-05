@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-icons-react",
-    "version": "0.0.0-11",
+    "version": "0.0.0-12",
     "sideEffects": false,
     "description": "Plurid Icons for Plurid Applications based on React.",
     "keywords": [
@@ -43,13 +43,11 @@
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-themes": ">=0.0.0-3",
         "react": ">=19",
         "react-dom": ">=19",
         "styled-components": ">=6"
     },
     "devDependencies": {
-        "@plurid/plurid-themes": "workspace:*",
         "@types/jest": "^30.0.0",
         "@types/node": "^20.3.3",
         "@types/react": "^19.2.0",
@@ -72,5 +70,8 @@
             "import": "./distribution/index.mjs",
             "require": "./distribution/index.js"
         }
+    },
+    "dependencies": {
+        "@plurid/plurid-themes": "workspace:^"
     }
 }

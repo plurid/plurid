@@ -12,6 +12,9 @@
         PluridRouteMultispace,
     } from '../multispace';
     // #endregion external
+    import {
+        PluridDocumentSource,
+    } from '../../document';
 // #endregion imports
 
 
@@ -61,6 +64,13 @@ export interface PluridRoute<C, G = any> {
     multispace?: PluridRouteMultispace<C>;
 
     defaultConfiguration?: PluridPartialConfiguration;
+
+    /**
+     * The document head (title, meta, links, JSON-LD, html/body attributes) while this route is
+     * served — a static document or a resolver of the route match (async on the server only).
+     * Layered above the application's static head and below in-render declarations.
+     */
+    head?: PluridDocumentSource;
 
     /**
      * Resolve the route at request time.
@@ -209,6 +219,11 @@ export interface PluridRoutePlaneOptions {
      * Constraints for the parameters.
      */
     parameters?: Record<string, PluridRouteParameter>;
+
+    /**
+     * The document head while this plane is directly accessed or shown in a space.
+     */
+    head?: PluridDocumentSource;
 }
 
 export interface PluridRoutePlaneObject<C> extends PluridRoutePlaneOptions {

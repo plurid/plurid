@@ -8,6 +8,10 @@ import {
     openHarness,
     collectConsoleErrors,
     publish,
+    settle,
+    camera,
+    spaceState,
+    viewRect,
 } from './helpers';
 
 
@@ -274,5 +278,179 @@ test.describe('links and tree', () => {
         const geometry = findPlane(roots, root.planeID);
         expect(geometry.children).toHaveLength(1);
         expect(geometry.children[0].planeID).toBe(child.planeID);
+    });
+});
+
+
+/** The page rect of a plane element (CSS 3D transforms are reflected in the bounding box). */
+const planeRect = (
+    page: Page,
+    planeID: string,
+) => page.evaluate((planeID) => {
+    const element = document.querySelector(`[data-plurid-plane="${planeID}"]`) as HTMLElement | null;
+    if (!element) {
+        return null;
+    }
+    const r = element.getBoundingClientRect();
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom, width: r.width, height: r.height };
+}, planeID);
+
+const viewCenter = async (page: Page) => {
+    const rect = await viewRect(page);
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+};
+
+/** Wait until the plane `planeID` is shown (or hidden) in the tree. */
+const waitForShown = (
+    page: Page,
+    planeID: string,
+    shown: boolean,
+) => page.waitForFunction(({ planeID, shown }) => {
+    const find = (nodes: any[]): any => {
+        for (const node of nodes) {
+            if (node.planeID === planeID) {
+                return node;
+            }
+            if (node.children) {
+                const hit = find(node.children);
+                if (hit) {
+                    return hit;
+                }
+            }
+        }
+        return undefined;
+    };
+    const plane = find((window as any).__rtTree());
+    return !!plane && (plane.show !== false) === shown;
+}, { planeID, shown });
+
+
+test.describe('reopen, close and the camera (the hypod issue)', () => {
+    test('a child reopened after a viewport resize is framed where it really is', async ({ page }) => {
+        const errors = collectConsoleErrors(page);
+        await page.setViewportSize({ width: 390, height: 844 });
+        await openHarness(page, '?reducedMotion=1');
+        const root = rootByRoute(await tree(page), '/geometry');
+
+        // open the child at the narrow viewport, then close it (the camera returns to the parent)
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForChildren(page, root.planeID, 1);
+        const child = findPlane(await tree(page), root.planeID).children[0];
+        await settle(page);
+        await publish(page, 'space.closePlane', { id: child.planeID });
+        await waitForShown(page, child.planeID, false);
+        await settle(page);
+
+        // the viewport grows: the closed (unmounted) child kept its narrow size and its link moved
+        await page.setViewportSize({ width: 1440, height: 1000 });
+        await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.viewSize.width === 1440);
+        await settle(page);
+
+        // reopen: the plane is relocated from the fresh link measurement and re-framed once measured
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForShown(page, child.planeID, true);
+        await page.waitForFunction((planeID) => !!document.querySelector(`[data-plurid-plane="${planeID}"]`), child.planeID);
+        await settle(page);
+        await page.waitForTimeout(120);
+        await settle(page);
+
+        const rect = (await planeRect(page, child.planeID))!;
+        const view = await viewRect(page);
+        const center = await viewCenter(page);
+        expect(rect.left).toBeGreaterThanOrEqual(view.left - 1);
+        expect(rect.right).toBeLessThanOrEqual(view.left + view.width + 1);
+        expect(rect.top).toBeGreaterThanOrEqual(view.top - 1);
+        expect(rect.bottom).toBeLessThanOrEqual(view.top + view.height + 1);
+        expect(Math.abs((rect.left + rect.right) / 2 - center.x)).toBeLessThanOrEqual(12);
+        expect(Math.abs((rect.top + rect.bottom) / 2 - center.y)).toBeLessThanOrEqual(12);
+
+        // the child's stored coordinates are the link's CURRENT measurement, not the narrow one
+        const reopened = findPlane(await tree(page), child.planeID);
+        const measured = await page.evaluate(({ planeID, route }) => {
+            const link = document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-link-route$="${route}"]`) as HTMLElement;
+            const plane = link.closest('[data-plurid-plane]') as HTMLElement;
+            // layout offsets up the offsetParent chain (what the engine measures), not transformed rects
+            let left = 0;
+            let top = 0;
+            let element: HTMLElement | null = link;
+            while (element && element !== plane) {
+                left += element.offsetLeft;
+                top += element.offsetTop;
+                element = element.offsetParent as HTMLElement | null;
+            }
+            return { x: left + link.offsetWidth, y: top + link.offsetHeight / 2 };
+        }, { planeID: root.planeID, route: '/geometry/detail' });
+        expect(Math.abs(reopened.linkCoordinates.x - measured.x)).toBeLessThanOrEqual(2);
+        expect(Math.abs(reopened.linkCoordinates.y - measured.y)).toBeLessThanOrEqual(2);
+
+        // close again without options: the parent comes back into view, centred
+        await publish(page, 'space.closePlane', { id: child.planeID });
+        await waitForShown(page, child.planeID, false);
+        await settle(page);
+        const parentRect = (await planeRect(page, root.planeID))!;
+        expect(Math.abs((parentRect.left + parentRect.right) / 2 - center.x)).toBeLessThanOrEqual(12);
+        expect(Math.abs((parentRect.top + parentRect.bottom) / 2 - center.y)).toBeLessThanOrEqual(12);
+        expect(await linkOpen(page, root.planeID, '/geometry/detail')).toBeNull();
+        expect(errors).toEqual([]);
+    });
+
+    test('closing the child in view hands the camera to the parent; `navigate: "stay"` keeps it', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1');
+        const root = rootByRoute(await tree(page), '/geometry');
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForChildren(page, root.planeID, 1);
+        const child = findPlane(await tree(page), root.planeID).children[0];
+        await settle(page);
+        const framedChild = await camera(page);
+
+        // default: the closed child was in view → the parent is framed and becomes active
+        await publish(page, 'space.closePlane', { id: child.planeID });
+        await waitForShown(page, child.planeID, false);
+        await settle(page);
+        const afterClose = await camera(page);
+        expect(Math.hypot(afterClose.pivot.x - framedChild.pivot.x, afterClose.pivot.z - framedChild.pivot.z)).toBeGreaterThan(50);
+        expect((await spaceState(page)).activePlaneID).toBe(root.planeID);
+        const center = await viewCenter(page);
+        const parentRect = (await planeRect(page, root.planeID))!;
+        expect(Math.abs((parentRect.left + parentRect.right) / 2 - center.x)).toBeLessThanOrEqual(12);
+
+        // stay: the camera does not move
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForShown(page, child.planeID, true);
+        await settle(page);
+        await page.waitForTimeout(120);
+        await settle(page);
+        const before = await camera(page);
+        await publish(page, 'space.closePlane', { id: child.planeID, navigate: 'stay' });
+        await waitForShown(page, child.planeID, false);
+        await settle(page);
+        const after = await camera(page);
+        expect(after.pivot).toEqual(before.pivot);
+        expect(after.yaw).toBe(before.yaw);
+        expect(after.scale).toBe(before.scale);
+    });
+
+    test('a reference-only tree update never reopens a closed child (the hypod 0.0.0-36 patch)', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1');
+        const root = rootByRoute(await tree(page), '/geometry');
+        await clickLink(page, root.planeID, '/geometry/detail');
+        await waitForChildren(page, root.planeID, 1);
+        const child = findPlane(await tree(page), root.planeID).children[0];
+        await publish(page, 'space.closePlane', { id: child.planeID, navigate: 'stay' });
+        await waitForShown(page, child.planeID, false);
+
+        // the same tree, new references (a host `setTree` / a collaboration echo)
+        for (let i = 0; i < 3; i += 1) {
+            await page.evaluate(() => {
+                const api = (window as any).__pluridApi;
+                api.store.dispatch({ type: 'space/setTree', payload: JSON.parse(JSON.stringify(api.store.getState().space.tree)) });
+            });
+            await page.waitForTimeout(100);
+        }
+        await page.waitForTimeout(300);
+
+        const after = findPlane(await tree(page), child.planeID);
+        expect(after.show).toBe(false);
+        expect(await linkOpen(page, root.planeID, '/geometry/detail')).toBeNull();
     });
 });

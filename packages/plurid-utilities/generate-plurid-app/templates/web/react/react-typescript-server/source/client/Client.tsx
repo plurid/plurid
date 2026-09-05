@@ -4,9 +4,6 @@
         useRef,
     } from 'react';
 
-    import {
-        HelmetProvider,
-    } from 'react-helmet-async';
 
 
     // [START ReduxProvider]
@@ -39,7 +36,6 @@
         routerProperties,
     } from '~shared/data/constants';
 
-    import helmetContext from '~kernel-services/helmet';
 
     // [START ReduxStore]
     import reduxStore from '~kernel-services/state/store';
@@ -81,7 +77,6 @@ const Client: React.FC<any> = () => {
     // #region render
     return (
         // [START ClientReturn]
-        <HelmetProvider context={helmetContext}>
             <ReduxProvider
                 store={store.current}
                 context={reduxContext}
@@ -99,7 +94,6 @@ const Client: React.FC<any> = () => {
                     {/* </StripeProvider> */}
                 </ApolloProvider>
             </ReduxProvider>
-        </HelmetProvider>
         // [END ClientReturn]
     );
     // #endregion render

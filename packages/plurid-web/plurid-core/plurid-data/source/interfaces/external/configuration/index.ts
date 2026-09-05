@@ -436,6 +436,13 @@ export interface PluridConfigurationSpaceNavigation {
     home?: string;
     /** Named preset viewpoints (encoded strings), reachable through the `space.preset` topic and the camera hooks. */
     presets?: Record<string, string>;
+    /**
+     * Where the camera goes when a plane that is IN VIEW closes (the plane controls, the
+     * `space.closePlane` topic, `usePluridPlane().close()`): to its parent (`'parent'`, the default —
+     * a child closed from within returns to where it was opened from) or nowhere (`'stay'`). Roots
+     * always stay; a topic / call can override per close.
+     */
+    onClose?: 'parent' | 'stay';
 }
 
 

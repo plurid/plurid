@@ -20,3 +20,11 @@ export const PLURID_ENTITY_TOOLBAR = 'PluridToolbar';
 export const PLURID_ENTITY_VIEWCUBE = 'PluridViewcube';
 export const PLURID_ENTITY_UNIVERSE_EXPLORER = 'PluridUniverseExplorer';
 // #endregion module
+export const PLURID_ENTITY_MINIMAP = 'PluridMinimap';
+export const PLURID_ENTITY_MARQUEE = 'PluridMarquee';
+export const PLURID_ENTITY_EMPTY = 'PluridEmpty';
+export const PLURID_ENTITY_LIVE_REGION = 'PluridLiveRegion';
+export const PLURID_ENTITY_PLANE_RESIZE_HANDLE = 'PluridPlaneResizeHandle';
+/** The shortcuts dialog (a lowercase historical value: it is a documented selector, so it stays). */
+export const PLURID_ENTITY_SHORTCUTS_OVERLAY = 'shortcuts-overlay';
+

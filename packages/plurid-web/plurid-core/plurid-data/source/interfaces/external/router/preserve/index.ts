@@ -1,3 +1,13 @@
+// #region imports
+    // #region external
+    import {
+        PluridDocument,
+    } from '../../document';
+    // #endregion external
+// #endregion imports
+
+
+
 // #region module
 export interface PluridPreserve<M = any, RQ = any, RS = any> {
     /**
@@ -86,6 +96,11 @@ export interface PluridPreserveResponse {
     globals?: Record<string, string>;
 
     template?: PluridPreserveResponseTemplate;
+    /**
+     * A document layer for this request (title, meta, links, JSON-LD, html/body attributes),
+     * above the route's and the in-render declarations, below the server's `document` hook.
+     */
+    document?: PluridDocument;
 }
 
 export type PluridPreserveResponseProviders = Record<string, any>;

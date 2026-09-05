@@ -53,7 +53,7 @@ Deployment is intentionally outside the CLI. CI builds images and applies review
 - Client and server use the same provider ordering but not the same import graph.
 - Redux/client factories run once per client lifecycle and per request on the server.
 - Real Express handlers remain product modules referenced by config; only empty copied handlers are removed.
-- Static head behavior has deterministic precedence with route-level Helmet output.
+- The document head has deterministic precedence: the kit's `head` < a route's / plane's `head` < in-render `<PluridDocument>` declarations < a preserve's `document` < the server `document` hook (the document model, 2026-09-05).
 - The client bundles application libraries; the server may externalize bare imports that are present in the runtime workspace skeleton.
 - Build exceptions are explicit typed configuration, not hidden inference.
 - Legacy and kit paths may coexist during an atomic migration, but the legacy path does not define new framework requirements unless an active product needs it.

@@ -5,7 +5,6 @@ import PluridServer, {
     PluridServerPartialOptions,
 } from '@plurid/plurid-react-server';
 
-import helmet from '../client/App/services/helmet';
 
 /** uncomment to use services */
 import reduxStore from '../client/App/services/state/store';
@@ -77,7 +76,6 @@ const options: PluridServerPartialOptions = {
 /** SERVER */
 const pluridServer = new PluridServer({
     paths,
-    helmet,
     styles,
     middleware,
     services,

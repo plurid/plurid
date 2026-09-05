@@ -19,6 +19,15 @@ export interface PluridThunkExtra {
     motion?: CameraMotionController;
     /** The View's root element, while mounted (the shortcuts' focus target). */
     view?: HTMLElement | null;
+    /**
+     * A plane to frame again once its FIRST measurement after (re)opening lands (`reportPlaneSize`):
+     * a plane that was closed is unmounted, so the tree keeps the size it had when it closed — the
+     * frame at reopen targets the best-known geometry, the measured one retargets the tween.
+     */
+    pendingFrame?: {
+        planeID: string;
+        animate: boolean;
+    };
 }
 
 

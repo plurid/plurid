@@ -26,6 +26,7 @@
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
     import { PluridThunkExtra } from '~services/state/extra';
+    import { SetPlaneSizePayload } from '~services/state/modules/space/types';
 
     import {
         interaction,
@@ -343,11 +344,44 @@ export const cameraCommand = (
 };
 
 
+/** Whether the view center looks at the plane: the ray through the view center hits inside it. */
+export const planeCoversViewCenter = (
+    spaceState: PluridStateSpace,
+    configuration: PluridConfiguration,
+    plane: TreePlane,
+): boolean => {
+    const viewSize = spaceState.viewSize;
+    const pick = cameraEngine.pickPlanePoint(
+        spaceState.camera,
+        viewSize,
+        planeGeometry(plane, resolvePlaneFallbackSize(configuration, viewSize)),
+        {
+            x: viewSize.width / 2,
+            y: viewSize.height / 2,
+        },
+    );
+
+    return !!pick && pick.inside;
+};
+
+
 // #region wrappers
+export interface FramePlaneNodeOptions {
+    /**
+     * Frame again when the plane's first measurement lands (`reportPlaneSize`): for a plane that
+     * (re)opens with a stale or unknown size the first frame targets the best-known geometry and
+     * the measured one retargets the tween. Ignored for manually sized planes (their size is
+     * authoritative).
+     */
+    awaitMeasure?: boolean;
+}
+
+
 /** Frame a plane node (already resolved). */
 export const framePlaneNode = (
     plane: TreePlane,
     animate = true,
+    options: FramePlaneNodeOptions = {},
 ): CameraThunk => (dispatch, getState, extra) => {
     const state = getState();
     commitCameraTarget(
@@ -358,6 +392,43 @@ export const framePlaneNode = (
             animate,
         },
     );
+
+    if (!extra) {
+        return;
+    }
+    if (options.awaitMeasure && plane.sizeMode !== 'manual') {
+        extra.pendingFrame = {
+            planeID: plane.planeID,
+            animate,
+        };
+    } else if (extra.pendingFrame && extra.pendingFrame.planeID !== plane.planeID) {
+        // Any other framing supersedes a pending re-frame.
+        extra.pendingFrame = undefined;
+    }
+};
+
+
+/**
+ * A plane's measurement (the plane's ResizeObserver): write it, then settle a pending re-frame for
+ * that plane. Never while the user drives the camera — a gesture or a fling is not hijacked.
+ */
+export const reportPlaneSize = (
+    payload: SetPlaneSizePayload,
+): CameraThunk => (dispatch, getState, extra) => {
+    dispatch(actions.space.setPlaneSize(payload));
+
+    const pending = extra?.pendingFrame;
+    if (!extra || !pending || pending.planeID !== payload.planeID) {
+        return;
+    }
+    extra.pendingFrame = undefined;
+
+    const motion = getState().space.motion;
+    if (motion === 'gesture' || motion === 'fling') {
+        return;
+    }
+
+    dispatch(framePlaneByID(payload.planeID, pending.animate) as any);
 };
 
 

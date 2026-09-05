@@ -12,7 +12,7 @@ export default defineConfig({
     esbuildPlugins: [cjsInteropPlugin()],
     // tsup's own externals plugin runs BEFORE user plugins; these two must not be pre-externalized
     // or the shim never sees them (the shim marks the real module external itself).
-    noExternal: ['styled-components', 'react-helmet-async'],
+    noExternal: ['styled-components'],
     dts: true,
     outDir: 'distribution',
     sourcemap: true,
