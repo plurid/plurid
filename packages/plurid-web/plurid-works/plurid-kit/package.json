@@ -90,7 +90,7 @@
         "jest": "^30.4.2",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
-        "react-helmet-async": "^2.0.4",
+        "react-helmet-async": "^3.0.0",
         "react-redux": "^9.3.0",
         "redux": "^5.0.1",
         "styled-components": "^6.4.2",

@@ -23,7 +23,7 @@ const keep = process.argv.includes('--keep');
 /** Peers the packages declare that live outside this repository (installed from the registry). */
 const EXTERNAL_PEERS = [
     'react@19', 'react-dom@19', 'styled-components@6', '@reduxjs/toolkit@2', 'react-redux@9', 'redux@5',
-    'react-helmet-async@2', 'cross-fetch@4', 'express@4', 'body-parser@1',
+    'react-helmet-async@3', 'cross-fetch@4', 'express@4', 'body-parser@1',
     '@plurid/elementql@0.0.0-1', '@plurid/elementql-client-react@0.0.0-1', '@plurid/deon@0.0.0-10',
 ];
 
@@ -62,7 +62,7 @@ for (const { directory, data } of packages) {
 
 writeFileSync(join(project, 'package.json'), JSON.stringify({ name: 'plurid-smoke', private: true, type: 'module' }, null, 2));
 console.log('[smoke.pack] installing tarballs + peers with npm (a minute)');
-execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', '--legacy-peer-deps', ...tarballFiles, ...EXTERNAL_PEERS], {
+execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, ...EXTERNAL_PEERS], {
     cwd: project,
     stdio: ['ignore', 'pipe', 'pipe'],
     timeout: 600000,

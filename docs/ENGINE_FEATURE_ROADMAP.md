@@ -130,3 +130,4 @@ Landed 2026-09-02/03 (see ARCHITECTURE.md): the camera core and motion controlle
 - A screen-reader 2D fallback (a linear list of the planes with the same commands).
 - State-preserving HMR for the kit (the dev loop restarts the server; client state survives only via persistence).
 - Query / fragment preservation on link routes (`resolveViewItem` strips them; the IsoMatcher parametric route-plane test stays skipped).
+- Evaluate React-native head metadata as a future simplification of `plurid-react-server`. This is not a React 19 compatibility blocker: `react-helmet-async@3` supports React 19 and satisfies the existing published peer range; development and packed-consumer checks use version 3 with peer checking enabled.
