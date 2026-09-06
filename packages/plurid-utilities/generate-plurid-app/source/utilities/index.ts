@@ -1,7 +1,7 @@
 // #region imports
     // #region libraries
     import {
-        exec,
+        execFile,
     } from 'node:child_process';
     import fs from 'node:fs';
     import path from 'node:path';
@@ -20,35 +20,27 @@
 
 
 // #region module
-export const copyDirectory = (
+/**
+ * Copy a directory tree, AWAITED (C12, 2026-09-06: the old stream copy returned before the bytes were
+ * written, so a later step could read a half-copied file). Symlinks are copied as links.
+ */
+export const copyDirectory = async (
     src: string,
     dest: string,
 ) => {
-    makeDirectory(dest);
-
-	const files = fs.readdirSync(src);
-	for(let i = 0; i < files.length; i++) {
-        const current = fs.lstatSync(path.join(src, files[i]));
-
-		if (current.isDirectory()) {
-			copyDirectory(path.join(src, files[i]), path.join(dest, files[i]));
-		} else if (current.isSymbolicLink()) {
-			const symlink = fs.readlinkSync(path.join(src, files[i]));
-			fs.symlinkSync(symlink, path.join(dest, files[i]));
-		} else {
-			copyFile(path.join(src, files[i]), path.join(dest, files[i]));
-		}
-	}
+    await fs.promises.cp(src, dest, {
+        recursive: true,
+        force: true,
+        verbatimSymlinks: true,
+    });
 };
 
 
-export const copyFile = (
+export const copyFile = async (
     src: string,
     dest: string,
 ) => {
-	const oldFile = fs.createReadStream(src);
-	const newFile = fs.createWriteStream(dest);
-    oldFile.pipe(newFile);
+    await fs.promises.copyFile(src, dest);
 };
 
 
@@ -75,43 +67,75 @@ export const makeDirectory = (
 export const removeDirectory = async (
     directory: string,
 ) => {
-    try {
-        await fs.promises.rm(
-            directory,
-            {
-                recursive: true,
-            },
-        );
-    } catch (error) {
-        return;
-    }
+    await fs.promises.rm(
+        directory,
+        {
+            recursive: true,
+            force: true,
+        },
+    );
 }
 
 
 /**
- * Executes a shell command and return it as a Promise.
- *
- * @param command
+ * The destination must be OURS: missing (created) or an empty directory. A non-empty directory is
+ * refused before anything is written or removed (C12: the client path removes `public`, `src` and
+ * `.git` under the destination, so it must never be someone else's project).
+ */
+export const ensureOwnedDirectory = (
+    directory: string,
+) => {
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+        return;
+    }
+    if (!fs.lstatSync(directory).isDirectory()) {
+        throw new Error(`The destination ${directory} exists and is not a directory.`);
+    }
+    if (fs.readdirSync(directory).length > 0) {
+        throw new Error(`The destination ${directory} is not empty; choose an empty or new directory.`);
+    }
+}
+
+
+export interface ExecutedCommand {
+    stdout: string;
+    stderr: string;
+}
+
+/**
+ * Run a program with an ARGUMENT ARRAY — never a shell string — so a path with spaces or a
+ * metacharacter is one argument (C12). Rejects when the program exits with a failure or cannot be
+ * started, so a failed step stops the generation instead of being reported as a success.
  */
 export const executeCommand = (
-    command: string,
+    file: string,
+    args: string[] = [],
     options?: {
-        cwd: string;
+        cwd?: string;
     },
-) => {
+): Promise<ExecutedCommand> => {
     return new Promise(
-        (resolve, _) => {
-            exec(
-                command,
+        (resolve, reject) => {
+            execFile(
+                file,
+                args,
                 {
                     cwd: options?.cwd || process.cwd(),
+                    maxBuffer: 64 * 1024 * 1024,
                 },
                 (error, stdout, stderr) => {
                     if (error) {
-                        console.warn(error);
+                        reject(new Error(
+                            `${[file, ...args].join(' ')} failed${error.code !== undefined ? ` (${error.code})` : ''}: `
+                            + (stderr || error.message).toString().trim(),
+                        ));
+                        return;
                     }
-
-                    resolve(stdout? stdout : stderr);
+                    resolve({
+                        stdout: stdout.toString(),
+                        stderr: stderr.toString(),
+                    });
                 },
             );
         }

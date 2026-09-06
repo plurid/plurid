@@ -15,12 +15,14 @@ export const useWindowEvent = (
         if (typeof window === 'undefined') {
             return;
         }
+
         window.addEventListener(event, callback, { passive: false });
 
         return () => {
             if (typeof window === 'undefined') {
                 return;
             }
+
             window.removeEventListener(event, callback);
         }
     }, [
@@ -30,27 +32,42 @@ export const useWindowEvent = (
 };
 
 
+/**
+ * Subscribe `callback` to `event` on `element`. An OMITTED element (`undefined`) means the window;
+ * `null` means no subscription (a target not mounted yet). The target is resolved once per effect and
+ * captured for the teardown, so a target that disappears or is replaced never throws on cleanup and
+ * never keeps a stale listener (C14, 2026-09-06); a changed element re-subscribes.
+ */
 export const useElementEvent = (
     event: any,
     element: any,
     callback: any,
 ) => {
     useEffect(() => {
-        if (element) {
-            element.addEventListener(event, callback, { passive: false });
+        const target = element === undefined
+            ? (typeof window !== 'undefined' ? window : null)
+            : element;
+        if (!target || typeof target.addEventListener !== 'function') {
+            return;
         }
-        return () => element.removeEventListener(event, callback);
-    }, [event, callback]);
+
+        target.addEventListener(event, callback, { passive: false });
+
+        return () => {
+            target.removeEventListener(event, callback);
+        };
+    }, [
+        event,
+        element,
+        callback,
+    ]);
 }
+
 
 export const useGlobalKeyDown = (
     callback: any,
     element?: any,
 ) => {
-    // if (!element) {
-    //     return useWindowEvent('keydown', callback);
-    // }
-
     return useElementEvent(
         'keydown',
         element,
@@ -58,14 +75,11 @@ export const useGlobalKeyDown = (
     );
 }
 
+
 export const useGlobalWheel = (
     callback: any,
     element?: any,
 ) => {
-    // if (!element) {
-    //     return useWindowEvent('wheel', callback);
-    // }
-
     return useElementEvent(
         'wheel',
         element,

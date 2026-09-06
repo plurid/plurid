@@ -74,13 +74,14 @@ describe('the dispatcher and the data table', () => {
             const definition = table.get(binding.id);
             expect({ id: binding.id, code: definition?.code }).toEqual({ id: binding.id, code: binding.code });
         }
-        expect(table.get('dock')!.when).toBe('page');
+        // `dock` (Escape) applies in both presentations since 2026-09-06 (a docked plane reveals in the space)
+        expect(table.get('dock')!.when).toBeUndefined();
     });
 
     it('the help is described for a presentation: the page-only bindings show on a page, not in the space', () => {
         const ids = (context: Parameters<typeof describeShortcuts>[1]) => describeShortcuts(undefined, context).flatMap((group) => group.items.map((item) => item.id));
         expect(ids({ presentation: 'page' })).toContain('dock');
-        expect(ids({ presentation: 'space' })).not.toContain('dock');
+        expect(ids({ presentation: 'space' })).toContain('dock');
         expect(ids({ presentation: 'space', grabMode: false })).not.toContain('exitGrabMode');
         expect(ids({})).toContain('dock');
     });

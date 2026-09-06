@@ -112,7 +112,7 @@ export const frameTargetForPlane = (
     plane: TreePlane,
 ): CameraState => {
     if (configuration.space.presentation === 'page') {
-        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.cameraLimits);
+        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.cameraLimits, spaceState.viewSize);
     }
     return cameraEngine.framePlane(
         spaceState.camera,
@@ -145,8 +145,12 @@ const dockTargetPlane = (
     planeID?: string,
 ): TreePlane | undefined => {
     const configured = spaceEngine.layout.configuredPlaneSize(configuration, spaceState.viewSize);
+    // this plane, else the docked one, else the ACTIVE plane (the one last clicked or focused — what a
+    // reader means by "this plane" in the space presentation), else the nearest
+    const active = spaceState.activePlaneID && spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, spaceState.activePlaneID);
     const id = planeID
-        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon)
+        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon, spaceState.cameraLimits)
+        || (active && active.show !== false ? active.planeID : '')
         || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree, spaceState.viewSize, configured);
     return id ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, id) : undefined;
 };
@@ -260,18 +264,14 @@ export const bookmarkTarget = (
 
 
 /**
- * The page a camera target LANDS DOCKED on (the page presentation), `''` when it lands elsewhere or
- * in the space presentation.
+ * The plane a camera target LANDS DOCKED on, `''` when it lands elsewhere (both presentations).
  */
 export const landingDockPlaneID = (
     state: AppState,
     target: CameraState,
 ): string => {
-    if (state.configuration.space.presentation !== 'page') {
-        return '';
-    }
     const configured = spaceEngine.layout.configuredPlaneSize(state.configuration, state.space.viewSize);
-    return cameraEngine.findDockedPlane(target, state.space.tree, state.space.viewSize, configured, state.configuration.space.docking?.epsilon);
+    return cameraEngine.findDockedPlane(target, state.space.tree, state.space.viewSize, configured, state.configuration.space.docking?.epsilon, state.space.cameraLimits);
 };
 
 /**
@@ -376,6 +376,7 @@ export const resolveCameraTarget = (
                     spaceState.camera,
                     dockGeometry(plane, configuration, spaceState.viewSize),
                     spaceState.cameraLimits,
+                    spaceState.viewSize,
                 )
                 : undefined;
         }
@@ -387,6 +388,7 @@ export const resolveCameraTarget = (
                         spaceState.camera,
                         dockGeometry(plane, configuration, spaceState.viewSize),
                         spaceState.cameraLimits,
+                        spaceState.viewSize,
                     ),
                     spaceState.cameraLimits,
                     configuration.space.docking?.reveal,

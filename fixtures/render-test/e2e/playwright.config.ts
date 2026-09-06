@@ -67,8 +67,9 @@ export default defineConfig({
                     width: 1280,
                     height: 800,
                 },
-                colorScheme: 'dark',
-                reducedMotion: 'reduce',
+                colorScheme: 'dark' as const,
+                // a context option (the typed home of `reducedMotion`); the fixtures also pass `reducedMotion=1`
+                contextOptions: { reducedMotion: 'reduce' as const },
             },
         },
     ],

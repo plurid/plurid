@@ -301,11 +301,19 @@ export const handleGetRequest = async (
 
         response.send(await renderer.html());
 
+        // Post-response work: observed, never a second response, never an unhandled rejection (C09).
         resolvePreserveAfterServe(server, 
             preserveAfterServe,
             request,
             response,
-        );
+        ).catch((error) => {
+            if (debugAllows(server.options, 'error')) {
+                console.error(
+                    `[${time.stamp()} :: ${requestID}] afterServe failed for GET ${request.path}`,
+                    error,
+                );
+            }
+        });
 
         return;
     } catch (error) {

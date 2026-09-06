@@ -17,6 +17,7 @@
 
     import {
         copyDirectory,
+        removeDirectory,
         executeCommand,
         addScript,
         loadingSpinner,
@@ -243,9 +244,9 @@ const setupVersioning = async (
     }
 
     if (app.versioning === 'Git') {
-        const gitInit = 'git init';
         await executeCommand(
-            gitInit,
+            'git',
+            ['init'],
             { cwd: app.directory },
         );
 
@@ -300,9 +301,7 @@ const removeUnusedAddons = async (
         const graphqlRelativeDirectory = './source/client/App/services/graphql';
         const graphqlDirectory = path.resolve(app.directory, graphqlRelativeDirectory);
 
-        await executeCommand(
-            `rm -rf ${graphqlDirectory}`,
-        );
+        await removeDirectory(graphqlDirectory);
     }
 
     const reduxService = app.services.includes(services.redux);
@@ -310,58 +309,38 @@ const removeUnusedAddons = async (
         const reduxRelativeDirectory = './source/client/App/services/state';
         const reduxDirectory = path.resolve(app.directory, reduxRelativeDirectory);
 
-        await executeCommand(
-            `rm -rf ${reduxDirectory}`,
-        );
+        await removeDirectory(reduxDirectory);
     }
 }
 
 
+/** The package manager's program and its `init` arguments. */
 const computeInitCommand = (
     app: Application,
-) => {
-    const yarnInitCommand = `yarn init -y`;
-    const npmInitCommand = `npm init -y`;
-    const pnpmInitCommand = `pnpm init -y`;
-    const initCommand = app.manager === manager.yarn
-        ? yarnInitCommand
-        : app.manager === manager.pnpm
-            ? pnpmInitCommand
-            : npmInitCommand;
-
-    return initCommand;
+): [string, string[]] => {
+    if (app.manager === manager.yarn) {
+        return ['yarn', ['init', '-y']];
+    }
+    if (app.manager === manager.pnpm) {
+        return ['pnpm', ['init']];
+    }
+    return ['npm', ['init', '-y']];
 }
 
+
+/** The package manager's program and its `add` arguments — an argument ARRAY, never a shell string (C12). */
 const computeInstallDependenciesCommand = (
     app: Application,
-    dependencies: string,
-) => {
-    const yarnInstallDependenciesCommand = `yarn add ${dependencies}`;
-    const npmInstallDependenciesCommand = `npm install ${dependencies}`;
-    const pnpmInstallDependenciesCommand = `pnpm install ${dependencies}`;
-    const installDependenciesCommand = app.manager === manager.yarn
-        ? yarnInstallDependenciesCommand
-        : app.manager === manager.pnpm
-            ? pnpmInstallDependenciesCommand
-            : npmInstallDependenciesCommand;
-
-    return installDependenciesCommand;
-}
-
-const computeInstallDevelopmentDependenciesCommand = (
-    app: Application,
-    dependencies: string,
-) => {
-    const yarnInstallDevelopmentDependenciesCommand = `yarn add -D ${dependencies}`;
-    const npmInstallDevelopmentDependenciesCommand = `npm install -D ${dependencies}`;
-    const pnpmInstallDevelopmentDependenciesCommand = `pnpm install -D ${dependencies}`;
-    const installDevelopmentDependenciesCommand = app.manager === manager.yarn
-        ? yarnInstallDevelopmentDependenciesCommand
-        : app.manager === manager.pnpm
-            ? pnpmInstallDevelopmentDependenciesCommand
-            : npmInstallDevelopmentDependenciesCommand;
-
-    return installDevelopmentDependenciesCommand;
+    dependencies: string[],
+    development = false,
+): [string, string[]] => {
+    if (app.manager === manager.yarn) {
+        return ['yarn', ['add', ...(development ? ['-D'] : []), ...dependencies]];
+    }
+    if (app.manager === manager.pnpm) {
+        return ['pnpm', ['add', ...(development ? ['-D'] : []), ...dependencies]];
+    }
+    return ['npm', ['install', ...(development ? ['-D'] : []), ...dependencies]];
 }
 
 
@@ -392,29 +371,27 @@ const generateReactServerApplication = async (
         ...stripeDependencies,
     ];
 
-    const requiredDependenciesPackages = completeRequiredDependencies.join(' ');
     const installDependenciesCommand = computeInstallDependenciesCommand(
         app,
-        requiredDependenciesPackages,
+        completeRequiredDependencies,
     );
-
     const requiredDevelopmentDependenciesPackages = app.language === 'TypeScript'
-        ? [ ...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies].join(' ')
-        : [...requiredDevelopmentDependencies, ...requiredDevelopmentJavascriptDependencies].join(' ');
-    const installDevelopmentDependenciesCommand = computeInstallDevelopmentDependenciesCommand(
+        ? [...requiredDevelopmentDependencies, ...requiredDevelopmentTypescriptDependencies]
+        : [...requiredDevelopmentDependencies, ...requiredDevelopmentJavascriptDependencies];
+    const installDevelopmentDependenciesCommand = computeInstallDependenciesCommand(
         app,
         requiredDevelopmentDependenciesPackages,
+        true,
     );
 
-
     await executeCommand(
-        initCommand,
+        ...initCommand,
         { cwd: app.directory },
     );
 
     const directDependenciesSpinner = loadingSpinner('\tInstalling direct dependencies...').start();
     await executeCommand(
-        installDependenciesCommand,
+        ...installDependenciesCommand,
         { cwd: app.directory },
     );
     directDependenciesSpinner.stopAndPersist();
@@ -423,7 +400,7 @@ const generateReactServerApplication = async (
 
     const developmentDependenciesSpinner = loadingSpinner('\tInstalling development dependencies...').start();
     await executeCommand(
-        installDevelopmentDependenciesCommand,
+        ...installDevelopmentDependenciesCommand,
         { cwd: app.directory },
     );
     developmentDependenciesSpinner.stopAndPersist();
@@ -440,7 +417,7 @@ const generateReactServerApplication = async (
     const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
     const templateDirectory = path.join(app.directory, base);
-    copyDirectory(templateDirectory, app.directory);
+    await copyDirectory(templateDirectory, app.directory);
 
     await setupPackageJSONReactServer(app);
 

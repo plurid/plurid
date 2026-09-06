@@ -43,9 +43,9 @@ Several utilities and the generator still have sanity-only tests. Coverage outpu
 
 ## P1: Establish and raise the large-space ceiling
 
-### Wire culling into rendering
+### Measure and budget culling
 
-`culledView`, configuration, selectors, UI, and engine calculation exist, but the View dispatch is commented out and rendering does not consume a real visibility set. Complete the data flow without introducing camera-update feedback or unmounting stateful content unexpectedly.
+Culling is WIRED (`useCulling`, `state.space.culled.hidden` / `.frozen`, `usePluridPlane().culled` / `.frozen`; see ARCHITECTURE §3.3): a throttled pass after every camera commit, tree change, or eligibility change (the selection, the active / isolated / focused plane, the configuration — 2026-09-06, C05 of the critique). Culled planes keep their React state (hidden, frozen), so what remains is measurement and budgets, not wiring:
 
 The design must decide:
 

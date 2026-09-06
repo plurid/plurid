@@ -167,6 +167,8 @@ export function clientBuildOptions(
         define?: Record<string, string>;
         loaders?: Record<string, string>;
         environment?: string[];
+        /** The client bundle's directory (`resolvePaths(config).clientDir`); default `build/client`. */
+        outdir?: string;
     },
 ): BuildOptions {
     const development = options.mode === 'development';
@@ -174,7 +176,7 @@ export function clientBuildOptions(
     return {
         ...commonBuild,
         entryPoints: ['source/client/index.tsx'],
-        outdir: 'build/client',
+        outdir: options.outdir ?? 'build/client',
         platform: 'browser',
         // iife (esbuild's browser default) - a single `build/client/index.js`
         // loadable via the template's `<script src>`. Matches denote's proven
@@ -218,6 +220,8 @@ export function serverBuildOptions(
         metafile?: boolean;
         define?: Record<string, string>;
         loaders?: Record<string, string>;
+        /** The server bundle's directory (`resolvePaths(config).buildDir`); default `build`. */
+        outdir?: string;
     },
 ): BuildOptions {
     const development = options.mode === 'development';
@@ -225,7 +229,7 @@ export function serverBuildOptions(
     return {
         ...commonBuild,
         entryPoints: ['source/server/index.ts'],
-        outdir: 'build',
+        outdir: options.outdir ?? 'build',
         platform: 'node',
         format: 'cjs',
         plugins: [externalizeBare(options.forceBundle)],

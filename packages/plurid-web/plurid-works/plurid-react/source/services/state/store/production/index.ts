@@ -12,20 +12,19 @@
         AppState,
     } from '../reducer';
 
-    import createHistoryMiddleware from '../../middleware/history';
-    import { PluridThunkExtra } from '../../extra';
+    import {
+        pluridMiddleware,
+        PluridStoreOptions,
+    } from '../middleware';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export interface PluridStoreOptions {
-    /** Include the spatial undo/redo history middleware. Default `true`. */
-    history?: boolean;
-    /** The thunk extra argument (the View's motion controller holder). */
-    extra?: PluridThunkExtra;
-}
+export type {
+    PluridStoreOptions,
+};
 
 
 const store: (
@@ -41,10 +40,7 @@ const store: (
     // `history` defaults to true; an explicit `false` drops the middleware entirely (no per-action
     // signature cost, no snapshot memory) — for hosts owning their own undo or never mutating the
     // arrangement.
-    middleware: (getDefaultMiddleware) =>
-        options?.history === false
-            ? getDefaultMiddleware({ thunk: { extraArgument: options?.extra } })
-            : getDefaultMiddleware({ thunk: { extraArgument: options?.extra } }).concat(createHistoryMiddleware()),
+    middleware: (getDefaultMiddleware) => pluridMiddleware(getDefaultMiddleware, options) as any,
 });
 
 

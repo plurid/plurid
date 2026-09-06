@@ -128,5 +128,22 @@ describe('createHistoryMiddleware', () => {
         store.dispatch({ type: 'space/undo' });          // undo toggle
         expect(show(store)).toBe(true);
     });
+
+    it("a peer's applied change clears the local undo/redo stacks: undo never restores a snapshot that predates peer work (C03 interim)", () => {
+        const store = makeStore();
+        store.dispatch({ type: 'TOGGLE_SHOW' });                       // local: A hidden — one entry
+        const afterLocal = store.getState().space.tree;
+        store.dispatch({
+            type: 'space/restoreArrangement',
+            payload: { tree: [{ planeID: '/a', show: false }, { planeID: '/b', show: false }], links: [] },
+            meta: { remote: true },
+        });
+        const afterRemote = store.getState().space.tree;
+        expect(afterRemote).not.toBe(afterLocal);
+        store.dispatch({ type: 'space/undo' });
+        // nothing to undo: the peer's arrangement stands
+        expect(store.getState().space.tree).toBe(afterRemote);
+        store.dispatch({ type: 'space/redo' });
+        expect(store.getState().space.tree).toBe(afterRemote);
+    });
 });
-// #endregion module

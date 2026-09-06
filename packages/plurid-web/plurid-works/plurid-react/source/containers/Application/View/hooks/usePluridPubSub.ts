@@ -5,6 +5,7 @@
         useState,
         useCallback,
         useEffect,
+        useLayoutEffect,
     } from 'react';
 
     import {
@@ -750,8 +751,13 @@ export const usePluridPubSub = (
 
 
     // #region effects pubsub
-    /** PubSub Subscribe */
-    useEffect(() => {
+    /**
+     * PubSub Subscribe — a LAYOUT effect on purpose: a child's layout effects run before the parent's
+     * `componentDidMount`, so the bridge exists when the Application fires `onReady`, and a host may
+     * publish a command synchronously from it (C01, 2026-09-06). React 19 runs it as a no-op on the
+     * server.
+     */
+    useLayoutEffect(() => {
         const unsubscribers: (() => void)[] = [];
 
         for (const pubsub of pluridPubSub) {

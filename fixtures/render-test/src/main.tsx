@@ -14,9 +14,12 @@ const flags = readFlags(location.search, (name) => fixtureByName(name)?.query);
 const gallery = flags.gallery || new URLSearchParams(window.location.search).get('gallery') === 'looks';
 const Root = flags.router ? RouterDemo : (gallery ? Gallery : App);
 
-console.log('[RT] plurid-react export count =', Object.keys(PR).length,
-  '| PluridApplication =', typeof (PR as any).PluridApplication,
-  '| SPACE_LAYOUT =', typeof (PR as any).SPACE_LAYOUT);
+// Boot diagnostics only with `?debug=1`: a quiet console is the harness's normal state.
+if (flags.debug) {
+  console.log('[RT] plurid-react export count =', Object.keys(PR).length,
+    '| PluridApplication =', typeof (PR as any).PluridApplication,
+    '| SPACE_LAYOUT =', typeof (PR as any).SPACE_LAYOUT);
+}
 
 class EB extends React.Component<any, any> {
   state = { err: null as any };
@@ -31,7 +34,9 @@ class EB extends React.Component<any, any> {
 const el = document.getElementById('plurid-app')!;
 try {
   createRoot(el).render(React.createElement(EB, null, React.createElement(Root)));
-  console.log('[RT] render() returned without throwing');
+  if (flags.debug) {
+    console.log('[RT] render() returned without throwing');
+  }
 } catch (e: any) {
   console.error('[RT] SYNC render threw:', e?.message);
 }

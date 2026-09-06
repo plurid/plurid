@@ -154,6 +154,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                             key={action.id}
                             type="button"
                             title={action.title}
+                            aria-label={action.title}
                             data-plurid-control={'selection-' + action.id}
                             onClick={() => dispatchThunk(action.run())}
                         >
@@ -169,6 +170,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationX)}
                     theme={interactionTheme}
                     checked={transformLocks.rotationX}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationX')}
@@ -183,6 +185,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowRotationY)}
                     theme={interactionTheme}
                     checked={transformLocks.rotationY}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('rotationY')}
@@ -197,6 +200,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationX)}
                     theme={interactionTheme}
                     checked={transformLocks.translationX}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationX')}
@@ -211,6 +215,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationY)}
                     theme={interactionTheme}
                     checked={transformLocks.translationY}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationY')}
@@ -225,6 +230,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowTranslationZ)}
                     theme={interactionTheme}
                     checked={transformLocks.translationZ}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('translationZ')}
@@ -239,6 +245,7 @@ const PluridMenuMoreTransform: React.FC<PluridMenuMoreTransformProperties> = (
                 </div>
 
                 <PluridSwitch
+                    label={internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTransformAllowScale)}
                     theme={interactionTheme}
                     checked={transformLocks.scale}
                     atChange={() => dispatchSetConfigurationSpaceTransformLocks('scale')}

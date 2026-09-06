@@ -12,20 +12,19 @@
         AppState,
     } from '../reducer';
 
-    import createHistoryMiddleware from '../../middleware/history';
-    import { PluridThunkExtra } from '../../extra';
+    import {
+        pluridMiddleware,
+        PluridStoreOptions,
+    } from '../middleware';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export interface PluridStoreOptions {
-    /** Include the spatial undo/redo history middleware. Default `true`. */
-    history?: boolean;
-    /** The thunk extra argument (the View's motion controller holder). */
-    extra?: PluridThunkExtra;
-}
+export type {
+    PluridStoreOptions,
+};
 
 
 const store: (
@@ -43,25 +42,7 @@ const store: (
     // arrangement.
     // `space.shortcuts.onUnhandledKey` is a host CALLBACK that legitimately lives in the merged
     // configuration; RTK's development serializable check would otherwise flag it on every action.
-    middleware: (getDefaultMiddleware) => {
-        const defaults = getDefaultMiddleware({
-            thunk: {
-                extraArgument: options?.extra,
-            },
-            serializableCheck: {
-                ignoredPaths: [
-                    'configuration.space.shortcuts.onUnhandledKey',
-                ],
-                ignoredActionPaths: [
-                    'payload.space.shortcuts.onUnhandledKey',
-                    'payload.configuration.space.shortcuts.onUnhandledKey',
-                ],
-            },
-        });
-        return options?.history === false
-            ? defaults
-            : defaults.concat(createHistoryMiddleware());
-    },
+    middleware: (getDefaultMiddleware) => pluridMiddleware(getDefaultMiddleware, options) as any,
 });
 
 

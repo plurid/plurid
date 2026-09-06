@@ -369,12 +369,26 @@ const PluridView: React.FC<PluridViewProperties> = (
     });
 
     // Culling + depth cues, throttled to one pass per 100 ms after a camera commit / tree change.
+    const cullingEligibility = useMemo(() => JSON.stringify([
+        state.space.activePlaneID,
+        state.space.isolatePlane,
+        state.space.selectedPlaneIDs,
+        stateConfiguration.space.culling,
+        stateConfiguration.elements.plane.depthFade,
+    ]), [
+        state.space.activePlaneID,
+        state.space.isolatePlane,
+        state.space.selectedPlaneIDs,
+        stateConfiguration.space.culling,
+        stateConfiguration.elements.plane.depthFade,
+    ]);
     useCulling({
         dispatch,
         stateRef,
         transform: state.space.transform,
         tree: stateTree,
         viewElement,
+        eligibility: cullingEligibility,
     });
 
     // Animated relayouts glide for the configured motion duration, instant under reduced motion.
@@ -852,7 +866,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             if (!previous || previous === signature) {
                 return;
             }
-            if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon)) {
+            if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon, undefined, spaceState.cameraLimits)) {
                 return;
             }
             dispatch(cameraCommand(

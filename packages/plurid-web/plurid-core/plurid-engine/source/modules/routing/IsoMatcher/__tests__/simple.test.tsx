@@ -448,5 +448,15 @@ describe('IsoMatcher simple', () => {
             }
         }
     });
+
+    it('matches through an ordinary hash and a malformed directive (C06)', () => {
+        const isoMatcher = new IsoMatcher<string>({ planes: [{ route: '/a', component: 'fixture' }] });
+        const anchored = isoMatcher.match('/a#details');
+        expect(anchored).toBeTruthy();
+        const queried = isoMatcher.match('/a?x=1#details');
+        expect(queried && queried.match.query).toStrictEqual({ x: '1' });
+        expect(() => isoMatcher.match('/a#:~:text')).not.toThrow();
+        expect(isoMatcher.match('/a#:~:text')).toBeTruthy();
+    });
 });
 // #endregion module

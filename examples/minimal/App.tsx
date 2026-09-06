@@ -2,7 +2,7 @@
  * Minimal plurid' — the hello-world.
  *
  * Three planes laid out in a navigable 3D space, with zero configuration. Drag to orbit, scroll to zoom,
- * hold G to grab-pan, press ? for the shortcuts overlay. Everything beyond this is opt-in — see
+ * press G (once) or hold Space to grab-pan, press ? for the shortcuts overlay. Everything beyond this is opt-in — see
  * ../control-surface for the same idea wired through every control seam, and ../../docs/GETTING_STARTED.md
  * for the walkthrough.
  *
@@ -29,7 +29,7 @@ const page = {
 const planes: PluridReactPlane[] = [
     { route: '/one',   component: () => <div style={page}><h3>Plane one</h3><p>Drag to orbit.</p></div> },
     { route: '/two',   component: () => <div style={page}><h3>Plane two</h3><p>Scroll to zoom.</p></div> },
-    { route: '/three', component: () => <div style={page}><h3>Plane three</h3><p>Hold G to grab-pan.</p></div> },
+    { route: '/three', component: () => <div style={page}><h3>Plane three</h3><p>Press G or hold Space to grab-pan.</p></div> },
 ];
 
 // The view is the initial arrangement: which routes to show on first render.

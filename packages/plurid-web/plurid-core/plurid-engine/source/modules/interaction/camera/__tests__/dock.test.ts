@@ -8,6 +8,7 @@
     } from '../delta';
     import {
         dockPose,
+        dockScale,
         isDocked,
         findDockedPlane,
         dockGeometry,
@@ -151,5 +152,21 @@ describe('docking', () => {
         expect(dockGeometry(stale, { width: view.width, height: 0 }).height).toBe(764);
     });
 
+
+    it('a smaller plane docks at its fill scale: the box fills the view along the tighter dimension (both presentations)', () => {
+        const camera = identityCamera(view);
+        const panel = { location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, width: 314, height: 416 };
+        expect(dockScale(panel, view)).toBeCloseTo(800 / 416, 6);
+        const docked = dockPose(camera, panel, undefined, view);
+        expect(docked.scale).toBeCloseTo(800 / 416, 6);
+        expect(isDocked(docked, panel, view)).toBe(true);
+        expect(isDocked(camera, panel, view)).toBe(false);                  // scale 1 is not this plane's page
+        expect(findDockedPlane(docked, [{ planeID: 'panel', ...panel, sizeMode: 'declared' }], view, { width: 0, height: 0 })).toBe('panel');
+        // a view-sized page keeps scale 1
+        expect(dockScale(page(), view)).toBe(1);
+        // the fill scale respects the zoom limits
+        expect(dockScale({ ...panel, width: 10, height: 10 }, view)).toBe(4);
+    });
 });
+
 // #endregion module

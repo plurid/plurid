@@ -27,7 +27,9 @@ export const extractPathname = (
         ? location
         : location.substring(0, queryIndex);
 
-    const fragmentIndex = noQueryPath.indexOf('#:~:');
+    // any hash — an ordinary anchor (`#details`) as much as a plurid directive (`#:~:text=…`) — is not
+    // part of the pathname (C06, 2026-09-06: `/a#details` used to miss `/a`)
+    const fragmentIndex = noQueryPath.indexOf('#');
     const noFragmentPath = fragmentIndex === -1
         ? noQueryPath
         : noQueryPath.substring(0, fragmentIndex);
@@ -184,7 +186,8 @@ export const splitPath = (
 export const extractQuery = (
     path: string,
 ): Indexed<string> => {
-    const fragmentIndex = path.indexOf('#:~:');
+    // the query ends at any hash: `/a?x=1#details` is `{ x: '1' }`, not `{ x: '1#details' }` (C06)
+    const fragmentIndex = path.indexOf('#');
     const noFragmentPath = fragmentIndex === -1
         ? path
         : path.substring(0, fragmentIndex);
@@ -259,8 +262,12 @@ export const parseFragment = (
     fragment: string,
 ): PluridRouteFragmentText | PluridRouteFragmentElement | undefined => {
     const fragmentData = fragment.split('=');
-    const fragmentType = fragmentData[0];
+    const fragmentType = fragmentData[0] || '';
     const fragmentValues = fragmentData[1];
+    // a malformed directive (`#:~:text`, `#:~:element=`) is dropped, never thrown (C06)
+    if (!fragmentValues) {
+        return undefined;
+    }
 
     switch (fragmentType.toLowerCase()) {
         case 'text':

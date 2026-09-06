@@ -131,6 +131,20 @@ export const StyledShortcutsTrigger = styled.button<{ theme: Theme }>`
     bottom: ${CHROME_PILL_MARGIN}px;
     left: ${CHROME_PILL_MARGIN}px;
     z-index: ${Z_INDEX.SHORTCUTS_TRIGGER};
+    /* a narrow viewport: above the toolbar's band (U02) */
+    @media (max-width: 640px) {
+        bottom: ${CHROME_PILL_MARGIN + 72}px;
+    }
+`;
+
+/** The dialog's visible close control (U08): touch users need more than the backdrop and Escape. */
+export const StyledShortcutsClose = styled.button`
+    ${chromeControl}
+    ${chromePill}
+    width: 28px;
+    height: 28px;
+    font-size: var(--plurid-font-size-title);
+    line-height: 1;
 `;
 
 export const StyledShortcutsKey = styled.kbd<{ theme: Theme }>`

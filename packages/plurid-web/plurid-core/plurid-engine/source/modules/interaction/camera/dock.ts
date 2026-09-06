@@ -26,11 +26,12 @@
 
 // #region module
 /**
- * DOCKING — the page presentation's derived state. A camera is docked on a plane when it shows
- * that plane face-on at scale 1 with the plane's center under the view center: `pitch = −rotateX`,
- * `yaw = −rotateY`, `scale 1`, `offset 0`, the pivot at the plane's center, so a view-sized plane
- * maps 1 : 1 to view pixels (depth 0, perspective factor 1) and a smaller one sits centered at its
- * own size. The identity camera of a fresh space IS the dock pose of a view-sized root at the
+ * DOCKING — the derived state of reading a plane as a page, in BOTH presentations (2026-09-06). A
+ * camera is docked on a plane when it shows that plane face-on at the plane's FILL scale with the
+ * plane's center under the view center: `pitch = −rotateX`, `yaw = −rotateY`, `scale = dockScale`,
+ * `offset 0`, the pivot at the plane's center. The fill scale lets the plane's box fill the view along
+ * its tighter dimension (`min(view / plane)` — 1 for a view-sized page, so the page presentation's
+ * pages map 1 : 1 to view pixels), within the camera's zoom limits. The identity camera of a fresh space IS the dock pose of a view-sized root at the
  * origin. "Docked" is read off the picture, never off the parameters: a zoom about the cursor or a
  * cursor pivot re-parameterize `pivot` / `offset` losslessly, so two cameras with different pivots
  * can render the same page — the test is "does the camera equal the plane's dock pose", the
@@ -77,18 +78,36 @@ export const dockGeometry = (
     };
 };
 
-/** The camera that docks on `plane`: face-on, unit scale, the plane's center under the view center. */
+/**
+ * The scale a plane is read at: its box filling the view along the tighter dimension (1 for a
+ * view-sized page), clamped to the zoom limits so the pose is always reachable.
+ */
+export const dockScale = (
+    plane: PlaneGeometry,
+    view: ViewSize,
+    limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+): number => {
+    if (!(plane.width > 0) || !(plane.height > 0) || !(view.width > 0) || !(view.height > 0)) {
+        return 1;
+    }
+    const fill = Math.min(view.width / plane.width, view.height / plane.height);
+    return Math.min(limits.zoomMax, Math.max(limits.zoomMin, fill));
+};
+
+
+/** The camera that docks on `plane`: face-on, the fill scale, the plane's center under the view center. */
 export const dockPose = (
     camera: CameraState,
     plane: PlaneGeometry,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    view: ViewSize = { width: plane.width, height: plane.height },
 ): CameraState => clampCamera(
     {
         ...camera,
         yaw: normalizeYaw(-plane.location.rotateY),
         // `0 - x`, not `-x`: a face-on plane must dock at +0 (a `-0` leaks into serialized viewpoints)
         pitch: 0 - plane.location.rotateX,
-        scale: 1,
+        scale: dockScale(plane, view, limits),
         pivot: planeCenter(plane),
         offset: { x: 0, y: 0, z: 0 },
     },
@@ -105,7 +124,7 @@ const angleDistance = (
 const DOCK_TOLERANCE = 1e-3;
 
 /**
- * Whether `camera` is docked on `plane` for this view — whether it IS the plane's dock pose: unit
+ * Whether `camera` is docked on `plane` for this view — whether it IS the plane's dock pose: the fill
  * scale and the face-on angles within `DOCK_TOLERANCE`, then the plane's center projected within
  * `epsilon` px of the view center. The scalar checks come first so an orbit or a zoom exits on
  * the first line; `matrix` lets a walk over many planes project with one camera matrix.
@@ -116,8 +135,9 @@ export const isDocked = (
     view: ViewSize,
     epsilon = 0.5,
     matrix = cameraMatrix(camera, view),
+    limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
 ): boolean => {
-    if (Math.abs(camera.scale - 1) > DOCK_TOLERANCE) {
+    if (Math.abs(camera.scale - dockScale(plane, view, limits)) > DOCK_TOLERANCE) {
         return false;
     }
     if (angleDistance(camera.yaw, -plane.location.rotateY) > DOCK_TOLERANCE) {
@@ -161,16 +181,14 @@ export const findDockedPlane = (
     view: ViewSize,
     fallback: DockFallbackSize,
     epsilon = 0.5,
+    limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
 ): string => {
-    // the scalar part of the test does not depend on the plane: a zoomed or turned camera is
-    // docked on nothing, and the walk is skipped
-    if (Math.abs(camera.scale - 1) > DOCK_TOLERANCE) {
-        return '';
-    }
+    // every plane has its own fill scale, so the scalar test is per plane (it is the first line of
+    // `isDocked`, before any projection)
     const matrix = cameraMatrix(camera, view);
     let found = '';
     walkShown(planes, (plane) => {
-        if (isDocked(camera, dockGeometry(plane, fallback), view, epsilon, matrix)) {
+        if (isDocked(camera, dockGeometry(plane, fallback), view, epsilon, matrix, limits)) {
             found = plane.planeID;
             return true;
         }

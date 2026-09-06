@@ -43,6 +43,13 @@ export interface UseCullingParameters {
     transform: string;
     tree: TreePlane[];
     viewElement: React.RefObject<HTMLDivElement>;
+    /**
+     * Everything else that changes a plane's eligibility (C05, 2026-09-06): the selection, the active and
+     * isolated planes, the culling and depth-fade configuration — folded into one string by the View, so
+     * a change to any of them schedules a pass with a still camera (the focused plane is caught by the
+     * `focusin` listener below).
+     */
+    eligibility: string;
 }
 
 /** At most one culling pass per this many ms, per committed frame. */
@@ -63,10 +70,13 @@ export const useCulling = (
         transform,
         tree,
         viewElement,
+        eligibility,
     }: UseCullingParameters,
 ) => {
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const last = useRef(0);
+    /** The latest scheduler, for the focus listener (it must not re-subscribe per frame). */
+    const scheduleRef = useRef<() => void>(() => {});
 
 
     useEffect(() => {
@@ -175,11 +185,15 @@ export const useCulling = (
             }
         };
 
-        const elapsed = Date.now() - last.current;
-        if (timer.current !== null) {
-            return;
-        }
-        timer.current = setTimeout(run, Math.max(0, CULLING_INTERVAL - elapsed));
+        const schedule = () => {
+            if (timer.current !== null) {
+                return;
+            }
+            const elapsed = Date.now() - last.current;
+            timer.current = setTimeout(run, Math.max(0, CULLING_INTERVAL - elapsed));
+        };
+        scheduleRef.current = schedule;
+        schedule();
 
         return () => {
             if (timer.current !== null) {
@@ -190,6 +204,24 @@ export const useCulling = (
     }, [
         transform,
         tree,
+        eligibility,
+    ]);
+
+    // A focus change inside the view makes another plane an exception: schedule a pass.
+    useEffect(() => {
+        const element = viewElement.current;
+        if (!element) {
+            return;
+        }
+        const onFocus = () => scheduleRef.current();
+        element.addEventListener('focusin', onFocus);
+        element.addEventListener('focusout', onFocus);
+        return () => {
+            element.removeEventListener('focusin', onFocus);
+            element.removeEventListener('focusout', onFocus);
+        };
+    }, [
+        viewElement,
     ]);
 }
 // #endregion module

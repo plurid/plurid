@@ -9,6 +9,12 @@
     import {
         loadEnvironment,
     } from './environment';
+    import {
+        loadPluridConfig,
+    } from './config';
+    import {
+        resolvePaths,
+    } from './paths';
     // #endregion internal
 // #endregion imports
 
@@ -26,16 +32,17 @@ export async function start(
     const mode = 'production';
     loadEnvironment(mode);
 
-    if (!fs.existsSync('build/index.js')) {
+    const paths = resolvePaths(await loadPluridConfig());
+    if (!fs.existsSync(paths.serverEntry)) {
         process.stderr.write(
-            '[plurid start] build/index.js not found - run `plurid build` first.\n',
+            `[plurid start] ${paths.serverEntry} not found - run \`plurid build\` first.\n`,
         );
         process.exit(1);
     }
 
     const port = readPort(argv) || process.env.PORT || '8080';
 
-    const child = spawn('node', ['build/index.js'], {
+    const child = spawn('node', [paths.serverEntry], {
         stdio: 'inherit',
         env: {
             ...process.env,

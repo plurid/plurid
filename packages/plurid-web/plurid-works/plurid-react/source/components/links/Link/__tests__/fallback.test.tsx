@@ -65,8 +65,9 @@ describe('PluridLink outside and inside an application', () => {
 
         const link = rendered.container.querySelector('[data-plurid-entity="PluridLink"]') as HTMLElement;
         expect(link).toBeTruthy();
-        // the connected link is an anchor WITHOUT an href (the engine owns the click)
-        expect(link.getAttribute('href')).toBeNull();
+        // the connected link is a real anchor: its href is the plane's address (U04, 2026-09-06) — the
+        // engine still owns a plain click (preventDefault), a modifier-click keeps the browser's behaviour
+        expect(link.getAttribute('href')).toMatch(/\/two$/);
         // the engine resolves the route against the application's host
         expect(link.getAttribute('data-plurid-link-route')).toMatch(/\/two$/);
 

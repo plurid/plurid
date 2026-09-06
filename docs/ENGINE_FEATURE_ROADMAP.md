@@ -38,7 +38,7 @@ A feature belongs in the engine when Denote, Depict, or Dechat can use the same 
 
 ## Next 1: Visibility, culling, and virtualization
 
-Real culling is the immediate capability priority. The repository contains culling configuration, calculation, state, selectors, and UI, but the View update is commented and rendering does not consume a true visible set.
+Culling is wired and exercised (`useCulling`: hidden / frozen planes, depth cues, the active / selected / isolated / focused exceptions, invalidated on every eligibility change since 2026-09-06). What is NOT established is general content virtualization: culled planes keep their mounted content and a host's own effects keep running (`usePluridPlane()` exposes `shown` / `culled` / `frozen` so content can pause itself). The next capability is retention and unmount semantics with measured memory budgets.
 
 The capability must define:
 

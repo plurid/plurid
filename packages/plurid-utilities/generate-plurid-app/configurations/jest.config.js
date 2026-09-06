@@ -1,4 +1,8 @@
 module.exports = {
+    // the `~` source alias (tsconfig paths) for the suites that reach the source tree
+    moduleNameMapper: {
+        '^~(.*)$': '<rootDir>/source/$1',
+    },
     transform: {
         '.(ts|tsx)': 'ts-jest',
     },

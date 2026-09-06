@@ -51,6 +51,20 @@ let plurid: PluridApi;
 
 ---
 
+### Readiness, registrars and the mount lifecycle (2026-09-06)
+
+- **`onReady` means ready.** The bus bridge is installed in a layout effect, before the application's
+  `componentDidMount` fires `onReady`, so a command published synchronously from `onReady` executes
+  (`api.pubsub.publish({ topic: 'space.rotateXTo', … })` in the callback rotates at once). `onReady` fires once
+  per instance, StrictMode replay included.
+- **StrictMode-safe.** The store subscription (persistence), `onViewpointChange` and the `pagehide` /
+  `visibilitychange` flush listeners are owned by the mount: React's development replay (mount → unmount →
+  mount) re-subscribes them, and a real unmount flushes a pending persistence write once.
+- **One registrar per application.** Every `PluridApplication` owns its plane registrar (client and server);
+  two applications registering the same route keep their own components. Planes a host registers globally
+  (`registerPlanes(planes)` without a registrar) stay readable through the application's registrar as a
+  fallback; pass `planesRegistrar` to share one deliberately.
+
 ## Tier 0.5 — the imperative handle (`ref`)
 
 `PluridApplication` takes a `ref`: a `PluridApplicationHandle` — the `onReady` api plus TYPED commands, for the host's own code (a command palette, a sidebar) without threading the api around.
@@ -155,6 +169,12 @@ In development the engine warns ONCE per page about the mistakes it can see: a `
 ## Tier 2 — opt out the always-on
 
 ### Undo
+
+A peer's applied change (`space.applyRemoteMutation`) CLEARS the local undo/redo stacks (2026-09-06): a
+snapshot recorded before it would restore the arrangement without the peer's work and broadcast that
+rollback as yours. Hosts see `canUndo` drop through `state.space.history` / `usePluridHistory()`. Undo that
+rebases over remote changes is the follow-up; until then, local history is valid between peer changes.
+
 
 History is on by default. Drop the middleware entirely (no per-action cost, no snapshot memory) when you own undo or never mutate the arrangement — `space.undo` / `space.redo` then become no-ops.
 
@@ -318,6 +338,8 @@ For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = th
 
 ### The page presentation (`presentation: 'page'`)
 
+**Reading a plane in the space presentation** (2026-09-06). Docking is not the page presentation's alone: the rail (fit · back · page/cube) renders in both presentations, and in the space presentation its page pill reads the ACTIVE plane (else the nearest) as a page — the camera frames it face-on at its FILL scale (the box filling the view along its tighter dimension; 1 for a view-sized page), the chrome hides, the other planes are set aside and `inert`, the wheel and the keys are the plane's, `data-plurid-docked` is set. Escape or the cube pill reveals the space; `space.dock { planeID }` / `space.reveal`, `useCamera().dock()` / `.reveal()` work the same in both. The viewcube no longer carries its own fit button.
+
 A site first, the space one move away. `presentation: 'page'` makes every undeclared plane the size of the view and docks the camera on the first page: face-on, at scale 1, the page filling the view to the pixel. It scrolls like a page (the wheel, the keys, one finger), the engine's chrome is hidden, and the only control is the RAIL at the bottom-right corner: fit (the globe), a back chevron on a spawned page, and the small cube that opens the space at the far right.
 
 ```tsx
@@ -459,7 +481,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
 `data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
-`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
+`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; a `PluridLink` renders an anchor WITH an `href` (the plane's address — a plain click is the engine's, a modifier-click is the browser's), every plane outside the docked page is `inert` while a page is docked (the reading scope), the settings drawers are native `button[aria-expanded][aria-controls]`s, the shortcuts dialog has a `shortcuts-close` control; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
 host's global resets: every chrome root and every chrome button / input / select starts from the engine's own

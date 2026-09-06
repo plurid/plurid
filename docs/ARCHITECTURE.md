@@ -36,7 +36,7 @@ What runs where:
 
 - `@plurid/plurid-react` - the browser adapter (also renders under SSR via `react-dom/server`).
 - `@plurid/plurid-react-server` - the Express 5 SSR server: route matching, per-request data (preserves), HTML template, static stills.
-- `@plurid/plurid-kit` - the published framework layer: `plurid.config.ts` + the `plurid` CLI (`dev/build/start/info`) + `createPluridServer`/`createPluridClient` bootstraps.
+- `@plurid/plurid-kit` - the framework layer, published as a pre-release (`0.0.0-4` on the registry; the workspace is at `0.0.0-5`): `plurid.config.ts` + the `plurid` CLI (`dev/build/start/info`) + `createPluridServer`/`createPluridClient` bootstraps.
 
 Dependency layers (imports point downward only):
 
@@ -76,7 +76,7 @@ The workspace (`pnpm-workspace.yaml`) globs `packages/plurid-web/plurid-core/*`,
 | L2 | `@plurid/plurid-ui-components-react` | 0.0.0-32 | plurid-utilities/plurid-ui-components-react | UI component library (48 styled files on the shared filtered `styled` factory) |
 | L3 | `@plurid/plurid-react` | 0.0.0-36 | plurid-works/plurid-react | the render adapter: `PluridApplication`, routers, links, hooks |
 | L4 | `@plurid/plurid-react-server` | 0.0.0-17 | plurid-works/plurid-react-server | SSR server (Express 5), stills, template |
-| L5 | `@plurid/plurid-kit` | 0.0.0-3 | plurid-works/plurid-kit | published framework: config contract + CLI + bootstraps |
+| L5 | `@plurid/plurid-kit` | 0.0.0-5 (registry: 0.0.0-4) | plurid-works/plurid-kit | framework pre-release: config contract + CLI + bootstraps |
 | L5 | `@plurid/generate-plurid-app` | 0.0.0-14 | plurid-utilities/generate-plurid-app | scaffolding CLI; still emits the CRA-era shape - the FRAMEWORK_PLAN P5 rework retargets it at the kit shape |
 | L5 | `fixtures/render-test` | private | fixtures/render-test | the CAD verification harness (Vite, port 5273) |
 
@@ -234,6 +234,8 @@ THE MOTION PATH: every NON-GESTURE camera move is `cameraCommand(kind, options)`
 
 ### 4.1 Docking and the page presentation
 
+Since 2026-09-06 docking is defined in BOTH presentations: the dock pose of a plane is face-on at the plane's FILL scale (`dockScale`: `min(view / plane)` within the zoom limits — 1 for a view-sized page, so everything below reads unchanged for the page presentation), and the rail renders in the space presentation too, its page pill docking the active plane (else the nearest). The viewcube's own fit cell is gone; the rail owns the fit.
+
 `space.presentation: 'page'` makes the space present as a SITE (2026-09-05, polished 2026-09-06). It is ONE knob with three defaults layered under the caller's configuration in `merge()` (`pagePresentationDefaults`: `fadeInTime: 0`, `opaque: false`, `elements.plane.height: 1`; a value still AT the space default counts as unset, so a runtime switch gets them too) and ONE derived state, the docked page. There is no mode flag.
 
 **The pose is the state.** `elements.plane.height` (flat `planeHeight`; ≤ 1 a fraction of the view height, > 1 px) is the general mechanism: the height every UNDECLARED plane renders at (`space/layout/size.ts` : `configuredPlaneSize`, the one definition the Plane and the layouts read), so in the page presentation every plane is view-sized. The camera DOCKS on a page (`interaction/camera/dock.ts`): `dockPose` = yaw −rotateY, pitch −rotateX, scale 1, pivot the plane center, offset 0, never pitch-clamped (a `rotateX: ±90` page docks face-on) — with `M = T(C+offset)·Rx·Ry·S·T(−pivot)` a view-sized plane then maps to view px 1:1, so at boot the identity camera IS the dock pose of root 0 and no fit runs. `isDocked` is "the camera IS the dock pose of this plane": scale 1, yaw = −rotateY, pitch = −rotateX within `DOCK_TOLERANCE` (1e-3), and the plane's CENTER projected within `docking.epsilon` (0.5 px) of the view center AT THE PIVOT DEPTH (`projected.cameraZ`) — two parallel pages a few hundred units apart project to the same point and are told apart by depth; the picture is compared, not the parameters, because zoom-at-cursor and the cursor pivot re-parameterize pivot/offset losslessly. A glossary: DOCKED (the camera is on a page), DESTINATION (the page a running swing lands on), CANDIDATE (`dockCandidate`: the shown page whose projected center is nearest the view center — what `space.dock` without a plane docks; a hidden root hides its subtree).
@@ -344,7 +346,7 @@ THE HISTORY MIDDLEWARE (`services/state/middleware/history.ts` : `createHistoryM
 THE PERSISTENCE CONTRACT (`plurid-engine source/modules/state/local`):
 
 - `PERSISTED_STATE_VERSION = 2` - a stored snapshot with a different version is IGNORED on load (fresh space) rather than risking a partial mis-merge.
-- `PERSISTED_SPACE_FIELDS` (13): `rotationX`, `rotationY`, `scale`, `translationX`, `translationY`, `translationZ`, `transform`, `camera`, `activePlaneID`, `isolatePlane`, `lastClosedPlane`, `tree`, `links`. Deliberately excluded: transient flags (`loading`, `resolvedLayout`, `animatedTransform`, `transformTime`), environmental sizes re-measured on mount (`viewSize`, `spaceSize`, `culledView`, `view`), and the other slices (they come from props/defaults).
+- `PERSISTED_SPACE_FIELDS`: `rotationX`, `rotationY`, `scale`, `translationX`, `translationY`, `translationZ`, `transform`, `camera`, `viewSize` (the view the camera was framed in, since v3 — see §4.1), `activePlaneID`, `isolatePlane`, `lastClosedPlane`, `tree`, `links`, plus the runtime `home` and `bookmarks`. Deliberately excluded: transient flags (`loading`, `resolvedLayout`, `transformTime`, `motion`, `dockingPlaneID`), the container sizes re-measured on mount (`spaceSize`, `culledView`, `view`), and the other slices (they come from props/defaults). The one schema description is §4 “Persistence” (`PERSISTED_STATE_VERSION = 3`, a v2 snapshot upgraded on load).
 - Keys: `pluridState-<id>` (the versioned space snapshot) and `pluridContent-<id>` (the OPAQUE product blob from `onPersistContent` - no version stamp; the content shape and its migration are the product's concern; the engine never inspects it).
 - Backend: the caller's `storageAdapter` wins; else a `localStorage` adapter; else (SSR/no storage) every entry point no-ops. Writes are best-effort (full/private-mode storage is swallowed), but a SERIALIZATION failure warns once - it means a cycle/DOM/function ref leaked into the persisted fields, a real bug that would otherwise silently disable persistence forever.
 - The debounce + pagehide/visibility flush around all of this lives in the Application shell (3.1).
@@ -456,6 +458,8 @@ RETIRED (2026-09-06, after a deprecation on 2026-09-03; every one was read by no
 Knob-by-knob reference (every `space.*`/`elements.*` option with a snippet): [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md).
 
 ## 9. The SSR pipeline (plurid-react-server)
+
+Request outcomes (2026-09-06, C07 – C09 of the critique): a preserve's `onServe` failure without an `onError` is the request's failure and reaches the pipeline's error path (500, the host's error page); with `onError` the host may respond, `depreserve` (render without the preserve), or return nothing (handled — rendering continues). `afterServe` runs after the response is sent and is observed: a rejection is logged with the request id, never a second response, never an unhandled rejection. `options.ignore` prefixes (`/api/*`) match on a segment boundary — `/api` and `/api/x`, never `/apiculture` — with the query string ignored.
 
 `plurid-react-server source/objects/Server/` : `PluridServer` - an Express 5 app. Since 2026-09-05 the class (`index.ts`, ~360 lines: fields, constructor, signal handlers, `start` / `stop` / `handle` / `instance`, the endpoint registration) implements `PluridServerContext` (`context.ts`) and hands itself to per-concern modules: `options.ts` (`resolveServerOptions`, `debugAllows`, `computeRequestTime`), `express.ts` (`configureExpress`, `openBrowser` — `open` is ESM-only and loaded lazily), `preserves.ts` (`ignoreGetRequest`, `resolveMatchingPath`, `resolvePreserve`, `resolvePreserveAfterServe`), `pipeline.tsx` (`handleGetRequest`, `renderApplication`), `render.tsx` (`buildRequestTree`, `renderContent`), `document.ts` (`documentFromTemplate`, `resolveRouteDocument`, `assembleDocument`), `pttp.ts` (`handlePTTPRequest`). The package's top level exports `PluridServer` (default), `PluridStillsGenerator`, the preload key constants (`PRELOADED_PLURID_METASTATE_KEY`, `PRELOADED_REDUX_STATE_KEY`) and the external interfaces (Appendix A). `PluridLiveServer` (a stub that threw) is gone.
 

@@ -51,16 +51,18 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     }
 
     position: absolute;
+    /* a small screen: the cube stays bottom-right but rises above the toolbar's band — it used to jump to
+       the top, onto the minimap (2026-09-06) */
     @media (max-width: 800px) {
-        top: ${({
+        bottom: ${({
             conceal,
             mouseOver,
         }) => {
             if (conceal && !mouseOver) {
                 return '-90px';
             }
-            return '0';
-        }};
+            return '88px';
+        }} !important;
     }
     bottom: ${({
         conceal,

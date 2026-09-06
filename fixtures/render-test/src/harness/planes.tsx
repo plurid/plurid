@@ -109,7 +109,7 @@ export const buildSite = (
     ]);
     return {
         planes: [...roots, ...subPages],
-        view: roots.map((root) => root.route),
+        view: roots.map((root) => (root as { route: string }).route),
         declared: {},
     };
 };

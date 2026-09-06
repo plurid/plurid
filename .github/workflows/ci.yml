@@ -1,7 +1,8 @@
 name: CI
 
-# Enforces the three quality gates that pass as of 2026-06-20:
-#   pnpm build · pnpm test · pnpm lint
+# Enforces the repository's deterministic gates on every change (2026-09-06: type checks, module
+# imports and the generated tables joined build / test / lint) and runs the chromium browser suite
+# in its own job; the strict visual comparisons stay local (their baselines are macOS renders).
 # (The archival plurid-canvas / plurid-html packages are excluded at the source —
 #  via the `!` globs in pnpm-workspace.yaml — so the recursive root scripts skip them.)
 
@@ -38,3 +39,39 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      - name: Type check
+        run: pnpm check
+
+      - name: Module imports (ESM + CommonJS)
+        run: pnpm check.modules
+
+      - name: Generated tables are current
+        run: pnpm docs.tables.check
+
+  browser:
+    runs-on: ubuntu-latest
+    needs: gates
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Chromium
+        run: pnpm --filter plurid-render-test exec playwright install --with-deps chromium
+
+      - name: Browser scenarios (chromium)
+        run: pnpm --filter plurid-render-test exec playwright test --config e2e/playwright.config.ts --project=chromium

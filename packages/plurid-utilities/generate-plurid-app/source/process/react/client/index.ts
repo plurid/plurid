@@ -1,8 +1,5 @@
 // #region imports
     // #region libraries
-    import {
-        exec,
-    } from 'node:child_process';
     import fs from 'node:fs';
     import path from 'node:path';
     // #endregion libraries
@@ -20,6 +17,7 @@
     import {
         copyDirectory,
         removeDirectory,
+        executeCommand,
     } from '~utilities/index';
 
     import {
@@ -55,82 +53,77 @@ const updatePackageScripts = async (
 }
 
 
+/** The package manager's program and its `add` verb, as an argument array. */
+const installArguments = (
+    app: Application,
+    packages: string[],
+): [string, string[]] => {
+    if (app.manager === manager.yarn) {
+        return ['yarn', ['add', ...packages]];
+    }
+    if (app.manager === manager.pnpm) {
+        return ['pnpm', ['add', ...packages]];
+    }
+    return ['npm', ['install', ...packages]];
+};
+
+
 const generatePluridReactApplication = async (
     app: Application,
 ) => {
     console.log('\n\tAdding the plurid\' packages to the React Application...');
 
-    const pluridReactPackages = requiredPluridReactPackages.join(' ');
+    const [file, args] = installArguments(app, requiredPluridReactPackages);
+    await executeCommand(file, args, { cwd: app.directory });
+    console.log('\tPlurid\' packages added succesfully.');
 
-    const yarnInstallCommand = `yarn add ${pluridReactPackages}`;
-    const npmInstallCommand = `npm install ${pluridReactPackages}`;
-    const pnpmInstallCommand = `pnpm install ${pluridReactPackages}`;
-    const installCommand = app.manager === manager.yarn
-        ? yarnInstallCommand
-        : app.manager === manager.pnpm
-            ? pnpmInstallCommand
-            : npmInstallCommand;
+    console.log('\n\tSetting up the template files...');
 
-    exec(installCommand, {
-        cwd: app.directory,
-    }, async () => {
-        console.log('\tPlurid\' packages added succesfully.');
+    // only after every command succeeded: the scaffold's own files make way for the template
+    const publicDir = path.join(app.directory, './public');
+    const sourceDir = path.join(app.directory, './src');
+    const gitDir = path.join(app.directory, './.git');
+    await removeDirectory(publicDir);
+    await removeDirectory(sourceDir);
+    await removeDirectory(gitDir);
 
-        console.log('\n\tSetting up the template files...');
+    const templateTypeScript = 'react-typescript-client';
+    const templateJavaScript = 'react-javascript-client';
+    const templateFiles = app.language === 'TypeScript'
+        ? templateTypeScript
+        : templateJavaScript;
 
-        const publicDir = path.join(app.directory, './public');
-        const sourceDir = path.join(app.directory, './src');
-        const gitDir = path.join(app.directory, './.git');
-        await removeDirectory(publicDir);
-        await removeDirectory(sourceDir);
-        await removeDirectory(gitDir);
+    const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
 
-        const templateTypeScript = 'react-typescript-client';
-        const templateJavaScript = 'react-javascript-client';
-        const templateFiles = app.language === 'TypeScript'
-            ? templateTypeScript
-            : templateJavaScript;
+    const templateDir = path.join(app.directory, base);
+    await copyDirectory(templateDir, app.directory);
 
-        const base = `./node_modules/@plurid/generate-plurid-app/distribution/templates/web/react/${templateFiles}`;
-
-        const templateDir = path.join(app.directory, base);
-        copyDirectory(templateDir, app.directory);
-
-        await setupPluridAppYaml(app);
-        await setupDocker(app);
-
-        await addScriptPluridApp(app);
-
-        await updatePackageScripts(app);
-
-        await removeGeneratePackage(app);
-    });
+    await setupPluridAppYaml(app);
+    await setupDocker(app);
+    await addScriptPluridApp(app);
+    await updatePackageScripts(app);
+    await removeGeneratePackage(app);
 }
 
 
 const generateReactClientApplication = async (
     app: Application,
 ) => {
-    const language = app.language === 'TypeScript'
-        ? '--template typescript'
-        : '';
+    const template = app.language === 'TypeScript'
+        ? ['--template', 'typescript']
+        : [];
 
     console.log('\n\tGenerating the React Application...');
 
-    const yarnCreateCommand = `yarn create react-app ${app.directory} ${language}`;
-    const npmCreateCommand = `npx create-react-app ${app.directory} ${language} --use-npm`;
-    const pnpmCreateCommand = `pnpm dlx create-react-app ${app.directory} ${language}`;
-    const createCommand = app.manager === manager.yarn
-        ? yarnCreateCommand
+    const [file, args]: [string, string[]] = app.manager === manager.yarn
+        ? ['yarn', ['create', 'react-app', app.directory, ...template]]
         : app.manager === manager.pnpm
-            ? pnpmCreateCommand
-            : npmCreateCommand;
+            ? ['pnpm', ['dlx', 'create-react-app', app.directory, ...template]]
+            : ['npx', ['create-react-app', app.directory, ...template, '--use-npm']];
 
-    exec(createCommand, async () => {
-        console.log('\tReact Application generated successfully.');
-
-        await generatePluridReactApplication(app);
-    });
+    await executeCommand(file, args);
+    console.log('\tReact Application generated successfully.');
+    await generatePluridReactApplication(app);
 }
 // #endregion module
 

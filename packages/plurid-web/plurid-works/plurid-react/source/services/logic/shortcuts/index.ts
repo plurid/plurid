@@ -196,18 +196,25 @@ export const SHORTCUTS: ShortcutBinding[] = [
         },
     },
     {
-        // The page presentation: Escape brings a page back — from the revealed space, the nearest
-        // page docks (grab mode ends too); docked on a spawned page, its parent page (a root stays).
+        // Escape and the docked plane. The page presentation: from the revealed space the nearest page
+        // docks (grab mode ends too); docked on a spawned page, its parent page (a root stays). The
+        // space presentation (2026-09-06): docked on a plane read as a page, Escape reveals the space
+        // (a spawned one goes to its parent first); revealed, Escape is the selection's.
         id: 'dock', code: 'Escape',
         match: (e, code, ctx) => e.code === code
-            && getPresentation(ctx.state) === 'page'
             && !ctx.state.ui?.shortcutsOverlayVisible
-            && (!getDockedPlaneID(ctx.state) || !!dockedParent(ctx.state)),
+            && (getPresentation(ctx.state) === 'page'
+                ? (!getDockedPlaneID(ctx.state) || !!dockedParent(ctx.state))
+                : !!getDockedPlaneID(ctx.state)),
         run: ({ dispatch, state, prevent }) => {
             prevent();
             const docked = getDockedPlaneID(state);
-            if (docked) {
+            if (docked && dockedParent(state)) {
                 dispatch(navigateToParent(docked) as any);
+                return;
+            }
+            if (docked) {
+                dispatch(cameraCommand({ kind: 'reveal' }, { animate: true }) as any);
                 return;
             }
             dispatch(actions.ui.setUIGrabMode(false));

@@ -15,6 +15,12 @@
 
 
 // #region module
+/**
+ * The viewport a page gets unless its document declares one: without it a phone lays the page out at
+ * 980 px and shrinks it, every plane a thumbnail (2026-09-06).
+ */
+export const DEFAULT_VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
+
 const template = async (
     data: RendererTemplateData,
 ) => {
@@ -44,6 +50,7 @@ const template = async (
 <html lang="${htmlLanguage}" ${htmlAttributes}>
     <head>
         ${head}
+        ${/name=["']viewport["']/.test(head) ? '' : DEFAULT_VIEWPORT_META}
 
         ${defaultStyle && (
             `<style>

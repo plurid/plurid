@@ -204,7 +204,8 @@ describe('getDockedPlaneID (the page presentation)', () => {
     it('is the first root at the identity camera, nothing after a zoom, nothing in the space presentation', () => {
         const space = reducer(initial(), actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
         expect(getDockedPlaneID(at(space))).toBe('p1');
-        expect(getDockedPlaneID(at(space, defaultConfiguration))).toBe('');
+        // the space presentation docks too (2026-09-06: a plane read as a page): a view-sized sheet at the identity camera
+        expect(getDockedPlaneID(at(space, defaultConfiguration))).toBe('p1');
         const zoomed = reducer(space, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
         expect(getDockedPlaneID(at(zoomed))).toBe('');
         // an UNMEASURED root still docks through the configured (view-sized) fallback
@@ -242,8 +243,8 @@ describe('getDockedPlaneID (the page presentation)', () => {
         expect(isAside(at(zoomed), 'contact')).toBe(false);
         const docking = reducer(reducer(zoomed, actions.setMotion('tween')), actions.setDockingPlaneID('about'));
         expect(isAside(at(docking), 'contact')).toBe(true);
-        // the space presentation never sets anything aside, nor does `docking.aside: 'none'`
-        expect(isAside(at(docked, defaultConfiguration), 'contact')).toBe(false);
+        // the space presentation sets aside the same way (a plane read as a page); `docking.aside: 'none'` never does
+        expect(isAside(at(docked, defaultConfiguration), 'contact')).toBe(true);
         expect(isAside(at(docked, pageConfiguration({ space: { docking: { aside: 'none' } } })), 'contact')).toBe(false);
     });
 

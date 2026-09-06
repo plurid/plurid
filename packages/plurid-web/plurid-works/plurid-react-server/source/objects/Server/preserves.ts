@@ -39,11 +39,18 @@
 
 
 // #region module
-/** `options.ignore`: exact paths and `/*` prefixes fall through to the next handler. */
+/**
+ * `options.ignore`: exact paths and `/*` prefixes fall through to the next handler. A prefix matches
+ * on a SEGMENT boundary — `/api/*` excludes `/api` and `/api/x`, never `/apiculture` (C08, 2026-09-06);
+ * the query string never takes part.
+ */
 export const ignoreGetRequest = (
     options: PluridServerOptions,
-    path: string,
+    requestPath: string,
 ) => {
+    const queryIndex = requestPath.indexOf('?');
+    const path = queryIndex === -1 ? requestPath : requestPath.slice(0, queryIndex);
+
     for (const ignore of options.ignore) {
         const normalizedIgnore = ignore.endsWith('/') && ignore.length > 1
             ? ignore.slice(0, ignore.length - 1)
@@ -54,9 +61,9 @@ export const ignoreGetRequest = (
         }
 
         if (normalizedIgnore.endsWith('/*')) {
-            const curatedIgnore = normalizedIgnore.replace('/*', '');
+            const curatedIgnore = normalizedIgnore.slice(0, -2);
 
-            if (path.startsWith(curatedIgnore)) {
+            if (path === curatedIgnore || path.startsWith(curatedIgnore + '/')) {
                 return true;
             }
         }
@@ -181,7 +188,14 @@ export const resolvePreserve = async (
                 }
             }
         } catch (error) {
-            if (preserveOnError) {
+            // No `onError`: the failure is the request's — it reaches the pipeline's error path (500 / the
+            // host's error page) instead of a normal-looking response missing its data (C07, 2026-09-06).
+            // With `onError`: the host may respond, `depreserve` (render without the preserve), or
+            // return nothing — which means it handled the failure and rendering continues.
+            if (!preserveOnError) {
+                throw error;
+            }
+            {
                 const onErrorResponse = await preserveOnError(
                     error,
                     transmission,

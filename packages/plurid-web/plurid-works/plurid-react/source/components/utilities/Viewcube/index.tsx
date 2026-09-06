@@ -16,9 +16,6 @@
         Theme,
     } from '@plurid/plurid-themes';
 
-    import {
-        PluridIconGlobal,
-    } from '@plurid/plurid-icons-react';
 
     import {
         /** constants */
@@ -48,7 +45,6 @@
         StyledPluridViewcube,
         StyledPluridViewcubeArrow,
         StyledPluridViewcubeArrowIcon,
-        StyledFitView,
     } from './styled';
 
     import PluridViewcubeModel from './components/ViewcubeModel';
@@ -138,26 +134,6 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             delta,
         });
     }
-
-    /**
-     * Click: fit (frame everything). ⌘/Ctrl-click: the home viewpoint. Alt-click: make the current
-     * camera the home viewpoint. Shift-click: the identity view.
-     */
-    const handleFitView = (event: React.MouseEvent) => {
-        if (event.altKey) {
-            dispatchSetHome();
-            return;
-        }
-        if (event.ctrlKey || event.metaKey) {
-            dispatchCameraCommand({ kind: 'home' });
-            return;
-        }
-        if (event.shiftKey) {
-            dispatchCameraCommand({ kind: 'reset' });
-            return;
-        }
-        dispatchCameraCommand({ kind: 'fit' });
-    }
     // #endregion handlers
 
 
@@ -177,7 +153,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
     return (
         <StyledPluridViewcube
-            $page={pagePresentation}
+            $page={true}
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
@@ -264,18 +240,6 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                             ▶
                         </StyledPluridViewcubeArrowIcon>
                     </StyledPluridViewcubeArrow>
-
-                    {!pagePresentation && (
-                        <StyledFitView
-                            type="button"
-                            aria-label="Fit everything (⌘ home, ⇧ reset, ⌥ set home)"
-                            onClick={handleFitView}
-                            title="Fit · ⌘ home · ⇧ reset · ⌥ set home"
-                            data-plurid-control="viewcube-fit"
-                        >
-                            <PluridIconGlobal />
-                        </StyledFitView>
-                    )}
 
                     {/* <PluridViewcubeTransformAreas /> */}
                 </>

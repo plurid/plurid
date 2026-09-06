@@ -57,6 +57,13 @@ export const StyledDockRail = styled.div`
         pointer-events: none;
         transition: none;
     }
+    /* a narrow viewport: the toolbar's pill spans the width, so the rail rises above its band while
+       the space is revealed (U02, 2026-09-06: at 390 px More sat on the fit button) */
+    @media (max-width: 640px) {
+        [data-plurid-presentation='page']:not([data-plurid-docked]) & {
+            bottom: ${RAIL_MARGIN + 72}px;
+        }
+    }
     @media (prefers-reduced-motion: reduce) {
         & > * {
             transition: none;

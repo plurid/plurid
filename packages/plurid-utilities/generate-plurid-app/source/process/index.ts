@@ -3,25 +3,20 @@
     import {
         Answers,
         Application,
-        Language,
-        UI,
-        Renderer,
-        Manager,
-        Versioning,
     } from '~data/interfaces';
 
     import {
-        language as languageTypes,
         ui as uiTypes,
-        renderer as rendererTypes,
-        manager as managerTypes,
         versioning as versioningTypes,
     } from '~data/constants';
 
     import {
         resolveAppDirectory,
-        makeDirectory,
+        ensureOwnedDirectory,
     } from '~utilities/index';
+    import {
+        normalizeAnswers,
+    } from './normalize';
     // #endregion external
 
 
@@ -47,90 +42,22 @@ const processArguments = async (
     program: Answers,
 ) => {
     try {
-        let language: Language;
-        let ui: UI;
-        let renderer: Renderer;
-        let manager: Manager;
-        let versioning: Versioning;
-
-        if (program.directory === undefined) {
-            console.log('App directory (-a or --app) must be specified.');
-            process.exit(1);
-        }
-
+        const answers = normalizeAnswers(program);
         const start = Date.now();
 
-        const directory = resolveAppDirectory(program.directory);
-        makeDirectory(directory);
-
-        switch(program.language.toLowerCase()) {
-            case languageTypes.typescript.toLowerCase():
-                language = languageTypes.typescript;
-                break;
-            case languageTypes.javascript.toLowerCase():
-                language = languageTypes.javascript;
-                break;
-            default:
-                language = languageTypes.typescript;
-        }
-
-        switch(program.ui.toLowerCase()) {
-            case uiTypes.html.toLowerCase():
-                ui = uiTypes.html;
-                break;
-            case uiTypes.react.toLowerCase():
-                ui = uiTypes.react;
-                break;
-            case uiTypes.vue.toLowerCase():
-                ui = uiTypes.vue;
-                break;
-            case uiTypes.angular.toLowerCase():
-                ui = uiTypes.angular;
-                break;
-            default:
-                ui = uiTypes.react;
-        }
-
-        switch(program.renderer.toLowerCase()) {
-            case rendererTypes.client.toLowerCase():
-                renderer = rendererTypes.client;
-                break;
-            case rendererTypes.server.toLowerCase():
-                renderer = rendererTypes.server;
-                break;
-            default:
-                renderer = rendererTypes.client;
-        }
-
-        switch(program.manager.toLowerCase()) {
-            case managerTypes.yarn.toLowerCase():
-                manager = managerTypes.yarn;
-                break;
-            case managerTypes.npm.toLowerCase():
-                manager = managerTypes.npm;
-                break;
-            case managerTypes.pnpm.toLowerCase():
-                manager = managerTypes.pnpm;
-                break;
-            default:
-                manager = managerTypes.npm;
-        }
-
-        // Guard against an unset value (the `--versioning` flag now defaults to "none", but a
-        // non-interactive caller on an older option set would otherwise throw on `.toLowerCase`).
-        switch ((program.versioning || versioningTypes.none).toLowerCase()) {
-            case versioningTypes.git.toLowerCase():
-                versioning = versioningTypes.git;
-                break;
-            default:
-                versioning = versioningTypes.none;
-        }
+        const directory = resolveAppDirectory(answers.directory);
+        ensureOwnedDirectory(directory);
 
         const {
+            language,
+            ui,
+            renderer,
+            manager,
             services,
+            versioning,
             containerize,
             deployment,
-        } = program;
+        } = answers;
 
         console.log('\n\tThe plurid\' application will be generated at:');
         console.log(`\t${directory}`);
@@ -140,37 +67,22 @@ const processArguments = async (
         console.log('\tThe package manager is:', manager);
 
         if (services.length > 0) {
-            const plural = services.length === 1
-                ? ''
-                : 's';
-            const verb = services.length === 1
-                ? 'is'
-                : 'are';
-            const servicesList = services.reduce((accumulator, service) => accumulator + ', ' + service);
-            console.log(`\tThe selected service${plural} ${verb}: ${servicesList}.`);
+            const plural = services.length === 1 ? '' : 's';
+            const verb = services.length === 1 ? 'is' : 'are';
+            console.log(`\tThe selected service${plural} ${verb}: ${services.join(', ')}.`);
         } else {
             console.log('\tNo selected services.');
         }
 
-        switch (versioning) {
-            case 'Git':
-                console.log('\tUsing Git for version control.');
-                break;
-            default:
-                console.log('\tNot using a version control system.');
-        }
-
-        if (containerize) {
-            console.log('\tUsing Docker to containerize the application.');
-        } else {
-            console.log('\tNot using Docker to containerize the application.');
-        }
-
-        if (deployment) {
-            console.log('\tDeploying the application to plurid.app.');
-        } else {
-            console.log('\tNot deploying the application to plurid.app.');
-        }
+        console.log(versioning === versioningTypes.git
+            ? '\tUsing Git for version control.'
+            : '\tNot using a version control system.');
+        console.log(containerize
+            ? '\tUsing Docker to containerize the application.'
+            : '\tNot using Docker to containerize the application.');
+        console.log(deployment
+            ? '\tDeploying the application to plurid.app.'
+            : '\tNot deploying the application to plurid.app.');
 
         const application: Application = {
             start,
@@ -184,9 +96,12 @@ const processArguments = async (
             containerize,
             deployment,
         };
+
         await generateApplication(application);
     } catch (error) {
-        console.log('\n\tSomething went wrong.\n');
+        // the cause is shown and the exit status is visible to automation (C11 / C12)
+        console.error(`\n\tCould not generate the application: ${error instanceof Error ? error.message : String(error)}\n`);
+        process.exitCode = 1;
     }
 }
 // #endregion module

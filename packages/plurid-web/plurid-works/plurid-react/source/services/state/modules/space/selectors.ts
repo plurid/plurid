@@ -87,16 +87,17 @@ export const getDockingConfiguration = (state: AppState) => state.configuration?
 
 /**
  * THE DOCKED STATE of the page presentation: the id of the shown plane the camera is docked on
- * (face-on, scale 1, the plane's box exactly on the view), `''` when the camera is anywhere else
- * or in the space presentation. Derived from the camera, the tree and the view — never stored —
+ * (face-on, at the plane's FILL scale — 1 for a view-sized page — its center under the view center),
+ * `''` when the camera is anywhere else. Both presentations (2026-09-06): in the space presentation the
+ * rail's page pill reads a plane as a page the same way. Derived from the camera, the tree and the view — never stored —
  * and memoized, so an orbit that stays undocked re-renders nothing. While a tween is DOCKING (its
  * destination is a page, `dockingPlaneID`) and `docking.chrome` is `hidden` (the default), the
  * destination page counts as docked for the whole swing: the chrome never paints between pages.
  */
 export const getDockedPlaneID = createSelector(
-    [getCamera, getTree, getViewSize, getPresentation, getPlaneElementConfiguration, getMotion, getDockingPlaneID, getDockingConfiguration],
-    (camera, tree, view, presentation, plane, motion, dockingPlaneID, docking): string => {
-        if (presentation !== 'page' || !plane) {
+    [getCamera, getTree, getViewSize, getPresentation, getPlaneElementConfiguration, getMotion, getDockingPlaneID, getDockingConfiguration, getCameraLimits],
+    (camera, tree, view, _presentation, plane, motion, dockingPlaneID, docking, limits): string => {
+        if (!plane) {
             return '';
         }
         // a docking swing: its destination is the page from the FIRST frame (the camera still sits
@@ -106,7 +107,7 @@ export const getDockedPlaneID = createSelector(
         }
         // the configured size (view-sized pages) over a measured one: a measurement lags a frame
         const configured = spaceEngine.layout.configuredPlaneSize({ elements: { plane } } as any, view);
-        return cameraEngine.findDockedPlane(camera, tree, view, configured, docking?.epsilon);
+        return cameraEngine.findDockedPlane(camera, tree, view, configured, docking?.epsilon, limits);
     },
 );
 export const getCulledView = (state: AppState) => state.space.culledView;

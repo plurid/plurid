@@ -27,6 +27,9 @@
         orderedServices,
     } from '../shared';
     // #endregion internal
+    import {
+        resolvePaths,
+    } from '../cli/paths';
 // #endregion imports
 
 
@@ -37,9 +40,11 @@
  * emitted client entry path. Returns `undefined` if absent (e.g. before a build
  * or in development), so the template falls back to the runtime default.
  */
-function readAssetManifest(): { main?: string } | undefined {
+function readAssetManifest(
+    manifestPath: string,
+): { main?: string } | undefined {
     try {
-        const raw = fs.readFileSync('build/asset-manifest.json', 'utf8');
+        const raw = fs.readFileSync(manifestPath, 'utf8');
         return JSON.parse(raw);
     } catch {
         return undefined;
@@ -82,7 +87,8 @@ export async function createPluridServer(
 
     // In production, point the template at the REAL emitted client entry (from
     // `plurid build`'s asset manifest).
-    const productionScripts = isProduction ? readAssetManifest() : undefined;
+    const paths = resolvePaths(config);
+    const productionScripts = isProduction ? readAssetManifest(paths.assetManifest) : undefined;
 
     // Template: fold head / favicon / manifest (P1 batteries) + root + script
     // sources, with the raw `template` escape hatch winning.
@@ -106,15 +112,16 @@ export async function createPluridServer(
     // Options: identity + directories. `publicDirectory` defaults to
     // `source/public` in development so favicons resolve; the raw `options`
     // escape hatch wins.
+    // the one path resolution (C13): the build directory the CLI wrote, the public directory it copied
     const defaultPublicDirectory = isProduction
         ? '' // -> <buildDirectory>/public (resolved by the runtime)
-        : (config.publicDir || 'source/public');
+        : paths.publicDir;
 
     const options: PluridServerPartialOptions = {
         serverName: config.serverName,
         hostname: config.hostname,
-        buildDirectory: config.buildDir,
-        publicDirectory: config.publicDir || defaultPublicDirectory,
+        buildDirectory: paths.buildDir,
+        publicDirectory: isProduction && !config.publicDir ? defaultPublicDirectory : paths.publicDir,
         ...config.options,
     };
 

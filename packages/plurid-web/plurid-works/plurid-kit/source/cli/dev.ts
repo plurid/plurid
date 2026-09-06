@@ -15,6 +15,9 @@
     import {
         loadPluridConfig,
     } from './config';
+    import {
+        resolvePaths,
+    } from './paths';
 
     import {
         loadEnvironment,
@@ -65,6 +68,7 @@ export async function dev(
 
     // `plurid.config.ts` build-time knobs (`bundle.*`); absent config -> defaults.
     const config = await loadPluridConfig();
+    const paths = resolvePaths(config);
     const bundle = config.bundle ?? {};
 
     const clientOptions = clientBuildOptions({
@@ -74,6 +78,7 @@ export async function dev(
         define: bundle.define,
         loaders: bundle.loaders,
         environment: bundle.environment,
+        outdir: paths.clientDir,
     });
     const serverOptions = serverBuildOptions({
         mode,
@@ -81,6 +86,7 @@ export async function dev(
         forceBundle: bundle.forceBundle,
         define: bundle.define,
         loaders: bundle.loaders,
+        outdir: paths.buildDir,
     });
 
     const link = `http://localhost:${port}`;
@@ -91,7 +97,7 @@ export async function dev(
     }
 
     const spawnChild = (): ChildProcess => {
-        const child = spawn('node', ['build/index.js'], {
+        const child = spawn('node', [paths.serverEntry], {
             stdio: 'inherit',
             env: {
                 ...process.env,

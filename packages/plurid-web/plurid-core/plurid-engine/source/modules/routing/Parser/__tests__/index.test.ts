@@ -1,4 +1,9 @@
 // #region imports
+    import {
+        extractPathname,
+        extractQuery,
+        extractFragments,
+    } from '../logic';
     // #region libraries
     import {
         PluridRoute,
@@ -216,5 +221,21 @@ describe('Parser', () => {
 
     //     expect(query.plurid).toEqual('https://domain.com://r?q=3#:~:t=2://s://u://c:///a-plane');
     // });
+
+    describe('hashes and fragments (C06, 2026-09-06)', () => {
+        it('an ordinary hash is neither pathname nor query', () => {
+            expect(extractPathname('/a#details')).toBe('/a');
+            expect(extractPathname('/a?x=1#details')).toBe('/a');
+            expect(extractQuery('/a?x=1#details')).toStrictEqual({ x: '1' });
+            expect(extractQuery('/a?x=1&y#details')).toStrictEqual({ x: '1', y: '' });
+        });
+
+        it('a malformed directive is dropped, never thrown', () => {
+            expect(extractFragments('/a#:~:text')).toStrictEqual({ texts: [], elements: [] });
+            expect(extractFragments('/a#:~:element=')).toStrictEqual({ texts: [], elements: [] });
+            expect(extractFragments('/a#:~:=foo')).toStrictEqual({ texts: [], elements: [] });
+            expect(extractFragments('/a#:~:text=foo,bar').texts).toStrictEqual([{ type: 'text', start: 'foo', end: 'bar', occurence: 0 }]);
+        });
+    });
 });
 // #endregion module

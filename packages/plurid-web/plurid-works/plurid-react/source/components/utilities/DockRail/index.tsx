@@ -117,7 +117,8 @@ const PluridDockRail: React.FC<PluridDockRailProperties> = (
 
 
     // #region render
-    if (space.presentation !== 'page' || elements.dockRail?.show === false) {
+    const pagePresentation = space.presentation === 'page';
+    if (elements.dockRail?.show === false) {
         return null;
     }
 
@@ -157,9 +158,9 @@ const PluridDockRail: React.FC<PluridDockRailProperties> = (
             <StyledRailButton
                 type="button"
                 theme={stateInteractionTheme}
-                aria-label={docked ? 'Reveal the space' : 'Back to the page'}
+                aria-label={docked ? 'Reveal the space' : (pagePresentation ? 'Back to the page' : 'Read this plane as a page')}
                 aria-pressed={!docked}
-                title={docked ? 'Reveal the space (G)' : 'Back to the page (Esc)'}
+                title={docked ? 'Reveal the space (G)' : (pagePresentation ? 'Back to the page (Esc)' : 'Read this plane as a page')}
                 data-plurid-control="dock-toggle"
                 data-plurid-rail-button=""
                 data-plurid-docked-state={docked ? 'docked' : 'revealed'}

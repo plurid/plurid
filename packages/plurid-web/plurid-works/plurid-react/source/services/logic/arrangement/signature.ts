@@ -13,7 +13,7 @@
 /**
  * A SIGNATURE of the authored arrangement — what a user can deliberately change, and nothing a
  * relayout touches on its own. It folds together:
- *   - structure: each plane's `planeID:show`
+ *   - structure: each plane's `planeID:show<parentPlaneID` (the parent is authored: a reparent is a change)
  *   - manual positions: a `manuallyPositioned` plane's rounded location
  *   - manual sizes: a hand-resized (`sizeMode: 'manual'`) plane's rounded size
  *   - the link graph: each link's `id:source>target:kind`
@@ -33,7 +33,7 @@ export const arrangementSignature = (
             // A node with no stable id can't be a meaningful signature entry — skip it (but still
             // recurse), so a malformed node can't collide with others as "undefined:…".
             if (node.planeID) {
-                let entry = node.planeID + ':' + (node.show ? 1 : 0);
+                let entry = node.planeID + ':' + (node.show ? 1 : 0) + '<' + (node.parentPlaneID || '');
                 if (node.manuallyPositioned) {
                     entry += ':' + Math.round(node.location.translateX)
                         + ',' + Math.round(node.location.translateY)

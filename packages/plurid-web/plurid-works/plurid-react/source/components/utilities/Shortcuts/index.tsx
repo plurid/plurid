@@ -47,6 +47,7 @@
         StyledShortcutsRow,
         StyledShortcutsKeys,
         StyledShortcutsKey,
+        StyledShortcutsClose,
     } from './styled';
     // #endregion internal
 // #endregion imports
@@ -190,6 +191,7 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
             onClick={() => setVisible(false)}
             onWheel={(event: React.WheelEvent) => event.stopPropagation()}
             data-plurid-entity={PLURID_ENTITY_SHORTCUTS_OVERLAY}
+            data-plurid-overlay="shortcuts"
             data-plurid-control="shortcuts-overlay"
         >
             <StyledShortcutsPanel
@@ -205,6 +207,15 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
                 <StyledShortcutsHeader>
                     <h2 id="plurid-shortcuts-title">Keyboard Shortcuts</h2>
                     <span>? or Esc to close</span>
+                    <StyledShortcutsClose
+                        type="button"
+                        aria-label="Close"
+                        title="Close"
+                        data-plurid-control="shortcuts-close"
+                        onClick={() => setVisible(false)}
+                    >
+                        ×
+                    </StyledShortcutsClose>
                 </StyledShortcutsHeader>
 
                 <StyledShortcutsGroups>

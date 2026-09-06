@@ -15,6 +15,7 @@ Current as of **2026-09-06**.
 | [`DESIGN.md`](./DESIGN.md) | The chrome's vocabulary and rules: pill, panel, line; the dual ground; the two tiers; adding a piece of chrome |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
 | [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
+| [`CODEBASE_CRITIQUE_2026-09-06.md`](./CODEBASE_CRITIQUE_2026-09-06.md) | Revision-specific critique: reproduced defects, UI/UX/DX assessment, performance measurements, verified capabilities, and prioritized improvements |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | Active engineering defects, performance work, and verification priorities |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | Delivered capabilities, adoption status, and future capability sequence |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | Current `@plurid/plurid-kit` adoption and generator plan |
@@ -24,9 +25,9 @@ Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the main
 
 ## Current priorities
 
-1. Wire and measure real culling/virtualization for large spaces.
+1. Measure retained content under culling and define virtualization (mount / retain / unmount) semantics with memory budgets — culling itself is wired.
 2. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines, `e2e/page.spec.ts` for the page presentation frame by frame; `docs/HARNESS.md`); extend the catalog as features land.
-3. Add explicit repository type-checking to CI.
+3. Keep CI on the repository's own gates (type checks, module imports, generated tables and the chromium suite run on every change since 2026-09-06; the strict visual comparisons stay local, their baselines are macOS renders).
 4. Move Denote onto the public engine control/persistence/collaboration seams.
 5. Use Depict and Dechat to validate content and interaction generality.
 6. Complete kit adoption and replace the CRA-era generator.

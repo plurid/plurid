@@ -18,17 +18,25 @@
 
 
 // #region module
+type RegistrarFallback<C> = IPluridPlanesRegistrar<C> | (() => IPluridPlanesRegistrar<C> | undefined);
+
+
 /**
- * The planes registrar can be stored in-memory (server-side)
- * or on the `window.__pluridPlanesRegistrar__` object (browser-side).
+ * The planes registrar: every application owns one (client and server alike, 2026-09-06 — C04: the
+ * window-global `__pluridPlanesRegistrar__` used to be the default on the client, so two applications
+ * registering the same route overwrote each other). An optional FALLBACK is consulted for reads only —
+ * the application passes the window-global registry, so planes a host registered globally (the older
+ * `registerPlanes(planes)` call) still resolve, while registrations never collide.
  */
 class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     private isoMatcher: IsoMatcher<C>;
+    private fallback: RegistrarFallback<C> | undefined;
 
 
     constructor(
         planes?: PluridPlane<C>[],
         origin = 'origin',
+        fallback?: RegistrarFallback<C>,
     ) {
         this.isoMatcher = new IsoMatcher(
             {
@@ -36,6 +44,13 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             },
             origin,
         );
+        this.fallback = fallback;
+    }
+
+
+    private resolveFallback(): IPluridPlanesRegistrar<C> | undefined {
+        const fallback = typeof this.fallback === 'function' ? this.fallback() : this.fallback;
+        return fallback === this ? undefined : fallback;
     }
 
 
@@ -47,9 +62,11 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
         });
     }
 
-    public identify() {
+    public identify(): string[] {
         const planes = this.isoMatcher.getPlanesIndex();
-        return [...planes.keys()];
+        const own: string[] = [...planes.keys()];
+        const fallback = this.resolveFallback();
+        return fallback ? [...new Set([...fallback.identify(), ...own])] : own;
     }
 
     public get(
@@ -78,12 +95,13 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
             return registeredPlane;
         }
 
-        return;
+        return this.resolveFallback()?.get(route);
     }
 
     public getAll() {
         const planes = this.isoMatcher.getPlanesIndex();
-        const all = new Map();
+        // the fallback's entries first: an own registration of the same path wins
+        const all = new Map(this.resolveFallback()?.getAll() ?? []);
 
         for (const [path, plane] of planes) {
             const absoluteRoute = plane.kind === 'Plane'

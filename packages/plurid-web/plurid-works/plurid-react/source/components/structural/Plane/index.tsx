@@ -104,9 +104,16 @@
  * A plane set aside is INERT (React 19 renders the boolean attribute; the React 18 typings the
  * workspace still carries do not know it): nothing inside it is focusable or read aloud.
  */
-const asideAttributes = (
+/**
+ * While the camera is docked on a page, every other plane — its ancestors and children included, not
+ * only the aside ones — is outside the reading scope: `inert` (U03, 2026-09-06: reverse-tabbing off
+ * a docked page used to land on the parent's links).
+ */
+const readingScopeAttributes = (
     aside: boolean,
-): Record<string, unknown> => (aside ? { inert: true } : {});
+    docked: boolean,
+    somePageDocked: boolean,
+): Record<string, unknown> => (aside || (somePageDocked && !docked) ? { inert: true } : {});
 
 export interface PluridPlaneOwnProperties {
     // #region required
@@ -132,6 +139,8 @@ export interface PluridPlaneStateProperties {
     stateIsActivePlane: boolean;
     /** The camera is docked on THIS plane (the page presentation). */
     stateIsDocked: boolean;
+    /** Some page is docked (or a swing is docking on one): the reading scope is that page alone. */
+    stateSomePageDocked: boolean;
     /** Outside the docked page's lineage (the page presentation): faded out, not interactive. */
     stateAside: boolean;
     stateIsolatePlane: string;
@@ -187,6 +196,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateViewSize,
         stateIsActivePlane,
         stateIsDocked,
+        stateSomePageDocked,
         stateAside,
         stateLayoutTransition,
         stateCulled,
@@ -583,13 +593,14 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
             data-plurid-aside={stateAside ? 'true' : undefined}
             data-plurid-page={stateIsDocked ? 'docked' : undefined}
-            {...asideAttributes(stateAside)}
+            {...readingScopeAttributes(stateAside, stateIsDocked, stateSomePageDocked)}
             backface={stateConfiguration.elements.plane.backface}
             depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
             <StyledFocusAnchor
                 tabIndex={0}
                 id={focusAnchorID}
+                aria-label={'plane ' + (treePlane.route || planeID)}
             />
 
             {treePlane.show && (
@@ -691,6 +702,7 @@ const makeMapStateToProps = () => {
         stateViewSize: selectors.space.getViewSize(state),
         stateIsActivePlane: selectors.space.getActivePlaneID(state) === ownProps.planeID,
         stateIsDocked: selectors.space.getDockedPlaneID(state) === ownProps.planeID,
+        stateSomePageDocked: selectors.space.getDockedPlaneID(state) !== '',
         stateAside: getIsAside(state, ownProps.planeID),
         stateLayoutTransition: state.space.layoutTransition || 0,
         stateCulled: getPlaneCulling(state, ownProps.planeID),

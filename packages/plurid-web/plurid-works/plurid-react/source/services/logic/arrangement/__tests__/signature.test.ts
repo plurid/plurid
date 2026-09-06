@@ -46,5 +46,12 @@ describe('arrangementSignature and sizes', () => {
         const measured = arrangementSignature([plane('a')], []);
         expect(measured).toBe(arrangementSignature([plane('a', { width: 999 })], []));
     });
+
+    it('carries the topology: two roots and a parent with a child differ; a reparent is a change (C10)', () => {
+        const flat = arrangementSignature([plane('a'), plane('b')], []);
+        const nested = arrangementSignature([plane('a', { children: [plane('b', { parentPlaneID: 'a' })] })], []);
+        expect(flat).not.toBe(nested);
+        const moved = arrangementSignature([plane('c'), plane('a', { children: [plane('b', { parentPlaneID: 'c' })] })], []);
+        expect(moved).not.toBe(nested);
+    });
 });
-// #endregion module

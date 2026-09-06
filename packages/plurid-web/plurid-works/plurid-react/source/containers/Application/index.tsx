@@ -180,12 +180,17 @@ class PluridApplicationShell extends Component<
             this.viewpointDebounceMs = timings.viewpointChangeDebounce;
         }
 
-        this.subscribeStore();
-        this.subscribeViewpoint();
     }
 
 
     public componentDidMount() {
+        // The store and viewpoint subscriptions and the pagehide / visibility listeners are MOUNT-owned
+        // (C02, 2026-09-06): React's StrictMode replays mount → unmount → mount in development, and a
+        // constructor-time subscription torn down by the replayed unmount never came back, so
+        // persistence and `onViewpointChange` went silent. Both are idempotent; the unmount resets them.
+        this.subscribeStore();
+        this.subscribeViewpoint();
+
         // Restore the product's persisted content AFTER the plane subtree has mounted (so the
         // consumer's components exist to receive it). Counterpart to the `onPersistContent` save
         // in `persistState`; opt-in + gated on `useLocalStorage`, same as the space snapshot.
@@ -264,9 +269,11 @@ class PluridApplicationShell extends Component<
     public componentWillUnmount() {
         if (this.storeUnubscriber) {
             this.storeUnubscriber();
+            this.storeUnubscriber = undefined;
         }
         if (this.viewpointUnsubscriber) {
             this.viewpointUnsubscriber();
+            this.viewpointUnsubscriber = undefined;
         }
         if (this.viewpointTimeout) {
             clearTimeout(this.viewpointTimeout);
@@ -275,9 +282,11 @@ class PluridApplicationShell extends Component<
         if (typeof window !== 'undefined') {
             if (this.flushPersistImmediate) {
                 window.removeEventListener('pagehide', this.flushPersistImmediate);
+                this.flushPersistImmediate = undefined;
             }
             if (this.onVisibilityChange && typeof document !== 'undefined') {
                 document.removeEventListener('visibilitychange', this.onVisibilityChange);
+                this.onVisibilityChange = undefined;
             }
         }
         // Flush any pending debounced persistence so the latest state isn't lost.
@@ -398,12 +407,18 @@ class PluridApplicationShell extends Component<
     }
 
 
+    /**
+     * Every application owns its registrar (C04, 2026-09-06: the window-global registry used to be
+     * the client default, so two applications registering the same route overwrote each other). The
+     * global registry stays a READ fallback, resolved lazily, for planes a host registers globally.
+     */
     private prepare() {
-        this.planesRegistrar = typeof window === 'undefined' && !this.props.planesRegistrar
-            ? new PluridPlanesRegistrar(
+        this.planesRegistrar = this.props.planesRegistrar
+            ?? new PluridPlanesRegistrar(
                 this.props.planes,
                 this.props.hostname,
-            ) : this.props.planesRegistrar;
+                () => getPlanesRegistrar(undefined),
+            );
     }
 
     private computeStore() {
@@ -472,7 +487,7 @@ class PluridApplicationShell extends Component<
     }
 
     private subscribeStore() {
-        if (!this.store) {
+        if (!this.store || this.storeUnubscriber) {
             return;
         }
 
@@ -532,7 +547,7 @@ class PluridApplicationShell extends Component<
      * wired when the host actually supplies the callback.
      */
     private subscribeViewpoint() {
-        if (!this.store || !this.props.onViewpointChange) {
+        if (!this.store || !this.props.onViewpointChange || this.viewpointUnsubscriber) {
             return;
         }
 

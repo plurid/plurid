@@ -144,7 +144,7 @@ export const settle = async (page: Page) => {
 export const spaceState = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space);
 
 export const publish = (page: Page, topic: string, data?: unknown) => page.evaluate(
-    ({ topic, data }) => (window as unknown as HarnessWindow).__pluridApi.pubsub.publish({ topic, data }),
+    ({ topic, data }) => (window as unknown as HarnessWindow).__pluridApi.pubsub.publish({ topic, data } as any),
     { topic, data },
 );
 

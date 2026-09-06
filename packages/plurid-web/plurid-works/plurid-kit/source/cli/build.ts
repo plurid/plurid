@@ -18,6 +18,10 @@
     } from './config';
 
     import {
+        resolvePaths,
+    } from './paths';
+
+    import {
         loadEnvironment,
     } from './environment';
     // #endregion internal
@@ -26,10 +30,6 @@
 
 
 // #region module
-/** The asset manifest the runtime reads to point the template at real emitted files. */
-const ASSET_MANIFEST = 'build/asset-manifest.json';
-
-
 /**
  * `plurid build` - the production esbuild pass. Replaces the legacy webpack /
  * rollup `scripts/workings/`.
@@ -47,14 +47,15 @@ export async function build(
     const mode = 'production';
     loadEnvironment(mode);
 
-    const clean = !argv.includes('--no-clean');
-    if (clean && fs.existsSync('build')) {
-        fs.rmSync('build', { recursive: true, force: true });
-    }
-
-    // `plurid.config.ts` build-time knobs (`bundle.*`); absent config -> defaults.
+    // `plurid.config.ts` build-time knobs (`bundle.*`) and the directories; absent config -> defaults.
     const config = await loadPluridConfig();
     const bundle = config.bundle ?? {};
+    const paths = resolvePaths(config);
+
+    const clean = !argv.includes('--no-clean');
+    if (clean && fs.existsSync(paths.buildDir)) {
+        fs.rmSync(paths.buildDir, { recursive: true, force: true });
+    }
 
     // client (browser, minified, single iife bundle) + server (node, minified)
     const clientResult = await esbuild.build(
@@ -65,6 +66,7 @@ export async function build(
             define: bundle.define,
             loaders: bundle.loaders,
             environment: bundle.environment,
+            outdir: paths.clientDir,
         }),
     );
     await esbuild.build(
@@ -74,23 +76,24 @@ export async function build(
             forceBundle: bundle.forceBundle,
             define: bundle.define,
             loaders: bundle.loaders,
+            outdir: paths.buildDir,
         }),
     );
 
     // copy the public directory (favicons, og, manifest, robots) into the build
-    copyDirectory('source/public', 'build/public');
+    copyDirectory(paths.publicDir, paths.builtPublicDir);
 
     // derive the real client entry path from the metafile -> asset manifest
     const mainScriptSource = mainEntryFromMetafile(clientResult.metafile);
     if (mainScriptSource) {
         fs.writeFileSync(
-            ASSET_MANIFEST,
+            paths.assetManifest,
             JSON.stringify({ main: mainScriptSource }, null, 2),
         );
     }
 
     process.stdout.write(
-        `[plurid build] built -> build/{index.js, client/**, public/**}`
+        `[plurid build] built -> ${paths.buildDir}/{index.js, client/**, public/**}`
         + (mainScriptSource ? ` (main ${mainScriptSource})` : '')
         + '\n',
     );

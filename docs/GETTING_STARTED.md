@@ -109,6 +109,8 @@ harness at `fixtures/render-test` with `?fixture=page-docked` (`pnpm dev` there)
 
 ## 2 · Your first space
 
+The rail at the bottom-right is the same in a space: the globe fits everything, the page pill reads the plane you last touched (else the nearest) as a page — the plane fills the view, the chrome steps aside — and Escape or the cube pill brings the space back.
+
 A plane is a `route` + a `component`. A view is the list of routes to show first. That's the minimum:
 
 ``` tsx

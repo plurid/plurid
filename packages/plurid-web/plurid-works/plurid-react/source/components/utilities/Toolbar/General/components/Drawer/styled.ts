@@ -23,8 +23,16 @@ export const StyledPluridDrawer: any = styled.div`
 `;
 
 
-/** A row: the drawer's name, a hover wash, no reflow. */
+/** A row: the drawer's name as a native disclosure BUTTON (rendered `as="button"`), a hover wash, no reflow. */
 export const StyledPluridDrawerHeading: any = styled.div`
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
     user-select: none;
     cursor: pointer;
     display: flex;
@@ -37,6 +45,10 @@ export const StyledPluridDrawerHeading: any = styled.div`
 
     &:hover {
         background-color: var(--plurid-hover);
+    }
+    &:focus-visible {
+        outline: 2px solid var(--plurid-focus);
+        outline-offset: -2px;
     }
 `;
 

@@ -177,7 +177,8 @@ describe('the page presentation', () => {
         expect(rendered.view.getAttribute('data-plurid-docked')).toBe(root.planeID);
         expect(state.space.camera.pivot.x).toBeCloseTo(root.location.translateX + 300, 6);
         expect(state.space.camera.pivot.y).toBeCloseTo(root.location.translateY + 200, 6);
-        expect(state.space.camera.scale).toBe(1);
+        // the re-dock reads the box at its FILL scale (2026-09-06): the 600 × 400 box fills the view along its tighter side
+        expect(state.space.camera.scale).toBeCloseTo(Math.min(state.space.viewSize.width / 600, state.space.viewSize.height / 400), 6);
         await rendered.unmount();
     });
 

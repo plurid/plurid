@@ -103,9 +103,9 @@ export const App = () => <PluridApplication planes={planes} view={['/one', '/two
 ```
 
 Drag the empty space to orbit, scroll to zoom, right-drag to pan, hold **Space** to grab from anywhere.
-Over a plane a drag is the page's (text selection, scrolling) unless you grab. Everything else, from undo and
-persistence to gestures, shortcuts, layouts, snapping, culling and the chrome, is opt-in and documented knob
-by knob.
+Over a plane a drag is the page's (text selection, scrolling) unless you grab. Undo and the shortcuts are on by
+default; persistence, collaboration, culling, snapping and the rest are opt-in, and every one of them, gestures,
+layouts and the chrome included, is a documented knob (`docs/CONTROL_SURFACE.md`).
 
 
 

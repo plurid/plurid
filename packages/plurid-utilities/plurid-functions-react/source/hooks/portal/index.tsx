@@ -75,16 +75,24 @@ const usePortal = (
             parentElem.appendChild(rootElemRef.current);
         }
 
+        const created = !existingParent;
+
         return () => {
             if (rootElemRef.current) {
                 rootElemRef.current.remove();
             }
 
-            if (parentElem.childNodes.length === -1) {
+            // Remove the container only if THIS hook created it and nothing else lives in it: a
+            // host-provided container is never removed (C15, 2026-09-06 — the old test compared the
+            // length with -1, so no container was ever removed).
+            if (created && parentElem.childNodes.length === 0) {
                 parentElem.remove();
             }
         };
-    }, []);
+    }, [
+        id,
+        parentID,
+    ]);
 
     /**
      * It's important we evaluate this lazily:

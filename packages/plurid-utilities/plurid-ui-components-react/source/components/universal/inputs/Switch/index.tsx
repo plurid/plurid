@@ -30,6 +30,8 @@ export interface SwitchProperties {
     exclusive?: boolean;
     accent?: string;
     Icon?: React.FC<any>;
+    /** The accessible name of the control (rendered as `aria-label` on the input). */
+    label?: string;
 
     atChange: () => void;
 }
@@ -47,6 +49,7 @@ const Switch: React.FC<SwitchProperties> = (
         exclusive,
         accent,
         Icon,
+        label,
 
         atChange,
     } = properties;
@@ -79,6 +82,7 @@ const Switch: React.FC<SwitchProperties> = (
             <input
                 type="checkbox"
                 checked={checked}
+                aria-label={label}
                 onChange={() => atChange()}
             />
 

@@ -25,7 +25,7 @@ client/server bootstraps over
 boilerplate (~145 lines), the provider-nesting `Client.tsx` (~85 lines), and the
 webpack/rollup `scripts/workings/` build machinery.
 
-Status: in build-out; unpublished (`0.0.0-0`). Plan of record:
+Status: implemented (config contract, CLI, bootstraps) and published as a pre-release (`0.0.0-4` on the registry; the workspace manifest is `0.0.0-5`, the next pre-release); adoption is in progress. Plan of record:
 [`docs/FRAMEWORK_PLAN.md`](https://github.com/plurid/plurid/blob/master/docs/FRAMEWORK_PLAN.md).
 
 
@@ -110,7 +110,8 @@ plurid info                          print the app's kit-shape diagnosis
 
 - `dev` loads `.env.development`, `build`/`start` load `.env.production`;
   `--watch` keeps the client + server bundles rebuilding (refresh the browser
-  for client changes; restart `plurid dev` for server changes).
+  for client changes; the server process restarts by itself after a successful
+  server rebuild).
 - `build` copies `source/public/** -> build/public/`, derives the real client
   entry from the esbuild metafile, and writes `build/asset-manifest.json` so
   the server template points at the actually-emitted script (no `/vendor.js`

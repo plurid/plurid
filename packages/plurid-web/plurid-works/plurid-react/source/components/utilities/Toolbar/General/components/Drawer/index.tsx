@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useId,
         useState,
     } from 'react';
 
@@ -99,6 +100,8 @@ const PluridDrawer: React.FC<PluridDrawerProperties> = (
 
     /** state */
     const [mouseOver, setMouseOver] = useState(false);
+    /** The items region the heading discloses (U01, 2026-09-06: a keyboard user can now reach every drawer). */
+    const itemsID = useId();
 
 
     /** render */
@@ -112,7 +115,11 @@ const PluridDrawer: React.FC<PluridDrawerProperties> = (
             toggled={toggled}
         >
             <StyledPluridDrawerHeading
+                as="button"
+                type="button"
                 theme={interactionTheme}
+                aria-expanded={toggled}
+                aria-controls={itemsID}
                 onClick={() => toggle()}
             >
                 <PluridHeading
@@ -124,7 +131,11 @@ const PluridDrawer: React.FC<PluridDrawerProperties> = (
             </StyledPluridDrawerHeading>
 
             {toggled && (
-                <StyledPluridDrawerItems>
+                <StyledPluridDrawerItems
+                    id={itemsID}
+                    role="group"
+                    aria-label={heading}
+                >
                     {items}
                 </StyledPluridDrawerItems>
             )}

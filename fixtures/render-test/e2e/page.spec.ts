@@ -160,9 +160,9 @@ test.describe('the page presentation', () => {
         await settle(page);
         const revealed = await camera(page);
         const reveal = await revealPose(page);
-        expect(revealed.scale).toBeCloseTo(reveal.scale, 6);
-        expect(revealed.pitch).toBeCloseTo(reveal.pitch, 6);
-        expect(revealed.yaw).toBeCloseTo(reveal.yaw, 6);
+        expect(revealed.scale).toBeCloseTo(reveal.scale as number, 6);
+        expect(revealed.pitch).toBeCloseTo(reveal.pitch as number, 6);
+        expect(revealed.yaw).toBeCloseTo(reveal.yaw as number, 6);
         expect(await dockedID(page)).toBeNull();
         await waitChromeShown(page);
 
@@ -458,7 +458,7 @@ test.describe('the page presentation', () => {
         await page.keyboard.press('KeyG');
         await settle(page);
         expect(await grabMode()).toBe(true);
-        expect((await camera(page)).scale).toBeCloseTo((await revealPose(page)).scale, 6);
+        expect((await camera(page)).scale).toBeCloseTo((await revealPose(page)).scale as number, 6);
         expect(await dockedID(page)).toBeNull();
 
         await page.keyboard.press('Escape');

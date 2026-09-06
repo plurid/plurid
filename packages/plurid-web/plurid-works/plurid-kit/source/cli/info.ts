@@ -44,7 +44,7 @@ export async function info(
         '  conventions',
         `    ${mark('plurid.config.ts')}plurid.config.ts`,
         `    ${mark('tsconfig.json')}tsconfig.json (esbuild reads ~ aliases)`,
-        `    ${mark('source/public')}source/public (favicons, manifest, robots)`,
+        `    ${mark('source/public')}source/public (favicons, manifest, robots; \`publicDir\` in plurid.config.ts)`,
         '',
     ];
 

@@ -323,8 +323,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const handleKeyUp = (
         event: React.KeyboardEvent,
     ) => {
-        if (event.code === 'Enter') {
-            // The link is an anchor without an `href`, so Enter has no native click: run ours.
+        // With an `href` (U04, 2026-09-06) Enter is the anchor's native click, which `handleClick`
+        // already takes; a link without one (a non-string route) keeps the manual path.
+        if (event.code === 'Enter' && typeof route !== 'string') {
             handleClick(event as any);
         }
     }
@@ -470,6 +471,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             data-plurid-link={linkID || undefined}
             data-plurid-link-route={route}
             data-plurid-link-open={showLink ? 'true' : undefined}
+            href={typeof route === 'string' ? route : undefined}
             tabIndex={0}
         >
             {children}
