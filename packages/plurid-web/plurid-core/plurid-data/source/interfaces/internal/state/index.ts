@@ -65,6 +65,12 @@ export interface PluridStateSpace {
     cameraLimits: CameraLimits;
     /** What is currently driving the camera: a gesture, a fling, a tween, or nothing. */
     motion: CameraMotion;
+    /**
+     * The page a running tween is DOCKING on — its destination, written when a docking tween starts
+     * and cleared when the motion leaves `tween`; `''` otherwise. Not the docked state (that stays
+     * derived from the camera): the one fact about a tween the camera cannot tell yet.
+     */
+    dockingPlaneID: string;
     /** @deprecated mirror of `camera` (legacy parameterization); read-only for consumers. */
     scale: number;
     /** @deprecated mirror of `camera.pitch`. */

@@ -15,6 +15,14 @@
         reducer,
         actions,
     } from '../index';
+    import {
+        getDockedPlaneID,
+        getDockedLineage,
+        makeGetIsPlaneAside,
+    } from '../selectors';
+    import {
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
     // #endregion external
 // #endregion imports
 
@@ -189,5 +197,72 @@ describe('space slice camera commit path', () => {
         expect(set.camera.yaw).toBe(45);
         expect(set.camera.offset.x).toBeCloseTo(10, 9);
     });
+
+describe('getDockedPlaneID (the page presentation)', () => {
+    const page = { ...defaultConfiguration, space: { ...defaultConfiguration.space, presentation: 'page' as const }, elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, height: 1 } } };
+    const sheet = (planeID: string, translateY = 0) => plane(planeID, { translateY }, { width: view.width, height: view.height });
+
+    it('is the first root at the identity camera, nothing after a zoom, nothing in the space presentation', () => {
+        const space = reducer(initial(), actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
+        expect(getDockedPlaneID({ space, configuration: page } as any)).toBe('p1');
+        expect(getDockedPlaneID({ space, configuration: defaultConfiguration } as any)).toBe('');
+        const zoomed = reducer(space, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
+        expect(getDockedPlaneID({ space: zoomed, configuration: page } as any)).toBe('');
+        // an UNMEASURED root still docks through the configured (view-sized) fallback
+        const unmeasured = reducer(initial(), actions.restoreArrangement({ tree: [plane('p1')], links: [] }));
+        expect(getDockedPlaneID({ space: unmeasured, configuration: page } as any)).toBe('p1');
+    });
+
+    it('the docked lineage: the page, its trail and its own children stay; a sibling is set aside — nothing when undocked', () => {
+        const child = (planeID: string, translateX: number, children?: any[]) => ({
+            ...plane(planeID, { translateX, rotateY: 90 }, { width: view.width, height: view.height }, children),
+            parentPlaneID: 'p1',
+        });
+        const grandchild = { ...plane('g1', { translateX: view.width + 300, rotateY: 180 }, { width: view.width, height: view.height }), parentPlaneID: 'about' };
+        const tree = [sheet('p1')];
+        tree[0].children = [child('about', view.width, [grandchild]), child('contact', view.width + 70)];
+        const space = reducer(initial(), actions.restoreArrangement({ tree, links: [] }));
+        const isAside = makeGetIsPlaneAside();
+
+        // docked on the root: everything is its lineage
+        expect([...getDockedLineage({ space, configuration: page } as any)].sort()).toEqual(['about', 'contact', 'g1', 'p1']);
+        expect(isAside({ space, configuration: page } as any, 'contact')).toBe(false);
+
+        // docked on `about` (its dock pose): the trail (p1) and its child (g1) stay, `contact` is aside
+        const about = space.tree[0].children![0];
+        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: about.location, width: view.width, height: view.height })));
+        const state = { space: docked, configuration: page } as any;
+        expect([...getDockedLineage(state)].sort()).toEqual(['about', 'g1', 'p1']);
+        expect(isAside(state, 'contact')).toBe(true);
+        expect(isAside(state, 'p1')).toBe(false);
+        expect(isAside(state, 'about')).toBe(false);
+        expect(isAside(state, 'g1')).toBe(false);
+
+        // undocked (a zoom): nothing is aside; a docking tween toward `about` already sets `contact` aside
+        const zoomed = reducer(docked, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
+        expect(getDockedLineage({ space: zoomed, configuration: page } as any).size).toBe(0);
+        expect(isAside({ space: zoomed, configuration: page } as any, 'contact')).toBe(false);
+        const docking = reducer(reducer(zoomed, actions.setMotion('tween')), actions.setDockingPlaneID('about'));
+        expect(isAside({ space: docking, configuration: page } as any, 'contact')).toBe(true);
+        // the space presentation never sets anything aside
+        expect(isAside({ space: docked, configuration: defaultConfiguration } as any, 'contact')).toBe(false);
+    });
+
+    it('while a tween DOCKS, its destination counts as docked (docking.chrome hidden); never once the motion ends', () => {
+        const space = reducer(initial(), actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
+        const travelling = reducer(reducer(reducer(space, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 })), actions.setMotion('tween')), actions.setDockingPlaneID('p2'));
+        expect(getDockedPlaneID({ space: travelling, configuration: page } as any)).toBe('p2');
+        const shown = { ...page, space: { ...page.space, docking: { motion: 'swing' as const, chrome: 'shown' as const } } };
+        expect(getDockedPlaneID({ space: travelling, configuration: shown } as any)).toBe('');
+        // the motion ends (a landing, a cancel, an input): the destination clears with it
+        const ended = reducer(travelling, actions.setMotion('idle'));
+        expect(ended.dockingPlaneID).toBe('');
+        expect(getDockedPlaneID({ space: ended, configuration: page } as any)).toBe('');
+        // a tween that lands elsewhere records nothing
+        const elsewhere = reducer(reducer(travelling, actions.setMotion('tween')), actions.setDockingPlaneID(''));
+        expect(getDockedPlaneID({ space: elsewhere, configuration: page } as any)).toBe('');
+    });
+});
+
 });
 // #endregion module

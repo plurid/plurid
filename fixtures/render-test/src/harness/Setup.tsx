@@ -31,6 +31,24 @@ const buttonStyle = (active: boolean, color = '#4da3ff'): React.CSSProperties =>
 
 const labelStyle: React.CSSProperties = { fontSize: 10, letterSpacing: '0.14em', color: '#6b7480', margin: '14px 0 6px' };
 
+/** Where the panel (and its button) sit: a corner, so it can be moved off whatever is being debugged. */
+interface PanelPosition {
+    vertical: 'top' | 'bottom';
+    horizontal: 'left' | 'right';
+}
+const POSITION_KEY = 'rt-setup-position';
+const readPosition = (): PanelPosition => {
+    try {
+        const stored = JSON.parse(localStorage.getItem(POSITION_KEY) || 'null');
+        if (stored && (stored.vertical === 'top' || stored.vertical === 'bottom') && (stored.horizontal === 'left' || stored.horizontal === 'right')) {
+            return stored;
+        }
+    } catch {
+        // no storage: the default corner
+    }
+    return { vertical: 'top', horizontal: 'left' };
+};
+
 /**
  * THE SETUP PANEL: one button at the top-left that expands into every option of the harness —
  * the fixtures of the catalog, the layout (live), the plane set and sizes (a remount), and every
@@ -38,6 +56,14 @@ const labelStyle: React.CSSProperties = { fontSize: 10, letterSpacing: '0.14em',
  */
 const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
     const [open, setOpen] = useState(false);
+    const [position, setPosition] = useState<PanelPosition>(readPosition);
+    useEffect(() => {
+        try {
+            localStorage.setItem(POSITION_KEY, JSON.stringify(position));
+        } catch {
+            // no storage: the corner lasts for the page
+        }
+    }, [position]);
 
     useEffect(() => {
         if (!open) return;
@@ -120,7 +146,10 @@ const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
     const skip = new Set(['layout', 'planes', 'sizes', 'persist', 'fixture', 'gallery']);
 
     return (
-        <div style={{ position: 'fixed', top: 12, left: 12, zIndex: 9999, fontFamily: mono }}>
+        <div
+            style={{ position: 'fixed', [position.vertical]: 12, [position.horizontal]: 12, zIndex: 9999, fontFamily: mono }}
+            data-rt-setup-position={position.vertical + '-' + position.horizontal}
+        >
             <button
                 type="button"
                 data-rt-setup
@@ -138,11 +167,19 @@ const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
                     id="rt-setup-panel"
                     data-rt-setup-panel
                     style={{
-                        position: 'absolute', top: 32, left: 0, width: 380, maxHeight: 'calc(100vh - 60px)', overflow: 'auto',
+                        position: 'absolute', [position.vertical]: 32, [position.horizontal]: 0, width: 380, maxHeight: 'calc(100vh - 60px)', overflow: 'auto',
                         background: '#0d0f12f2', border: '1px solid #ffffff22', borderRadius: 6, padding: '10px 14px 14px',
                         boxShadow: '0 18px 50px -12px #000c', color: '#e6e8ea',
                     }}
                 >
+                    <div style={{ ...labelStyle, marginTop: 4 }}>PANEL · corner</div>
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }} title="move the panel off whatever is being debugged (remembered)">
+                        <button type="button" onClick={() => setPosition((current) => ({ ...current, vertical: 'top' }))} style={buttonStyle(position.vertical === 'top')} data-rt-setup-corner="top">▲ TOP</button>
+                        <button type="button" onClick={() => setPosition((current) => ({ ...current, vertical: 'bottom' }))} style={buttonStyle(position.vertical === 'bottom')} data-rt-setup-corner="bottom">▼ BOTTOM</button>
+                        <button type="button" onClick={() => setPosition((current) => ({ ...current, horizontal: 'left' }))} style={buttonStyle(position.horizontal === 'left')} data-rt-setup-corner="left">◀ LEFT</button>
+                        <button type="button" onClick={() => setPosition((current) => ({ ...current, horizontal: 'right' }))} style={buttonStyle(position.horizontal === 'right')} data-rt-setup-corner="right">▶ RIGHT</button>
+                    </div>
+
                     <div style={labelStyle}>FIXTURES</div>
                     <select
                         value={flags.fixture ?? ''}

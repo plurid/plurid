@@ -35,6 +35,15 @@ export const focusPluridPlaneAnchor = (
         // Server / node: nothing to focus.
         return;
     }
+    // A plane whose content scrolls inside it (a declared or configured height) focuses the
+    // scroller, so the keyboard scrolls the page; otherwise the invisible anchor.
+    const scroller = document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-entity="PluridPlaneContent"][tabindex]`) as HTMLElement | null;
+    if (scroller) {
+        scroller.focus({
+            preventScroll: true,
+        });
+        return;
+    }
     const selector = `[id='${planeID + FOCUS_ANCHOR_SUFFIX}']`;
     const focusAnchor: HTMLAnchorElement | null = document.querySelector(selector);
 

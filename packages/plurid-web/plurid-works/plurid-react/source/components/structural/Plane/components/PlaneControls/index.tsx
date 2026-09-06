@@ -108,6 +108,8 @@ export interface PluridPlaneControlsOwnProperties {
     treePlane: TreePlane;
     parentTreePlane: TreePlane | undefined;
     mouseOver: boolean;
+    /** The page presentation: the bar overlays the content (it fades out while docked). */
+    overlay?: boolean;
 
     refreshing: boolean;
     refreshPlane: () => void;
@@ -142,6 +144,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
         treePlane,
         parentTreePlane,
         mouseOver,
+        overlay,
 
         refreshing,
         refreshPlane,
@@ -247,6 +250,7 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
             theme={stateGeneralTheme}
             mouseOver={mouseOver}
             transparentUI={transparentUI}
+            $overlay={overlay}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTROLS}
         >
             <StyledPluridPlaneControlsLeft>

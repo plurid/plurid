@@ -264,5 +264,31 @@ describe('computeColumnLayout', () => {
         expect(tree.map((plane) => plane.sizeMode)).toEqual(['declared', 'declared', 'declared', 'declared']);
     });
 
+
+    it('a configured plane height pitches the rows of unmeasured planes (the page presentation)', () => {
+        const configuration = {
+            ...defaultConfiguration,
+            elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, height: 1 } },
+        };
+        const tree = computeColumnLayout(
+            ['a', 'b', 'c'].map((id) => ({ ...defaultTreePlane, sourceID: id, route: '/' + id, planeID: id, show: true })),
+            1,
+            undefined,
+            50,
+            configuration,
+            { width: 1200, height: 800 },
+        );
+        expect(tree.map((plane) => plane.location.translateY)).toEqual([0, 850, 1700]);
+        const half = computeColumnLayout(
+            ['a', 'b'].map((id) => ({ ...defaultTreePlane, sourceID: id, route: '/' + id, planeID: id, show: true })),
+            1,
+            undefined,
+            50,
+            { ...configuration, elements: { ...configuration.elements, plane: { ...configuration.elements.plane, height: 0.5 } } },
+            { width: 1200, height: 800 },
+        );
+        expect(half.map((plane) => plane.location.translateY)).toEqual([0, 450]);
+    });
+
 });
 // #endregion module

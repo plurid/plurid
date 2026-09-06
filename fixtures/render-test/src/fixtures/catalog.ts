@@ -11,13 +11,26 @@ export interface FixtureViewpoint {
     apply?: { topic: string; data?: unknown }[];
 }
 
-export interface FixtureStep {
-    kind: 'clickLink';
-    /** the registered route of the plane holding the link */
-    plane: string;
-    /** the link's target route */
-    route: string;
-}
+export type FixtureStep =
+    | {
+        kind: 'clickLink';
+        /** the registered route of the plane holding the link */
+        plane: string;
+        /** the link's target route */
+        route: string;
+    }
+    | {
+        kind: 'scroll';
+        /** the registered route of the plane whose content scrolls */
+        plane: string;
+        /** the content's scrollTop, px */
+        top: number;
+    }
+    | {
+        kind: 'dock';
+        /** the registered route of the plane to dock the camera on (instant; the page presentation) */
+        plane: string;
+    };
 
 export interface FixtureExpectations {
     /** shown planes after the steps */
@@ -49,6 +62,19 @@ const ORBIT: FixtureViewpoint = {
     name: 'orbit',
     apply: [{ topic: 'space.cameraDelta', data: { absolute: { yaw: -30, pitch: 12 }, animate: false } }],
 };
+/** The page presentation's reveal move: the docked page pulled back and tilted. */
+const REVEALED: FixtureViewpoint = {
+    name: 'revealed',
+    apply: [{ topic: 'space.reveal', data: { animate: false } }],
+};
+/** Revealed, then turned and pulled further back: the pages BEHIND the docked one come into view. */
+const REVEALED_ORBIT: FixtureViewpoint = {
+    name: 'revealed-orbit',
+    apply: [
+        { topic: 'space.reveal', data: { animate: false } },
+        { topic: 'space.cameraDelta', data: { absolute: { yaw: -35, pitch: 10 }, zoom: { factor: 0.8 }, animate: false } },
+    ],
+};
 
 export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'columns', title: 'Columns', description: 'The five instrument panels in three columns.', query: {}, viewpoints: [FRONT, ORBIT], expect: { planes: 5 } },
@@ -66,6 +92,11 @@ export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'nested-chain-3', title: 'Nested chain', description: 'A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent.', query: { nested: '3' }, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/chain-1' }, { kind: 'clickLink', plane: '/chain-1', route: '/chain-2' }, { kind: 'clickLink', plane: '/chain-2', route: '/chain-3' }], viewpoints: [FRONT, ORBIT], expect: { planes: 8, overlap: 'expected', links: false } },
     { name: 'detail-spawned', title: 'Detail spawned', description: 'The DETAIL plane opened from GEOMETRY, behind the wall.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }], viewpoints: [FRONT, ORBIT], expect: { planes: 6, overlap: 'expected', links: false } },
     { name: 'media', title: 'Media plane', description: 'A consumer-built media plane beside the panels.', query: { media: '1' }, viewpoints: [FRONT], expect: { planes: 6 } },
+    { name: 'page-docked', title: 'A page, docked', description: 'The page presentation: one view-sized page, the camera docked on it, no chrome but the corner control.', query: { presentation: 'page', pages: '1' }, viewpoints: [FRONT], expect: { planes: 1 } },
+    { name: 'page-revealed', title: 'A page, revealed', description: 'The same page pulled back and tilted: the sheet in the space behind the site.', query: { presentation: 'page', pages: '1' }, viewpoints: [REVEALED], expect: { planes: 1 } },
+    { name: 'page-spawned', title: 'A page, a link followed', description: 'The about page spawned behind the site by its link, the camera docked onto it.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/about' }], viewpoints: [FRONT], expect: { planes: 2, overlap: 'expected', links: false } },
+    { name: 'page-spawned-scrolled', title: 'A page scrolled past its link', description: 'The contact page open, the site scrolled so its link is beyond the fold: the child stays, the bridge follows the link to the edge.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/contact' }, { kind: 'dock', plane: '/page-1' }, { kind: 'scroll', plane: '/page-1', top: 600 }], viewpoints: [REVEALED_ORBIT], expect: { planes: 2, overlap: 'expected', links: false } },
+    { name: 'pages-3-revealed', title: 'Three pages, revealed', description: 'Three site pages side by side, the space revealed.', query: { presentation: 'page', pages: '3' }, viewpoints: [REVEALED], expect: { planes: 3 } },
     { name: 'empty', title: 'Empty', description: 'No roots: the empty state.', query: { empty: '1' }, viewpoints: [FRONT], expect: { planes: 0, minimap: false, links: false } },
 ];
 

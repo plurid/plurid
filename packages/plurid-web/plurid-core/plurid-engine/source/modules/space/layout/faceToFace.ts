@@ -22,6 +22,9 @@
     import {
         recomputeSubtree,
     } from '../location';
+    import {
+        configuredPlaneSize,
+    } from './size';
     // #endregion external
 // #endregion imports
 
@@ -97,7 +100,10 @@ const computeFaceToFaceLayout = (
         ? configuration.elements.plane.width
         : configuration.elements.plane.width * windowInnerWidth;
     // An unmeasured plane counts as the tallest measured one, else the view height (see column.ts).
-    const fallbackHeight = Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
+    // an unmeasured plane counts as the configured height, else the tallest measured plane, else
+    // the view height
+    const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
+    const fallbackHeight = configuredHeight || Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
     const planeAngle = 90 - angle / 2;
     const columns = 2 + middle;
     const rows = splitIntoGroups(roots, columns);

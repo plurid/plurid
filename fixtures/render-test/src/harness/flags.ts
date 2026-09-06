@@ -62,10 +62,12 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'gallery', type: 'boolean', group: 'scene', apply: 'reload', description: 'the contact sheet: every fixture in an iframe', exercises: 'the fixture catalog' },
     { key: 'router', type: 'boolean', group: 'scene', apply: 'reload', description: 'the router demo instead of the space (PluridRouterBrowser)', exercises: 'PluridRouterBrowser / PluridRouterLink' },
     { key: 'empty', type: 'boolean', group: 'scene', apply: 'reload', description: 'an empty view (no roots)', exercises: 'the empty state' },
+    { key: 'presentation', type: 'enum', values: ['page'], group: 'scene', apply: 'reload', description: 'the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed', exercises: '`space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked`' },
     // layout
     { key: 'layout', type: 'enum', values: LAYOUT_KEYS, default: 'columns', group: 'layout', apply: 'live', description: 'the root layout', exercises: '`space.layout` (an animated relayout on the live instance)' },
     // planes
     { key: 'planes', type: 'number', group: 'planes', apply: 'remount', description: 'N generated planes instead of the five instrument panels (stress)', exercises: 'many roots; the 8-column stress layout' },
+    { key: 'pages', type: 'number', group: 'planes', apply: 'remount', description: 'the SITE set: N root pages, each with an about (long) and a contact (short) sub-page', exercises: 'view-sized pages, native scroll inside a plane, links spawning behind a docked page' },
     { key: 'sizes', type: 'enum', values: SIZE_SET_KEYS, default: 'default', group: 'planes', apply: 'remount', description: 'declared plane sizes: mixed (five different boxes), wide, tall, small', exercises: '`planes[].width` / `height` (declared sizes), per-column / per-row layout pitch' },
     { key: 'media', type: 'boolean', group: 'planes', apply: 'reload', description: 'a consumer-style media plane (lens, lazy image, button-driven video)', exercises: '`usePluridPlane()` from content; window.__rtPlaneLens' },
     { key: 'scrollable', type: 'boolean', group: 'planes', apply: 'reload', description: 'the GEOMETRY readout is a scroller (28 filler rows in a 120px box)', exercises: 'the wheel over scrollable content stays the content\'s' },
@@ -82,6 +84,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'pivot', type: 'enum', values: ['view', 'selection', 'cursor'], group: 'navigation', apply: 'reload', description: 'what an orbit turns about', exercises: '`navigation.orbitPivot`' },
     { key: 'pitchLimit', type: 'number', group: 'navigation', apply: 'reload', description: 'the orbit never flips past this pitch', exercises: '`navigation.pitchLimit`' },
     { key: 'perspective', type: 'number', group: 'navigation', apply: 'reload', description: 'the CSS lens', exercises: '`space.perspective`' },
+    { key: 'dockMotion', type: 'enum', values: ['instant'], group: 'navigation', apply: 'reload', description: 'the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging', exercises: '`space.docking.motion: instant`' },
+    { key: 'dockChrome', type: 'enum', values: ['shown'], group: 'navigation', apply: 'reload', description: 'the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone)', exercises: '`space.docking.chrome: shown`' },
     { key: 'vp', type: 'enum', values: ['2'], group: 'navigation', apply: 'reload', description: 'full-camera (v2) viewpoints in the URL and the callback', exercises: '`viewpointURLVersion: 2`' },
     // gestures
     { key: 'momentum', name: 'momentumOff', type: 'boolean', on: '0', group: 'gestures', apply: 'reload', description: 'no fling after a drag (release stops dead)', exercises: '`gestures.disableMomentum`' },
@@ -128,8 +132,10 @@ export interface HarnessFlags {
     gallery: boolean;
     router: boolean;
     empty: boolean;
+    presentation?: 'page';
     layout: LayoutKey;
     planes?: number;
+    pages?: number;
     sizes: SizeSetKey;
     media: boolean;
     scrollable: boolean;
@@ -143,6 +149,8 @@ export interface HarnessFlags {
     pivot?: 'view' | 'selection' | 'cursor';
     pitchLimit?: number;
     perspective?: number;
+    dockMotion?: 'instant';
+    dockChrome?: 'shown';
     vp?: '2';
     momentumOff: boolean;
     rotateSens?: number;

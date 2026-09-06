@@ -8,6 +8,7 @@
         RecursivePartial,
 
         defaultConfiguration,
+        pagePresentationDefaults,
     } from '@plurid/plurid-data';
 
     import {
@@ -56,8 +57,14 @@ export const merge = (
     configuration?: PluridPartialConfiguration,
     target?: PluridConfiguration,
 ): PluridConfiguration => {
+    // The page presentation changes three DEFAULTS (no fade-in, no gradient, view-sized planes);
+    // they are layered under the target and the partial, so a host's own values still win.
+    const presentation = configuration?.space?.presentation ?? target?.space?.presentation;
+    const base: PluridConfiguration = presentation === 'page'
+        ? objects.merge(objects.clone(defaultConfiguration), objects.clone(pagePresentationDefaults)) as PluridConfiguration
+        : objects.clone(defaultConfiguration);
     const targetConfiguration: PluridConfiguration = {
-        ...objects.clone(defaultConfiguration),
+        ...base,
         ...objects.clone(target || {}),
     };
 
@@ -112,6 +119,8 @@ export const definePluridConfiguration = (
     if (flat.spaceDimensions !== undefined) { space.dimensions = flat.spaceDimensions; }
     if (flat.perspective !== undefined) { space.perspective = flat.perspective; }
     if (flat.center !== undefined) { space.center = flat.center; }
+    if (flat.presentation !== undefined) { space.presentation = flat.presentation; }
+    if (flat.docking !== undefined) { space.docking = { ...space.docking, ...flat.docking }; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }
     if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
     if (flat.undo !== undefined) { space.undo = flat.undo; }
@@ -150,6 +159,7 @@ export const definePluridConfiguration = (
     const elements: PluridPartialConfiguration['elements'] = {};
     const plane: NonNullable<PluridPartialConfiguration['elements']>['plane'] = {};
     if (flat.planeWidth !== undefined) { plane.width = flat.planeWidth; }
+    if (flat.planeHeight !== undefined) { plane.height = flat.planeHeight; }
     if (flat.planeOpacity !== undefined) { plane.opacity = flat.planeOpacity; }
     if (flat.planeControls !== undefined) { plane.controls = { show: flat.planeControls }; }
     if (flat.planeResizable !== undefined) { plane.resizable = flat.planeResizable; }

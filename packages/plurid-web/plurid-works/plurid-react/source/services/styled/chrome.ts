@@ -34,6 +34,25 @@ export const chromeRoot = css`
 `;
 
 
+/**
+ * Chrome that exists only while the camera is UNDOCKED (the page presentation): the View carries
+ * `data-plurid-docked="<planeID>"` while it is docked on a page, and this fragment fades the chrome
+ * out under it — invisible, out of the tab order and out of hit-testing — with no script involved.
+ * Never set in the space presentation, so nothing changes there.
+ */
+export const chromeDocked = css`
+    transition: opacity 240ms ease;
+    [data-plurid-docked] & {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+`;
+
 export const chromeControl = css`
     appearance: none;
     -webkit-appearance: none;

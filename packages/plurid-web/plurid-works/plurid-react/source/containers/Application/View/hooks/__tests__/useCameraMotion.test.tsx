@@ -155,6 +155,44 @@ describe('useCameraMotion', () => {
         hook.unmount();
     });
 
+    it('a retarget mid-tween leaves the store in `tween`, not `idle` (the controller records what it dispatched)', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const first = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(first, { duration: 100 }); });
+        act(() => { clock.advance(40); });
+        const second = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -90 }, view);
+        act(() => { hook.controller().tweenTo(second, { duration: 100 }); });
+        const motions = hook.dispatched.filter((action) => action.type === 'space/setMotion').map((action) => action.payload);
+        expect(motions[motions.length - 1]).toBe('tween');
+        expect(hook.controller().isActive()).toBe(true);
+        act(() => { clock.advance(100); });
+        act(() => { clock.advance(10); });
+        expect(hook.dispatched.filter((action) => action.type === 'space/setMotion').map((action) => action.payload).pop()).toBe('idle');
+        expect(hook.camera().yaw).toBeCloseTo(second.yaw, 9);
+        hook.unmount();
+    });
+
+    it('a retarget to the SAME pose keeps the running tween instead of restarting it', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const target = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(target, { duration: 100 }); });
+        act(() => { clock.advance(40); });
+        const motionsBefore = hook.dispatched.filter((action) => action.type === 'space/setMotion').length;
+        const atRetarget = hook.camera();
+        act(() => { hook.controller().tweenTo(target, { duration: 100 }); });
+        expect(hook.dispatched.filter((action) => action.type === 'space/setMotion').length).toBe(motionsBefore);
+        // the original timing holds: 60 more ms land it
+        act(() => { clock.advance(30); });
+        expect(hook.camera().yaw).toBeGreaterThan(atRetarget.yaw);
+        act(() => { clock.advance(30); });
+        act(() => { clock.advance(10); });
+        expect(hook.camera().yaw).toBeCloseTo(60, 9);
+        expect(hook.controller().isActive()).toBe(false);
+        hook.unmount();
+    });
+
     it('reduced motion collapses a tween to one commit', () => {
         const clock = installFrameClock();
         const hook = mountHook(true);

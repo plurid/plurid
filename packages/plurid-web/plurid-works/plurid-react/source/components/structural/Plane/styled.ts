@@ -24,6 +24,8 @@ export interface IStyledPluridPlane {
     selected: boolean;
     /** A declared or hand-set height: the content row takes the rest and scrolls inside it. */
     fixedHeight?: boolean;
+    /** The controls bar takes a 56px row (false: it overlays the content, the page presentation). */
+    controlsRow?: boolean;
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
@@ -42,6 +44,13 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }
     &[data-plurid-culled='frozen'] {
         contain: layout paint style;
+    }
+    /* Set aside (outside the docked page's lineage): the fade rides the inline opacity; none under reduced motion. */
+    @media (prefers-reduced-motion: reduce) {
+        &[data-plurid-aside],
+        &:not([data-plurid-aside]) {
+            transition: none !important;
+        }
     }
 
     background-color: ${({
@@ -117,14 +126,20 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     grid-template-columns: 1fr;
     grid-template-rows: ${({
         planeControls,
+        controlsRow,
         fixedHeight,
     }) => {
         const content = fixedHeight ? 'minmax(0, 1fr)' : 'auto';
-        if (planeControls) {
+        if (planeControls && controlsRow !== false) {
             return '56px ' + content;
         }
         return content;
     }};
+
+    /* Docked on this page (the page presentation) the sheet has no drop shadow: it IS the page. */
+    [data-plurid-docked] & {
+        box-shadow: none;
+    }
 
     transform-origin: 0 0 0;
 `;

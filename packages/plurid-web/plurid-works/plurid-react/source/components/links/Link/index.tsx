@@ -70,6 +70,11 @@
         measureLinkCoordinates,
         resolveLinkID,
     } from '~services/logic/link/measure';
+    import {
+        bridgeGeometry,
+        BRIDGE_REACH_VARIABLE,
+        BRIDGE_ANGLE_VARIABLE,
+    } from '~services/logic/link/bridge';
 
     import {
         planeElementOf,
@@ -218,6 +223,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const showLink = !!childPlane && childPlane.show !== false;
     const pluridPlaneID = childPlane?.planeID || '';
     storedCoordinates.current = childPlane?.linkCoordinates;
+    // the spawn geometry the leash is drawn with (stored on the tree node at spawn)
+    const bridgeRef = useRef<{ length: number; side: 'start' | 'end' }>({ length: 100, side: 'start' });
+    bridgeRef.current = {
+        length: childPlane?.bridgeLength ?? 100,
+        side: childPlane?.bridgeSide ?? 'start',
+    };
     // #endregion state
 
 
@@ -363,19 +374,64 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             }));
         };
 
-        update();
+        // THE LEASH (`services/logic/link/bridge.ts`): while the link scrolls inside its plane the
+        // child stays where it is and the bridge follows the link — two custom properties on the
+        // child plane element, written per frame, never through the store. `scroll` does not
+        // bubble; a capture listener on the plane catches every scroller inside it.
+        let childElement: HTMLElement | null = null;
+        const findChild = () => {
+            if (!childElement || !childElement.isConnected) {
+                childElement = document.querySelector<HTMLElement>(
+                    '[data-plurid-plane="' + pluridPlaneID.replace(/["\\]/g, '\\$&') + '"]',
+                );
+            }
+            return childElement;
+        };
+        let frame = 0;
+        const follow = () => {
+            frame = 0;
+            const target = findChild();
+            if (!target) {
+                return;
+            }
+            const current = measureLinkCoordinates(element, planeElement);
+            const geometry = bridgeGeometry(storedCoordinates.current, current, bridgeRef.current.length, bridgeRef.current.side);
+            target.style.setProperty(BRIDGE_REACH_VARIABLE, geometry.reach + 'px');
+            target.style.setProperty(BRIDGE_ANGLE_VARIABLE, geometry.angle + 'deg');
+        };
+        const onScroll = () => {
+            if (!frame && typeof requestAnimationFrame === 'function') {
+                frame = requestAnimationFrame(follow);
+            }
+        };
+        const measureAndFollow = () => {
+            update();
+            follow();
+        };
+
+        measureAndFollow();
+        planeElement.addEventListener('scroll', onScroll, true);
 
         let observer: ResizeObserver | undefined;
         if (typeof ResizeObserver !== 'undefined') {
             observer = new ResizeObserver(() => {
-                update();
+                measureAndFollow();
             });
             observer.observe(element);
         }
 
         return () => {
+            planeElement.removeEventListener('scroll', onScroll, true);
+            if (frame && typeof cancelAnimationFrame === 'function') {
+                cancelAnimationFrame(frame);
+            }
             if (observer) {
                 observer.disconnect();
+            }
+            const target = childElement && childElement.isConnected ? childElement : null;
+            if (target) {
+                target.style.removeProperty(BRIDGE_REACH_VARIABLE);
+                target.style.removeProperty(BRIDGE_ANGLE_VARIABLE);
             }
         };
     }, [

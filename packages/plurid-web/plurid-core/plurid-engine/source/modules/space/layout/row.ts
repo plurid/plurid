@@ -20,6 +20,9 @@
         recomputeSubtree,
     } from '../location';
     import {
+        configuredPlaneSize,
+    } from './size';
+    import {
         groupSizes,
         prefixOffsets,
     } from './pitch';
@@ -63,7 +66,10 @@ const computeRowLayout = (
     // Per-column widths and per-row heights (see column.ts): mixed sizes pack without overlap,
     // unmeasured planes keep the uniform grid.
     const rowCount = Math.max(1, Math.ceil(roots.length / Math.max(1, length)));
-    const fallbackHeight = Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
+    // an unmeasured plane counts as the configured height, else the tallest measured plane, else
+    // the view height
+    const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
+    const fallbackHeight = configuredHeight || Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
     const widths = groupSizes(roots, length, columnOf, (root) => root.width, width);
     const heights = groupSizes(roots, rowCount, rowOf, (root) => root.height, fallbackHeight);
     const xOffsets = prefixOffsets(widths, gapValue);

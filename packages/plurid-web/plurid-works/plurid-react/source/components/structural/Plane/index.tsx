@@ -114,6 +114,10 @@ export interface PluridPlaneStateProperties {
     // to the string re-rendered all 40 planes on each hover. The boolean only flips for the two
     // planes whose active-state actually changes.
     stateIsActivePlane: boolean;
+    /** The camera is docked on THIS plane (the page presentation). */
+    stateIsDocked: boolean;
+    /** Outside the docked page's lineage (the page presentation): faded out, not interactive. */
+    stateAside: boolean;
     stateIsolatePlane: string;
     /** ms of an animated relayout in flight (0 = none): the placement transition. */
     stateLayoutTransition: number;
@@ -166,6 +170,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateParentPlane,
         stateViewSize,
         stateIsActivePlane,
+        stateIsDocked,
+        stateAside,
         stateLayoutTransition,
         stateCulled,
         stateIsolatePlane,
@@ -396,6 +402,24 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateCulled,
     ]);
 
+    /**
+     * Docked on this page: give the content scroller the focus (without scrolling) so PageDown,
+     * Space and the arrows scroll the page like on any site — unless focus is already inside.
+     */
+    useEffect(() => {
+        if (!stateIsDocked || typeof document === 'undefined') {
+            return;
+        }
+        const element = planeRef.current;
+        if (!element || element.contains(document.activeElement)) {
+            return;
+        }
+        const content = element.querySelector('[data-plurid-entity="PluridPlaneContent"][tabindex]') as HTMLElement | null;
+        content?.focus({ preventScroll: true });
+    }, [
+        stateIsDocked,
+    ]);
+
     /** PubSub refresh plane */
     useEffect(() => {
         if (!defaultPubSub) {
@@ -447,11 +471,23 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const manualSize = treePlane.sizeMode === 'manual' && treePlane.width > 0;
     const declaredWidth = plane.width && plane.width > 0 ? plane.width : 0;
     const declaredHeight = plane.height && plane.height > 0 ? plane.height : 0;
+    // `elements.plane.height`: a fraction of the view height (≤ 1) or px, the height of every
+    // undeclared plane (the page presentation sets 1: view-sized pages); unset = content-driven.
+    const configuredHeightValue = elements.plane.height;
+    const configuredHeight = configuredHeightValue === undefined || configuredHeightValue <= 0
+        ? 0
+        : (mathematics.numbers.checkIntegerNonUnit(configuredHeightValue)
+            ? configuredHeightValue
+            : configuredHeightValue * stateViewSize.height);
+    const fixedHeightValue = declaredHeight || configuredHeight;
     const renderWidth = (manualSize ? treePlane.width : (declaredWidth || width)) + 'px';
     const renderHeight = manualSize && treePlane.height > 0
         ? treePlane.height + 'px'
-        : (declaredHeight ? declaredHeight + 'px' : undefined);
+        : (fixedHeightValue ? fixedHeightValue + 'px' : undefined);
     const fixedHeight = !!renderHeight;
+    // The page presentation: the controls bar overlays the top of the sheet (faded out while
+    // docked) instead of taking a row, so the docked page is edge to edge and never jumps.
+    const pagePresentation = stateConfiguration.space.presentation === 'page';
     const resizable = !!stateConfiguration.elements.plane.resizable && stateIsSelected && treePlane.show;
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const isolatePointerEvents = computeIsolatePointerEvents();
@@ -473,6 +509,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             ref={planeRef}
             theme={stateGeneralTheme}
             planeControls={showPlaneControls}
+            controlsRow={!pagePresentation}
             planeOpacity={planeOpacity}
             fixedHeight={fixedHeight}
             show={treePlane.show}
@@ -483,11 +520,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 transform,
                 // Animated relayout (FLIP): planes glide to their new placements only while the
                 // View holds the transition window open — never during a spawn or a drag.
-                transition: stateLayoutTransition > 0
-                    ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1)`
-                    : undefined,
-                opacity: isolatePlaneOpacity,
-                pointerEvents: isolatePointerEvents,
+                // Set aside (outside the docked page's lineage): a 240 ms fade both ways.
+                transition: [
+                    stateLayoutTransition > 0 ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1)` : '',
+                    'opacity 240ms ease',
+                ].filter(Boolean).join(', '),
+                opacity: stateAside ? 0 : isolatePlaneOpacity,
+                pointerEvents: stateAside ? 'none' : isolatePointerEvents,
             }}
             onPointerEnter={activatePlane}
             onPointerLeave={deactivatePlane}
@@ -499,6 +538,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
+            data-plurid-aside={stateAside ? 'true' : undefined}
             backface={stateConfiguration.elements.plane.backface}
             depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
@@ -533,6 +573,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
                     {showPlaneControls && (
                         <PlaneControls
+                            overlay={pagePresentation}
                             plane={plane}
                             treePlane={treePlane}
                             parentTreePlane={parentTreePlane}
@@ -588,6 +629,7 @@ const makeMapStateToProps = () => {
     const getParentPlane = selectors.space.makeGetTreePlaneByID();
     const getIsSelected = selectors.space.makeGetIsPlaneSelected();
     const getPlaneCulling = makeGetPlaneCulling();
+    const getIsAside = selectors.space.makeGetIsPlaneAside();
 
     return (
         state: AppState,
@@ -596,6 +638,8 @@ const makeMapStateToProps = () => {
         stateParentPlane: getParentPlane(state, ownProps.treePlane?.parentPlaneID),
         stateViewSize: selectors.space.getViewSize(state),
         stateIsActivePlane: selectors.space.getActivePlaneID(state) === ownProps.planeID,
+        stateIsDocked: selectors.space.getDockedPlaneID(state) === ownProps.planeID,
+        stateAside: getIsAside(state, ownProps.planeID),
         stateLayoutTransition: state.space.layoutTransition || 0,
         stateCulled: getPlaneCulling(state, ownProps.planeID),
         stateIsolatePlane: selectors.space.getIsolatePlane(state),

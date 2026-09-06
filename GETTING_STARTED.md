@@ -5,13 +5,14 @@ engine; if you want to *work on* the engine itself, read [`CONTRIBUTING.md`](./C
 
 - [Prerequisites](#prerequisites)
 - [Install](#install)
-- [1 · Your first space](#1--your-first-space)
-- [2 · Planes & views](#2--planes--views)
-- [3 · Links — planes are pages](#3--links--planes-are-pages)
-- [4 · Configuration](#4--configuration)
-- [5 · Persistence](#5--persistence)
-- [6 · The control surface](#6--the-control-surface)
-- [7 · The viewpoint (share links & saved views)](#7--the-viewpoint-share-links--saved-views)
+- [1 · A site first](#1--a-site-first)
+- [2 · Your first space](#2--your-first-space)
+- [3 · Planes & views](#3--planes--views)
+- [4 · Links — planes are pages](#4--links--planes-are-pages)
+- [5 · Configuration](#5--configuration)
+- [6 · Persistence](#6--persistence)
+- [7 · The control surface](#7--the-control-surface)
+- [8 · The viewpoint (share links & saved views)](#8--the-viewpoint-share-links--saved-views)
 - [Where to go next](#where-to-go-next)
 
 
@@ -55,7 +56,55 @@ npm install \
 
 
 
-## 1 · Your first space
+## 1 · A site first
+
+Plurid does not have to look like a 3D space at first. With the **page presentation** the space presents as a
+site: every plane is the size of the view, the camera is *docked* on the first page (face-on, at scale one,
+filling the view to the pixel), the page scrolls like any page, and the engine's chrome stays out of the
+picture. The space is one move away.
+
+``` tsx
+import React from 'react';
+import { PluridApplication, PluridLink, PluridReactPlane, definePluridConfiguration } from '@plurid/plurid-react';
+
+const sheet = { minHeight: '100%', padding: 40, background: '#f6f5f1', color: '#1c1c1a' } as const;
+
+const Home = () => (
+    <article style={sheet}>
+        <h1>An ordinary page</h1>
+        <p>Scroll it, select its text, tab through it — it is a site.</p>
+        <PluridLink route="/about">about →</PluridLink>
+    </article>
+);
+const About = () => <article style={sheet}><h1>About</h1></article>;
+
+const planes: PluridReactPlane[] = [
+    { route: '/', component: Home },
+    { route: '/about', component: About },
+];
+
+const configuration = definePluridConfiguration({ presentation: 'page' });
+
+const App = () => (
+    <PluridApplication planes={planes} view={['/']} configuration={configuration} />
+);
+
+export default App;
+```
+
+- **Follow the link**: the about page opens *behind* the site and the camera swings around to it — a page
+  again, filling the view. Its back control (or Escape) brings the site back.
+- **Reveal the space**: press **G**, pinch out (Ctrl + wheel), or click the faint cube at the bottom-right
+  corner — the page pulls back and tilts, the chrome fades in, and you are in the 3D space of §2.
+- **Return**: **Escape** docks the page again.
+
+There is no mode: the pose of the camera is the whole state. Every undeclared plane takes the view's size
+(`planeHeight: 1`); a plane can still declare its own `width` / `height`. Details in
+[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) ("The page presentation").
+
+
+
+## 2 · Your first space
 
 A plane is a `route` + a `component`. A view is the list of routes to show first. That's the minimum:
 
@@ -94,7 +143,7 @@ Planes are real DOM — text stays selectable, content stays accessible and styl
 
 
 
-## 2 · Planes & views
+## 3 · Planes & views
 
 **A plane** is `{ route: string, component: React.ComponentType }` (the `PluridReactPlane` type). The
 `route` is the plane's address — it's how links target it and how `view` references it. The component is
@@ -109,13 +158,12 @@ Useful related props:
 | Prop | Purpose |
 |---|---|
 | `id` | Distinguishes multiple plurid apps on the same origin (also the persistence key). |
-| `centerView` | Center the camera on one route from `view` at startup. |
 | `planeNotFound` / `planeRenderError` | `true` (default) shows the built-in fallback, or pass your own component. |
 | `customPlane` | Replace the internal plane wrapper entirely. |
 
 
 
-## 3 · Links — planes are pages
+## 4 · Links — planes are pages
 
 Following a link spawns the target plane **in the same space** instead of navigating away, so the trail of
 related content stays visible. Render a `PluridLink` inside a plane's component:
@@ -137,7 +185,7 @@ persistence, and the viewpoint.
 
 
 
-## 4 · Configuration
+## 5 · Configuration
 
 Pass a `configuration` object. The ergonomic way to build one is the **flat preset**,
 `definePluridConfiguration`, which exposes every knob as a single flat key (no nested config object needed)
@@ -192,7 +240,7 @@ The full per-knob reference is **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURF
 
 
 
-## 5 · Persistence
+## 6 · Persistence
 
 Set `useLocalStorage` and the engine saves the **spatial state** (camera + plane tree) to `localStorage`,
 keyed by `id`, and restores it on load (debounced, and flushed on `pagehide`):
@@ -226,7 +274,7 @@ const sessionAdapter = {
 
 
 
-## 6 · The control surface
+## 7 · The control surface
 
 Plurid is transparent: the host drives and observes it. There are three layers, from most to least common.
 
@@ -290,7 +338,7 @@ a render-slot that *substitutes* the corresponding engine overlay with your own 
 
 
 
-## 7 · The viewpoint (share links & saved views)
+## 8 · The viewpoint (share links & saved views)
 
 The **viewpoint** is the camera state encoded as a short string. The engine never touches the URL — you
 own that. Read it when it settles, and set it back, to build share links, saved views, or guided tours:

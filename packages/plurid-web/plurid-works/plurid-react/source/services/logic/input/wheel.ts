@@ -133,6 +133,8 @@ export interface WheelContext {
     onPlane: boolean;
     /** The content under the pointer is a scroller along the wheel's axis (whether or not it can move further). */
     scrollable: boolean;
+    /** The camera is docked on a page (the page presentation): the wheel is the page's, whatever it can do. */
+    docked?: boolean;
     shift: boolean;
     alt: boolean;
     ctrlOrMeta: boolean;
@@ -284,6 +286,12 @@ export const wheelToDelta = (
         return zoom(wheel.dy);
     }
 
+    // Docked on a page, a plain wheel (mouse or trackpad) is the page's: it scrolls the content if
+    // it can, else nothing — never a zoom or a pan. Pinch / Ctrl / Shift / Alt / grab above still
+    // open the space.
+    if (ctx.docked) {
+        return { kind: 'scroll' };
+    }
     if (ctx.onPlane && ctx.scrollable && policy === 'scroll-first') {
         return { kind: 'scroll' };
     }

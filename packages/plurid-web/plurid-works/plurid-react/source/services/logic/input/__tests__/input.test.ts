@@ -147,6 +147,19 @@ describe('wheelToDelta', () => {
         expect((notch as any).delta.zoom.factor).toBeCloseTo(1.1, 9);
     });
 
+    it('docked on a page, a plain wheel is the page\'s: it scrolls if it can, else nothing; pinch, Shift, Alt and grab still move the camera', () => {
+        const docked = { ...base, onPlane: true, docked: true };
+        expect(wheelToDelta(mouseDown, docked).kind).toBe('scroll');
+        expect(wheelToDelta(trackpad, docked).kind).toBe('scroll');
+        expect(wheelToDelta(mouseDown, { ...docked, scrollable: true }).kind).toBe('scroll');
+        expect(wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, docked).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...docked, ctrlOrMeta: true }).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...docked, shift: true }).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...docked, grabMode: true }).kind).toBe('camera');
+        // not docked, the same wheel over a non-scroller zooms
+        expect(wheelToDelta(mouseDown, { ...base, onPlane: true }).kind).toBe('camera');
+    });
+
     it('a mouse wheel on empty space zooms at the cursor', () => {
         const resolution = wheelToDelta(mouseDown, base);
         expect(resolution.kind).toBe('camera');

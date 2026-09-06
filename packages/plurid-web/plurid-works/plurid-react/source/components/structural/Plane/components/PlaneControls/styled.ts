@@ -6,6 +6,7 @@
 
     import {
         chromeRoot,
+        chromeDocked,
     } from '~services/styled/chrome';
 
     import {
@@ -21,10 +22,13 @@ export interface IStyledPluridPlaneControls {
     theme: Theme;
     transparentUI: boolean;
     mouseOver: boolean;
+    /** The page presentation: the bar hangs above the sheet instead of taking a row (the page stays whole). */
+    $overlay?: boolean;
 }
 
 export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
     ${chromeRoot}
+    ${chromeDocked}
     background-color: ${({
         transparentUI,
         mouseOver,
@@ -43,6 +47,7 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
     }};
 
     width: 100%;
+    ${({ $overlay }) => ($overlay ? 'position: absolute; top: -56px; left: 0; right: 0; height: 56px; z-index: 5;' : '')}
     display: grid;
     align-items: center;
     justify-content: center;

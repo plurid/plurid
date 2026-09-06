@@ -129,6 +129,8 @@ run `npx playwright test --config e2e/playwright.config.ts --project visual --up
 baselines under `e2e/__snapshots__/`. `fixtures.spec.ts` picks the fixture up by itself. A new flag goes into the
 registry the same way (the panel and the docs follow).
 
+Two traps: the suite REUSES a server already listening on 5273 (`reuseExistingServer`), so a server orphaned by a killed run keeps serving an old bundle — `lsof -nP -i :5273` before trusting a browser result; and the strict / regenerate decision lives in `visual.spec.ts` (from `testInfo.config.updateSnapshots` and `VISUAL_STRICT`), never in the config, because a worker process does not see the CLI's arguments. The budget is an absolute `maxDiffPixels` (120): a ratio let a 22×20 control vanish unnoticed.
+
 
 
 ## Build gotchas (tsup / esbuild)

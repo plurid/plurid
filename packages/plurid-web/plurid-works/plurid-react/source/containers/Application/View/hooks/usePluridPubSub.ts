@@ -64,6 +64,8 @@
         setHome,
         fitToView,
         frameCommand,
+        dockCommand,
+        revealCommand,
         applyCameraDeltaCommand,
     } from '~services/logic/camera';
 
@@ -610,6 +612,18 @@ export const usePluridPubSub = (
                 topic: PLURID_PUBSUB_TOPIC.SPACE_HOME,
                 callback: (data) => {
                     dispatch(goHome((data as any)?.animate ?? true) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_DOCK,
+                callback: (data) => {
+                    dispatch(dockCommand((data as any)?.planeID, (data as any)?.animate ?? true) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_REVEAL,
+                callback: (data) => {
+                    dispatch(revealCommand((data as any)?.animate ?? true) as any);
                 },
             },
             {

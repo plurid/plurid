@@ -5,6 +5,9 @@
     import computeFaceToFaceLayout from './faceToFace';
     import computeSheavesLayout from './sheaves';
     import computeZigZagLayout from './zigZag';
+    import {
+        configuredPlaneSize,
+    } from './size';
     // #endregion internal
 // #endregion imports
 
@@ -17,5 +20,6 @@ export {
     computeFaceToFaceLayout,
     computeSheavesLayout,
     computeZigZagLayout,
+    configuredPlaneSize,
 };
 // #endregion exports

@@ -22,6 +22,20 @@ export const buildConfiguration = (
         minimap: true,
     };
 
+    // The page presentation: the site set as a site — every page the width of the view, the first
+    // one at the origin (no centering): the identity camera IS its dock pose.
+    if (flags.presentation === 'page') {
+        flat.presentation = 'page';
+        flat.planeWidth = 1;
+        flat.center = false;
+    }
+    if (flags.dockMotion || flags.dockChrome) {
+        flat.docking = {
+            ...(flags.dockMotion ? { motion: flags.dockMotion } : {}),
+            ...(flags.dockChrome ? { chrome: flags.dockChrome } : {}),
+        };
+    }
+
     if (flags.undoOff) {
         flat.undo = false;
     }

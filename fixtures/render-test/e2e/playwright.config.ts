@@ -10,22 +10,23 @@ import { defineConfig } from '@playwright/test';
  * `e2e/__snapshots__/<platform>/`). The comparison is STRICT only with `VISUAL_STRICT=1` — the
  * baselines are taken on macOS, headless Chromium, DPR 1 — or when regenerating with
  * `--update-snapshots`; elsewhere the fixtures still open and render (a boot / console-error gate).
+ * The spec decides (from `testInfo.config.updateSnapshots` and the env), never this file: a worker
+ * process does not see the CLI's arguments.
  */
-const strictVisual = !!process.env.VISUAL_STRICT || process.argv.includes('--update-snapshots');
 
 export default defineConfig({
     testDir: '.',
     testMatch: /.*\.spec\.ts/,
     timeout: 30_000,
     snapshotPathTemplate: '{testDir}/__snapshots__/{platform}/{arg}{ext}',
-    ignoreSnapshots: !strictVisual,
     expect: {
         timeout: 5_000,
         toHaveScreenshot: {
             animations: 'disabled',
             caret: 'hide',
             scale: 'css',
-            maxDiffPixelRatio: 0.002,
+            // an absolute budget: a 0.2 % RATIO (~2 000 px at 1280×800) let a 22×20 control vanish unnoticed
+            maxDiffPixels: 120,
             threshold: 0.2,
         },
     },

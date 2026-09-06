@@ -69,6 +69,7 @@ const resolveSpace = <C>(
         camera: cameraEngine.identityCamera(initialViewSize, perspective),
         cameraLimits,
         motion: 'idle',
+        dockingPlaneID: '',
         scale: 1,
         rotationX: 0,
         rotationY: 0,

@@ -156,7 +156,7 @@ harnessLines.push('| Fixture | Title | Flags | Steps | Viewpoints | Expectations
 harnessLines.push('| --- | --- | --- | --- | --- | --- |');
 for (const fixture of FIXTURES) {
     const flags = Object.entries(fixture.query).map(([key, value]) => '`' + key + '=' + value + '`').join(' ') || '-';
-    const steps = (fixture.steps || []).map((step) => '`' + step.plane + ' → ' + step.route + '`').join(', ') || '-';
+    const steps = (fixture.steps || []).map((step) => '`' + (step.kind === 'scroll' ? step.plane + ' ↓ ' + step.top : (step.kind === 'dock' ? '⌂ ' + step.plane : step.plane + ' → ' + step.route)) + '`').join(', ') || '-';
     const viewpoints = fixture.viewpoints.map((viewpoint) => '`' + viewpoint.name + '`').join(', ');
     const expectations = Object.entries(fixture.expect || {}).map(([key, value]) => key + ': ' + value).join(', ') || '-';
     harnessLines.push(`| \`${fixture.name}\` | ${cell(fixture.title)} — ${cell(fixture.description)} | ${flags} | ${steps} | ${viewpoints} | ${cell(expectations)} |`);

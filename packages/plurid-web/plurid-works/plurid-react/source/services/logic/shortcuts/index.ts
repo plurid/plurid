@@ -23,6 +23,10 @@
     // #region external
     import { AppState } from '~services/state/store';
     import actions from '~services/state/actions';
+    import {
+        getDockedPlaneID,
+        getPresentation,
+    } from '~services/state/modules/space/selectors';
 
     import {
         focusActivePlane,
@@ -40,6 +44,7 @@
         fitToView,
         frameSelection,
         goHome,
+        cameraCommand,
     } from '~services/logic/camera';
 
     import {
@@ -167,7 +172,28 @@ const SHORTCUTS: ShortcutBinding[] = [
         // G toggles grab / navigate mode (left drag orbits everywhere, the wheel zooms).
         id: 'grabMode', code: 'KeyG',
         match: (e, code, ctx) => e.code === code && ctx.noModifiers,
-        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.ui.toggleUIGrabMode()); },
+        run: ({ dispatch, state, prevent }) => {
+            prevent();
+            const entering = !state.ui?.grabMode;
+            dispatch(actions.ui.toggleUIGrabMode());
+            // Docked on a page, turning grab ON is a door into the space: reveal it.
+            if (entering && getPresentation(state) === 'page' && getDockedPlaneID(state)) {
+                dispatch(cameraCommand({ kind: 'reveal' }, { animate: true }) as any);
+            }
+        },
+    },
+    {
+        // The page presentation: Escape docks the camera back on a page (exiting grab mode too).
+        id: 'dock', code: 'Escape',
+        match: (e, code, ctx) => e.code === code
+            && getPresentation(ctx.state) === 'page'
+            && !getDockedPlaneID(ctx.state)
+            && !ctx.state.ui?.shortcutsOverlayVisible,
+        run: ({ dispatch, prevent }) => {
+            prevent();
+            dispatch(actions.ui.setUIGrabMode(false));
+            dispatch(cameraCommand({ kind: 'dock' }, { animate: true }) as any);
+        },
     },
     {
         id: 'exitGrabMode', code: 'Escape',

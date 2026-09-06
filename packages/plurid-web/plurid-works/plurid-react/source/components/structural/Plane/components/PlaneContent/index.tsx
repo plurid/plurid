@@ -78,6 +78,7 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
         <StyledPluridPlaneContent
             ref={planeContentElement}
             $fixedHeight={fixedHeight}
+            tabIndex={fixedHeight ? -1 : undefined}
             data-plurid-entity={PLURID_ENTITY_PLANE_CONTENT}
         >
             {children}

@@ -96,6 +96,10 @@ export const useCameraMotion = (
         kind: FlingKind;
         last: number;
     } | null>(null);
+    // The motion this controller last dispatched. `stateRef` is assigned at render time, so within
+    // one synchronous run (a retarget: `stop()` then a new tween) it cannot tell that the store
+    // already moved — comparing against it alone skipped the `tween` after the `idle`.
+    const motionRef = useRef<CameraMotion>('idle');
 
     const mediaQuery = useRef<MediaQueryList | null>(null);
     useEffect(() => {
@@ -107,7 +111,8 @@ export const useCameraMotion = (
 
     const controller = useMemo<CameraMotionController>(() => {
         const setMotion = (motion: CameraMotion) => {
-            if (stateRef.current?.space?.motion !== motion) {
+            if (motionRef.current !== motion || stateRef.current?.space?.motion !== motion) {
+                motionRef.current = motion;
                 dispatch(actions.space.setMotion(motion));
             }
         };
@@ -230,6 +235,10 @@ export const useCameraMotion = (
                 schedule();
             },
             tweenTo: (target, options = {}) => {
+                // already on its way there: a retarget to the same pose would only restart the tween
+                if (tween.current && cameraEngine.sameCamera(tween.current.to, target, 1e-9)) {
+                    return;
+                }
                 stop();
                 const from = stateRef.current.space.camera;
                 const motion = configRef.current.navigation?.motion || {};

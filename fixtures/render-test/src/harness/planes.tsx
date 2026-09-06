@@ -7,6 +7,10 @@ import {
 
 import Panel, { PanelProps } from '../Plane';
 import MediaPlane from '../MediaPlane';
+import {
+    SitePage,
+    SubPage,
+} from '../Site';
 import type { HarnessFlags, SizeSetKey } from './flags';
 
 
@@ -85,6 +89,29 @@ const GeometryDocument = () => {
     return null;
 };
 
+/**
+ * The SITE set (`?pages=N`): N root pages, each linking to an about (long) and a contact (short)
+ * sub-page registered but not in view — what a consumer site looks like in the page presentation.
+ */
+export const buildSite = (
+    count: number,
+): BuiltPlanes => {
+    const indices = Array.from({ length: Math.max(1, count) }, (_, i) => i + 1);
+    const roots: PluridReactPlane[] = indices.map((index) => ({
+        route: `/page-${index}`,
+        component: () => <SitePage index={index} />,
+    }));
+    const subPages: PluridReactPlane[] = indices.flatMap((index) => [
+        { route: `/page-${index}/about`, component: () => <SubPage index={index} kind="about" /> },
+        { route: `/page-${index}/contact`, component: () => <SubPage index={index} kind="contact" /> },
+    ]);
+    return {
+        planes: [...roots, ...subPages],
+        view: roots.map((root) => root.route),
+        declared: {},
+    };
+};
+
 export interface BuiltPlanes {
     planes: PluridReactPlane[];
     /** the initially visible roots */
@@ -97,6 +124,9 @@ export interface BuiltPlanes {
 export const buildPlanes = (
     flags: HarnessFlags,
 ): BuiltPlanes => {
+    if (flags.pages) {
+        return buildSite(flags.pages);
+    }
     const stress = !!flags.planes;
     const source = stress ? stressPanels(flags.planes ?? 40) : PANELS;
     const sizeOf = SIZE_SETS[flags.sizes] ?? SIZE_SETS.default;

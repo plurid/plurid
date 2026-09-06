@@ -9,41 +9,97 @@
 
 
 // #region module
+/** The layout position of `element` within `planeElement`: the `offsetLeft/Top` sum along the `offsetParent` chain. */
+const offsetWithin = (
+    element: HTMLElement,
+    planeElement: HTMLElement,
+): { left: number; top: number } => {
+    let left = 0;
+    let top = 0;
+    let current: HTMLElement | null = element;
+    while (current && current !== planeElement) {
+        left += current.offsetLeft;
+        top += current.offsetTop;
+        const parent = current.offsetParent as HTMLElement | null;
+        if (!parent || !planeElement.contains(parent)) {
+            break;
+        }
+        current = parent;
+    }
+    return { left, top };
+};
+
+const CLIPPING = ['auto', 'scroll', 'hidden', 'clip'];
+
+/** Whether the element clips its overflow on an axis (a scroller, or an `overflow: hidden` box). */
+const clips = (
+    element: HTMLElement,
+    axis: 'x' | 'y',
+): boolean => {
+    if (typeof getComputedStyle !== 'function') {
+        return false;
+    }
+    const style = getComputedStyle(element);
+    const value = (axis === 'x' ? style.overflowX : style.overflowY) || style.overflow;
+    return CLIPPING.includes(value);
+};
+
+const half = (value: number) => Math.round(value * 2) / 2;
+
 /**
  * Where a link sits on its plane, in plane-local px from the plane's top-left corner: the sum of
  * `offsetLeft/Top` along the `offsetParent` chain up to the plane element (the plane is positioned,
- * so it is an offset parent), minus the scroll offsets of any scroller in between. Layout values,
- * never `getBoundingClientRect` — the camera's CSS 3D transform does not leak in. `x` is the link's
- * right edge (where the bridge starts), `y` its vertical middle.
+ * so it is an offset parent), minus the scroll offsets of any scroller in between — the VISUAL
+ * position — and CLAMPED into the visible box of every clipping ancestor (a scroller, an
+ * `overflow: hidden` box): a link scrolled beyond the fold measures AT the fold, so the plane it
+ * spawned anchors at the edge of its sheet and never leaves it. Layout values, never
+ * `getBoundingClientRect` — the camera's CSS 3D transform does not leak in. `x` is the link's right
+ * edge (where the bridge starts), `y` its vertical middle.
  */
 export const measureLinkCoordinates = (
     linkElement: HTMLElement,
     planeElement: HTMLElement,
 ): LinkCoordinates => {
-    let left = 0;
-    let top = 0;
+    const origin = offsetWithin(linkElement, planeElement);
+    let x = origin.left + linkElement.offsetWidth;
+    let y = origin.top + linkElement.offsetHeight / 2;
 
-    let element: HTMLElement | null = linkElement;
-    while (element && element !== planeElement) {
-        left += element.offsetLeft;
-        top += element.offsetTop;
-        const parent = element.offsetParent as HTMLElement | null;
-        if (!parent || !planeElement.contains(parent)) {
-            break;
-        }
-        element = parent;
+    // the ancestors between the link and the plane, innermost first
+    const ancestors: HTMLElement[] = [];
+    for (let ancestor = linkElement.parentElement; ancestor && ancestor !== planeElement; ancestor = ancestor.parentElement) {
+        ancestors.push(ancestor);
+    }
+    for (const ancestor of ancestors) {
+        x -= ancestor.scrollLeft || 0;
+        y -= ancestor.scrollTop || 0;
     }
 
-    let scroller: HTMLElement | null = linkElement.parentElement;
-    while (scroller && scroller !== planeElement) {
-        left -= scroller.scrollLeft || 0;
-        top -= scroller.scrollTop || 0;
-        scroller = scroller.parentElement;
+    // clamp into each clipping ancestor's visible box, itself in visual plane coordinates (its
+    // layout position minus the scroll of the ancestors OUTSIDE it)
+    let outerScrollLeft = 0;
+    let outerScrollTop = 0;
+    for (let index = ancestors.length - 1; index >= 0; index -= 1) {
+        const ancestor = ancestors[index];
+        const width = ancestor.clientWidth;
+        const height = ancestor.clientHeight;
+        if (width > 0 || height > 0) {
+            const position = offsetWithin(ancestor, planeElement);
+            const left = position.left + ancestor.clientLeft - outerScrollLeft;
+            const top = position.top + ancestor.clientTop - outerScrollTop;
+            if (width > 0 && clips(ancestor, 'x')) {
+                x = Math.min(Math.max(x, left), left + width);
+            }
+            if (height > 0 && clips(ancestor, 'y')) {
+                y = Math.min(Math.max(y, top), top + height);
+            }
+        }
+        outerScrollLeft += ancestor.scrollLeft || 0;
+        outerScrollTop += ancestor.scrollTop || 0;
     }
 
     return {
-        x: Math.round((left + linkElement.offsetWidth) * 2) / 2,
-        y: Math.round((top + linkElement.offsetHeight / 2) * 2) / 2,
+        x: half(x),
+        y: half(y),
     };
 };
 

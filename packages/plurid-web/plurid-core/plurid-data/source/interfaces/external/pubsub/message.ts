@@ -597,6 +597,36 @@ export interface PluridPubSubSubscribeMessageFrame {
     callback: PluridPubSubCallback<PluridPubSubMessageFrame | undefined>;
 }
 
+/** Dock the camera on a page (the page presentation): face-on, scale 1, the page filling the view. */
+export interface PluridPubSubMessageDock {
+    /** This plane; omit for the page nearest the view center. */
+    planeID?: string;
+    /** Tween instead of jumping. Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageDock {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DOCK;
+    data?: PluridPubSubMessageDock;
+}
+export interface PluridPubSubSubscribeMessageDock {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DOCK;
+    callback: PluridPubSubCallback<PluridPubSubMessageDock | undefined>;
+}
+
+/** Reveal the space from a docked page: pull the camera back and tilt it (the page presentation). */
+export interface PluridPubSubMessageReveal {
+    /** Tween instead of jumping. Default `true`. */
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageReveal {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_REVEAL;
+    data?: PluridPubSubMessageReveal;
+}
+export interface PluridPubSubSubscribeMessageReveal {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_REVEAL;
+    callback: PluridPubSubCallback<PluridPubSubMessageReveal | undefined>;
+}
+
 export interface PluridPubSubMessageHome {
     /** Tween to the home viewpoint instead of jumping. Default `true`. */
     animate?: boolean;
@@ -798,6 +828,8 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageSetTree
     | PluridPubSubPublishMessageCameraDelta
     | PluridPubSubPublishMessageFrame
+    | PluridPubSubPublishMessageDock
+    | PluridPubSubPublishMessageReveal
     | PluridPubSubPublishMessageHome
     | PluridPubSubPublishMessageSetHome
     | PluridPubSubPublishMessagePreset
@@ -864,6 +896,8 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageSetTree
     | PluridPubSubSubscribeMessageCameraDelta
     | PluridPubSubSubscribeMessageFrame
+    | PluridPubSubSubscribeMessageDock
+    | PluridPubSubSubscribeMessageReveal
     | PluridPubSubSubscribeMessageHome
     | PluridPubSubSubscribeMessageSetHome
     | PluridPubSubSubscribeMessagePreset

@@ -67,8 +67,11 @@ export const navigatePlane = (
         value: plane.planeID,
     }));
 
-    const duration = animate
-        ? (getState().configuration.space.navigation?.motion?.duration ?? 380)
+    // an instant dock (`space.docking.motion`) lands in the same frame: focus at once
+    const configuration = getState().configuration;
+    const instant = configuration.space.presentation === 'page' && configuration.space.docking?.motion === 'instant';
+    const duration = animate && !instant
+        ? (configuration.space.navigation?.motion?.duration ?? 380)
         : 0;
     const focus = () => {
         focusPluridPlaneAnchor(plane.planeID);

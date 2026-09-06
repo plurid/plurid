@@ -310,5 +310,64 @@ describe('navigateToParent() / openLastClosed()', () => {
         openLastClosed({ navigate: false })(store.dispatch, store.getState);
         expect(store.cameraCommits().length).toBe(commits + 1);
     });
+
+describe('the page presentation: docking controls on the link path', () => {
+    const pageConfiguration = (docking?: { motion: 'swing' | 'instant'; chrome: 'hidden' | 'shown' }) => ({
+        ...defaultConfiguration,
+        space: { ...defaultConfiguration.space, presentation: 'page' as const, ...(docking ? { docking } : {}) },
+        elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, height: 1 } },
+    });
+    /** A mounted View's motion controller, as a spy. */
+    const withMotion = (store: ReturnType<typeof makeStore>) => {
+        const tweens: any[] = [];
+        store.extra.motion = {
+            tweenTo: (target: any, options: any) => { tweens.push({ target, options }); },
+            cancel: () => {},
+            fling: () => {},
+            isActive: () => false,
+            reducedMotion: () => false,
+        } as any;
+        return tweens;
+    };
+
+    it('a link click swings to the child and records it as the destination (the chrome stays hidden)', () => {
+        const store = makeStore(pageConfiguration());
+        const tweens = withMotion(store);
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(tweens).toHaveLength(1);
+        expect(tweens[0].target.scale).toBe(1);
+        expect(store.cameraCommits()).toHaveLength(0);
+        const destinations = store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type).map((action) => action.payload);
+        expect(destinations).toEqual([child(store).planeID]);
+    });
+
+    it('on a page a link is a link: clicking an OPEN link navigates to it instead of closing it', () => {
+        const store = makeStore(pageConfiguration());
+        const tweens = withMotion(store);
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(child(store).show).toBe(true);
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(child(store).show).toBe(true);
+        expect(store.state().lastClosedPlane).toBe('');
+        expect(tweens).toHaveLength(2);
+        expect(tweens[1].target.scale).toBe(1);
+        // the space presentation keeps the toggle
+        const space = makeStore(defaultConfiguration);
+        space.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        space.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(child(space).show).toBe(false);
+    });
+
+    it('docking.motion instant: the link click lands on the child in one jump', () => {
+        const store = makeStore(pageConfiguration({ motion: 'instant', chrome: 'hidden' }));
+        const tweens = withMotion(store);
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(tweens).toHaveLength(0);
+        expect(store.cameraCommits()).toHaveLength(1);
+        expect(store.state().camera.scale).toBe(1);
+        expect(Math.abs(store.state().camera.yaw)).toBeCloseTo(90, 6);
+    });
+});
+
 });
 // #endregion module

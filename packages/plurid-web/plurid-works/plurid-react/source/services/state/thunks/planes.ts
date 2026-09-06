@@ -115,6 +115,15 @@ export const toggleLinkPlane = (
 
     const show = existing.show === false;
 
+    // On a PAGE a link is a link: it takes the user to its page and never toggles it closed (the
+    // page's own close control and the back control do that).
+    if (!show && state.configuration.space.presentation === 'page') {
+        if (navigate) {
+            navigateToPluridPlane(dispatch, existing);
+        }
+        return;
+    }
+
     // A link re-measures itself at every click, while a closed plane kept the coordinates of the
     // moment it closed (its link stopped tracking it): the fresh measurement relocates the subtree
     // BEFORE it shows, so the frame below targets where the plane really is.

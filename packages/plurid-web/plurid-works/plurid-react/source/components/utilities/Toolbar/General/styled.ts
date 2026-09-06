@@ -5,6 +5,7 @@
     import {
         chromeControl,
         chromeRoot,
+        chromeDocked,
     } from '~services/styled/chrome';
 
     import {
@@ -44,6 +45,7 @@ export interface IStyledToolbar {
 
 export const StyledToolbar = styled.div<IStyledToolbar>`
     ${chromeRoot}
+    ${chromeDocked}
     bottom: ${({
         conceal,
         mouseIn,

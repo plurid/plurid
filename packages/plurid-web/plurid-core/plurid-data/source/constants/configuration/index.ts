@@ -7,6 +7,7 @@
         PluridConfigurationSpace,
         PluridConfigurationNetwork,
         PluridConfigurationDevelopment,
+        PluridPartialConfiguration,
     } from '../../interfaces';
 
     import {
@@ -102,6 +103,11 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     opaque: true,
     fadeInTime: 1500,
     center: false,
+    presentation: 'space',
+    docking: {
+        motion: 'swing',
+        chrome: 'hidden',
+    },
     transformOrigin: {
         show: true,
         size: SIZES.NORMAL,
@@ -190,6 +196,24 @@ export const defaultConfiguration: PluridConfiguration = {
     },
     development: {
         ...defaultConfigurationDevelopment,
+    },
+};
+
+
+/**
+ * What `space.presentation: 'page'` changes about the defaults: no fade-in (the first paint IS the
+ * page), no space gradient (the page floats on the host's own backdrop when revealed), every plane
+ * sized to the view (its content scrolls inside). Layered under a host's own values by `merge`.
+ */
+export const pagePresentationDefaults: PluridPartialConfiguration = {
+    space: {
+        fadeInTime: 0,
+        opaque: false,
+    },
+    elements: {
+        plane: {
+            height: 1,
+        },
     },
 };
 

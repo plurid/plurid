@@ -30,6 +30,18 @@ const box = (
 };
 
 
+/** A clipping box (a scroller): jsdom reports no client sizes, so they are set the way a browser would. */
+const clip = (
+    element: HTMLElement,
+    size: { width: number; height: number },
+) => {
+    element.style.overflowY = 'auto';
+    element.style.overflowX = 'auto';
+    Object.defineProperty(element, 'clientWidth', { value: size.width, configurable: true });
+    Object.defineProperty(element, 'clientHeight', { value: size.height, configurable: true });
+};
+
+
 const plane = (
     planeID = 'plane-1',
 ) => {
@@ -79,6 +91,66 @@ describe('measureLinkCoordinates()', () => {
         scroller.scrollLeft = 0;
 
         expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 90, y: 310 });
+    });
+
+    it('clamps a link beyond the fold to the scroller\'s visible box: it anchors at the edge', () => {
+        const planeElement = plane();
+        const scroller = document.createElement('div');
+        const link = document.createElement('a');
+        planeElement.appendChild(scroller);
+        scroller.appendChild(link);
+        box(scroller, { left: 0, top: 56, width: 1000, height: 600, offsetParent: planeElement });
+        clip(scroller, { width: 1000, height: 600 });
+        box(link, { left: 800, top: 20, width: 80, height: 20, offsetParent: scroller });
+
+        // visible: unchanged
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 880, y: 86 });
+        // scrolled above the fold: y clamps to the scroller's top edge
+        scroller.scrollTop = 600;
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 880, y: 56 });
+        // scrolled so the link is below the fold: y clamps to the bottom edge
+        scroller.scrollTop = -700;
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 880, y: 656 });
+        // a horizontal scroll clamps x too
+        scroller.scrollTop = 0;
+        scroller.scrollLeft = 2000;
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 0, y: 86 });
+    });
+
+    it('clamps through two nested scrollers, each box in visual plane coordinates', () => {
+        const planeElement = plane();
+        const outer = document.createElement('div');
+        const inner = document.createElement('div');
+        const link = document.createElement('a');
+        planeElement.appendChild(outer);
+        outer.appendChild(inner);
+        inner.appendChild(link);
+        box(outer, { left: 0, top: 0, width: 600, height: 400, offsetParent: planeElement });
+        clip(outer, { width: 600, height: 400 });
+        box(inner, { left: 0, top: 300, width: 600, height: 200, offsetParent: outer });
+        clip(inner, { width: 600, height: 200 });
+        box(link, { left: 10, top: 150, width: 40, height: 20, offsetParent: inner });
+
+        // the outer scroller brings the inner box up by 250: the inner box is at y 50..250, the link at 210
+        outer.scrollTop = 250;
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 50, y: 210 });
+        // the inner scroller pushes the link above its own box: clamped to the inner top (50)
+        inner.scrollTop = 190;
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 50, y: 50 });
+    });
+
+    it('does not clamp into an ancestor that does not clip (overflow visible)', () => {
+        const planeElement = plane();
+        const wrapper = document.createElement('div');
+        const link = document.createElement('a');
+        planeElement.appendChild(wrapper);
+        wrapper.appendChild(link);
+        box(wrapper, { left: 0, top: 100, width: 200, height: 10, offsetParent: planeElement });
+        Object.defineProperty(wrapper, 'clientWidth', { value: 200, configurable: true });
+        Object.defineProperty(wrapper, 'clientHeight', { value: 10, configurable: true });
+        box(link, { left: 0, top: 80, width: 40, height: 20, offsetParent: wrapper });
+
+        expect(measureLinkCoordinates(link, planeElement)).toEqual({ x: 40, y: 190 });
     });
 
     it('stops at an offset parent outside the plane', () => {

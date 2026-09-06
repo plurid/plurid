@@ -110,6 +110,7 @@ export const serverComputeMetastate = async (
                 ),
                 cameraLimits: interaction.camera.resolveCameraLimits(appConfiguration.space.navigation),
                 motion: 'idle',
+                dockingPlaneID: '',
                 viewSize: {
                     width: 1440,
                     height: 821,

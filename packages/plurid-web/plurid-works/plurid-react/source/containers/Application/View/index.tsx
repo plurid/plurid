@@ -110,7 +110,10 @@
     import PluridLiveRegion from '~components/utilities/LiveRegion';
     import useCulling from './hooks/useCulling';
     import { warnOnce } from '~services/logic/development/warn';
-    import { resolvePlaneFallbackSize } from '~services/logic/camera';
+    import {
+        resolvePlaneFallbackSize,
+        cameraCommand,
+    } from '~services/logic/camera';
     import { PluridThunkExtra } from '~services/state/extra';
     import useFlyControls from './hooks/useFlyControls';
     import useViewResize from './hooks/useViewResize';
@@ -175,6 +178,8 @@ export interface PluridViewStateProperties {
     // stateCulledView: any;
     stateSpaceView: PluridApplicationView;
     stateGeneralTheme: Theme;
+    /** The page the camera is docked on (the page presentation), `''` otherwise. */
+    stateDockedPlaneID: string;
 }
 
 export interface PluridViewDispatchProperties {
@@ -256,6 +261,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         stateTree,
         stateLinks,
         stateGeneralTheme,
+        stateDockedPlaneID,
         // #endregion state
 
 
@@ -368,6 +374,10 @@ const PluridView: React.FC<PluridViewProperties> = (
     // `gestures.wheelSmoothing` of what is still pending (raw under reduced motion), so a burst of
     // wheel events glides to its exact total instead of stepping. A press cancels the tail.
     const wheelBatcher = useMemo(() => createSmoothedBatcher((delta) => {
+        // a camera tween owns the camera: the wheel's tail never fights it
+        if (stateRef.current.space.motion === 'tween') {
+            return;
+        }
         dispatch(actions.space.applyCameraDelta(
             applyLocks(delta, stateRef.current.configuration.space.transformLocks),
         ));
@@ -380,6 +390,15 @@ const PluridView: React.FC<PluridViewProperties> = (
     ]);
     // The device of the current wheel stream (a fast trackpad flick must not read as a mouse notch).
     const wheelHistory = useRef(createWheelHistory());
+    // A page docks: whatever the wheel still had pending is dropped (the dock pose is exact).
+    useEffect(() => {
+        if (stateDockedPlaneID) {
+            wheelBatcher.cancel();
+        }
+    }, [
+        stateDockedPlaneID,
+        wheelBatcher,
+    ]);
 
     const [
         preventOverscroll,
@@ -571,6 +590,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             firstPerson: spaceConfiguration.firstPerson,
             onPlane: !!planeElement,
             scrollable,
+            docked: !!selectors.space.getDockedPlaneID(stateRef.current),
             shift: event.shiftKey,
             alt: event.altKey,
             ctrlOrMeta: event.ctrlKey || event.metaKey,
@@ -770,7 +790,12 @@ const PluridView: React.FC<PluridViewProperties> = (
             if (previous.width === viewSize.width && previous.height === viewSize.height) {
                 return;
             }
+            // A docked page stays docked through the relayout (its view-sized box changed with the view).
+            const docked = selectors.space.getDockedPlaneID(stateRef.current);
             treeUpdateCallback();
+            if (docked) {
+                dispatch(cameraCommand({ kind: 'dock', planeID: docked }, { animate: false }) as any);
+            }
         }, [
             state.space.viewSize.width,
             state.space.viewSize.height,
@@ -903,6 +928,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             firstPerson={stateConfiguration.space.firstPerson}
             preventOverscroll={preventOverscroll}
             data-plurid-entity={PLURID_ENTITY_VIEW}
+            data-plurid-docked={stateDockedPlaneID || undefined}
             role="application"
             aria-roledescription="3D space"
             aria-label="plurid space"
@@ -951,6 +977,7 @@ const mapStateToProperties = (
     // stateCulledView: selectors.space.getCulledView(state),
     stateSpaceView: selectors.space.getView(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateDockedPlaneID: selectors.space.getDockedPlaneID(state),
 });
 
 

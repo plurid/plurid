@@ -5,6 +5,7 @@
     import {
         chromeControl,
         chromeRoot,
+        chromeDocked,
     } from '~services/styled/chrome';
 
     import {
@@ -123,6 +124,7 @@ export const StyledShortcutsKeys = styled.div`
 
 export const StyledShortcutsTrigger = styled.button<{ theme: Theme }>`
     ${chromeControl}
+    ${chromeDocked}
     position: absolute;
     bottom: 18px;
     left: 18px;

@@ -189,5 +189,73 @@ describe('cameraCommand()', () => {
             expect(projected.y).toBeLessThanOrEqual(view.height + 1);
         }
     });
+
+describe('the page presentation: framing docks', () => {
+    const page: PluridConfiguration = {
+        ...defaultConfiguration,
+        space: { ...defaultConfiguration.space, presentation: 'page' },
+    };
+    const sheet = (planeID: string, translateY = 0): TreePlane => ({
+        ...plane(planeID, 0),
+        width: view.width,
+        height: view.height,
+        location: { translateX: 0, translateY, translateZ: 0, rotateX: 0, rotateY: 0 },
+    });
+    const makePageStore = () => {
+        const store = makeStore(page);
+        store.dispatch(actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
+        return store;
+    };
+
+    it('frame resolves to the dock pose (scale 1, the sheet exactly on the view), not a fitted frame', () => {
+        const store = makePageStore();
+        const docked = resolveCameraTarget({ kind: 'frame', planeID: 'p1' }, store.getState())!;
+        expect(docked.scale).toBe(1);
+        expect(docked.yaw).toBe(0);
+        expect(docked.pitch).toBe(0);
+        expect(docked.pivot).toEqual({ x: view.width / 2, y: view.height / 2, z: 0 });
+        // the same sheet in the space presentation is fitted with a margin
+        const fitted = resolveCameraTarget({ kind: 'frame', planeID: 'p1' }, { ...store.getState(), configuration: defaultConfiguration })!;
+        expect(fitted.scale).toBeLessThan(1);
+    });
+
+    it('dock without a plane docks the candidate; reveal is the reveal pose of the docked page', () => {
+        const store = makePageStore();
+        const identity = cameraEngine.identityCamera(view);
+        const dock = resolveCameraTarget({ kind: 'dock' }, store.getState())!;
+        expect(dock.scale).toBe(1);
+        expect(dock.pivot).toEqual(identity.pivot);
+        const reveal = resolveCameraTarget({ kind: 'reveal' }, store.getState())!;
+        expect(reveal.scale).toBeCloseTo(cameraEngine.REVEAL.scale, 9);
+        expect(reveal.pitch).toBeCloseTo(cameraEngine.REVEAL.pitch, 9);
+        expect(reveal.yaw).toBeCloseTo(cameraEngine.REVEAL.yaw, 9);
+        // a docked second page: dock (no plane) keeps it, reveal reveals it
+        store.dispatch(actions.setCamera(resolveCameraTarget({ kind: 'frame', planeID: 'p2' }, store.getState())!));
+        expect(resolveCameraTarget({ kind: 'dock' }, store.getState())!.pivot.y).toBeCloseTo(view.height + 50 + view.height / 2, 6);
+    });
+
+    it('a swing that lands docked records its destination; a reveal records none', () => {
+        const store = makePageStore();
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
+        store.dispatch(cameraCommand({ kind: 'reveal' }));
+        expect(store.tweens).toHaveLength(2);
+        expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type).map((action) => action.payload)).toEqual(['p2', '']);
+    });
+
+    it('docking.motion instant: a move that lands docked jumps, the reveal still swings', () => {
+        const instant: PluridConfiguration = { ...page, space: { ...page.space, docking: { motion: 'instant', chrome: 'hidden' } } };
+        const store = makeStore(instant);
+        store.dispatch(actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
+        expect(store.tweens).toHaveLength(0);
+        expect(store.space().camera.scale).toBe(1);
+        expect(store.space().camera.pivot.y).toBeCloseTo(view.height + 50 + view.height / 2, 6);
+        store.dispatch(cameraCommand({ kind: 'dock', planeID: 'p1' }));
+        expect(store.tweens).toHaveLength(0);
+        store.dispatch(cameraCommand({ kind: 'reveal' }));
+        expect(store.tweens).toHaveLength(1);
+    });
+});
+
 });
 // #endregion module

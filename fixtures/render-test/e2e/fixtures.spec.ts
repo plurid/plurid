@@ -100,6 +100,8 @@ test.describe('fixtures', () => {
                         }
                         if (clipped) continue;
                         const top = document.elementFromPoint(x, y);
+                        // chrome (the minimap, the toolbar, the viewcube, a control) legitimately floats over content
+                        if (top && top.closest('[data-plurid-entity="PluridMinimap"], [data-plurid-entity="PluridToolbar"], [data-plurid-entity="PluridViewcube"], [data-plurid-control]')) continue;
                         if (!top || top.closest('[data-plurid-link-route]') !== link) {
                             misses.push(link.getAttribute('data-plurid-link-route') + ' ← ' + (top ? top.tagName + (top.getAttribute('data-plurid-entity') ? '#' + top.getAttribute('data-plurid-entity') : '') : 'none'));
                         }

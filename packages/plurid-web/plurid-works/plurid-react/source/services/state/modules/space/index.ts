@@ -80,6 +80,7 @@ const initialState: PluridStateSpace = {
     camera: cameraEngine.identityCamera(initialViewSize),
     cameraLimits: cameraEngine.DEFAULT_CAMERA_LIMITS,
     motion: 'idle',
+    dockingPlaneID: '',
     scale: 1,
     rotationX: 0,
     rotationY: 0,
@@ -435,6 +436,19 @@ export const space = createSlice({
         ) => {
             if (state.motion !== action.payload) {
                 state.motion = action.payload;
+            }
+            // a tween's destination is only meaningful while the tween runs
+            if (action.payload !== 'tween' && state.dockingPlaneID) {
+                state.dockingPlaneID = '';
+            }
+        },
+        /** The page a starting tween docks on (`''` for a tween that lands elsewhere); see `PluridStateSpace.dockingPlaneID`. */
+        setDockingPlaneID: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            if (state.dockingPlaneID !== action.payload) {
+                state.dockingPlaneID = action.payload;
             }
         },
         setTransform: (

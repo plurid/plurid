@@ -17,6 +17,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?gallery=1` | - | reload | the contact sheet: every fixture in an iframe | the fixture catalog |
 | `?router=1` | - | reload | the router demo instead of the space (PluridRouterBrowser) | PluridRouterBrowser / PluridRouterLink |
 | `?empty=1` | - | reload | an empty view (no roots) | the empty state |
+| `?presentation=page` | - | reload | the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed | `space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked` |
 
 ### layout
 
@@ -29,6 +30,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | Param | Default | Applies | Does | Exercises |
 | --- | --- | --- | --- | --- |
 | `?planes=<n>` | - | remount | N generated planes instead of the five instrument panels (stress) | many roots; the 8-column stress layout |
+| `?pages=<n>` | - | remount | the SITE set: N root pages, each with an about (long) and a contact (short) sub-page | view-sized pages, native scroll inside a plane, links spawning behind a docked page |
 | `?sizes=default\|mixed\|wide\|tall\|small` | `default` | remount | declared plane sizes: mixed (five different boxes), wide, tall, small | `planes[].width` / `height` (declared sizes), per-column / per-row layout pitch |
 | `?media=1` | - | reload | a consumer-style media plane (lens, lazy image, button-driven video) | `usePluridPlane()` from content; window.__rtPlaneLens |
 | `?scrollable=1` | - | reload | the GEOMETRY readout is a scroller (28 filler rows in a 120px box) | the wheel over scrollable content stays the content's |
@@ -57,6 +59,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?pivot=view\|selection\|cursor` | - | reload | what an orbit turns about | `navigation.orbitPivot` |
 | `?pitchLimit=<n>` | - | reload | the orbit never flips past this pitch | `navigation.pitchLimit` |
 | `?perspective=<n>` | - | reload | the CSS lens | `space.perspective` |
+| `?dockMotion=instant` | - | reload | the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging | `space.docking.motion: instant` |
+| `?dockChrome=shown` | - | reload | the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone) | `space.docking.chrome: shown` |
 | `?vp=2` | - | reload | full-camera (v2) viewpoints in the URL and the callback | `viewpointURLVersion: 2` |
 
 ### gestures
@@ -145,6 +149,11 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `nested-chain-3` | Nested chain — A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent. | `nested=3` | `/geometry → /chain-1`, `/chain-1 → /chain-2`, `/chain-2 → /chain-3` | `front`, `orbit` | planes: 8, overlap: expected, links: false |
 | `detail-spawned` | Detail spawned — The DETAIL plane opened from GEOMETRY, behind the wall. | - | `/geometry → /geometry/detail` | `front`, `orbit` | planes: 6, overlap: expected, links: false |
 | `media` | Media plane — A consumer-built media plane beside the panels. | `media=1` | - | `front` | planes: 6 |
+| `page-docked` | A page, docked — The page presentation: one view-sized page, the camera docked on it, no chrome but the corner control. | `presentation=page` `pages=1` | - | `front` | planes: 1 |
+| `page-revealed` | A page, revealed — The same page pulled back and tilted: the sheet in the space behind the site. | `presentation=page` `pages=1` | - | `revealed` | planes: 1 |
+| `page-spawned` | A page, a link followed — The about page spawned behind the site by its link, the camera docked onto it. | `presentation=page` `pages=1` | `/page-1 → /page-1/about` | `front` | planes: 2, overlap: expected, links: false |
+| `page-spawned-scrolled` | A page scrolled past its link — The contact page open, the site scrolled so its link is beyond the fold: the child stays, the bridge follows the link to the edge. | `presentation=page` `pages=1` | `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 ↓ 600` | `revealed-orbit` | planes: 2, overlap: expected, links: false |
+| `pages-3-revealed` | Three pages, revealed — Three site pages side by side, the space revealed. | `presentation=page` `pages=3` | - | `revealed` | planes: 3 |
 | `empty` | Empty — No roots: the empty state. | `empty=1` | - | `front` | planes: 0, minimap: false, links: false |
 
 ## Assertion globals

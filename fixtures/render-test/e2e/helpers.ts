@@ -175,6 +175,16 @@ export const clickLink = (page: Page, planeID: string, route: string) => page.ev
     link.click();
 }, { planeID, route });
 
+/** Scroll a plane's content (its `PluridPlaneContent` scroller) and let the scroll frame run. */
+export const scrollPlaneContent = async (page: Page, planeID: string, top: number) => {
+    await page.evaluate(({ planeID, top }) => {
+        const content = document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-entity="PluridPlaneContent"]`) as HTMLElement | null;
+        if (!content) throw new Error('no content scroller in ' + planeID);
+        content.scrollTop = top;
+    }, { planeID, top });
+    await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+};
+
 /** Wait until the plane has exactly `count` shown children, measured. */
 export const waitForChildren = (page: Page, planeID: string, count: number) => page.waitForFunction(({ planeID, count }) => {
     const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === planeID) return node; const f = node.children ? find(node.children) : undefined; if (f) return f; } return undefined; };
@@ -236,6 +246,15 @@ export const openFixture = async (
     for (const step of fixture.steps ?? []) {
         const parent = planeByRoute(await tree(page), step.plane);
         if (!parent) throw new Error('fixture ' + name + ': no plane ' + step.plane);
+        if (step.kind === 'scroll') {
+            await scrollPlaneContent(page, parent.planeID, step.top);
+            continue;
+        }
+        if (step.kind === 'dock') {
+            await publish(page, 'space.dock', { planeID: parent.planeID, animate: false });
+            await settle(page);
+            continue;
+        }
         const before = (parent.children ?? []).filter((child: any) => child.show !== false).length;
         await clickLink(page, parent.planeID, step.route);
         await waitForChildren(page, parent.planeID, before + 1);

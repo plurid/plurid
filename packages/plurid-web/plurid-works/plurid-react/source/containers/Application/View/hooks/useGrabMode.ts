@@ -84,6 +84,11 @@ export const useGrabMode = (
             if (isEditableTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
                 return;
             }
+            // Inside plane content Space is the page's (it scrolls a docked page); the hold starts
+            // from the view or a plane's anchor.
+            if ((event.target as Element | null)?.closest?.('[data-plurid-entity="PluridPlaneContent"]')) {
+                return;
+            }
             // Space would scroll the page / activate a focused button; the hold is a navigation gesture.
             event.preventDefault();
             if (!event.repeat) {

@@ -18,7 +18,7 @@
         chromeControl,
 
         chromeRoot,
-
+        chromeDocked,
     } from '~services/styled/chrome';
 
     import {
@@ -77,6 +77,7 @@ interface StyledMinimapProperties extends ThemedProperties {
 
 const StyledMinimap = styled.div<StyledMinimapProperties>`
     ${chromeRoot}
+    ${chromeDocked}
     position: absolute;
     top: 16px;
     right: 16px;

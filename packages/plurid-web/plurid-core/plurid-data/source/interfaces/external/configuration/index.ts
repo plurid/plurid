@@ -62,6 +62,10 @@ export interface FlatPluridConfiguration {
     perspective?: number;
     /** `space.center` — center the camera on the first root. */
     center?: boolean;
+    /** `space.presentation` — `'page'`: the space presents as pages (see `PluridConfigurationSpace.presentation`). */
+    presentation?: 'space' | 'page';
+    /** `space.docking` — how a move lands on a page: `{ motion: 'swing' | 'instant', chrome: 'hidden' | 'shown' }`. */
+    docking?: PluridConfigurationSpaceDocking;
     /** `space.firstPerson` — first-person ("fly") navigation. */
     firstPerson?: boolean;
     /** `space.collaboration` — opt in to the collaboration seam (publish/apply arrangement snapshots). */
@@ -123,6 +127,8 @@ export interface FlatPluridConfiguration {
     // #region elements
     /** `elements.plane.width` — fraction of the viewport (≤1) or absolute px (>1). */
     planeWidth?: number;
+    /** `elements.plane.height` — a fraction of the view height (≤ 1) or px (> 1); unset = the content's height. */
+    planeHeight?: number;
     /** `elements.plane.opacity`. */
     planeOpacity?: number;
     /** `elements.plane.controls.show` — per-plane control buttons. */
@@ -205,6 +211,14 @@ export interface PluridConfigurationTheme {
 }
 
 
+
+export interface PluridConfigurationSpaceDocking {
+    /** `swing` (default): the camera tween; `instant`: a jump, like a router rendering the page. */
+    motion?: 'swing' | 'instant';
+    /** `hidden` (default): no chrome while a transition docks; `shown`: the space shows during the swing. */
+    chrome?: 'hidden' | 'shown';
+}
+
 export interface PluridConfigurationSpace {
     layout: PluridLayout;
 
@@ -245,6 +259,26 @@ export interface PluridConfigurationSpace {
      * or, if camera is set, on the Root indicated by the camera.
      */
     center: boolean;
+    /**
+     * How the space presents itself. `space` (default): a navigable 3D space. `page`: the space
+     * presents as PAGES — every plane is sized to the view (`elements.plane.height` defaults to
+     * `1`), the camera DOCKS on a page (face-on, scale 1, the page filling the view pixel-exact, its
+     * content scrolling natively) and the engine chrome shows only while the camera is undocked;
+     * the space is one move away (a link, the corner control, `G`, a pinch). Being docked is not a
+     * mode flag but a derived state of the camera. The page presentation also defaults
+     * `fadeInTime` to 0 and `opaque` to false; a host's explicit values still win.
+     */
+    presentation?: 'space' | 'page';
+    /**
+     * How the camera DOCKS on a page (the page presentation). `motion` — how a move that LANDS
+     * DOCKED arrives: `swing` (default), the camera tween; `instant`, a jump, like a router
+     * rendering the new page — a link, a child's back, `onClose: 'parent'`, Escape and `space.dock`
+     * all switch at once, while the reveal keeps its motion. `chrome` — whether the engine chrome
+     * stays hidden while a transition docks: `hidden` (default), the pages swing and nothing else
+     * appears (the destination page counts as docked for the whole tween); `shown`, the space
+     * shows during the swing.
+     */
+    docking?: PluridConfigurationSpaceDocking;
 
     transformOrigin: PluridConfigurationSpaceTransformOrigin;
 
@@ -544,6 +578,7 @@ export type PluridShortcutID =
     | 'grabMode'
     | 'grabHold'
     | 'exitGrabMode'
+    | 'dock'
     | 'help'
     | 'toggleFirstPerson'
     | 'flyForward'
@@ -773,6 +808,12 @@ export interface PluridConfigurationElementsPlane {
      * Default `1.00`.
      */
     opacity: number;
+    /**
+     * The plane height, like `width`: a value up to `1` is a fraction of the view height, above `1`
+     * px. Unset (the default) leaves the height to the content. A plane with a configured height
+     * scrolls its content inside it; a registered plane's own `height` overrides it.
+     */
+    height?: number;
 
     controls: PluridConfigurationElementsPlaneControls;
 

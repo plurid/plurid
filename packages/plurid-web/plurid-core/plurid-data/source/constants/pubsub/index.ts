@@ -79,6 +79,8 @@ export const PLURID_PUBSUB_TOPIC = {
     SPACE_CAMERA_DELTA: 'space.cameraDelta',
     /** Frame a plane (`planeID`), the selection, or everything (no target), optionally animated. */
     SPACE_FRAME: 'space.frame',
+    SPACE_DOCK: 'space.dock',
+    SPACE_REVEAL: 'space.reveal',
     /** Go to the home viewpoint (`space.setHome` / `navigation.home` / identity). data?: { animate? } */
     SPACE_HOME: 'space.home',
     /** Set the home viewpoint: data `{ viewpoint }` (encoded), or no data for the current camera. */

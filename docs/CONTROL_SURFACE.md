@@ -314,6 +314,34 @@ const planes: PluridReactPlane[] = [
 
 Content taller than a declared height scrolls inside the plane (the wheel over it stays the content's). A hand resize (`planeResizable`) overrides a declaration; a declared size never enters undo or collaboration (it is not an arrangement change). From content, `usePluridPlane().width / height / sizeMode` (`measured` | `manual` | `declared`).
 
+For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = the view width) and `planeHeight` (`elements.plane.height`; ≤ 1 a fraction of the view height, > 1 px, unset = content-driven). The layouts pitch their columns and rows by these; a declared size wins for its plane.
+
+### The page presentation (`presentation: 'page'`)
+
+A site first, the space one move away. `presentation: 'page'` makes every undeclared plane the size of the view and docks the camera on the first page: face-on, at scale 1, the page filling the view to the pixel. It scrolls like a page (the wheel, the keys, one finger), the engine's chrome is hidden, and the only control is a small cube button at the bottom-right corner (the viewcube's rail; a back chevron joins it on a spawned page).
+
+```tsx
+const configuration = definePluridConfiguration({ presentation: 'page' });
+// one knob; three defaults layer UNDER your fields: space.fadeInTime 0, space.opaque false, elements.plane.height 1
+```
+
+POSE IS THE STATE. There is no mode flag: "page mode" is the camera docked on a page, and anything that moves the camera off that pose reveals the space — a `PluridLink` (the child opens behind its parent and the camera swings to it: a page again), the corner control, `G` (grab mode), a pinch or Ctrl + wheel. Framing a page docks again: Escape (the `dock` shortcut, page presentation only), the corner control while revealed, a child's back control, `Home` (the identity camera: the first page), `onClose: 'parent'`, `space.frame`. `0` (fit) and the viewcube faces still fit — a legitimate undock.
+
+- Topics: `space.dock` `{ planeID?, animate? }` (that plane, else the docked one, else the plane nearest the view center) and `space.reveal` `{ animate? }` (the docked page pulled back to scale 0.8 and tilted 8° / −6°). From the host's own code, `cameraCommand({ kind: 'dock' | 'reveal' })`.
+- Observe: `pluridSelectors.space.getDockedPlaneID(state)` (`''` while undocked, and always outside the presentation) and ONE DOM attribute, `data-plurid-docked="<planeID>"` on the `PluridView` element — style your own chrome with `[data-plurid-docked] .mine { opacity: 0 }`.
+- The wheel over a docked page is the page's: it scrolls the content or does nothing; pinch, Ctrl/⌘, Shift, Alt and grab still move the camera. One finger scrolls the docked page on touch; a two-finger pinch reveals.
+- Only the page's LINEAGE is shown while docked: the page, its ancestors (the trail back to the root) and its own children stay; every other plane (a sibling opened from the same header, a cousin) is set ASIDE — faded out over 240 ms, inert, `data-plurid-aside` on its element — and fades back when the space is revealed. Two links in one header spawn two parallel pages a few dozen pixels apart; without this the one opened last would cover the one you clicked.
+- A link is a link: in the page presentation a plurid link always takes you to its page, open or not — it never toggles the page closed (the space presentation keeps the open / close toggle). Closing is the page's close control, the back control and `space.closePlane`.
+- `docking` (`space.docking`): how a move LANDS on a page. `motion: 'swing'` (default) tweens the camera; `'instant'` jumps — a link, a child's back, `onClose: 'parent'`, Escape and `space.dock` switch at once, like a router rendering the new page — while the reveal keeps its motion. `chrome: 'hidden'` (default) keeps every piece of chrome hidden while a transition docks (the destination page counts as docked for the whole swing: the pages swing, nothing else appears); `'shown'` lets the space show during the swing.
+
+  ```tsx
+  definePluridConfiguration({ presentation: 'page', docking: { motion: 'instant' } })   // a site with plurid links that simply switch pages
+  ```
+- `renderViewcube` replaces the corner control too: render your own `data-plurid-control="dock-toggle"` that publishes `space.reveal` / `space.dock`.
+- SSR renders the identity camera, so the HTML is the docked page with the chrome hidden — a site to a crawler and to the first paint.
+
+Migrating a site-like consumer (hypod, `generate-plurid-app`'s `/planes` width hack): the configuration becomes `presentation: 'page'`; the `planeWidth: 1`, `controls.show: false` and fade-in overrides go, and the pages finally scroll.
+
 ### Culling, depth cues, backfaces (`space.culling`, `elements.plane.depthFade`, `elements.plane.backface`)
 
 ```tsx
@@ -361,7 +389,8 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `shortcuts-overlay` (all exported as `PLURID_ENTITY_*` from `@plurid/plurid-data`). Alongside:
 `data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
-toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay`),
+toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
+`data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert),
 `data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`.
 
@@ -455,7 +484,8 @@ await app.unmount(); clock.restore();
 | Read state synchronously | `api.getSnapshot()` / `api.getViewpoint()` / `pluridSelectors` |
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
 | Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
-| Give one plane its own size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` |
+| Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane |
+| Present the space as a site (a page first, the space one move away) | `{ presentation: 'page' }` · `space.dock` / `space.reveal` · `pluridSelectors.space.getDockedPlaneID` · `[data-plurid-docked]` on the view · Escape docks, G / the corner control / a pinch reveal |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
@@ -481,6 +511,7 @@ await app.unmount(); clock.restore();
 | Hide link beams / alignment guides | `extend.elements.{planeLinks,alignmentGuides}.show: false` |
 | Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
 | The same 90° turn every generation (default), or alternate it; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'fixed' \| 'alternate'`, `extend.space.bridge.direction: 'backward' \| 'forward'`, `extend.space.bridge.keepBehind: true` (mirror the generations that would hang on the side their parent faces) (+ `bridgeLength` / `planeAngle`) |
+| A link scrolls inside its plane | Nothing to configure: the child stays where it is, the bridge follows the link (a leash) and rests at the fold once the link is beyond it; a re-measure (resize) anchors a hidden link at the edge, never off the sheet. `--plurid-bridge-reach` / `--plurid-bridge-angle` on the child plane element carry it |
 | Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |
 | Go fully headless | `{ micro: true }` |
 

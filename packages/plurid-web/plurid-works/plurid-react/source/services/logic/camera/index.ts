@@ -77,14 +77,12 @@ export const resolvePlaneFallbackSize = (
     configuration: PluridConfiguration,
     viewSize: ViewSize,
 ): { width: number; height: number } => {
-    const planeWidth = configuration.elements.plane.width;
-    const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
-        ? planeWidth
-        : planeWidth * viewSize.width;
-
+    // the configured width and, when there is one, the configured height (`elements.plane.height`:
+    // every plane view-sized in the page presentation); else a proportional height
+    const configured = spaceEngine.layout.configuredPlaneSize(configuration, viewSize);
     return {
-        width,
-        height: Math.max(200, Math.round(width * 0.7)),
+        width: configured.width,
+        height: configured.height || Math.max(200, Math.round(configured.width * 0.7)),
     };
 };
 
@@ -100,19 +98,49 @@ const planeGeometry = (
 
 
 // #region targets
-/** The camera that frames one plane face-on, from the current space state. */
+/**
+ * The camera that frames one plane face-on, from the current space state. In the PAGE presentation
+ * framing is DOCKING: scale 1, the plane's box exactly on the view (`cameraEngine.dockPose`) — the
+ * one place the presentation enters the camera logic, so every framing path (the frame control, a
+ * link spawn, the back control, `onClose: 'parent'`, the arrows, the minimap, `space.frame`) docks.
+ */
 export const frameTargetForPlane = (
     spaceState: PluridStateSpace,
     configuration: PluridConfiguration,
     plane: TreePlane,
-): CameraState => cameraEngine.framePlane(
-    spaceState.camera,
-    planeGeometry(plane, resolvePlaneFallbackSize(configuration, spaceState.viewSize)),
-    spaceState.viewSize,
-    {
-        limits: spaceState.cameraLimits,
-    },
-);
+): CameraState => {
+    if (configuration.space.presentation === 'page') {
+        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.cameraLimits);
+    }
+    return cameraEngine.framePlane(
+        spaceState.camera,
+        planeGeometry(plane, resolvePlaneFallbackSize(configuration, spaceState.viewSize)),
+        spaceState.viewSize,
+        {
+            limits: spaceState.cameraLimits,
+        },
+    );
+};
+
+/** The box a plane docks by: the configured size over a measured one (`cameraEngine.dockGeometry`). */
+const dockGeometry = (
+    plane: TreePlane,
+    configuration: PluridConfiguration,
+    viewSize: ViewSize,
+) => cameraEngine.dockGeometry(plane as any, spaceEngine.layout.configuredPlaneSize(configuration, viewSize));
+
+/** The plane to dock on when none is named: the docked one, else the one nearest the view center. */
+const dockTargetPlane = (
+    spaceState: PluridStateSpace,
+    configuration: PluridConfiguration,
+    planeID?: string,
+): TreePlane | undefined => {
+    const configured = spaceEngine.layout.configuredPlaneSize(configuration, spaceState.viewSize);
+    const id = planeID
+        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree as any, spaceState.viewSize, configured)
+        || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree as any, spaceState.viewSize, configured);
+    return id ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, id) : undefined;
+};
 
 
 /** The camera that frames every visible plane (children included), front-on by default. */
@@ -223,14 +251,33 @@ export const bookmarkTarget = (
 
 
 /**
+ * The page a camera target LANDS DOCKED on (the page presentation), `''` when it lands elsewhere or
+ * in the space presentation.
+ */
+export const landingDockPlaneID = (
+    state: AppState,
+    target: CameraState,
+): string => {
+    if (state.configuration.space.presentation !== 'page') {
+        return '';
+    }
+    const configured = spaceEngine.layout.configuredPlaneSize(state.configuration, state.space.viewSize);
+    return cameraEngine.findDockedPlane(target, state.space.tree as any, state.space.viewSize, configured);
+};
+
+/**
  * Commit a camera target: an interruptible tween through the View's motion controller when
- * animated and a View is mounted, else one jump. The ONE exit of every programmatic camera move.
+ * animated and a View is mounted, else one jump. The ONE exit of every programmatic camera move —
+ * and so the one place the DOCKING controls apply: a move that lands docked jumps under
+ * `docking.motion: 'instant'` whatever the caller asked, and a docking tween records its
+ * destination (`dockingPlaneID`) so the chrome can stay hidden for the swing.
  */
 export const commitCameraTarget = (
     dispatch: Dispatch,
     extra: PluridThunkExtra | undefined,
     target: CameraState,
     options: CameraMotionOptions = {},
+    state?: AppState,
 ) => {
     const {
         animate = true,
@@ -238,12 +285,16 @@ export const commitCameraTarget = (
         easing,
     } = options;
 
+    const landing = state ? landingDockPlaneID(state, target) : '';
+    const instant = !!landing && state?.configuration.space.docking?.motion === 'instant';
     const controller = extra?.motion;
-    if (animate && controller) {
+    if (animate && controller && !instant) {
         controller.tweenTo(target, {
             duration,
             easing,
         });
+        // after `tweenTo`: it stops a running tween first, which resets the motion (and the field)
+        dispatch(actions.space.setDockingPlaneID(landing));
         return;
     }
 
@@ -259,7 +310,11 @@ export type CameraCommand =
     | { kind: 'preset'; name: string }
     | { kind: 'bookmark'; name: string; action?: PluridBookmarkAction }
     | { kind: 'viewpoint'; viewpoint: string }
-    | { kind: 'delta'; delta: CameraDelta };
+    | { kind: 'delta'; delta: CameraDelta }
+    /** Dock on a page (the page presentation): this plane, else the docked one, else the nearest. */
+    | { kind: 'dock'; planeID?: string }
+    /** Reveal the space from a docked page: pull back and tilt (the page presentation). */
+    | { kind: 'reveal' };
 
 
 /** The camera a command resolves to (pure), or `undefined` when there is nothing to go to. */
@@ -297,6 +352,29 @@ export const resolveCameraTarget = (
                 : undefined;
         case 'viewpoint':
             return decodeTarget(spaceState, command.viewpoint);
+        case 'dock': {
+            const plane = dockTargetPlane(spaceState, configuration, command.planeID);
+            return plane
+                ? cameraEngine.dockPose(
+                    spaceState.camera,
+                    dockGeometry(plane, configuration, spaceState.viewSize),
+                    spaceState.cameraLimits,
+                )
+                : undefined;
+        }
+        case 'reveal': {
+            const plane = dockTargetPlane(spaceState, configuration);
+            return plane
+                ? cameraEngine.revealPose(
+                    cameraEngine.dockPose(
+                        spaceState.camera,
+                        dockGeometry(plane, configuration, spaceState.viewSize),
+                        spaceState.cameraLimits,
+                    ),
+                    spaceState.cameraLimits,
+                )
+                : undefined;
+        }
         case 'delta':
             return cameraEngine.applyCameraDelta(
                 spaceState.camera,
@@ -340,7 +418,7 @@ export const cameraCommand = (
         return;
     }
 
-    commitCameraTarget(dispatch, extra, target, options);
+    commitCameraTarget(dispatch, extra, target, options, state);
 };
 
 
@@ -391,6 +469,7 @@ export const framePlaneNode = (
         {
             animate,
         },
+        state,
     );
 
     if (!extra) {
@@ -467,6 +546,17 @@ export const resetCamera = (
 export const goHome = (
     animate = true,
 ): CameraThunk => cameraCommand({ kind: 'home' }, { animate });
+
+/** Dock the camera on a page (`space.dock`). */
+export const dockCommand = (
+    planeID?: string,
+    animate = true,
+): CameraThunk => cameraCommand({ kind: 'dock', planeID }, { animate });
+
+/** Reveal the space from a docked page (`space.reveal`). */
+export const revealCommand = (
+    animate = true,
+): CameraThunk => cameraCommand({ kind: 'reveal' }, { animate });
 
 
 export const goPreset = (

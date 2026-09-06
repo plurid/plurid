@@ -4,6 +4,7 @@
 
     import {
         chromeRoot,
+        chromeDocked,
     } from '~services/styled/chrome';
 
     import {
@@ -46,6 +47,7 @@ const resolveSize = ({
 
 export const StyledOrigin = styled.div<IStyledOrigin>`
     ${chromeRoot}
+    ${chromeDocked}
     background-color: ${
         ({
             theme,

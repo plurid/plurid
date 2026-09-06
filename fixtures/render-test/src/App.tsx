@@ -48,7 +48,7 @@ const App = () => {
     const stress = !!flags.planes;
     // The plane set, the sizes and persistence re-create the application; a layout change does
     // not (an animated relayout on the live instance, children attached).
-    const applicationKey = [stress ? 'stress-' + flags.planes : 'base', flags.sizes, flags.persist ? 'p' : ''].join('-');
+    const applicationKey = [stress ? 'stress-' + flags.planes : (flags.pages ? 'site-' + flags.pages : 'base'), flags.sizes, flags.persist ? 'p' : ''].join('-');
 
     return (
         <>
