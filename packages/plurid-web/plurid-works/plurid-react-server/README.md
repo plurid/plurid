@@ -105,5 +105,5 @@ generation via the server's `stiller` option (`waitUntil`, `timeout`, `ignore`).
 ## Documentation
 
 Full engine docs: the repo [`README`](https://github.com/plurid/plurid),
-[`GETTING_STARTED`](https://github.com/plurid/plurid/blob/master/GETTING_STARTED.md), and
+[`GETTING_STARTED`](https://github.com/plurid/plurid/blob/master/docs/GETTING_STARTED.md), and
 [`CONTROL_SURFACE`](https://github.com/plurid/plurid/blob/master/docs/CONTROL_SURFACE.md).

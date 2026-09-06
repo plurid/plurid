@@ -90,7 +90,7 @@ Archived / de-globbed (source kept on disk, out of every gate, `!` negations in 
 
 `pnpm-workspace.yaml` also carries the `overrides` block that keeps the graph single-versioned: `immer ^10` (RTK 2.12 pairs with immer 10; immer 11 types leak), `react-redux ^9` and `styled-components ^6` (two copies break React context -> blank render), and `@types/react ^18.3` + `@types/react-dom ^18.3`. The `@types/react` pin exists because TWO type copies (18 from the libs, 19 from the React-19 harness) leak into styled-components' shared type inference and produce TS2742 ("inferred type cannot be named") in dts builds; the libs build their types against 18.3 (a type-level subset of 19) while runtime React stays 19.
 
-Per-package status, gates, and the governance ledger live in [`../CONTEXT-MAP.md`](../CONTEXT-MAP.md)
+Per-package status, gates, and the governance ledger live in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md)
 
 - this document does not duplicate its table.
 
@@ -717,13 +717,13 @@ Bin: `plurid` (`distribution/cli/index.js`) - commands `dev | build | start | in
 | [`README.md`](./README.md) | READING ORDER - maintained/current/historical document map | start here |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) (this) | HOW IT WORKS - structure, pipelines, contracts, the wire catalog | descriptive; re-verified when source moves |
 | [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) | HOW YOU DRIVE IT - every knob/seam with a snippet, tiered | the canonical per-knob reference |
-| [`../CONTEXT-MAP.md`](../CONTEXT-MAP.md) | PACKAGE STATUS - live/legacy/archived, gates, governance | per-package table; this doc links, never duplicates |
+| [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | PACKAGE STATUS - live/legacy/archived, gates, governance | per-package table; this doc links, never duplicates |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | DEFECT + REFACTOR LEDGER - findings and their phases | audit lens |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | CAPABILITY HISTORY + PLANS - what shipped when, what is next | feature lens |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | THE KIT - current adoption and generator plan | section 10 describes the implemented contract |
 | [`CODEBASE_DEEP_CRITIQUE.md`](./CODEBASE_DEEP_CRITIQUE.md) | HISTORICAL SNAPSHOT (2026-06-19) | pre-modernization state; do not cite as current |
 | package `README.md`s | npm-facing per-package intro | usage-first, not architecture |
 
-Also: [`../GETTING_STARTED.md`](../GETTING_STARTED.md) (use the engine), [`../CONTRIBUTING.md`](../CONTRIBUTING.md) (work on it), [`../examples/`](../examples/) (runnable references), [`../fixtures/render-test/`](../fixtures/render-test/) (the harness).
+Also: [`GETTING_STARTED.md`](./GETTING_STARTED.md) (use the engine), [`CONTRIBUTING.md`](./CONTRIBUTING.md) (work on it), [`../examples/`](../examples/) (runnable references), [`../fixtures/render-test/`](../fixtures/render-test/) (the harness).
 
 On conflict: source wins; then this document and CONTROL_SURFACE for behavior; CONTEXT-MAP for status; the roadmaps for intent. A doc that disagrees with Appendix A's export lists is stale.

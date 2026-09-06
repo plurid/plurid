@@ -3,7 +3,7 @@
  *
  * Three planes laid out in a navigable 3D space, with zero configuration. Drag to orbit, scroll to zoom,
  * hold G to grab-pan, press ? for the shortcuts overlay. Everything beyond this is opt-in — see
- * ../control-surface for the same idea wired through every control seam, and ../../GETTING_STARTED.md
+ * ../control-surface for the same idea wired through every control seam, and ../../docs/GETTING_STARTED.md
  * for the walkthrough.
  *
  * Type-correct against the public `@plurid/plurid-react` API.

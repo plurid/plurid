@@ -89,7 +89,7 @@ Drag to orbit, scroll to zoom, hold **G** to grab-pan.
 
 # Going further
 
-- **[Getting started](https://github.com/plurid/plurid/blob/master/GETTING_STARTED.md)** — planes, views,
+- **[Getting started](https://github.com/plurid/plurid/blob/master/docs/GETTING_STARTED.md)** — planes, views,
   links, configuration, persistence, the control surface.
 - **[Control surface](https://github.com/plurid/plurid/blob/master/docs/CONTROL_SURFACE.md)** — `onReady`,
   pub/sub control & observe topics, `storageAdapter`, gestures, shortcuts, UI render-slots.

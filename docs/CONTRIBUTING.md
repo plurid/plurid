@@ -150,11 +150,11 @@ repo (compiled clean, rendered blank):
 ## How to add a seam
 
 The control surface is built from a few repeated patterns. Match them when extending it (full rationale in
-[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)).
+[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md)).
 
 Docs are part of the checklist: a new topic, knob, or export also updates
-[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) (the topic catalog / Appendix A inventory) and
-[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) (the quick reference).
+[`docs/ARCHITECTURE.md`](./ARCHITECTURE.md) (the topic catalog / Appendix A inventory) and
+[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) (the quick reference).
 
 ### A configuration knob
 

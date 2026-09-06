@@ -8,11 +8,11 @@ Current as of **2026-09-06**.
 | --- | --- |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Source-verified description of the live package graph, render pipeline, state, SSR, kit, and public APIs |
 | [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) | Canonical guide to configuration, callbacks, pubsub, storage, gestures, shortcuts, slots, and escape hatches |
-| [`../GETTING_STARTED.md`](../GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
+| [`GETTING_STARTED.md`](./GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
 | [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
 | [`HARNESS.md`](./HARNESS.md) | GENERATED — every flag and fixture of the verification harness (`fixtures/render-test`) |
-| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
-| [`../CONTEXT-MAP.md`](../CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
+| [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | Active engineering defects, performance work, and verification priorities |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | Delivered capabilities, adoption status, and future capability sequence |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | Current `@plurid/plurid-kit` adoption and generator plan |

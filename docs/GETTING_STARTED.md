@@ -102,7 +102,7 @@ export default App;
 
 There is no mode: the pose of the camera is the whole state. Every undeclared plane takes the view's size
 (`planeHeight: 1`); a plane can still declare its own `width` / `height`. Details in
-[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) ("The page presentation"); to see it live, open the
+[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) ("The page presentation"); to see it live, open the
 harness at `fixtures/render-test` with `?fixture=page-docked` (`pnpm dev` there).
 
 
@@ -239,7 +239,7 @@ Configuration groups (all optional):
 | `shortcuts` | `disabled` ids, a `keymap` to remap, and `onUnhandledKey`. |
 | `elements` | `planeLinks.show` / `alignmentGuides.show` toggles for engine overlays. |
 
-The full per-knob reference is **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)**.
+The full per-knob reference is **[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md)**.
 
 
 
@@ -311,7 +311,7 @@ Control topics cover the high-value declarative operations — fit-to-view, rese
 set-tree, selection (set / toggle / clear), set-viewpoint, and the rotate / translate / scale families;
 niche operations go through the `onReady` store. The single `space.changed` observe topic fires for
 selection / tree / links / active-plane / isolate / layout / loading changes. The full topic list is in
-[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md).
+[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md).
 
 **`onReady(api)` — the escape hatch.** When the declarative surface doesn't cover something, `api` hands you
 the raw machinery:
@@ -365,10 +365,10 @@ string. `encodeViewpoint` / `decodeViewpoint` are exported for full host control
 
 ## Where to go next
 
-- **[`examples/minimal`](./examples/minimal)** — the hello-world above, as a runnable file.
-- **[`examples/control-surface`](./examples/control-surface)** — every seam in one small "spatial notes" component.
-- **[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)** — the full per-knob / per-topic reference.
-- **[`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)** - when you want to know how it works inside (render pipeline, camera/state model, pubsub protocol, consumption modes).
-- **Server rendering + the batteries path** - [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) (SSR/stills) and [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) (`plurid.config.ts` + CLI; see [`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)).
+- **[`examples/minimal`](../examples/minimal)** — the hello-world above, as a runnable file.
+- **[`examples/control-surface`](../examples/control-surface)** — every seam in one small "spatial notes" component.
+- **[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md)** — the full per-knob / per-topic reference.
+- **[`docs/ARCHITECTURE.md`](./ARCHITECTURE.md)** - when you want to know how it works inside (render pipeline, camera/state model, pubsub protocol, consumption modes).
+- **Server rendering + the batteries path** - [`@plurid/plurid-react-server`](../packages/plurid-web/plurid-works/plurid-react-server) (SSR/stills) and [`@plurid/plurid-kit`](../packages/plurid-web/plurid-works/plurid-kit) (`plurid.config.ts` + CLI; see [`docs/FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md)).
 - **[`CONTEXT-MAP.md`](./CONTEXT-MAP.md)** — which packages are live, and what each is for.
 - **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** — to work on the engine itself.

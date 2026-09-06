@@ -12,5 +12,5 @@ Drop it into any React 19 app that can render a `<PluridApplication />` (e.g. co
 
 Next steps:
 
-- The walkthrough — [`../../GETTING_STARTED.md`](../../GETTING_STARTED.md)
+- The walkthrough — [`../../GETTING_STARTED.md`](../../docs/GETTING_STARTED.md)
 - Every control seam in one component — [`../control-surface`](../control-surface)
