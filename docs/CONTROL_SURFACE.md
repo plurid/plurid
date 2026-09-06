@@ -408,7 +408,7 @@ definePluridConfiguration({
 
 ### The look
 
-Every piece of engine chrome is drawn from one set of tokens, the LOOK — 44 `--plurid-*` custom
+Every piece of engine chrome is drawn from one set of tokens, the LOOK — 45 `--plurid-*` custom
 properties on the application's element, derived from a base of a few colours (the vocabulary and its
 rules: [DESIGN.md](./DESIGN.md); the token table and the presets: [LOOKS.md](./LOOKS.md)). One knob,
 `look`, in three forms:

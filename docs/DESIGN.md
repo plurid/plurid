@@ -28,7 +28,7 @@ the docked state, `--plurid-fade`).
    are now `--plurid-radius` / `-radius-panel`, `-font-size` / `-small` / `-title`, and the two tiers.
 2. **Tokens are the contract; presets are derived.** A look is a base of a few colours
    (`scheme`, `space`, `surface`, `ink`, `accent`, optionally the fonts, the grid and the vignette);
-   `deriveLook` makes the 44 tokens from it, so the twelve presets are twelve bases, and a host that
+   `deriveLook` makes the 45 tokens from it, so the twelve presets are twelve bases, and a host that
    gives three colours gets a whole consistent look. The derivation keeps the ink on the solid surface
    at 4.5:1 or better and the accent on the space at 3:1 or better (asserted by the tests for every preset).
 3. **The dual ground.** A control that sits ON a page (the rail, the `?`, a page's bar) must read over

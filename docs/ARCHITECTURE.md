@@ -180,7 +180,7 @@ PluridViewContainer
 Every piece of engine chrome reads ONE set of design tokens, the look, and owns no colour, radius,
 font size or opacity of its own ([DESIGN.md](./DESIGN.md)). The pieces: `@plurid/plurid-themes`
 `looks/` — `LookBase` (scheme, space, surface, ink, accent, fonts, grid, vignette) → `deriveLook` →
-`LookTokens` (44 tokens, `LOOK_TOKENS` is the table the docs are generated from), twelve preset bases
+`LookTokens` (45 tokens, `LOOK_TOKENS` is the table the docs are generated from), twelve preset bases
 (`LOOK_BASES`, `looks`), `themeFromLook` (the legacy `Theme` a look implies), `LEGACY_LOOKS` (the old
 theme names → the nearest preset), the colour helpers (`parseColor`, `withAlpha`, `mix`, `contrastRatio`).
 The engine resolves `global.look` once per configuration object (`general/look` `resolveLook`: a name,

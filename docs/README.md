@@ -11,7 +11,7 @@ Current as of **2026-09-06**.
 | [`GETTING_STARTED.md`](./GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
 | [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
 | [`HARNESS.md`](./HARNESS.md) | GENERATED — every flag and fixture of the verification harness (`fixtures/render-test`) |
-| [`LOOKS.md`](./LOOKS.md) | GENERATED — the twelve looks and the 44 chrome tokens, from `@plurid/plurid-themes` (`pnpm docs.tables`) |
+| [`LOOKS.md`](./LOOKS.md) | GENERATED — the twelve looks and the 45 chrome tokens, from `@plurid/plurid-themes` (`pnpm docs.tables`) |
 | [`DESIGN.md`](./DESIGN.md) | The chrome's vocabulary and rules: pill, panel, line; the dual ground; the two tiers; adding a piece of chrome |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
 | [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
