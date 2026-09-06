@@ -63,6 +63,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?perspective=<n>` | - | reload | the CSS lens | `space.perspective` |
 | `?dockMotion=instant` | - | reload | the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging | `space.docking.motion: instant` |
 | `?dockChrome=shown` | - | reload | the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone) | `space.docking.chrome: shown` |
+| `?url=0\|1` | - | reload | the address bar is the page: `1` turns the binding on in the space presentation, `0` turns it off in the page presentation (on by default there) | `space.docking.url` |
+| `?vpURL=1` | - | reload | the camera viewpoint written to and restored from ?v= | `viewpointURLWrite` / `viewpointURLRestore` |
 | `?vp=2` | - | reload | full-camera (v2) viewpoints in the URL and the callback | `viewpointURLVersion: 2` |
 
 ### gestures

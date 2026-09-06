@@ -9,6 +9,9 @@
 
         defaultConfiguration,
         pagePresentationDefaults,
+        PLURID_DOCKING_URL_PARAM,
+        PluridConfigurationSpaceDocking,
+        DockingURLBinding,
     } from '@plurid/plurid-data';
 
     import {
@@ -53,7 +56,11 @@ const resolveTheme = (
 }
 
 
-/** The three page defaults win over a value equal to the space default (`pagePresentationDefaults`). */
+/**
+ * The four page defaults win over a value equal to the space default (`pagePresentationDefaults`);
+ * `docking.url` has no space default (unset = off there), so an explicit `false` under the page
+ * presentation is honoured.
+ */
 const applyPageDefaults = (
     configuration: PluridConfiguration,
 ) => {
@@ -66,6 +73,43 @@ const applyPageDefaults = (
     if (configuration.elements.plane.height === defaultConfiguration.elements.plane.height) {
         configuration.elements.plane.height = pagePresentationDefaults.elements!.plane!.height as number;
     }
+    if (configuration.space.docking?.url === undefined) {
+        configuration.space.docking = {
+            ...configuration.space.docking,
+            url: pagePresentationDefaults.space!.docking!.url,
+        };
+    }
+};
+
+
+/**
+ * Resolve `space.docking.url`: unset / `false` → no binding; `true` → both directions, the pathname,
+ * history entries; an object → its flags (`write` / `restore` default on; both off → no binding), a
+ * `param` selects the query mode. Inside a host router (`context.router`) the pathname is the
+ * router's: the query mode with `page` (or the given `param`) and `replace` history, whatever was
+ * asked — a router entry must never be shadowed by ours.
+ */
+export const resolveDockingURL = (
+    url: PluridConfigurationSpaceDocking['url'] | undefined,
+    context: { router: boolean } = { router: false },
+): DockingURLBinding | null => {
+    if (!url) {
+        return null;
+    }
+    const options = url === true ? {} : url;
+    const write = options.write !== false;
+    const restore = options.restore !== false;
+    if (!write && !restore) {
+        return null;
+    }
+    const query = context.router || typeof options.param === 'string';
+    return {
+        write,
+        restore,
+        history: context.router ? 'replace' : (options.history ?? (query ? 'replace' : 'push')),
+        mode: query ? 'query' : 'path',
+        param: options.param || PLURID_DOCKING_URL_PARAM,
+    };
 };
 
 

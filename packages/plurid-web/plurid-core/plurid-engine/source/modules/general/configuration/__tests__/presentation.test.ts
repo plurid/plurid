@@ -21,10 +21,16 @@ describe('the page presentation defaults', () => {
         expect(page.space.opaque).toBe(false);
         expect(page.elements.plane.height).toBe(1);
         expect(page.elements.plane.width).toBe(1);
+        // the fourth page default: the address bar is the page
+        expect(page.space.docking?.url).toBe(true);
         const tuned = definePluridConfiguration({ presentation: 'page', fadeInTime: 300, opaque: true, planeHeight: 0.5 });
         expect(tuned.space.fadeInTime).toBe(300);
         expect(tuned.space.opaque).toBe(true);
         expect(tuned.elements.plane.height).toBe(0.5);
+        // an explicit opt-out is honoured; a partial docking keeps the default
+        expect(definePluridConfiguration({ presentation: 'page', docking: { url: false } }).space.docking?.url).toBe(false);
+        expect(definePluridConfiguration({ presentation: 'page', docking: { motion: 'instant' } }).space.docking?.url).toBe(true);
+        expect(definePluridConfiguration({}).space.docking?.url).toBeUndefined();
     });
 
     it('the space presentation keeps every default', () => {

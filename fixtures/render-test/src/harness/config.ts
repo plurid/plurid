@@ -36,6 +36,17 @@ export const buildConfiguration = (
         };
     }
 
+    if (flags.url) {
+        flat.docking = {
+            ...(flat.docking ?? {}),
+            url: flags.url === '1',
+        };
+    }
+    if (flags.vpURL) {
+        flat.viewpointURLWrite = true;
+        flat.viewpointURLRestore = true;
+    }
+
     if (flags.undoOff) {
         flat.undo = false;
     }

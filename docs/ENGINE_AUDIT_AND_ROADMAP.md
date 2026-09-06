@@ -2,7 +2,7 @@
 
 Status: **active engineering ledger, re-verified 2026-07-13**.
 
-This document records what remains after the June/July modernization. Historical implementation detail belongs in git history and [`CODEBASE_DEEP_CRITIQUE.md`](./CODEBASE_DEEP_CRITIQUE.md); live mechanics belong in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+This document records what remains after the June/July modernization. Historical implementation detail belongs in git history; live mechanics belong in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
 ## Current assessment
 

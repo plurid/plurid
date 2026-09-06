@@ -88,6 +88,31 @@ export const computePlaneAddress = (
     return planeAddress;
 }
 
+/**
+ * The pathname a plane address names — the inverse of `computePlaneAddress` for the address bar:
+ * `plurid://host/page-1/about` → `/page-1/about`; a plane id's `@…` suffix dropped (`/page-1@0` →
+ * `/page-1`, but `/users/@alice` kept — the suffix follows a segment, never a slash); the query and
+ * the hash dropped; a bare host → `/`; an `http(s)` address (a foreign host) → `null`.
+ */
+export const planeAddressPath = (
+    address: string,
+): string | null => {
+    const type = checkPlaneAddressType(address);
+    if (type === HTTP_PROTOCOL || type === HTTPS_PROTOCOL) {
+        return null;
+    }
+    let value = address.trim();
+    if (type === 'pttp') {
+        value = value.slice(protocols.plurid.length);
+        const slash = value.indexOf('/');
+        value = slash === -1 ? '' : value.slice(slash);
+    }
+    value = extractPathname(value);
+    value = value.replace(/(?<=[^/])@[A-Za-z0-9_-]+$/, '');
+    return cleanupPath(value) || '/';
+}
+
+
 export const isAbsolutePlane = (
     value: string,
 ) => {

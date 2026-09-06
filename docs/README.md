@@ -15,11 +15,9 @@ Current as of **2026-09-06**.
 | [`DESIGN.md`](./DESIGN.md) | The chrome's vocabulary and rules: pill, panel, line; the dual ground; the two tiers; adding a piece of chrome |
 | [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
 | [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
-| [`CODEBASE_CRITIQUE_2026-09-06.md`](./CODEBASE_CRITIQUE_2026-09-06.md) | Revision-specific critique: reproduced defects, UI/UX/DX assessment, performance measurements, verified capabilities, and prioritized improvements |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | Active engineering defects, performance work, and verification priorities |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | Delivered capabilities, adoption status, and future capability sequence |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | Current `@plurid/plurid-kit` adoption and generator plan |
-| [`CODEBASE_DEEP_CRITIQUE.md`](./CODEBASE_DEEP_CRITIQUE.md) | Historical 2026-06-19 audit; useful provenance, not current status |
 
 Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the maintained descriptions. Roadmaps express intent and must not be cited as proof that a capability exists.
 
@@ -43,4 +41,4 @@ pnpm test
 pnpm lint
 ```
 
-`plurid-react` also exposes an explicit `check` script. The current GitHub CI runs build, test, and lint but not that type-check. Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.
+Every public package exposes a `check` script (the harness too). GitHub CI runs build, test, lint, `check`, `check.modules` and `docs.tables.check` on every change, plus the chromium browser suite in its own job; `pnpm verify` is the local superset (it adds the strict visual comparisons, whose baselines are macOS renders, and the packed-install smoke test). Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.

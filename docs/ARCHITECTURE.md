@@ -135,7 +135,7 @@ StyleSheetManager shouldForwardProp={isPropValid}     (@emotion/is-prop-valid)
 
 `containers/Application/View/index.tsx` is a connected function component: it subscribes the full state plus derived slices (`mapStateToProperties`), binds ~20 dispatchers, attaches the raw `keydown` + `wheel` listeners (passive: false) on the view element — the keydown runs the shortcut dispatcher (`services/logic/shortcuts`, generated from the `PLURID_SHORTCUTS` table), the wheel runs `services/logic/input/wheel.ts` (`normalizeWheel` for `deltaMode`/trackpad classification, `wheelToDelta` for the policy: pinch/Ctrl zoom at the cursor — a trackpad pinch by an exponent per px (`gestures.trackpadPinchSensitivity`, ≈ ×3 over a whole pinch; a Ctrl + mouse notch keeps the notch step), modes and modifiers, `scroll-first` over scrollable plane content, `trackpadScroll` on empty space) into a SMOOTHED batcher (`createSmoothedBatcher`: each frame releases `gestures.wheelSmoothing` (0.6 per 60 Hz frame, scaled to the real frame time) of the still-pending pan / dolly / yaw / pitch / log-zoom and keeps the rest, so a wheel burst neither steps nor floats and lands exactly on its total; raw under reduced motion; a press cancels the tail). `normalizeWheel` keeps a `WheelHistory`: the device of a wheel STREAM wins, so a fast trackpad flick — 40–200 px deltas that look like mouse notches — stays a trackpad pan instead of becoming a zoom — and memoizes the `pluridContext` value (registrar, plane context, `defaultPubSub`, `registerPubSub`) so that planes
 
-- which read it via `useContext` - do not re-render on every per-frame View render. The behavior lives in nine hooks, `containers/Application/View/hooks/` (the directory holds exactly these):
+- which read it via `useContext` - do not re-render on every per-frame View render. The behavior lives in ten hooks, `containers/Application/View/hooks/` (the directory holds exactly these):
 
 | Hook | Responsibility | File |
 | --- | --- | --- |
@@ -148,6 +148,7 @@ StyleSheetManager shouldForwardProp={isPropValid}     (@emotion/is-prop-valid)
 | `usePluridPubSub` | the pubsub bridge: the bus registry + `registerPubSub`, subscribes the 35 control topics, re-publishes `space.transform` + `configuration` with `internal: true` (section 7) | `hooks/usePluridPubSub.ts` |
 | `useCollaboration` | collaboration seam (on when `space.collaboration === true`): emits `COLLABORATION_MUTATION` on shared-arrangement change, applies `APPLY_REMOTE_MUTATION` with `meta.remote` | `hooks/useCollaboration.ts` |
 | `useEngineEvents` | the engine->host observe channel: publishes `space.changed` `{ kind, value }` per watched slice; always on (publishing to a no-subscriber topic is free) | `hooks/useEngineEvents.ts` |
+| `useDockingURL` | THE ADDRESS BAR IS THE PAGE (`space.docking.url`): writes the docked page's path (one entry per page, the first write replaces the entry, the reveal keeps it), restores a deep link on mount (a root at once; a registered sub-page spawned through its parent's `PluridLink`, one level per commit; a path no registrar answers to settles at once), docks on `popstate`; declared after the relayout and follow effects so a restore docks with the roots measured; the query mode (`?page=`) inside a `PluridRouterBrowser` route (`PluridRouterContext`) | `hooks/useDockingURL.ts` |
 | `useViewpointURL` | opt-in URL binding for the camera: `restore` on mount (a deep-link overrides the persisted camera), debounced `replaceState` `write`; both default OFF | `hooks/useViewpointURL.ts` |
 
 ### 3.4 The structural tree
@@ -285,6 +286,8 @@ THE VIEWPOINT CODEC (`services/logic/viewpoint`): two encodings, both always acc
 - `decodeViewpoint(string, view?)` → legacy scalars (a v2 string is reduced through `toLegacy`); `decodeCameraViewpoint(string, view, perspective?, limits?)` → `CameraState` for either version (the application's own perspective wins over a v2 string's). Malformed strings decode to `null` and are ignored.
 
 URL binding (`useViewpointURL`, config knobs on `space.*`): `viewpointURLWrite` and `viewpointURLRestore` BOTH default false; `viewpointURLParam` defaults `'v'`; `viewpointURLDebounce` defaults 400 ms for the `replaceState` write (path, other query params and hash preserved; no history spam). Programmatic control rides the `space.setViewpoint` topic (v1 or v2, `animated` optional), `space.cameraDelta` (one `CameraDelta`, `animate` optional) and `space.frame` (`{ planeID? | selection? }`, everything when neither); programmatic observation rides the debounced `onViewpointChange(viewpoint)` prop and the synchronous `api.getViewpoint()` - deliberately NOT the `space.changed` channel, because the camera changes per orbit frame.
+
+The address bar (2026-09-06): the docked page's path is the pathname while `docking.url` is on (the page presentation's default); the two URL bindings share one URL — the path is the page's, `?v=` the camera's (`replaceState` keeps the other) — and a deep link's path wins over the persisted camera (the persisted tree stays); the resolver `general.configuration.resolveDockingURL` turns the knob into `{ write, restore, history, mode, param }`, the engine's `planeAddressPath` reduces a plane address to its pathname.
 
 Persistence: the camera, the view size it was framed in (2026-09-06: `resolveSpace` starts the store at it, so a restored camera is consistent until the first real measurement, which re-pivots it the way a live resize does), the bookmarks and the runtime home are stored in the versioned space snapshot (`PERSISTED_STATE_VERSION = 3`); a v2 snapshot (scalars only) is upgraded on load by deriving the camera from its scalars.
 
@@ -753,7 +756,6 @@ Bin: `plurid` (`distribution/cli/index.js`) - commands `dev | build | start | in
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | DEFECT + REFACTOR LEDGER - findings and their phases | audit lens |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | CAPABILITY HISTORY + PLANS - what shipped when, what is next | feature lens |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | THE KIT - current adoption and generator plan | section 10 describes the implemented contract |
-| [`CODEBASE_DEEP_CRITIQUE.md`](./CODEBASE_DEEP_CRITIQUE.md) | HISTORICAL SNAPSHOT (2026-06-19) | pre-modernization state; do not cite as current |
 | package `README.md`s | npm-facing per-package intro | usage-first, not architecture |
 
 Also: [`GETTING_STARTED.md`](./GETTING_STARTED.md) (use the engine), [`CONTRIBUTING.md`](./CONTRIBUTING.md) (work on it), [`../examples/`](../examples/) (runnable references), [`../fixtures/render-test/`](../fixtures/render-test/) (the harness).

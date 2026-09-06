@@ -67,7 +67,7 @@ export interface FlatPluridConfiguration {
     center?: boolean;
     /** `space.presentation` — `'page'`: the space presents as pages (see `PluridConfigurationSpace.presentation`). */
     presentation?: 'space' | 'page';
-    /** `space.docking` — how a move lands on a page: `{ motion: 'swing' | 'instant', chrome: 'hidden' | 'shown' }`. */
+    /** `space.docking` — how a move lands on a page: `{ motion: 'swing' | 'instant', chrome: 'hidden' | 'shown', url: boolean | { write, restore, history, param } }`. */
     docking?: PluridConfigurationSpaceDocking;
     /** `space.firstPerson` — first-person ("fly") navigation. */
     firstPerson?: boolean;
@@ -248,6 +248,36 @@ export interface PluridConfigurationSpaceDocking {
     focus?: boolean;
     /** px — how close to the dock pose "docked" is read (default 0.5). */
     epsilon?: number;
+    /**
+     * THE ADDRESS BAR IS THE PAGE. While docked, the page's path is the location's pathname (the
+     * query and the hash untouched); docking on another page is a history entry; the reveal keeps
+     * the last page's path; Back / Forward dock the page at the entry's path; a load at a page's path
+     * boots docked on it (a deep link wins over the persisted camera). Default `true` in the page
+     * presentation, off in the space presentation; `false` opts out. Inside a `PluridRouterBrowser`
+     * route the router owns the pathname and the page rides `?page=<path>` without history entries.
+     */
+    url?: boolean | PluridConfigurationSpaceDockingURL;
+}
+
+/** THE ADDRESS-BAR BINDING as the View reads it, resolved from `docking.url` and the host context. */
+export interface DockingURLBinding {
+    write: boolean;
+    restore: boolean;
+    history: 'push' | 'replace';
+    /** `path`: the pathname is the page's; `query`: the page rides `?<param>=<path>`. */
+    mode: 'path' | 'query';
+    param: string;
+}
+
+export interface PluridConfigurationSpaceDockingURL {
+    /** Write the docked page's path to the location. Default `true`. */
+    write?: boolean;
+    /** Boot docked on the page the location names (a deep link wins over the persisted camera). Default `true`. */
+    restore?: boolean;
+    /** `push` (default standalone): docking on another page is a history entry, Back walks the pages; `replace`: the address follows, no entries. Forced `replace` inside a `PluridRouterBrowser` route. */
+    history?: 'push' | 'replace';
+    /** The QUERY-PARAMETER mode: the page rides `?<param>=<path>` and the pathname stays the host's. Set to `page` automatically inside a `PluridRouterBrowser` route. */
+    param?: string;
 }
 
 export interface PluridConfigurationSpace {

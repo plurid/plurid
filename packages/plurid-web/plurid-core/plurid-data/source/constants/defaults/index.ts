@@ -29,6 +29,9 @@ export const PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST = 'originhost';
 
 export const PLURID_ROUTER_STORAGE = '__PLURID_ROUTER__';
 
+/** The query parameter the docked page rides when a host router owns the pathname (`docking.url.param`). */
+export const PLURID_DOCKING_URL_PARAM = 'page';
+
 
 // in milliseconds
 export const PLURID_DEFAULT_RESIZE_DEBOUNCE_TIME = 50;

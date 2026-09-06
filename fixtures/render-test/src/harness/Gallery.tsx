@@ -27,7 +27,7 @@ const LooksGallery = () => (
                     <div style={{ padding: '8px 12px', borderBottom: '1px solid #ffffff12', fontSize: 12, letterSpacing: '0.08em' }}>{look}</div>
                     <iframe
                         title={look + ' · page revealed'}
-                        src={fixtureQuery('page-revealed', { look })}
+                        src={fixtureQuery('page-revealed', { look, url: '0' })}
                         style={{ width: '100%', aspectRatio: '16 / 10', border: 0, display: 'block' }}
                         onLoad={(event) => {
                             const frame = event.currentTarget;
@@ -67,7 +67,8 @@ const Gallery = () => {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(640px, 1fr))', gap: 24 }}>
                 {FIXTURES.map((fixture) => {
-                    const query = fixtureQuery(fixture.name);
+                    // the sheet's frames share the browser's history: no address-bar entries from them
+                    const query = fixtureQuery(fixture.name, { url: '0' });
                     return (
                         <div key={fixture.name} style={{ border: '1px solid #ffffff18', borderRadius: 6, overflow: 'hidden', background: '#0d0f12' }} data-rt-gallery-fixture={fixture.name}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderBottom: '1px solid #ffffff12' }}>

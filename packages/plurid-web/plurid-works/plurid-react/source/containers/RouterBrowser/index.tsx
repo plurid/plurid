@@ -10,6 +10,9 @@
 
 
     import {
+        pluridRouterNavigate,
+    } from '@plurid/plurid-engine';
+    import {
         storage,
     } from '@plurid/plurid-functions';
 
@@ -64,6 +67,9 @@
     import {
         resolvePlaneDocument,
     } from '~components/utilities/Document/Planes';
+    // #region internal
+    import PluridRouterContext from './context';
+    // #endregion internal
 // #endregion imports
 
 
@@ -353,8 +359,15 @@ const PluridRouterBrowser = (
         }
     }
 
+    // the pathname is the router's: an application inside a route reads this (its address-bar binding
+    // rides a query parameter instead)
+    const routerContextValue = useMemo(() => ({
+        path: matchedPath,
+        navigate: pluridRouterNavigate,
+    }), [matchedPath]);
+
     return (
-        <>
+        <PluridRouterContext.Provider value={routerContextValue}>
             <FadeIn
                 time={fadeIn}
             />
@@ -374,7 +387,7 @@ const PluridRouterBrowser = (
             >
                 <PluridRoute />
             </PluridRouterShell>
-        </>
+        </PluridRouterContext.Provider>
     );
     // #endregion render
 }

@@ -469,4 +469,23 @@ export const openFixture = async (
     await settle(page);
     return fixture;
 };
+
+/** Open a fixture AT A PATH (the address bar is the page): the fixture's query on the given pathname. */
+export const openPath = async (
+    page: Page,
+    path: string,
+    name: string,
+    extra: Record<string, string> = {},
+) => {
+    const fixture = fixtureByName(name);
+    if (!fixture) throw new Error('no fixture ' + name);
+    await page.goto(path + fixtureQuery(name, extra));
+    await waitForBoot(page, { planes: (fixture.expect?.planes ?? 1) > 0 });
+    await settle(page);
+    return fixture;
+};
+
+export const pathname = (page: Page) => page.evaluate(() => window.location.pathname);
+export const historyLength = (page: Page) => page.evaluate(() => window.history.length);
+export const historyDocked = (page: Page) => page.evaluate(() => (window.history.state as { plurid?: { docked?: string } } | null)?.plurid?.docked ?? null);
 // #endregion fixtures

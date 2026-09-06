@@ -2,7 +2,7 @@
 
 _Last updated: 2026-07-02._
 
-This is the governance map for the monorepo: **what is live, what is legacy, what is experimental**, and how the workspace/quality gates cover each package. It exists because folder names alone don't make those distinctions clear (the lens both `docs/ENGINE_AUDIT_AND_ROADMAP.md` and `docs/CODEBASE_DEEP_CRITIQUE.md` asked for).
+This is the governance map for the monorepo: **what is live, what is legacy, what is experimental**, and how the workspace/quality gates cover each package. It exists because folder names alone don't make those distinctions clear (the lens `docs/ENGINE_AUDIT_AND_ROADMAP.md` asked for).
 
 > New here? To **use** the engine read [`GETTING_STARTED.md`](./GETTING_STARTED.md); to **work on** it read [`CONTRIBUTING.md`](./CONTRIBUTING.md). This file is the package-by-package status reference.
 
@@ -68,4 +68,3 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 - `docs/CONTROL_SURFACE.md` — the full developer-control-surface reference.
 - `examples/` — runnable references (`minimal`, `control-surface`).
 - `docs/ENGINE_AUDIT_AND_ROADMAP.md` — engine-deep audit + phased roadmap (with per-phase progress).
-- `docs/CODEBASE_DEEP_CRITIQUE.md` — repo-wide critique (governance, package shapes, product ideas).

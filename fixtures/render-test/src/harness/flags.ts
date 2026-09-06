@@ -88,6 +88,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'perspective', type: 'number', group: 'navigation', apply: 'reload', description: 'the CSS lens', exercises: '`space.perspective`' },
     { key: 'dockMotion', type: 'enum', values: ['instant'], group: 'navigation', apply: 'reload', description: 'the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging', exercises: '`space.docking.motion: instant`' },
     { key: 'dockChrome', type: 'enum', values: ['shown'], group: 'navigation', apply: 'reload', description: 'the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone)', exercises: '`space.docking.chrome: shown`' },
+    { key: 'url', type: 'enum', values: ['0', '1'], group: 'navigation', apply: 'reload', description: 'the address bar is the page: `1` turns the binding on in the space presentation, `0` turns it off in the page presentation (on by default there)', exercises: '`space.docking.url`' },
+    { key: 'vpURL', type: 'boolean', group: 'navigation', apply: 'reload', description: 'the camera viewpoint written to and restored from ?v=', exercises: '`viewpointURLWrite` / `viewpointURLRestore`' },
     { key: 'vp', type: 'enum', values: ['2'], group: 'navigation', apply: 'reload', description: 'full-camera (v2) viewpoints in the URL and the callback', exercises: '`viewpointURLVersion: 2`' },
     // gestures
     { key: 'momentum', name: 'momentumOff', type: 'boolean', on: '0', group: 'gestures', apply: 'reload', description: 'no fling after a drag (release stops dead)', exercises: '`gestures.disableMomentum`' },
@@ -159,6 +161,8 @@ export interface HarnessFlags {
     pitchLimit?: number;
     perspective?: number;
     dockMotion?: 'instant';
+    url?: '0' | '1';
+    vpURL: boolean;
     dockChrome?: 'shown';
     vp?: '2';
     momentumOff: boolean;

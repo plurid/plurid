@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useContext,
         useRef,
         useCallback,
         useMemo,
@@ -51,6 +52,7 @@
     } from '~data/interfaces';
 
     import Context from '~services/context';
+    import PluridRouterContext from '../../RouterBrowser/context';
 
     import {
         handleGlobalShortcuts,
@@ -65,6 +67,7 @@
     } from '~services/chrome';
 
     import {
+        generalEngine,
         interaction,
         space as spaceEngine,
     } from '~services/engine';
@@ -134,6 +137,7 @@
     import useCollaboration from './hooks/useCollaboration';
     import useEngineEvents from './hooks/useEngineEvents';
     import useViewpointURL from './hooks/useViewpointURL';
+    import useDockingURL from './hooks/useDockingURL';
     // #endregion internal
 // #endregion imports
 
@@ -967,6 +971,33 @@ const PluridView: React.FC<PluridViewProperties> = (
         ]);
         // #endregion layout
     // #endregion effects
+
+
+    // THE ADDRESS BAR IS THE PAGE (`space.docking.url`, on by default in the page presentation): the
+    // docked page's path in the location, a deep link docked on load, Back / Forward docking pages.
+    // Declared AFTER the relayout and the followed-page effects: effect order is declaration order, so
+    // a restore docks with the roots at their measured positions (the boot's first measurement relays
+    // them in the same commit) and the follow sees a settled page; a `?v=` restored earlier is refined
+    // by the path. Inside a `PluridRouterBrowser` route the pathname is the router's and the page
+    // rides a query parameter.
+    const routerContext = useContext(PluridRouterContext);
+    const dockingURL = useMemo(
+        () => generalEngine.configuration.resolveDockingURL(stateConfiguration.space.docking?.url, { router: !!routerContext }),
+        [stateConfiguration.space.docking?.url, routerContext],
+    );
+    useDockingURL({
+        binding: dockingURL,
+        stateDockedPlaneID,
+        stateTree,
+        stateResolvedLayout,
+        stateViewSize: state.space.viewSize,
+        getState: () => stateRef.current,
+        dispatch,
+        viewElement,
+        planesRegistrar,
+        hostname,
+        warnings: stateConfiguration.development?.warnings !== false,
+    });
 
 
     // #region render

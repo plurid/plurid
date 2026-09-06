@@ -224,6 +224,10 @@ export const pagePresentationDefaults: PluridPartialConfiguration = {
     space: {
         fadeInTime: 0,
         opaque: false,
+        // a site is URLs: the docked page's path in the address bar (the fourth page default)
+        docking: {
+            url: true,
+        },
     },
     elements: {
         plane: {
