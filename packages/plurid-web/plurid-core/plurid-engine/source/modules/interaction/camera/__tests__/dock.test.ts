@@ -33,7 +33,7 @@ describe('docking', () => {
     it('the identity camera is the dock pose of a view-sized root at the origin', () => {
         const camera = identityCamera(view);
         expect(isDocked(camera, page(), view)).toBe(true);
-        const docked = dockPose(camera, page());
+        const docked = dockPose(camera, page(), view);
         expect(docked.scale).toBe(1);
         expect(docked.yaw).toBe(0);
         expect(docked.pitch).toBe(0);
@@ -66,9 +66,9 @@ describe('docking', () => {
         const camera = identityCamera(view);
         const below = page(0, view.height + 50);
         expect(isDocked(camera, below, view)).toBe(false);
-        expect(isDocked(dockPose(camera, below), below, view)).toBe(true);
+        expect(isDocked(dockPose(camera, below, view), below, view)).toBe(true);
         const child = page(200, 300, 90);
-        const docked = dockPose(camera, child);
+        const docked = dockPose(camera, child, view);
         expect(docked.yaw).toBe(-90);
         expect(isDocked(docked, child, view)).toBe(true);
     });
@@ -82,8 +82,8 @@ describe('docking', () => {
             { planeID: 'second', ...page(0, view.height + 50) },
         ];
         expect(findDockedPlane(camera, tree, view, fallback)).toBe('root');
-        expect(findDockedPlane(dockPose(camera, page(200, 300, 90)), tree, view, fallback)).toBe('child');
-        expect(findDockedPlane(dockPose(camera, page(0, view.height + 50)), tree, view, fallback)).toBe('second');
+        expect(findDockedPlane(dockPose(camera, page(200, 300, 90), view), tree, view, fallback)).toBe('child');
+        expect(findDockedPlane(dockPose(camera, page(0, view.height + 50), view), tree, view, fallback)).toBe('second');
         expect(findDockedPlane({ ...camera, scale: 0.5 }, tree, view, fallback)).toBe('');
         expect(dockCandidate(camera, tree, view, fallback)).toBe('root');
         expect(dockCandidate({ ...camera, offset: { x: 0, y: -(view.height + 50), z: 0 } }, tree, view, fallback)).toBe('second');
@@ -91,7 +91,7 @@ describe('docking', () => {
     });
 
     it('the reveal pose pulls back and tilts', () => {
-        const docked = dockPose(identityCamera(view), page());
+        const docked = dockPose(identityCamera(view), page(), view);
         const revealed = revealPose(docked);
         expect(revealed.scale).toBe(REVEAL.scale);
         expect(revealed.pitch).toBe(REVEAL.pitch);
@@ -99,17 +99,17 @@ describe('docking', () => {
         expect(isDocked(revealed, page(), view)).toBe(false);
     });
 
-    it('a page smaller than the view docks too: its dock pose passes its own test (centered, scale 1)', () => {
+    it('a page smaller than the view docks too: its dock pose passes its own test (centered, at its fill scale)', () => {
         const camera = identityCamera(view);
         const small = { location: { translateX: 300, translateY: 200, translateZ: 0, rotateX: 0, rotateY: 0 }, width: 600, height: 400 };
         expect(isDocked(camera, small, view)).toBe(false);
-        const docked = dockPose(camera, small);
-        expect(docked.scale).toBe(1);
+        const docked = dockPose(camera, small, view);
+        expect(docked.scale).toBeCloseTo(Math.min(view.width / 600, view.height / 400), 6);
         expect(isDocked(docked, small, view)).toBe(true);
         expect(isDocked({ ...docked, pivot: { ...docked.pivot, x: docked.pivot.x + 2 } }, small, view)).toBe(false);
         // a tilted page docks face-on whatever the orbit's pitch limit
         const tilted = { ...small, location: { ...small.location, rotateX: 90 } };
-        expect(isDocked(dockPose(camera, tilted), tilted, view)).toBe(true);
+        expect(isDocked(dockPose(camera, tilted, view), tilted, view)).toBe(true);
     });
 
     it('two parallel pages behind a site (two links in one header): docked on one, the other is not docked', () => {
@@ -118,11 +118,11 @@ describe('docking', () => {
         const about = { planeID: 'about', location: { translateX: 260, translateY: 0, translateZ: -100, rotateX: 0, rotateY: 90 }, width: view.width, height: view.height };
         const contact = { planeID: 'contact', location: { translateX: 560, translateY: 0, translateZ: -100, rotateX: 0, rotateY: 90 }, width: view.width, height: view.height };
         const camera = identityCamera(view);
-        const onContact = dockPose(camera, contact);
+        const onContact = dockPose(camera, contact, view);
         expect(isDocked(onContact, contact, view)).toBe(true);
         expect(isDocked(onContact, about, view)).toBe(false);
         expect(findDockedPlane(onContact, [about, contact], view, { width: view.width, height: view.height })).toBe('contact');
-        expect(findDockedPlane(dockPose(camera, about), [about, contact], view, { width: view.width, height: view.height })).toBe('about');
+        expect(findDockedPlane(dockPose(camera, about, view), [about, contact], view, { width: view.width, height: view.height })).toBe('about');
     });
 
     it('the candidate is the plane under the view center; nothing when every plane is hidden or the tree is empty', () => {
@@ -157,7 +157,7 @@ describe('docking', () => {
         const camera = identityCamera(view);
         const panel = { location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, width: 314, height: 416 };
         expect(dockScale(panel, view)).toBeCloseTo(800 / 416, 6);
-        const docked = dockPose(camera, panel, undefined, view);
+        const docked = dockPose(camera, panel, view);
         expect(docked.scale).toBeCloseTo(800 / 416, 6);
         expect(isDocked(docked, panel, view)).toBe(true);
         expect(isDocked(camera, panel, view)).toBe(false);                  // scale 1 is not this plane's page

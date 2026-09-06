@@ -234,7 +234,7 @@ THE MOTION PATH: every NON-GESTURE camera move is `cameraCommand(kind, options)`
 
 ### 4.1 Docking and the page presentation
 
-Since 2026-09-06 docking is defined in BOTH presentations: the dock pose of a plane is face-on at the plane's FILL scale (`dockScale`: `min(view / plane)` within the zoom limits — 1 for a view-sized page, so everything below reads unchanged for the page presentation), and the rail renders in the space presentation too, its page pill docking the active plane (else the nearest). The viewcube's own fit cell is gone; the rail owns the fit.
+Since 2026-09-06 docking is defined in BOTH presentations: the dock pose of a plane is face-on at the plane's FILL scale (`dockScale`: `min(view / plane)` within the zoom limits — 1 for a view-sized page, so everything below reads unchanged for the page presentation), and the rail renders in the space presentation too, its page pill docking the selected plane (else the one under the pointer, else the nearest). The viewcube's own fit cell is gone; the rail owns the fit.
 
 `space.presentation: 'page'` makes the space present as a SITE (2026-09-05, polished 2026-09-06). It is ONE knob with three defaults layered under the caller's configuration in `merge()` (`pagePresentationDefaults`: `fadeInTime: 0`, `opaque: false`, `elements.plane.height: 1`; a value still AT the space default counts as unset, so a runtime switch gets them too) and ONE derived state, the docked page. There is no mode flag.
 

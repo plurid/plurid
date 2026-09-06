@@ -48,10 +48,12 @@ test.describe('a plane read as a page', () => {
         expect((await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.camera.scale))).toBeLessThan(1.5);
     });
 
-    test('the cube pill reveals; the page pill docks the ACTIVE plane', async ({ page }) => {
+    test('the cube pill reveals; the page pill docks the SELECTED plane', async ({ page }) => {
         await openFixture(page, 'columns');
-        // activate MATERIAL by clicking its content
-        await page.locator('[data-plurid-plane$="material@2"] [data-plurid-entity="PluridPlaneContent"], [data-plurid-plane$="material@2"]').first().click({ position: { x: 20, y: 120 } });
+        // select MATERIAL: the selected plane is the deliberate choice the page pill reads
+        const material = await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.tree.map((node: { planeID: string }) => node.planeID).find((id: string) => /material@2$/.test(id)));
+        expect(material).toBeTruthy();
+        await page.evaluate((id) => { (window as unknown as HarnessWindow).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [id] }); }, material);
         await page.locator('[data-plurid-control="dock-toggle"]').click();
         await settle(page);
         expect(await dockedID(page)).toMatch(/material@2$/);

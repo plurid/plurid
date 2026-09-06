@@ -112,7 +112,7 @@ export const frameTargetForPlane = (
     plane: TreePlane,
 ): CameraState => {
     if (configuration.space.presentation === 'page') {
-        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.cameraLimits, spaceState.viewSize);
+        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.viewSize, spaceState.cameraLimits);
     }
     return cameraEngine.framePlane(
         spaceState.camera,
@@ -145,12 +145,16 @@ const dockTargetPlane = (
     planeID?: string,
 ): TreePlane | undefined => {
     const configured = spaceEngine.layout.configuredPlaneSize(configuration, spaceState.viewSize);
-    // this plane, else the docked one, else the ACTIVE plane (the one last clicked or focused — what a
-    // reader means by "this plane" in the space presentation), else the nearest
-    const active = spaceState.activePlaneID && spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, spaceState.activePlaneID);
+    // this plane, else the docked one, else the SELECTED plane (the deliberate choice), else the plane
+    // under the pointer (`activePlaneID` is hover-driven), else the nearest
+    const shown = (id: string) => {
+        const plane = id ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, id) : undefined;
+        return plane && plane.show !== false ? plane.planeID : '';
+    };
     const id = planeID
         || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon, spaceState.cameraLimits)
-        || (active && active.show !== false ? active.planeID : '')
+        || shown(spaceState.selectedPlaneIDs[0] || '')
+        || shown(spaceState.activePlaneID || '')
         || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree, spaceState.viewSize, configured);
     return id ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, id) : undefined;
 };
@@ -375,8 +379,8 @@ export const resolveCameraTarget = (
                 ? cameraEngine.dockPose(
                     spaceState.camera,
                     dockGeometry(plane, configuration, spaceState.viewSize),
-                    spaceState.cameraLimits,
                     spaceState.viewSize,
+                    spaceState.cameraLimits,
                 )
                 : undefined;
         }
@@ -387,8 +391,8 @@ export const resolveCameraTarget = (
                     cameraEngine.dockPose(
                         spaceState.camera,
                         dockGeometry(plane, configuration, spaceState.viewSize),
-                        spaceState.cameraLimits,
                         spaceState.viewSize,
+                        spaceState.cameraLimits,
                     ),
                     spaceState.cameraLimits,
                     configuration.space.docking?.reveal,

@@ -227,7 +227,7 @@ describe('getDockedPlaneID (the page presentation)', () => {
 
         // docked on `about` (its dock pose): the trail (p1) and its child (g1) stay, `contact` is aside
         const about = space.tree[0].children![0];
-        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: about.location, width: view.width, height: view.height })));
+        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: about.location, width: view.width, height: view.height }, view)));
         const state = at(docked);
         expect([...getDockedLineage(state)].sort()).toEqual(['about', 'g1', 'p1']);
         expect(isAside(state, 'contact')).toBe(true);
@@ -253,7 +253,7 @@ describe('getDockedPlaneID (the page presentation)', () => {
         const tree = [sheet('p1')];
         tree[0].children = [orphan, viewSizedSheet('other', { location: { translateX: view.width + 70, rotateY: 90 }, parentPlaneID: 'p1' })];
         const space = reducer(initial(), actions.restoreArrangement({ tree, links: [] }));
-        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: orphan.location, width: view.width, height: view.height })));
+        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: orphan.location, width: view.width, height: view.height }, view)));
         const state = at(docked);
         expect(getDockedPlaneID(state)).toBe('orphan');
         expect([...getDockedLineage(state)].sort()).toEqual(['leaf', 'orphan']);

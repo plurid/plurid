@@ -158,7 +158,7 @@ const PluridDockRail: React.FC<PluridDockRailProperties> = (
             <StyledRailButton
                 type="button"
                 theme={stateInteractionTheme}
-                aria-label={docked ? 'Reveal the space' : (pagePresentation ? 'Back to the page' : 'Read this plane as a page')}
+                aria-label={docked ? 'Reveal the space' : (pagePresentation ? 'Back to the page' : 'Read the selected plane as a page')}
                 aria-pressed={!docked}
                 title={docked ? 'Reveal the space (G)' : (pagePresentation ? 'Back to the page (Esc)' : 'Read this plane as a page')}
                 data-plurid-control="dock-toggle"

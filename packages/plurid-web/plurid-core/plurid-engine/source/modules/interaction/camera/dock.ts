@@ -99,8 +99,8 @@ export const dockScale = (
 export const dockPose = (
     camera: CameraState,
     plane: PlaneGeometry,
+    view: ViewSize,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
-    view: ViewSize = { width: plane.width, height: plane.height },
 ): CameraState => clampCamera(
     {
         ...camera,
