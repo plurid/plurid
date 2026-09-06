@@ -125,11 +125,11 @@ generated `docs/HARNESS.md`. `?gallery=1` shows every fixture on one page.
 
 **Adding a fixture** (a scene a feature needs verified): add an entry to `src/fixtures/catalog.ts` (its flags,
 optional link-click steps, 1–2 viewpoints, expectations), run `pnpm docs.tables`, then from `fixtures/render-test`
-run `npx playwright test --config e2e/playwright.config.ts --project visual --update-snapshots` and commit the new
+run `npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots` and commit the new
 baselines under `e2e/__snapshots__/`. `fixtures.spec.ts` picks the fixture up by itself. A new flag goes into the
 registry the same way (the panel and the docs follow).
 
-Two traps: the suite REUSES a server already listening on 5273 (`reuseExistingServer`), so a server orphaned by a killed run keeps serving an old bundle — `lsof -nP -i :5273` before trusting a browser result; and the strict / regenerate decision lives in `visual.spec.ts` (from `testInfo.config.updateSnapshots` and `VISUAL_STRICT`), never in the config, because a worker process does not see the CLI's arguments. The budget is an absolute `maxDiffPixels` (120): a ratio let a 22×20 control vanish unnoticed.
+Four traps: the suite REUSES a server already listening on 5273 (`reuseExistingServer`), so a server orphaned by a killed run keeps serving an old bundle — `lsof -nP -i :5273` before trusting a browser result; the strict / regenerate decision lives in `visual.spec.ts` (from `testInfo.config.updateSnapshots` and `VISUAL_STRICT`), never in the config, because a worker process does not see the CLI's arguments; a nested `test.use({ reducedMotion })` inside a `describe` did not reach the page (2026-09-06) — a scenario that needs an emulation makes its own `browser.newContext(...)`, as the touch scenarios do; and a plane's compositing layer includes everything it draws outside its box (its bridge, its controls bar), so an element of a plane that reaches PAST the parent's plane is split by Chrome's 3D sorting and everything outside the box disappears (the tilted leash, 2026-09-06 — now a band inside an axis-aligned box that ends at the parent's face). The budget is an absolute `maxDiffPixels` (120): a ratio let a 22×20 control vanish unnoticed.
 
 
 

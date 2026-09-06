@@ -31,6 +31,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | --- | --- | --- | --- | --- |
 | `?planes=<n>` | - | remount | N generated planes instead of the five instrument panels (stress) | many roots; the 8-column stress layout |
 | `?pages=<n>` | - | remount | the SITE set: N root pages, each with an about (long) and a contact (short) sub-page | view-sized pages, native scroll inside a plane, links spawning behind a docked page |
+| `?siteTheme=light` | - | remount | the site set on a light palette (default dark) | the rail and the leash over a light page |
+| `?stickyHeader=1` | - | remount | the site set with a sticky header (the links never scroll away) | a link that stays in view while the page scrolls |
 | `?sizes=default\|mixed\|wide\|tall\|small` | `default` | remount | declared plane sizes: mixed (five different boxes), wide, tall, small | `planes[].width` / `height` (declared sizes), per-column / per-row layout pitch |
 | `?media=1` | - | reload | a consumer-style media plane (lens, lazy image, button-driven video) | `usePluridPlane()` from content; window.__rtPlaneLens |
 | `?scrollable=1` | - | reload | the GEOMETRY readout is a scroller (28 filler rows in a 120px box) | the wheel over scrollable content stays the content's |
@@ -104,6 +106,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | --- | --- | --- | --- | --- |
 | `?hostileCss=1` | - | reload | a host stylesheet with aggressive global resets | the chrome reset (chrome.spec.ts) |
 | `?slotToolbar=1` | - | reload | a custom toolbar through the render slot | `renderToolbar` |
+| `?slotDockRail=1` | - | reload | a custom dock rail through the render slot (the page presentation) | `renderDockRail` |
+| `?slotViewcube=1` | - | reload | a custom viewcube through the render slot | `renderViewcube` |
 | `?hideLinks=1` | - | reload | hide the link beams and the alignment guides | `elements.planeLinks.show`, `elements.alignmentGuides.show` |
 
 ### debug
@@ -130,7 +134,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 
 ## Fixtures
 
-Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants: boots without console errors, every shown plane measured, a declared size is the plane's box, the roots of a grid layout do not overlap in world X/Y, one minimap dot per shown plane, every on-screen link hit by itself, the space idle) and `visual.spec.ts` (a screenshot baseline per viewpoint under `e2e/__snapshots__/<platform>/`, compared strictly with `VISUAL_STRICT=1`; regenerate with `npx playwright test --config e2e/playwright.config.ts --project visual --update-snapshots` from `fixtures/render-test`).
+Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants: boots without console errors, every shown plane measured, a declared size is the plane's box, the roots of a grid layout do not overlap in world X/Y, one minimap dot per shown plane, every on-screen link hit by itself, the space idle) and `visual.spec.ts` (a screenshot baseline per viewpoint under `e2e/__snapshots__/<platform>/`, compared strictly with `VISUAL_STRICT=1`; regenerate with `npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots` from `fixtures/render-test`).
 
 | Fixture | Title | Flags | Steps | Viewpoints | Expectations |
 | --- | --- | --- | --- | --- | --- |
@@ -153,7 +157,11 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `page-revealed` | A page, revealed — The same page pulled back and tilted: the sheet in the space behind the site. | `presentation=page` `pages=1` | - | `revealed` | planes: 1 |
 | `page-spawned` | A page, a link followed — The about page spawned behind the site by its link, the camera docked onto it. | `presentation=page` `pages=1` | `/page-1 → /page-1/about` | `front` | planes: 2, overlap: expected, links: false |
 | `page-spawned-scrolled` | A page scrolled past its link — The contact page open, the site scrolled so its link is beyond the fold: the child stays, the bridge follows the link to the edge. | `presentation=page` `pages=1` | `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 ↓ 600` | `revealed-orbit` | planes: 2, overlap: expected, links: false |
-| `pages-3-revealed` | Three pages, revealed — Three site pages side by side, the space revealed. | `presentation=page` `pages=3` | - | `revealed` | planes: 3 |
+| `page-rail-focus` | A page, the rail focused — The page presentation with the keyboard on the corner control: its two-tone focus ring reads on the page. | `presentation=page` `pages=1` | `⌨ dock-toggle` | `front` | planes: 1 |
+| `page-docked-light` | A light page, docked — The page presentation on a light site: the rail reads over a light page too. | `presentation=page` `pages=1` `siteTheme=light` | - | `front` | planes: 1 |
+| `page-aside` | A page, its sibling aside — Two pages opened from the site's header; docked on the first, the second is set aside (faded, inert). | `presentation=page` `pages=1` | `/page-1 → /page-1/about`, `⌂ /page-1`, `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 → /page-1/about` | `front`, `leash` | planes: 3, overlap: expected, links: false |
+| `page-leash` | A page, its leash — The contact page open and the site scrolled past its link, seen from the side: the leash from the link's fold to the page. | `presentation=page` `pages=1` | `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 ↓ 600` | `leash` | planes: 2, overlap: expected, links: false |
+| `pages-3-revealed` | Three pages, revealed — Three site pages side by side, fitted in the view. | `presentation=page` `pages=3` | - | `fit` | planes: 3 |
 | `empty` | Empty — No roots: the empty state. | `empty=1` | - | `front` | planes: 0, minimap: false, links: false |
 
 ## Assertion globals

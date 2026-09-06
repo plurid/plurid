@@ -36,13 +36,6 @@
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import {
-        navigateToParent,
-    } from '~services/state/thunks/planes';
-    import {
-        space as spaceEngine,
-    } from '~services/engine';
-
-    import {
         cameraCommand,
         setHome,
         CameraCommand,
@@ -56,10 +49,6 @@
         StyledPluridViewcubeArrow,
         StyledPluridViewcubeArrowIcon,
         StyledFitView,
-        StyledDockRail,
-        StyledRailButton,
-        StyledDockToggle,
-        StyledDockBack,
     } from './styled';
 
     import PluridViewcubeModel from './components/ViewcubeModel';
@@ -75,18 +64,12 @@ export interface PluridViewcubeOwnProperties {
 
 export interface PluridViewcubeStateProperties {
     stateConfiguration: PluridConfiguration;
-    /** The page the camera is docked on (the page presentation), `''` otherwise. */
-    stateDockedPlaneID: string;
-    /** The docked page has a parent to go back to. */
-    stateDockedHasParent: boolean;
     stateInteractionTheme: Theme;
-    stateTransformTime: number;
 }
 
 export interface PluridViewcubeDispatchProperties {
     dispatchCameraCommand: (command: CameraCommand) => void;
     dispatchSetHome: () => void;
-    dispatchNavigateToParent: (planeID: string) => void;
 }
 
 export type PluridViewcubeProperties =
@@ -102,16 +85,12 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
     const {
         // #region state
         stateConfiguration,
-        stateDockedPlaneID,
-        stateDockedHasParent,
         stateInteractionTheme,
-        stateTransformTime,
         // #endregion state
 
         // #region dispatch
         dispatchCameraCommand,
         dispatchSetHome,
-        dispatchNavigateToParent,
         // #endregion dispatch
     } = properties;
 
@@ -191,71 +170,8 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
 
     // #region render
     const pagePresentation = space.presentation === 'page';
-    const docked = !!stateDockedPlaneID;
 
-    // The page presentation's corner control: the door into the space while docked, the way back
-    // while revealed; a second chevron goes back to the parent of a spawned page. Rendered even
-    // when the viewcube itself is off — it is the page's one affordance.
-    const dockControls = pagePresentation && (
-        <StyledDockRail data-plurid-rail="">
-            {showViewcube && (
-                <StyledRailButton
-                    type="button"
-                    theme={stateInteractionTheme}
-                    aria-label="Fit everything (⌘ home, ⇧ reset, ⌥ set home)"
-                    title="Fit · ⌘ home · ⇧ reset · ⌥ set home"
-                    data-plurid-control="viewcube-fit"
-                    data-plurid-rail-button=""
-                    onClick={handleFitView}
-                >
-                    <PluridIconGlobal />
-                </StyledRailButton>
-            )}
-            {docked && stateDockedHasParent && (
-                <StyledDockBack
-                    type="button"
-                    theme={stateInteractionTheme}
-                    aria-label="Back to the parent page"
-                    title="Back to the parent page"
-                    data-plurid-control="dock-back"
-                    data-plurid-overlay="dock-back"
-                    data-plurid-rail-button=""
-                    onClick={() => dispatchNavigateToParent(stateDockedPlaneID)}
-                >
-                    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M11 3.5 5.5 9l5.5 5.5" />
-                    </svg>
-                </StyledDockBack>
-            )}
-            <StyledDockToggle
-                type="button"
-                theme={stateInteractionTheme}
-                aria-label={docked ? 'Reveal the space' : 'Back to the page'}
-                aria-pressed={!docked}
-                title={docked ? 'Reveal the space (G)' : 'Back to the page (Esc)'}
-                data-plurid-control="dock-toggle"
-                data-plurid-overlay="dock-toggle"
-                data-plurid-rail-button=""
-                data-plurid-docked-state={docked ? 'docked' : 'revealed'}
-                onClick={() => dispatchCameraCommand({ kind: docked ? 'reveal' : 'dock' })}
-            >
-                {docked ? (
-                    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M9 2.2 15.2 5.6v6.8L9 15.8 2.8 12.4V5.6L9 2.2Z" />
-                        <path d="M2.8 5.6 9 9l6.2-3.4M9 9v6.8" />
-                    </svg>
-                ) : (
-                    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M4 2.5h6.5L14 6v9.5H4V2.5Z" />
-                        <path d="M10.5 2.5V6H14" />
-                    </svg>
-                )}
-            </StyledDockToggle>
-        </StyledDockRail>
-    );
-
-    // Without the viewcube the box still hosts the dock controls in the page presentation.
-    if (!showViewcube && !pagePresentation) {
+    if (!showViewcube) {
         return null;
     }
 
@@ -265,7 +181,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             onMouseEnter={() => setMouseOver(true)}
             onMouseLeave={() => setMouseOver(false)}
             onMouseMove={() => !mouseOver ? setMouseOver(true) : null}
-            conceal={conceal}
+            conceal={conceal && !pagePresentation}
             mouseOver={mouseOver}
             isMounted={isMounted}
             fadeInTime={fadeInTime}
@@ -364,7 +280,6 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
                     {/* <PluridViewcubeTransformAreas /> */}
                 </>
             )}
-            {dockControls}
         </StyledPluridViewcube>
     );
     // #endregion render
@@ -376,12 +291,6 @@ const mapStateToProperties = (
 ): PluridViewcubeStateProperties => ({
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateInteractionTheme: selectors.themes.getInteractionTheme(state),
-    stateTransformTime: selectors.space.getTransformTime(state),
-    stateDockedPlaneID: selectors.space.getDockedPlaneID(state),
-    stateDockedHasParent: (() => {
-        const docked = selectors.space.getDockedPlaneID(state);
-        return !!docked && !!spaceEngine.tree.logic.getTreePlaneByID(state.space.tree, docked)?.parentPlaneID;
-    })(),
 });
 
 
@@ -394,9 +303,6 @@ const mapDispatchToProperties = (
     ),
     dispatchSetHome: () => dispatch(
         setHome() as any,
-    ),
-    dispatchNavigateToParent: (planeID) => dispatch(
-        navigateToParent(planeID) as any,
     ),
 });
 

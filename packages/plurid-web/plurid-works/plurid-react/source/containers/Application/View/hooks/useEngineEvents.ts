@@ -12,6 +12,9 @@
     } from '@plurid/plurid-data';
 
     import { AppState } from '~services/state/store';
+    import {
+        getDockedPlaneID,
+    } from '~services/state/modules/space/selectors';
     // #endregion libraries
 // #endregion imports
 
@@ -89,6 +92,13 @@ export const useEngineEvents = (
     useEffect(() => {
         emit('bookmarks', space.bookmarks);
     }, [pubsub, space.bookmarks]);
+
+    // the page presentation: a page docked (its id) or left (`''`) — a navigation, for a host
+    // syncing a title, an address bar or an analytics page view
+    const docked = getDockedPlaneID(state);
+    useEffect(() => {
+        emit('docked', docked);
+    }, [pubsub, docked]);
 }
 // #endregion module
 

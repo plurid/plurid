@@ -37,7 +37,7 @@ interface PanelPosition {
     horizontal: 'left' | 'right';
 }
 const POSITION_KEY = 'rt-setup-position';
-const readPosition = (): PanelPosition => {
+const readPosition = (page: boolean): PanelPosition => {
     try {
         const stored = JSON.parse(localStorage.getItem(POSITION_KEY) || 'null');
         if (stored && (stored.vertical === 'top' || stored.vertical === 'bottom') && (stored.horizontal === 'left' || stored.horizontal === 'right')) {
@@ -46,7 +46,8 @@ const readPosition = (): PanelPosition => {
     } catch {
         // no storage: the default corner
     }
-    return { vertical: 'top', horizontal: 'left' };
+    // a page fills the view: the panel starts at the bottom, off the site's header
+    return { vertical: page ? 'bottom' : 'top', horizontal: 'left' };
 };
 
 /**
@@ -56,7 +57,12 @@ const readPosition = (): PanelPosition => {
  */
 const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
     const [open, setOpen] = useState(false);
-    const [position, setPosition] = useState<PanelPosition>(readPosition);
+    const [position, setPosition] = useState<PanelPosition>(() => readPosition(flags.presentation === 'page'));
+    // At the bottom the engine's own chrome owns the corners (the `?` pill at the left, the rail /
+    // the viewcube at the right): the panel sits beside them, never over them.
+    const inset = position.vertical === 'bottom'
+        ? (position.horizontal === 'left' ? 56 : 190)
+        : 12;
     useEffect(() => {
         try {
             localStorage.setItem(POSITION_KEY, JSON.stringify(position));
@@ -101,7 +107,7 @@ const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
             return (
                 <label key={flag.key} style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 11, color: '#aab2bd', padding: '2px 0' }} title={common.title}>
                     <input type="checkbox" checked={!!value} onChange={(event) => set(flag.key, event.target.checked)} data-rt-flag={flag.key} id={id} />
-                    <span style={{ color: value ? '#e6e8ea' : '#aab2bd' }}>{flag.key}</span>
+                    <span style={{ color: value ? '#e6e8ea' : '#aab2bd' }}>{flag.on === '0' ? 'no ' + flag.key : flag.key}</span>
                     <span style={{ color: '#5b6470', marginLeft: 'auto', fontSize: 10 }}>{flag.apply}</span>
                 </label>
             );
@@ -147,7 +153,7 @@ const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
 
     return (
         <div
-            style={{ position: 'fixed', [position.vertical]: 12, [position.horizontal]: 12, zIndex: 9999, fontFamily: mono }}
+            style={{ position: 'fixed', [position.vertical]: 12, [position.horizontal]: inset, zIndex: 9999, fontFamily: mono }}
             data-rt-setup-position={position.vertical + '-' + position.horizontal}
         >
             <button
@@ -239,7 +245,7 @@ const Setup: React.FC<SetupProperties> = ({ flags, onChange }) => {
                         if (shown.length === 0) return null;
                         return (
                             <div key={group}>
-                                <div style={labelStyle}>{group.toUpperCase()} · reload</div>
+                                <div style={labelStyle}>{group.toUpperCase()} · {[...new Set(shown.map((flag) => flag.apply))].join(' / ')}</div>
                                 {shown.map(control)}
                             </div>
                         );

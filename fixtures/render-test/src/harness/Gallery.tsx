@@ -4,6 +4,7 @@ import {
     FIXTURES,
     FixtureDefinition,
     FixtureViewpoint,
+    fixtureQuery,
 } from '../fixtures/catalog';
 
 
@@ -26,7 +27,7 @@ const Gallery = () => {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(640px, 1fr))', gap: 24 }}>
                 {FIXTURES.map((fixture) => {
-                    const query = new URLSearchParams({ fixture: fixture.name, reducedMotion: '1', momentum: '0' });
+                    const query = fixtureQuery(fixture.name);
                     return (
                         <div key={fixture.name} style={{ border: '1px solid #ffffff18', borderRadius: 6, overflow: 'hidden', background: '#0d0f12' }} data-rt-gallery-fixture={fixture.name}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderBottom: '1px solid #ffffff12' }}>
@@ -38,13 +39,13 @@ const Gallery = () => {
                                             {viewpoint.name}
                                         </button>
                                     ))}
-                                    <a href={'/?' + query.toString()} target="_blank" rel="noreferrer" style={{ fontSize: 10, letterSpacing: '0.08em', color: '#4da3ff', padding: '3px 4px' }}>OPEN</a>
+                                    <a href={'/' + query} target="_blank" rel="noreferrer" style={{ fontSize: 10, letterSpacing: '0.08em', color: '#4da3ff', padding: '3px 4px' }}>OPEN</a>
                                 </span>
                             </div>
                             <iframe
                                 ref={(element) => { frames.current[fixture.name] = element; }}
                                 title={fixture.title}
-                                src={'/?' + query.toString()}
+                                src={'/' + query}
                                 loading="lazy"
                                 style={{ width: '100%', aspectRatio: '16 / 10', border: 0, display: 'block', background: '#0a0c0f' }}
                             />

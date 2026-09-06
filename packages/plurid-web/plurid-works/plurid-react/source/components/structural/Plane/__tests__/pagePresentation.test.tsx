@@ -9,10 +9,16 @@
     } from 'react';
     // #endregion libraries
 
+
     // #region external
     import {
         renderPlurid,
+        gestures,
+        flushFrames,
+        installFrameClock,
+        RenderPluridProperties,
     } from '../../../../testing';
+    import actions from '~services/state/actions';
     import PluridLink from '../../../links/Link';
     // #endregion external
 // #endregion imports
@@ -22,12 +28,17 @@
 // #region module
 const Page = () => <div style={{ height: 3000 }}>a long page</div>;
 
+/** The page presentation, instant moves. */
+const page: RenderPluridProperties['configuration'] = {
+    space: { presentation: 'page', navigation: { motion: { duration: 0 } } },
+};
+
 describe('the page presentation', () => {
     it('renders every plane view-sized with a scrolling content row, the bar as an overlay, and the view docked', async () => {
         const rendered = await renderPlurid({
             planes: [{ route: '/page', component: Page }],
             view: ['/page'],
-            configuration: { space: { presentation: 'page', navigation: { motion: { duration: 0 } } } } as any,
+            configuration: page,
         });
         const state = rendered.api.getSnapshot();
         expect(state.configuration.space.presentation).toBe('page');
@@ -47,7 +58,8 @@ describe('the page presentation', () => {
         expect(getComputedStyle(bar!).position).toBe('absolute');
 
         expect(rendered.view.getAttribute('data-plurid-docked')).toBe(root.planeID);
-        rendered.unmount();
+        expect(rendered.handle.camera.docked()).toBe(root.planeID);
+        await rendered.unmount();
     });
 
     it('docked on a page, only its lineage stays: a sibling page is set aside (faded, inert) and comes back on the reveal', async () => {
@@ -64,7 +76,7 @@ describe('the page presentation', () => {
                 { route: '/site/contact', component: Page },
             ],
             view: ['/site'],
-            configuration: { space: { presentation: 'page', navigation: { motion: { duration: 0 } } } } as any,
+            configuration: page,
         });
         // jsdom has no layout: give the two links distinct positions (as a browser would measure
         // them), or both pages would hang at the same point and share one dock pose
@@ -87,36 +99,78 @@ describe('the page presentation', () => {
         // docked on contact (the last click): about is aside, the site is not
         expect(rendered.view.getAttribute('data-plurid-docked')).toBe(contact.planeID);
         expect(element(about.planeID).getAttribute('data-plurid-aside')).toBe('true');
+        expect(element(about.planeID).hasAttribute('inert')).toBe(true);
         expect(element(about.planeID).style.opacity).toBe('0');
         expect(element(about.planeID).style.pointerEvents).toBe('none');
         expect(element(root.planeID).hasAttribute('data-plurid-aside')).toBe(false);
         expect(element(contact.planeID).hasAttribute('data-plurid-aside')).toBe(false);
 
-        // dock on about: contact is aside now
-        act(() => { rendered.api.pubsub.publish({ topic: 'space.dock', data: { planeID: about.planeID, animate: false } } as any); });
+        // dock on about (the typed handle): contact is aside now
+        act(() => { rendered.handle.camera.dock(about.planeID, { animate: false }); });
         expect(rendered.view.getAttribute('data-plurid-docked')).toBe(about.planeID);
         expect(element(contact.planeID).getAttribute('data-plurid-aside')).toBe('true');
         expect(element(about.planeID).hasAttribute('data-plurid-aside')).toBe(false);
 
-        // revealed: nothing is aside
-        act(() => { rendered.api.pubsub.publish({ topic: 'space.reveal', data: { animate: false } } as any); });
+        // revealed (the topic): nothing is aside
+        act(() => { rendered.api.pubsub.publish({ topic: 'space.reveal', data: { animate: false } }); });
         expect(rendered.view.hasAttribute('data-plurid-docked')).toBe(false);
         expect(element(contact.planeID).hasAttribute('data-plurid-aside')).toBe(false);
+        expect(element(contact.planeID).hasAttribute('inert')).toBe(false);
         expect(element(contact.planeID).style.opacity).not.toBe('0');
-        rendered.unmount();
+        await rendered.unmount();
+    });
+
+    it('two fingers inside the page are the space\'s: a pinch undocks it and the chrome comes back', async () => {
+        const clock = installFrameClock();
+        const rendered = await renderPlurid({
+            planes: [{ route: '/page', component: Page }],
+            view: ['/page'],
+            configuration: page,
+        });
+        const root = rendered.api.getSnapshot().space.tree[0];
+        expect(rendered.view.getAttribute('data-plurid-docked')).toBe(root.planeID);
+        const content = rendered.container.querySelector('[data-plurid-entity="PluridPlaneContent"]') as HTMLElement;
+        await gestures.pinch(content, { x: 500, y: 300 }, 300, 150);
+        await flushFrames(2);
+        expect(rendered.api.getSnapshot().space.camera.scale).toBeLessThan(0.99);
+        expect(rendered.view.hasAttribute('data-plurid-docked')).toBe(false);
+        await rendered.unmount();
+        clock.restore();
+    });
+
+    it('the docked page is followed: when its geometry changes under the camera, the camera re-docks on it', async () => {
+        const rendered = await renderPlurid({
+            planes: [{ route: '/page', component: Page }],
+            view: ['/page'],
+            configuration: page,
+        });
+        const root = rendered.api.getSnapshot().space.tree[0];
+        expect(rendered.view.getAttribute('data-plurid-docked')).toBe(root.planeID);
+        // the page becomes a declared 600 × 400 box: its dock pose is its own center now
+        act(() => {
+            rendered.api.store.dispatch(actions.space.setPlaneSize({ planeID: root.planeID, width: 600, height: 400, sizeMode: 'manual' }));
+        });
+        const state = rendered.api.getSnapshot();
+        expect(state.space.tree[0].width).toBe(600);
+        expect(rendered.view.getAttribute('data-plurid-docked')).toBe(root.planeID);
+        expect(state.space.camera.pivot.x).toBeCloseTo(root.location.translateX + 300, 6);
+        expect(state.space.camera.pivot.y).toBeCloseTo(root.location.translateY + 200, 6);
+        expect(state.space.camera.scale).toBe(1);
+        await rendered.unmount();
     });
 
     it('the space presentation is untouched: no attribute, a content-driven height, the bar in its row', async () => {
         const rendered = await renderPlurid({
             planes: [{ route: '/page', component: Page }],
             view: ['/page'],
-            configuration: { space: { navigation: { motion: { duration: 0 } } } } as any,
+            configuration: { space: { navigation: { motion: { duration: 0 } } } },
         });
         const root = rendered.api.getSnapshot().space.tree[0];
         const element = rendered.container.querySelector(`[data-plurid-plane="${root.planeID}"]`) as HTMLElement;
         expect(element.style.height).toBe('');
         expect(rendered.view.hasAttribute('data-plurid-docked')).toBe(false);
-        rendered.unmount();
+        expect(rendered.handle.camera.docked()).toBe('');
+        await rendered.unmount();
     });
 });
 // #endregion module

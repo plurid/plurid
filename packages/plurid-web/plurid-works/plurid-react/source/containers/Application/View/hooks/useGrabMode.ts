@@ -13,6 +13,8 @@
     import {
         PluridConfigurationSpaceShortcuts,
         PluridStateUI,
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ENTITY_PLANE_CONTENT,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -86,7 +88,7 @@ export const useGrabMode = (
             }
             // Inside plane content Space is the page's (it scrolls a docked page); the hold starts
             // from the view or a plane's anchor.
-            if ((event.target as Element | null)?.closest?.('[data-plurid-entity="PluridPlaneContent"]')) {
+            if ((event.target as Element | null)?.closest?.(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTENT}"]`)) {
                 return;
             }
             // Space would scroll the page / activate a focused button; the hold is a navigation gesture.

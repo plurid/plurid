@@ -1,4 +1,10 @@
 // #region imports
+    import {
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ENTITY_PLANE_CONTENT,
+        ViewSize,
+        PLANE_BAR_HEIGHT,
+    } from '@plurid/plurid-data';
     // #region libraries
     import React, {
         useMemo,
@@ -21,7 +27,6 @@
     } from '@plurid/plurid-themes';
 
     import {
-        mathematics,
     } from '@plurid/plurid-functions';
 
     import {
@@ -48,7 +53,6 @@
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
-    // import { ViewSize } from '~services/state/types/space';
     import selectors from '~services/state/selectors';
     import {
         makeGetPlaneCulling,
@@ -70,6 +74,7 @@
     import {
         cleanTemplate,
         space,
+        space as spaceEngine,
     } from '~services/engine';
     // #endregion external
 
@@ -91,6 +96,14 @@
 
 
 // #region module
+/**
+ * A plane set aside is INERT (React 19 renders the boolean attribute; the React 18 typings the
+ * workspace still carries do not know it): nothing inside it is focusable or read aloud.
+ */
+const asideAttributes = (
+    aside: boolean,
+): Record<string, unknown> => (aside ? { inert: true } : {});
+
 export interface PluridPlaneOwnProperties {
     // #region required
         // #region values
@@ -107,8 +120,7 @@ export interface PluridPlaneStateProperties {
     // whole tree — so an unrelated mutation (which structural sharing leaves this parent's
     // reference untouched) yields shallow-equal props and react-redux skips the re-render.
     stateParentPlane: TreePlane | undefined;
-    // stateViewSize: ViewSize;
-    stateViewSize: any;
+    stateViewSize: ViewSize;
     // A per-instance DERIVED boolean (`activePlaneID === this planeID`), not the raw shared
     // `activePlaneID` string: `activePlaneID` changes on every hover over ANY plane, so subscribing
     // to the string re-rendered all 40 planes on each hover. The boolean only flips for the two
@@ -198,15 +210,15 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const {
         controls,
-        width: planeWidth,
         opacity: planeOpacity,
     } = elements.plane;
 
     const showPlaneControls = controls.show;
 
-    const width = mathematics.numbers.checkIntegerNonUnit(planeWidth)
-        ? planeWidth
-        : planeWidth * stateViewSize.width;
+    // the configured size of an undeclared plane (`elements.plane.width` / `height`): one rule,
+    // the engine's, shared with the layouts and the docking
+    const configuredSize = spaceEngine.layout.configuredPlaneSize(stateConfiguration, stateViewSize);
+    const width = configuredSize.width;
 
     // Resolved in `makeMapStateToProps` off the memoized plane index (no per-render tree walk).
     const parentTreePlane = stateParentPlane;
@@ -407,17 +419,34 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
      * Space and the arrows scroll the page like on any site — unless focus is already inside.
      */
     useEffect(() => {
-        if (!stateIsDocked || typeof document === 'undefined') {
+        if (!stateIsDocked || typeof document === 'undefined' || stateConfiguration.space.docking?.focus === false) {
             return;
         }
-        const element = planeRef.current;
-        if (!element || element.contains(document.activeElement)) {
-            return;
+        let frame = 0;
+        const focus = (): boolean => {
+            const element = planeRef.current;
+            if (!element || element.contains(document.activeElement)) {
+                return true;
+            }
+            const content = element.querySelector(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTENT}"][tabindex]`) as HTMLElement | null;
+            if (!content) {
+                return false;
+            }
+            content.focus({ preventScroll: true });
+            return true;
+        };
+        // the scroller mounts with the page: a swing marks the destination docked before that
+        if (!focus() && typeof requestAnimationFrame === 'function') {
+            frame = requestAnimationFrame(() => { frame = 0; focus(); });
         }
-        const content = element.querySelector('[data-plurid-entity="PluridPlaneContent"][tabindex]') as HTMLElement | null;
-        content?.focus({ preventScroll: true });
+        return () => {
+            if (frame && typeof cancelAnimationFrame === 'function') {
+                cancelAnimationFrame(frame);
+            }
+        };
     }, [
         stateIsDocked,
+        stateConfiguration.space.docking?.focus,
     ]);
 
     /** PubSub refresh plane */
@@ -462,8 +491,6 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // Render the plane at its computed width (matches the layout's translateX spacing,
     // which is derived from the same `width`). A hardcoded 100% made every plane span the
     // full viewport, so fractional widths and multi-column layouts overlapped.
-    // A hand-resized plane renders the size the tree holds; otherwise the configured width and
-    // the content's own height.
     // A hand-resized plane renders the size the tree holds; a plane that DECLARED a size at
     // registration renders exactly that (its content scrolls inside a declared height; a
     // declared width alone keeps the content-driven height); otherwise the configured width and
@@ -471,14 +498,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const manualSize = treePlane.sizeMode === 'manual' && treePlane.width > 0;
     const declaredWidth = plane.width && plane.width > 0 ? plane.width : 0;
     const declaredHeight = plane.height && plane.height > 0 ? plane.height : 0;
-    // `elements.plane.height`: a fraction of the view height (≤ 1) or px, the height of every
-    // undeclared plane (the page presentation sets 1: view-sized pages); unset = content-driven.
-    const configuredHeightValue = elements.plane.height;
-    const configuredHeight = configuredHeightValue === undefined || configuredHeightValue <= 0
-        ? 0
-        : (mathematics.numbers.checkIntegerNonUnit(configuredHeightValue)
-            ? configuredHeightValue
-            : configuredHeightValue * stateViewSize.height);
+    const configuredHeight = configuredSize.height;
     const fixedHeightValue = declaredHeight || configuredHeight;
     const renderWidth = (manualSize ? treePlane.width : (declaredWidth || width)) + 'px';
     const renderHeight = manualSize && treePlane.height > 0
@@ -520,11 +540,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 transform,
                 // Animated relayout (FLIP): planes glide to their new placements only while the
                 // View holds the transition window open — never during a spawn or a drag.
-                // Set aside (outside the docked page's lineage): a 240 ms fade both ways.
-                transition: [
-                    stateLayoutTransition > 0 ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1)` : '',
-                    'opacity 240ms ease',
-                ].filter(Boolean).join(', '),
+                // Animated relayout only: the aside fade is the stylesheet's (`[data-plurid-aside]`).
+                transition: stateLayoutTransition > 0
+                    ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1), opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear ${stateAside ? 'var(--plurid-dock-fade, 240ms)' : '0s'}`
+                    : undefined,
                 opacity: stateAside ? 0 : isolatePlaneOpacity,
                 pointerEvents: stateAside ? 'none' : isolatePointerEvents,
             }}
@@ -539,6 +558,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-entity={PLURID_ENTITY_PLANE}
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
             data-plurid-aside={stateAside ? 'true' : undefined}
+            data-plurid-page={stateIsDocked ? 'docked' : undefined}
+            {...asideAttributes(stateAside)}
             backface={stateConfiguration.elements.plane.backface}
             depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
@@ -554,6 +575,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                             mouseOver={mouseOver}
                             bridgeLength={treePlane.bridgeLength}
                             bridgeSide={treePlane.bridgeSide}
+                            raise={pagePresentation ? PLANE_BAR_HEIGHT : 0}
                         />
                     )}
 

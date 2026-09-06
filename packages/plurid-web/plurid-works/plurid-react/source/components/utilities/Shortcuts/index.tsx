@@ -58,6 +58,8 @@ export interface PluridShortcutsStateProperties {
     theme: Theme;
     visible: boolean;
     shortcuts?: PluridConfigurationSpaceShortcuts;
+    presentation: 'space' | 'page';
+    grabMode: boolean;
 }
 
 export interface PluridShortcutsDispatchProperties {
@@ -84,6 +86,8 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
         theme,
         visible,
         shortcuts,
+        presentation,
+        grabMode,
         setVisible,
     } = properties;
     // #endregion properties
@@ -97,10 +101,12 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
 
     // #region state
     const groups = useMemo(
-        () => describeShortcuts(shortcuts),
+        () => describeShortcuts(shortcuts, { presentation, grabMode }),
         [
             JSON.stringify(shortcuts?.keymap || null),
             JSON.stringify(shortcuts?.disabled ?? null),
+            presentation,
+            grabMode,
         ],
     );
     // #endregion state
@@ -242,6 +248,8 @@ const mapStateToProperties = (
     theme: selectors.themes.getGeneralTheme(state),
     visible: selectors.ui.getShortcutsOverlayVisible(state),
     shortcuts: selectors.configuration.getConfiguration(state).space.shortcuts,
+    presentation: selectors.configuration.getConfiguration(state).space.presentation ?? 'space',
+    grabMode: !!state.ui?.grabMode,
 });
 
 

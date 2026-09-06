@@ -14,6 +14,9 @@
         isShortcutDisabled,
         labelForCode,
     } from '../registry';
+    import {
+        SHORTCUTS,
+    } from '../index';
     // #endregion external
 // #endregion imports
 
@@ -63,5 +66,25 @@ describe('shortcut registry', () => {
         expect(labelForCode('Period')).toBe('.');
         expect(labelForCode('ShiftLeft')).toBe('Shift');
     });
+
+describe('the dispatcher and the data table', () => {
+    it('every dispatcher binding is in the table with the same code, and a `when` marks the presentation-only ones', () => {
+        const table = new Map(PLURID_SHORTCUTS.map((definition) => [definition.id, definition]));
+        for (const binding of SHORTCUTS) {
+            const definition = table.get(binding.id);
+            expect({ id: binding.id, code: definition?.code }).toEqual({ id: binding.id, code: binding.code });
+        }
+        expect(table.get('dock')!.when).toBe('page');
+    });
+
+    it('the help is described for a presentation: the page-only bindings show on a page, not in the space', () => {
+        const ids = (context: Parameters<typeof describeShortcuts>[1]) => describeShortcuts(undefined, context).flatMap((group) => group.items.map((item) => item.id));
+        expect(ids({ presentation: 'page' })).toContain('dock');
+        expect(ids({ presentation: 'space' })).not.toContain('dock');
+        expect(ids({ presentation: 'space', grabMode: false })).not.toContain('exitGrabMode');
+        expect(ids({})).toContain('dock');
+    });
+});
+
 });
 // #endregion module

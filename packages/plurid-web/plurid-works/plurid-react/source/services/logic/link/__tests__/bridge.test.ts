@@ -32,6 +32,11 @@ describe('bridgeGeometry()', () => {
         expect(bridgeGeometry(anchor, { x: 880, y: 54 }, 160, 'end').angle).toBeCloseTo(-11.31, 2);
     });
 
+    it('a zero or negative bridge length is no bridge: nothing to stretch, nothing to tilt', () => {
+        expect(bridgeGeometry({ x: 0, y: 0 }, { x: 0, y: -40 }, 0)).toEqual({ reach: 0, angle: 0 });
+        expect(bridgeGeometry({ x: 0, y: 0 }, { x: 0, y: -40 }, -160)).toEqual({ reach: 0, angle: 0 });
+    });
+
     it('ignores a horizontal displacement (it would leave the child\'s plane)', () => {
         expect(bridgeGeometry(anchor, { x: 0, y: 86 }, 160)).toEqual({ reach: 160, angle: 0 });
     });

@@ -8,26 +8,41 @@
         TreePlane,
         defaultConfiguration,
         PluridConfiguration,
+        PluridPartialConfiguration,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
     import {
-        reducer,
         actions,
     } from '~services/state/modules/space';
 
+    import {
+        encodeCameraViewpoint,
+    } from '~services/logic/viewpoint';
+
+    import {
+        TEST_VIEW as view,
+        treePlane,
+        viewSizedSheet,
+        configurationWith,
+        pageConfiguration,
+    } from '../../../../testing/fixtures';
+    import {
+        makeSpaceStore,
+        motionSpy,
+    } from '../../../../testing/store';
+    // #endregion external
+
+
+    // #region internal
     import {
         cameraCommand,
         resolveCameraTarget,
         homeTarget,
     } from '../index';
-
-    import {
-        encodeCameraViewpoint,
-    } from '~services/logic/viewpoint';
-    // #endregion external
+    // #endregion internal
 // #endregion imports
 
 
@@ -37,89 +52,46 @@ const {
     camera: cameraEngine,
 } = interaction;
 
-const view = { width: 1000, height: 600 };
-
+/** Two roots side by side, as a layout places them. */
 const plane = (
     planeID: string,
     translateX = 100,
-): TreePlane => ({
-    sourceID: planeID,
-    planeID,
-    route: '/' + planeID,
-    routeDivisions: {} as any,
-    width: 400,
-    height: 300,
-    location: {
-        translateX,
-        translateY: 50,
-        translateZ: 0,
-        rotateX: 0,
-        rotateY: 0,
-    },
-    show: true,
-});
+): TreePlane => treePlane(planeID, { location: { translateX, translateY: 50 } });
 
-
+/** The command tests' store: two roots, a spy for the motion controller. */
 const makeStore = (
     configuration: PluridConfiguration = defaultConfiguration,
+    tree: TreePlane[] = [plane('a'), plane('b', 700)],
 ) => {
-    let space = reducer(reducer(undefined, { type: '@@init' }), actions.setViewSize(view));
-    space = reducer(space, actions.restoreArrangement({ tree: [plane('a'), plane('b', 700)], links: [] }));
-    const getState = () => ({ space, configuration } as any);
-    const dispatched: any[] = [];
-    const dispatch: any = (action: any) => {
-        if (typeof action === 'function') {
-            return action(dispatch, getState, extra);
-        }
-        dispatched.push(action);
-        space = reducer(space, action);
-        return action;
-    };
-    const tweens: any[] = [];
-    const extra = {
-        motion: {
-            tweenTo: (target: any, options: any) => { tweens.push({ target, options }); },
-            cancel: () => {},
-            fling: () => {},
-            isActive: () => false,
-            reducedMotion: () => false,
-        },
-    };
-    return { dispatch, getState, dispatched, tweens, extra, space: () => space };
+    const store = makeSpaceStore(configuration, tree);
+    const tweens = motionSpy(store);
+    return { ...store, tweens };
 };
 
-const withNavigation = (navigation: Record<string, unknown>): PluridConfiguration => ({
-    ...defaultConfiguration,
-    space: {
-        ...defaultConfiguration.space,
-        navigation: {
-            ...defaultConfiguration.space.navigation,
-            ...navigation,
-        } as any,
-    },
-});
+const withNavigation = (
+    navigation: NonNullable<PluridPartialConfiguration['space']>['navigation'],
+): PluridConfiguration => configurationWith({ space: { navigation } });
 
 
 describe('cameraCommand()', () => {
     it('tweens through the motion controller when animated, jumps otherwise', () => {
         const store = makeStore();
-        cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: true })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: true }));
         expect(store.tweens).toHaveLength(1);
-        expect(store.dispatched.some((action) => action.type === 'space/setCamera')).toBe(false);
+        expect(store.cameraCommits()).toHaveLength(0);
         // the framed plane's center is the pivot
         expect(store.tweens[0].target.pivot.x).toBeCloseTo(300, 6);
         expect(store.tweens[0].target.pivot.y).toBeCloseTo(200, 6);
 
-        cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: false })(store.dispatch, store.getState, store.extra);
-        expect(store.dispatched.some((action) => action.type === 'space/setCamera')).toBe(true);
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: false }));
+        expect(store.cameraCommits()).toHaveLength(1);
         expect(store.space().camera.pivot.x).toBeCloseTo(300, 6);
     });
 
     it('jumps when no motion controller is registered (no View mounted)', () => {
-        const store = makeStore();
-        cameraCommand({ kind: 'reset' }, { animate: true })(store.dispatch, store.getState, { motion: undefined });
-        expect(store.tweens).toHaveLength(0);
-        expect(store.dispatched.some((action) => action.type === 'space/setCamera')).toBe(true);
+        const store = makeSpaceStore(defaultConfiguration, [plane('a'), plane('b', 700)]);
+        store.dispatch(cameraCommand({ kind: 'reset' }, { animate: true }));
+        expect(store.cameraCommits()).toHaveLength(1);
     });
 
     it('home is the identity camera by default, the configured viewpoint otherwise, the runtime home first', () => {
@@ -134,7 +106,7 @@ describe('cameraCommand()', () => {
 
         // `setHome` without a viewpoint captures the current camera
         configured.dispatch(actions.applyCameraDelta({ yaw: 10 }));
-        cameraCommand({ kind: 'delta', delta: { pitch: 5 } }, { animate: false })(configured.dispatch, configured.getState, configured.extra);
+        configured.dispatch(cameraCommand({ kind: 'delta', delta: { pitch: 5 } }, { animate: false }));
         configured.dispatch(actions.setHome(encodeCameraViewpoint(configured.space().camera, view, 2)));
         const runtime = resolveCameraTarget({ kind: 'home' }, configured.getState());
         expect(runtime!.yaw).toBeCloseTo(10, 6);
@@ -143,29 +115,29 @@ describe('cameraCommand()', () => {
 
     it('presets resolve from the configuration; unknown names do nothing', () => {
         const store = makeStore(withNavigation({ presets: { side: '0,90,0,0,0,1' } }));
-        cameraCommand({ kind: 'preset', name: 'side' }, { animate: true })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'preset', name: 'side' }, { animate: true }));
         expect(store.tweens).toHaveLength(1);
         expect(store.tweens[0].target.yaw).toBeCloseTo(90, 6);
-        cameraCommand({ kind: 'preset', name: 'nope' }, { animate: true })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'preset', name: 'nope' }, { animate: true }));
         expect(store.tweens).toHaveLength(1);
     });
 
     it('bookmarks: save captures the camera (v2), go tweens to it, remove deletes it', () => {
         const store = makeStore();
         store.dispatch(actions.applyCameraDelta({ yaw: 33, pitch: -12, zoom: { factor: 1.5 } }));
-        cameraCommand({ kind: 'bookmark', name: 'desk', action: 'save' })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'bookmark', name: 'desk', action: 'save' }));
         expect(store.space().bookmarks.desk).toMatch(/^v2\|/);
 
         store.dispatch(actions.setCamera(cameraEngine.identityCamera(view, store.space().camera.perspective)));
-        cameraCommand({ kind: 'bookmark', name: 'desk' }, { animate: true })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'bookmark', name: 'desk' }, { animate: true }));
         expect(store.tweens).toHaveLength(1);
         expect(store.tweens[0].target.yaw).toBeCloseTo(33, 2);
         expect(store.tweens[0].target.pitch).toBeCloseTo(-12, 2);
         expect(store.tweens[0].target.scale).toBeCloseTo(1.5, 2);
 
-        cameraCommand({ kind: 'bookmark', name: 'desk', action: 'remove' })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'bookmark', name: 'desk', action: 'remove' }));
         expect(store.space().bookmarks.desk).toBeUndefined();
-        cameraCommand({ kind: 'bookmark', name: 'desk' }, { animate: true })(store.dispatch, store.getState, store.extra);
+        store.dispatch(cameraCommand({ kind: 'bookmark', name: 'desk' }, { animate: true }));
         expect(store.tweens).toHaveLength(1);
     });
 
@@ -189,23 +161,18 @@ describe('cameraCommand()', () => {
             expect(projected.y).toBeLessThanOrEqual(view.height + 1);
         }
     });
+});
+
 
 describe('the page presentation: framing docks', () => {
-    const page: PluridConfiguration = {
-        ...defaultConfiguration,
-        space: { ...defaultConfiguration.space, presentation: 'page' },
-    };
-    const sheet = (planeID: string, translateY = 0): TreePlane => ({
-        ...plane(planeID, 0),
-        width: view.width,
-        height: view.height,
-        location: { translateX: 0, translateY, translateZ: 0, rotateX: 0, rotateY: 0 },
-    });
-    const makePageStore = () => {
-        const store = makeStore(page);
-        store.dispatch(actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
-        return store;
-    };
+    /** Two pages down the column. */
+    const pages = () => [
+        viewSizedSheet('p1'),
+        viewSizedSheet('p2', { location: { translateY: view.height + 50 } }),
+    ];
+    const makePageStore = (
+        configuration = pageConfiguration(),
+    ) => makeStore(configuration, pages());
 
     it('frame resolves to the dock pose (scale 1, the sheet exactly on the view), not a fitted frame', () => {
         const store = makePageStore();
@@ -234,6 +201,14 @@ describe('the page presentation: framing docks', () => {
         expect(resolveCameraTarget({ kind: 'dock' }, store.getState())!.pivot.y).toBeCloseTo(view.height + 50 + view.height / 2, 6);
     });
 
+    it('the reveal pose is the configured one', () => {
+        const store = makePageStore(pageConfiguration({ space: { docking: { reveal: { scale: 0.5, pitch: 20, yaw: 15 } } } }));
+        const reveal = resolveCameraTarget({ kind: 'reveal' }, store.getState())!;
+        expect(reveal.scale).toBeCloseTo(0.5, 9);
+        expect(reveal.pitch).toBeCloseTo(20, 9);
+        expect(reveal.yaw).toBeCloseTo(15, 9);
+    });
+
     it('a swing that lands docked records its destination; a reveal records none', () => {
         const store = makePageStore();
         store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
@@ -242,10 +217,15 @@ describe('the page presentation: framing docks', () => {
         expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type).map((action) => action.payload)).toEqual(['p2', '']);
     });
 
+    it('docking.chrome shown: the destination is still recorded at the commit (the selector is what ignores it)', () => {
+        const store = makePageStore(pageConfiguration({ space: { docking: { chrome: 'shown' } } }));
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
+        expect(store.tweens).toHaveLength(1);
+        expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type).map((action) => action.payload)).toEqual(['p2']);
+    });
+
     it('docking.motion instant: a move that lands docked jumps, the reveal still swings', () => {
-        const instant: PluridConfiguration = { ...page, space: { ...page.space, docking: { motion: 'instant', chrome: 'hidden' } } };
-        const store = makeStore(instant);
-        store.dispatch(actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
+        const store = makePageStore(pageConfiguration({ space: { docking: { motion: 'instant' } } }));
         store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
         expect(store.tweens).toHaveLength(0);
         expect(store.space().camera.scale).toBe(1);
@@ -255,7 +235,14 @@ describe('the page presentation: framing docks', () => {
         store.dispatch(cameraCommand({ kind: 'reveal' }));
         expect(store.tweens).toHaveLength(1);
     });
-});
 
+    it('a jump cancels a running motion before it commits (a tween frame never overwrites it)', () => {
+        const store = makePageStore(pageConfiguration({ space: { docking: { motion: 'instant' } } }));
+        let cancelled = 0;
+        store.extra.motion!.cancel = () => { cancelled += 1; };
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
+        expect(cancelled).toBe(1);
+        expect(store.cameraCommits()).toHaveLength(1);
+    });
 });
 // #endregion module

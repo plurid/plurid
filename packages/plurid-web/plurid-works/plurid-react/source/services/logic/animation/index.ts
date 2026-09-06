@@ -46,14 +46,22 @@ export interface NavigatePlaneOptions {
 export const navigatePlane = (
     plane: TreePlane,
     options: NavigatePlaneOptions = {},
-): CameraThunk => (dispatch, getState) => {
+): CameraThunk => (dispatch) => {
     const {
         deisolate = true,
         animate = true,
         awaitMeasure = false,
     } = options;
 
-    dispatch(framePlaneNode(plane, animate, { awaitMeasure }) as any);
+    // Focus follows the landing (the motion controller's settle), not a timer: an interrupted
+    // move never steals the focus later, and an instant dock focuses at once. In the page
+    // presentation the docked page focuses its own scroller as well (`Plane`, `docking.focus`).
+    dispatch(framePlaneNode(plane, animate, {
+        awaitMeasure,
+        onSettle: () => {
+            focusPluridPlaneAnchor(plane.planeID);
+        },
+    }) as any);
 
     if (deisolate) {
         dispatch(actions.space.setSpaceField({
@@ -67,20 +75,6 @@ export const navigatePlane = (
         value: plane.planeID,
     }));
 
-    // an instant dock (`space.docking.motion`) lands in the same frame: focus at once
-    const configuration = getState().configuration;
-    const instant = configuration.space.presentation === 'page' && configuration.space.docking?.motion === 'instant';
-    const duration = animate && !instant
-        ? (configuration.space.navigation?.motion?.duration ?? 380)
-        : 0;
-    const focus = () => {
-        focusPluridPlaneAnchor(plane.planeID);
-    };
-    if (duration > 0) {
-        setTimeout(focus, duration + 16);
-    } else {
-        focus();
-    }
 };
 
 

@@ -54,7 +54,6 @@ export interface PluridStateShortcuts {
 export interface PluridStateSpace {
     loading: boolean;
     resolvedLayout: boolean;
-    animatedTransform: boolean;
     transformTime: number;
     /**
      * The camera proper — the single source of truth for where the viewer is. Every camera

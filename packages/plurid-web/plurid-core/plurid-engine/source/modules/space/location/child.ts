@@ -4,6 +4,8 @@
         TreePlane,
         TreePlaneLocation,
         LinkCoordinates,
+        PLANE_BAR_HEIGHT,
+        BRIDGE_STRIP_HEIGHT,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -17,6 +19,17 @@ export const DEFAULT_BRIDGE_LENGTH = 100;
 export const DEFAULT_PLANE_ANGLE = 90;
 /** The width a mirrored child is placed with before it has been measured. */
 export const FALLBACK_CHILD_WIDTH = 400;
+
+/**
+ * Where a spawned plane's top sits relative to its link's midline (`TreePlane.bridgeOffset`): the
+ * plane's top is the top of its controls bar, and the bridge — one strip, centred on the link's
+ * line — is flush with it. In the space presentation the bar is the plane's first row, so the plane
+ * hangs half a strip above the link; on a page the bar hangs `PLANE_BAR_HEIGHT` above the sheet,
+ * so the sheet sits that much lower (the user's rule, 2026-09-06).
+ */
+export const resolveBridgeOffset = (
+    presentation: 'space' | 'page' | undefined,
+): number => (presentation === 'page' ? PLANE_BAR_HEIGHT : 0) - BRIDGE_STRIP_HEIGHT / 2;
 
 /** The edge a child's bridge leaves from: its left edge (`start`) or its right edge (`end`). */
 export type BridgeSide =
@@ -50,12 +63,15 @@ export const childLocation = (
     bridgeLength: number = DEFAULT_BRIDGE_LENGTH,
     planeAngle: number = DEFAULT_PLANE_ANGLE,
     bridgeSide: BridgeSide = 'start',
-    childWidth: number = FALLBACK_CHILD_WIDTH,
+    /** 0 (unmeasured) falls back to `FALLBACK_CHILD_WIDTH` */
+    childWidth = 0,
+    /** the plane's top relative to the link's midline (`resolveBridgeOffset`); 0 puts the top on the line */
+    bridgeOffset = 0,
 ): TreePlaneLocation => {
     const parentAngle = parent.rotateY * DEG;
     const linkX = parent.translateX + linkCoordinates.x * Math.cos(parentAngle);
     const linkZ = parent.translateZ - linkCoordinates.x * Math.sin(parentAngle);
-    const linkY = parent.translateY + linkCoordinates.y;
+    const linkY = parent.translateY + linkCoordinates.y + bridgeOffset;
     const bridgeAngle = (parent.rotateY + planeAngle) * DEG;
     const reach = bridgeSide === 'end'
         ? -(bridgeLength + (childWidth || FALLBACK_CHILD_WIDTH))
@@ -105,7 +121,6 @@ export const resolveBridgeSide = (
  */
 export const resolvePlaneAngle = (
     depth: number,
-    _siblingIndex: number,
     configured: number = DEFAULT_PLANE_ANGLE,
     fan: PlaneFan = 'fixed',
     direction: PlaneFanDirection = 'backward',
@@ -152,6 +167,7 @@ export const recomputeSubtree = (
                 child.planeAngle ?? DEFAULT_PLANE_ANGLE,
                 child.bridgeSide ?? 'start',
                 child.width,
+                child.bridgeOffset ?? 0,
             );
             if (!sameLocation(location, child.location)) {
                 relocated = {

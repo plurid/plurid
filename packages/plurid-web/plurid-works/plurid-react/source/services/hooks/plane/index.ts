@@ -49,6 +49,13 @@
         PluridPlaneDetails,
     } from './context';
     // #endregion internal
+    import {
+        getDockedPlaneID,
+        makeGetIsPlaneAside,
+    } from '~services/state/modules/space/selectors';
+    import {
+        cameraCommand,
+    } from '~services/logic/camera';
 // #endregion imports
 
 
@@ -141,6 +148,16 @@ export interface PluridPlaneLens {
      * Frame this plane.
      */
     frame: () => void;
+    /** The page presentation: `'page'` when the space presents as pages. */
+    presentation: 'space' | 'page';
+    /** This plane is the page the camera is docked on (or docking on). */
+    docked: boolean;
+    /** This plane is set aside: outside the docked page's lineage, faded and inert. */
+    aside: boolean;
+    /** Dock the camera on this plane (the page presentation). */
+    dock: () => void;
+    /** Reveal the space from this plane (the page presentation). */
+    reveal: () => void;
 }
 
 
@@ -227,6 +244,10 @@ export const usePluridPlane = (): PluridPlaneLens => {
             ? getTreePlane(state, planeID)?.sizeMode
             : undefined) ?? 'measured',
     );
+    const presentation = useEngineSelector((state: AppState) => state.configuration?.space?.presentation ?? 'space');
+    const docked = useEngineSelector((state: AppState) => !!planeID && getDockedPlaneID(state) === planeID);
+    const getIsAside = useMemo(() => makeGetIsPlaneAside(), []);
+    const aside = useEngineSelector((state: AppState) => getIsAside(state, planeID));
     const culled = useEngineSelector(
         (state: AppState): 'visible' | 'hidden' | 'frozen' => {
             if (planeID === undefined || !state.space.culled) {
@@ -258,6 +279,14 @@ export const usePluridPlane = (): PluridPlaneLens => {
                 dispatch(framePlaneByID(planeID) as any);
             }
         },
+        dock: () => {
+            if (planeID !== undefined) {
+                dispatch(cameraCommand({ kind: 'dock', planeID }, { animate: true }) as any);
+            }
+        },
+        reveal: () => {
+            dispatch(cameraCommand({ kind: 'reveal' }, { animate: true }) as any);
+        },
     }), [
         dispatch,
         planeID,
@@ -265,6 +294,9 @@ export const usePluridPlane = (): PluridPlaneLens => {
 
     return {
         planeID,
+        presentation,
+        docked,
+        aside,
         active,
         selected,
         isolation,

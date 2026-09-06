@@ -44,6 +44,12 @@ export interface PluridApplicationHandle extends PluridApi {
         setHome: (viewpoint?: string) => void;
         preset: (name: string, options?: CameraMotionOptions) => void;
         bookmark: (name: string, action?: PluridBookmarkAction, options?: CameraMotionOptions) => void;
+        /** The page presentation: the docked page's id (`''` when the camera is off every page). */
+        docked: () => string;
+        /** Dock on a page: the named one, else the docked one, else the page nearest the view center. */
+        dock: (planeID?: string, options?: CameraMotionOptions) => void;
+        /** Reveal the space from the docked page. */
+        reveal: (options?: CameraMotionOptions) => void;
     };
     selection: {
         get: () => string[];

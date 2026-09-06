@@ -53,6 +53,22 @@ const resolveTheme = (
 }
 
 
+/** The three page defaults win over a value equal to the space default (`pagePresentationDefaults`). */
+const applyPageDefaults = (
+    configuration: PluridConfiguration,
+) => {
+    if (configuration.space.fadeInTime === defaultConfiguration.space.fadeInTime) {
+        configuration.space.fadeInTime = pagePresentationDefaults.space!.fadeInTime as number;
+    }
+    if (configuration.space.opaque === defaultConfiguration.space.opaque) {
+        configuration.space.opaque = pagePresentationDefaults.space!.opaque as boolean;
+    }
+    if (configuration.elements.plane.height === defaultConfiguration.elements.plane.height) {
+        configuration.elements.plane.height = pagePresentationDefaults.elements!.plane!.height as number;
+    }
+};
+
+
 export const merge = (
     configuration?: PluridPartialConfiguration,
     target?: PluridConfiguration,
@@ -60,13 +76,16 @@ export const merge = (
     // The page presentation changes three DEFAULTS (no fade-in, no gradient, view-sized planes);
     // they are layered under the target and the partial, so a host's own values still win.
     const presentation = configuration?.space?.presentation ?? target?.space?.presentation;
-    const base: PluridConfiguration = presentation === 'page'
+    const page = presentation === 'page';
+    const base: PluridConfiguration = page
         ? objects.merge(objects.clone(defaultConfiguration), objects.clone(pagePresentationDefaults)) as PluridConfiguration
         : objects.clone(defaultConfiguration);
-    const targetConfiguration: PluridConfiguration = {
-        ...base,
-        ...objects.clone(target || {}),
-    };
+    const targetConfiguration = objects.merge(base, objects.clone(target || {})) as PluridConfiguration;
+    if (page) {
+        // A full target (a live reconfiguration carries the whole current configuration) holds the
+        // SPACE defaults for the three page fields; a value still at that default is not a choice.
+        applyPageDefaults(targetConfiguration);
+    }
 
     if (!configuration) {
         return targetConfiguration;
@@ -107,7 +126,6 @@ export const definePluridConfiguration = (
     // #region global
     const global: PluridPartialConfiguration['global'] = {};
     if (flat.theme !== undefined) { global.theme = flat.theme; }
-    if (flat.micro !== undefined) { global.micro = flat.micro; }
     if (flat.transparentUI !== undefined) { global.transparentUI = flat.transparentUI; }
     if (flat.language !== undefined) { global.language = flat.language; }
     if (Object.keys(global).length > 0) { partial.global = global; }
@@ -120,7 +138,7 @@ export const definePluridConfiguration = (
     if (flat.perspective !== undefined) { space.perspective = flat.perspective; }
     if (flat.center !== undefined) { space.center = flat.center; }
     if (flat.presentation !== undefined) { space.presentation = flat.presentation; }
-    if (flat.docking !== undefined) { space.docking = { ...space.docking, ...flat.docking }; }
+    if (flat.docking !== undefined) { space.docking = flat.docking; }
     if (flat.firstPerson !== undefined) { space.firstPerson = flat.firstPerson; }
     if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
     if (flat.undo !== undefined) { space.undo = flat.undo; }
@@ -140,15 +158,12 @@ export const definePluridConfiguration = (
     if (flat.camera !== undefined) { space.camera = flat.camera; }
     if (flat.transformOrigin !== undefined) { space.transformOrigin = flat.transformOrigin; }
     if (flat.transformMode !== undefined) { space.transformMode = flat.transformMode; }
-    if (flat.transformMultimode !== undefined) { space.transformMultimode = flat.transformMultimode; }
-    if (flat.transformTouch !== undefined) { space.transformTouch = flat.transformTouch; }
     if (flat.cullingDistance !== undefined) {
-        space.cullingDistance = flat.cullingDistance;
         space.culling = { ...(space.culling || {}), distance: flat.cullingDistance };
     }
     if (flat.fadeInTime !== undefined) { space.fadeInTime = flat.fadeInTime; }
-    if (flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
-        space.bridge = {};
+    if (flat.bridge !== undefined || flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
+        space.bridge = { ...(flat.bridge || {}) };
         if (flat.bridgeLength !== undefined) { space.bridge.length = flat.bridgeLength; }
         if (flat.bridgePlaneAngle !== undefined) { space.bridge.planeAngle = flat.bridgePlaneAngle; }
     }
@@ -168,6 +183,7 @@ export const definePluridConfiguration = (
     if (Object.keys(plane).length > 0) { elements.plane = plane; }
     if (flat.toolbar !== undefined) { elements.toolbar = { show: flat.toolbar }; }
     if (flat.viewcube !== undefined) { elements.viewcube = { show: flat.viewcube }; }
+    if (flat.dockRail !== undefined) { elements.dockRail = { show: flat.dockRail }; }
     if (flat.minimap !== undefined) { elements.minimap = { show: flat.minimap }; }
     if (Object.keys(elements).length > 0) { partial.elements = elements; }
     // #endregion elements

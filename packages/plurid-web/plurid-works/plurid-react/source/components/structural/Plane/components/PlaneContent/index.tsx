@@ -20,7 +20,6 @@
 // #endregion imports
 
 
-
 // #region module
 export interface PluridPlaneContentOwnProperties {
     // updatePlaneSize: any;
@@ -47,30 +46,6 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     // #endregion references
 
 
-    // #region effects
-    // useEffect(() => {
-    //     if (planeContentElement.current) {
-    //         // TODO
-    //         // Implement a resize observer
-
-    //         const {
-    //             offsetWidth,
-    //             offsetHeight,
-    //         } = planeContentElement.current;
-
-    //         const size = {
-    //             width: offsetWidth,
-    //             height: offsetHeight
-    //         }
-    //         updatePlaneSize(size)
-    //         // console.log(offsetWidth, offsetHeight);
-    //     }
-    // }, [
-    //     planeContentElement.current,
-    // ]);
-    // #endregion effects
-
-
     // console.log('render content');
 
     // #region render
@@ -87,7 +62,6 @@ const PluridPlaneContent: React.FC<PluridPlaneContentOwnProperties> = (
     // #endregion render
 }
 // #endregion module
-
 
 
 // #region exports

@@ -14,6 +14,8 @@
         PluridConfigurationSpace,
         CameraDelta,
         Vec3,
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ENTITY_PLANE_CONTROLS,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -165,6 +167,13 @@ export const usePointerGestures = (
     spaceConfigRef.current = spaceConfiguration;
 
     const pointers = useRef<Map<number, { x: number; y: number; type: string }>>(new Map());
+    /**
+     * Touches the intent table DECLINED (one finger inside a page's content is the page's: the
+     * browser scrolls it), remembered while they are down so a SECOND finger can turn them into a
+     * pinch — two fingers are the space's, on a page the pinch that reveals it. A touch the browser
+     * has already taken for a scroll (a `pointercancel`) is forgotten with it.
+     */
+    const declined = useRef<Map<number, { x: number; y: number; type: string }>>(new Map());
     const gesture = useRef<Gesture | null>(null);
     const suppressContextMenu = useRef(false);
 
@@ -572,6 +581,42 @@ export const usePointerGestures = (
                 return;
             }
 
+            // A second finger while a declined one is still down: the two are a pinch from here.
+            if (event.pointerType === 'touch' && declined.current.size > 0 && !declined.current.has(event.pointerId)) {
+                const [firstID, first] = Array.from(declined.current.entries())[0];
+                declined.current.clear();
+                motion.cancel();
+                pointers.current.clear();
+                pointers.current.set(firstID, first);
+                pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY, type: event.pointerType });
+                const pinch: Gesture = {
+                    intent: 'pan',
+                    button: 0,
+                    pointerType: event.pointerType,
+                    primary: firstID,
+                    startX: first.x,
+                    startY: first.y,
+                    lastX: first.x,
+                    lastY: first.y,
+                    dragging: true,
+                    samples: [],
+                    historyOpen: false,
+                    dragDepth: 0,
+                    pinch: null,
+                };
+                pinch.pinch = twoPointers();
+                gesture.current = pinch;
+                setNavDragging(true);
+                for (const id of [firstID, event.pointerId]) {
+                    try {
+                        element.setPointerCapture(id);
+                    } catch (_) { /* capture unsupported */ }
+                }
+                trace({ phase: 'down', intent: 'pinch', pointerType: event.pointerType, button: 0, pointerId: event.pointerId });
+                event.preventDefault();
+                return;
+            }
+
             // A touch that the browser will scroll natively still reaches us; the intent table
             // decides whether the engine wants it.
             const context = contextFor(event);
@@ -579,6 +624,9 @@ export const usePointerGestures = (
             onPress?.();
             trace({ phase: 'down', intent, pointerType: context.pointerType, button: context.button, onPlane: context.onPlane, onControl: context.onControl, onEditable: context.onEditable, pointerId: event.pointerId });
             if (intent === 'none') {
+                if (event.pointerType === 'touch') {
+                    declined.current.set(event.pointerId, { x: event.clientX, y: event.clientY, type: event.pointerType });
+                }
                 return;
             }
 
@@ -613,6 +661,12 @@ export const usePointerGestures = (
         const onPointerMove = (event: PointerEvent) => {
             const current = gesture.current;
             if (!current || !pointers.current.has(event.pointerId)) {
+                const waiting = declined.current.get(event.pointerId);
+                if (waiting) {
+                    waiting.x = event.clientX;
+                    waiting.y = event.clientY;
+                    return;
+                }
                 trace({ phase: 'move-ignored', hasGesture: !!current, known: pointers.current.has(event.pointerId), pointerId: event.pointerId });
                 return;
             }
@@ -666,6 +720,7 @@ export const usePointerGestures = (
         };
 
         const onPointerEnd = (event: PointerEvent) => {
+            declined.current.delete(event.pointerId);
             const current = gesture.current;
             if (!current) {
                 pointers.current.delete(event.pointerId);
@@ -703,6 +758,7 @@ export const usePointerGestures = (
         };
 
         const onWindowPointerEnd = (event: PointerEvent) => {
+            declined.current.delete(event.pointerId);
             if (gesture.current && pointers.current.has(event.pointerId)) {
                 onPointerEnd(event);
             }
@@ -745,7 +801,7 @@ export const usePointerGestures = (
             // CONTENT is the page's — a word selection — never a camera move (2026-09-05).
             if (
                 planeElement
-                && !(event.target as Element | null)?.closest?.('[data-plurid-entity="PluridPlaneControls"]')
+                && !(event.target as Element | null)?.closest?.(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTROLS}"]`)
             ) {
                 return;
             }

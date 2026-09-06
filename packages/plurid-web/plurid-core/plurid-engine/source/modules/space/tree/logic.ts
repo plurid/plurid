@@ -40,6 +40,7 @@
     import {
         childLocation,
         resolvePlaneAngle,
+        resolveBridgeOffset,
         resolveBridgeSide,
         recomputeSubtree,
         planeDepth,
@@ -760,11 +761,9 @@ export const updateTreeWithNewPlane = <C>(
     // fanned by generation so nested spawns never turn back-to-front.
     const bridgeLength = configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH;
     const depth = planeDepth(tree, parentPlaneID) + 1;
-    const siblingIndex = parentPlane.children ? parentPlane.children.length : 0;
     const direction = configuration.space.bridge?.direction ?? 'backward';
     const planeAngle = resolvePlaneAngle(
         depth,
-        siblingIndex,
         configuration.space.bridge?.planeAngle ?? DEFAULT_PLANE_ANGLE,
         configuration.space.bridge?.fan ?? 'fixed',
         direction,
@@ -772,6 +771,7 @@ export const updateTreeWithNewPlane = <C>(
     const bridgeSide = configuration.space.bridge?.keepBehind
         ? resolveBridgeSide(planeAngle, direction)
         : 'start';
+    const bridgeOffset = resolveBridgeOffset(configuration.space.presentation);
 
     const updatedTreePlane: TreePlane = {
         ...treePlane,
@@ -783,10 +783,12 @@ export const updateTreeWithNewPlane = <C>(
             planeAngle,
             bridgeSide,
             treePlane.width || options.fallbackWidth,
+            bridgeOffset,
         ),
         bridgeLength,
         planeAngle,
         bridgeSide,
+        bridgeOffset,
         linkCoordinates,
         ...(options.linkID ? { spawnedByLinkID: options.linkID } : {}),
     };
@@ -848,6 +850,7 @@ export const updateLinkCoordinates = (
             plane.planeAngle ?? DEFAULT_PLANE_ANGLE,
             plane.bridgeSide ?? 'start',
             plane.width,
+            plane.bridgeOffset ?? 0,
         ),
     });
 

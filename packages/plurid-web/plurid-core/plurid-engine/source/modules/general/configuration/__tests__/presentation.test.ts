@@ -1,4 +1,7 @@
 // #region imports
+    import {
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
     // #region external
     import {
         definePluridConfiguration,
@@ -33,5 +36,19 @@ describe('the page presentation defaults', () => {
         const nested = merge({ space: { presentation: 'page' } });
         expect(nested.space.fadeInTime).toBe(0);
     });
+
+    it('a runtime switch to the page presentation (a full target at the space defaults) gets the page defaults; explicit values still win', () => {
+        const live = merge(undefined, undefined);
+        expect(live.space.fadeInTime).toBe(defaultConfiguration.space.fadeInTime);
+        const switched = merge({ space: { presentation: 'page' } }, live);
+        expect(switched.space.presentation).toBe('page');
+        expect(switched.space.fadeInTime).toBe(0);
+        expect(switched.space.opaque).toBe(false);
+        expect(switched.elements.plane.height).toBe(1);
+        const explicit = merge({ space: { presentation: 'page', fadeInTime: 300 } }, live);
+        expect(explicit.space.fadeInTime).toBe(300);
+        expect(explicit.space.opaque).toBe(false);
+    });
+
 });
 // #endregion module

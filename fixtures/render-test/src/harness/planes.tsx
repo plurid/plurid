@@ -10,6 +10,7 @@ import MediaPlane from '../MediaPlane';
 import {
     SitePage,
     SubPage,
+    SiteOptions,
 } from '../Site';
 import type { HarnessFlags, SizeSetKey } from './flags';
 
@@ -95,15 +96,16 @@ const GeometryDocument = () => {
  */
 export const buildSite = (
     count: number,
+    options: SiteOptions = {},
 ): BuiltPlanes => {
     const indices = Array.from({ length: Math.max(1, count) }, (_, i) => i + 1);
     const roots: PluridReactPlane[] = indices.map((index) => ({
         route: `/page-${index}`,
-        component: () => <SitePage index={index} />,
+        component: () => <SitePage index={index} options={options} />,
     }));
     const subPages: PluridReactPlane[] = indices.flatMap((index) => [
-        { route: `/page-${index}/about`, component: () => <SubPage index={index} kind="about" /> },
-        { route: `/page-${index}/contact`, component: () => <SubPage index={index} kind="contact" /> },
+        { route: `/page-${index}/about`, component: () => <SubPage index={index} kind="about" options={options} /> },
+        { route: `/page-${index}/contact`, component: () => <SubPage index={index} kind="contact" options={options} /> },
     ]);
     return {
         planes: [...roots, ...subPages],
@@ -125,7 +127,7 @@ export const buildPlanes = (
     flags: HarnessFlags,
 ): BuiltPlanes => {
     if (flags.pages) {
-        return buildSite(flags.pages);
+        return buildSite(flags.pages, { theme: flags.siteTheme ?? 'dark', stickyHeader: flags.stickyHeader });
     }
     const stress = !!flags.planes;
     const source = stress ? stressPanels(flags.planes ?? 40) : PANELS;

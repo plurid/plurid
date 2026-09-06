@@ -75,7 +75,6 @@ const initialState: PluridStateSpace = {
     loading: true,
     resolvedLayout: false,
     transform: cameraEngine.IDENTITY_MATRIX3D,
-    animatedTransform: false,
     transformTime: 450,
     camera: cameraEngine.identityCamera(initialViewSize),
     cameraLimits: cameraEngine.DEFAULT_CAMERA_LIMITS,
@@ -464,12 +463,6 @@ export const space = createSlice({
                 rotationY: action.payload.rotationY ?? current.rotationY,
                 scale: action.payload.scale ?? current.scale,
             });
-        },
-        setAnimatedTransform: (
-            state,
-            action: PayloadAction<boolean>,
-        ) => {
-            state.animatedTransform = action.payload;
         },
         setTransformTime: (
             state,

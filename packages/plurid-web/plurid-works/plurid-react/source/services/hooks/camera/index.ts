@@ -32,6 +32,9 @@
         useEngineSelector,
         useEngineDispatch,
     } from '../engine';
+    import {
+        getDockedPlaneID,
+    } from '~services/state/modules/space/selectors';
     // #endregion internal
 // #endregion imports
 
@@ -60,6 +63,12 @@ export interface PluridCameraHandle {
     setHome: (viewpoint?: string) => void;
     preset: (name: string, options?: CameraMotionOptions) => void;
     bookmark: (name: string, action?: PluridBookmarkAction, options?: CameraMotionOptions) => void;
+    /** The page presentation: the id of the page the camera is docked on (or docking on), `''` otherwise. */
+    docked: string;
+    /** Dock on a page: the named one, else the docked one, else the page nearest the view center. */
+    dock: (planeID?: string, options?: CameraMotionOptions) => void;
+    /** Reveal the space from the docked page (`space.docking.reveal`). */
+    reveal: (options?: CameraMotionOptions) => void;
 }
 
 
@@ -75,6 +84,7 @@ export const useCamera = (): PluridCameraHandle => {
     const bookmarks = useEngineSelector((state) => state.space.bookmarks);
     const viewSize = useEngineSelector((state) => state.space.viewSize);
     const version = useEngineSelector((state) => state.configuration.space.viewpointURLVersion ?? 1);
+    const docked = useEngineSelector(getDockedPlaneID);
 
     const viewpoint = useMemo(
         () => encodeCameraViewpoint(camera, viewSize, version as 1 | 2),
@@ -106,6 +116,12 @@ export const useCamera = (): PluridCameraHandle => {
         preset: (name: string, options: CameraMotionOptions = {}) => {
             dispatch(cameraCommand({ kind: 'preset', name }, { animate: true, ...options }) as any);
         },
+        dock: (planeID?: string, options: CameraMotionOptions = {}) => {
+            dispatch(cameraCommand({ kind: 'dock', planeID }, { animate: true, ...options }) as any);
+        },
+        reveal: (options: CameraMotionOptions = {}) => {
+            dispatch(cameraCommand({ kind: 'reveal' }, { animate: true, ...options }) as any);
+        },
         bookmark: (name: string, action: PluridBookmarkAction = 'go', options: CameraMotionOptions = {}) => {
             dispatch(cameraCommand({ kind: 'bookmark', name, action }, { animate: true, ...options }) as any);
         },
@@ -113,6 +129,7 @@ export const useCamera = (): PluridCameraHandle => {
 
     return {
         camera,
+        docked,
         motion,
         viewpoint,
         bookmarks: bookmarks || {},

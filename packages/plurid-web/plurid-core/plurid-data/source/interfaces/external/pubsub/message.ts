@@ -49,14 +49,6 @@ export interface PluridPubSubSubscribeMessageConfiguration {
     callback: PluridPubSubCallback<PluridPartialConfiguration>;
 }
 
-export interface PluridPubSubPublishMessageSpaceAnimatedTransform {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM;
-    data?: any;
-}
-export interface PluridPubSubSubscribeMessageSpaceAnimatedTransform {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM;
-    callback: PluridPubSubCallback<any>;
-}
 
 
 
@@ -265,7 +257,10 @@ export interface PluridPubSubSubscribeMessageSpaceTransform {
 
 
 export interface PluridPubSubMessageViewAddPlaneData {
-    plane: string;
+    /** the route of the plane to add to the view */
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    plane?: string;
 }
 export interface PluridPubSubPublishMessageViewAddPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE;
@@ -293,7 +288,9 @@ export interface PluridPubSubSubscribeMessageViewSetPlanes {
 }
 
 export interface PluridPubSubMessageViewRemovePlaneData {
-    plane: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    plane?: string;
 }
 export interface PluridPubSubPublishMessageViewRemovePlane {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE;
@@ -305,7 +302,9 @@ export interface PluridPubSubSubscribeMessageViewRemovePlane {
 }
 
 export interface PluridPubSubMessageNavigateToPlane {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
 }
 export interface PluridPubSubPublishMessageNavigateToPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE;
@@ -317,7 +316,9 @@ export interface PluridPubSubSubscribeMessageNavigateToPlane {
 }
 
 export interface PluridPubSubMessageRefreshPlane {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
 }
 export interface PluridPubSubPublishMessageRefreshPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.REFRESH_PLANE;
@@ -329,7 +330,9 @@ export interface PluridPubSubSubscribeMessageRefreshPlane {
 }
 
 export interface PluridPubSubMessageIsolatePlane {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
 }
 export interface PluridPubSubPublishMessageIsolatePlane {
     topic: typeof PLURID_PUBSUB_TOPIC.ISOLATE_PLANE;
@@ -350,7 +353,9 @@ export interface PluridPubSubSubscribeMessageOpenClosedPlane {
 }
 
 export interface PluridPubSubMessageClosePlane {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
     /** Where the camera goes when the closed plane is in view; defaults to `space.navigation.onClose`. */
     navigate?: 'parent' | 'stay';
 }
@@ -397,7 +402,9 @@ export interface PluridPubSubSubscribeMessageNavigateToRoot {
 
 
 export type PluridPubSubMessageSetPlanePath = {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
     value: string;
 }
 export interface PluridPubSubPublishMessageSetPlanePath {
@@ -457,7 +464,9 @@ export interface PluridPubSubSubscribeMessageSetSelection {
 }
 
 export interface PluridPubSubMessageToggleSelection {
-    id: string;
+    planeID?: string;
+    /** @deprecated use `planeID` */
+    id?: string;
 }
 export interface PluridPubSubPublishMessageToggleSelection {
     topic: typeof PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION;
@@ -509,6 +518,8 @@ export interface PluridPubSubMessageSetViewpoint {
     /** An encoded viewpoint: the v1 `rotationX,rotationY,tX,tY,tZ,scale` tuple or a `v2|…` camera string. */
     viewpoint: string;
     /** Smoothly animate the camera to it (vs jump instantly). Default `false`. */
+    animate?: boolean;
+    /** @deprecated use `animate` */
     animated?: boolean;
 }
 export interface PluridPubSubPublishMessageSetViewpoint {
@@ -521,14 +532,19 @@ export interface PluridPubSubSubscribeMessageSetViewpoint {
 }
 
 
-// No-data declarative control.
+export interface PluridPubSubMessageFitToView {
+    /** tween (default) or jump */
+    animate?: boolean;
+    /** face the planes (default) or keep the current angles */
+    faceOn?: boolean;
+}
 export interface PluridPubSubPublishMessageFitToView {
     topic: typeof PLURID_PUBSUB_TOPIC.FIT_TO_VIEW;
-    data?: any;
+    data?: PluridPubSubMessageFitToView;
 }
 export interface PluridPubSubSubscribeMessageFitToView {
     topic: typeof PLURID_PUBSUB_TOPIC.FIT_TO_VIEW;
-    callback: PluridPubSubCallback<any>;
+    callback: PluridPubSubCallback<PluridPubSubMessageFitToView | undefined>;
 }
 export interface PluridPubSubPublishMessageResetTransform {
     topic: typeof PLURID_PUBSUB_TOPIC.RESET_TRANSFORM;
@@ -760,7 +776,9 @@ export type PluridChangeKind =
     | 'loading'
     | 'history'
     | 'motion'
-    | 'bookmarks';
+    | 'bookmarks'
+    /** the page presentation: the docked page's id, `''` when the camera left the page */
+    | 'docked';
 export interface PluridPubSubMessageChanged {
     kind: PluridChangeKind;
     value: any;
@@ -777,7 +795,6 @@ export interface PluridPubSubSubscribeMessageChanged {
 
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
-    | PluridPubSubPublishMessageSpaceAnimatedTransform
     | PluridPubSubPublishMessageSpaceRotateUp
     | PluridPubSubPublishMessageSpaceRotateDown
     | PluridPubSubPublishMessageSpaceRotateLeft
@@ -845,7 +862,6 @@ export type PluridPubSubPublishMessage =
 
 export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageConfiguration
-    | PluridPubSubSubscribeMessageSpaceAnimatedTransform
     | PluridPubSubSubscribeMessageSpaceRotateUp
     | PluridPubSubSubscribeMessageSpaceRotateDown
     | PluridPubSubSubscribeMessageSpaceRotateLeft

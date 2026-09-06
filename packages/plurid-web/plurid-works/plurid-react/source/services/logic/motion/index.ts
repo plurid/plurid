@@ -25,6 +25,12 @@ export interface TweenOptions {
     /** ms. Default `navigation.motion.duration` (380). */
     duration?: number;
     easing?: EasingName;
+    /**
+     * Called once the camera has LANDED on the target — at once when the controller jumps (reduced
+     * motion, a zero duration, already there), at the tween's last frame otherwise; never when an
+     * input interrupts it. A retarget carries a pending `onSettle` over to the new tween.
+     */
+    onSettle?: () => void;
 }
 
 
@@ -39,8 +45,8 @@ export interface CameraMotionController {
     cancel: () => void;
     /** Start a decaying fling from a pointer velocity (px/ms). */
     fling: (velocity: Vec2, kind: FlingKind) => void;
-    /** Animate to a camera (interruptible; instant under reduced motion). */
-    tweenTo: (target: CameraState, options?: TweenOptions) => void;
+    /** Animate to a camera (interruptible; instant under reduced motion). `true` when a tween started, `false` for a jump. */
+    tweenTo: (target: CameraState, options?: TweenOptions) => boolean;
     isActive: () => boolean;
     /** Whether the viewer prefers reduced motion (and the configuration respects it). */
     reducedMotion: () => boolean;

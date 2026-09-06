@@ -1,5 +1,5 @@
 // #region imports
-    // #region external
+    // #region internal
     import {
         normalizeWheel,
         wheelToDelta,
@@ -17,7 +17,7 @@
         createSmoothedBatcher,
         mergeCameraDeltas,
     } from '../frame';
-    // #endregion external
+    // #endregion internal
 // #endregion imports
 
 
@@ -149,9 +149,11 @@ describe('wheelToDelta', () => {
 
     it('docked on a page, a plain wheel is the page\'s: it scrolls if it can, else nothing; pinch, Shift, Alt and grab still move the camera', () => {
         const docked = { ...base, onPlane: true, docked: true };
-        expect(wheelToDelta(mouseDown, docked).kind).toBe('scroll');
-        expect(wheelToDelta(trackpad, docked).kind).toBe('scroll');
+        // a page that cannot scroll consumes the wheel (the host document must not scroll away either)
+        expect(wheelToDelta(mouseDown, docked).kind).toBe('consume');
+        expect(wheelToDelta(trackpad, docked).kind).toBe('consume');
         expect(wheelToDelta(mouseDown, { ...docked, scrollable: true }).kind).toBe('scroll');
+        expect(wheelToDelta(trackpad, { ...docked, scrollable: true }).kind).toBe('scroll');
         expect(wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, docked).kind).toBe('camera');
         expect(wheelToDelta(mouseDown, { ...docked, ctrlOrMeta: true }).kind).toBe('camera');
         expect(wheelToDelta(mouseDown, { ...docked, shift: true }).kind).toBe('camera');
@@ -296,7 +298,6 @@ describe('frame batcher', () => {
         expect(mergeCameraDeltas({}, {})).toEqual({});
     });
 });
-// #endregion module
 
 
 describe('smoothed batcher', () => {
@@ -378,3 +379,4 @@ describe('smoothed batcher', () => {
         expect(dropped.batcher.pending()).toBe(false);
     });
 });
+// #endregion module

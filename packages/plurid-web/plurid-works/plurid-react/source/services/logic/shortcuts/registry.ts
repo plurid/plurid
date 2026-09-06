@@ -123,14 +123,37 @@ export interface ShortcutHelpGroup {
  * The help content, generated from the shortcut table with the host's `keymap`/`disabled` applied
  * — what the `?` overlay and the toolbar drawer render, so neither can drift from the bindings.
  */
+/** What the help is described for: a binding with a `when` shows only where it applies. */
+export interface ShortcutHelpContext {
+    presentation?: 'space' | 'page';
+    grabMode?: boolean;
+    firstPerson?: boolean;
+}
+
+const appliesIn = (
+    when: PluridShortcutDefinition['when'],
+    context: ShortcutHelpContext,
+): boolean => {
+    switch (when) {
+        case 'page': return context.presentation === undefined || context.presentation === 'page';
+        case 'grabMode': return context.grabMode === undefined || context.grabMode;
+        case 'firstPerson': return context.firstPerson === undefined || context.firstPerson;
+        default: return true;
+    }
+};
+
 export const describeShortcuts = (
     shortcuts?: PluridConfigurationSpaceShortcuts,
+    context: ShortcutHelpContext = {},
 ): ShortcutHelpGroup[] => {
     const modifierKey = isMac() ? '⌘' : 'Ctrl';
     const groups = new Map<PluridShortcutGroup, ShortcutHelpItem[]>();
 
     for (const definition of PLURID_SHORTCUTS) {
         if (isShortcutDisabled(definition.id, shortcuts)) {
+            continue;
+        }
+        if (!appliesIn(definition.when, context)) {
             continue;
         }
 

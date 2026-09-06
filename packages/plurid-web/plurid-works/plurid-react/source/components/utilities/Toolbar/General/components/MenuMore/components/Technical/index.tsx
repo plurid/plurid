@@ -1,4 +1,7 @@
 // #region imports
+    import {
+        defaultConfiguration,
+    } from '@plurid/plurid-data';
     // #region libraries
     import React, {
         useState,
@@ -92,8 +95,7 @@ const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
         dispatchSetConfigurationSpaceCullingDistance,
     } = properties;
 
-    const cullingDistance = stateConfiguration.space.culling?.distance
-        ?? stateConfiguration.space.cullingDistance;
+    const cullingDistance = stateConfiguration.space.culling?.distance ?? defaultConfiguration.space.culling?.distance ?? 6000;
 
 
     /** state */

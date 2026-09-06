@@ -75,6 +75,9 @@
         BRIDGE_REACH_VARIABLE,
         BRIDGE_ANGLE_VARIABLE,
     } from '~services/logic/link/bridge';
+    import {
+        followPlaneScroll,
+    } from '~services/logic/link/follow';
 
     import {
         planeElementOf,
@@ -105,6 +108,9 @@
 
 
 // #region module
+/** The bridge length of a node spawned before the length was stored (`space.bridge.length`'s default). */
+const DEFAULT_BRIDGE_LENGTH = 100;
+
 export interface PluridLinkStateProperties {
     stateTree: TreePlane[];
     stateGeneralTheme: Theme;
@@ -222,13 +228,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     );
     const showLink = !!childPlane && childPlane.show !== false;
     const pluridPlaneID = childPlane?.planeID || '';
-    storedCoordinates.current = childPlane?.linkCoordinates;
-    // the spawn geometry the leash is drawn with (stored on the tree node at spawn)
-    const bridgeRef = useRef<{ length: number; side: 'start' | 'end' }>({ length: 100, side: 'start' });
-    bridgeRef.current = {
-        length: childPlane?.bridgeLength ?? 100,
-        side: childPlane?.bridgeSide ?? 'start',
-    };
+    // the spawn geometry the leash is drawn with (stored on the tree node at spawn); the refs are
+    // synced after the commit (never during a render), before the tracking effect below reads them
+    const bridgeRef = useRef<{ length: number; side: 'start' | 'end' }>({ length: DEFAULT_BRIDGE_LENGTH, side: 'start' });
+    useEffect(() => {
+        storedCoordinates.current = childPlane?.linkCoordinates;
+        bridgeRef.current = {
+            length: childPlane?.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
+            side: childPlane?.bridgeSide ?? 'start',
+        };
+    });
     // #endregion state
 
 
@@ -380,6 +389,9 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         // bubble; a capture listener on the plane catches every scroller inside it.
         let childElement: HTMLElement | null = null;
         const findChild = () => {
+            if (typeof document === 'undefined') {
+                return null;
+            }
             if (!childElement || !childElement.isConnected) {
                 childElement = document.querySelector<HTMLElement>(
                     '[data-plurid-plane="' + pluridPlaneID.replace(/["\\]/g, '\\$&') + '"]',
@@ -387,9 +399,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             }
             return childElement;
         };
-        let frame = 0;
         const follow = () => {
-            frame = 0;
             const target = findChild();
             if (!target) {
                 return;
@@ -399,18 +409,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             target.style.setProperty(BRIDGE_REACH_VARIABLE, geometry.reach + 'px');
             target.style.setProperty(BRIDGE_ANGLE_VARIABLE, geometry.angle + 'deg');
         };
-        const onScroll = () => {
-            if (!frame && typeof requestAnimationFrame === 'function') {
-                frame = requestAnimationFrame(follow);
-            }
-        };
         const measureAndFollow = () => {
             update();
             follow();
         };
 
         measureAndFollow();
-        planeElement.addEventListener('scroll', onScroll, true);
+        const unfollow = followPlaneScroll(planeElement, follow);
 
         let observer: ResizeObserver | undefined;
         if (typeof ResizeObserver !== 'undefined') {
@@ -421,14 +426,11 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         }
 
         return () => {
-            planeElement.removeEventListener('scroll', onScroll, true);
-            if (frame && typeof cancelAnimationFrame === 'function') {
-                cancelAnimationFrame(frame);
-            }
+            unfollow();
             if (observer) {
                 observer.disconnect();
             }
-            const target = childElement && childElement.isConnected ? childElement : null;
+            const target = findChild();
             if (target) {
                 target.style.removeProperty(BRIDGE_REACH_VARIABLE);
                 target.style.removeProperty(BRIDGE_ANGLE_VARIABLE);

@@ -94,7 +94,6 @@ export const serverComputeMetastate = async (
             space: {
                 loading: false,
                 resolvedLayout: false,
-                animatedTransform: false,
                 transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
                 scale: 1,
                 rotationX: 0,

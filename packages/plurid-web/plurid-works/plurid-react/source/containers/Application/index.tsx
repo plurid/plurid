@@ -98,6 +98,7 @@
         PluridDocumentScope,
         PluridDocumentPlanes,
     } from '~components/utilities/Document';
+    import selectors from '~services/state/selectors';
 // #endregion imports
 
 
@@ -342,6 +343,9 @@ class PluridApplicationShell extends Component<
                 fit: (options = {}) => dispatch(cameraCommand({ kind: 'fit' }, { animate: true, ...options })),
                 reset: (options = {}) => dispatch(cameraCommand({ kind: 'reset' }, { animate: true, ...options })),
                 home: (options = {}) => dispatch(cameraCommand({ kind: 'home' }, { animate: true, ...options })),
+                docked: () => selectors.space.getDockedPlaneID(getState()),
+                dock: (planeID, options = {}) => dispatch(cameraCommand({ kind: 'dock', planeID }, { animate: true, ...options })),
+                reveal: (options = {}) => dispatch(cameraCommand({ kind: 'reveal' }, { animate: true, ...options })),
                 setHome: (viewpoint) => dispatch(setHome(viewpoint)),
                 preset: (name, options = {}) => dispatch(cameraCommand({ kind: 'preset', name }, { animate: true, ...options })),
                 bookmark: (name, action = 'go', options = {}) => dispatch(cameraCommand({ kind: 'bookmark', name, action }, { animate: true, ...options })),

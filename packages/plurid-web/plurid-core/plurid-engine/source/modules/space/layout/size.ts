@@ -28,20 +28,24 @@ export const configuredPlaneSize = (
     configuration: PluridConfiguration,
     view: ViewSize,
 ): ConfiguredPlaneSize => {
-    const configuredWidth = configuration.elements.plane.width;
-    const configuredHeight = configuration.elements.plane.height;
-    const width = mathematics.numbers.checkIntegerNonUnit(configuredWidth)
-        ? configuredWidth
-        : configuredWidth * view.width;
-    const height = configuredHeight === undefined || configuredHeight <= 0
-        ? 0
-        : (mathematics.numbers.checkIntegerNonUnit(configuredHeight)
-            ? configuredHeight
-            : configuredHeight * view.height);
     return {
-        width,
-        height,
+        width: resolveDimension(configuration.elements.plane.width, view.width),
+        height: resolveDimension(configuration.elements.plane.height, view.height),
     };
+};
+
+/** A configured dimension against the view's: unset or ≤ 0 → 0 (content-driven); an integer above 1 → px; else a fraction. */
+const resolveDimension = (
+    configured: number | undefined,
+    viewExtent: number,
+): number => {
+    if (configured === undefined || configured <= 0) {
+        return 0;
+    }
+    if (mathematics.numbers.checkIntegerNonUnit(configured)) {
+        return configured;
+    }
+    return configured * viewExtent;
 };
 // #endregion module
 

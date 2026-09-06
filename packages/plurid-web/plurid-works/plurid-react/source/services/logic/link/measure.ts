@@ -31,18 +31,44 @@ const offsetWithin = (
 
 const CLIPPING = ['auto', 'scroll', 'hidden', 'clip'];
 
-/** Whether the element clips its overflow on an axis (a scroller, or an `overflow: hidden` box). */
+/**
+ * Whether an element clips its overflow, per axis — a computed-style read, so it is cached per
+ * element (a scroll frame measures every open link of a plane) and forgotten on a window resize,
+ * the one moment a host's overflow rules plausibly change.
+ */
+const clipCache: WeakMap<HTMLElement, { x: boolean; y: boolean; generation: number }> = new WeakMap();
+// a WeakMap cannot be cleared: entries carry the generation they were computed in, a resize bumps it
+let clipGeneration = 0;
+let clipInvalidationInstalled = false;
+
+const clipsOf = (
+    element: HTMLElement,
+): { x: boolean; y: boolean } => {
+    const cached = clipCache.get(element);
+    if (cached && cached.generation === clipGeneration) {
+        return cached;
+    }
+    if (typeof getComputedStyle !== 'function') {
+        return { x: false, y: false };
+    }
+    if (!clipInvalidationInstalled && typeof window !== 'undefined') {
+        clipInvalidationInstalled = true;
+        window.addEventListener('resize', () => { clipGeneration += 1; }, { passive: true });
+    }
+    const style = getComputedStyle(element);
+    const verdict = {
+        x: CLIPPING.includes(style.overflowX || style.overflow),
+        y: CLIPPING.includes(style.overflowY || style.overflow),
+        generation: clipGeneration,
+    };
+    clipCache.set(element, verdict);
+    return verdict;
+};
+
 const clips = (
     element: HTMLElement,
     axis: 'x' | 'y',
-): boolean => {
-    if (typeof getComputedStyle !== 'function') {
-        return false;
-    }
-    const style = getComputedStyle(element);
-    const value = (axis === 'x' ? style.overflowX : style.overflowY) || style.overflow;
-    return CLIPPING.includes(value);
-};
+): boolean => clipsOf(element)[axis];
 
 const half = (value: number) => Math.round(value * 2) / 2;
 

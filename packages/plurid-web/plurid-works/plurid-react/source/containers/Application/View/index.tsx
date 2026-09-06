@@ -58,6 +58,7 @@
 
     import {
         interaction,
+        space as spaceEngine,
     } from '~services/engine';
 
     import {
@@ -85,6 +86,7 @@
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
     import StateContext from '~services/state/context';
+    import { createStoreHook } from 'react-redux';
     import {
         DispatchAction,
         DispatchActionWithoutPayload,
@@ -113,6 +115,7 @@
     import {
         resolvePlaneFallbackSize,
         cameraCommand,
+        dockGeometry,
     } from '~services/logic/camera';
     import { PluridThunkExtra } from '~services/state/extra';
     import useFlyControls from './hooks/useFlyControls';
@@ -129,6 +132,8 @@
 
 
 // #region module
+const useEngineStore = createStoreHook(StateContext as any);
+
 /** The engine overlay (minimap, toolbar, viewcube, dialog, HUD) an event target sits in, if any. */
 const overlayOf = (
     target: EventTarget | null,
@@ -186,13 +191,11 @@ export interface PluridViewDispatchProperties {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
 
     dispatchSetConfiguration: DispatchAction<typeof actions.configuration.setConfiguration>;
-    dispatchSetConfigurationMicro: DispatchActionWithoutPayload<typeof actions.configuration.setConfigurationMicro>;
 
     // dispatchSetUniverses: DispatchAction<typeof actions.data.setUniverses>;
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
 
     dispatchSetSpaceLoading: DispatchAction<typeof actions.space.setSpaceLoading>;
-    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
     dispatchSetTransformTime: DispatchAction<typeof actions.space.setTransformTime>;
     dispatchSetSpaceLocation: DispatchAction<typeof actions.space.setSpaceLocation>;
     dispatchSetTree: DispatchAction<typeof actions.space.setTree>;
@@ -268,16 +271,12 @@ const PluridView: React.FC<PluridViewProperties> = (
         // #region dispatch
         dispatch,
         dispatchSetConfiguration,
-        // dispatchSetConfigurationMicro,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
 
         dispatchSetSpaceField,
-        // dispatchSetSpaceLoading,
         dispatchSetSpaceLocation,
-        dispatchSetAnimatedTransform,
         dispatchSetTransformTime,
-        // dispatchSetInitialTree,
         dispatchSetTree,
 
         dispatchRotateXWith,
@@ -391,12 +390,13 @@ const PluridView: React.FC<PluridViewProperties> = (
     // The device of the current wheel stream (a fast trackpad flick must not read as a mouse notch).
     const wheelHistory = useRef(createWheelHistory());
     // A page docks: whatever the wheel still had pending is dropped (the dock pose is exact).
+    const docked = !!stateDockedPlaneID;
     useEffect(() => {
-        if (stateDockedPlaneID) {
+        if (docked) {
             wheelBatcher.cancel();
         }
     }, [
-        stateDockedPlaneID,
+        docked,
         wheelBatcher,
     ]);
 
@@ -464,7 +464,6 @@ const PluridView: React.FC<PluridViewProperties> = (
             dispatchSetGeneralTheme,
             dispatchSetInteractionTheme,
             dispatchSetSpaceLocation,
-            dispatchSetAnimatedTransform,
             dispatchSetTransformTime,
             dispatchRotateXWith,
             dispatchRotateX,
@@ -512,7 +511,8 @@ const PluridView: React.FC<PluridViewProperties> = (
     });
 
     // Keep the camera's lens + limits in step with the (live-reconfigurable) configuration.
-    const navigationSignature = JSON.stringify(stateConfiguration.space.navigation || null);
+    // the camera limits follow `navigation` — compared by value, once per configuration change, not per frame
+    const navigationSignature = useMemo(() => JSON.stringify(stateConfiguration.space.navigation || null), [stateConfiguration.space.navigation]);
     useEffect(() => {
         dispatch(actions.space.setPerspective(stateConfiguration.space.perspective || 2000));
     }, [
@@ -529,6 +529,12 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region callbacks
+    const engineStore = useEngineStore();
+    // the one fade of the page presentation (`space.docking.fade`), read by every stylesheet
+    const dockFadeStyle = useMemo(
+        () => ({ '--plurid-dock-fade': (stateConfiguration.space.docking?.fade ?? 240) + 'ms' } as React.CSSProperties),
+        [stateConfiguration.space.docking?.fade],
+    );
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         const {
             transformLocks,
@@ -541,9 +547,11 @@ const PluridView: React.FC<PluridViewProperties> = (
             motion.cancel();
         }
 
+        // the cancel above already moved the store (`motion`, the docking destination); the shortcut
+        // must read the store, not the render-time state
         handleGlobalShortcuts(
             dispatch,
-            stateRef.current,
+            engineStore.getState() as AppState,
             pluridPubSub[0],
             event,
             stateConfiguration.space.firstPerson,
@@ -607,6 +615,10 @@ const PluridView: React.FC<PluridViewProperties> = (
         });
 
         if (resolution.kind === 'scroll') {
+            return;
+        }
+        if (resolution.kind === 'consume') {
+            event.preventDefault();
             return;
         }
 
@@ -742,7 +754,6 @@ const PluridView: React.FC<PluridViewProperties> = (
         }, [
             stateResolvedLayout,
         ]);
-
         // A layout change on a LIVE space (the host switched `space.layout`): relayout with the
         // planes gliding to their new placements — no remount, children stay attached.
         const layoutRef = useRef(stateConfiguration.space.layout);
@@ -790,17 +801,62 @@ const PluridView: React.FC<PluridViewProperties> = (
             if (previous.width === viewSize.width && previous.height === viewSize.height) {
                 return;
             }
-            // A docked page stays docked through the relayout (its view-sized box changed with the view).
-            const docked = selectors.space.getDockedPlaneID(stateRef.current);
             treeUpdateCallback();
-            if (docked) {
-                dispatch(cameraCommand({ kind: 'dock', planeID: docked }, { animate: false }) as any);
-            }
         }, [
             state.space.viewSize.width,
             state.space.viewSize.height,
             stateResolvedLayout,
         ]);
+
+        // THE DOCKED PAGE IS FOLLOWED. A page's dock pose moves with its geometry: a resize resizes
+        // every page and relays the roots, a re-measured link relocates a spawned page, a restore
+        // brings last session's geometry, a measurement corrects a fallback. The camera that was
+        // docked on that page (or docking toward it) one commit ago is re-docked — a jump, or the
+        // running swing retargeted — so a page never sits a few pixels off the view for a reason the
+        // user never saw. A user move is not followed: then the geometry is what it was and only the
+        // camera changed. `dockedBeforeRef` is written by a later effect, so this one reads the
+        // previous commit's page.
+        const dockedBeforeRef = useRef('');
+        const followedGeometryRef = useRef('');
+        useEffect(() => {
+            const followed = stateDockedPlaneID || dockedBeforeRef.current;
+            const plane = followed ? spaceEngine.tree.logic.getTreePlaneByID(stateTree, followed) : undefined;
+            if (!plane || plane.show === false) {
+                followedGeometryRef.current = '';
+                return;
+            }
+            const spaceState = stateRef.current.space;
+            const view = spaceState.viewSize;
+            const geometry = dockGeometry(plane, stateConfiguration, view);
+            const location = geometry.location;
+            const signature = [
+                followed,
+                location.translateX, location.translateY, location.translateZ, location.rotateX, location.rotateY,
+                geometry.width, geometry.height, view.width, view.height,
+            ].join(',');
+            const previous = followedGeometryRef.current;
+            followedGeometryRef.current = signature;
+            if (!previous || previous === signature) {
+                return;
+            }
+            if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon)) {
+                return;
+            }
+            dispatch(cameraCommand(
+                { kind: 'dock', planeID: followed },
+                { animate: spaceState.motion === 'tween' },
+            ) as any);
+        }, [
+            stateTree,
+            stateDockedPlaneID,
+            stateConfiguration,
+            state.space.viewSize.width,
+            state.space.viewSize.height,
+        ]);
+        // declared AFTER the follow effect: effects run in order, so the follow reads the previous commit
+        useEffect(() => {
+            dockedBeforeRef.current = stateDockedPlaneID;
+        });
 
         // `space.center`: on a FRESH space (identity camera, nothing restored) pan once so the first
         // root's center sits at the view center, as soon as that root has been measured.
@@ -929,6 +985,8 @@ const PluridView: React.FC<PluridViewProperties> = (
             preventOverscroll={preventOverscroll}
             data-plurid-entity={PLURID_ENTITY_VIEW}
             data-plurid-docked={stateDockedPlaneID || undefined}
+            data-plurid-motion={state.space.motion !== 'idle' ? state.space.motion : undefined}
+            style={dockFadeStyle}
             role="application"
             aria-roledescription="3D space"
             aria-label="plurid space"
@@ -944,6 +1002,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                         renderToolbar={properties.renderToolbar as any}
                         renderViewcube={properties.renderViewcube as any}
                         renderMinimap={properties.renderMinimap as any}
+                        renderDockRail={properties.renderDockRail as any}
                         renderShortcuts={properties.renderShortcuts as any}
                     />
                 ) : (
@@ -989,9 +1048,6 @@ const mapDispatchToProperties = (
     dispatchSetConfiguration: (payload) => dispatch(
         actions.configuration.setConfiguration(payload),
     ),
-    dispatchSetConfigurationMicro: () => dispatch(
-        actions.configuration.setConfigurationMicro(),
-    ),
 
     // dispatchSetUniverses: (universes: any) => dispatch(
     //     actions.data.setUniverses(universes),
@@ -1005,9 +1061,6 @@ const mapDispatchToProperties = (
 
     dispatchSetSpaceLoading: (payload) => dispatch(
         actions.space.setSpaceLoading(payload),
-    ),
-    dispatchSetAnimatedTransform: (payload) => dispatch(
-        actions.space.setAnimatedTransform(payload),
     ),
     dispatchSetTransformTime: (payload) => dispatch(
         actions.space.setTransformTime(payload),

@@ -4,11 +4,13 @@ import * as PR from '@plurid/plurid-react';
 import App from './App';
 import RouterDemo from './RouterDemo';
 import Gallery from './harness/Gallery';
+import { readFlags } from './harness/flags';
+import { fixtureByName } from './fixtures/catalog';
 
-// `?router` → the PluridRouterBrowser SPA demo; `?gallery=1` → every fixture on one page; default = the CAD harness.
-const Root = /[?&]router/.test(location.search)
-  ? RouterDemo
-  : (/[?&]gallery=1/.test(location.search) ? Gallery : App);
+// The registry decides (`?router=1` → the PluridRouterBrowser SPA demo; `?gallery=1` → every
+// fixture on one page; default = the CAD harness) — the same reader as every other flag.
+const flags = readFlags(location.search, (name) => fixtureByName(name)?.query);
+const Root = flags.router ? RouterDemo : (flags.gallery ? Gallery : App);
 
 console.log('[RT] plurid-react export count =', Object.keys(PR).length,
   '| PluridApplication =', typeof (PR as any).PluridApplication,

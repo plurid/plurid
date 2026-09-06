@@ -73,14 +73,15 @@ interface ThemedProperties {
 
 interface StyledMinimapProperties extends ThemedProperties {
     transparent: boolean;
+    /** The page presentation: bottom-left, above the shortcuts trigger, out of a page's header. */
+    $page?: boolean;
 }
 
 const StyledMinimap = styled.div<StyledMinimapProperties>`
     ${chromeRoot}
     ${chromeDocked}
     position: absolute;
-    top: 16px;
-    right: 16px;
+    ${({ $page }) => ($page ? 'bottom: 60px; left: 18px;' : 'top: 16px; right: 16px;')}
     width: ${WIDTH}px;
     height: ${HEIGHT}px;
     /* square, like a plane's window and the viewcube's faces */
@@ -239,6 +240,7 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
     if (layout.dots.length === 0) {
         return (
             <StyledMinimap
+                $page={stateConfiguration.space.presentation === 'page'}
                 theme={stateGeneralTheme}
                 transparent={transparent}
             />
@@ -265,6 +267,7 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
 
     return (
         <StyledMinimap
+            $page={stateConfiguration.space.presentation === 'page'}
             data-plurid-entity={PLURID_ENTITY_MINIMAP}
             data-plurid-minimap={true}
             data-plurid-overlay="minimap"

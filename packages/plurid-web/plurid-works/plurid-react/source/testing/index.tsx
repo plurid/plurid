@@ -12,6 +12,8 @@
         PluridApi,
         CameraState,
         PluridApplication as PluridApplicationProperties,
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ENTITY_VIEW,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -220,7 +222,7 @@ export const renderPlurid = async (
     if (!api) {
         throw new Error('[plurid testing] the application did not become ready');
     }
-    const view = container.querySelector('[data-plurid-entity="PluridView"]') as HTMLElement;
+    const view = container.querySelector(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_VIEW}"]`) as HTMLElement;
 
     return {
         container,
@@ -426,4 +428,7 @@ export const expectCamera = (
 export type {
     PluridApplicationHandle,
 };
+
+export * from './fixtures';
+export * from './store';
 // #endregion exports

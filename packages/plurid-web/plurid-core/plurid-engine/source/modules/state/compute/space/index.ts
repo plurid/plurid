@@ -64,7 +64,6 @@ const resolveSpace = <C>(
     const stateSpace: PluridStateSpace = {
         loading: true,
         resolvedLayout: false,
-        animatedTransform: false,
         transformTime: 450,
         camera: cameraEngine.identityCamera(initialViewSize, perspective),
         cameraLimits,

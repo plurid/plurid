@@ -66,6 +66,8 @@ export interface CameraMotionOptions {
     /** ms; default `navigation.motion.duration`. */
     duration?: number;
     easing?: EasingName;
+    /** Called once the camera has landed (at once for a jump; never for an interrupted tween). */
+    onSettle?: () => void;
 }
 
 
@@ -122,12 +124,19 @@ export const frameTargetForPlane = (
     );
 };
 
+/** The box a plane docks by: its location and the size the dock is computed with. */
+export interface DockGeometry {
+    location: TreePlane['location'];
+    width: number;
+    height: number;
+}
+
 /** The box a plane docks by: the configured size over a measured one (`cameraEngine.dockGeometry`). */
-const dockGeometry = (
+export const dockGeometry = (
     plane: TreePlane,
     configuration: PluridConfiguration,
     viewSize: ViewSize,
-) => cameraEngine.dockGeometry(plane as any, spaceEngine.layout.configuredPlaneSize(configuration, viewSize));
+): DockGeometry => cameraEngine.dockGeometry(plane as any, spaceEngine.layout.configuredPlaneSize(configuration, viewSize));
 
 /** The plane to dock on when none is named: the docked one, else the one nearest the view center. */
 const dockTargetPlane = (
@@ -137,8 +146,8 @@ const dockTargetPlane = (
 ): TreePlane | undefined => {
     const configured = spaceEngine.layout.configuredPlaneSize(configuration, spaceState.viewSize);
     const id = planeID
-        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree as any, spaceState.viewSize, configured)
-        || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree as any, spaceState.viewSize, configured);
+        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon)
+        || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree, spaceState.viewSize, configured);
     return id ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, id) : undefined;
 };
 
@@ -262,7 +271,7 @@ export const landingDockPlaneID = (
         return '';
     }
     const configured = spaceEngine.layout.configuredPlaneSize(state.configuration, state.space.viewSize);
-    return cameraEngine.findDockedPlane(target, state.space.tree as any, state.space.viewSize, configured);
+    return cameraEngine.findDockedPlane(target, state.space.tree, state.space.viewSize, configured, state.configuration.space.docking?.epsilon);
 };
 
 /**
@@ -276,29 +285,37 @@ export const commitCameraTarget = (
     dispatch: Dispatch,
     extra: PluridThunkExtra | undefined,
     target: CameraState,
-    options: CameraMotionOptions = {},
-    state?: AppState,
+    options: CameraMotionOptions,
+    state: AppState,
 ) => {
     const {
         animate = true,
         duration,
         easing,
+        onSettle,
     } = options;
 
-    const landing = state ? landingDockPlaneID(state, target) : '';
-    const instant = !!landing && state?.configuration.space.docking?.motion === 'instant';
+    const landing = landingDockPlaneID(state, target);
+    const instant = !!landing && state.configuration.space.docking?.motion === 'instant';
     const controller = extra?.motion;
     if (animate && controller && !instant) {
-        controller.tweenTo(target, {
+        const started = controller.tweenTo(target, {
             duration,
             easing,
+            onSettle,
         });
-        // after `tweenTo`: it stops a running tween first, which resets the motion (and the field)
-        dispatch(actions.space.setDockingPlaneID(landing));
+        // after `tweenTo` (it stops a running tween first, which resets the motion and the field),
+        // and only for a tween: a jump is docked, or not, by its camera alone
+        if (started) {
+            dispatch(actions.space.setDockingPlaneID(landing));
+        }
         return;
     }
 
+    // a jump: whatever was driving the camera stops, or its next frame would overwrite the jump
+    controller?.cancel();
     dispatch(actions.space.setCamera(target));
+    onSettle?.();
 };
 
 
@@ -372,6 +389,7 @@ export const resolveCameraTarget = (
                         spaceState.cameraLimits,
                     ),
                     spaceState.cameraLimits,
+                    configuration.space.docking?.reveal,
                 )
                 : undefined;
         }
@@ -445,6 +463,8 @@ export const planeCoversViewCenter = (
 
 // #region wrappers
 export interface FramePlaneNodeOptions {
+    /** Called once the camera has landed on the plane (at once for a jump). */
+    onSettle?: () => void;
     /**
      * Frame again when the plane's first measurement lands (`reportPlaneSize`): for a plane that
      * (re)opens with a stale or unknown size the first frame targets the best-known geometry and
@@ -468,6 +488,7 @@ export const framePlaneNode = (
         frameTargetForPlane(state.space, state.configuration, plane),
         {
             animate,
+            onSettle: options.onSettle,
         },
         state,
     );

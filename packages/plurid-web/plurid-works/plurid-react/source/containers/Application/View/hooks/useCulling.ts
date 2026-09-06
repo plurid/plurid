@@ -22,6 +22,7 @@
 
     import {
         space as spaceEngine,
+        interaction,
     } from '~services/engine';
 
     import {
@@ -33,6 +34,8 @@
 
 
 // #region module
+const cameraEngine = interaction.camera;
+
 export interface UseCullingParameters {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     stateRef: React.MutableRefObject<AppState>;
@@ -65,6 +68,7 @@ export const useCulling = (
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const last = useRef(0);
 
+
     useEffect(() => {
         const run = () => {
             timer.current = null;
@@ -77,7 +81,6 @@ export const useCulling = (
             const spaceState = state.space;
             const enabled = !!culling?.enabled;
             const fadeEnabled = !!depthFade?.enabled;
-
             if (!enabled && !fadeEnabled) {
                 if (spaceState.culled.hidden.length > 0 || spaceState.culled.frozen.length > 0) {
                     dispatch(actions.space.setCulled({ hidden: [], frozen: [] }));
@@ -115,6 +118,10 @@ export const useCulling = (
                 : undefined;
             if (focused) {
                 exceptions.add(focused);
+            }
+
+            if (!enabled && !fadeEnabled) {
+                return;
             }
 
             const previous = {

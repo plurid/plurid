@@ -6,6 +6,9 @@
         chromeControl,
         chromeRoot,
         chromeDocked,
+        chromePill,
+        CHROME_PILL_MARGIN,
+        CHROME_OPACITY_AMBIENT,
     } from '~services/styled/chrome';
 
     import {
@@ -122,34 +125,15 @@ export const StyledShortcutsKeys = styled.div`
     flex-shrink: 0;
 `;
 
+/** The `?` trigger: the same persistent pill as the rail's buttons, at the rail's margin, bottom-left; it fades with the docked state. */
 export const StyledShortcutsTrigger = styled.button<{ theme: Theme }>`
     ${chromeControl}
+    ${chromePill}
     ${chromeDocked}
     position: absolute;
-    bottom: 18px;
-    left: 18px;
+    bottom: ${CHROME_PILL_MARGIN}px;
+    left: ${CHROME_PILL_MARGIN}px;
     z-index: ${Z_INDEX.SHORTCUTS_TRIGGER};
-    width: 30px;
-    height: 30px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background-color: ${({ theme }) => theme.backgroundColorSecondary};
-    color: ${({ theme }) => theme.colorPrimary};
-    font-family: ${({ theme }) => theme.fontFamilySansSerif};
-    font-size: 14px;
-    line-height: 1;
-    cursor: pointer;
-    opacity: 0.4;
-    transition: opacity 150ms ease, transform 150ms ease, box-shadow 150ms ease;
-
-    &:hover {
-        opacity: 1;
-        transform: translateY(-1px);
-        box-shadow: ${({ theme }) => theme.boxShadowUmbra};
-    }
 `;
 
 export const StyledShortcutsKey = styled.kbd<{ theme: Theme }>`

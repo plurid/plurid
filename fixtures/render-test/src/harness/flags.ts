@@ -68,6 +68,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     // planes
     { key: 'planes', type: 'number', group: 'planes', apply: 'remount', description: 'N generated planes instead of the five instrument panels (stress)', exercises: 'many roots; the 8-column stress layout' },
     { key: 'pages', type: 'number', group: 'planes', apply: 'remount', description: 'the SITE set: N root pages, each with an about (long) and a contact (short) sub-page', exercises: 'view-sized pages, native scroll inside a plane, links spawning behind a docked page' },
+    { key: 'siteTheme', type: 'enum', values: ['light'], group: 'planes', apply: 'remount', description: 'the site set on a light palette (default dark)', exercises: 'the rail and the leash over a light page' },
+    { key: 'stickyHeader', type: 'boolean', group: 'planes', apply: 'remount', description: 'the site set with a sticky header (the links never scroll away)', exercises: 'a link that stays in view while the page scrolls' },
     { key: 'sizes', type: 'enum', values: SIZE_SET_KEYS, default: 'default', group: 'planes', apply: 'remount', description: 'declared plane sizes: mixed (five different boxes), wide, tall, small', exercises: '`planes[].width` / `height` (declared sizes), per-column / per-row layout pitch' },
     { key: 'media', type: 'boolean', group: 'planes', apply: 'reload', description: 'a consumer-style media plane (lens, lazy image, button-driven video)', exercises: '`usePluridPlane()` from content; window.__rtPlaneLens' },
     { key: 'scrollable', type: 'boolean', group: 'planes', apply: 'reload', description: 'the GEOMETRY readout is a scroller (28 filler rows in a 120px box)', exercises: 'the wheel over scrollable content stays the content\'s' },
@@ -113,6 +115,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     // ui
     { key: 'hostileCss', type: 'boolean', group: 'ui', apply: 'reload', description: 'a host stylesheet with aggressive global resets', exercises: 'the chrome reset (chrome.spec.ts)' },
     { key: 'slotToolbar', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom toolbar through the render slot', exercises: '`renderToolbar`' },
+    { key: 'slotDockRail', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom dock rail through the render slot (the page presentation)', exercises: '`renderDockRail`' },
+    { key: 'slotViewcube', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom viewcube through the render slot', exercises: '`renderViewcube`' },
     { key: 'hideLinks', type: 'boolean', group: 'ui', apply: 'reload', description: 'hide the link beams and the alignment guides', exercises: '`elements.planeLinks.show`, `elements.alignmentGuides.show`' },
     { key: 'debug', type: 'boolean', group: 'debug', apply: 'reload', description: 'the space and plane debuggers (the perf HUD)', exercises: '`development.spaceDebugger` / `planeDebugger`' },
     // shortcuts
@@ -136,6 +140,8 @@ export interface HarnessFlags {
     layout: LayoutKey;
     planes?: number;
     pages?: number;
+    siteTheme?: 'light';
+    stickyHeader: boolean;
     sizes: SizeSetKey;
     media: boolean;
     scrollable: boolean;
@@ -174,6 +180,8 @@ export interface HarnessFlags {
     bench: boolean;
     hostileCss: boolean;
     slotToolbar: boolean;
+    slotDockRail: boolean;
+    slotViewcube: boolean;
     hideLinks: boolean;
     debug: boolean;
     scDisable?: string;

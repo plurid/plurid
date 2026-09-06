@@ -14,11 +14,9 @@
         LAYOUT_TYPES,
         SIZES,
         TRANSFORM_MODES,
-        TRANSFORM_TOUCHES,
     } from '../../enumerations';
 
     import {
-        PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
 
         PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
         PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
@@ -36,14 +34,12 @@
 
 // #region module
 export const defaultConfigurationGlobal: PluridConfigurationGlobal = {
-    micro: false,
     theme: {
         general: 'plurid',
         interaction: 'plurid',
     },
     language: 'english',
     transparentUI: false,
-    render: 'plurid',
 };
 
 
@@ -67,6 +63,9 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
         show: false,
         transparent: true,
     },
+    dockRail: {
+        show: true,
+    },
     plane: {
         width: 1,
         opacity: 1,
@@ -88,9 +87,6 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
             offsetY: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_OFFSET_Y,
         },
     },
-    switch: {
-        show: false,
-    },
 };
 
 
@@ -107,6 +103,15 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     docking: {
         motion: 'swing',
         chrome: 'hidden',
+        reveal: {
+            scale: 0.8,
+            pitch: 8,
+            yaw: -6,
+        },
+        fade: 240,
+        aside: 'lineage',
+        focus: true,
+        epsilon: 0.5,
     },
     transformOrigin: {
         show: true,
@@ -121,8 +126,6 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         scale: true,
     },
     transformMode: TRANSFORM_MODES.ALL,
-    transformMultimode: false,
-    transformTouch: TRANSFORM_TOUCHES.PAN,
     firstPerson: false,
     collaboration: false,
     undo: true,
@@ -159,12 +162,12 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         persistDebounce: 300,
         viewpointChangeDebounce: 250,
     },
-    cullingDistance: PLURID_DEFAULT_CONFIGURATION_SPACE_CULLING_DISTANCE,
     bridge: {
         length: 100,
         planeAngle: 90,
         fan: 'fixed',
         direction: 'backward',
+        keepBehind: false,
     },
 };
 
@@ -176,6 +179,7 @@ export const defaultConfigurationNetwork: PluridConfigurationNetwork = {
 
 
 export const defaultConfigurationDevelopment: PluridConfigurationDevelopment = {
+    warnings: true,
     planeDebugger: false,
     spaceDebugger: false,
 };

@@ -11,7 +11,6 @@
 
         SIZES,
         TRANSFORM_MODES,
-        TRANSFORM_TOUCHES,
         TOOLBAR_DRAWERS,
         LAYOUT_TYPES,
 
@@ -50,13 +49,6 @@ export const configuration = createSlice({
             return {
                 ...action.payload,
             };
-        },
-        setConfigurationMicro: (
-            state,
-        ) => {
-            state.elements.toolbar.show = false;
-            state.elements.plane.controls.show = false;
-            state.elements.viewcube.show = false;
         },
         setConfigurationPlaneControls: (
             state,
@@ -213,18 +205,6 @@ export const configuration = createSlice({
                 state.space.transformMode = TRANSFORM_MODES.ALL;
             }
         },
-        toggleConfigurationSpaceTransformMultimode: (
-            state,
-            action: PayloadAction<boolean>,
-        ) => {
-            state.space.transformMultimode = action.payload;
-        },
-        setConfigurationSpaceTransformTouch: (
-            state,
-            action: PayloadAction<TRANSFORM_TOUCHES>,
-        ) => {
-            state.space.transformTouch = action.payload;
-        },
         toggleConfigurationSpaceFirstPerson: (
             state,
         ) => {
@@ -284,8 +264,6 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<number>,
         ) => {
-            // The legacy scalar stays in step; the culling pass reads `space.culling.distance`.
-            state.space.cullingDistance = action.payload;
             state.space.culling = {
                 ...(state.space.culling || {}),
                 distance: action.payload,

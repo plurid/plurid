@@ -22,35 +22,52 @@ const SENTENCES = [
     'Escape brings the page back; the corner control, a pinch or the G key take the space out.',
     'Nothing here is a mode: the pose of the camera is the whole state.',
     'Every page keeps its width, its height and its scroll position while the space turns.',
+    'Two links in one header open two pages behind the site; docked on one, the other steps aside.',
+    'The rail at the corner is the whole chrome of a page: fit, back, and the door into the space.',
+    'A scrolled link keeps its page where it was; the bridge follows the link to the fold and rests there.',
+    'Reveal the space and the pages are sheets again, each where its link put it.',
 ];
 
-const paragraph = (seed: number) => Array.from({ length: 4 }, (_, i) => SENTENCES[(seed * 3 + i) % SENTENCES.length]).join(' ');
+// a stride coprime with the pool size: consecutive paragraphs never repeat a run of sentences
+const paragraph = (seed: number) => Array.from({ length: 4 }, (_, i) => SENTENCES[(seed * 5 + i * 3) % SENTENCES.length]).join(' ');
+
+export type SiteTheme = 'dark' | 'light';
+export interface SiteOptions {
+    theme?: SiteTheme;
+    stickyHeader?: boolean;
+}
+const PALETTES = {
+    dark: { background: '#101317', color: '#e6e8ea', rule: '#ffffff14', muted: '#6b7480', lead: '#aab2bd' },
+    light: { background: '#f6f5f1', color: '#1c1c1a', rule: '#dcdad3', muted: '#6b6a64', lead: '#4a4944' },
+} as const;
 
 const SECTIONS = ['Sheets', 'Docking', 'Scroll', 'Links', 'Chrome', 'The reveal', 'Pose', 'Sizes', 'Motion', 'Return'];
 
 const fontBody = 'Georgia, "Times New Roman", serif';
 const fontUI = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 
-const pageStyle = (accent: string): React.CSSProperties => ({
+const pageStyle = (palette: typeof PALETTES[SiteTheme]): React.CSSProperties => ({
     minHeight: '100%',
     boxSizing: 'border-box',
-    background: '#101317',
-    color: '#e6e8ea',
+    background: palette.background,
+    color: palette.color,
     fontFamily: fontBody,
     fontSize: 17,
     lineHeight: 1.6,
-    borderTop: `4px solid ${accent}`,
 });
 
-const headerStyle: React.CSSProperties = {
+const headerStyle = (accent: string, palette: typeof PALETTES[SiteTheme], sticky: boolean): React.CSSProperties => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0 40px',
     height: 64,
     fontFamily: fontUI,
-    borderBottom: '1px solid #ffffff14',
-};
+    // the accent is a rule under the header, not a band on the view's edge
+    borderBottom: `2px solid ${accent}`,
+    boxShadow: `0 1px 0 ${palette.rule}`,
+    ...(sticky ? { position: 'sticky' as const, top: 0, background: palette.background, zIndex: 1 } : {}),
+});
 
 const navLinkStyle = (accent: string): React.CSSProperties => ({
     fontFamily: fontUI,
@@ -81,18 +98,19 @@ const Prose = ({ sections, seed }: { sections: string[]; seed: number }) => (
     </div>
 );
 
-const Footer = ({ index }: { index: number }) => (
-    <footer style={{ ...columnStyle, padding: '40px 24px 48px', fontFamily: fontUI, fontSize: 12, color: '#6b7480', letterSpacing: '0.12em' }}>
+const Footer = ({ index, muted }: { index: number; muted: string }) => (
+    <footer style={{ ...columnStyle, padding: '40px 24px 48px', fontFamily: fontUI, fontSize: 12, color: muted, letterSpacing: '0.12em' }}>
         SITE {String(index).padStart(2, '0')} · A PLURID PAGE
     </footer>
 );
 
 
-export const SitePage = ({ index }: { index: number }) => {
+export const SitePage = ({ index, options = {} }: { index: number; options?: SiteOptions }) => {
     const accent = ACCENTS[(index - 1) % ACCENTS.length];
+    const palette = PALETTES[options.theme ?? 'dark'];
     return (
-        <div style={pageStyle(accent)} data-rt-site="page">
-            <header style={headerStyle}>
+        <div style={pageStyle(palette)} data-rt-site="page" data-rt-site-theme={options.theme ?? 'dark'}>
+            <header style={headerStyle(accent, palette, !!options.stickyHeader)}>
                 <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.16em' }}>SITE {String(index).padStart(2, '0')}</span>
                 <nav style={{ display: 'flex', gap: 28 }}>
                     <PluridLink route={`/page-${index}/about`} style={navLinkStyle(accent)}>about</PluridLink>
@@ -105,23 +123,24 @@ export const SitePage = ({ index }: { index: number }) => {
                 <h1 style={{ fontFamily: fontUI, fontSize: 44, lineHeight: 1.1, margin: '0 0 20px', fontWeight: 700, letterSpacing: '-0.01em' }}>
                     An ordinary page, until the space is one move away.
                 </h1>
-                <p style={{ fontSize: 20, color: '#aab2bd', margin: 0 }}>{SENTENCES[0]} {SENTENCES[1]}</p>
+                <p style={{ fontSize: 20, color: palette.lead, margin: 0 }}>{SENTENCES[0]} {SENTENCES[1]}</p>
                 <div style={{ height: 2, width: 64, background: accent, margin: '32px 0 0' }} />
             </div>
 
             <Prose sections={SECTIONS} seed={index} />
-            <Footer index={index} />
+            <Footer index={index} muted={palette.muted} />
         </div>
     );
 };
 
 
-export const SubPage = ({ index, kind }: { index: number; kind: 'about' | 'contact' }) => {
+export const SubPage = ({ index, kind, options = {} }: { index: number; kind: 'about' | 'contact'; options?: SiteOptions }) => {
     const accent = ACCENTS[(index - 1) % ACCENTS.length];
+    const palette = PALETTES[options.theme ?? 'dark'];
     const lens = usePluridPlane();
     return (
-        <div style={pageStyle(accent)} data-rt-site={kind}>
-            <header style={headerStyle}>
+        <div style={pageStyle(palette)} data-rt-site={kind} data-rt-site-theme={options.theme ?? 'dark'}>
+            <header style={headerStyle(accent, palette, !!options.stickyHeader)}>
                 <button
                     type="button"
                     data-rt-site-back
@@ -130,27 +149,36 @@ export const SubPage = ({ index, kind }: { index: number; kind: 'about' | 'conta
                 >
                     ← site {String(index).padStart(2, '0')}
                 </button>
-                <span style={{ fontSize: 13, letterSpacing: '0.16em', color: '#6b7480' }}>{kind.toUpperCase()}</span>
+                <span style={{ fontSize: 13, letterSpacing: '0.16em', color: palette.muted }}>{kind.toUpperCase()}</span>
             </header>
 
             <div style={{ ...columnStyle, padding: '56px 24px 24px' }}>
                 <h1 style={{ fontFamily: fontUI, fontSize: 36, margin: '0 0 16px', fontWeight: 700 }}>
                     {kind === 'about' ? 'About this site' : 'Contact'}
                 </h1>
-                <p style={{ fontSize: 19, color: '#aab2bd', margin: 0 }}>
+                <p style={{ fontSize: 19, color: palette.lead, margin: 0 }}>
                     {kind === 'about' ? SENTENCES[3] + ' ' + SENTENCES[6] : 'A short page: it fits the view, so there is nothing to scroll.'}
                 </p>
             </div>
 
             {kind === 'about'
-                ? <Prose sections={SECTIONS.slice(0, 8)} seed={index + 10} />
+                ? (
+                    <>
+                        <div style={columnStyle}>
+                            <p style={{ margin: 0 }}>
+                                Questions? <PluridLink route={`/page-${index}/contact`} style={navLinkStyle(accent)}>write to us</PluridLink>.
+                            </p>
+                        </div>
+                        <Prose sections={SECTIONS.slice(0, 8)} seed={index + 10} />
+                    </>
+                )
                 : (
                     <div style={columnStyle}>
                         <p style={{ margin: '0 0 8px' }}>mail · hello@site-{String(index).padStart(2, '0')}.example</p>
                         <p style={{ margin: 0 }}>{SENTENCES[5]}</p>
                     </div>
                 )}
-            <Footer index={index} />
+            <Footer index={index} muted={palette.muted} />
         </div>
     );
 };

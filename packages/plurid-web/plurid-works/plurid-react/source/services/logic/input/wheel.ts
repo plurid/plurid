@@ -158,7 +158,10 @@ export interface WheelContext {
 }
 
 export type WheelResolution =
+    /** the browser's: the content under the cursor scrolls */
     | { kind: 'scroll' }
+    /** nobody's: the event is consumed (a docked page that cannot scroll — the host page must not scroll either) */
+    | { kind: 'consume' }
     | { kind: 'camera'; delta: CameraDelta; preventDefault: boolean };
 
 
@@ -290,7 +293,7 @@ export const wheelToDelta = (
     // it can, else nothing — never a zoom or a pan. Pinch / Ctrl / Shift / Alt / grab above still
     // open the space.
     if (ctx.docked) {
-        return { kind: 'scroll' };
+        return ctx.scrollable ? { kind: 'scroll' } : { kind: 'consume' };
     }
     if (ctx.onPlane && ctx.scrollable && policy === 'scroll-first') {
         return { kind: 'scroll' };

@@ -41,6 +41,11 @@ const fakeState = () => ({
         isolatePlane: '',
         tree: [{ planeID: '/a', show: true }],
         links: [],
+        viewSize: { width: 1280, height: 800 },
+        // never persisted: environmental, transient
+        spaceSize: { width: 1, height: 1 },
+        loading: true,
+        motion: 'tween',
     },
 }) as any;
 
@@ -66,6 +71,11 @@ describe('state.local storage adapter', () => {
         expect(loaded?.space.rotationX).toBe(5);
         expect(loaded?.space.scale).toBe(1.5);
         expect(loaded?.space.tree?.length).toBe(1);
+        // the view the camera was framed in travels with it; the transient fields do not
+        expect(loaded?.space.viewSize).toEqual({ width: 1280, height: 800 });
+        expect(loaded?.space).not.toHaveProperty('spaceSize');
+        expect(loaded?.space).not.toHaveProperty('loading');
+        expect(loaded?.space).not.toHaveProperty('motion');
     });
 
     it('round-trips the opaque content blob through the adapter', () => {

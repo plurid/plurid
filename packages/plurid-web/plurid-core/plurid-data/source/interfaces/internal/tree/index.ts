@@ -42,6 +42,14 @@ export interface TreePlane {
      */
     bridgeSide?: 'start' | 'end';
     /**
+     * Where this plane's top sits relative to its link's midline, px (negative: above). The plane's
+     * top is the top of its controls bar, and the bridge — half a strip tall on each side of the
+     * link's line — is flush with it: `−BRIDGE_STRIP_HEIGHT / 2` in the space presentation, plus
+     * `PLANE_BAR_HEIGHT` on a page, where the bar hangs above the sheet (`resolveBridgeOffset`).
+     * Stored with the spawn geometry so a relayout never needs the configuration.
+     */
+    bridgeOffset?: number;
+    /**
      * Set when the user has dragged this plane to a manual position. The auto-layout then leaves it
      * pinned (its `location` is carried across relayouts, like measured `width`/`height`) and arranges
      * only the un-pinned planes around it. Persisted with the tree, so manual arrangement survives reload.

@@ -64,7 +64,7 @@ const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     const shortcuts = configuration.space.shortcuts;
 
     const rows = useMemo(() => {
-        const groups = describeShortcuts(shortcuts);
+        const groups = describeShortcuts(shortcuts, { presentation: configuration.space.presentation ?? 'space' });
         const flat: { key: string; label: string; keys: string; afterline: boolean }[] = [];
         groups.forEach((group) => {
             group.items.forEach((item, index) => {

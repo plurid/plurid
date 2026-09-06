@@ -45,8 +45,6 @@ export interface FlatPluridConfiguration {
     // #region global
     /** `global.theme` — a plurid theme name, or `{ general, interaction }`. */
     theme?: ThemeName | PluridConfigurationTheme;
-    /** `global.micro` — render the space with NO engine elements (toolbar/viewcube/controls). */
-    micro?: boolean;
     /** `global.transparentUI` — render the engine elements transparent. */
     transparentUI?: boolean;
     /** `global.language` — UI language. */
@@ -100,6 +98,8 @@ export interface FlatPluridConfiguration {
     gestures?: PluridConfigurationSpaceGestures;
     /** `space.shortcuts` — disable / remap / extend the engine keyboard shortcuts. */
     shortcuts?: PluridConfigurationSpaceShortcuts;
+    /** `space.bridge` — the spawn geometry of link-spawned planes (length, planeAngle, fan, direction, keepBehind). */
+    bridge?: PluridConfigurationSpace['bridge'];
     /** `space.bridge.length` — parent→child gap + rendered bridge length. */
     bridgeLength?: number;
     /** `space.bridge.planeAngle` — spawned child plane angle. */
@@ -114,11 +114,7 @@ export interface FlatPluridConfiguration {
     transformOrigin?: RecursivePartial<PluridConfigurationSpaceTransformOrigin>;
     /** `space.transformMode` — restrict to one transform type, or all. */
     transformMode?: keyof typeof TRANSFORM_MODES;
-    /** @deprecated Read nowhere since the input layer v2 (2026-09); kept so existing configurations type-check. */
-    transformMultimode?: boolean;
-    /** @deprecated Read nowhere since the input layer v2 (2026-09; see `gestures.touchOne`); kept so existing configurations type-check. */
-    transformTouch?: keyof typeof TRANSFORM_TOUCHES;
-    /** @deprecated Use `culling.distance` (`space.culling`); kept as an alias for one release. */
+    /** @deprecated Use `culling.distance` (`space.culling`); an alias of it. */
     cullingDistance?: number;
     /** `space.fadeInTime` — plane fade-in duration (ms). */
     fadeInTime?: number;
@@ -137,6 +133,8 @@ export interface FlatPluridConfiguration {
     toolbar?: boolean;
     /** `elements.viewcube.show`. */
     viewcube?: boolean;
+    /** `elements.dockRail.show` — the page presentation's rail (fit · back · the page / cube toggle). */
+    dockRail?: boolean;
     /** `elements.minimap.show` — the 2D top-down overview of the space. */
     minimap?: boolean;
     // #endregion elements
@@ -156,11 +154,6 @@ export interface PluridConfiguration {
 
 
 export interface PluridConfigurationGlobal {
-    /**
-     * Renders the application without any elements
-     * (toolbar, viewcube, plane controls, switch, etc.).
-     */
-    micro: boolean;
 
     /**
      * A theme name based on plurid themes, https://meta.plurid.com/themes,
@@ -192,16 +185,6 @@ export interface PluridConfigurationGlobal {
      */
     transparentUI: boolean;
 
-    /**
-     * Render the view as a `plurid` space, or as a `legacy` web page.
-     *
-     * When setting to `legacy`, the `switch` configuration element (`elements.switch.show`)
-     * should also be set to `true`, allowing the user to switch from rendering types
-     * through the interface.
-     *
-     * Default: `plurid`.
-     */
-    render: 'plurid' | 'legacy';
 }
 
 
@@ -217,6 +200,20 @@ export interface PluridConfigurationSpaceDocking {
     motion?: 'swing' | 'instant';
     /** `hidden` (default): no chrome while a transition docks; `shown`: the space shows during the swing. */
     chrome?: 'hidden' | 'shown';
+    /** The reveal move from a docked page: the camera scale (default 0.8) and the tilt added to the dock pose in degrees (pitch 8, yaw −6). */
+    reveal?: {
+        scale?: number;
+        pitch?: number;
+        yaw?: number;
+    };
+    /** ms — the one fade of the page presentation: the chrome, a plane set aside, the rail (default 240). */
+    fade?: number;
+    /** `lineage` (default): docked on a page, only the page, its ancestors and its descendants stay, every other plane fades out; `none`: nothing is set aside. */
+    aside?: 'lineage' | 'none';
+    /** Whether docking gives the page's content the keyboard focus, so keys scroll it (default true). */
+    focus?: boolean;
+    /** px — how close to the dock pose "docked" is read (default 0.5). */
+    epsilon?: number;
 }
 
 export interface PluridConfigurationSpace {
@@ -288,13 +285,6 @@ export interface PluridConfigurationSpace {
      * Allow only one type of transformation, or all of them.
      */
     transformMode: keyof typeof TRANSFORM_MODES;
-    /**
-     * Allow multiple types of transformations.
-     */
-    transformMultimode: boolean;
-
-    transformTouch: keyof typeof TRANSFORM_TOUCHES;
-
     firstPerson: boolean;
 
     /**
@@ -385,7 +375,6 @@ export interface PluridConfigurationSpace {
      */
     shortcuts?: PluridConfigurationSpaceShortcuts;
 
-    cullingDistance: number;
 
     /**
      * Geometry of the bridge that joins a plurid-link-spawned child plane to its parent.
@@ -746,9 +735,12 @@ export interface PluridConfigurationElements {
     viewcube: PluridConfigurationElementsViewcube;
     /** Optional opt-in: a 2D top-down overview/minimap of the space. */
     minimap?: PluridConfigurationElementsMinimap;
+    /** The page presentation's rail at the bottom-right: fit, back, the page / cube toggle (default shown). */
+    dockRail?: {
+        show?: boolean;
+    };
     plane: PluridConfigurationElementsPlane;
     link: PluridConfigurationElementsLink;
-    switch: PluridConfigurationElementsSwitch;
     /** The 3D beams drawn between plane↔plane links. Shown by default; `{ show: false }` hides them. */
     planeLinks?: PluridConfigurationElementsToggle;
     /** The live alignment guides drawn while dragging a selection. Shown by default. */
@@ -867,14 +859,6 @@ export interface PluridConfigurationElementsLink {
     };
 }
 
-
-export interface PluridConfigurationElementsSwitch {
-    /**
-     * Default: `false`.
-     */
-    show: boolean;
-    // position: 'top left' | 'top right' | 'bottom left' | 'bottom right';
-}
 
 
 export interface PluridConfigurationNetwork {

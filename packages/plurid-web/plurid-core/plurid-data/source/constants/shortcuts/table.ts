@@ -51,7 +51,7 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     { id: 'grabMode', code: 'KeyG', kind: 'press', group: 'navigate', label: 'Toggle grab / navigate mode' },
     { id: 'grabHold', code: 'Space', kind: 'hold', group: 'navigate', label: 'Hold to navigate (orbit anywhere)' },
     { id: 'exitGrabMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Exit grab mode', when: 'grabMode' },
-    { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'Back to the page (dock the camera)', when: 'page' },
+    { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'Back to the page: from the space, dock; on a spawned page, its parent', when: 'page' },
     { id: 'fitToView', code: 'Digit0', keys: ['0'], kind: 'press', group: 'navigate', label: 'Frame everything' },
     { id: 'home', code: 'Home', kind: 'press', group: 'navigate', label: 'Home viewpoint' },
     { id: 'navigateLeft', code: 'ArrowLeft', kind: 'press', group: 'navigate', label: 'Go to the plane on the left' },

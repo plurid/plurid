@@ -47,6 +47,8 @@ export interface PluridPlaneBridgeOwnProperties {
     bridgeLength?: number;
     /** The edge the bridge leaves from (from the tree); the left edge by default. */
     bridgeSide?: 'start' | 'end';
+    /** How far the plane's top (its controls bar) hangs above the sheet, px (a page: `PLANE_BAR_HEIGHT`). */
+    raise?: number;
 }
 
 export interface PluridPlaneBridgeStateProperties {
@@ -72,6 +74,7 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
         mouseOver,
         bridgeLength: bridgeLengthProperty,
         bridgeSide = 'start',
+        raise = 0,
         // #endregion own
 
         // #region state
@@ -105,6 +108,7 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             mouseOver={mouseOver}
             bridgeLength={bridgeLength}
             bridgeSide={bridgeSide}
+            raise={raise}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
             data-plurid-bridge-side={bridgeSide}
         />

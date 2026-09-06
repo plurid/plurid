@@ -84,7 +84,6 @@ export interface UsePluridPubSubDispatchers {
     dispatchSetGeneralTheme: DispatchAction<typeof actions.themes.setGeneralTheme>;
     dispatchSetInteractionTheme: DispatchAction<typeof actions.themes.setInteractionTheme>;
     dispatchSetSpaceLocation: DispatchAction<typeof actions.space.setSpaceLocation>;
-    dispatchSetAnimatedTransform: DispatchAction<typeof actions.space.setAnimatedTransform>;
     dispatchSetTransformTime: DispatchAction<typeof actions.space.setTransformTime>;
     dispatchRotateXWith: DispatchAction<typeof actions.space.rotateXWith>;
     dispatchRotateX: DispatchAction<typeof actions.space.rotateX>;
@@ -173,7 +172,6 @@ export const usePluridPubSub = (
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
         dispatchSetSpaceLocation,
-        dispatchSetAnimatedTransform,
         dispatchSetTransformTime,
         dispatchRotateXWith,
         dispatchRotateX,
@@ -239,22 +237,6 @@ export const usePluridPubSub = (
                     }
 
                     dispatchSetSpaceLocation(value);
-                },
-            },
-            {
-                topic: PLURID_PUBSUB_TOPIC.SPACE_ANIMATED_TRANSFORM,
-                callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-
-                    dispatchSetAnimatedTransform(value.active);
-
-                    if (value.time) {
-                        dispatchSetTransformTime(value.time);
-                    } else {
-                        dispatchSetTransformTime(450);
-                    }
                 },
             },
 
@@ -354,9 +336,10 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
                 callback: (data) => {
-                    const {
-                        plane,
-                    } = data;
+                    const plane = data?.planeID ?? data?.plane;
+                    if (typeof plane !== 'string') {
+                        return;
+                    }
 
                     const updatedView = [
                         ...stateSpaceView,
@@ -384,9 +367,10 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
                 callback: (data) => {
-                    const {
-                        plane,
-                    } = data;
+                    const plane = data?.planeID ?? data?.plane;
+                    if (typeof plane !== 'string') {
+                        return;
+                    }
 
                     /** TODO
                      * a less naive filtering
@@ -413,9 +397,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
                 callback: (data) => {
-                    const {
-                        id,
-                    } = data;
+                    const id = data?.planeID ?? data?.id;
 
                     const plane = space.tree.logic.getTreePlaneByID(
                         latest.current.stateTree,
@@ -431,9 +413,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
                 callback: (data) => {
-                    const {
-                        id,
-                    } = data;
+                    const id = data?.planeID ?? data?.id;
 
                     if (typeof id !== 'string') {
                         return;
@@ -454,10 +434,11 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
                 callback: (data) => {
-                    const {
-                        id,
-                        navigate,
-                    } = data;
+                    const id = data?.planeID ?? data?.id;
+                    const navigate = data?.navigate;
+                    if (typeof id !== 'string') {
+                        return;
+                    }
 
                     // Deep lookup (children included) through the thunk — the old flat `find`
                     // never matched a spawned plane.
@@ -552,7 +533,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION,
                 callback: (data) => {
-                    const id = (data as any)?.id;
+                    const id = data?.planeID ?? data?.id;
                     if (!id) {
                         return;
                     }
@@ -576,7 +557,7 @@ export const usePluridPubSub = (
                     if (typeof encoded !== 'string') {
                         return;
                     }
-                    dispatch(setViewpoint(encoded, !!(data as any)?.animated) as any);
+                    dispatch(setViewpoint(encoded, !!((data as any)?.animate ?? (data as any)?.animated)) as any);
                 },
             },
             {

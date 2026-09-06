@@ -31,10 +31,14 @@ let serializeFailureWarned = false;
 
 /**
  * Only the meaningful, durable space fields are persisted — NOT the whole Redux state.
- * Excluded on purpose: transient flags (`loading`, `resolvedLayout`, `animatedTransform`,
- * `transformTime`), environmental sizes that are re-measured on mount (`viewSize`,
- * `spaceSize`, `culledView`, `view`), and the other slices (`configuration`, `themes`,
- * `shortcuts`, `ui`) which come from props/defaults each load.
+ * Excluded on purpose: transient flags (`loading`, `resolvedLayout`, `transformTime`),
+ * environmental sizes that are re-measured on mount (`spaceSize`, `culledView`, `view`), and the
+ * other slices (`configuration`, `themes`, `shortcuts`, `ui`) which come from props/defaults each
+ * load. `viewSize` IS persisted: the camera is framed in view coordinates (its pivot and offset are
+ * about the view center), so a camera without the view it was framed in is ambiguous — restored
+ * with it, a docked page is docked from the first frame, and the first real measurement re-pivots
+ * the camera the way a live resize does (the picture kept) instead of from a fallback size the
+ * camera never saw (2026-09-06).
  */
 const PERSISTED_SPACE_FIELDS = [
     'rotationX',
@@ -45,6 +49,7 @@ const PERSISTED_SPACE_FIELDS = [
     'translationZ',
     'transform',
     'camera',
+    'viewSize',
     'activePlaneID',
     'isolatePlane',
     'lastClosedPlane',

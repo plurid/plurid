@@ -29,7 +29,6 @@ describe('plurid-data default configuration', () => {
             general: 'plurid',
             interaction: 'plurid',
         });
-        expect(defaultConfigurationGlobal.micro).toBe(false);
         expect(defaultConfigurationGlobal.transparentUI).toBe(false);
     });
 

@@ -95,6 +95,8 @@ const expectedChildLocation = (
     planeAngle: number,
     bridgeSide: 'start' | 'end' = 'start',
     childWidth = 0,
+    /** the plane's top relative to the link's midline (half a strip above it, so the bridge is centred on the link) */
+    bridgeOffset = 0,
 ) => {
     const parentAngle = parent.rotateY * DEG;
     const linkX = parent.translateX + link.x * Math.cos(parentAngle);
@@ -104,7 +106,7 @@ const expectedChildLocation = (
     const reach = bridgeSide === 'end' ? -(bridgeLength + (childWidth || 400)) : bridgeLength;
     return {
         translateX: linkX + reach * Math.cos(bridgeAngle),
-        translateY: parent.translateY + link.y,
+        translateY: parent.translateY + link.y + bridgeOffset,
         translateZ: linkZ - reach * Math.sin(bridgeAngle),
         rotateY: parent.rotateY + planeAngle,
     };
@@ -133,7 +135,7 @@ test.describe('links and tree', () => {
         expect(material.planeAngle).toBe(90);
         expect(material.location.rotateY).toBeCloseTo(geometry.location.rotateY + 90, 6);
         for (const child of [material, topology]) {
-            const expected = expectedChildLocation(geometry.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width);
+            const expected = expectedChildLocation(geometry.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width, child.bridgeOffset);
             expect(child.location.translateX).toBeCloseTo(expected.translateX, 3);
             expect(child.location.translateY).toBeCloseTo(expected.translateY, 3);
             expect(child.location.translateZ).toBeCloseTo(expected.translateZ, 3);
@@ -313,7 +315,7 @@ test.describe('links and tree', () => {
         expect(after.children).toHaveLength(1);
         expect(after.children[0].planeID).toBe(before.children[0].planeID);
         const child = after.children[0];
-        const expected = expectedChildLocation(after.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width);
+        const expected = expectedChildLocation(after.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width, child.bridgeOffset);
         expect(child.location.translateX).toBeCloseTo(expected.translateX, 2);
         expect(child.location.translateY).toBeCloseTo(expected.translateY, 2);
         expect(child.location.translateZ).toBeCloseTo(expected.translateZ, 2);

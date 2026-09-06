@@ -6,11 +6,25 @@
 
     import {
         TreePlane,
+        defaultConfiguration,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
+    import {
+        TEST_VIEW as view,
+        treePlane,
+        viewSizedSheet,
+        pageConfiguration,
+    } from '../../../../../testing/fixtures';
+    import {
+        makeSpaceStore,
+    } from '../../../../../testing/store';
+    // #endregion external
+
+
+    // #region internal
     import {
         reducer,
         actions,
@@ -20,10 +34,7 @@
         getDockedLineage,
         makeGetIsPlaneAside,
     } from '../selectors';
-    import {
-        defaultConfiguration,
-    } from '@plurid/plurid-data';
-    // #endregion external
+    // #endregion internal
 // #endregion imports
 
 
@@ -33,36 +44,20 @@ const {
     camera: cameraEngine,
 } = interaction;
 
-const view = { width: 1000, height: 600 };
+type SpaceState = ReturnType<typeof reducer>;
 
 const initial = () => reducer(
     reducer(undefined, { type: '@@init' }),
     actions.setViewSize(view),
 );
 
+/** An UNMEASURED node (0 × 0) unless a size is given. */
 const plane = (
     planeID: string,
     location: Partial<TreePlane['location']> = {},
     size: { width?: number; height?: number } = {},
     children?: TreePlane[],
-): TreePlane => ({
-    sourceID: planeID,
-    planeID,
-    route: '/' + planeID,
-    routeDivisions: {} as any,
-    width: size.width ?? 0,
-    height: size.height ?? 0,
-    location: {
-        translateX: 0,
-        translateY: 0,
-        translateZ: 0,
-        rotateX: 0,
-        rotateY: 0,
-        ...location,
-    },
-    show: true,
-    children,
-});
+): TreePlane => treePlane(planeID, { location, width: size.width ?? 0, height: size.height ?? 0, children });
 
 
 describe('space slice camera commit path', () => {
@@ -197,72 +192,88 @@ describe('space slice camera commit path', () => {
         expect(set.camera.yaw).toBe(45);
         expect(set.camera.offset.x).toBeCloseTo(10, 9);
     });
+});
+
 
 describe('getDockedPlaneID (the page presentation)', () => {
-    const page = { ...defaultConfiguration, space: { ...defaultConfiguration.space, presentation: 'page' as const }, elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, height: 1 } } };
-    const sheet = (planeID: string, translateY = 0) => plane(planeID, { translateY }, { width: view.width, height: view.height });
+    const page = pageConfiguration();
+    const sheet = (planeID: string, translateY = 0) => viewSizedSheet(planeID, { location: { translateY } });
+    /** The application state around a space slice (the configuration is the page's unless given). */
+    const at = (space: SpaceState, configuration = page) => ({ ...makeSpaceStore(configuration).getState(), space, configuration });
 
     it('is the first root at the identity camera, nothing after a zoom, nothing in the space presentation', () => {
         const space = reducer(initial(), actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
-        expect(getDockedPlaneID({ space, configuration: page } as any)).toBe('p1');
-        expect(getDockedPlaneID({ space, configuration: defaultConfiguration } as any)).toBe('');
+        expect(getDockedPlaneID(at(space))).toBe('p1');
+        expect(getDockedPlaneID(at(space, defaultConfiguration))).toBe('');
         const zoomed = reducer(space, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
-        expect(getDockedPlaneID({ space: zoomed, configuration: page } as any)).toBe('');
+        expect(getDockedPlaneID(at(zoomed))).toBe('');
         // an UNMEASURED root still docks through the configured (view-sized) fallback
         const unmeasured = reducer(initial(), actions.restoreArrangement({ tree: [plane('p1')], links: [] }));
-        expect(getDockedPlaneID({ space: unmeasured, configuration: page } as any)).toBe('p1');
+        expect(getDockedPlaneID(at(unmeasured))).toBe('p1');
     });
 
     it('the docked lineage: the page, its trail and its own children stay; a sibling is set aside — nothing when undocked', () => {
-        const child = (planeID: string, translateX: number, children?: any[]) => ({
-            ...plane(planeID, { translateX, rotateY: 90 }, { width: view.width, height: view.height }, children),
-            parentPlaneID: 'p1',
-        });
-        const grandchild = { ...plane('g1', { translateX: view.width + 300, rotateY: 180 }, { width: view.width, height: view.height }), parentPlaneID: 'about' };
+        const child = (planeID: string, translateX: number, children?: TreePlane[]) => viewSizedSheet(planeID, { location: { translateX, rotateY: 90 }, children, parentPlaneID: 'p1' });
+        const grandchild = viewSizedSheet('g1', { location: { translateX: view.width + 300, rotateY: 180 }, parentPlaneID: 'about' });
         const tree = [sheet('p1')];
         tree[0].children = [child('about', view.width, [grandchild]), child('contact', view.width + 70)];
         const space = reducer(initial(), actions.restoreArrangement({ tree, links: [] }));
         const isAside = makeGetIsPlaneAside();
 
         // docked on the root: everything is its lineage
-        expect([...getDockedLineage({ space, configuration: page } as any)].sort()).toEqual(['about', 'contact', 'g1', 'p1']);
-        expect(isAside({ space, configuration: page } as any, 'contact')).toBe(false);
+        expect([...getDockedLineage(at(space))].sort()).toEqual(['about', 'contact', 'g1', 'p1']);
+        expect(isAside(at(space), 'contact')).toBe(false);
 
         // docked on `about` (its dock pose): the trail (p1) and its child (g1) stay, `contact` is aside
         const about = space.tree[0].children![0];
         const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: about.location, width: view.width, height: view.height })));
-        const state = { space: docked, configuration: page } as any;
+        const state = at(docked);
         expect([...getDockedLineage(state)].sort()).toEqual(['about', 'g1', 'p1']);
         expect(isAside(state, 'contact')).toBe(true);
         expect(isAside(state, 'p1')).toBe(false);
         expect(isAside(state, 'about')).toBe(false);
         expect(isAside(state, 'g1')).toBe(false);
+        // a plane the tree does not hold is never aside
+        expect(isAside(state, 'nowhere')).toBe(false);
 
         // undocked (a zoom): nothing is aside; a docking tween toward `about` already sets `contact` aside
         const zoomed = reducer(docked, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
-        expect(getDockedLineage({ space: zoomed, configuration: page } as any).size).toBe(0);
-        expect(isAside({ space: zoomed, configuration: page } as any, 'contact')).toBe(false);
+        expect(getDockedLineage(at(zoomed)).size).toBe(0);
+        expect(isAside(at(zoomed), 'contact')).toBe(false);
         const docking = reducer(reducer(zoomed, actions.setMotion('tween')), actions.setDockingPlaneID('about'));
-        expect(isAside({ space: docking, configuration: page } as any, 'contact')).toBe(true);
-        // the space presentation never sets anything aside
-        expect(isAside({ space: docked, configuration: defaultConfiguration } as any, 'contact')).toBe(false);
+        expect(isAside(at(docking), 'contact')).toBe(true);
+        // the space presentation never sets anything aside, nor does `docking.aside: 'none'`
+        expect(isAside(at(docked, defaultConfiguration), 'contact')).toBe(false);
+        expect(isAside(at(docked, pageConfiguration({ space: { docking: { aside: 'none' } } })), 'contact')).toBe(false);
+    });
+
+    it('an orphaned page (its parent gone from the tree) has no trail: itself and its children stay, the rest is aside', () => {
+        const orphan = viewSizedSheet('orphan', { location: { translateX: view.width, rotateY: 90 }, parentPlaneID: 'ghost', children: [viewSizedSheet('leaf', { location: { translateX: view.width + 300, rotateY: 180 }, parentPlaneID: 'orphan' })] });
+        const tree = [sheet('p1')];
+        tree[0].children = [orphan, viewSizedSheet('other', { location: { translateX: view.width + 70, rotateY: 90 }, parentPlaneID: 'p1' })];
+        const space = reducer(initial(), actions.restoreArrangement({ tree, links: [] }));
+        const docked = reducer(space, actions.setCamera(cameraEngine.dockPose(space.camera, { location: orphan.location, width: view.width, height: view.height })));
+        const state = at(docked);
+        expect(getDockedPlaneID(state)).toBe('orphan');
+        expect([...getDockedLineage(state)].sort()).toEqual(['leaf', 'orphan']);
+        const isAside = makeGetIsPlaneAside();
+        expect(isAside(state, 'other')).toBe(true);
+        expect(isAside(state, 'leaf')).toBe(false);
     });
 
     it('while a tween DOCKS, its destination counts as docked (docking.chrome hidden); never once the motion ends', () => {
         const space = reducer(initial(), actions.restoreArrangement({ tree: [sheet('p1'), sheet('p2', view.height + 50)], links: [] }));
         const travelling = reducer(reducer(reducer(space, actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 })), actions.setMotion('tween')), actions.setDockingPlaneID('p2'));
-        expect(getDockedPlaneID({ space: travelling, configuration: page } as any)).toBe('p2');
-        const shown = { ...page, space: { ...page.space, docking: { motion: 'swing' as const, chrome: 'shown' as const } } };
-        expect(getDockedPlaneID({ space: travelling, configuration: shown } as any)).toBe('');
+        expect(getDockedPlaneID(at(travelling))).toBe('p2');
+        const shown = pageConfiguration({ space: { docking: { chrome: 'shown' } } });
+        expect(getDockedPlaneID(at(travelling, shown))).toBe('');
         // the motion ends (a landing, a cancel, an input): the destination clears with it
         const ended = reducer(travelling, actions.setMotion('idle'));
         expect(ended.dockingPlaneID).toBe('');
-        expect(getDockedPlaneID({ space: ended, configuration: page } as any)).toBe('');
+        expect(getDockedPlaneID(at(ended))).toBe('');
         // a tween that lands elsewhere records nothing
         const elsewhere = reducer(reducer(travelling, actions.setMotion('tween')), actions.setDockingPlaneID(''));
-        expect(getDockedPlaneID({ space: elsewhere, configuration: page } as any)).toBe('');
+        expect(getDockedPlaneID(at(elsewhere))).toBe('');
     });
-});
-
 });
 // #endregion module

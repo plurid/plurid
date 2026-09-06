@@ -10,6 +10,7 @@
     import PluridToolbar from '~components/utilities/Toolbar/General';
     import PluridViewcube from '~components/utilities/Viewcube';
     import PluridMinimap from '~components/utilities/Minimap';
+    import PluridDockRail from '~components/utilities/DockRail';
     import PluridShortcuts from '~components/utilities/Shortcuts';
     // #endregion external
 // #region imports
@@ -20,13 +21,15 @@
 export interface PluridViewContainerProperties {
     /**
      * Optional render-slots — when provided, each REPLACES the engine's default overlay (rendered at
-     * the same spot). Omit to keep the default. The `elements.*.show` flags / `global.micro` still
+     * the same spot). Omit to keep the default. The `elements.*.show` flags still
      * apply to the defaults; a slot bypasses them entirely (the host owns that element).
      */
     renderToolbar?: () => unknown;
     renderViewcube?: () => unknown;
     renderMinimap?: () => unknown;
     renderShortcuts?: () => unknown;
+    /** The page presentation's rail (fit · back · the page / cube toggle). */
+    renderDockRail?: () => unknown;
 }
 
 const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
@@ -37,6 +40,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
         renderViewcube,
         renderMinimap,
         renderShortcuts,
+        renderDockRail,
     } = properties;
 
     // #region render
@@ -47,6 +51,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
             {renderToolbar ? renderToolbar() as React.ReactNode : <PluridToolbar />}
             {renderViewcube ? renderViewcube() as React.ReactNode : <PluridViewcube />}
             {renderMinimap ? renderMinimap() as React.ReactNode : <PluridMinimap />}
+            {renderDockRail ? renderDockRail() as React.ReactNode : <PluridDockRail />}
             {renderShortcuts ? renderShortcuts() as React.ReactNode : <PluridShortcuts />}
         </>
     );

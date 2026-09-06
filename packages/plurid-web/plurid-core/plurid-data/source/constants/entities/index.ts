@@ -19,7 +19,6 @@ export const PLURID_ENTITY_MULTISPACE = 'PluridMultispace';
 export const PLURID_ENTITY_TOOLBAR = 'PluridToolbar';
 export const PLURID_ENTITY_VIEWCUBE = 'PluridViewcube';
 export const PLURID_ENTITY_UNIVERSE_EXPLORER = 'PluridUniverseExplorer';
-// #endregion module
 export const PLURID_ENTITY_MINIMAP = 'PluridMinimap';
 export const PLURID_ENTITY_MARQUEE = 'PluridMarquee';
 export const PLURID_ENTITY_EMPTY = 'PluridEmpty';
@@ -28,3 +27,13 @@ export const PLURID_ENTITY_PLANE_RESIZE_HANDLE = 'PluridPlaneResizeHandle';
 /** The shortcuts dialog (a lowercase historical value: it is a documented selector, so it stays). */
 export const PLURID_ENTITY_SHORTCUTS_OVERLAY = 'shortcuts-overlay';
 
+
+/** The DOM attributes of the contract (`docs/CONTROL_SURFACE.md`, "Stable DOM contract"). */
+export const PLURID_ATTRIBUTE_ENTITY = 'data-plurid-entity';
+export const PLURID_ATTRIBUTE_PLANE = 'data-plurid-plane';
+export const PLURID_ATTRIBUTE_CONTROL = 'data-plurid-control';
+/** On the view while the camera is docked on a page (the page presentation): the page's id. */
+export const PLURID_ATTRIBUTE_DOCKED = 'data-plurid-docked';
+/** On a plane outside the docked page's lineage: faded, inert. */
+export const PLURID_ATTRIBUTE_ASIDE = 'data-plurid-aside';
+// #endregion module

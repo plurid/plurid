@@ -1,6 +1,6 @@
 # Plurid Engine Documentation
 
-Current as of **2026-07-13**.
+Current as of **2026-09-06**.
 
 ## Authority order
 
@@ -8,6 +8,10 @@ Current as of **2026-07-13**.
 | --- | --- |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Source-verified description of the live package graph, render pipeline, state, SSR, kit, and public APIs |
 | [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) | Canonical guide to configuration, callbacks, pubsub, storage, gestures, shortcuts, slots, and escape hatches |
+| [`../GETTING_STARTED.md`](../GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
+| [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
+| [`HARNESS.md`](./HARNESS.md) | GENERATED — every flag and fixture of the verification harness (`fixtures/render-test`) |
+| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Work on the engine: the gates, the harness, the traps |
 | [`../CONTEXT-MAP.md`](../CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | Active engineering defects, performance work, and verification priorities |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | Delivered capabilities, adoption status, and future capability sequence |
@@ -19,7 +23,7 @@ Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the main
 ## Current priorities
 
 1. Wire and measure real culling/virtualization for large spaces.
-2. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines; `docs/HARNESS.md`); extend the catalog as features land.
+2. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines, `e2e/page.spec.ts` for the page presentation frame by frame; `docs/HARNESS.md`); extend the catalog as features land.
 3. Add explicit repository type-checking to CI.
 4. Move Denote onto the public engine control/persistence/collaboration seams.
 5. Use Depict and Dechat to validate content and interaction generality.

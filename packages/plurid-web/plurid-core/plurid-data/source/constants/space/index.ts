@@ -13,4 +13,9 @@ export const ROOTS_GAP = 50;
 export const PLANE_DEFAULT_ANGLE = 90;
 
 export const FOCUS_ANCHOR_SUFFIX = '-focus';
+
+/** The height of a plane's controls bar, px: its first row in the space presentation, hanging above the sheet on a page. */
+export const PLANE_BAR_HEIGHT = 56;
+/** The height of the bridge strip between a link and its spawned plane, px (the leash is drawn as this band). */
+export const BRIDGE_STRIP_HEIGHT = 30;
 // #endregion module

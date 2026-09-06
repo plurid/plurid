@@ -93,6 +93,8 @@ export const useTreeUpdate = (
         const hiddenFallback = viewResized
             ? resolvePlaneFallbackSize(treeConfiguration, viewSize)
             : undefined;
+        // a configured height (view-sized pages) is exact; else a hidden plane keeps its aspect
+        const hiddenFallbackExact = viewResized && space.layout.configuredPlaneSize(treeConfiguration, viewSize).height > 0;
 
         const planes = getRegisteredPlanes(planesRegistrar);
 
@@ -145,7 +147,7 @@ export const useTreeUpdate = (
                 ...(previous.children
                     ? {
                         children: hiddenFallback
-                            ? space.tree.fields.refreshHiddenPlaneSizes(previous.children, hiddenFallback)
+                            ? space.tree.fields.refreshHiddenPlaneSizes(previous.children, hiddenFallback, hiddenFallbackExact)
                             : previous.children,
                     }
                     : {}),

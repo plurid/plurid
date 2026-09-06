@@ -15,7 +15,9 @@
  * child does not move — its world position is state — but the bridge follows: it becomes the
  * segment from the child's edge to the link's CURRENT point, tilting and stretching, resting at the
  * fold once the link is beyond it (the measurement clamps there). The two values ride on the child
- * plane element as CSS custom properties (no store churn), and the bridge's stylesheet reads them.
+ * plane element as CSS custom properties (no store churn), and the bridge's stylesheet draws the
+ * segment from them as a band across an axis-aligned box - never as a rotated element, whose corners
+ * would cross the parent's plane (components/structural/Plane/components/PlaneBridge/styled.ts).
  */
 export const BRIDGE_REACH_VARIABLE = '--plurid-bridge-reach';
 export const BRIDGE_ANGLE_VARIABLE = '--plurid-bridge-angle';
@@ -23,7 +25,7 @@ export const BRIDGE_ANGLE_VARIABLE = '--plurid-bridge-angle';
 export interface BridgeGeometry {
     /** the bridge's length, px */
     reach: number;
-    /** its tilt about the child-side end, degrees (CSS `rotate`: clockwise-positive, y down) */
+    /** its tilt about the child-side end, degrees (clockwise-positive, y down: a rising leash is positive for `start`) */
     angle: number;
 }
 

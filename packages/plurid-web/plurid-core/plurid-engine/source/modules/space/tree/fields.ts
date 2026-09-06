@@ -15,6 +15,24 @@
  * the SAME tree reference when the plane is absent or every patched field is already `===`, so
  * callers can detect a no-op without diffing and connected planes keep their memo bailouts.
  */
+/** A location is compared by value (a fresh object with the same five numbers is not a change). */
+const sameField = (
+    key: keyof TreePlane,
+    a: unknown,
+    b: unknown,
+): boolean => {
+    if (a === b) {
+        return true;
+    }
+    if (key === 'location' && a && b) {
+        const x = a as TreePlane['location'];
+        const y = b as TreePlane['location'];
+        return x.translateX === y.translateX && x.translateY === y.translateY && x.translateZ === y.translateZ
+            && x.rotateX === y.rotateX && x.rotateY === y.rotateY;
+    }
+    return false;
+};
+
 export const updateTreePlaneFields = (
     tree: TreePlane[],
     planeID: string,
@@ -26,7 +44,7 @@ export const updateTreePlaneFields = (
         if (plane.planeID === planeID) {
             let differs = false;
             for (const key of Object.keys(patch) as (keyof TreePlane)[]) {
-                if (plane[key] !== patch[key]) {
+                if (!sameField(key, plane[key], patch[key])) {
                     differs = true;
                     break;
                 }
@@ -90,7 +108,6 @@ export const pruneLinks = (
 };
 
 
-/** Every plane id in the tree, children included. */
 /**
  * A closed plane is unmounted, so its measured size froze at the moment it closed. When the view
  * changes size, re-derive every hidden, non-manual plane's size from the fallback (its aspect ratio
@@ -100,26 +117,30 @@ export const pruneLinks = (
 export const refreshHiddenPlaneSizes = (
     planes: TreePlane[],
     fallback: { width: number; height: number },
+    /** the fallback height is configured (view-sized pages), not derived from the plane's aspect */
+    exactHeight = false,
 ): TreePlane[] => {
     let changed = false;
 
     const next = planes.map((plane) => {
         const children = plane.children
-            ? refreshHiddenPlaneSizes(plane.children, fallback)
+            ? refreshHiddenPlaneSizes(plane.children, fallback, exactHeight)
             : undefined;
         const childrenChanged = !!children && children !== plane.children;
 
         const hidden = plane.show === false && plane.sizeMode !== 'manual' && plane.sizeMode !== 'declared';
-        const resize = hidden && plane.width !== fallback.width;
+        const resize = hidden && (plane.width !== fallback.width || (exactHeight && plane.height !== fallback.height));
         if (!resize && !childrenChanged) {
             return plane;
         }
 
         changed = true;
         const height = resize
-            ? (plane.width > 0 && plane.height > 0
-                ? Math.round(fallback.width * plane.height / plane.width)
-                : fallback.height)
+            ? (exactHeight
+                ? fallback.height
+                : (plane.width > 0 && plane.height > 0
+                    ? Math.round(fallback.width * plane.height / plane.width)
+                    : fallback.height))
             : plane.height;
 
         return {
@@ -133,6 +154,7 @@ export const refreshHiddenPlaneSizes = (
 };
 
 
+/** Every plane id in the tree, children included. */
 export const collectPlaneIDs = (
     tree: TreePlane[],
     into: Set<string> = new Set(),

@@ -15,6 +15,8 @@ export const Z_INDEX = {
     ORIGIN: 30,
     VIEWCUBE: 40,
     MINIMAP: 41,
+    /** the page presentation's rail: above the cube and the minimap, under the toolbar */
+    DOCK: 45,
     TOOLBAR: 50,
     /** The shortcuts `?` trigger. */
     SHORTCUTS_TRIGGER: 60,

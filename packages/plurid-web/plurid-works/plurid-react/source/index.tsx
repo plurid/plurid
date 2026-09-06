@@ -208,6 +208,7 @@ const Plurid = {
 
     /** Escape-hatch primitives */
     selectors: pluridSelectors,
+    definePluridConfiguration,
     arrangementSignature,
 
     internals,
@@ -344,6 +345,46 @@ export type {
 export type {
     PluridApplicationHandle,
 } from './containers/Application/handle';
+export type {
+    PluridConfigurationSpaceDocking,
+    PluridConfigurationSpace,
+    PluridConfigurationElementsPlane,
+    TreePlane,
+    PlaneLink,
+    LinkCoordinates,
+    PluridBookmarkAction,
+    PluridChangeKind,
+    PluridShortcutID,
+    PluridState,
+} from '@plurid/plurid-data';
+export type {
+    ClosePlaneOptions,
+} from './services/state/thunks/planes';
+export type {
+    AppState as PluridStoreState,
+} from './services/state/store';
+export type {
+    BridgeGeometry,
+} from './services/logic/link/bridge';
+export {
+    bridgeGeometry,
+    BRIDGE_REACH_VARIABLE,
+    BRIDGE_ANGLE_VARIABLE,
+} from './services/logic/link/bridge';
+export {
+    dockCommand,
+    revealCommand,
+    resolveCameraTarget,
+    landingDockPlaneID,
+} from './services/logic/camera';
+export {
+    pagePresentationDefaults,
+    PLURID_ATTRIBUTE_ENTITY,
+    PLURID_ATTRIBUTE_PLANE,
+    PLURID_ATTRIBUTE_CONTROL,
+    PLURID_ATTRIBUTE_DOCKED,
+    PLURID_ATTRIBUTE_ASIDE,
+} from '@plurid/plurid-data';
 export type {
     CameraMotionOptions,
     CameraCommand,

@@ -17,7 +17,6 @@
     } from './matrix';
     import {
         projectWithMatrix,
-        planeBasis,
         planeCenter,
     } from './project';
     // #endregion internal
@@ -28,12 +27,18 @@
 // #region module
 /**
  * DOCKING — the page presentation's derived state. A camera is docked on a plane when it shows
- * that plane face-on at scale 1 with the plane's box exactly on the view: `pitch = −rotateX`,
+ * that plane face-on at scale 1 with the plane's center under the view center: `pitch = −rotateX`,
  * `yaw = −rotateY`, `scale 1`, `offset 0`, the pivot at the plane's center, so a view-sized plane
- * maps 1 : 1 to view pixels (depth 0, perspective factor 1). The identity camera of a fresh space
- * IS the dock pose of a view-sized root at the origin. "Docked" is read off the picture, never
- * off the parameters: a zoom about the cursor or a cursor pivot re-parameterize `pivot` / `offset`
- * losslessly, so two cameras with different pivots can render the same page.
+ * maps 1 : 1 to view pixels (depth 0, perspective factor 1) and a smaller one sits centered at its
+ * own size. The identity camera of a fresh space IS the dock pose of a view-sized root at the
+ * origin. "Docked" is read off the picture, never off the parameters: a zoom about the cursor or a
+ * cursor pivot re-parameterize `pivot` / `offset` losslessly, so two cameras with different pivots
+ * can render the same page — the test is "does the camera equal the plane's dock pose", the
+ * angles and the scale as scalars, the position through one projection of the plane's center.
+ *
+ * Three words: the DOCKED plane is the one the camera sits on now; the DESTINATION is the page a
+ * running tween is docking on (`dockingPlaneID` in the react state); the CANDIDATE is the shown
+ * plane nearest the view center, docked on when no plane is named.
  */
 
 /** A tree node as the dock functions read it (a root or a spawned child). */
@@ -87,7 +92,8 @@ export const dockPose = (
         pivot: planeCenter(plane),
         offset: { x: 0, y: 0, z: 0 },
     },
-    limits,
+    // a page is docked face-on whatever its tilt: the orbit's pitch limit never clamps a dock pose
+    { ...limits, pitchLimit: Math.max(limits.pitchLimit, Math.abs(plane.location.rotateX)) },
 );
 
 const angleDistance = (
@@ -95,44 +101,40 @@ const angleDistance = (
     b: number,
 ): number => Math.abs(normalizeYaw(a - b));
 
+/** The scalar tolerance of the dock test (scale, and the angles in degrees). */
+const DOCK_TOLERANCE = 1e-3;
+
 /**
- * Whether `camera` is docked on `plane` for this view: unit scale and the face-on angles (within
- * 1e-3), then the plane's top-left and bottom-right corners projected onto the view's own corners
- * within `epsilon` px. The scalar checks come first so an orbit or a zoom exits on the first line.
+ * Whether `camera` is docked on `plane` for this view — whether it IS the plane's dock pose: unit
+ * scale and the face-on angles within `DOCK_TOLERANCE`, then the plane's center projected within
+ * `epsilon` px of the view center. The scalar checks come first so an orbit or a zoom exits on
+ * the first line; `matrix` lets a walk over many planes project with one camera matrix.
  */
 export const isDocked = (
     camera: CameraState,
     plane: PlaneGeometry,
     view: ViewSize,
     epsilon = 0.5,
+    matrix = cameraMatrix(camera, view),
 ): boolean => {
-    if (Math.abs(camera.scale - 1) > 1e-3) {
+    if (Math.abs(camera.scale - 1) > DOCK_TOLERANCE) {
         return false;
     }
-    if (angleDistance(camera.yaw, -plane.location.rotateY) > 1e-3) {
+    if (angleDistance(camera.yaw, -plane.location.rotateY) > DOCK_TOLERANCE) {
         return false;
     }
-    if (Math.abs(camera.pitch + plane.location.rotateX) > 1e-3) {
+    if (Math.abs(camera.pitch + plane.location.rotateX) > DOCK_TOLERANCE) {
         return false;
     }
-    const basis = planeBasis(plane.location);
-    const topLeft = basis.origin;
-    const bottomRight = {
-        x: basis.origin.x + basis.u.x * plane.width + basis.v.x * plane.height,
-        y: basis.origin.y + basis.u.y * plane.width + basis.v.y * plane.height,
-        z: basis.origin.z + basis.u.z * plane.width + basis.v.z * plane.height,
-    };
-    const matrix = cameraMatrix(camera, view);
-    const a = projectWithMatrix(matrix, camera.perspective, view, topLeft);
-    const b = projectWithMatrix(matrix, camera.perspective, view, bottomRight);
-    return a.visible && b.visible
-        && Math.abs(a.x) <= epsilon
-        && Math.abs(a.y) <= epsilon
-        && Math.abs(b.x - view.width) <= epsilon
-        && Math.abs(b.y - view.height) <= epsilon;
+    // the center under the view center AT THE PIVOT DEPTH: a parallel page a few hundred units in
+    // front or behind projects to the same point, at another depth
+    const center = viewCenter(view);
+    const projected = projectWithMatrix(matrix, camera.perspective, view, planeCenter(plane));
+    return projected.visible
+        && Math.abs(projected.cameraZ) <= epsilon
+        && Math.abs(projected.x - center.x) <= epsilon
+        && Math.abs(projected.y - center.y) <= epsilon;
 };
-
-const geometryOf = dockGeometry;
 
 const walkShown = (
     planes: DockablePlane[],
@@ -160,9 +162,15 @@ export const findDockedPlane = (
     fallback: DockFallbackSize,
     epsilon = 0.5,
 ): string => {
+    // the scalar part of the test does not depend on the plane: a zoomed or turned camera is
+    // docked on nothing, and the walk is skipped
+    if (Math.abs(camera.scale - 1) > DOCK_TOLERANCE) {
+        return '';
+    }
+    const matrix = cameraMatrix(camera, view);
     let found = '';
     walkShown(planes, (plane) => {
-        if (isDocked(camera, geometryOf(plane, fallback), view, epsilon)) {
+        if (isDocked(camera, dockGeometry(plane, fallback), view, epsilon, matrix)) {
             found = plane.planeID;
             return true;
         }
@@ -183,7 +191,7 @@ export const dockCandidate = (
     let best = '';
     let bestDistance = Infinity;
     walkShown(planes, (plane) => {
-        const projected = projectWithMatrix(matrix, camera.perspective, view, planeCenter(geometryOf(plane, fallback)));
+        const projected = projectWithMatrix(matrix, camera.perspective, view, planeCenter(dockGeometry(plane, fallback)));
         if (!projected.visible) {
             return false;
         }
@@ -197,22 +205,33 @@ export const dockCandidate = (
     return best;
 };
 
-/** The reveal from a docked page: pulled back and tilted, the page seen as a sheet in space. */
-export const REVEAL = {
+/** The reveal move from a docked page: pulled back and tilted, the page seen as a sheet in space. */
+export interface RevealPose {
+    /** the camera scale (1 = docked) */
+    scale: number;
+    /** degrees added to the dock pose's pitch */
+    pitch: number;
+    /** degrees added to the dock pose's yaw */
+    yaw: number;
+}
+
+/** The default reveal move (`space.docking.reveal`). */
+export const REVEAL: RevealPose = {
     scale: 0.8,
     pitch: 8,
     yaw: -6,
-} as const;
+};
 
 export const revealPose = (
     dock: CameraState,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    reveal: Partial<RevealPose> = REVEAL,
 ): CameraState => clampCamera(
     {
         ...dock,
-        scale: REVEAL.scale,
-        pitch: dock.pitch + REVEAL.pitch,
-        yaw: normalizeYaw(dock.yaw + REVEAL.yaw),
+        scale: reveal.scale ?? REVEAL.scale,
+        pitch: dock.pitch + (reveal.pitch ?? REVEAL.pitch),
+        yaw: normalizeYaw(dock.yaw + (reveal.yaw ?? REVEAL.yaw)),
     },
     limits,
 );

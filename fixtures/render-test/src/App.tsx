@@ -48,7 +48,7 @@ const App = () => {
     const stress = !!flags.planes;
     // The plane set, the sizes and persistence re-create the application; a layout change does
     // not (an animated relayout on the live instance, children attached).
-    const applicationKey = [stress ? 'stress-' + flags.planes : (flags.pages ? 'site-' + flags.pages : 'base'), flags.sizes, flags.persist ? 'p' : ''].join('-');
+    const applicationKey = [stress ? 'stress-' + flags.planes : (flags.pages ? 'site-' + flags.pages : 'base'), flags.sizes, flags.siteTheme ?? '', flags.stickyHeader ? 'sticky' : '', flags.persist ? 'p' : ''].join('-');
 
     return (
         <>
@@ -80,6 +80,26 @@ const App = () => {
                             style={{ position: 'fixed', bottom: 12, left: 12, zIndex: 9999, color: '#7ee787' }}
                         >
                             CUSTOM TOOLBAR
+                        </div>
+                    )
+                    : undefined}
+                renderDockRail={flags.slotDockRail
+                    ? () => (
+                        <div
+                            id="rt-custom-dock-rail"
+                            style={{ position: 'fixed', bottom: 12, right: 12, zIndex: 9999, color: '#7ee787' }}
+                        >
+                            CUSTOM RAIL
+                        </div>
+                    )
+                    : undefined}
+                renderViewcube={flags.slotViewcube
+                    ? () => (
+                        <div
+                            id="rt-custom-viewcube"
+                            style={{ position: 'fixed', top: 12, right: 12, zIndex: 9999, color: '#7ee787' }}
+                        >
+                            CUSTOM CUBE
                         </div>
                     )
                     : undefined}

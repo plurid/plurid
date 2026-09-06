@@ -174,13 +174,6 @@ export interface PluridRoutePlaneOptions {
     /** The plane's own height in px (see `PluridPlaneOptions.height`). */
     height?: number;
 
-    /**
-     * On direct link access (from the browser), show the plane in a `plurid` space,
-     * or as the legacy view of an web page.
-     *
-     * Default `'plurid'`
-     */
-    linkView?: 'legacy' | 'plurid';
 
     /**
      * Injectable into other `plurid` spaces.

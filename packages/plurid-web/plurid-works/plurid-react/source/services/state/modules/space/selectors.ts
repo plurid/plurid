@@ -34,7 +34,6 @@ export const getSpace = (state: AppState) => state.space;
 export const getLoading = (state: AppState): boolean => state.space.loading;
 export const getResolvedLayout = (state: AppState): boolean => state.space.resolvedLayout;
 export const getTransformMatrix = (state: AppState) => state.space.transform;
-export const getAnimatedTransform = (state: AppState): boolean => state.space.animatedTransform;
 export const getTransformTime = (state: AppState): number => state.space.transformTime;
 
 export const getCamera = (state: AppState) => state.space.camera;
@@ -107,7 +106,7 @@ export const getDockedPlaneID = createSelector(
         }
         // the configured size (view-sized pages) over a measured one: a measurement lags a frame
         const configured = spaceEngine.layout.configuredPlaneSize({ elements: { plane } } as any, view);
-        return cameraEngine.findDockedPlane(camera, tree as any, view, configured);
+        return cameraEngine.findDockedPlane(camera, tree, view, configured, docking?.epsilon);
     },
 );
 export const getCulledView = (state: AppState) => state.space.culledView;
@@ -134,9 +133,9 @@ const NO_LINEAGE: ReadonlySet<string> = new Set();
  * the docked state, recomputed only when the docked page or the tree changes.
  */
 export const getDockedLineage = createSelector(
-    [getDockedPlaneID, getTree],
-    (docked, tree): ReadonlySet<string> => {
-        if (!docked) {
+    [getDockedPlaneID, getTree, getDockingConfiguration],
+    (docked, tree, docking): ReadonlySet<string> => {
+        if (!docked || docking?.aside === 'none') {
             return NO_LINEAGE;
         }
         const lineage = new Set<string>();
@@ -152,13 +151,14 @@ export const getDockedLineage = createSelector(
     },
 );
 
-/** Factory: one memoized "is THIS plane set aside" selector per plane (outside the docked lineage). */
+/** Factory: one memoized "is THIS plane set aside" selector per plane (in the tree, outside the docked lineage). */
 export const makeGetIsPlaneAside = () => createSelector(
     [
         getDockedLineage,
+        getPlaneIndex,
         (_state: AppState, planeID: string | undefined) => planeID,
     ],
-    (lineage, planeID): boolean => !!planeID && lineage.size > 0 && !lineage.has(planeID),
+    (lineage, index, planeID): boolean => !!planeID && lineage.size > 0 && index.has(planeID) && !lineage.has(planeID),
 );
 
 export type PlaneCullingState = 'visible' | 'hidden' | 'frozen';
@@ -224,6 +224,13 @@ export const getPlaneIndex = createSelector(
     [getTree],
     buildPlaneIndex,
 );
+
+/** The parent of the docked page, `''` for a root or when nothing is docked (the rail's back control). */
+export const getDockedParentPlaneID = createSelector(
+    [getDockedPlaneID, getPlaneIndex],
+    (docked, index): string => (docked ? (index.get(docked)?.parentPlaneID ?? '') : ''),
+);
+
 
 /**
  * Factory for a PER-INSTANCE memoized "resolve a plane node by id" selector. Use one per

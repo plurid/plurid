@@ -1,5 +1,8 @@
 // #region imports
     // #region libraries
+    import {
+        PLANE_BAR_HEIGHT,
+    } from '@plurid/plurid-data';
     import styled from 'styled-components';
 
     import {
@@ -24,7 +27,7 @@ export interface IStyledPluridPlane {
     selected: boolean;
     /** A declared or hand-set height: the content row takes the rest and scrolls inside it. */
     fixedHeight?: boolean;
-    /** The controls bar takes a 56px row (false: it overlays the content, the page presentation). */
+    /** The controls bar takes a `PLANE_BAR_HEIGHT` row (false: it hangs above the sheet, the page presentation). */
     controlsRow?: boolean;
 }
 
@@ -45,10 +48,16 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     &[data-plurid-culled='frozen'] {
         contain: layout paint style;
     }
-    /* Set aside (outside the docked page's lineage): the fade rides the inline opacity; none under reduced motion. */
+    /* Set aside (outside the docked page's lineage): the opacity is inline (0), this is its fade —
+       and once faded the plane is gone for the keyboard and the reader too (inert + visibility),
+       coming back at once when the attribute goes. None under reduced motion. */
+    transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear 0s;
+    &[data-plurid-aside] {
+        visibility: hidden;
+        transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear var(--plurid-dock-fade, 240ms);
+    }
     @media (prefers-reduced-motion: reduce) {
-        &[data-plurid-aside],
-        &:not([data-plurid-aside]) {
+        & {
             transition: none !important;
         }
     }
@@ -112,8 +121,6 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }};
 
     position: absolute;
-    height: auto;
-    width: 100%;
     font-size: 0.9rem;
     font-family: ${
         ({
@@ -131,13 +138,13 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }) => {
         const content = fixedHeight ? 'minmax(0, 1fr)' : 'auto';
         if (planeControls && controlsRow !== false) {
-            return '56px ' + content;
+            return PLANE_BAR_HEIGHT + 'px ' + content;
         }
         return content;
     }};
 
-    /* Docked on this page (the page presentation) the sheet has no drop shadow: it IS the page. */
-    [data-plurid-docked] & {
+    /* Docked on THIS page (the page presentation) the sheet has no drop shadow: it IS the page. */
+    &[data-plurid-page='docked'] {
         box-shadow: none;
     }
 

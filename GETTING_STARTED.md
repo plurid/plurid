@@ -93,14 +93,16 @@ export default App;
 ```
 
 - **Follow the link**: the about page opens *behind* the site and the camera swings around to it — a page
-  again, filling the view. Its back control (or Escape) brings the site back.
-- **Reveal the space**: press **G**, pinch out (Ctrl + wheel), or click the faint cube at the bottom-right
-  corner — the page pulls back and tilts, the chrome fades in, and you are in the 3D space of §2.
-- **Return**: **Escape** docks the page again.
+  again, filling the view (nothing else appears during the swing). The back chevron in the rail at the
+  bottom-right corner, or **Escape**, brings the site back — one page at a time.
+- **Reveal the space**: press **G**, pinch (Ctrl + wheel, or two fingers on touch), or click the small cube in
+  that rail — the page pulls back and tilts, the chrome fades in, and you are in the 3D space of §2.
+- **Return**: **Escape** docks the nearest page again (on a spawned page, Escape goes to its parent instead).
 
 There is no mode: the pose of the camera is the whole state. Every undeclared plane takes the view's size
 (`planeHeight: 1`); a plane can still declare its own `width` / `height`. Details in
-[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) ("The page presentation").
+[`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) ("The page presentation"); to see it live, open the
+harness at `fixtures/render-test` with `?fixture=page-docked` (`pnpm dev` there).
 
 
 

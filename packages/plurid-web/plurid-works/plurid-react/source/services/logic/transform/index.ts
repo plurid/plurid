@@ -1,4 +1,9 @@
 // #region imports
+    import {
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ATTRIBUTE_PLANE,
+        PLURID_ENTITY_PLANE_CONTENT,
+    } from '@plurid/plurid-data';
     // #region libraries
     import {
         FOCUS_ANCHOR_SUFFIX,
@@ -37,7 +42,7 @@ export const focusPluridPlaneAnchor = (
     }
     // A plane whose content scrolls inside it (a declared or configured height) focuses the
     // scroller, so the keyboard scrolls the page; otherwise the invisible anchor.
-    const scroller = document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-entity="PluridPlaneContent"][tabindex]`) as HTMLElement | null;
+    const scroller = document.querySelector(`[${PLURID_ATTRIBUTE_PLANE}="${planeID}"] [${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTENT}"][tabindex]`) as HTMLElement | null;
     if (scroller) {
         scroller.focus({
             preventScroll: true,

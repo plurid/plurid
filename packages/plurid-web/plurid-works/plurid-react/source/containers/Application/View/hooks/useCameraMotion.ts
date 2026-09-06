@@ -64,6 +64,9 @@ export interface UseCameraMotionParameters {
     spaceConfiguration: PluridConfigurationSpace;
 }
 
+/** The clock the tweens read (the global one, so tests can drive it); `Date.now` without `performance`. */
+const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+
 const REFERENCE_FRAME_MS = 1000 / 60;
 
 
@@ -90,6 +93,7 @@ export const useCameraMotion = (
         start: number;
         duration: number;
         easing: Easing;
+        onSettle?: () => void;
     } | null>(null);
     const fling = useRef<{
         velocity: Vec2;
@@ -150,8 +154,10 @@ export const useCameraMotion = (
                 );
                 dispatch(actions.space.setCamera(camera));
                 if (progress >= 1) {
+                    const onSettle = activeTween.onSettle;
                     tween.current = null;
                     setMotion('idle');
+                    onSettle?.();
                     return;
                 }
                 frame.current = requestAnimationFrame(tick);
@@ -229,7 +235,7 @@ export const useCameraMotion = (
                 fling.current = {
                     velocity: { x: velocity.x, y: velocity.y },
                     kind,
-                    last: performance.now(),
+                    last: now(),
                 };
                 setMotion('fling');
                 schedule();
@@ -237,8 +243,13 @@ export const useCameraMotion = (
             tweenTo: (target, options = {}) => {
                 // already on its way there: a retarget to the same pose would only restart the tween
                 if (tween.current && cameraEngine.sameCamera(tween.current.to, target, 1e-9)) {
-                    return;
+                    if (options.onSettle) {
+                        tween.current.onSettle = options.onSettle;
+                    }
+                    return true;
                 }
+                // the intent to settle survives a retarget (a re-frame after a measurement)
+                const onSettle = options.onSettle ?? tween.current?.onSettle;
                 stop();
                 const from = stateRef.current.space.camera;
                 const motion = configRef.current.navigation?.motion || {};
@@ -252,18 +263,21 @@ export const useCameraMotion = (
                     || cameraEngine.sameCamera(from, target, 1e-9)
                 ) {
                     dispatch(actions.space.setCamera(target));
-                    return;
+                    onSettle?.();
+                    return false;
                 }
 
                 tween.current = {
                     from,
                     to: target,
-                    start: performance.now(),
+                    start: now(),
                     duration,
                     easing: (cameraEngine.EASINGS as Record<string, Easing>)[easingName] || cameraEngine.EASINGS['out-cubic'],
+                    onSettle,
                 };
                 setMotion('tween');
                 schedule();
+                return true;
             },
         };
     }, []);

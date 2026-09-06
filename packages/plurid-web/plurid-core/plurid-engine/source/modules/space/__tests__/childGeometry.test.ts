@@ -123,20 +123,20 @@ describe('childLocation() mirrored', () => {
 
 describe('resolvePlaneAngle()', () => {
     it('starts behind the parent (positive); fixed (the default) keeps the same turn, alternate flips it by generation', () => {
-        expect(resolvePlaneAngle(1, 0, 90)).toBe(90);
-        expect(resolvePlaneAngle(2, 0, 90)).toBe(90);
-        expect(resolvePlaneAngle(3, 0, 90)).toBe(90);
-        expect(resolvePlaneAngle(1, 0, 90, 'alternate')).toBe(90);
-        expect(resolvePlaneAngle(2, 0, 90, 'alternate')).toBe(-90);
-        expect(resolvePlaneAngle(3, 0, 60, 'alternate')).toBe(60);
-        expect(resolvePlaneAngle(2, 0, 60, 'fixed')).toBe(60);
+        expect(resolvePlaneAngle(1, 90)).toBe(90);
+        expect(resolvePlaneAngle(2, 90)).toBe(90);
+        expect(resolvePlaneAngle(3, 90)).toBe(90);
+        expect(resolvePlaneAngle(1, 90, 'alternate')).toBe(90);
+        expect(resolvePlaneAngle(2, 90, 'alternate')).toBe(-90);
+        expect(resolvePlaneAngle(3, 60, 'alternate')).toBe(60);
+        expect(resolvePlaneAngle(2, 60, 'fixed')).toBe(60);
     });
 
     it('forward grows toward the viewer (the negative angle first)', () => {
-        expect(resolvePlaneAngle(1, 0, 90, 'alternate', 'forward')).toBe(-90);
-        expect(resolvePlaneAngle(2, 0, 90, 'alternate', 'forward')).toBe(90);
-        expect(resolvePlaneAngle(3, 0, 60, 'alternate', 'forward')).toBe(-60);
-        expect(resolvePlaneAngle(2, 0, 60, 'fixed', 'forward')).toBe(-60);
+        expect(resolvePlaneAngle(1, 90, 'alternate', 'forward')).toBe(-90);
+        expect(resolvePlaneAngle(2, 90, 'alternate', 'forward')).toBe(90);
+        expect(resolvePlaneAngle(3, 60, 'alternate', 'forward')).toBe(-60);
+        expect(resolvePlaneAngle(2, 60, 'fixed', 'forward')).toBe(-60);
     });
 });
 
@@ -214,7 +214,7 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(finPlane.planeAngle).toBe(90);
         expect(finPlane.location.rotateY).toBe(90);
         expect(finPlane.location.translateX).toBeCloseTo(112, 9);
-        expect(finPlane.location.translateY).toBeCloseTo(361, 9);
+        expect(finPlane.location.translateY).toBeCloseTo(361 - 15, 9);  // the plane's top half a strip above the link (bridgeOffset)
         expect(finPlane.location.translateZ).toBeCloseTo(-160, 9);
         // the mesh link sits 61 px along the fin: the mesh turns another 90° (faces −z) and hangs
         // on the fin's back side (x < 112), its bridge along local −X reaching the link
@@ -224,7 +224,7 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(mesh.location.rotateY).toBe(180);
         expect(mesh.location.translateX).toBeCloseTo(112 - 160, 9);
         expect(mesh.location.translateZ).toBeCloseTo(-221, 9);
-        expect(mesh.location.translateY).toBeCloseTo(678, 9);
+        expect(mesh.location.translateY).toBeCloseTo(678 - 30, 9);  // two generations, two offsets
         // a third turn: faces −x, behind the mesh's face (+z side of it)
         const edges = updateTreeWithNewPlane('/detail', mesh.planeID, { x: 20, y: 300 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'c', fallbackWidth: 320 }).updatedTreePlane;
         expect(edges).toBeUndefined();

@@ -30,6 +30,11 @@ export type FixtureStep =
         kind: 'dock';
         /** the registered route of the plane to dock the camera on (instant; the page presentation) */
         plane: string;
+    }
+    | {
+        kind: 'focus';
+        /** the `data-plurid-control` value of the control to focus (its focus ring is the picture) */
+        control: string;
     };
 
 export interface FixtureExpectations {
@@ -62,12 +67,22 @@ const ORBIT: FixtureViewpoint = {
     name: 'orbit',
     apply: [{ topic: 'space.cameraDelta', data: { absolute: { yaw: -30, pitch: 12 }, animate: false } }],
 };
+/** Every plane fitted in the view. */
+const FIT: FixtureViewpoint = { name: 'fit', apply: [{ topic: 'space.fitToView', data: { animate: false } }] };
 /** The page presentation's reveal move: the docked page pulled back and tilted. */
 const REVEALED: FixtureViewpoint = {
     name: 'revealed',
     apply: [{ topic: 'space.reveal', data: { animate: false } }],
 };
 /** Revealed, then turned and pulled further back: the pages BEHIND the docked one come into view. */
+/** Revealed and turned almost to a spawned page's face: its leash runs BEHIND the site (the child hangs behind it), in the child's own plane, so it shows only from the child's side. */
+const LEASH: FixtureViewpoint = {
+    name: 'leash',
+    apply: [
+        { topic: 'space.reveal', data: { animate: false } },
+        { topic: 'space.cameraDelta', data: { absolute: { yaw: -80, pitch: 6 }, zoom: { factor: 0.75 }, animate: false } },
+    ],
+};
 const REVEALED_ORBIT: FixtureViewpoint = {
     name: 'revealed-orbit',
     apply: [
@@ -96,7 +111,11 @@ export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'page-revealed', title: 'A page, revealed', description: 'The same page pulled back and tilted: the sheet in the space behind the site.', query: { presentation: 'page', pages: '1' }, viewpoints: [REVEALED], expect: { planes: 1 } },
     { name: 'page-spawned', title: 'A page, a link followed', description: 'The about page spawned behind the site by its link, the camera docked onto it.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/about' }], viewpoints: [FRONT], expect: { planes: 2, overlap: 'expected', links: false } },
     { name: 'page-spawned-scrolled', title: 'A page scrolled past its link', description: 'The contact page open, the site scrolled so its link is beyond the fold: the child stays, the bridge follows the link to the edge.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/contact' }, { kind: 'dock', plane: '/page-1' }, { kind: 'scroll', plane: '/page-1', top: 600 }], viewpoints: [REVEALED_ORBIT], expect: { planes: 2, overlap: 'expected', links: false } },
-    { name: 'pages-3-revealed', title: 'Three pages, revealed', description: 'Three site pages side by side, the space revealed.', query: { presentation: 'page', pages: '3' }, viewpoints: [REVEALED], expect: { planes: 3 } },
+    { name: 'page-rail-focus', title: 'A page, the rail focused', description: 'The page presentation with the keyboard on the corner control: its two-tone focus ring reads on the page.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'focus', control: 'dock-toggle' }], viewpoints: [FRONT], expect: { planes: 1 } },
+    { name: 'page-docked-light', title: 'A light page, docked', description: 'The page presentation on a light site: the rail reads over a light page too.', query: { presentation: 'page', pages: '1', siteTheme: 'light' }, viewpoints: [FRONT], expect: { planes: 1 } },
+    { name: 'page-aside', title: 'A page, its sibling aside', description: 'Two pages opened from the site\'s header; docked on the first, the second is set aside (faded, inert).', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/about' }, { kind: 'dock', plane: '/page-1' }, { kind: 'clickLink', plane: '/page-1', route: '/page-1/contact' }, { kind: 'dock', plane: '/page-1' }, { kind: 'clickLink', plane: '/page-1', route: '/page-1/about' }], viewpoints: [FRONT, LEASH], expect: { planes: 3, overlap: 'expected', links: false } },
+    { name: 'page-leash', title: 'A page, its leash', description: 'The contact page open and the site scrolled past its link, seen from the side: the leash from the link\'s fold to the page.', query: { presentation: 'page', pages: '1' }, steps: [{ kind: 'clickLink', plane: '/page-1', route: '/page-1/contact' }, { kind: 'dock', plane: '/page-1' }, { kind: 'scroll', plane: '/page-1', top: 600 }], viewpoints: [LEASH], expect: { planes: 2, overlap: 'expected', links: false } },
+    { name: 'pages-3-revealed', title: 'Three pages, revealed', description: 'Three site pages side by side, fitted in the view.', query: { presentation: 'page', pages: '3' }, viewpoints: [FIT], expect: { planes: 3 } },
     { name: 'empty', title: 'Empty', description: 'No roots: the empty state.', query: { empty: '1' }, viewpoints: [FRONT], expect: { planes: 0, minimap: false, links: false } },
 ];
 

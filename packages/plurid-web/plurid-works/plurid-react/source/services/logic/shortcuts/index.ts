@@ -51,6 +51,12 @@
         navigateDirection,
         duplicateSelection,
     } from '~services/state/thunks/selection';
+    import {
+        navigateToParent,
+    } from '~services/state/thunks/planes';
+    import {
+        getPlaneIndex,
+    } from '~services/state/modules/space/selectors';
 
 
     // #endregion external
@@ -69,6 +75,12 @@
 
 
 // #region module
+/** The parent of the docked page, `''` for a root or when nothing is docked. */
+const dockedParent = (state: AppState): string => {
+    const docked = getDockedPlaneID(state);
+    return docked ? (getPlaneIndex(state).get(docked)?.parentPlaneID ?? '') : '';
+};
+
 /** The key came from inside a plane's CONTENT (not the view, not a plane's focus anchor). */
 const insidePlaneContent = (
     event: KeyboardEvent,
@@ -141,7 +153,8 @@ const runTransformNudge = (ctx: ShortcutContext): boolean => {
 // The binding table — SAME order and SAME (deliberately loose) match conditions as the original
 // if-ladder, so first-match-wins behavior is byte-for-byte preserved. Only the surrounding
 // disable / remap / unhandled-key plumbing is new.
-const SHORTCUTS: ShortcutBinding[] = [
+/** The dispatcher's bindings, in PRECEDENCE order for a shared code (the first match wins). Every id and code is in `PLURID_SHORTCUTS`. */
+export const SHORTCUTS: ShortcutBinding[] = [
     {
         // Cmd/Ctrl+Z = undo, +Shift = redo. The editable-target guard lets an editor keep its own undo.
         id: 'undo', code: 'KeyZ',
@@ -183,14 +196,20 @@ const SHORTCUTS: ShortcutBinding[] = [
         },
     },
     {
-        // The page presentation: Escape docks the camera back on a page (exiting grab mode too).
+        // The page presentation: Escape brings a page back — from the revealed space, the nearest
+        // page docks (grab mode ends too); docked on a spawned page, its parent page (a root stays).
         id: 'dock', code: 'Escape',
         match: (e, code, ctx) => e.code === code
             && getPresentation(ctx.state) === 'page'
-            && !getDockedPlaneID(ctx.state)
-            && !ctx.state.ui?.shortcutsOverlayVisible,
-        run: ({ dispatch, prevent }) => {
+            && !ctx.state.ui?.shortcutsOverlayVisible
+            && (!getDockedPlaneID(ctx.state) || !!dockedParent(ctx.state)),
+        run: ({ dispatch, state, prevent }) => {
             prevent();
+            const docked = getDockedPlaneID(state);
+            if (docked) {
+                dispatch(navigateToParent(docked) as any);
+                return;
+            }
             dispatch(actions.ui.setUIGrabMode(false));
             dispatch(cameraCommand({ kind: 'dock' }, { animate: true }) as any);
         },
@@ -214,9 +233,10 @@ const SHORTCUTS: ShortcutBinding[] = [
         run: ({ dispatch, prevent }) => { prevent(); dispatch(fitToView({ animate: true }) as any); },
     },
     {
-        // The home viewpoint (`space.setHome` / `navigation.home` / identity): Home.
+        // The home viewpoint (`space.setHome` / `navigation.home` / identity): Home. Never from
+        // inside plane CONTENT, where Home is the page's (a docked page scrolls to its top).
         id: 'home', code: 'Home',
-        match: (e, code, ctx) => (e.code === code || e.key === 'Home') && ctx.noModifiers,
+        match: (e, code, ctx) => (e.code === code || e.key === 'Home') && ctx.noModifiers && !insidePlaneContent(e),
         run: ({ dispatch, prevent }) => { prevent(); dispatch(goHome(true) as any); },
     },
     // Keyboard plane navigation: plain arrows walk to the nearest plane in that screen direction,

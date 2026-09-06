@@ -6,7 +6,6 @@
     // #region libraries
     import React, {
         act,
-        useRef,
     } from 'react';
     import { createRoot, Root } from 'react-dom/client';
 
@@ -22,15 +21,27 @@
 
     // #region external
     import {
-        reducer,
-        actions,
-    } from '~services/state/modules/space';
-
-    import useCameraMotion from '../useCameraMotion';
+        AppState,
+    } from '~services/state/store/reducer';
     import {
         CameraMotionController,
     } from '~services/logic/motion';
+
+    import {
+        TEST_VIEW as view,
+    } from '../../../../../testing/fixtures';
+    import {
+        makeSpaceStore,
+    } from '../../../../../testing/store';
+    import {
+        installFrameClock,
+    } from '../../../../../testing';
     // #endregion external
+
+
+    // #region internal
+    import useCameraMotion from '../useCameraMotion';
+    // #endregion internal
 // #endregion imports
 
 
@@ -40,57 +51,46 @@ const {
     camera: cameraEngine,
 } = interaction;
 
-(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 
-const view = { width: 1000, height: 600 };
-
-/** A controllable rAF + clock. */
-const installFrameClock = () => {
-    let now = 0;
-    let queue: FrameRequestCallback[] = [];
-    (window as any).requestAnimationFrame = (callback: FrameRequestCallback) => {
-        queue.push(callback);
-        return queue.length;
-    };
-    (window as any).cancelAnimationFrame = () => {
-        queue = [];
-    };
-    // the hook reads the GLOBAL clock
-    jest.spyOn(globalThis.performance, 'now').mockImplementation(() => now);
-    return {
-        advance: (milliseconds: number) => {
-            now += milliseconds;
-            const callbacks = queue;
-            queue = [];
-            for (const callback of callbacks) {
-                callback(now);
-            }
-        },
-        pending: () => queue.length,
-    };
+/** The reduced-motion query, answered as asked. */
+const installReducedMotion = (
+    matches: boolean,
+) => {
+    Object.defineProperty(window, 'matchMedia', {
+        configurable: true,
+        writable: true,
+        value: (query: string): MediaQueryList => ({
+            matches,
+            media: query,
+            onchange: null,
+            addEventListener: () => {},
+            removeEventListener: () => {},
+            addListener: () => {},
+            removeListener: () => {},
+            dispatchEvent: () => false,
+        }),
+    });
 };
 
+/** The hook mounted over a headless store; its state ref always reads the live store. */
 const mountHook = (
-    reducedMotionMatches = false,
+    reducedMotion = false,
 ) => {
-    (window as any).matchMedia = () => ({ matches: reducedMotionMatches, addEventListener: () => {}, removeEventListener: () => {} });
-
-    let space = reducer(reducer(undefined, { type: '@@init' }), actions.setViewSize(view));
-    const stateRef: any = { current: { space, configuration: defaultConfiguration } };
-    const dispatched: any[] = [];
-    const dispatch: any = (action: any) => {
-        dispatched.push(action);
-        space = reducer(space, action);
-        stateRef.current = { space, configuration: defaultConfiguration };
-        return action;
+    installReducedMotion(reducedMotion);
+    const store = makeSpaceStore(defaultConfiguration, []);
+    const stateRef: React.MutableRefObject<AppState> = {
+        get current() {
+            return store.getState();
+        },
+        set current(_next: AppState) {},
     };
 
     let controller: CameraMotionController | undefined;
     const Probe = () => {
-        const reference = useRef(stateRef);
         controller = useCameraMotion({
-            dispatch,
-            stateRef: reference.current,
+            dispatch: store.dispatch,
+            stateRef,
             spaceConfiguration: defaultConfiguration.space,
         });
         return null;
@@ -106,14 +106,23 @@ const mountHook = (
 
     return {
         controller: () => controller!,
-        dispatched,
-        camera: () => space.camera,
-        unmount: () => act(() => root.unmount()),
+        dispatched: store.dispatched,
+        motions: () => store.dispatched.filter((action) => action.type === 'space/setMotion').map((action) => action.payload as string),
+        commits: () => store.cameraCommits().length,
+        camera: () => store.space().camera,
+        unmount: () => {
+            act(() => root.unmount());
+            container.remove();
+        },
     };
 };
 
 
 describe('useCameraMotion', () => {
+    afterEach(() => {
+        installFrameClock().restore();
+    });
+
     it('tweens to the target with one commit per frame and lands exactly', () => {
         const clock = installFrameClock();
         const hook = mountHook();
@@ -124,15 +133,14 @@ describe('useCameraMotion', () => {
         });
         expect(hook.controller().isActive()).toBe(true);
 
-        const commitsBefore = hook.dispatched.filter((action) => action.type === 'space/setCamera').length;
+        const commitsBefore = hook.commits();
         act(() => { clock.advance(50); });
         const midway = hook.camera();
         expect(midway.yaw).toBeGreaterThan(0);
         expect(midway.yaw).toBeLessThan(90);
         act(() => { clock.advance(30); });
         act(() => { clock.advance(30); });
-        const commits = hook.dispatched.filter((action) => action.type === 'space/setCamera').length - commitsBefore;
-        expect(commits).toBe(3);
+        expect(hook.commits() - commitsBefore).toBe(3);
         expect(hook.camera().yaw).toBeCloseTo(90, 9);
         expect(hook.camera().offset.x).toBeCloseTo(target.offset.x, 9);
         expect(hook.controller().isActive()).toBe(false);
@@ -163,12 +171,11 @@ describe('useCameraMotion', () => {
         act(() => { clock.advance(40); });
         const second = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -90 }, view);
         act(() => { hook.controller().tweenTo(second, { duration: 100 }); });
-        const motions = hook.dispatched.filter((action) => action.type === 'space/setMotion').map((action) => action.payload);
-        expect(motions[motions.length - 1]).toBe('tween');
+        expect(hook.motions().pop()).toBe('tween');
         expect(hook.controller().isActive()).toBe(true);
         act(() => { clock.advance(100); });
         act(() => { clock.advance(10); });
-        expect(hook.dispatched.filter((action) => action.type === 'space/setMotion').map((action) => action.payload).pop()).toBe('idle');
+        expect(hook.motions().pop()).toBe('idle');
         expect(hook.camera().yaw).toBeCloseTo(second.yaw, 9);
         hook.unmount();
     });
@@ -179,10 +186,10 @@ describe('useCameraMotion', () => {
         const target = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
         act(() => { hook.controller().tweenTo(target, { duration: 100 }); });
         act(() => { clock.advance(40); });
-        const motionsBefore = hook.dispatched.filter((action) => action.type === 'space/setMotion').length;
+        const motionsBefore = hook.motions().length;
         const atRetarget = hook.camera();
         act(() => { hook.controller().tweenTo(target, { duration: 100 }); });
-        expect(hook.dispatched.filter((action) => action.type === 'space/setMotion').length).toBe(motionsBefore);
+        expect(hook.motions().length).toBe(motionsBefore);
         // the original timing holds: 60 more ms land it
         act(() => { clock.advance(30); });
         expect(hook.camera().yaw).toBeGreaterThan(atRetarget.yaw);
@@ -193,13 +200,38 @@ describe('useCameraMotion', () => {
         hook.unmount();
     });
 
+    it('onSettle fires once the tween lands, at once for a jump, and never for a cancelled tween', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const settled: string[] = [];
+        const target = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(target, { duration: 100, onSettle: () => settled.push('tween') }); });
+        act(() => { clock.advance(50); });
+        expect(settled).toEqual([]);
+        act(() => { clock.advance(60); });
+        expect(settled).toEqual(['tween']);
+        // already there: a jump, settled at once, no tween started
+        let started = true;
+        act(() => { started = hook.controller().tweenTo(hook.camera(), { duration: 100, onSettle: () => settled.push('jump') }); });
+        expect(started).toBe(false);
+        expect(settled).toEqual(['tween', 'jump']);
+        // cancelled: never
+        const other = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -60 }, view);
+        act(() => { hook.controller().tweenTo(other, { duration: 100, onSettle: () => settled.push('cancelled') }); });
+        act(() => { clock.advance(30); });
+        act(() => { hook.controller().cancel(); });
+        act(() => { clock.advance(200); });
+        expect(settled).toEqual(['tween', 'jump']);
+        hook.unmount();
+    });
+
     it('reduced motion collapses a tween to one commit', () => {
         const clock = installFrameClock();
         const hook = mountHook(true);
         const target = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 45 }, view);
-        const before = hook.dispatched.filter((action) => action.type === 'space/setCamera').length;
+        const before = hook.commits();
         act(() => { hook.controller().tweenTo(target, { duration: 300 }); });
-        expect(hook.dispatched.filter((action) => action.type === 'space/setCamera').length - before).toBe(1);
+        expect(hook.commits() - before).toBe(1);
         expect(hook.camera().yaw).toBeCloseTo(45, 9);
         expect(clock.pending()).toBe(0);
         hook.unmount();
