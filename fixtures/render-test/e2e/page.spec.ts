@@ -332,6 +332,31 @@ test.describe('the page presentation', () => {
         expect(reopened.slice(firstTween, lastTween + 1).filter((frame) => frame.motion !== 'tween')).toEqual([]);
     });
 
+    test('revealed, a link is a toggle again: clicking the open about link closes its page; clicking it once more re-opens it and docks', async ({ page }) => {
+        await openFixture(page, 'page-docked');
+        const root = (await tree(page))[0];
+        await clickLink(page, root.planeID, '/page-1/about');
+        await waitForChildren(page, root.planeID, 1);
+        await settle(page);
+        const about = byRoute(await tree(page), '/about');
+        expect(await dockedID(page)).toBe(about.planeID);
+
+        await publish(page, 'space.reveal', { animate: false });
+        await settle(page);
+        expect(await dockedID(page)).toBeNull();
+        await clickLink(page, root.planeID, '/page-1/about');
+        await page.waitForFunction(() => ((window as unknown as HarnessWindow).__rtTree()[0].children || []).every((child) => child.show === false));
+        await settle(page);
+        expect(await page.locator(`[data-plurid-plane="${about.planeID}"]`).count()).toBe(0);
+        expect(await dockedID(page)).toBeNull();
+
+        await clickLink(page, root.planeID, '/page-1/about');
+        await waitForChildren(page, root.planeID, 1);
+        await settle(page);
+        expect(byRoute(await tree(page), '/about').show).not.toBe(false);
+        expect(await dockedID(page)).toBe(about.planeID);
+    });
+
     test('two pages open behind the site: docking on one sets the other aside, from the first frame of the swing; the reveal brings it back', async ({ page }) => {
         await openFixture(page, 'page-docked', { extra: SWING });
         const root = (await tree(page))[0];

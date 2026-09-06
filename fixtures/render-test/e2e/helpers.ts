@@ -451,7 +451,8 @@ export const openFixture = async (
             await settle(page);
             continue;
         }
-        // on a page a link is a link: clicking an OPEN one navigates to it and spawns nothing
+        // on a DOCKED page a link is a link: clicking an OPEN one navigates to it and spawns nothing
+        // (every catalog click happens docked: a `dock` step precedes it, or the boot docked the page)
         const shown = (parent.children ?? []).filter((child: any) => child.show !== false);
         const open = shown.some((child: any) => String(child.route).endsWith(step.route));
         await clickLink(page, parent.planeID, step.route);

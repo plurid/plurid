@@ -14,7 +14,11 @@
 
     import {
         reportPlaneSize,
+        resolveCameraTarget,
     } from '~services/logic/camera';
+    import {
+        getDockedPlaneID,
+    } from '~services/state/modules/space/selectors';
 
     import {
         navigatePlane,
@@ -304,16 +308,29 @@ describe('the page presentation: docking controls on the link path', () => {
         expect(destinations).toEqual([child(store).planeID]);
     });
 
-    it('on a page a link is a link: clicking an OPEN link navigates to it instead of closing it', () => {
+    it('a link is a link only while the camera is DOCKED on a page: an open link navigates then; revealed, it closes the page', () => {
         const store = makeStore(pageConfiguration());
         const tweens = motionSpy(store);
         store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
         expect(child(store).show).toBe(true);
+        expect(tweens).toHaveLength(1);
+        // the swing lands: the camera is the child's dock pose
+        store.dispatch(actions.setCamera(resolveCameraTarget({ kind: 'frame', planeID: child(store).planeID }, store.getState())!));
+        expect(getDockedPlaneID(store.getState())).toBe(child(store).planeID);
         store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
         expect(child(store).show).toBe(true);
         expect(store.space().lastClosedPlane).toBe('');
         expect(tweens).toHaveLength(2);
         expect(tweens[1].target.scale).toBe(1);
+
+        // revealed (the camera off every page): the toggle is back — the open link closes its page
+        store.dispatch(actions.zoomAtPoint({ deltaScale: 0.5, originX: 100, originY: 100 }));
+        expect(getDockedPlaneID(store.getState())).toBe('');
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(child(store).show).toBe(false);
+        expect(store.space().lastClosedPlane).toBe(child(store).planeID);
+        expect(tweens).toHaveLength(2);
+
         // the space presentation keeps the toggle
         const space = makeStore(defaultConfiguration);
         space.dispatch(toggleLinkPlane(parameters({ navigate: true })));

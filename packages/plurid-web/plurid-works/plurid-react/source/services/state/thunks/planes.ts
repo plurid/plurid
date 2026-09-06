@@ -19,6 +19,9 @@
 
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
+    import {
+        getDockedPlaneID,
+    } from '~services/state/modules/space/selectors';
 
     import {
         space as spaceEngine,
@@ -115,9 +118,11 @@ export const toggleLinkPlane = (
 
     const show = existing.show === false;
 
-    // On a PAGE a link is a link: it takes the user to its page and never toggles it closed (the
-    // page's own close control and the back control do that).
-    if (!show && state.configuration.space.presentation === 'page') {
+    // ON A PAGE — the camera docked on one, or a swing docking on one — a link is a link: it takes
+    // the user to its page and never toggles it closed (the page's own close control and the back
+    // control do that). With the space revealed the presentation is a space again and the toggle
+    // closes the page, as it always did in the space presentation (the user's rule, 2026-09-06).
+    if (!show && getDockedPlaneID(state)) {
         if (navigate) {
             navigateToPluridPlane(dispatch, existing);
         }
