@@ -125,6 +125,27 @@ interface Gesture {
 
 const MAX_SAMPLES = 24;
 
+/** The intents that move the camera: a press with one of them is the space's, never the page's. */
+const isNavigationIntent = (
+    intent: GestureIntent,
+): boolean => intent === 'orbit' || intent === 'pan' || intent === 'dolly' || intent === 'zoom' || intent === 'look';
+
+/** Drop a native text selection anchored inside `element` (a navigation drag never carries one). */
+const clearSelectionInside = (
+    element: HTMLElement,
+) => {
+    if (typeof window === 'undefined' || typeof window.getSelection !== 'function') {
+        return;
+    }
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+        return;
+    }
+    if (selection.anchorNode && element.contains(selection.anchorNode)) {
+        selection.removeAllRanges();
+    }
+};
+
 /** Development trace: when a host sets `window.__pluridGestureLog = []`, every decision is pushed to it. */
 const trace = (entry: Record<string, unknown>) => {
     if (typeof window === 'undefined') {
@@ -344,6 +365,8 @@ export const usePointerGestures = (
                 dispatch(actions.ui.setMarquee({ left: start.x, top: start.y, right: start.x, bottom: start.y }));
             } else {
                 setNavDragging(true);
+                // a selection that already exists inside the view does not ride along with the space
+                clearSelectionInside(element);
                 if (current.intent === 'orbit') {
                     autoPivot(event.clientX, event.clientY);
                 }
@@ -527,6 +550,14 @@ export const usePointerGestures = (
                 return;
             }
 
+            // G arms ONE grab: the drag it armed ends it on release (the user's rule, 2026-09-06), so
+            // the page is a page again — text selectable, links the page's. A press that never
+            // dragged keeps the grab armed (G again or Escape cancels it); Space held is the way to
+            // grab repeatedly (`grabHold`, off with the key).
+            if (current.dragging && isNavigationIntent(current.intent) && stateRef.current.ui?.grabMode) {
+                dispatch(actions.ui.setUIGrabMode(false));
+            }
+
             // A plain click (no drag, no modifier) on empty space clears the selection — the way out
             // of ⌘/Ctrl+A without a key (2026-09-05).
             if (
@@ -651,10 +682,16 @@ export const usePointerGestures = (
                 dragDepth: 0,
                 pinch: null,
             };
-            // Middle / right presses would otherwise auto-scroll or select; a left press below the
-            // threshold must still click, so it is left alone here.
-            if (event.button === 1 || event.button === 2) {
-                event.preventDefault();
+            // A PRESS THE ENGINE TAKES IS THE ENGINE'S. Its default — the compatibility mousedown
+            // that anchors a native selection and moves the focus — goes: an orbit that starts on
+            // the empty space around a page would otherwise drag a selection into the page's text as
+            // the pointer crosses it, and a press on content in grab mode would select as it orbits
+            // (2026-09-06). `click` is not a compatibility event, so a press below the threshold
+            // still clicks. The one thing the default did that the view wants is the focus: a press
+            // from outside the view moves it in, so the keys work after a click as they always did.
+            event.preventDefault();
+            if (typeof document !== 'undefined' && !element.contains(document.activeElement)) {
+                element.focus({ preventScroll: true });
             }
         };
 

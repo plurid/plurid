@@ -41,24 +41,34 @@ export interface UseGrabModeParameters {
     stateUI: PluridStateUI;
     shortcuts?: PluridConfigurationSpaceShortcuts;
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
+    /** The camera is docked on a page (the page presentation): Space inside its content scrolls it. */
+    dockedRef: React.MutableRefObject<boolean>;
 }
 
 
 /**
- * Grab / navigate mode. Two ways in: **G** toggles it (a registry shortcut, handled by the keydown
- * dispatcher), **Space** holds it (tracked here: down → on, up / window blur → off). When ON a left
- * drag orbits everywhere — over plane content too — and the wheel always zooms; when OFF the space
- * behaves like a page over planes and orbits only on empty space. Both flags live in the `ui` slice
+ * Grab / navigate mode. Two ways in: **G** arms it (a registry shortcut, handled by the keydown
+ * dispatcher; ONE drag — the release ends it, `usePointerGestures`' `finish` — G again or Escape
+ * cancels an armed grab that was never used), **Space** holds it (tracked here: down → on, up /
+ * window blur → off, as many drags as the hold lasts). When ON a left drag orbits everywhere — over
+ * plane content too — and the wheel always zooms; when OFF the space behaves like a page over planes
+ * and orbits only on empty space. Both flags live in the `ui` slice
  * so every listener (pointer, wheel, cursor) reads one source of truth.
  *
  * `grabModeRef` mirrors the effective value on every render for the pointer/wheel handlers.
  */
+/** The View carries the presentation for its stylesheets; the hold reads it there (no store round trip). */
+const isPagePresentation = (
+    element: HTMLElement,
+): boolean => element.getAttribute('data-plurid-presentation') === 'page';
+
 export const useGrabMode = (
     {
         viewElement,
         stateUI,
         shortcuts,
         dispatch,
+        dockedRef,
     }: UseGrabModeParameters,
 ) => {
     const grabMode = stateUI.grabMode || stateUI.grabHold;
@@ -86,9 +96,14 @@ export const useGrabMode = (
             if (isEditableTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
                 return;
             }
-            // Inside plane content Space is the page's (it scrolls a docked page); the hold starts
-            // from the view or a plane's anchor.
-            if ((event.target as Element | null)?.closest?.(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTENT}"]`)) {
+            // Inside plane content Space is the page's while the camera is DOCKED on it (it scrolls
+            // the page); once the space is revealed a page is a sheet in the space and its focused
+            // scroller must not swallow the hold (the page's scroller keeps the focus across the
+            // reveal, 2026-09-06). In the space presentation content keeps Space too.
+            if (
+                (dockedRef.current || !isPagePresentation(element))
+                && (event.target as Element | null)?.closest?.(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTENT}"]`)
+            ) {
                 return;
             }
             // Space would scroll the page / activate a focused button; the hold is a navigation gesture.

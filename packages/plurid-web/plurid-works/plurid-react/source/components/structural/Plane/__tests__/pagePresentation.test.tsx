@@ -138,6 +138,28 @@ describe('the page presentation', () => {
         clock.restore();
     });
 
+    it('Space held inside the page: while docked it is the page\'s (no grab); on the revealed page it grabs', async () => {
+        const rendered = await renderPlurid({
+            planes: [{ route: '/page', component: Page }],
+            view: ['/page'],
+            configuration: page,
+        });
+        const content = rendered.container.querySelector('[data-plurid-entity="PluridPlaneContent"]') as HTMLElement;
+        const hold = () => {
+            act(() => { content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, code: 'Space', key: ' ' })); });
+            const held = rendered.api.getSnapshot().ui.grabHold;
+            act(() => { window.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true, cancelable: true, code: 'Space', key: ' ' })); });
+            return held;
+        };
+        expect(rendered.view.getAttribute('data-plurid-docked')).not.toBeNull();
+        expect(hold()).toBe(false);
+        act(() => { rendered.handle.camera.reveal({ animate: false }); });
+        expect(rendered.view.hasAttribute('data-plurid-docked')).toBe(false);
+        expect(hold()).toBe(true);
+        expect(rendered.api.getSnapshot().ui.grabHold).toBe(false);
+        await rendered.unmount();
+    });
+
     it('the docked page is followed: when its geometry changes under the camera, the camera re-docks on it', async () => {
         const rendered = await renderPlurid({
             planes: [{ route: '/page', component: Page }],

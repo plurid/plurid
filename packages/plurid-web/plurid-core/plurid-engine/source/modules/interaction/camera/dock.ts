@@ -217,9 +217,9 @@ export interface RevealPose {
 
 /** The default reveal move (`space.docking.reveal`). */
 export const REVEAL: RevealPose = {
-    scale: 0.8,
-    pitch: 8,
-    yaw: -6,
+    scale: 0.75,
+    pitch: -24,
+    yaw: 0,
 };
 
 export const revealPose = (

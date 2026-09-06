@@ -313,11 +313,14 @@ const PluridView: React.FC<PluridViewProperties> = (
     // #region state
     // Grab/navigate mode (G toggles, Space holds, Escape exits) — see `useGrabMode`. `grabModeRef`
     // mirrors the effective value every render so the pointer + wheel handlers read it live.
+    const dockedRef = useRef(!!stateDockedPlaneID);
+    dockedRef.current = !!stateDockedPlaneID;
     const { grabMode, grabModeRef } = useGrabMode({
         viewElement,
         stateUI: state.ui,
         shortcuts: stateConfiguration.space.shortcuts,
         dispatch,
+        dockedRef,
     });
     const [navDragging, setNavDragging] = useState(false);
 
@@ -985,7 +988,11 @@ const PluridView: React.FC<PluridViewProperties> = (
             preventOverscroll={preventOverscroll}
             data-plurid-entity={PLURID_ENTITY_VIEW}
             data-plurid-docked={stateDockedPlaneID || undefined}
+            data-plurid-presentation={stateConfiguration.space.presentation === 'page' ? 'page' : undefined}
             data-plurid-motion={state.space.motion !== 'idle' ? state.space.motion : undefined}
+            data-plurid-navigating={stateConfiguration.space.firstPerson
+                ? 'fly'
+                : (grabMode ? 'grab' : (stateConfiguration.space.transformMode !== 'ALL' ? 'transform' : undefined))}
             style={dockFadeStyle}
             role="application"
             aria-roledescription="3D space"

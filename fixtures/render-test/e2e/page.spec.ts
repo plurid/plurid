@@ -704,8 +704,79 @@ test.describe('the page presentation', () => {
         expect(panned.sheet.top).toBeLessThan(view.top);
         expect(panned.bar.top).toBeLessThan(panned.sheet.top);
         expect(panned.bar.top + panned.bar.height).toBeLessThan(view.top + BAR);
-        // the same offset from the sheet as before the pan (the slope of a tilted sheet aside)
-        expect(Math.abs((panned.sheet.top - panned.bar.top) - (revealed.sheet.top - revealed.bar.top))).toBeLessThanOrEqual(2);
+        // about the same offset from the sheet as before the pan (a tilted sheet projects its bar a
+        // few pixels taller or shorter as it moves in depth; sliding would be a 56 px difference)
+        expect(Math.abs((panned.sheet.top - panned.bar.top) - (revealed.sheet.top - revealed.bar.top))).toBeLessThanOrEqual(8);
+    });
+
+    test('a grab drag across the page\'s prose orbits the space and never selects its text', async ({ page }) => {
+        await openFixture(page, 'page-docked');
+        const root = (await tree(page))[0];
+        await publish(page, 'space.reveal', { animate: false });
+        await settle(page);
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press('KeyG');
+        const before = await camera(page);
+        const sheet = await planeRect(page, root.planeID);
+        const from = { x: sheet.left + sheet.width * 0.4, y: sheet.top + sheet.height * 0.5 };
+        await page.mouse.move(from.x, from.y);
+        await page.mouse.down();
+        for (let step = 1; step <= 10; step += 1) {
+            await page.mouse.move(from.x + step * 14, from.y + step * 3);
+        }
+        await page.mouse.up();
+        await settle(page);
+        expect((await camera(page)).yaw).not.toBeCloseTo(before.yaw, 1);
+        expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
+        // one grab: the release ended it; the space stays revealed until Escape docks
+        expect(await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().ui.grabMode)).toBe(false);
+        expect(await dockedID(page)).toBeNull();
+
+        // grab off: an orbit that starts on the EMPTY space around the page and crosses its prose
+        // never selects it either (the user's report, 2026-09-06)
+        const afterGrab = await camera(page);
+        const revealedSheet = await planeRect(page, root.planeID);
+        const outside = { x: Math.max(8, revealedSheet.left - 40), y: revealedSheet.top + revealedSheet.height * 0.5 };
+        expect(outside.x).toBeLessThan(revealedSheet.left);
+        await page.mouse.move(outside.x, outside.y);
+        await page.mouse.down();
+        for (let step = 1; step <= 14; step += 1) {
+            await page.mouse.move(outside.x + step * 40, outside.y + step * 2);
+        }
+        await page.mouse.up();
+        await settle(page);
+        expect((await camera(page)).yaw).not.toBeCloseTo(afterGrab.yaw, 1);
+        expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
+
+        await page.keyboard.press('Escape');
+        await settle(page);
+        expect(await dockedID(page)).toBe(root.planeID);
+    });
+
+    test('Space held on the revealed page grabs from inside its prose: the drag orbits, no selection; docked, Space scrolls', async ({ page }) => {
+        await openFixture(page, 'page-docked');
+        const root = (await tree(page))[0];
+        await publish(page, 'space.reveal', { animate: false });
+        await settle(page);
+        // the page's scroller still has the focus after the reveal
+        expect(await page.evaluate((content) => document.activeElement?.matches(content) ?? false, CONTENT)).toBe(true);
+        const before = await camera(page);
+        const sheet = await planeRect(page, root.planeID);
+        const from = { x: sheet.left + sheet.width * 0.4, y: sheet.top + sheet.height * 0.5 };
+        await page.keyboard.down('Space');
+        await expect.poll(() => page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().ui.grabHold)).toBe(true);
+        await page.mouse.move(from.x, from.y);
+        await page.mouse.down();
+        for (let step = 1; step <= 10; step += 1) {
+            await page.mouse.move(from.x + step * 14, from.y + step * 3);
+        }
+        await page.mouse.up();
+        await page.keyboard.up('Space');
+        await settle(page);
+        expect((await camera(page)).yaw).not.toBeCloseTo(before.yaw, 1);
+        expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
+        expect(await scrollTop(page, root.planeID)).toBe(0);
+        expect(await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().ui.grabHold)).toBe(false);
     });
 
     test('with prefers-reduced-motion: a link lands docked in one commit and the chrome never shows; the reveal is instant too', async ({ browser }) => {

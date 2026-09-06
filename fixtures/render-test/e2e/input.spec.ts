@@ -67,9 +67,21 @@ test.describe('input layer', () => {
 
         await page.locator('[data-plurid-entity="PluridView"]').focus();
         await page.keyboard.press('g');
+        // in grab mode the press is the space's: the drag across the plane's text orbits and never selects
+        const contentSelect = () => page.evaluate(() => getComputedStyle(document.querySelector('[data-plurid-entity="PluridPlaneContent"]')!).userSelect);
+        expect(await page.evaluate(() => document.querySelector('[data-plurid-entity="PluridView"]')!.getAttribute('data-plurid-navigating'))).toBe('grab');
+        expect(await contentSelect()).toBe('none');
         await drag(page, inside, { x: inside.x + 120, y: inside.y }, { steps: 10 });
         expect((await camera(page)).yaw).toBeGreaterThan(before.yaw + 10);
-        await page.keyboard.press('Escape');
+        expect(await page.evaluate(() => String(window.getSelection()))).toBe('');
+        // G arms one grab: the release ended it, the page is a page again
+        expect(await page.evaluate(() => (window as any).__pluridApi.getSnapshot().ui.grabMode)).toBe(false);
+        expect(await page.evaluate(() => document.querySelector('[data-plurid-entity="PluridView"]')!.hasAttribute('data-plurid-navigating'))).toBe(false);
+        expect(await contentSelect()).not.toBe('none');
+        // a second drag is the page's again
+        const afterGrab = await camera(page);
+        await drag(page, inside, { x: inside.x + 120, y: inside.y }, { steps: 10 });
+        expect((await camera(page)).yaw).toBeCloseTo(afterGrab.yaw, 6);
     });
 
     test('right-drag pans and suppresses the context menu, a plain right-click keeps it', async ({ page }) => {

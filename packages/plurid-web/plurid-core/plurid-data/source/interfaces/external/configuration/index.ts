@@ -200,7 +200,7 @@ export interface PluridConfigurationSpaceDocking {
     motion?: 'swing' | 'instant';
     /** `hidden` (default): no chrome while a transition docks; `shown`: the space shows during the swing. */
     chrome?: 'hidden' | 'shown';
-    /** The reveal move from a docked page: the camera scale (default 0.8) and the tilt added to the dock pose in degrees (pitch 8, yaw −6). */
+    /** The reveal move from a docked page: the camera scale (default 0.75), and the tilt in degrees — `pitch` (default −24: NEGATIVE looks DOWN on the page, its top nearest; positive would look up at it) and `yaw` (default 0, a turn about the vertical). The pose the corner control, G and `space.reveal` go to. */
     reveal?: {
         scale?: number;
         pitch?: number;

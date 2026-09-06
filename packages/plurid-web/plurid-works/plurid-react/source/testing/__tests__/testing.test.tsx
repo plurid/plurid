@@ -77,6 +77,52 @@ describe('@plurid/plurid-react/testing', () => {
         await gestures.drag(rendered.view, { x: 100, y: 500 }, { x: 260, y: 500 }, { steps: 4 });
         await flushFrames(2);
         expect(rendered.api.getSnapshot().space.camera.yaw).toBeGreaterThan(5);
+        // G arms one grab: the release ended it
+        expect(rendered.api.getSnapshot().ui.grabMode).toBe(false);
+
+        await rendered.unmount();
+        clock.restore();
+    });
+
+    it('in grab mode a press on plane content is the space\'s: its default is prevented (no native selection starts); off grab mode the page keeps it', async () => {
+        const clock = installFrameClock();
+        const rendered = await renderPlurid({
+            planes,
+            view: ['/one'],
+            configuration: { space: { gestures: { disableMomentum: true } } },
+        });
+        const content = rendered.container.querySelector('[data-plurid-entity="PluridPlaneContent"]') as HTMLElement;
+        const press = () => {
+            const event = new (window as any).PointerEvent('pointerdown', {
+                bubbles: true, cancelable: true, clientX: 200, clientY: 200, button: 0, buttons: 1, pointerId: 1, pointerType: 'mouse', isPrimary: true,
+            });
+            content.dispatchEvent(event);
+            const prevented = event.defaultPrevented;
+            content.dispatchEvent(new (window as any).PointerEvent('pointerup', { bubbles: true, cancelable: true, clientX: 200, clientY: 200, button: 0, buttons: 0, pointerId: 1, pointerType: 'mouse', isPrimary: true }));
+            return prevented;
+        };
+        // planes are pages: the press is the page's
+        expect(press()).toBe(false);
+        expect(rendered.view.hasAttribute('data-plurid-navigating')).toBe(false);
+
+        rendered.handle.focus();
+        await gestures.key(rendered.view, 'KeyG');
+        expect(rendered.api.getSnapshot().ui.grabMode).toBe(true);
+        expect(rendered.view.getAttribute('data-plurid-navigating')).toBe('grab');
+        expect(press()).toBe(true);
+
+        await gestures.key(rendered.view, 'Escape');
+        expect(rendered.api.getSnapshot().ui.grabMode).toBe(false);
+        expect(press()).toBe(false);
+
+        // a press on the EMPTY space is the engine's (an orbit): prevented too, so a drag that
+        // crosses a page never selects its text
+        const empty = new (window as any).PointerEvent('pointerdown', {
+            bubbles: true, cancelable: true, clientX: 20, clientY: 20, button: 0, buttons: 1, pointerId: 2, pointerType: 'mouse', isPrimary: true,
+        });
+        rendered.view.dispatchEvent(empty);
+        expect(empty.defaultPrevented).toBe(true);
+        rendered.view.dispatchEvent(new (window as any).PointerEvent('pointerup', { bubbles: true, cancelable: true, clientX: 20, clientY: 20, button: 0, buttons: 0, pointerId: 2, pointerType: 'mouse', isPrimary: true }));
 
         await rendered.unmount();
         clock.restore();

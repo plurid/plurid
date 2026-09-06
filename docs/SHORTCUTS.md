@@ -8,7 +8,7 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 
 | Keys | Action | Id | Kind | When |
 | --- | --- | --- | --- | --- |
-| `G` | Toggle grab / navigate mode | `grabMode` | press | - |
+| `G` | Grab once: the next drag orbits anywhere (the release ends it; G again or Esc cancels) | `grabMode` | press | - |
 | `Space` | Hold to navigate (orbit anywhere) | `grabHold` | hold | - |
 | `Esc` | Exit grab mode | `exitGrabMode` | press | grabMode |
 | `Esc` | Back to the page: from the space, dock; on a spawned page, its parent | `dock` | press | page |

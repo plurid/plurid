@@ -226,7 +226,7 @@ The default mapping (planes are pages: content interaction always wins over a pl
 
 | Input | On empty space | Over a plane |
 | --- | --- | --- |
-| Left drag | orbit (about the point under the cursor) | the page's (text selection, drag-scroll); orbit in grab mode (G / hold Space) |
+| Left drag | orbit (about the point under the cursor) | the page's (text selection, drag-scroll); orbit in grab mode (G arms ONE grab, the release ends it; hold Space to grab repeatedly) — and never a selection: a press the engine takes, on empty space or on content, is the space's |
 | Right drag | pan (the context menu is suppressed for the press) | the page's context menu; pan in grab mode |
 | Middle drag / Shift + left drag | pan | pan |
 | Alt + left drag | dolly | dolly (grab mode) |
@@ -331,14 +331,14 @@ POSE IS THE STATE. There is no mode flag: "page mode" is the camera docked on a 
 | --- | --- |
 | a `PluridLink` — the child opens behind its parent and the camera swings to it, a page again (nothing else appears during the swing) | a link's landing; the rail's back chevron (the parent page) |
 | the rail's cube (`dock-toggle`) | the rail's cube while revealed (the page nearest the view center) |
-| `G` (grab mode), Ctrl / ⌘ + wheel, a drag-zoom, two fingers on touch | `Escape`: from the revealed space the nearest page (grab mode ends too); docked on a spawned page, its parent; on a root, nothing |
+| `G` (one grab: the next drag orbits anywhere, then the page is a page again), Ctrl / ⌘ + wheel, a drag-zoom, two fingers on touch | `Escape`: from the revealed space the nearest page (grab mode ends too); docked on a spawned page, its parent; on a root, nothing |
 | `0` (fit) and the viewcube faces — a legitimate undock | `Home` from outside plane content (the first page); `onClose: 'parent'`; `space.frame` |
 | `space.reveal` `{ animate? }` · `useCamera().reveal()` · `handle.camera.reveal()` · the lens `reveal()` | `space.dock` `{ planeID?, animate? }` (that page, else the docked one, else the nearest) · `useCamera().dock(planeID?)` · `handle.camera.dock()` · the lens `dock()` |
 
 Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''` off every page), `usePluridPlane().docked` / `.aside` / `.presentation` from inside a page, `pluridSelectors.space.getDockedPlaneID(state)`, `space.changed` kind `docked` (a navigation, for a host that syncs a title or an analytics page view), and ONE DOM attribute, `data-plurid-docked="<planeID>"` on the `PluridView` element — style your own chrome under the view with `[data-plurid-docked] .mine { opacity: 0 }`; chrome OUTSIDE the space toggles on the kind or the hook (`:has([data-plurid-docked])` works in CSS too).
 
 - The wheel over a docked page is the page's: it scrolls the content, or is consumed when there is nothing to scroll — it never reaches the host document. Pinch, Ctrl / ⌘, Shift, Alt and grab still move the camera.
-- The keys inside a page are the page's: PageDown, Space, the arrows, Home and End scroll the docked page (its scroller takes the focus when the page docks — `docking.focus: false` turns the grab off); Space never grabs, Home never goes to the home viewpoint, from inside content.
+- The keys inside a page are the page's: PageDown, Space, the arrows, Home and End scroll the docked page (its scroller takes the focus when the page docks — `docking.focus: false` turns the grab off); Space never grabs, Home never goes to the home viewpoint, from inside a DOCKED page's content; once the space is revealed, Space held inside the page grabs it (the scroller keeps the focus across the reveal).
 - Touch: one finger scrolls the docked page; two fingers pinch it open (the second finger joins the first even though the first was the page's).
 - Only the page's LINEAGE is shown while docked: the page, its ancestors (the trail back to the root) and its own children stay; every other plane (a sibling opened from the same header, a cousin, another root) is set ASIDE — faded out over `docking.fade`, `inert`, `data-plurid-aside` on its element — and fades back when the space is revealed. Two links in one header spawn two parallel pages a few dozen pixels apart; without this the one opened last would cover the one you clicked. `docking.aside: 'none'` keeps everything.
 - A link is a link: in the page presentation a plurid link always takes you to its page, open or not — it never toggles the page closed (the space presentation keeps the open / close toggle). Closing is the page's close control, the back chevron and `space.closePlane`.
@@ -351,7 +351,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 | --- | --- | --- |
 | `motion` | `'swing'` | `'swing'` tweens the camera to the page; `'instant'` jumps — a link, a child's back, `onClose: 'parent'`, Escape and `space.dock` switch at once, like a router rendering the new page. The reveal keeps its motion either way |
 | `chrome` | `'hidden'` | `'hidden'` keeps every piece of chrome hidden while a transition docks (the destination page counts as docked for the whole swing: the pages swing, nothing else appears); `'shown'` lets the space show during the swing |
-| `reveal` | `{ scale: 0.8, pitch: 8, yaw: -6 }` | the reveal pose: the docked page pulled back and tilted |
+| `reveal` | `{ scale: 0.75, pitch: -24, yaw: 0 }` | the reveal pose: the docked page pulled back and looked down on (a negative `pitch` brings its top toward you; positive looks up at it; `yaw` turns it) |
 | `fade` | `240` | ms: the chrome's fade-in on the reveal, the aside fade, the rail — one number, `--plurid-dock-fade` on the view |
 | `aside` | `'lineage'` | `'lineage'` sets every plane outside the docked page's lineage aside; `'none'` keeps them |
 | `focus` | `true` | the docked page's scroller takes the focus (the keys scroll it); `false` leaves the focus where it was |
@@ -359,7 +359,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 
 ```tsx
 definePluridConfiguration({ presentation: 'page', docking: { motion: 'instant' } })   // a site with plurid links that simply switch pages
-definePluridConfiguration({ presentation: 'page', docking: { reveal: { scale: 0.6, pitch: 15, yaw: -12 }, fade: 400 } })
+definePluridConfiguration({ presentation: 'page', docking: { reveal: { scale: 0.6, pitch: -32, yaw: -8 }, fade: 400 } })   // steeper, a little turned
 ```
 
 - The rail: `elements.dockRail.show: false` (flat `dockRail: { show: false }`) removes it; `renderDockRail` replaces it — render your own `data-plurid-control="dock-toggle"` / `"dock-back"` that publish `space.reveal` / `space.dock` / `space.frame`. `renderViewcube` no longer touches it. Every plane-addressing message takes `planeID` (`id` / `plane` still work, deprecated); `space.setViewpoint` takes `animate` (alias of `animated`).
@@ -419,7 +419,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
-`data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
+`data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
 `data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`. The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE`). CSS custom properties the engine writes, for a host's own stylesheet: `--plurid-dock-fade` on the view (`docking.fade`), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 

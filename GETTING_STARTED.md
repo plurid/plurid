@@ -95,8 +95,9 @@ export default App;
 - **Follow the link**: the about page opens *behind* the site and the camera swings around to it — a page
   again, filling the view (nothing else appears during the swing). The back chevron in the rail at the
   bottom-right corner, or **Escape**, brings the site back — one page at a time.
-- **Reveal the space**: press **G**, pinch (Ctrl + wheel, or two fingers on touch), or click the small cube in
-  that rail — the page pulls back and tilts, the chrome fades in, and you are in the 3D space of §2.
+- **Reveal the space**: press **G** (one grab: the next drag orbits, then the page is a page again), pinch
+  (Ctrl + wheel, or two fingers on touch), or click the small cube in that rail — the page pulls back and
+  tilts, the chrome fades in, and you are in the 3D space of §2.
 - **Return**: **Escape** docks the nearest page again (on a spawned page, Escape goes to its parent instead).
 
 There is no mode: the pose of the camera is the whole state. Every undeclared plane takes the view's size

@@ -104,9 +104,9 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         motion: 'swing',
         chrome: 'hidden',
         reveal: {
-            scale: 0.8,
-            pitch: 8,
-            yaw: -6,
+            scale: 0.75,
+            pitch: -24,
+            yaw: 0,
         },
         fade: 240,
         aside: 'lineage',

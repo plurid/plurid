@@ -48,7 +48,7 @@ export interface PluridShortcutDefinition {
 
 export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     // navigate
-    { id: 'grabMode', code: 'KeyG', kind: 'press', group: 'navigate', label: 'Toggle grab / navigate mode' },
+    { id: 'grabMode', code: 'KeyG', kind: 'press', group: 'navigate', label: 'Grab once: the next drag orbits anywhere (the release ends it; G again or Esc cancels)' },
     { id: 'grabHold', code: 'Space', kind: 'hold', group: 'navigate', label: 'Hold to navigate (orbit anywhere)' },
     { id: 'exitGrabMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Exit grab mode', when: 'grabMode' },
     { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'Back to the page: from the space, dock; on a spawned page, its parent', when: 'page' },

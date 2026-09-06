@@ -119,6 +119,13 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
         }
         return 'auto';
     }};
+    /* While the space is in a navigation mode (grab, fly, a transform mode: data-plurid-navigating
+       on the View) a drag over a page is the space's, so its text is not selectable then - the View's
+       own rule says so, and this plane's auto above would otherwise take it back (2026-09-06). */
+    [data-plurid-navigating] &,
+    [data-plurid-motion='gesture'] & {
+        user-select: none;
+    }
 
     position: absolute;
     font-size: 0.9rem;
