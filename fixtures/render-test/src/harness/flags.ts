@@ -59,7 +59,7 @@ export const FLAGS: readonly FlagDefinition[] = [
     // scene
     { key: 'fixture', type: 'string', group: 'scene', apply: 'reload', description: 'open a named fixture from the catalog (its flags apply UNDER any explicit param)', exercises: 'the fixture catalog (src/fixtures/catalog.ts)' },
     { key: 'viewpoint', type: 'string', group: 'scene', apply: 'reload', description: 'an encoded viewpoint applied once the planes are measured', exercises: '`space.setViewpoint`' },
-    { key: 'gallery', type: 'boolean', group: 'scene', apply: 'reload', description: 'the contact sheet: every fixture in an iframe', exercises: 'the fixture catalog' },
+    { key: 'gallery', type: 'boolean', group: 'scene', apply: 'reload', description: 'the contact sheet: every fixture in an iframe (`?gallery=looks`: the twelve looks, each on the revealed page and on the columns)', exercises: 'the fixture catalog, the looks' },
     { key: 'router', type: 'boolean', group: 'scene', apply: 'reload', description: 'the router demo instead of the space (PluridRouterBrowser)', exercises: 'PluridRouterBrowser / PluridRouterLink' },
     { key: 'empty', type: 'boolean', group: 'scene', apply: 'reload', description: 'an empty view (no roots)', exercises: 'the empty state' },
     { key: 'presentation', type: 'enum', values: ['page'], group: 'scene', apply: 'reload', description: 'the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed', exercises: '`space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked`' },
@@ -117,6 +117,9 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'slotToolbar', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom toolbar through the render slot', exercises: '`renderToolbar`' },
     { key: 'slotDockRail', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom dock rail through the render slot (the page presentation)', exercises: '`renderDockRail`' },
     { key: 'slotViewcube', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom viewcube through the render slot', exercises: '`renderViewcube`' },
+    { key: 'slotPlaneControls', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom plane bar through the render slot (called with the plane)', exercises: '`renderPlaneControls`' },
+    { key: 'look', type: 'enum', values: ['graphite', 'noir', 'slate', 'ink', 'ember', 'moss', 'plum', 'paper', 'snow', 'sand', 'mint', 'cobalt'], group: 'ui', apply: 'reload', description: 'the look: one of the twelve presets (default graphite)', exercises: '`look`, the `--plurid-*` tokens on every piece of chrome' },
+    { key: 'chrome', type: 'enum', values: ['minimal', 'none'], group: 'ui', apply: 'reload', description: 'how much engine chrome renders: minimal (the rail, the plane bars, the ?) or none (headless)', exercises: '`elements.chrome`' },
     { key: 'hideLinks', type: 'boolean', group: 'ui', apply: 'reload', description: 'hide the link beams and the alignment guides', exercises: '`elements.planeLinks.show`, `elements.alignmentGuides.show`' },
     { key: 'debug', type: 'boolean', group: 'debug', apply: 'reload', description: 'the space and plane debuggers (the perf HUD)', exercises: '`development.spaceDebugger` / `planeDebugger`' },
     // shortcuts
@@ -182,6 +185,9 @@ export interface HarnessFlags {
     slotToolbar: boolean;
     slotDockRail: boolean;
     slotViewcube: boolean;
+    slotPlaneControls: boolean;
+    look?: string;
+    chrome?: 'minimal' | 'none';
     hideLinks: boolean;
     debug: boolean;
     scDisable?: string;

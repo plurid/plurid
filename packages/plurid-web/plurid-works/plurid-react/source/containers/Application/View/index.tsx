@@ -55,6 +55,14 @@
     import {
         handleGlobalShortcuts,
     } from '~services/logic/shortcuts';
+    import {
+        lookOf,
+        PluridLookStyle,
+    } from '~services/look';
+    import {
+        chromeModeOf,
+        PluridChromeContext,
+    } from '~services/chrome';
 
     import {
         interaction,
@@ -165,6 +173,8 @@ const rootsMatchView = (
 export interface PluridViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
     /** The store's thunk extra holder (from `PluridApplication`): the View registers its motion controller in it. */
     thunkExtra?: PluridThunkExtra;
+    /** The application's id: the scope of its look (`data-plurid-application`). */
+    applicationID?: string;
 }
 
 export interface PluridViewStateProperties {
@@ -946,6 +956,33 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region render
+    // The chrome: the mode, and the context every `render*` slot is called with. The view-level
+    // context carries the LIVE camera (the view re-renders per frame anyway); the planes get a
+    // frame-stable subset through the engine context below, so they never re-render per frame.
+    const look = lookOf(stateConfiguration);
+    const chromeMode = chromeModeOf(stateConfiguration);
+    const presentation: 'space' | 'page' = stateConfiguration.space.presentation === 'page' ? 'page' : 'space';
+    const chromeContext = useMemo<PluridChromeContext>(() => ({
+        look,
+        tokens: look.tokens,
+        camera: state.space.camera,
+        docked: stateDockedPlaneID,
+        presentation,
+        selection: state.space.selectedPlaneIDs,
+        history: state.space.history,
+        configuration: stateConfiguration,
+        pubsub: pluridPubSub[0],
+    }), [
+        look,
+        state.space.camera,
+        stateDockedPlaneID,
+        presentation,
+        state.space.selectedPlaneIDs,
+        state.space.history,
+        stateConfiguration,
+        pluridPubSub,
+    ]);
+
     // Memoized so the `Context.Provider` value below is referentially stable across View's many
     // re-renders (it re-renders on every transform tick / spawn dispatch). A fresh context object
     // each render would re-render EVERY `useContext(Context)` consumer — i.e. every plane — no
@@ -963,6 +1000,17 @@ const PluridView: React.FC<PluridViewProperties> = (
 
         defaultPubSub: pluridPubSub[0],
         registerPubSub,
+
+        chrome: {
+            mode: chromeMode,
+            look,
+            docked: stateDockedPlaneID,
+            presentation,
+            pubsub: pluridPubSub[0],
+            renderPlaneControls: properties.renderPlaneControls as any,
+            renderPlaneBridge: properties.renderPlaneBridge as any,
+            renderDebugger: properties.renderDebugger as any,
+        },
     }), [
         planesRegistrar,
         planeContext,
@@ -974,6 +1022,13 @@ const PluridView: React.FC<PluridViewProperties> = (
         hostname,
         pluridPubSub,
         registerPubSub,
+        chromeMode,
+        look,
+        stateDockedPlaneID,
+        presentation,
+        properties.renderPlaneControls,
+        properties.renderPlaneBridge,
+        properties.renderDebugger,
     ]);
 
     return (
@@ -987,6 +1042,8 @@ const PluridView: React.FC<PluridViewProperties> = (
             firstPerson={stateConfiguration.space.firstPerson}
             preventOverscroll={preventOverscroll}
             data-plurid-entity={PLURID_ENTITY_VIEW}
+            data-plurid-application={properties.applicationID ?? 'default'}
+            data-plurid-look={lookOf(stateConfiguration).name}
             data-plurid-docked={stateDockedPlaneID || undefined}
             data-plurid-presentation={stateConfiguration.space.presentation === 'page' ? 'page' : undefined}
             data-plurid-motion={state.space.motion !== 'idle' ? state.space.motion : undefined}
@@ -998,6 +1055,11 @@ const PluridView: React.FC<PluridViewProperties> = (
             aria-roledescription="3D space"
             aria-label="plurid space"
         >
+            <PluridLookStyle
+                look={lookOf(stateConfiguration)}
+                applicationID={properties.applicationID ?? 'default'}
+                fade={stateConfiguration.space.docking?.fade}
+            />
             <Context.Provider
                 value={pluridContext}
             >
@@ -1006,6 +1068,9 @@ const PluridView: React.FC<PluridViewProperties> = (
 
                 {stateSpaceView.length !== 0 ? (
                     <PluridViewContainer
+                        mode={chromeMode}
+                        context={chromeContext}
+                        renderOrigin={properties.renderOrigin as any}
                         renderToolbar={properties.renderToolbar as any}
                         renderViewcube={properties.renderViewcube as any}
                         renderMinimap={properties.renderMinimap as any}
@@ -1015,7 +1080,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 ) : (
                     stateResolvedLayout
                         ? (properties.renderEmpty
-                            ? (properties.renderEmpty as any)()
+                            ? (properties.renderEmpty as any)(chromeContext)
                             : <PluridEmpty />)
                         : <></>
                 )}

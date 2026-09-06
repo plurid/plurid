@@ -95,6 +95,11 @@ export const merge = (
         targetConfiguration,
         configuration,
         {
+            // the look is taken whole (a name, a base, or a preset with overrides): never a deep merge
+            // of a string with an object
+            'global.look': () => (configuration.global?.look !== undefined
+                ? configuration.global.look
+                : (target?.global?.look ?? defaultConfiguration.global.look)),
             'global.theme': () => {
                 return {
                     general: resolveTheme(configuration.global?.theme, 'general') as any,
@@ -125,6 +130,7 @@ export const definePluridConfiguration = (
 
     // #region global
     const global: PluridPartialConfiguration['global'] = {};
+    if (flat.look !== undefined) { global.look = flat.look; }
     if (flat.theme !== undefined) { global.theme = flat.theme; }
     if (flat.transparentUI !== undefined) { global.transparentUI = flat.transparentUI; }
     if (flat.language !== undefined) { global.language = flat.language; }
@@ -185,6 +191,11 @@ export const definePluridConfiguration = (
     if (flat.viewcube !== undefined) { elements.viewcube = { show: flat.viewcube }; }
     if (flat.dockRail !== undefined) { elements.dockRail = { show: flat.dockRail }; }
     if (flat.minimap !== undefined) { elements.minimap = { show: flat.minimap }; }
+    if (flat.chrome !== undefined) { elements.chrome = flat.chrome; }
+    if (flat.origin !== undefined) { elements.origin = { show: flat.origin }; }
+    if (flat.planeBridge !== undefined) { elements.planeBridge = { show: flat.planeBridge }; }
+    if (flat.shortcutsTrigger !== undefined) { elements.shortcuts = { show: flat.shortcutsTrigger }; }
+    if (flat.marquee !== undefined) { elements.marquee = { show: flat.marquee }; }
     if (Object.keys(elements).length > 0) { partial.elements = elements; }
     // #endregion elements
 

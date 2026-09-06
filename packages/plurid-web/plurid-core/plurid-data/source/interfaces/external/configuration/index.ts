@@ -3,6 +3,9 @@
     import {
         Theme,
         ThemeName,
+        LookName,
+        LookBase,
+        LookTokens,
     } from '@plurid/plurid-themes';
     // #endregion libraries
 
@@ -44,6 +47,8 @@ export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
 export interface FlatPluridConfiguration {
     // #region global
     /** `global.theme` — a plurid theme name, or `{ general, interaction }`. */
+    /** the look: a preset name, a base, or a preset with token overrides (`global.look`) */
+    look?: PluridConfigurationLook;
     theme?: ThemeName | PluridConfigurationTheme;
     /** `global.transparentUI` — render the engine elements transparent. */
     transparentUI?: boolean;
@@ -137,6 +142,16 @@ export interface FlatPluridConfiguration {
     dockRail?: boolean;
     /** `elements.minimap.show` — the 2D top-down overview of the space. */
     minimap?: boolean;
+    /** `elements.chrome` — `full` | `minimal` | `none` (headless). */
+    chrome?: 'full' | 'minimal' | 'none';
+    /** `elements.origin.show` — the transform-origin dot. */
+    origin?: boolean;
+    /** `elements.planeBridge.show` — the bridge from a link to its spawned plane. */
+    planeBridge?: boolean;
+    /** `elements.shortcuts.show` — the `?` trigger and its dialog. */
+    shortcutsTrigger?: boolean;
+    /** `elements.marquee.show` — the rubber-band selection rectangle. */
+    marquee?: boolean;
     // #endregion elements
 
     /** Escape hatch: a normal nested partial config, merged LAST (overrides the flat fields above). */
@@ -156,8 +171,19 @@ export interface PluridConfiguration {
 export interface PluridConfigurationGlobal {
 
     /**
-     * A theme name based on plurid themes, https://meta.plurid.com/themes,
-     * or specific theme names/objects for `general` and for the `interaction` elements.
+     * THE LOOK: the engine's design tokens, one vocabulary for every piece of chrome and for the
+     * space itself. A preset name (`'graphite'`, the default; `LOOK_NAMES` has the twelve), a base
+     * of your own (`{ scheme, space, surface, ink, accent, font?, grid? }` — the whole token set
+     * derives from it), or a preset with token overrides (`{ preset: 'paper', tokens: { accent:
+     * '#b0003a' } }`). Emitted as `--plurid-*` custom properties on the application (see
+     * `LOOK_TOKENS`); a host's stylesheet can overwrite any of them.
+     */
+    look: PluridConfigurationLook;
+
+    /**
+     * The legacy Theme (plurid themes, https://meta.plurid.com/themes) that plane content and the
+     * toolbar drawers' inputs still read: a name, or names/objects for `general` and `interaction`.
+     * Derived from the look unless set here.
      */
     theme: ThemeName | PluridConfigurationTheme;
 
@@ -187,6 +213,14 @@ export interface PluridConfigurationGlobal {
 
 }
 
+
+export type PluridConfigurationLook =
+    | LookName
+    | LookBase
+    | {
+        preset?: LookName;
+        tokens?: Partial<LookTokens>;
+    };
 
 export interface PluridConfigurationTheme {
     general: ThemeName | Theme;
@@ -731,6 +765,22 @@ export interface PluridConfigurationSpaceGesturesButtonMap {
 
 
 export interface PluridConfigurationElements {
+    /**
+     * How much engine chrome renders. `full` (the default): everything below. `minimal`: the page's
+     * rail, the plane bars, the `?` and the drag feedback (guides, marquee, resize handles) — no toolbar,
+     * viewcube, minimap or origin. `none`: no engine chrome at all — a space with planes, links and
+     * bridges; every action is still a topic, a hook or a handle call, and every key still works.
+     * The `render*` slots are unaffected: a slot renders whatever the mode (the host owns it).
+     */
+    chrome?: 'full' | 'minimal' | 'none';
+    /** The transform-origin dot; unset, it follows `space.transformOrigin.show`. */
+    origin?: PluridConfigurationElementsToggle;
+    /** The bridge from a link to the plane it spawned (the leash). */
+    planeBridge?: PluridConfigurationElementsToggle;
+    /** The `?` trigger and its dialog; the shortcuts themselves stay on. */
+    shortcuts?: PluridConfigurationElementsToggle;
+    /** The rubber-band selection rectangle. */
+    marquee?: PluridConfigurationElementsToggle;
     toolbar: PluridConfigurationElementsToolbar;
     viewcube: PluridConfigurationElementsViewcube;
     /** Optional opt-in: a 2D top-down overview/minimap of the space. */

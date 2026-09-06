@@ -23,80 +23,41 @@ export interface IStyledToolbarButton {
     scaleImage?: boolean;
 }
 
+/** A menu button: the look's ink; hovered, the wash; active, the accent as ink; the ends of a stack rounded by the look. */
 export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
     ${chromeControl}
     border: 0;
     padding: 0;
     margin: 0;
     font: inherit;
-    color: inherit;
-    background: none;
+    font-family: var(--plurid-font);
+    font-size: var(--plurid-font-size);
+    font-weight: var(--plurid-weight);
+    color: ${({ active }) => (active ? 'var(--plurid-accent)' : 'var(--plurid-ink)')};
+    background: transparent;
     position: relative;
 
     &:focus-visible {
-        outline: 2px solid currentColor;
+        outline: 2px solid var(--plurid-focus);
         outline-offset: -2px;
     }
     cursor: pointer;
     height: 40px;
     display: grid;
     place-content: center;
-    transition: transform 50ms ease-in-out;
+    transition: background-color 150ms var(--plurid-ease), color 150ms var(--plurid-ease);
 
-    border-top-left-radius: ${({
-        first,
-    }) => {
-        if (first) {
-            return '15px';
-        }
-        return '0';
-    }};
-    border-top-right-radius: ${({
-        first,
-    }) => {
-        if (first) {
-            return '15px';
-        }
-        return '0';
-    }};
-
-    border-bottom-left-radius: ${({
-        last,
-    }) => {
-        if (last) {
-            return '15px';
-        }
-        return '0';
-    }};
-    border-bottom-right-radius: ${({
-        last,
-    }) => {
-        if (last) {
-            return '15px';
-        }
-        return '0';
-    }};
-
-    background-color: ${({
-        theme,
-        active,
-    }) => {
-        if (active) {
-            return theme.backgroundColorTertiary;
-        }
-        return 'transparent';
-    }};
+    border-top-left-radius: ${({ first }) => (first ? 'var(--plurid-radius)' : '0')};
+    border-top-right-radius: ${({ first }) => (first ? 'var(--plurid-radius)' : '0')};
+    border-bottom-left-radius: ${({ last }) => (last ? 'var(--plurid-radius)' : '0')};
+    border-bottom-right-radius: ${({ last }) => (last ? 'var(--plurid-radius)' : '0')};
 
     @media (hover: hover) {
-        :hover {
-            background: ${({
-                theme,
-            }) => {
-                return theme.backgroundColorTertiary;
-            }};
+        &:hover {
+            background: var(--plurid-hover);
         }
 
-        :hover svg {
+        &:hover svg {
             transform: ${({
                 scaleImage,
             }) => {
@@ -112,11 +73,7 @@ export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
         transition: transform 100ms linear;
         width: 15px;
         height: 15px;
-        fill: ${({
-            theme,
-        }) => {
-            return theme.colorPrimary;
-        }};
+        fill: currentColor;
         transform: ${({
             active,
             scaleImage,

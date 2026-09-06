@@ -74,7 +74,7 @@ export const StyledTransformLine = styled.div<IStyledTransformLine>`
     background-color: ${
         ({
             theme,
-        }: IStyledTransformLine) => theme.colorTertiary
+        }: IStyledTransformLine) => 'var(--plurid-ink-faint)'
     };
 `;
 
@@ -93,7 +93,7 @@ export const StyledTransformThumb = styled.div<IStyledTransformThumb>`
     background-color: ${
         ({
             theme,
-        }: IStyledTransformThumb) => theme.colorPrimary
+        }: IStyledTransformThumb) => 'var(--plurid-ink)'
     };
     top: ${
         ({

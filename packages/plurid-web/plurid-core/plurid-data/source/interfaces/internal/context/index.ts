@@ -31,6 +31,21 @@ export interface PluridContext<C> {
     matchedRoute?: IsoMatcherRouteResult<C> | undefined;
     hostname?: string;
 
+    /**
+     * The chrome in force — read by the planes and the space: the mode (`elements.chrome`), the look,
+     * the docked page, the presentation, the bus, and the plane-level render slots.
+     */
+    chrome?: {
+        mode: 'full' | 'minimal' | 'none';
+        look: any;
+        docked: string;
+        presentation: 'space' | 'page';
+        pubsub: PluridPubSub;
+        renderPlaneControls?: (context: any) => unknown;
+        renderPlaneBridge?: (context: any) => unknown;
+        renderDebugger?: (context: any) => unknown;
+    };
+
     defaultPubSub: PluridPubSub,
     registerPubSub: (
         pubsub: PluridPubSub,

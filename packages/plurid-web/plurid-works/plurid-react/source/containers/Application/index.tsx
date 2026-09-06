@@ -306,6 +306,7 @@ class PluridApplicationShell extends Component<
                         />
                         <PluridView
                             {...this.props}
+                            applicationID={this.storeID}
                             planesRegistrar={this.planesRegistrar}
                             pubsub={this.pubsub}
                             thunkExtra={this.thunkExtra}

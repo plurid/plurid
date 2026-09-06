@@ -45,15 +45,10 @@ export const StyledPluridPlanePreview = styled.div<IStyledPreview>`
         const location = linkCoordinates.x + 5;
         return location + 'px';
     }};
-    background-color: ${({
-        theme,
-    }) => {
-        return theme.backgroundColorSecondary;
-    }};
-    box-shadow: ${({
-        theme,
-    }) => {
-        return theme.boxShadowUmbra;
-    }};
+    color: var(--plurid-ink);
+    background-color: var(--plurid-surface-solid);
+    border: 1px solid var(--plurid-rim);
+    border-radius: var(--plurid-radius-panel);
+    box-shadow: 0 0 0 1px var(--plurid-halo), var(--plurid-shadow);
 `;
 // #endregion module

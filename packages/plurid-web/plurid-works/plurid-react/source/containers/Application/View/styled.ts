@@ -6,6 +6,9 @@
         TRANSFORM_MODES,
     } from '@plurid/plurid-data';
     // #endregion libraries
+    // #region external
+    import { spaceGround } from '~components/structural/Space/styled';
+    // #endregion external
 // #endregion imports
 
 
@@ -118,23 +121,6 @@ export const StyledView: any = styled.div`
 
 export const StyledEmpty: any = styled.div`
     outline: none;
-    background: ${(props: any) => {
-        if (props.opaque) {
-            const foregroundGradient = props.theme.type === 'dark'
-                ? props.theme.backgroundColorTertiary
-                : props.theme.backgroundColorPrimary;
-            const backgroundGradient = props.theme.type === 'dark'
-                ? props.theme.backgroundColorPrimary
-                : props.theme.backgroundColorTertiary;
-
-            return `radial-gradient(
-                ellipse at center,
-                ${foregroundGradient} 0%,
-                ${backgroundGradient} 100%)
-            `;
-        }
-
-        return 'transparent';
-    }};
+    ${(props: any) => (props.opaque ? spaceGround : 'background: transparent;')}
 `;
 // #endregion module

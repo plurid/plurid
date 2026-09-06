@@ -49,9 +49,9 @@ const StyledPluridPlaneDebugger = styled.pre<{ theme: Theme }>`
     margin: 2px 0 0;
     padding: 4px 6px;
     font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${({ theme }) => theme.colorPrimary};
-    background-color: ${({ theme }) => theme.backgroundColorPrimaryAlpha};
-    border: 1px solid ${({ theme }) => theme.backgroundColorTertiary};
+    color: ${({ theme }) => 'var(--plurid-ink)'};
+    background-color: ${({ theme }) => 'var(--plurid-surface)'};
+    border: 1px solid ${({ theme }) => 'var(--plurid-surface-strong)'};
     border-radius: 4px;
     pointer-events: none;
     user-select: none;

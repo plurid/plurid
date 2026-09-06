@@ -232,7 +232,9 @@ export interface PluridApplication<C> {
     /**
      * Render-slots: return your own element to REPLACE an engine overlay (rendered at the same spot
      * inside the view), or omit to keep the default. Orthogonal to the `elements.*.show` flags and
-     * (which HIDE the defaults) — these SUBSTITUTE. The slot is invoked on each render.
+     * (which HIDE the defaults) — these SUBSTITUTE. The slot is invoked on each render, with the
+     * chrome context (the look's tokens, the live camera, the docked page, the presentation, the
+     * selection, the history, the configuration, the bus) as its one argument.
      */
     renderToolbar?: PluridRenderSlot;
     renderViewcube?: PluridRenderSlot;
@@ -242,6 +244,14 @@ export interface PluridApplication<C> {
     renderShortcuts?: PluridRenderSlot;
     /** Rendered in place of the space when it holds no planes (the layout resolved to nothing). */
     renderEmpty?: PluridRenderSlot;
+    /** A plane's controls bar (the path, back, close …); called with the plane's chrome context (its id, route, tree node). */
+    renderPlaneControls?: PluridRenderSlot;
+    /** A spawned plane's bridge to its link; called with the plane's chrome context. */
+    renderPlaneBridge?: PluridRenderSlot;
+    /** The transform-origin dot. */
+    renderOrigin?: PluridRenderSlot;
+    /** The space debugger (rendered when `development.spaceDebugger` is on). */
+    renderDebugger?: PluridRenderSlot;
 
     matchedRoute?: IsoMatcherRouteResult<C>;
 
@@ -259,7 +269,7 @@ export type PluridApplicationView = (string | PluridView)[];
  * A render-slot — returns the element to render in place of an engine UI overlay. Typed loosely
  * (`unknown`) to keep the data layer framework-agnostic; in React it is a `() => ReactNode`.
  */
-export type PluridRenderSlot = () => unknown;
+export type PluridRenderSlot<Context = any> = (context: Context) => unknown;
 
 
 export interface LocalStorageUsage {

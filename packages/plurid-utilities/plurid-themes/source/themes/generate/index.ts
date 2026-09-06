@@ -1,5 +1,10 @@
 // #region imports
     import {
+        parseColor,
+        deriveLook,
+        themeFromLook,
+    } from '../../looks';
+    import {
         Theme,
     } from '../../interfaces';
 
@@ -8,24 +13,20 @@
         THEME_TYPES,
     } from '../../constants';
 
-    import {
-        fontFamily,
-    } from '../general';
 
-    import {
-        parseHSL,
-        invertColor,
-    } from './utilities';
 // #endregion imports
 
 
 
 // #region module
 /**
- * Based on the type and the baseColor generates a Theme.
+ * @deprecated A look is the way to make a theme from a colour: `themeFromLook(deriveLook(base))`,
+ * or give the application `look: { scheme, space, surface, ink, accent }`. Kept for one release as a
+ * shim over that derivation: the base colour is the space and the surface, the ink and the accent are
+ * the scheme's defaults. Returns `undefined` for an unknown type or an unparsable colour, as before.
  *
  * @param type 'dark' or 'bright'
- * @param baseColor HSL format, e.g. hsl(220, 20%, 40%)
+ * @param baseColor any CSS colour, e.g. hsl(220, 20%, 40%)
  */
 const generateTheme = (
     type: keyof typeof THEME_TYPES,
@@ -34,113 +35,25 @@ const generateTheme = (
     if (!Object.keys(THEME_TYPES).includes(type)) {
         return;
     }
-
-    const hslBaseColor = parseHSL(baseColor);
-    if (!hslBaseColor) {
+    if (!parseColor(baseColor)) {
         return;
     }
-    const saturation = hslBaseColor.saturation();
-    const hue = hslBaseColor.hue();
-    const lightness = hslBaseColor.lightness();
-
-    const hslBaseColorInverted = invertColor(hslBaseColor);
-    const baseColorInverted = hslBaseColorInverted.display();
-
-    const backgroundColorDark = `hsl(${saturation}, ${hue}%, 10%)`;
-    const backgroundColorBright = `hsl(${saturation}, ${hue}%, 90%)`;
-
-    const backgroundColorPrimary = `hsl(${saturation}, ${hue}%, ${lightness}%)`;
-    const backgroundColorPrimaryAlpha = `hsl(${saturation}, ${hue}%, ${lightness}%, 0.4)`;
-    const backgroundColorPrimaryInverted = `hsl(${saturation}, ${hue}%, ${100 - lightness}%)`;
-
-    const backgroundColorSecondary = '';
-    const backgroundColorSecondaryAlpha = '';
-    const backgroundColorSecondaryInverted = '';
-
-    const backgroundColorTertiary = '';
-    const backgroundColorTertiaryAlpha = '';
-    const backgroundColorTertiaryInverted = '';
-
-    const backgroundColorQuaternary = '';
-    const backgroundColorQuaternaryAlpha = '';
-    const backgroundColorQuaternaryInverted = '';
-
-    const colorPrimary = '';
-    const colorPrimaryInverted = '';
-
-    const colorSecondary = '';
-    const colorSecondaryInverted = '';
-
-    const colorTertiary = '';
-    const colorTertiaryInverted = '';
-
-    const boxShadowUmbra = '';
-    const boxShadowUmbraColor = '';
-    const boxShadowUmbraInset = '';
-
-    const boxShadowPenumbra = '';
-    const boxShadowPenumbraColor = '';
-    const boxShadowPenumbraInset = '';
-
-    const boxShadowAntumbra = '';
-    const boxShadowAntumbraColor = '';
-    const boxShadowAntumbraInset = '';
-
-
-    const theme: Theme = {
-        type,
+    const dark = type === 'dark';
+    const look = deriveLook({
+        scheme: dark ? 'dark' : 'light',
+        space: baseColor,
+        surface: baseColor,
+        ink: dark ? '#ffffff' : '#141414',
+        accent: dark ? '#4da3ff' : '#1f6feb',
+    }, THEME_NAME_GENERATED);
+    return {
+        ...themeFromLook(look),
         name: THEME_NAME_GENERATED,
-
         baseColor,
-        baseColorInverted,
-
-        backgroundColorDark,
-        backgroundColorBright,
-
-        backgroundColorPrimary,
-        backgroundColorPrimaryAlpha,
-        backgroundColorPrimaryInverted,
-
-        backgroundColorSecondary,
-        backgroundColorSecondaryAlpha,
-        backgroundColorSecondaryInverted,
-
-        backgroundColorTertiary,
-        backgroundColorTertiaryAlpha,
-        backgroundColorTertiaryInverted,
-
-        backgroundColorQuaternary,
-        backgroundColorQuaternaryAlpha,
-        backgroundColorQuaternaryInverted,
-
-        colorPrimary,
-        colorPrimaryInverted,
-
-        colorSecondary,
-        colorSecondaryInverted,
-
-        colorTertiary,
-        colorTertiaryInverted,
-
-
-        boxShadowUmbra,
-        boxShadowUmbraColor,
-        boxShadowUmbraInset,
-
-        boxShadowPenumbra,
-        boxShadowPenumbraColor,
-        boxShadowPenumbraInset,
-
-        boxShadowAntumbra,
-        boxShadowAntumbraColor,
-        boxShadowAntumbraInset,
-
-        ...fontFamily,
     };
-
-    return theme;
-}
+};
 // #endregion module
+
 
 
 

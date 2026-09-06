@@ -51,7 +51,7 @@ export const StyledOrigin = styled.div<IStyledOrigin>`
     background-color: ${
         ({
             theme,
-        }) => theme.backgroundColorTertiaryAlpha
+        }) => 'var(--plurid-ink-faint)'
     };
     height: ${resolveSize};
     width: ${resolveSize};

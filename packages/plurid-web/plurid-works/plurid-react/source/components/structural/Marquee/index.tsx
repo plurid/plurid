@@ -29,6 +29,8 @@
 
     // #region external
     import { AppState } from '~services/state/store';
+    import { useEngineSelector } from '~services/hooks/engine';
+    import { chromeModeOf, showsChrome } from '~services/chrome';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
     import {
@@ -48,8 +50,8 @@ const StyledPluridMarquee = styled.div<{ theme: Theme }>`
     ${chromeRoot}
     position: absolute;
     pointer-events: none;
-    border: 1px dashed ${({ theme }) => theme.colorPrimary};
-    background-color: ${({ theme }) => theme.backgroundColorPrimaryAlpha};
+    border: 1px dashed ${({ theme }) => 'var(--plurid-ink)'};
+    background-color: ${({ theme }) => 'var(--plurid-surface)'};
     z-index: ${Z_INDEX.MARQUEE};
 `;
 
@@ -69,7 +71,8 @@ const PluridMarquee: React.FC<PluridMarqueeProperties> = (
         stateInteractionTheme,
     },
 ) => {
-    if (!stateMarquee) {
+    const shown = useEngineSelector((state) => state.configuration.elements?.marquee?.show !== false && showsChrome(chromeModeOf(state.configuration), 'marquee'));
+    if (!stateMarquee || !shown) {
         return null;
     }
 

@@ -50,6 +50,10 @@
     import ErrorBoundary from '~components/utilities/ErrorBoundary';
 
     import Context from '~services/context';
+    import {
+        showsChrome,
+        PluridPlaneChromeContext,
+    } from '~services/chrome';
 
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
@@ -508,6 +512,26 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // The page presentation: the controls bar overlays the top of the sheet (faded out while
     // docked) instead of taking a row, so the docked page is edge to edge and never jumps.
     const pagePresentation = stateConfiguration.space.presentation === 'page';
+
+    // The chrome in force (`elements.chrome`) and the plane-level slots, from the engine context.
+    const chrome = context?.chrome;
+    const chromeMode = chrome?.mode ?? 'full';
+    const bridgeShown = stateConfiguration.elements.planeBridge?.show !== false;
+    const planeChromeContext: PluridPlaneChromeContext | undefined = chrome && (chrome.renderPlaneControls || chrome.renderPlaneBridge)
+        ? {
+            look: chrome.look,
+            tokens: chrome.look.tokens,
+            docked: chrome.docked,
+            presentation: chrome.presentation,
+            configuration: stateConfiguration,
+            pubsub: chrome.pubsub,
+            planeID,
+            route: treePlane.route,
+            treePlane,
+            parentTreePlane,
+            mouseOver,
+        }
+        : undefined;
     const resizable = !!stateConfiguration.elements.plane.resizable && stateIsSelected && treePlane.show;
     const isolatePlaneOpacity = computeIsolatePlaneOpacity();
     const isolatePointerEvents = computeIsolatePointerEvents();
@@ -570,7 +594,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
             {treePlane.show && (
                 <>
-                    {treePlane.parentPlaneID && (
+                    {treePlane.parentPlaneID && bridgeShown && chrome?.renderPlaneBridge && (
+                        chrome.renderPlaneBridge(planeChromeContext) as React.ReactNode
+                    )}
+                    {treePlane.parentPlaneID && bridgeShown && !chrome?.renderPlaneBridge && (
                         <PlaneBridge
                             mouseOver={mouseOver}
                             bridgeLength={treePlane.bridgeLength}
@@ -579,7 +606,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         />
                     )}
 
-                    {resizable && (
+                    {resizable && showsChrome(chromeMode, 'resizeHandles') && (
                         <PlaneResizeHandles
                             planeID={planeID}
                             width={treePlane.width || width}
@@ -593,7 +620,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         />
                     )}
 
-                    {showPlaneControls && (
+                    {showPlaneControls && showsChrome(chromeMode, 'planeControls') && chrome?.renderPlaneControls && (
+                        chrome.renderPlaneControls(planeChromeContext) as React.ReactNode
+                    )}
+                    {showPlaneControls && showsChrome(chromeMode, 'planeControls') && !chrome?.renderPlaneControls && (
                         <PlaneControls
                             overlay={pagePresentation}
                             plane={plane}

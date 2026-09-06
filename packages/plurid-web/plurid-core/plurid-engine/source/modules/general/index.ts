@@ -1,6 +1,7 @@
 // #region imports
     // #region internal
     import * as configuration from './configuration';
+    import * as look from './look';
     import * as document from './document';
     import * as tree from './tree';
     // #endregion internal
@@ -11,6 +12,7 @@
 // #region exports
 export {
     configuration,
+    look,
     document,
     tree,
 };

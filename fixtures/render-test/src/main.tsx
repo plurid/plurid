@@ -10,7 +10,9 @@ import { fixtureByName } from './fixtures/catalog';
 // The registry decides (`?router=1` → the PluridRouterBrowser SPA demo; `?gallery=1` → every
 // fixture on one page; default = the CAD harness) — the same reader as every other flag.
 const flags = readFlags(location.search, (name) => fixtureByName(name)?.query);
-const Root = flags.router ? RouterDemo : (flags.gallery ? Gallery : App);
+// `?gallery=1` is the fixtures sheet; `?gallery=looks` the twelve looks (the flag is a boolean, so the word is read here)
+const gallery = flags.gallery || new URLSearchParams(window.location.search).get('gallery') === 'looks';
+const Root = flags.router ? RouterDemo : (gallery ? Gallery : App);
 
 console.log('[RT] plurid-react export count =', Object.keys(PR).length,
   '| PluridApplication =', typeof (PR as any).PluridApplication,

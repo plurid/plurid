@@ -51,9 +51,9 @@ const StyledPluridSpaceDebugger = styled.pre<{ theme: Theme }>`
     padding: 8px 10px;
     z-index: ${Z_INDEX.DEBUGGER};
     font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: ${({ theme }) => theme.colorPrimary};
-    background-color: ${({ theme }) => theme.backgroundColorPrimaryAlpha};
-    border: 1px solid ${({ theme }) => theme.backgroundColorTertiary};
+    color: ${({ theme }) => 'var(--plurid-ink)'};
+    background-color: ${({ theme }) => 'var(--plurid-surface)'};
+    border: 1px solid ${({ theme }) => 'var(--plurid-surface-strong)'};
     border-radius: 6px;
     pointer-events: none;
     user-select: none;

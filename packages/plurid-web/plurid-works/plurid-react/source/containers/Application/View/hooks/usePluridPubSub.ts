@@ -72,6 +72,7 @@
     import {
         generalEngine,
         space,
+        state as stateEngine,
     } from '~services/engine';
     // #endregion external
 // #endregion imports
@@ -202,23 +203,11 @@ export const usePluridPubSub = (
                         latest.current.stateConfiguration,
                     );
 
-                    // Handle themes
-                    if (typeof computedConfiguration.global.theme === 'object') {
-                        if (typeof computedConfiguration.global.theme.general === 'string') {
-                            dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme.general]);
-                        } else {
-                            dispatchSetGeneralTheme(computedConfiguration.global.theme.general);
-                        }
-
-                        if (typeof computedConfiguration.global.theme.interaction === 'string') {
-                            dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme.interaction]);
-                        } else {
-                            dispatchSetInteractionTheme(computedConfiguration.global.theme.interaction);
-                        }
-                    } else if (typeof computedConfiguration.global.theme === 'string') {
-                        dispatchSetGeneralTheme((themes as any)[computedConfiguration.global.theme]);
-                        dispatchSetInteractionTheme((themes as any)[computedConfiguration.global.theme]);
-                    }
+                    // The themes: the one resolution the store was created with (the engine's) — a
+                    // name is checked, an object is taken, and without a host theme the look decides.
+                    const resolvedThemes = stateEngine.resolveThemes(computedConfiguration, undefined);
+                    dispatchSetGeneralTheme(resolvedThemes.general);
+                    dispatchSetInteractionTheme(resolvedThemes.interaction);
 
 
                     dispatchSetConfiguration(computedConfiguration);

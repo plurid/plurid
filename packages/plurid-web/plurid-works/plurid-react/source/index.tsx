@@ -135,7 +135,32 @@
         usePluridHistory,
         usePluridPubSub,
         usePluridApi,
+        useLook,
     } from './services/hooks';
+
+    import {
+        PluridPill,
+        PluridPanel,
+        PluridIconButton,
+        PluridKey,
+    } from './components/utilities/Chrome';
+    import {
+        PluridLookStyle,
+        lookStylesheet,
+    } from './services/look';
+    import {
+        chromeRoot,
+        chromeControl,
+        chromePill,
+        chromePanel,
+        chromeLine,
+        chromeDocked,
+        chromeKey,
+    } from './services/styled/chrome';
+    import {
+        chromeModeOf,
+        showsChrome,
+    } from './services/chrome';
 
     // Escape-hatch primitives (Tier 3): the same building blocks the engine uses internally, so a
     // power-user can read derived state and compute "did the arrangement change" without forking.
@@ -155,6 +180,16 @@
 
 
 const internals = {
+    /** The vocabulary's css fragments (styled-components `css`): compose your own chrome on the look's tokens. */
+    chrome: {
+        chromeRoot,
+        chromeControl,
+        chromePill,
+        chromePanel,
+        chromeLine,
+        chromeDocked,
+        chromeKey,
+    },
     PluridPlaneBridge,
     PluridPlaneContent,
     PluridPlaneControls,
@@ -279,6 +314,15 @@ export {
     usePluridHistory,
     usePluridPubSub,
     usePluridApi,
+    useLook,
+    PluridPill,
+    PluridPanel,
+    PluridIconButton,
+    PluridKey,
+    PluridLookStyle,
+    lookStylesheet,
+    chromeModeOf,
+    showsChrome,
 
     getDirectPlaneMatch,
 
@@ -384,7 +428,36 @@ export {
     PLURID_ATTRIBUTE_CONTROL,
     PLURID_ATTRIBUTE_DOCKED,
     PLURID_ATTRIBUTE_ASIDE,
+    PLURID_ATTRIBUTE_APPLICATION,
+    PLURID_ATTRIBUTE_LOOK,
+    PLURID_ATTRIBUTE_PRESENTATION,
+    PLURID_ATTRIBUTE_PAGE,
+    PLURID_ATTRIBUTE_MOTION,
+    PLURID_ATTRIBUTE_NAVIGATING,
+    PLURID_ATTRIBUTE_OVERLAY,
+    PLURID_ATTRIBUTE_RAIL,
+    PLURID_ATTRIBUTE_RAIL_BUTTON,
 } from '@plurid/plurid-data';
+export type {
+    ChromeMode,
+    ChromePiece,
+    PluridChromeContext,
+    PluridPlaneChromeContext,
+} from './services/chrome';
+export type {
+    Look,
+    LookBase,
+    LookTokens,
+    LookName,
+    LookScheme,
+} from '@plurid/plurid-themes';
+export {
+    looks,
+    LOOK_NAMES,
+    LOOK_TOKENS,
+    deriveLook,
+    themeFromLook,
+} from '@plurid/plurid-themes';
 export type {
     CameraMotionOptions,
     CameraCommand,

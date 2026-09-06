@@ -8,6 +8,7 @@ your own React 19 app, and render it.
 |---|---|
 | [`minimal`](./minimal) | Hello-world: three planes in a 3D space, zero configuration. Start here. |
 | [`control-surface`](./control-surface) | A small "spatial notes" component exercising **every** control seam — `onReady`, pub/sub control & observe, a storage adapter, tuned timings, gesture `buttonMap`, shortcuts, and a custom toolbar slot. |
+| [`custom-chrome`](./custom-chrome) | The headless mode (`chrome: 'none'`) with the host's own bar: the hooks, the exported primitives (`PluridPanel`, `PluridPill`, `PluridKey`) and a look with a token laid over it. |
 
 New to the engine? Read [`../GETTING_STARTED.md`](../docs/GETTING_STARTED.md) first, then come back for the
 full reference in [`../docs/CONTROL_SURFACE.md`](../docs/CONTROL_SURFACE.md); the deep how-it-works

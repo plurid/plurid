@@ -85,7 +85,8 @@ const Origin: React.FC<OriginProperties> = (
 
 
     // #region render
-    if (!showTransformOrigin) {
+    const shown = stateConfiguration.elements?.origin?.show ?? showTransformOrigin;
+    if (!shown) {
         return (<></>);
     }
 

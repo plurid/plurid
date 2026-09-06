@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {
     PluridApplication,
+    PluridPlaneChromeContext,
 } from '@plurid/plurid-react';
 
 import {
@@ -100,6 +101,17 @@ const App = () => {
                             style={{ position: 'fixed', top: 12, right: 12, zIndex: 9999, color: '#7ee787' }}
                         >
                             CUSTOM CUBE
+                        </div>
+                    )
+                    : undefined}
+                renderPlaneControls={flags.slotPlaneControls
+                    ? (context: PluridPlaneChromeContext) => (
+                        <div
+                            data-plurid-control="rt-plane-bar"
+                            data-rt-route={context.route}
+                            style={{ position: 'absolute', top: -28, left: 0, right: 0, height: 24, lineHeight: '24px', fontSize: 11, color: '#7ee787' }}
+                        >
+                            CUSTOM BAR · {context.route}
                         </div>
                     )
                     : undefined}

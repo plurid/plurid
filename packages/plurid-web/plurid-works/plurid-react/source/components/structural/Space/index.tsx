@@ -20,6 +20,7 @@
         PluridConfiguration,
         PLURID_ENTITY_SPACE,
     } from '@plurid/plurid-data';
+    import { useContext as useReactContext } from 'react';
     // #endregion libraries
 
 
@@ -39,6 +40,7 @@
         StyledPluridSpace,
     } from './styled';
     // #endregion internal
+    import Context from '~services/context';
 // #endregion imports
 
 
@@ -65,6 +67,7 @@ export type PluridSpaceProperties =
 const PluridSpace: React.FC<PluridSpaceProperties> = (
     properties,
 ) => {
+    const pluridContext = useReactContext(Context);
     // #region properties
     const {
         // #region state
@@ -117,7 +120,9 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             <PluridRoots />
 
             {stateConfiguration.development?.spaceDebugger && (
-                <PluridSpaceDebugger />
+                pluridContext?.chrome?.renderDebugger
+                    ? pluridContext.chrome.renderDebugger(undefined) as React.ReactNode
+                    : <PluridSpaceDebugger />
             )}
         </StyledPluridSpace>
     );

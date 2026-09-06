@@ -9,26 +9,22 @@
 // #region module
 export const StyledPluridMoreMenu: any = styled.div`
     position: absolute;
-    bottom: 75px;
-    height: 280px;
-    width: 380px;
+    bottom: 68px;
+    width: 320px;
+    max-height: min(60vh, 520px);
     left: 50%;
     transform: translateX(-50%);
-    border-radius: 22.5px;
-    padding: 22px;
-    font-size: 0.8rem;
+    border-radius: var(--plurid-radius-panel);
+    padding: 6px;
+    font-size: var(--plurid-font-size);
     overflow: hidden;
 
-    background-color: ${(props: any) => {
-        if (props.transparentUI) {
-            return props.theme.backgroundColorPrimaryAlpha;
-        }
-
-        return props.theme.backgroundColorSecondary;
-    }};
-    box-shadow: ${(props: any) => {
-        return props.theme.boxShadowUmbra;
-    }};
+    color: var(--plurid-ink);
+    background: ${(props: any) => (props.transparentUI ? 'var(--plurid-surface)' : 'var(--plurid-surface-solid)')};
+    border: 1px solid var(--plurid-rim);
+    box-shadow: 0 0 0 1px var(--plurid-halo), var(--plurid-shadow);
+    backdrop-filter: blur(var(--plurid-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--plurid-blur)) saturate(1.2);
 `;
 
 
@@ -60,7 +56,7 @@ export const StyledPluridMoreMenuItem: any = styled.div`
                     right: 0;
                     bottom: -15px;
                     height: 1px;
-                    background-color: ${props.theme ? props.theme.colorPrimary : 'white'};
+                    background-color: var(--plurid-line);
                 }
             `;
         }
@@ -70,10 +66,10 @@ export const StyledPluridMoreMenuItem: any = styled.div`
 
 
 export const StyledPluridMoreMenuScroll = styled.div`
-    height: 240px;
-    overflow: scroll;
+    max-height: calc(min(60vh, 520px) - 12px);
+    overflow-y: auto;
     overscroll-behavior: contain;
-    padding: 0 5px;
+    padding: 0;
 
     /* Hide Scrollbar */
     scrollbar-width: none; /* Firefox 64 */

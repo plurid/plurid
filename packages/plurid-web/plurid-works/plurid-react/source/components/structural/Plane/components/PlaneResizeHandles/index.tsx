@@ -73,7 +73,7 @@ const StyledHandle = styled.div<{ theme: Theme; kind: 'right' | 'bottom' | 'corn
         position: absolute;
         inset: 3px;
         border-radius: 2px;
-        background-color: ${({ theme }) => theme.colorPrimary};
+        background-color: ${({ theme }) => 'var(--plurid-ink)'};
         opacity: ${({ kind }) => (kind === 'corner' ? 0.9 : 0)};
     }
 

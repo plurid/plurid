@@ -19,7 +19,7 @@ export interface IStyledPluridTransformArrow {
 export const StyledPluridTransformArrow = styled.div<IStyledPluridTransformArrow>`
     user-select: none;
     cursor: pointer;
-    border-radius: 50px;
+    border-radius: var(--plurid-radius);
     width: 25px;
     height: 25px;
     display: grid;
@@ -32,18 +32,18 @@ export const StyledPluridTransformArrow = styled.div<IStyledPluridTransformArrow
             theme,
         }: IStyledPluridTransformArrow) => {
             if (pressed) {
-                return theme.backgroundColorTertiary;
+                return 'var(--plurid-hover)';
             }
 
             return 'initial';
         }
     };
 
-    :hover {
+    &:hover {
         background-color: ${
             ({
                 theme,
-            }: IStyledPluridTransformArrow) => theme.backgroundColorTertiary
+            }: IStyledPluridTransformArrow) => 'var(--plurid-hover)'
         };
     }
 `;

@@ -7,6 +7,7 @@
         chromeRoot,
         chromeDocked,
         chromePill,
+        chromePanel,
         CHROME_PILL_MARGIN,
         CHROME_OPACITY_AMBIENT,
     } from '~services/styled/chrome';
@@ -42,7 +43,7 @@ export const StyledShortcutsBackdrop = styled.div`
     display: grid;
     place-items: center;
     padding: 40px;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: color-mix(in srgb, var(--plurid-space) 65%, transparent);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     animation: ${fadeIn} 140ms ease;
@@ -55,13 +56,9 @@ export const StyledShortcutsPanel = styled.div<{ theme: Theme }>`
     max-height: 82vh;
     overflow-y: auto;
     box-sizing: border-box;
+    ${chromePanel}
     padding: 26px 30px 30px;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background-color: ${({ theme }) => theme.backgroundColorSecondary};
-    color: ${({ theme }) => theme.colorPrimary};
-    box-shadow: ${({ theme }) => theme.boxShadowUmbra};
-    font-family: ${({ theme }) => theme.fontFamilySansSerif};
+    font-family: var(--plurid-font);
     animation: ${riseIn} 180ms cubic-bezier(0.16, 1, 0.3, 1);
 `;
 
@@ -74,14 +71,14 @@ export const StyledShortcutsHeader = styled.div`
 
     h2 {
         margin: 0;
-        font-size: 15px;
+        font-size: var(--plurid-font-size-title);
         font-weight: 600;
         letter-spacing: 0.02em;
     }
 
     span {
-        font-size: 11px;
-        opacity: 0.45;
+        font-size: var(--plurid-font-size-small);
+        color: var(--plurid-ink-muted);
     }
 `;
 
@@ -97,11 +94,11 @@ export const StyledShortcutsGroup = styled.div`
 
 export const StyledShortcutsGroupTitle = styled.div`
     margin-bottom: 8px;
-    font-size: 10px;
+    font-size: var(--plurid-font-size-small);
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    opacity: 0.42;
+    color: var(--plurid-ink-muted);
 `;
 
 export const StyledShortcutsRow = styled.div`
@@ -111,10 +108,10 @@ export const StyledShortcutsRow = styled.div`
     gap: 14px;
     min-height: 26px;
     padding: 2px 0;
-    font-size: 12.5px;
+    font-size: var(--plurid-font-size);
 
     span.label {
-        opacity: 0.78;
+        color: var(--plurid-ink-muted);
     }
 `;
 
@@ -143,12 +140,12 @@ export const StyledShortcutsKey = styled.kbd<{ theme: Theme }>`
     min-width: 12px;
     height: 19px;
     padding: 0 6px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background-color: ${({ theme }) => theme.backgroundColorTertiary};
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.25);
-    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-    font-size: 10.5px;
+    border-radius: calc(var(--plurid-radius) - 4px);
+    border: 1px solid var(--plurid-rim);
+    background-color: var(--plurid-surface-strong);
+    box-shadow: 0 1px 0 0 var(--plurid-halo);
+    font-family: var(--plurid-font-mono);
+    font-size: var(--plurid-font-size-small);
     line-height: 1;
     white-space: nowrap;
 `;

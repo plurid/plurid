@@ -23,7 +23,7 @@ export interface IStyledPluridViewcubeFace {
 }
 
 export const StyledPluridViewcubeFace = styled.div<IStyledPluridViewcubeFace>`
-    font-size: 0.6rem;
+    font-size: var(--plurid-font-size-small);
     position: absolute;
     height: 50px;
     width: 50px;
@@ -43,16 +43,15 @@ export const StyledPluridViewcubeFace = styled.div<IStyledPluridViewcubeFace>`
         theme,
     }) => {
         if (mouseOver) {
-            return theme.colorTertiary;
+            return 'var(--plurid-ink-muted)';
         }
-        return theme.backgroundColorSecondary;
+        return 'var(--plurid-rim)';
     }};
     box-shadow: ${({
         face,
-        theme,
     }) => {
         if (face === 'base') {
-            return '0px 0px 12px 2px ' + theme.boxShadowPenumbraColor;
+            return '0px 0px 12px 2px var(--plurid-halo)';
         }
         return '';
     }};
@@ -126,9 +125,9 @@ export const StyledPluridViewcubeFaceZone = styled.button<IStyledPluridViewcubeF
         hovered,
     }) => {
         if (hovered) {
-            return theme.colorPrimary;
+            return 'var(--plurid-ink)';
         }
-        return theme.colorSecondary;
+        return 'var(--plurid-ink-muted)';
     }};
     background-color: ${({
         theme,
@@ -137,16 +136,16 @@ export const StyledPluridViewcubeFaceZone = styled.button<IStyledPluridViewcubeF
         active,
     }) => {
         if (transparentUI && !hovered) {
-            return theme.backgroundColorPrimaryAlpha;
+            return 'var(--plurid-surface)';
         }
 
         if (active) {
-            return theme.backgroundColorTertiary;
+            return 'var(--plurid-surface-strong)';
         }
         if (hovered) {
-            return theme.backgroundColorTertiary;
+            return 'var(--plurid-surface-strong)';
         }
-        return theme.backgroundColorSecondary;
+        return 'var(--plurid-surface-solid)';
     }};
     border: 1px solid ${({
         theme,
@@ -158,16 +157,16 @@ export const StyledPluridViewcubeFaceZone = styled.button<IStyledPluridViewcubeF
         }
 
         if (hovered) {
-            return theme.colorTertiary;
+            return 'var(--plurid-ink-faint)';
         }
-        return theme.backgroundColorSecondary;
+        return 'var(--plurid-surface-solid)';
     }};
 
-    :hover {
+    &:hover {
         background-color: ${({
             theme,
         }) => {
-            return theme.backgroundColorTertiary;
+            return 'var(--plurid-surface-strong)';
         }};
     }
 `;

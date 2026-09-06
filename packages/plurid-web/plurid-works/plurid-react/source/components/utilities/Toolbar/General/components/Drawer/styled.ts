@@ -8,57 +8,41 @@
 
 // #region module
 export const StyledPluridDrawer: any = styled.div`
+    margin: 0 0 2px;
+    border-radius: var(--plurid-radius);
+    padding-bottom: ${(props: any) => (props.toggled ? '6px' : '0')};
+    background-color: ${(props: any) => (props.toggled ? 'var(--plurid-hover)' : 'transparent')};
+    color: var(--plurid-ink);
+    transition: background-color 150ms var(--plurid-ease);
+
     h5 {
-        font-size: 1rem;
+        font-size: var(--plurid-font-size);
+        font-weight: 600;
         margin: 0;
     }
-
-    margin-bottom: 2rem;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-
-    padding-bottom: ${(props: any) => {
-        if (props.transparentUI && props.toggled) {
-            return '0.5rem';
-        }
-        return '0';
-    }};
-    background-color: ${(props: any) => {
-        if (props.transparentUI && props.mouseOver) {
-            return props.theme.backgroundColorSecondary;
-        }
-        return 'transparent';
-    }};
-    box-shadow: ${(props: any) => {
-        if (props.transparentUI && props.mouseOver) {
-            return props.theme.boxShadowUmbra;
-        }
-        return 'none';
-    }};
-    color: ${(props: any) => {
-        return props.theme.colorPrimary;
-    }};
 `;
 
 
+/** A row: the drawer's name, a hover wash, no reflow. */
 export const StyledPluridDrawerHeading: any = styled.div`
     user-select: none;
     cursor: pointer;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: var(--plurid-radius);
     text-align: left;
-    transition: box-shadow 150ms ease;
+    transition: background-color 150ms var(--plurid-ease);
 
-    /* Just an underline on hover — NO background fill — drawn with an inset box-shadow so
-       it can never reflow / shift the text (a border-bottom toggle nudges the layout). */
-    :hover {
-        box-shadow: inset 0 -1px 0 0 ${(props: any) => {
-            return props.theme.colorPrimary;
-        }};
+    &:hover {
+        background-color: var(--plurid-hover);
     }
 `;
 
 
 export const StyledPluridDrawerItems = styled.div`
+    padding: 2px 12px 4px;
+    font-size: var(--plurid-font-size);
 `;
 // #endregion module

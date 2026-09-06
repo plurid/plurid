@@ -119,7 +119,7 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
         return '';
     }};
 
-    :hover {
+    &:hover {
         opacity: 1;
     }
 `;
@@ -133,10 +133,7 @@ export const StyledPluridViewcubeArrow = styled.div<IStyledPluridViewcubeArrow>`
     display: grid;
     place-content: center;
 
-    /* TODO
-     * Themed color
-     */
-    color: white;
+    color: var(--plurid-ink);
 `;
 
 
@@ -154,24 +151,20 @@ export const StyledPluridViewcubeArrowIcon = styled.button<IStyledPluridViewcube
     background: none;
 
     &:focus-visible {
-        outline: 2px solid currentColor;
+        outline: 2px solid var(--plurid-focus);
         outline-offset: 1px;
     }
     user-select: none;
-    font-size: 0.6rem;
+    font-size: var(--plurid-font-size-small);
     width: 1.2rem;
     height: 1.2rem;
-    border-radius: 0.6rem;
+    border-radius: var(--plurid-radius);
     display: grid;
     place-content: center;
     cursor: pointer;
 
-    :hover {
-        background-color: ${({
-            theme,
-        }) => {
-            return theme.backgroundColorTertiary;
-        }};
+    &:hover {
+        background-color: var(--plurid-hover);
     }
 `;
 
@@ -201,7 +194,7 @@ export const StyledFitView = styled.button<IStyledFitView>`
     svg {
         height: 0.8rem;
         width: 0.8rem;
-        fill: white;
+        fill: currentColor;
     }
 `;
 // #endregion module

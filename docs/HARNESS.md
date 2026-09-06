@@ -14,7 +14,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | --- | --- | --- | --- | --- |
 | `?fixture=<text>` | - | reload | open a named fixture from the catalog (its flags apply UNDER any explicit param) | the fixture catalog (src/fixtures/catalog.ts) |
 | `?viewpoint=<text>` | - | reload | an encoded viewpoint applied once the planes are measured | `space.setViewpoint` |
-| `?gallery=1` | - | reload | the contact sheet: every fixture in an iframe | the fixture catalog |
+| `?gallery=1` | - | reload | the contact sheet: every fixture in an iframe (`?gallery=looks`: the twelve looks, each on the revealed page and on the columns) | the fixture catalog, the looks |
 | `?router=1` | - | reload | the router demo instead of the space (PluridRouterBrowser) | PluridRouterBrowser / PluridRouterLink |
 | `?empty=1` | - | reload | an empty view (no roots) | the empty state |
 | `?presentation=page` | - | reload | the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed | `space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked` |
@@ -108,6 +108,9 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?slotToolbar=1` | - | reload | a custom toolbar through the render slot | `renderToolbar` |
 | `?slotDockRail=1` | - | reload | a custom dock rail through the render slot (the page presentation) | `renderDockRail` |
 | `?slotViewcube=1` | - | reload | a custom viewcube through the render slot | `renderViewcube` |
+| `?slotPlaneControls=1` | - | reload | a custom plane bar through the render slot (called with the plane) | `renderPlaneControls` |
+| `?look=graphite\|noir\|slate\|ink\|ember\|moss\|plum\|paper\|snow\|sand\|mint\|cobalt` | - | reload | the look: one of the twelve presets (default graphite) | `look`, the `--plurid-*` tokens on every piece of chrome |
+| `?chrome=minimal\|none` | - | reload | how much engine chrome renders: minimal (the rail, the plane bars, the ?) or none (headless) | `elements.chrome` |
 | `?hideLinks=1` | - | reload | hide the link beams and the alignment guides | `elements.planeLinks.show`, `elements.alignmentGuides.show` |
 
 ### debug
@@ -162,6 +165,9 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `page-aside` | A page, its sibling aside — Two pages opened from the site's header; docked on the first, the second is set aside (faded, inert). | `presentation=page` `pages=1` | `/page-1 → /page-1/about`, `⌂ /page-1`, `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 → /page-1/about` | `front`, `leash` | planes: 3, overlap: expected, links: false |
 | `page-leash` | A page, its leash — The contact page open and the site scrolled past its link, seen from the side: the leash from the link's fold to the page. | `presentation=page` `pages=1` | `/page-1 → /page-1/contact`, `⌂ /page-1`, `/page-1 ↓ 600` | `leash` | planes: 2, overlap: expected, links: false |
 | `pages-3-revealed` | Three pages, revealed — Three site pages side by side, fitted in the view. | `presentation=page` `pages=3` | - | `fit` | planes: 3 |
+| `columns-paper` | Columns, the paper look — The five panels under a light look: every piece of chrome on the paper tokens. | `look=paper` | - | `front` | planes: 5 |
+| `page-revealed-paper` | A page revealed, the paper look — The revealed page under the paper look: the rail, the toolbar and the cube on light tokens over a dark site. | `presentation=page` `pages=1` `look=paper` | - | `revealed` | planes: 1 |
+| `columns-headless` | Columns, headless — No engine chrome at all (`chrome: none`): the planes, their links and the space; every key and topic still works. | `chrome=none` | - | `front` | planes: 5, minimap: false |
 | `empty` | Empty — No roots: the empty state. | `empty=1` | - | `front` | planes: 0, minimap: false, links: false |
 
 ## Assertion globals

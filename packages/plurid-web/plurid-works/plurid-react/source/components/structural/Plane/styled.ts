@@ -69,18 +69,18 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
         planeOpacity,
     }) => {
         if (transparentUI && !mouseOver) {
-            return theme.backgroundColorPrimaryAlpha;
+            return 'var(--plurid-surface)';
         }
 
         if (planeOpacity !== 1) {
-            const decomposedColor = decomposeColor(theme.backgroundColorPrimary);
+            const decomposedColor = decomposeColor('var(--plurid-plane)');
             if (decomposedColor) {
                 const color = `hsla(${decomposedColor.hue}, ${decomposedColor.saturation}%, ${decomposedColor.lightness}%, ${planeOpacity})`;
                 return color;
             }
             return 'transparent';
         }
-        return theme.backgroundColorPrimary;
+        return 'var(--plurid-plane)';
     }};
     box-shadow: ${({
         planeOpacity,
@@ -89,19 +89,19 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }) => {
         // A 3px accent ring marks selection — distinct from the hover/active highlight, and kept
         // even when the plane is fully transparent so a selected-but-faded plane still reads.
-        const ring = `0 0 0 3px ${theme.colorPrimary}`;
+        const ring = `0 0 0 3px ${'var(--plurid-ink)'}`;
         if (planeOpacity === 0) {
             return selected ? ring : 'none';
         }
         if (selected) {
-            return `${ring}, ${theme.boxShadowUmbra}`;
+            return `${ring}, ${'var(--plurid-shadow)'}`;
         }
-        return theme.boxShadowUmbra;
+        return 'var(--plurid-shadow)';
     }};
     color: ${({
         theme,
     }) => {
-        return theme.colorPrimary;
+        return 'var(--plurid-ink)';
     }};
     opacity: ${({
         show,
@@ -132,7 +132,7 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     font-family: ${
         ({
             theme,
-        }: IStyledPluridPlane) => theme.fontFamilySansSerif
+        }: IStyledPluridPlane) => 'var(--plurid-font)'
     };
     transition: background-color 300ms linear;
 

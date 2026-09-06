@@ -62,7 +62,7 @@ export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
         mouseOver,
     }) => {
         if (transparentUI && !mouseOver) {
-            return theme.backgroundColorPrimaryAlpha;
+            return 'var(--plurid-surface)';
         }
 
         if (planeOpacity === 0) {
@@ -70,10 +70,10 @@ export const StyledPluridPlaneBridge = styled.div<IStyledPluridPlaneBridge>`
         }
 
         if (!planeControls) {
-            return theme.backgroundColorPrimary;
+            return 'var(--plurid-plane)';
         }
 
-        return theme.backgroundColorDark;
+        return 'var(--plurid-surface-solid)';
     }};
     --plurid-leash-angle: var(${BRIDGE_ANGLE_VARIABLE}, 0deg);
 

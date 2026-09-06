@@ -32,7 +32,7 @@ export const StyledAlignmentGuide = styled.div<IStyledAlignmentGuide>`
     top: 0;
     left: 0;
     transform-origin: 0 0;
-    background-color: ${({ theme }) => theme.colorPrimary};
-    opacity: 0.6;
+    background-color: var(--plurid-accent);
+    opacity: 0.8;
 `;
 // #endregion module

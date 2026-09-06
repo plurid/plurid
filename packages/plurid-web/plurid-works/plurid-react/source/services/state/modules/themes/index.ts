@@ -62,7 +62,7 @@ export const actions = themes.actions;
 
 
 export const getGeneralTheme = (state: AppState) => state.themes.general;
-export const getInteractionTheme = (state: AppState) => state.themes.general;
+export const getInteractionTheme = (state: AppState) => state.themes.interaction;
 
 export const selectors = {
     getGeneralTheme,

@@ -20,10 +20,10 @@ export const StyledPluridMenuUniverses = styled.div`
     overflow: hidden;
 
     background-color: ${(props: any) => {
-        return props.theme.backgroundColorSecondary;
+        return 'var(--plurid-surface-solid)';
     }};
     box-shadow: ${(props: any) => {
-        return props.theme.boxShadowUmbra;
+        return 'var(--plurid-shadow)';
     }};
 
     ul {
@@ -94,30 +94,10 @@ export const StyledMenuUniversesItemList: any = styled.li`
         }
         return 'pointer';
     }};
-    background-color: ${(props: any) => {
-        if (props.active) {
-            return props.theme.backgroundColorTertiary;
-        }
-        return '';
-    }};
-    box-shadow: ${(props: any) => {
-        if (props.active) {
-            return 'inset 0px -1px 6px 0px ' + props.theme.boxShadowUmbraColor;
-        }
-        return '';
-    }};
+    color: ${(props: any) => (props.active ? 'var(--plurid-accent)' : 'inherit')};
 
-    :hover {
-        background-color: ${(props: any) => {
-            return props.theme.backgroundColorTertiary;
-        }};
-        box-shadow: ${(props: any) => {
-            if (props.active) {
-                return 'inset 0px -1px 6px 0px ' + props.theme.boxShadowUmbraColor;
-            }
-
-            return props.theme.boxShadowUmbra;
-        }};
+    &:hover {
+        background-color: var(--plurid-hover);
     }
 `;
 // #endregion module

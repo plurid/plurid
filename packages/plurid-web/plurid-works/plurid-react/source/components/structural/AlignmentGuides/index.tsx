@@ -19,6 +19,8 @@
 
     // #region external
     import { AppState } from '~services/state/store';
+    import { useEngineSelector } from '~services/hooks/engine';
+    import { chromeModeOf, showsChrome } from '~services/chrome';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
 
@@ -76,7 +78,8 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
     } = properties;
 
     // #region render
-    if (!stateDraggingSelection || stateSelectedPlaneIDs.length === 0 || stateSnap?.enabled === false) {
+    const shown = useEngineSelector((state) => showsChrome(chromeModeOf(state.configuration), 'alignmentGuides'));
+    if (!shown || !stateDraggingSelection || stateSelectedPlaneIDs.length === 0 || stateSnap?.enabled === false) {
         return null;
     }
 

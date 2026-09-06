@@ -2,7 +2,7 @@ import generateTheme from '..';
 
 
 
-describe('generateTheme', () => {
+describe('generateTheme (deprecated: a shim over the look derivation)', () => {
     const baseColor = 'hsl(220, 20%, 40%)';
 
     it('generates a Theme from a type + base color', () => {
@@ -10,11 +10,17 @@ describe('generateTheme', () => {
 
         expect(theme).toBeDefined();
         expect(theme?.type).toBe('dark');
-        // the base color round-trips, and the derived backgrounds are real HSL strings
+        expect(theme?.name).toBe('generated');
+        // the base color round-trips; every field the drawers and content read is filled
         expect(theme?.baseColor).toBe(baseColor);
-        expect(theme?.backgroundColorPrimary.startsWith('hsl(')).toBe(true);
-        expect(theme?.backgroundColorDark).toContain('10%');
-        expect(theme?.backgroundColorBright).toContain('90%');
+        for (const field of ['backgroundColorPrimary', 'backgroundColorSecondary', 'backgroundColorTertiary', 'colorPrimary', 'colorSecondary', 'boxShadowUmbra', 'fontFamilySansSerif'] as const) {
+            expect(typeof theme?.[field]).toBe('string');
+            expect((theme?.[field] as string).length).toBeGreaterThan(0);
+        }
+    });
+
+    it('a bright type gives a bright theme', () => {
+        expect(generateTheme('bright', 'hsl(40, 30%, 92%)')?.type).toBe('bright');
     });
 
     it('returns undefined for an invalid theme type', () => {

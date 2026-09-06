@@ -78,6 +78,13 @@ export const buildConfiguration = (
     }
     flat.shortcuts = shortcuts;
 
+    if (flags.look) {
+        flat.look = flags.look as any;
+    }
+    if (flags.chrome) {
+        flat.chrome = flags.chrome;
+    }
+
     if (flags.hideLinks || flags.debug) {
         flat.extend = {
             ...(flags.hideLinks ? { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } : {}),

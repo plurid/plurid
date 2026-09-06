@@ -36,4 +36,21 @@ export const PLURID_ATTRIBUTE_CONTROL = 'data-plurid-control';
 export const PLURID_ATTRIBUTE_DOCKED = 'data-plurid-docked';
 /** On a plane outside the docked page's lineage: faded, inert. */
 export const PLURID_ATTRIBUTE_ASIDE = 'data-plurid-aside';
+/** On the view: the application's id — the scope of its look's `--plurid-*` custom properties. */
+export const PLURID_ATTRIBUTE_APPLICATION = 'data-plurid-application';
+/** On the view: the name of the look in force (`graphite`, `paper`, a preset with tokens over it as `name+`, or `custom`). */
+export const PLURID_ATTRIBUTE_LOOK = 'data-plurid-look';
+/** On the view: `page` in the page presentation. */
+export const PLURID_ATTRIBUTE_PRESENTATION = 'data-plurid-presentation';
+/** On the docked plane: `docked`. */
+export const PLURID_ATTRIBUTE_PAGE = 'data-plurid-page';
+/** On the view while the camera moves: `gesture` | `fling` | `tween`. */
+export const PLURID_ATTRIBUTE_MOTION = 'data-plurid-motion';
+/** On the view while a navigation mode is on: `grab` | `fly` | `transform`. */
+export const PLURID_ATTRIBUTE_NAVIGATING = 'data-plurid-navigating';
+/** On a chrome overlay (toolbar, viewcube, minimap, dock-rail, shortcuts): its name. A host slot that sets it is treated as chrome by the view (pointer routing). */
+export const PLURID_ATTRIBUTE_OVERLAY = 'data-plurid-overlay';
+/** On the page presentation's rail, and (`-button`) on each of its pills. */
+export const PLURID_ATTRIBUTE_RAIL = 'data-plurid-rail';
+export const PLURID_ATTRIBUTE_RAIL_BUTTON = 'data-plurid-rail-button';
 // #endregion module

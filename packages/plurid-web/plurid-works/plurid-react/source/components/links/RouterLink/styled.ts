@@ -21,15 +21,15 @@ const commonStyle = css<IStyledPluridRouterLink>`
     color: ${({
         theme,
     }) => {
-        return theme.colorTertiary;
+        return 'var(--plurid-accent)';
     }};
 
     @media (hover:hover) {
-        :hover {
+        &:hover {
             color: ${({
                 theme,
             }) => {
-                return theme.colorPrimary;
+                return 'var(--plurid-ink)';
             }};
         }
     }

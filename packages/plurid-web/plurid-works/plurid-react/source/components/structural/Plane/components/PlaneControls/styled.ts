@@ -42,12 +42,12 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
             return 'transparent';
         }
 
-        return theme.backgroundColorDark;
+        return 'var(--plurid-surface-solid)';
     }};
     box-shadow: ${({
         theme,
     }) => {
-        return theme.boxShadowUmbraInset;
+        return 'inset 0 -1px 0 0 var(--plurid-rim)';
     }};
 
     width: 100%;

@@ -37,8 +37,8 @@ const StyledPluridEmpty = styled.div<{ theme: Theme }>`
     place-content: center;
     text-align: center;
     pointer-events: none;
-    color: ${({ theme }) => theme.colorSecondary};
-    font-family: ${({ theme }) => theme.fontFamilySansSerif};
+    color: ${({ theme }) => 'var(--plurid-ink-muted)'};
+    font-family: ${({ theme }) => 'var(--plurid-font)'};
     letter-spacing: 0.08em;
     font-size: 0.85rem;
     opacity: 0.7;

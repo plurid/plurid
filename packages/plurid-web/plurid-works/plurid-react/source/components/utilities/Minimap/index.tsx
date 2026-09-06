@@ -86,7 +86,7 @@ const StyledMinimap = styled.div<StyledMinimapProperties>`
     height: ${HEIGHT}px;
     /* square, like a plane's window and the viewcube's faces */
     border-radius: 0;
-    color: ${({ theme }) => theme.colorPrimary};
+    color: ${({ theme }) => 'var(--plurid-ink)'};
     overflow: hidden;
     z-index: ${Z_INDEX.MINIMAP};
     user-select: none;
@@ -94,14 +94,14 @@ const StyledMinimap = styled.div<StyledMinimapProperties>`
        overview reads as a hint until the pointer comes over it, then it is the solid panel. */
     opacity: 0.4;
     background-color: transparent;
-    border: 1px solid ${({ theme }) => theme.backgroundColorSecondary};
+    border: 1px solid ${({ theme }) => 'var(--plurid-surface-solid)'};
     box-shadow: none;
     transition: opacity 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
 
     &:hover {
         opacity: 1;
-        background-color: ${({ theme }) => theme.backgroundColorSecondary};
-        border-color: ${({ theme }) => theme.backgroundColorTertiary};
+        background-color: ${({ theme }) => 'var(--plurid-surface-solid)'};
+        border-color: ${({ theme }) => 'var(--plurid-surface-strong)'};
         box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
     }
 `;
@@ -113,9 +113,9 @@ interface StyledMinimapDotProperties extends ThemedProperties {
 
 const StyledMinimapDot = styled.div<StyledMinimapDotProperties>`
     border-radius: 50%;
-    background-color: ${({ theme }) => theme.colorPrimary};
+    background-color: ${({ theme }) => 'var(--plurid-ink)'};
     box-shadow: ${({ active, theme }) =>
-        active ? `0 0 0 3px ${theme.backgroundColorTertiary}` : 'none'};
+        active ? `0 0 0 3px ${'var(--plurid-surface-strong)'}` : 'none'};
     transition: opacity 120ms ease, width 120ms ease, height 120ms ease;
 `;
 
@@ -174,7 +174,7 @@ const StyledMinimapEye = styled.div<ThemedProperties>`
     height: 9px;
     margin: -4.5px 0 0 -4.5px;
     border-radius: 50%;
-    border: 2px solid ${({ theme }) => theme.colorPrimary};
+    border: 2px solid ${({ theme }) => 'var(--plurid-ink)'};
     pointer-events: none;
     box-sizing: border-box;
 `;

@@ -21,6 +21,7 @@
  */
 type Row = { value: unknown; path: string; expect?: unknown };
 const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
+    look: { value: 'paper', path: 'global.look' },
     theme: { value: 'night', path: 'global.theme', expect: { general: 'night', interaction: 'night' } },
     transparentUI: { value: true, path: 'global.transparentUI' },
     language: { value: 'romanian', path: 'global.language' },
@@ -65,6 +66,11 @@ const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
     viewcube: { value: false, path: 'elements.viewcube.show' },
     minimap: { value: true, path: 'elements.minimap.show' },
     dockRail: { value: false, path: 'elements.dockRail.show' },
+    chrome: { value: 'none', path: 'elements.chrome' },
+    origin: { value: false, path: 'elements.origin.show' },
+    planeBridge: { value: false, path: 'elements.planeBridge.show' },
+    shortcutsTrigger: { value: false, path: 'elements.shortcuts.show' },
+    marquee: { value: false, path: 'elements.marquee.show' },
     // `extend` is the nested escape hatch itself, not a flat key with one location
     extend: null,
 };

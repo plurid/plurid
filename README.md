@@ -120,6 +120,7 @@ by knob.
 | **Camera** | One value: yaw, pitch, scale, pivot, offset. Docked on a page or free in the space. |
 | **Viewpoint** | The camera encoded as a short string, for share links, saved views and tours. |
 | **Universe · Cluster** | Higher groupings of spaces, for multi-space arrangements. |
+| **Look** | The chrome's design tokens: twelve presets derived from a few colours, overridable from CSS, replaceable piece by piece. |
 
 
 
@@ -130,8 +131,9 @@ by knob.
 | [`docs/GETTING_STARTED.md`](./docs/GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint. |
 | [`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) | Every knob and seam with a snippet, tiered from the escape hatch to the granular options. |
 | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | How it works: the packages, the render pipeline, the camera and state model, docking, the pub/sub wire, SSR. |
-| [`docs/SHORTCUTS.md`](./docs/SHORTCUTS.md) · [`docs/HARNESS.md`](./docs/HARNESS.md) | Generated from the data tables: every key and gesture; every flag and fixture of the harness. |
-| [`examples/`](./examples) | Runnable references: [`minimal`](./examples/minimal) and [`control-surface`](./examples/control-surface). |
+| [`docs/SHORTCUTS.md`](./docs/SHORTCUTS.md) · [`docs/HARNESS.md`](./docs/HARNESS.md) · [`docs/LOOKS.md`](./docs/LOOKS.md) | Generated from the data tables: every key and gesture; every flag and fixture of the harness; every look and token. |
+| [`docs/DESIGN.md`](./docs/DESIGN.md) | The chrome's vocabulary (pill, panel, line) and its rules; what a new piece of chrome must do. |
+| [`examples/`](./examples) | Runnable references: [`minimal`](./examples/minimal), [`control-surface`](./examples/control-surface) and [`custom-chrome`](./examples/custom-chrome). |
 | [`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md) | Work on the engine: the layout, the gates, the harness, the traps. |
 | [`docs/CONTEXT-MAP.md`](./docs/CONTEXT-MAP.md) | Which packages are live, legacy or archived, and which gates cover each. |
 | [`docs/README.md`](./docs/README.md) | The document map and its authority order; the roadmaps and the audit live there too. |
@@ -182,7 +184,7 @@ pnpm check         # tsc --noEmit in every package
 pnpm test          # jest across the workspace
 pnpm lint          # one flat-config ESLint pass
 pnpm e2e           # the browser suite: Playwright against the harness, plus the visual baselines
-pnpm docs.tables   # regenerate docs/SHORTCUTS.md and docs/HARNESS.md from the data tables
+pnpm docs.tables   # regenerate docs/SHORTCUTS.md, docs/HARNESS.md and docs/LOOKS.md from the data tables
 ```
 
 The harness at `fixtures/render-test` is the engine running for real: a catalog of fixtures, every option a

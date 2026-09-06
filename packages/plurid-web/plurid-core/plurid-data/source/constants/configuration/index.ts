@@ -34,6 +34,7 @@
 
 // #region module
 export const defaultConfigurationGlobal: PluridConfigurationGlobal = {
+    look: 'graphite',
     theme: {
         general: 'plurid',
         interaction: 'plurid',
@@ -44,6 +45,16 @@ export const defaultConfigurationGlobal: PluridConfigurationGlobal = {
 
 
 export const defaultConfigurationElements: PluridConfigurationElements = {
+    chrome: 'full',
+    planeBridge: {
+        show: true,
+    },
+    shortcuts: {
+        show: true,
+    },
+    marquee: {
+        show: true,
+    },
     toolbar: {
         show: true,
         opaque: true,

@@ -90,6 +90,9 @@ describe('the page presentation on the server', () => {
             expect(body).toMatch(/data-plurid-entity="PluridView"/);
             expect(body).toMatch(/data-plurid-docked="[^"]+"/);
             expect(body).toContain('data-plurid-page="docked"');
+            // the look ships with the page: its tokens, scoped to the application
+            expect(body).toContain('data-plurid-look="graphite"');
+            expect(body).toContain('--plurid-space:');
             // the chrome's docked rule ships in the collected styles: hidden before any script runs
             expect(body).toMatch(/\[data-plurid-docked\][^{]*\{[^}]*visibility:\s*hidden/);
             // the space presentation: no such attribute

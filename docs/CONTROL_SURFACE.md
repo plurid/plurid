@@ -406,6 +406,44 @@ definePluridConfiguration({
 });
 ```
 
+### The look
+
+Every piece of engine chrome is drawn from one set of tokens, the LOOK — 44 `--plurid-*` custom
+properties on the application's element, derived from a base of a few colours (the vocabulary and its
+rules: [DESIGN.md](./DESIGN.md); the token table and the presets: [LOOKS.md](./LOOKS.md)). One knob,
+`look`, in three forms:
+
+```tsx
+<PluridApplication look="paper" />                                                    // a preset: graphite (default) · noir · slate · ink · ember · moss · plum · paper · snow · sand · mint · cobalt
+<PluridApplication look={{ scheme: 'dark', space: '#000', surface: '#0b0b0d', ink: '#f2f2f2', accent: '#8ab4ff' }} />   // a base: a whole look derived from it
+<PluridApplication look={{ preset: 'graphite', tokens: { accent: '#ff5a5f', radius: '4px' } }} />   // a preset with tokens laid over it
+```
+
+- **CSS wins.** The tokens are emitted as `[data-plurid-application="<id>"] { --plurid-…: … }`
+  (specificity 0,1,0), so a host rule with a more specific selector overrides any of them:
+  `[data-plurid-application] { --plurid-accent: hotpink }`; per look, `[data-plurid-look="paper"] { … }`.
+  The space's grid is a token too: `grid: false` on the base, or `--plurid-space-grid: none`.
+- **At runtime**, the `configuration` topic with `{ global: { look: 'noir' } }` (or `setConfiguration`)
+  re-emits the stylesheet. `useLook()` reads the look in force inside the application.
+- The legacy `theme` (the content's and the drawers' `Theme`) is derived from the look unless set; a
+  legacy theme NAME given to `look` maps to the nearest preset.
+- **The chrome mode**, `elements.chrome` (flat `chrome`): `full` (default) · `minimal` (the page's rail,
+  the plane bars, the `?` and the drag feedback) · `none` (HEADLESS: a space with planes, links and
+  bridges, no engine chrome at all — every key and every topic still work). Per surface: `elements.origin`
+  / `planeBridge` / `shortcuts` / `marquee` `.show` join the existing `toolbar` / `viewcube` / `minimap` /
+  `dockRail` / `plane.controls` / `planeLinks` / `alignmentGuides`.
+- **Slots with context.** Every `render*` slot (`renderToolbar`, `renderViewcube`, `renderMinimap`,
+  `renderDockRail`, `renderShortcuts`, `renderEmpty`, `renderOrigin`, `renderDebugger`) is called with the
+  CHROME CONTEXT — `{ look, tokens, camera, docked, presentation, selection, history, configuration, pubsub }` —
+  and renders whatever the mode. The plane-level slots `renderPlaneControls(context)` and
+  `renderPlaneBridge(context)` get the plane too (`planeID`, `route`, `treePlane`, `parentTreePlane`,
+  `mouseOver`; not the live camera — a plane slot that needs it reads `useCamera`).
+- **Primitives.** `PluridPill`, `PluridIconButton`, `PluridPanel`, `PluridKey` are the vocabulary as
+  components (on the tokens, so custom chrome matches by construction); `internals.chrome` holds the css
+  fragments (`chromeRoot`, `chromeControl`, `chromePill`, `chromePanel`, `chromeLine`, `chromeDocked`,
+  `chromeKey`); `looks`, `LOOK_NAMES`, `LOOK_TOKENS`, `deriveLook`, `themeFromLook`, `lookStylesheet` and
+  `PluridLookStyle` are re-exported. The recipe: [`examples/custom-chrome`](../examples/custom-chrome).
+
 ### Stable DOM contract (`data-plurid-*`) and chrome isolation
 
 The engine's DOM is addressable through `data-plurid-*` attributes, which are a documented contract: tests,
@@ -421,7 +459,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
 `data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
-`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`. The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE`). CSS custom properties the engine writes, for a host's own stylesheet: `--plurid-dock-fade` on the view (`docking.fade`), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
+`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
 host's global resets: every chrome root and every chrome button / input / select starts from the engine's own
@@ -529,6 +567,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
 | Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
 | Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane |
+| Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` · `useLook()` |
 | Present the space as a site (a page first, the space one move away) | `{ presentation: 'page', docking: { motion, chrome, reveal, fade, aside, focus, epsilon } }` · `space.dock` / `space.reveal` · `useCamera().dock / reveal / docked` · `space.changed` kind `docked` · `[data-plurid-docked]` on the view · `renderDockRail` / `dockRail: { show }` · Escape docks (a spawned page: its parent), G / the rail / a pinch reveal |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |

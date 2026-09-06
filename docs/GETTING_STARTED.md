@@ -243,6 +243,24 @@ The full per-knob reference is **[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.m
 
 
 
+### Pick a look
+
+The engine's chrome (the toolbar, the cube, the minimap, the plane bars, the rail, the `?`) is drawn
+from one set of tokens, the LOOK. Twelve presets ship; the default is `graphite`. Pick one, or give
+three colours and get a whole look derived from them:
+
+```tsx
+<PluridApplication look="paper" />
+<PluridApplication look={{ preset: 'ink', tokens: { accent: '#ff8a3d' } }} />
+```
+
+See them all on the harness: `http://localhost:5275/?gallery=looks`. Everything else about the chrome —
+hiding it (`chrome: 'none'`), replacing a piece with your own (the `render*` slots), the exported
+primitives — is in the control surface's ["The look"](./CONTROL_SURFACE.md#the-look) and in
+[DESIGN.md](./DESIGN.md).
+
+
+
 ## 6 · Persistence
 
 Set `useLocalStorage` and the engine saves the **spatial state** (camera + plane tree) to `localStorage`,

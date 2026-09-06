@@ -27,14 +27,14 @@ export const StyledPluridLink = styled.a<IStyledPluridLink>`
     color: ${({
         theme,
     }) => {
-        return theme.colorTertiary;
+        return 'var(--plurid-accent)';
     }};
 
-    :hover {
+    &:hover {
         color: ${({
             theme,
         }) => {
-            return theme.colorPrimary;
+            return 'var(--plurid-ink)';
         }};
     }
 

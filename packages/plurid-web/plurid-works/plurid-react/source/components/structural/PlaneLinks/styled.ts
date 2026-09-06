@@ -43,8 +43,8 @@ export const StyledPluridPlaneLink = styled.div<IStyledPluridPlaneLink>`
     height: ${({ thickness }) => thickness}px;
     width: ${({ length }) => length}px;
     transform-origin: 0 0;
-    background-color: ${({ theme }) => theme.colorPrimary};
+    background-color: var(--plurid-ink);
     border-radius: ${({ thickness }) => thickness}px;
-    opacity: 0.5;
+    opacity: var(--plurid-opacity-ambient);
 `;
 // #endregion module

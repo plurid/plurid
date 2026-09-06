@@ -12,15 +12,15 @@ export const StyledPluridSearchList = styled.div`
     left: 0;
     right: 0;
     top: 47px;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: var(--plurid-radius-panel);
+    border-bottom-right-radius: var(--plurid-radius-panel);
     z-index: 9999;
 
     background-color: ${(props: any) => {
-        return props.theme.backgroundColorDark;
+        return 'var(--plurid-surface-solid)';
     }};
     box-shadow: ${(props: any) => {
-        return props.theme.boxShadowPenumbra;
+        return 'var(--plurid-shadow)';
     }};
 
     ul {
@@ -35,14 +35,12 @@ export const StyledPluridSearchList = styled.div`
     }
 
     li:last-child {
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: var(--plurid-radius-panel);
+        border-bottom-right-radius: var(--plurid-radius-panel);
     }
 
     li:hover {
-        background-color: ${(props: any) => {
-            return props.theme.backgroundColorPrimary;
-        }};
+        background-color: var(--plurid-hover);
     }
 `;
 

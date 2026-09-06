@@ -110,27 +110,14 @@ export interface IStyledToolbarButtons {
     mouseIn: boolean;
 }
 
+/** The bar: a wide pill of the look's material (the surface, the rim, the halo, the blur); ambient when the host asks for a see-through toolbar. */
 export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
-    color: ${({
-        theme,
-    }) => {
-        return theme.colorPrimary;
-    }};
-    background-color: ${({
-        theme,
-        transparentUI,
-    }) => {
-        if (transparentUI) {
-            return theme.backgroundColorPrimaryAlpha;
-        }
-
-        return theme.backgroundColorSecondary;
-    }};
-    box-shadow: ${({
-        theme,
-    }) => {
-        return theme.boxShadowUmbra;
-    }};
+    color: var(--plurid-ink);
+    background: ${({ transparentUI }) => (transparentUI ? 'var(--plurid-surface)' : 'var(--plurid-surface-strong)')};
+    border: 1px solid var(--plurid-rim);
+    box-shadow: 0 0 0 1px var(--plurid-halo), var(--plurid-shadow);
+    backdrop-filter: blur(var(--plurid-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--plurid-blur)) saturate(1.2);
     grid-template-columns: ${({
         showIcons,
         showTransformButtons,
@@ -166,30 +153,33 @@ export const StyledToolbarButtons = styled.div<IStyledToolbarButtons>`
         mouseIn,
     }) => {
         if (!opaque && !mouseIn) {
-            return '0.4';
+            return 'var(--plurid-opacity-ambient)';
         }
-        return '1';
+        return 'var(--plurid-opacity-persistent)';
     }};
+    &:hover,
+    &:focus-within {
+        opacity: 1;
+    }
 
     z-index: ${Z_INDEX.TOOLBAR};
     user-select: none;
-    /* height: 75px; */
     display: grid;
     pointer-events: all;
-    display: grid;
     /* stretch buttons to the full toolbar height so their fill is never short */
     align-items: stretch;
     justify-content: center;
     justify-items: center;
-    border-radius: 22.5px;
+    border-radius: 999px;
+    overflow: hidden;
     margin: 0 auto;
     margin-top: 10px;
     margin-bottom: 20px;
-    padding: 0 22.5px;
-    font-size: 12px;
-    height: 45px;
+    padding: 0 6px;
+    font-size: var(--plurid-font-size);
+    height: calc(var(--plurid-control) + 12px);
     position: relative;
-    transition: opacity 300ms ease-in-out;
+    transition: opacity var(--plurid-fade) var(--plurid-ease);
 
     /* A hover bridge under the pill (its bottom margin), so the cursor can slide down to the screen
        edge without the toolbar concealing — the pill's OWN width. A bare ":after" here is a
@@ -215,18 +205,23 @@ export interface IStyledToolbarButton {
     showTransformButtons: boolean;
 }
 
+/** A toolbar button: the look's ink on nothing; hovered, the wash; active (a transform mode, an open menu), the accent as ink. */
 export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
     ${chromeControl}
     border: 0;
     margin: 0;
     font: inherit;
-    color: inherit;
-    background: none;
+    font-family: var(--plurid-font);
+    font-size: var(--plurid-font-size);
+    font-weight: var(--plurid-weight);
+    color: ${({ active }) => (active ? 'var(--plurid-accent)' : 'var(--plurid-ink)')};
+    background: transparent;
+    border-radius: 999px;
     cursor: pointer;
 
     &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: -2px;
+        outline: 2px solid var(--plurid-focus);
+        outline-offset: -3px;
     }
 
     padding: ${({
@@ -245,16 +240,7 @@ export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
             return '0';
         }
 
-        return '0 7px';
-    }};
-    background-color: ${({
-        active,
-        theme,
-    }) => {
-        if (active) {
-            return theme.backgroundColorTertiary;
-        }
-        return 'transparent';
+        return '0 14px';
     }};
     min-width: ${({
         button,
@@ -266,25 +252,26 @@ export const StyledToolbarButton = styled.button<IStyledToolbarButton>`
         return '70px';
     }};
 
-    /* Original look: a full-height fill on the button, with a smooth fade. Fill the row the
-       grid stretches us into (min 45px) so the highlight always spans the toolbar height. */
-    min-height: 45px;
-    height: 100%;
+    /* Fill the row the grid stretches us into, inset by the bar's padding, so the highlight
+       always spans the bar's height. */
+    min-height: calc(var(--plurid-control) + 4px);
+    height: calc(100% - 8px);
+    margin: 4px 0;
     display: grid;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
     user-select: none;
-    transition: background-color 150ms ease;
+    transition: background-color 150ms var(--plurid-ease), color 150ms var(--plurid-ease);
 
     /* No @media (hover: hover) gate — some setups report hover: none even with a mouse,
        which silently dropped the hover fill. */
-    :hover {
-        background-color: ${({
-            theme,
-        }) => {
-            return theme.backgroundColorTertiary;
-        }};
+    &:hover {
+        background: var(--plurid-hover);
+    }
+    /* the round mask: whatever the icon wrapper paints stays inside the pill */
+    overflow: hidden;
+    svg {
+        fill: currentColor;
     }
 `;
 
@@ -294,11 +281,15 @@ export const StyledIcon = styled.div`
     height: 100%;
     display: grid;
     place-content: center;
+    /* the icon components paint their own background; in a pill the fill is the pill's */
+    &, & * {
+        background: transparent;
+    }
 
-    /* svg {
+    svg {
         height: 15px;
         width: 15px;
-        fill: white;
-    } */
+        fill: currentColor;
+    }
 `;
 // #endregion module

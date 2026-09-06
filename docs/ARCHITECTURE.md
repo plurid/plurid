@@ -175,6 +175,34 @@ PluridViewContainer
 - `Plane` positions itself with a per-plane CSS transform built from `treePlane.location` (`translateX/Y/Z` px + `rotateX/Y` deg, `transform-origin: 0 0 0`). Width comes from `elements.plane.width`: a value `<= 1` is a fraction of the measured view width, `> 1` is absolute px. It subscribes to DERIVED per-instance booleans (`stateIsActivePlane`, `stateIsSelected`) rather than the raw shared strings - the raw `activePlaneID` changes on every hover over ANY plane, so subscribing to the string re-rendered all planes per hover; the boolean flips only for the two planes whose state changed. Its chrome: `PlaneControls` (address bar, isolate/refresh/close), `PlaneContent` (the consumer component), `PlaneBridge` (the visual parent->child bridge). During an ANIMATED RELAYOUT (`state.space.layoutTransition` > 0: a layout switch, a `view.addPlane`/`view.removePlane`, a `view` prop change) the plane's placement transform carries a CSS transition for that window — the one place a CSS transition is right (many independent plane transforms, not the camera) — instant under reduced motion. A registered plane may DECLARE its own `width` / `height` in px (`planes[].width` / `height`, the tuple's options too): it renders exactly that box (content taller than a declared height scrolls inside the plane — `PlaneContent` gets `overflow: auto`), the tree node is born `sizeMode: 'declared'` with those numbers, the layouts space by them, and a hand resize (`elements.plane.resizable`) overrides it; a declared width alone keeps the content-driven height.
 - `PluridEmpty` (`components/structural/Empty`) renders in place of the space when the layout resolved to no planes; the `renderEmpty` slot replaces it.
 
+### 3.5 The look (2026-09-06)
+
+Every piece of engine chrome reads ONE set of design tokens, the look, and owns no colour, radius,
+font size or opacity of its own ([DESIGN.md](./DESIGN.md)). The pieces: `@plurid/plurid-themes`
+`looks/` — `LookBase` (scheme, space, surface, ink, accent, fonts, grid, vignette) → `deriveLook` →
+`LookTokens` (44 tokens, `LOOK_TOKENS` is the table the docs are generated from), twelve preset bases
+(`LOOK_BASES`, `looks`), `themeFromLook` (the legacy `Theme` a look implies), `LEGACY_LOOKS` (the old
+theme names → the nearest preset), the colour helpers (`parseColor`, `withAlpha`, `mix`, `contrastRatio`).
+The engine resolves `global.look` once per configuration object (`general/look` `resolveLook`: a name,
+a base, or `{ preset, tokens }`, identity-memoised) and derives `state.themes` from it unless the host
+set a `theme`. The View emits the tokens as one scoped `<style>` (`services/look` `lookStylesheet`:
+`[data-plurid-application="<id>"] { --plurid-…: … }`, specificity 0,1,0 so host CSS wins) and carries
+`data-plurid-application` / `data-plurid-look`; a runtime `configuration` message re-emits it; the server
+renders it with the page. The vocabulary lives in `services/styled/chrome.ts` (`chromePill`, `chromePanel`,
+`chromeLine`, `chromeKey`, `chromeRoot`, `chromeDocked`) and is exported as components (`PluridPill`,
+`PluridPanel`, `PluridIconButton`, `PluridKey`) and fragments (`internals.chrome`); the space draws the
+ground and the grid from the tokens (`Space/styled.ts`). The chrome mode (`elements.chrome`:
+`full` / `minimal` / `none`, `services/chrome` `showsChrome`) gates the defaults in the view container, the
+planes, the marquee and the guides; every `render*` slot is called with the chrome context (the look,
+the live camera, the docked page, the presentation, the selection, the history, the configuration, the
+bus), the plane-level slots (`renderPlaneControls`, `renderPlaneBridge`) with the plane and the frame-stable
+part of it through the engine context. Verification: `plurid-themes` (derivation, contrast per preset),
+`plurid-engine` `look` (resolution, legacy names), `plurid-react` `services/look` (the stylesheet, the three
+forms end to end, the runtime switch) and `services/chrome` (the modes, the slots, `useLook`), the server's
+page test (the block ships with the HTML), `chrome.spec.ts` (the host-CSS guarantee on two looks, the headless
+fixture, the minimal mode, the plane-bar slot), the visual baselines (`columns-paper`, `page-revealed-paper`,
+`columns-headless`), `?gallery=looks`.
+
 ## 4. The camera and transform model
 
 The camera is a first-class value, `state.space.camera` (`CameraState`, defined in plurid-data `interfaces/internal/camera`), and the pure math lives in the engine's `modules/interaction/camera/` (`interaction.camera`):
