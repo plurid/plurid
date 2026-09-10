@@ -9,7 +9,10 @@
         cullPlanes,
         sameCulling,
         CullingPlane,
+        CullPassResult,
         EMPTY_CULLING,
+        resolveDetachOptions,
+        resolveDetached,
     } from '../culling';
     // #endregion external
 // #endregion imports
@@ -68,7 +71,7 @@ describe('cullPlanes()', () => {
 
     it('hysteresis: a plane jittering on the distance boundary never flickers', () => {
         const camera = identityCamera(view);
-        let previous = EMPTY_CULLING;
+        let previous: CullPassResult = EMPTY_CULLING;
         const states: boolean[] = [];
         for (let frame = 0; frame < 20; frame += 1) {
             // depth oscillates ±60 around the 1500 threshold (z negative = farther from the eye)
@@ -80,9 +83,76 @@ describe('cullPlanes()', () => {
         expect(new Set(states).size).toBe(1);
     });
 
-    it('sameCulling compares the lists', () => {
-        expect(sameCulling({ hidden: ['a'], frozen: [], depths: {} }, { hidden: ['a'], frozen: [], depths: { a: 1 } })).toBe(true);
-        expect(sameCulling({ hidden: ['a'], frozen: [], depths: {} }, { hidden: ['b'], frozen: [], depths: {} })).toBe(false);
+    it('sameCulling compares the three lists, never the depths', () => {
+        expect(sameCulling({ hidden: ['a'], frozen: [], detached: [], depths: {} }, { hidden: ['a'], frozen: [], detached: [], depths: { a: 1 } })).toBe(true);
+        expect(sameCulling({ hidden: ['a'], frozen: [], detached: [], depths: {} }, { hidden: ['b'], frozen: [], detached: [], depths: {} })).toBe(false);
+        expect(sameCulling({ hidden: ['a'], frozen: [], detached: [], depths: {} }, { hidden: ['a'], frozen: [], detached: ['a'], depths: {} })).toBe(false);
+        expect(sameCulling({ hidden: ['a'], frozen: ['b'], detached: [], depths: {} }, { hidden: ['a'], frozen: [], detached: [], depths: {} })).toBe(false);
     });
 });
-// #endregion module
+
+
+describe('the detach tier: resolveDetached', () => {
+    const base = (extra: Partial<Parameters<typeof resolveDetached>[0]> = {}) => resolveDetached({
+        hidden: ['a', 'b', 'c'],
+        depths: { a: 1000, b: 5000, c: 9000 },
+        childrenOf: new Map(),
+        previous: [],
+        hiddenSince: new Map(),
+        now: 10_000,
+        exceptions: new Set(),
+        gate: false,
+        options: { mode: 'unmount', delay: 1000, distance: 0, max: Infinity },
+        ...extra,
+    });
+
+    it('resolves the knob: off without the pass or a mode; the string and the object forms', () => {
+        expect(resolveDetachOptions(undefined).mode).toBe('off');
+        expect(resolveDetachOptions({ enabled: false, detach: 'unmount' }).mode).toBe('off');
+        expect(resolveDetachOptions({ enabled: true }).mode).toBe('off');
+        expect(resolveDetachOptions({ enabled: true, detach: 'retain' })).toEqual({ mode: 'retain', delay: 1000, distance: 0, max: Infinity });
+        expect(resolveDetachOptions({ enabled: true, detach: { mode: 'unmount', delay: 0, distance: 4000, max: 20 } })).toEqual({ mode: 'unmount', delay: 0, distance: 4000, max: 20 });
+        // a negative number is clamped like its siblings
+        expect(resolveDetachOptions({ enabled: true, detach: { mode: 'unmount', delay: -1, distance: -1, max: -1 } })).toEqual({ mode: 'unmount', delay: 0, distance: 0, max: 0 });
+    });
+
+    it('a plane matures after the delay; the clock starts when it becomes hidden; nextDue names the earliest', () => {
+        const first = base();
+        expect(first.detached).toEqual([]);
+        expect(first.nextDue).toBe(11_000);
+        expect([...first.hiddenSince.keys()]).toEqual(['a', 'b', 'c']);
+        const later = base({ hiddenSince: first.hiddenSince, now: 11_000 });
+        expect(later.detached).toEqual(['a', 'b', 'c']);
+        expect(later.nextDue).toBeNull();
+        // a plane no longer hidden leaves the clock and re-attaches; the others stay detached
+        const shown = base({ hidden: ['b', 'c'], hiddenSince: later.hiddenSince, previous: later.detached, now: 11_050 });
+        expect(shown.detached).toEqual(['b', 'c']);
+        expect(shown.hiddenSince.has('a')).toBe(false);
+    });
+
+    it('distance, exceptions and the children rule keep a plane attached', () => {
+        const far = base({ now: 20_000, hiddenSince: new Map([['a', 0], ['b', 0], ['c', 0]]), options: { mode: 'unmount', delay: 0, distance: 4000, max: Infinity } });
+        expect(far.detached).toEqual(['b', 'c']);
+        const except = base({ now: 20_000, hiddenSince: new Map([['a', 0], ['b', 0], ['c', 0]]), exceptions: new Set(['b']) });
+        expect(except.detached).toEqual(['a', 'c']);
+        // `a` has a shown child `d` that is NOT hidden: `a` keeps its content (the leash)
+        const children = base({ now: 20_000, hiddenSince: new Map([['a', 0], ['b', 0], ['c', 0]]), childrenOf: new Map([['a', ['d']], ['b', ['c']]]) });
+        expect(children.detached).toEqual(['b', 'c']);
+    });
+
+    it('the gate stops new detaches but never re-attaching; the budget detaches the farthest at once', () => {
+        const gated = base({ now: 20_000, hiddenSince: new Map([['a', 0], ['b', 0], ['c', 0]]), previous: ['c'], gate: true });
+        expect(gated.detached).toEqual(['c']);
+        const reattached = base({ hidden: ['a'], previous: ['c'], gate: true });
+        expect(reattached.detached).toEqual([]);
+        const budget = base({ options: { mode: 'retain', delay: 1000, distance: 0, max: 1 } });
+        // nothing mature yet, but only one hidden plane may stay mounted: the two farthest go
+        expect(budget.detached).toEqual(['b', 'c']);
+        // an exception counts against the budget (it is mounted) but is never the one detached
+        const counted = base({ exceptions: new Set(['a']), options: { mode: 'retain', delay: 1000, distance: 0, max: 2 } });
+        expect(counted.detached).toEqual(['c']);
+        const off = base({ now: 20_000, hiddenSince: new Map([['a', 0]]), options: { mode: 'off', delay: 0, distance: 0, max: Infinity } });
+        expect(off.detached).toEqual([]);
+    });
+});
+

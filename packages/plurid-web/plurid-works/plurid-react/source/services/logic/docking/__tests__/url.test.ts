@@ -11,7 +11,7 @@ import {
 
 
 
-const path = { write: true, restore: true, history: 'push' as const, mode: 'path' as const, param: 'page' };
+const path = { write: true, restore: true, history: 'push' as const, mode: 'path' as const, param: 'page', base: '', orphan: 'root' as const };
 const query = { ...path, mode: 'query' as const, history: 'replace' as const };
 
 describe('the docking URL primitives', () => {
@@ -62,5 +62,21 @@ describe('the docking URL primitives', () => {
         expect(parentPath('/page-1/about')).toBe('/page-1');
         expect(parentPath('/page-1')).toBeNull();
         expect(parentPath('/')).toBeNull();
+    });
+
+    it('under a base the target is read from under it, written after it, and a location outside it is not ours', () => {
+        const docs = { ...path, base: '/docs' };
+        window.history.replaceState(null, '', '/docs/page-1/about?x=1');
+        expect(readDockingURLTarget(docs)).toBe('/page-1/about');
+        window.history.replaceState(null, '', '/docs');
+        expect(readDockingURLTarget(docs)).toBe('/');
+        writeDockingURL(docs, '/page-1', 'p1', { replace: true });
+        expect(window.location.pathname).toBe('/docs/page-1');
+        writeDockingURL(docs, '/', 'p0', { replace: true });
+        expect(window.location.pathname).toBe('/docs');
+        window.history.replaceState(null, '', '/elsewhere/page-1');
+        // outside the base the binding is passive: the reader answers null, the writer stays silent
+        expect(readDockingURLTarget(docs)).toBeNull();
+        expect(readDockingURLTarget(path)).toBe('/elsewhere/page-1');
     });
 });

@@ -1,7 +1,8 @@
 // #region imports
     // #region libraries
     import React, {
-        // useContext,
+        useMemo,
+        useContext,
         // useState,
         // useEffect,
         Component,
@@ -87,12 +88,26 @@
         registerPlanes,
         getPlanesRegistrar,
         PluridPlanesRegistrar,
+        generalEngine,
+        routing,
     } from '~services/engine';
+
+    import {
+        readDockingURLTarget,
+    } from '~services/logic/docking/url';
+    import {
+        createInspector,
+        buildInspection,
+        cullingCounts,
+    } from '~services/logic/inspector';
     // #endregion external
 
 
     // #region internal
     import PluridView from './View';
+    import PluridRouterContext, {
+        locationOf,
+    } from '../RouterBrowser/context';
     // #endregion internal
     import {
         PluridDocumentScope,
@@ -109,10 +124,17 @@ const planeIdentity = (
 ): string => String(plane?.route ?? plane?.id ?? plane?.path ?? '');
 
 
+/** What the function wrapper knows and the class cannot read: the host context. */
+interface PluridApplicationShellExtras {
+    /** Rendered inside a `PluridRouterBrowser` route: the router owns the pathname (the address bar's query mode). */
+    routerHosted?: boolean;
+    /** The router's location (the request's on the server): where the address bar reads a deep link without a window. */
+    routerLocation?: { pathname: string; search: string };
+}
+
+
 class PluridApplicationShell extends Component<
-    PluridApplicationProperties<PluridReactComponent>
-    // any,
-    // any
+    PluridApplicationProperties<PluridReactComponent> & PluridApplicationShellExtras
 > {
     // static contextType = PluridProviderContext;
 
@@ -136,6 +158,9 @@ class PluridApplicationShell extends Component<
     private persistDebounceMs = 300;
     private viewpointDebounceMs = 250;
     private readyFired = false;
+    /** The diagnostic registry (`api.inspect()`): the planes' renders, the gesture in flight, the dispatches. */
+    private inspector = createInspector();
+    private inspectorUnsubscriber: ReduxUnsubscribe | undefined;
     private storeID: string;
     private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
 
@@ -147,6 +172,9 @@ class PluridApplicationShell extends Component<
         super(properties);
 
         this.storeID = properties.id || 'default';
+        // the host's bus or our own: the SAME bus the View subscribes and `onReady(api)` hands out
+        // (THE READINESS CONTRACT lives in the bus: a command published before the View bridged it,
+        // or after it left, is dropped and reported there)
         this.pubsub = properties.pubsub || new PluridPubSub();
         // this.context = context;
 
@@ -185,11 +213,19 @@ class PluridApplicationShell extends Component<
 
     public componentDidMount() {
         // The store and viewpoint subscriptions and the pagehide / visibility listeners are MOUNT-owned
-        // (C02, 2026-09-06): React's StrictMode replays mount → unmount → mount in development, and a
+        // React's StrictMode replays mount → unmount → mount in development, and a
         // constructor-time subscription torn down by the replayed unmount never came back, so
         // persistence and `onViewpointChange` went silent. Both are idempotent; the unmount resets them.
         this.subscribeStore();
         this.subscribeViewpoint();
+        // the dispatch counter (a notification each; counted only while the inspector is on)
+        if (!this.inspectorUnsubscriber) {
+            this.inspectorUnsubscriber = this.store.subscribe(() => {
+                if (this.inspector.enabled) {
+                    this.inspector.dispatches += 1;
+                }
+            });
+        }
 
         // Restore the product's persisted content AFTER the plane subtree has mounted (so the
         // consumer's components exist to receive it). Counterpart to the `onPersistContent` save
@@ -271,6 +307,10 @@ class PluridApplicationShell extends Component<
             this.storeUnubscriber();
             this.storeUnubscriber = undefined;
         }
+        if (this.inspectorUnsubscriber) {
+            this.inspectorUnsubscriber();
+            this.inspectorUnsubscriber = undefined;
+        }
         if (this.viewpointUnsubscriber) {
             this.viewpointUnsubscriber();
             this.viewpointUnsubscriber = undefined;
@@ -319,6 +359,7 @@ class PluridApplicationShell extends Component<
                             planesRegistrar={this.planesRegistrar}
                             pubsub={this.pubsub}
                             thunkExtra={this.thunkExtra}
+                            inspector={this.inspector}
                         />
                     </ReduxProvider>
                 </StyleSheetManager>
@@ -334,6 +375,7 @@ class PluridApplicationShell extends Component<
             pubsub: this.pubsub,
             getSnapshot: () => this.store.getState(),
             getViewpoint: (options) => this.encodeViewpoint(options?.version),
+            inspect: () => buildInspection(this.store.getState(), this.inspector),
         };
     }
 
@@ -378,6 +420,7 @@ class PluridApplicationShell extends Component<
             },
             tree: {
                 get: () => getState().space.tree,
+                culling: () => cullingCounts(getState().space),
                 setView: (view) => dispatch(actions.space.spaceSetView(view)),
                 spawn: (route, parentPlaneID, linkCoordinates = { x: 0, y: 0 }) => {
                     const registrar = getPlanesRegistrar(this.planesRegistrar);
@@ -408,7 +451,7 @@ class PluridApplicationShell extends Component<
 
 
     /**
-     * Every application owns its registrar (C04, 2026-09-06: the window-global registry used to be
+     * Every application owns its registrar (the window-global registry used to be
      * the client default, so two applications registering the same route overwrote each other). The
      * global registry stays a READ fallback, resolved lazily, for planes a host registers globally.
      */
@@ -477,6 +520,23 @@ class PluridApplicationShell extends Component<
             hostname,
             {
                 configurationAuthoritative,
+                // THE ADDRESS BAR IS THE PAGE at store time: a root deep link boots docked from the first
+                // frame (the binding read against the MERGED configuration, the page defaults applied)
+                dockPath: (merged) => {
+                    const binding = generalEngine.configuration.resolveDockingURL(
+                        merged.space.docking?.url,
+                        { router: !!this.props.routerHosted },
+                    );
+                    if (!binding?.restore) {
+                        return null;
+                    }
+                    if (typeof window === 'undefined') {
+                        return this.props.routerLocation
+                            ? routing.dockingURLTarget(binding, this.props.routerLocation)
+                            : null;
+                    }
+                    return readDockingURLTarget(binding);
+                },
             },
         );
         // console.log({
@@ -626,6 +686,11 @@ const PluridApplication = forwardRef<
     PluridApplicationProperties<PluridReactComponent>
 >((properties, reference) => {
     const shell = useRef<PluridApplicationShell>(null);
+    // inside a router route the router owns the pathname: the address bar rides the query there
+    const routerContext = useContext(PluridRouterContext);
+    const routerHosted = !!routerContext;
+    const routerPath = routerContext?.path;
+    const routerLocation = useMemo(() => (routerPath === undefined ? undefined : locationOf(routerPath)), [routerPath]);
 
     useImperativeHandle(reference, () => (shell.current
         ? shell.current.getHandle()
@@ -635,6 +700,11 @@ const PluridApplication = forwardRef<
         <PluridApplicationShell
             ref={shell}
             {...properties}
+            // the route-driven mode: the router's `onReady` and bus, unless the host gave the application its own
+            onReady={properties.onReady ?? routerContext?.onReady}
+            pubsub={properties.pubsub ?? routerContext?.pubsub}
+            routerHosted={routerHosted}
+            routerLocation={routerLocation}
         />
     );
 });

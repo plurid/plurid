@@ -41,11 +41,19 @@ const Page: React.FC<{ name: string; accent: string; to: string; toLabel: string
 const routes: any[] = [
     { value: '/', exterior: () => <Page name="HOME" accent="#4da3ff" to="/about" toLabel="go to about →" /> },
     { value: '/about', exterior: () => <Page name="ABOUT" accent="#7ee787" to="/" toLabel="← back home" /> },
+    // a route WITH an application: the readiness contract in the route-driven mode (navigation.spec.ts)
+    { value: '/space', exterior: () => <Page name="SPACE" accent="#ffb454" to="/" toLabel="← back home" />, planes: [['/demo', () => <div style={{ padding: 24, color: '#e6e8ea' }}>a plane inside a route</div>]], view: ['/demo'] },
 ];
 
 
 const RouterDemo: React.FC = () => (
     <PluridRouterBrowser
+        // the readiness contract in the route-driven mode: the api at `onReady`, a command at once
+        onReady={(api) => {
+            (window as unknown as { __rtRouterReady?: unknown; __rtRouterRotation?: number }).__rtRouterReady = api;
+            api.pubsub.publish({ topic: 'space.rotateXTo', data: { value: 15 } } as never);
+            (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation = api.getSnapshot().space.rotationX;
+        }}
         routes={routes}
         planes={[]}
     />

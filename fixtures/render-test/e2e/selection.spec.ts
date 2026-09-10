@@ -78,9 +78,9 @@ test.describe('selection and editing', () => {
         await openHarness(page, '?reducedMotion=1&momentum=0');
         const roots = await visibleRoots(page);
         const [first, second] = roots;
-        const rect = await viewRect(page);
-        // focus the view on empty space
-        await page.mouse.click(rect.left + 30, rect.top + rect.height - 140);
+        // focus the view itself (a click on "empty space" is no longer empty: the sizing contract
+        // packs the rows by the panels' heights, and a hovered plane would become the active one)
+        await page.evaluate(() => (document.querySelector('[data-plurid-entity="PluridView"]') as HTMLElement).focus());
 
         await publish(page, 'space.frame', { planeID: first.plane.planeID, animate: false });
         await page.evaluate((id) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSpaceField', payload: { field: 'activePlaneID', value: id } }), first.plane.planeID);

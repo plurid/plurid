@@ -7,6 +7,7 @@
         useMemo,
         useState,
         useEffect,
+        useLayoutEffect,
     } from 'react';
 
     import {
@@ -42,6 +43,7 @@
         PlaneLink,
         SpaceTransform,
         PluridApplicationView,
+        PluridInspectorRegistry,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -138,6 +140,7 @@
     import useEngineEvents from './hooks/useEngineEvents';
     import useViewpointURL from './hooks/useViewpointURL';
     import useDockingURL from './hooks/useDockingURL';
+    import useMeasuredRelayout from './hooks/useMeasuredRelayout';
     // #endregion internal
 // #endregion imports
 
@@ -175,6 +178,8 @@ const rootsMatchView = (
 );
 
 export interface PluridViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
+    /** The diagnostic registry (`api.inspect()`), written by the planes and the gesture layer. */
+    inspector?: PluridInspectorRegistry;
     /** The store's thunk extra holder (from `PluridApplication`): the View registers its motion controller in it. */
     thunkExtra?: PluridThunkExtra;
     /** The application's id: the scope of its look (`data-plurid-application`). */
@@ -373,18 +378,30 @@ const PluridView: React.FC<PluridViewProperties> = (
     });
 
     // Culling + depth cues, throttled to one pass per 100 ms after a camera commit / tree change.
-    const cullingEligibility = useMemo(() => JSON.stringify([
+    // Everything besides the camera and the tree that changes a plane's eligibility, as one string:
+    // the exceptions (the active, isolated and selected planes, the docked lineage), the pass's
+    // configuration, the detach tier's gate (the motion, a layout transition) and its frustum (the
+    // view size).
+    const cullingEligibility = useMemo(() => [
+        state.space.activePlaneID,
+        state.space.isolatePlane,
+        state.space.selectedPlaneIDs.join(','),
+        JSON.stringify(stateConfiguration.space.culling),
+        JSON.stringify(stateConfiguration.elements.plane.depthFade),
+        state.space.motion,
+        state.space.layoutTransition,
+        state.space.viewSize.width + 'x' + state.space.viewSize.height,
+        stateDockedPlaneID,
+    ].join('|'), [
         state.space.activePlaneID,
         state.space.isolatePlane,
         state.space.selectedPlaneIDs,
         stateConfiguration.space.culling,
         stateConfiguration.elements.plane.depthFade,
-    ]), [
-        state.space.activePlaneID,
-        state.space.isolatePlane,
-        state.space.selectedPlaneIDs,
-        stateConfiguration.space.culling,
-        stateConfiguration.elements.plane.depthFade,
+        state.space.motion,
+        state.space.layoutTransition,
+        state.space.viewSize,
+        stateDockedPlaneID,
     ]);
     useCulling({
         dispatch,
@@ -733,10 +750,23 @@ const PluridView: React.FC<PluridViewProperties> = (
         // #region effects pointer
         // Native Pointer-Events gestures (orbit/pan/scale, two-pointer pinch, momentum) live in
         // `usePointerGestures`.
+        // the diagnostic registry follows the configuration: the counters run for `inspect()` and
+        // for the debuggers (before the planes' render effects of the same commit count)
+        const development = stateConfiguration.development;
+        useLayoutEffect(() => {
+            if (properties.inspector) {
+                properties.inspector.enabled = !!(development?.inspector || development?.spaceDebugger || development?.planeDebugger);
+            }
+        }, [properties.inspector, development]);
         usePointerGestures({
             viewElement,
             spaceConfiguration: stateConfiguration.space,
             grabModeRef,
+            onIntent: (intent) => {
+                if (properties.inspector) {
+                    properties.inspector.gesture = intent;
+                }
+            },
             stateRef,
             dispatch,
             setNavDragging,
@@ -838,6 +868,18 @@ const PluridView: React.FC<PluridViewProperties> = (
             state.space.viewSize.height,
             stateResolvedLayout,
         ]);
+
+        // THE SIZING CONTRACT: a measured height change relays the roots by their current sizes
+        // (once per frame, gliding after the boot's first measured relayout, never mid-motion).
+        useMeasuredRelayout({
+            tree: stateTree,
+            resolvedLayout: stateResolvedLayout,
+            motion: state.space.motion,
+            layoutTransition: state.space.layoutTransition,
+            layoutType: String(stateConfiguration.space.layout.type),
+            configuredHeight: spaceEngine.layout.configuredPlaneSize(stateConfiguration, state.space.viewSize).height,
+            relayout: ({ transition }) => treeUpdate(stateSpaceView, stateConfiguration, true, { transition }),
+        });
 
         // THE DOCKED PAGE IS FOLLOWED. A page's dock pose moves with its geometry: a resize resizes
         // every page and relays the roots, a re-measured link relocates a spawned page, a restore
@@ -1045,6 +1087,7 @@ const PluridView: React.FC<PluridViewProperties> = (
 
         defaultPubSub: pluridPubSub[0],
         registerPubSub,
+        inspector: properties.inspector,
 
         chrome: {
             mode: chromeMode,

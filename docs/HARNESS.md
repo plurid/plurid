@@ -29,11 +29,12 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 
 | Param | Default | Applies | Does | Exercises |
 | --- | --- | --- | --- | --- |
+| `?planeMaxHeight=<n>` | - | live | the tallest a content-sized plane grows (a fraction ≤ 1 of the view or px): taller content scrolls inside | `elements.plane.maxHeight` (flat `planeMaxHeight`) |
 | `?planes=<n>` | - | remount | N generated planes instead of the five instrument panels (stress) | many roots; the 8-column stress layout |
 | `?pages=<n>` | - | remount | the SITE set: N root pages, each with an about (long) and a contact (short) sub-page | view-sized pages, native scroll inside a plane, links spawning behind a docked page |
 | `?siteTheme=light` | - | remount | the site set on a light palette (default dark) | the rail and the leash over a light page |
 | `?stickyHeader=1` | - | remount | the site set with a sticky header (the links never scroll away) | a link that stays in view while the page scrolls |
-| `?sizes=default\|mixed\|wide\|tall\|small` | `default` | remount | declared plane sizes: mixed (five different boxes), wide, tall, small | `planes[].width` / `height` (declared sizes), per-column / per-row layout pitch |
+| `?sizes=default\|mixed\|wide\|tall\|small\|content` | `default` | remount | declared plane sizes: mixed (five different boxes), wide, tall, small; `content`: no declaration, content-sized panels of different heights (the sizing contract) | `planes[].width` / `height` (declared sizes), per-column / per-row layout pitch |
 | `?media=1` | - | reload | a consumer-style media plane (lens, lazy image, button-driven video) | `usePluridPlane()` from content; window.__rtPlaneLens |
 | `?scrollable=1` | - | reload | the GEOMETRY readout is a scroller (28 filler rows in a 120px box) | the wheel over scrollable content stays the content's |
 
@@ -64,6 +65,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?dockMotion=instant` | - | reload | the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging | `space.docking.motion: instant` |
 | `?dockChrome=shown` | - | reload | the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone) | `space.docking.chrome: shown` |
 | `?url=0\|1` | - | reload | the address bar is the page: `1` turns the binding on in the space presentation, `0` turns it off in the page presentation (on by default there) | `space.docking.url` |
+| `?urlBase=<text>` | - | reload | the pathname prefix the site is hosted under (`/docs`): the page path is written after it | `space.docking.url.base` |
+| `?urlOrphan=keep` | - | reload | a location naming no page at boot keeps its address (default: the boot page's path is written) | `space.docking.url.orphan` |
 | `?vpURL=1` | - | reload | the camera viewpoint written to and restored from ?v= | `viewpointURLWrite` / `viewpointURLRestore` |
 | `?vp=2` | - | reload | full-camera (v2) viewpoints in the URL and the callback | `viewpointURLVersion: 2` |
 
@@ -97,10 +100,15 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?culling=1` | - | reload | frustum / distance culling | `space.culling.enabled` |
 | `?cullDistance=<n>` | - | reload | the culling distance | `space.culling.distance` |
 | `?freezeDistance=<n>` | - | reload | the freeze distance | `space.culling.freezeDistance` |
+| `?cullDetach=retain\|unmount` | - | reload | the detach tier: a hidden plane's content is retained (state kept, effects off) or unmounted after cullDelay; the shell stays | `space.culling.detach` |
+| `?cullDelay=<n>` | - | reload | ms a plane stays hidden before its content detaches (default 1000) | `space.culling.detach.delay` |
+| `?cullMax=<n>` | - | reload | the most hidden-but-mounted planes kept; the farthest beyond it detach at once | `space.culling.detach.max` |
+| `?cullDetachDistance=<n>` | - | reload | only hidden planes farther than this (camera-space) detach | `space.culling.detach.distance` |
 | `?depthFade=1` | - | reload | far planes fade and blur | `elements.plane.depthFade` |
 | `?spaceW=<n>` | - | reload | the roots container width | `space.dimensions.width` |
 | `?spaceH=<n>` | - | reload | the roots container height | `space.dimensions.height` |
-| `?bench=1` | - | reload | a scripted orbit + pan + zoom over 240 frames → window.__rtBench | the per-frame camera path (bench.spec.ts) |
+| `?bench=1` | - | reload | a scripted run over 240 frames → window.__rtBench (the scenario: benchScenario) | the per-frame camera path (bench.spec.ts) |
+| `?benchScenario=orbit\|relayout\|spawn` | `orbit` | reload | what the bench drives: the camera (orbit + pan + zoom), the view size (relayouts), or a link opened and closed (spawns) | the relayout and spawn paths under a frame budget |
 
 ### ui
 
@@ -153,6 +161,7 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `zig-zag-tall` | Zig-zag, tall — Tall declared planes stacked without overlap. | `layout=zigZag` `sizes=tall` | - | `front` | planes: 5, overlap: expected, declaredSizes: true |
 | `face-to-face-wide` | Face to face, wide — Wide declared planes; the row spaces by each plane's own width. | `layout=faceToFace` `sizes=wide` | - | `front` | planes: 5, overlap: expected, declaredSizes: true |
 | `columns-small` | Columns, small — Small declared planes: content scrolls inside a declared height. | `sizes=small` | - | `front` | planes: 5, declaredSizes: true |
+| `columns-content` | Columns, content-sized — Twelve content-sized panels of different heights, the rows as tall as their tallest panel (the sizing contract). | `sizes=content` `planes=12` | - | `fit` | planes: 12 |
 | `stress-40` | Stress, 40 planes — Forty generated planes in eight columns. | `planes=40` | - | `front` | planes: 40 |
 | `links-dense` | Dense links — Six links on GEOMETRY, two to the same route. | `links=dense` | - | `front` | planes: 5 |
 | `nested-chain-3` | Nested chain — A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent. | `nested=3` | `/geometry → /chain-1`, `/chain-1 → /chain-2`, `/chain-2 → /chain-3` | `front`, `orbit` | planes: 8, overlap: expected, links: false |

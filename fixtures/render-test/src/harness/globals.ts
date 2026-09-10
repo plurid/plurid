@@ -19,6 +19,14 @@ export const installHarnessGlobals = (
     w.__rtFlags = () => flags;
     // The declared sizes by registered route (a fixture's `sizes` set) for the DOM-box assertion.
     w.__rtPlanes = () => Object.entries(declared).map(([route, size]) => ({ route, ...size }));
+    // the diagnostic surface, as the api gives it
+    w.__rtInspect = () => api.inspect();
+    // the detach tier: the planes whose content is mounted (a shell without content is detached)
+    w.__rtMounted = () => ({
+        shells: document.querySelectorAll('[data-plurid-plane]').length,
+        contents: Array.from(document.querySelectorAll('[data-plurid-entity="PluridPlaneContent"]')).filter((node) => (node as HTMLElement).style.display !== 'none').length,
+        detached: document.querySelectorAll('[data-plurid-culled="detached"]').length,
+    });
     const perf = (w.__rtPerf = { dispatches: 0, frames: 0 });
     // Which top-level slice keys changed on each notification (a no-op dispatch logs `[]`).
     const changes: string[][] = (w.__rtChanges = []);
@@ -66,9 +74,29 @@ export const installHarnessGlobals = (
         }
     });
 
-    // `?bench=1`: a scripted orbit + pan + zoom, 240 frames, one camera delta per frame; frame
-    // times from rAF deltas → window.__rtBench.
+    // `?bench=1`: a scripted run, 240 frames, one step per frame; frame times from rAF deltas →
+    // window.__rtBench. The scenario (`benchScenario`): `orbit` (orbit + pan + zoom camera deltas),
+    // `relayout` (the view size toggled every 20 frames: the roots relaid, the children re-placed),
+    // `spawn` (the GEOMETRY detail link opened and closed every 30 frames: spawns and closes).
     if (flags.bench) {
+        const scenario = flags.benchScenario ?? 'orbit';
+        const spaceElement = () => document.querySelector('[data-plurid-entity="PluridView"]') as HTMLElement | null;
+        const relayoutStep = (index: number) => {
+            // the view size through the store is the resize path without a window resize: a relayout
+            // every 20 frames (a real resize is debounced; one per frame would measure the reducer, not a relayout)
+            if (index % 20 !== 0) {
+                return;
+            }
+            const wide = index % 40 < 20;
+            api.store.dispatch({ type: 'space/setViewSize', payload: { width: wide ? 1200 : 1000, height: wide ? 760 : 700 } });
+        };
+        const spawnStep = (index: number) => {
+            if (index % 30 !== 0) {
+                return;
+            }
+            const link = spaceElement()?.querySelector('[data-plurid-link-route$="/geometry/detail"]') as HTMLElement | null;
+            link?.click();
+        };
         const bootMs = performance.now();
         const frameTimes: number[] = [];
         let dispatchesAtStart = 0;
@@ -83,13 +111,19 @@ export const installHarnessGlobals = (
                 frameTimes.push(now - last);
                 last = now;
             }
-            const phase = Math.floor(index / 80);
-            const delta = phase === 0
-                ? { yaw: 0.9, pitch: index % 2 ? 0.3 : -0.3 }
-                : (phase === 1
-                    ? { pan: { x: index % 40 < 20 ? 6 : -6, y: 2 } }
-                    : { zoom: { factor: index % 40 < 20 ? 1.01 : 1 / 1.01 } });
-            api.store.dispatch({ type: 'space/applyCameraDelta', payload: delta });
+            if (scenario === 'relayout') {
+                relayoutStep(index);
+            } else if (scenario === 'spawn') {
+                spawnStep(index);
+            } else {
+                const phase = Math.floor(index / 80);
+                const delta = phase === 0
+                    ? { yaw: 0.9, pitch: index % 2 ? 0.3 : -0.3 }
+                    : (phase === 1
+                        ? { pan: { x: index % 40 < 20 ? 6 : -6, y: 2 } }
+                        : { zoom: { factor: index % 40 < 20 ? 1.01 : 1 / 1.01 } });
+                api.store.dispatch({ type: 'space/applyCameraDelta', payload: delta });
+            }
             index += 1;
             if (index < total) {
                 requestAnimationFrame(run);

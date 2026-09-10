@@ -8,10 +8,14 @@ import {
     expect,
 } from '@playwright/test';
 
+import AxeBuilder from '@axe-core/playwright';
+
 import {
     openHarness,
     openFixture,
     settle,
+    spaceState,
+    tree,
     HarnessWindow,
 } from './helpers';
 
@@ -114,6 +118,61 @@ test.describe('access', () => {
             expect(await panel.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
         } finally {
             await context.close();
+        }
+    });
+
+    test('keyboard only: Tab reaches the space, the arrows walk the planes, Enter frames, Alt+W closes, Escape reveals a read plane', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        await settle(page);
+        // Tab from the document's start lands on the space (the view is focusable)
+        await page.evaluate(() => (document.querySelector('[data-plurid-entity="PluridView"]') as HTMLElement).focus());
+        expect(await page.evaluate(() => document.activeElement?.getAttribute('data-plurid-entity'))).toBe('PluridView');
+        // every plane is a named group
+        const names = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-plane]')).map((node) => [node.getAttribute('role'), node.getAttribute('aria-roledescription'), node.getAttribute('aria-label')]));
+        expect(names.length).toBe(5);
+        for (const [role, description, name] of names) {
+            expect(role).toBe('group');
+            expect(description).toBe('plane');
+            expect(name).toMatch(/^\//);
+        }
+        // the arrows walk the planes from the first root; Enter frames the active one
+        const roots = await tree(page);
+        await page.evaluate((id) => (window as unknown as HarnessWindow).__pluridApi.store.dispatch({ type: 'space/setSpaceField', payload: { field: 'activePlaneID', value: id } }), roots[0].planeID);
+        await page.keyboard.press('ArrowRight');
+        await page.waitForTimeout(80);
+        const walked = (await spaceState(page)).activePlaneID;
+        expect(walked).not.toBe(roots[0].planeID);
+        await page.keyboard.press('Enter');
+        await settle(page);
+        const target = roots.find((node: any) => node.planeID === walked)!;
+        expect((await spaceState(page)).camera.pivot.x).toBeCloseTo(target.location.translateX + target.width / 2, 0);
+        // Alt+W closes the active plane; Alt+Shift+T reopens it
+        await page.keyboard.press('Alt+KeyW');
+        await settle(page);
+        expect((await tree(page)).find((node: any) => node.planeID === walked)!.show).toBe(false);
+        await page.keyboard.press('Alt+Shift+KeyT');
+        await settle(page);
+        expect((await tree(page)).find((node: any) => node.planeID === walked)!.show).toBe(true);
+    });
+
+    test('an axe scan of the space and of a docked page finds no serious or critical violation', async ({ page }) => {
+        for (const query of ['?reducedMotion=1&momentum=0', '?fixture=page-docked&reducedMotion=1']) {
+            await openHarness(page, query);
+            await settle(page);
+            const results = await new AxeBuilder({ page })
+                // the harness's own SETUP pill and panel are not the engine's
+                .exclude('[data-rt-setup-position]')
+                // the chrome's muted ink sits on translucent, blurred surfaces over the space: axe reads a
+                // surface's own colour, not the composite, so the chrome is left out of the contrast rule
+                // and the CONTENT's contrast is still checked; the look's contrast (ink on surface ≥ 4.5:1)
+                // is asserted by the themes' tests
+                .exclude('[data-plurid-overlay]')
+                .exclude('[data-plurid-rail]')
+                .exclude('[data-plurid-entity="PluridPlaneControls"]')
+                .exclude('[data-plurid-control]')
+                .analyze();
+            const serious = results.violations.filter((violation) => violation.impact === 'serious' || violation.impact === 'critical');
+            expect(serious.map((violation) => violation.id + ': ' + violation.nodes.map((node) => node.target.join(' ')).slice(0, 3).join(' | ')), query).toEqual([]);
         }
     });
 });

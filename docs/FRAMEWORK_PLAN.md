@@ -83,11 +83,11 @@ Per-app verification:
 
 Do not equate a generated config with successful migration.
 
-## Remaining P5: Replace `generate-plurid-app`
+## P5: Replace `generate-plurid-app` — DONE 2026-09-10
 
-The generator is still CRA/webpack/rollup-era code. It shells out to Create React App, carries large dependency lists, has weak failure completion behavior, and only a sanity test. Replace it with direct generation of the kit shape.
+The generator emits the kit shape below (TypeScript, one template stamped with the workspace's versions at build; `-d`, `-m npm|pnpm|yarn`, `-v git|none`, `--no-install`; another language or UI engine is refused). Tests: the answers, the deterministic file list and manifest, an end-to-end generation with git; `pnpm smoke.pack` generates an application, installs it from the packed tarballs, runs `plurid build`, starts it and asserts the space at `/`. ### Historical: the plan (2026-09)
 
-The generated application should contain:
+The generator was CRA/webpack/rollup-era code: it shelled out to Create React App, carried large dependency lists, completed weakly on failure, and had only a sanity test. The plan was to replace it with direct generation of the kit shape:
 
 ```text
 plurid.config.ts
@@ -101,16 +101,7 @@ package.json                   # dev/build/start/check/test
 tsconfig.json
 ```
 
-It should not contain CRA, webpack, rollup, copied application scripts, or a per-app Dockerfile. Containerization and deployment belong to shared service-type templates and CI.
-
-Generator tests must verify:
-
-- input validation and non-zero failure behavior;
-- deterministic file output;
-- TypeScript config correctness;
-- generated install/build/type-check;
-- a browser smoke of the generated app;
-- compatibility with the current published engine/kit versions.
+with no CRA, webpack, rollup, copied application scripts or per-app Dockerfile (containerization and deployment belong to shared service-type templates and CI), and with tests for input validation and non-zero failure behavior, deterministic file output, TypeScript config correctness, the generated install / build / type-check, a browser smoke of the generated app, and compatibility with the published engine and kit versions. All of it landed as described above.
 
 ## Framework verification
 

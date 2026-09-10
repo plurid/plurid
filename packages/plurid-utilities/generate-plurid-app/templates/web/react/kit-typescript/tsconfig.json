@@ -1,0 +1,38 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "ES2020",
+        "lib": ["ES2020", "DOM", "DOM.Iterable"],
+        "jsx": "react",
+
+        "baseUrl": ".",
+        "paths": {
+            "~client/*": ["./source/client/*"],
+            "~server/*": ["./source/server/*"],
+            "~shared/*": ["./source/shared/*"]
+        },
+
+        "outDir": "build",
+        "declaration": false,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+
+        "strict": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false
+    },
+    "include": [
+        "plurid.config.ts",
+        "source"
+    ],
+    "exclude": [
+        "node_modules",
+        "build"
+    ]
+}

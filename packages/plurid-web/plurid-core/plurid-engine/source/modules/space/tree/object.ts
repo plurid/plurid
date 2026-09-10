@@ -25,6 +25,7 @@ export interface TreeData<C> {
     view: PluridApplicationView;
     configuration: PluridConfiguration;
     layout?: boolean;
+    /** The tree being replaced: its roots' measured / hand-set sizes place the new roots (the sizing contract). */
     previousTree?: TreePlane[];
     /** The measured view the layouts space planes by (falls back to the window / an SSR default). */
     viewSize?: ViewSize;
@@ -52,6 +53,7 @@ export default class Tree<C> {
             configuration,
             layout,
             viewSize,
+            previousTree,
         } = this.data;
 
         return computeSpaceTree(
@@ -62,6 +64,7 @@ export default class Tree<C> {
             this.origin,
             this.getCount.bind(this),
             viewSize,
+            previousTree,
         );
     }
 

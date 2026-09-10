@@ -113,10 +113,11 @@ export interface PluridStateSpace {
      * the View clears it once the transition has run.
      */
     layoutTransition: number;
-    /** The culling pass's result: planes that stop painting, planes that are contained (both kept mounted). */
+    /** The culling pass's result: planes that stop painting, planes that are contained (both kept mounted), planes whose content is DETACHED (`culling.detach`; the shell stays). Never persisted. */
     culled: {
         hidden: string[];
         frozen: string[];
+        detached: string[];
     };
 }
 

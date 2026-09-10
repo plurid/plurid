@@ -307,5 +307,24 @@ describe('pruneLinks()', () => {
         const kept = [links[0]];
         expect(pruneLinks(kept, ids)).toBe(kept);
     });
+
+    it('a PINNED child keeps the location it was dragged to; its own children still follow it (the sizing contract)', () => {
+        const grandchild = plane('gc', { translateX: 999 }, { parentPlaneID: 'c', linkCoordinates: { x: 50, y: 10 }, bridgeLength: 100, planeAngle: 90 });
+        const child = plane('c', { translateX: 700, translateY: 40, translateZ: -20, rotateY: 90 }, {
+            parentPlaneID: 'p', linkCoordinates: { x: 300, y: 120 }, bridgeLength: 100, planeAngle: 90, manuallyPositioned: true, children: [grandchild],
+        });
+        const parent = plane('p', {}, { children: [child] });
+        const result = recomputeSubtree(parent);
+        const placed = result.children![0];
+        expect(placed.location).toEqual(child.location);
+        // the grandchild is placed from the PINNED location, not from where the link would put its parent
+        const expected = childLocation(child.location, { x: 50, y: 10 }, 100, 90, 'start', grandchild.width, 0);
+        expect(placed.children![0].location.translateX).toBeCloseTo(expected.translateX, 9);
+        expect(placed.children![0].location.translateZ).toBeCloseTo(expected.translateZ, 9);
+        // an unpinned child is re-placed as before
+        const loose = plane('l', { translateX: 700 }, { parentPlaneID: 'p', linkCoordinates: { x: 300, y: 120 }, bridgeLength: 100, planeAngle: 90 });
+        const relaid = recomputeSubtree(plane('p', {}, { children: [loose] })).children![0];
+        expect(relaid.location.translateX).toBeCloseTo(300, 9);
+    });
 });
 // #endregion module

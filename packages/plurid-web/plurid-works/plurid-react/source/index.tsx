@@ -36,6 +36,9 @@
         PluridPubSubSubscribeMessage,
 
         PluridApi,
+    PluridInspection,
+    PluridInspectionPlane,
+    PluridInspectorRegistry,
         PluridStore,
         PluridStorageAdapter,
 
@@ -497,6 +500,9 @@ export type {
     PluridPubSubSubscribeMessage,
 
     PluridApi,
+    PluridInspection,
+    PluridInspectionPlane,
+    PluridInspectorRegistry,
     PluridStore,
     PluridStorageAdapter,
 

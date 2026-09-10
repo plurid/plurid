@@ -15,6 +15,9 @@
     import {
         getDockedPlaneID,
     } from '~services/state/modules/space/selectors';
+    import {
+        cullingCounts,
+    } from '~services/logic/inspector';
     // #endregion libraries
 // #endregion imports
 
@@ -99,6 +102,12 @@ export const useEngineEvents = (
     useEffect(() => {
         emit('docked', docked);
     }, [pubsub, docked]);
+
+    // the culling pass: the counts per tier (a host measuring what is live)
+    const culled = space.culled;
+    useEffect(() => {
+        emit('culling', cullingCounts(space));
+    }, [pubsub, culled]);
 }
 // #endregion module
 

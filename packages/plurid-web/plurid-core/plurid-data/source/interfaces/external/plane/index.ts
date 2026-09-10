@@ -37,6 +37,12 @@ export interface PluridPlaneOptions {
      * overrides it.
      */
     height?: number;
+    /**
+     * The tallest this content-sized plane grows (px > 0): taller content scrolls inside it and
+     * the plane's measured height is the cap. Ignored with a declared `height`; overrides
+     * `elements.plane.maxHeight`.
+     */
+    maxHeight?: number;
 }
 
 
@@ -145,5 +151,7 @@ export interface RegisteredPluridPlane<C> {
     /** The plane's declared `width` / `height` (px), carried through registration. */
     width?: number;
     height?: number;
+    /** The plane's declared `maxHeight` (px), carried through registration. */
+    maxHeight?: number;
 }
 // #endregion module

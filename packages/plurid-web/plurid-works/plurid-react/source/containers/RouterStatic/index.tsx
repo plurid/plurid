@@ -25,6 +25,8 @@
 export interface PluridRouterStaticOwnProperties {
     path: string;
     directPlane?: string;
+    /** The request's query (`?page=…`), for THE ADDRESS BAR IS THE PAGE on the server. */
+    search?: string;
     exterior?: PluridReactComponent;
     shell?: PluridReactComponent;
     routes: PluridRoute<PluridReactComponent>[];
@@ -42,6 +44,7 @@ const PluridRouterStatic = (
     const {
         path,
         directPlane,
+        search,
         routes,
         planes,
         exterior,
@@ -66,6 +69,7 @@ const PluridRouterStatic = (
             static={{
                 path,
                 directPlane,
+                search,
             }}
             protocol={protocol}
             hostname={hostname}

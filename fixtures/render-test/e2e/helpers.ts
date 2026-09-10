@@ -8,6 +8,7 @@ import type {
     CameraState,
     TreePlane,
     PluridApi,
+    PluridInspection,
 } from '@plurid/plurid-react';
 
 import type {
@@ -23,7 +24,7 @@ export interface RecordedFrame {
     aside: number;
 }
 
-/** One frame of the boot recording: was any plane painted before the view was docked? */
+/** One frame of the boot recording (`page.spec.ts`): was any plane painted before the view was docked? */
 export interface BootFrame {
     plane: boolean;
     docked: boolean;
@@ -66,7 +67,15 @@ export interface HarnessWindow {
     __rtFrames?: RecordedFrame[];
     __rtRecording?: boolean;
     /** the boot recorder (`page.spec.ts`) */
+    /** the boot recorder (`page.spec.ts`) */
     __rtBootFrames?: BootFrame[];
+    /** the suite's boot recorder (`recordDockedFrames`): the docked page per frame from the first script */
+    __rtDockedFrames?: (string | null)[];
+    __rtDockedRecording?: boolean;
+    /** the detach tier's DOM counts */
+    __rtMounted: () => { shells: number; contents: number; detached: number };
+    /** the diagnostic surface (`api.inspect()`) */
+    __rtInspect: () => PluridInspection;
 }
 
 /** `window` as the harness shapes it, inside `page.evaluate`. */
@@ -487,5 +496,80 @@ export const openPath = async (
 
 export const pathname = (page: Page) => page.evaluate(() => window.location.pathname);
 export const historyLength = (page: Page) => page.evaluate(() => window.history.length);
+/** The detach tier's counts from the DOM: shells, contents mounted (and not hidden), detached shells. */
+export const mounted = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__rtMounted());
+/** The diagnostic surface, as `api.inspect()` gives it. */
+export const inspect = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__rtInspect());
+/** Chrome's own DOM node and heap counts (the memory budget; a DOM count is machine-independent). */
+export const cdpMetrics = async (page: Page) => {
+    const session = await page.context().newCDPSession(page);
+    await session.send('Performance.enable');
+    const { metrics } = await session.send('Performance.getMetrics');
+    await session.detach();
+    const read = (name: string) => metrics.find((metric) => metric.name === name)?.value ?? 0;
+    return { nodes: read('Nodes'), heap: read('JSHeapUsedSize'), listeners: read('JSEventListeners') };
+};
+
 export const historyDocked = (page: Page) => page.evaluate(() => (window.history.state as { plurid?: { docked?: string } } | null)?.plurid?.docked ?? null);
+
+/** The store's notification count (`__rtPerf`): a still space dispatches nothing. */
+export const dispatches = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__rtPerf.dispatches);
+
+/** A root's world box: the tree's placement and size. */
+export interface Box {
+    id: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+export const overlaps = (a: Box, b: Box): boolean =>
+    a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+
+/** The shown roots' world boxes. */
+export const rootBoxes = async (page: Page): Promise<Box[]> => ((await tree(page)) as any[])
+    .filter((root: any) => root.show !== false)
+    .map((root: any) => ({ id: root.planeID, x: root.location.translateX, y: root.location.translateY, width: root.width, height: root.height }));
+
+/**
+ * Leave the plane the scenario touched: the pointer to the view's corner, the focus blurred, the
+ * selection and the active plane cleared — a clicked plane is active, selected AND focused, three
+ * culling exceptions, so this comes before a plane may be culled or detached.
+ */
+export const leavePlane = async (page: Page) => {
+    const view = await page.locator('[data-plurid-entity="PluridView"]').boundingBox();
+    await page.mouse.move((view?.x ?? 0) + 2, (view?.y ?? 0) + 2);
+    await page.evaluate(() => {
+        (document.activeElement as HTMLElement | null)?.blur();
+        const api = (window as unknown as HarnessWindow).__pluridApi;
+        api.store.dispatch({ type: 'space/setSelection', payload: [] });
+        api.store.dispatch({ type: 'space/setSpaceField', payload: { field: 'activePlaneID', value: '' } });
+    });
+};
+
+/**
+ * Record the view's docked page per frame from BEFORE the first script runs (the navigation follows):
+ * a boot on the wrong page shows as a frame docked on it, a chrome frame as `null`.
+ */
+export const recordDockedFrames = async (page: Page) => {
+    await page.addInitScript(() => {
+        const w = window as unknown as HarnessWindow;
+        const frames: (string | null)[] = (w.__rtDockedFrames = []);
+        w.__rtDockedRecording = true;
+        const tick = () => {
+            const view = document.querySelector('[data-plurid-entity="PluridView"]');
+            if (view) frames.push(view.getAttribute('data-plurid-docked'));
+            if (w.__rtDockedRecording && frames.length < 600) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    });
+    return {
+        stop: (): Promise<(string | null)[]> => page.evaluate(() => {
+            const w = window as unknown as HarnessWindow;
+            w.__rtDockedRecording = false;
+            return w.__rtDockedFrames ?? [];
+        }),
+    };
+};
 // #endregion fixtures

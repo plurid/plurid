@@ -349,11 +349,17 @@ export const renderApplication = async (
 ) => {
     const globals = preserveResult?.globals;
 
+    const requestURL = request?.originalUrl || request?.url || '';
+    const search = requestURL.includes('?') ? requestURL.slice(requestURL.indexOf('?')) : '';
     const pluridMetastate = await serverComputeMetastate(
         isoMatch,
         server.routes,
         globals,
         server.options.hostname,
+        {
+            pathname: isoMatch.match.value,
+            search,
+        },
     );
 
     // The document head, as data: the route's head is known BEFORE the render, the in-render
@@ -373,6 +379,7 @@ export const renderApplication = async (
         preserveResult,
         documentRegistry,
         pathname: isoMatch.match.value,
+        search,
         hostname: server.options.hostname,
         directPlane: isoMatch.kind === 'RoutePlane'
             ? isoMatch.match.value

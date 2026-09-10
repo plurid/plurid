@@ -24,6 +24,9 @@
     } from '@plurid/plurid-data';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
+    import type {
+        PluridPubSub as IPluridPubSub,
+    } from '@plurid/plurid-data';
 
     import {
         uuid,
@@ -1230,6 +1233,8 @@ export const computePluridRoute = (
     isoMatcher: routing.IsoMatcher<PluridReactComponent>,
     directPlane?: PluridRouteMatch,
     hostname = 'origin',
+    /** The router's bus, when the host gave it one: the route's application and its exterior share it. */
+    routerPubSub?: IPluridPubSub,
 ) => {
     if (
         directPlane
@@ -1331,7 +1336,9 @@ export const computePluridRoute = (
         view
     ) {
         return (): React.FC<any> => {
-            const pubsub = new PluridPubSub();
+            // the router's bus when the host gave one (the readiness contract: one bus for every
+            // route), else this route's own — the application and its exterior share it either way
+            const pubsub = routerPubSub ?? new PluridPubSub();
 
             const space = matchedRoute.data.value;
 
@@ -1380,8 +1387,9 @@ export const computePluridRoute = (
 export const computeInitialMatchedPath = (
     staticContext?: PluridRouterStatic,
 ): string => {
+    // the matched path is the location, pathname + search, on both sides
     if (staticContext) {
-        return staticContext.path;
+        return staticContext.path + (staticContext.search ?? '');
     }
 
     if (typeof window !== 'undefined') {

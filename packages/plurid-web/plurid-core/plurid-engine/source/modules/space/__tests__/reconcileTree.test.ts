@@ -104,5 +104,16 @@ describe('reconcileTree (structural sharing)', () => {
 
         expect(logic.reconcileTree(undefined, next)).toBe(next);
     });
+
+    it('compares the spawn geometry: link coordinates, the bridge side / offset and the spawning link survive an equal-route reconcile', () => {
+        const spawned = (y: number, side: 'start' | 'end', offset: number, link: string): TreePlane => ({ ...makePlane('c', 500), parentPlaneID: 'p', linkCoordinates: { x: 100, y }, bridgeSide: side, bridgeOffset: offset, spawnedByLinkID: link });
+        const previous: TreePlane[] = [makePlane('p', 0, [spawned(20, 'start', -15, 'l1')])];
+        const result = logic.reconcileTree(previous, [makePlane('p', 0, [spawned(60, 'end', 41, 'l2')])]);
+        expect(result[0].children![0]).toMatchObject({ linkCoordinates: { x: 100, y: 60 }, bridgeSide: 'end', bridgeOffset: 41, spawnedByLinkID: 'l2' });
+        expect(result[0].children![0]).not.toBe(previous[0].children![0]);
+        // equal geometry keeps the reference
+        const same = logic.reconcileTree(previous, [makePlane('p', 0, [spawned(20, 'start', -15, 'l1')])]);
+        expect(same[0].children![0]).toBe(previous[0].children![0]);
+    });
 });
 // #endregion module

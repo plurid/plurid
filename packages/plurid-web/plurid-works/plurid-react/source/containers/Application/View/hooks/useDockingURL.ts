@@ -78,7 +78,7 @@ const RESTORE_ATTEMPTS = 20;
 const RESTORE_RETRY_MS = 50;
 
 /**
- * THE ADDRESS BAR IS THE PAGE (`space.docking.url`, 2026-09-06). Two directions, the model of
+ * THE ADDRESS BAR IS THE PAGE (`space.docking.url`). Two directions, the model of
  * `useViewpointURL`:
  * - WRITE: while docked, the page's path is the pathname (the query and the hash untouched); docking
  *   on another page pushes a history entry (`history: 'push'`); the reveal keeps the last page's path;
@@ -117,6 +117,8 @@ export const useDockingURL = (
     /** Set by a `popstate` dock: the next writer run is a no-op (the browser already moved). */
     const suppress = useRef(false);
     const attempts = useRef(0);
+    /** `orphan: 'keep'`: the address is left as typed while the boot page (`planeID`, `''` for none) stays docked. */
+    const kept = useRef({ keeping: false, planeID: '' });
     /** A retry tick for a restore waiting on the DOM. */
     const [tick, setTick] = useState(0);
     const retry = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -200,11 +202,28 @@ export const useDockingURL = (
                 return;
             } else {
                 const target = readDockingURLTarget(binding);
-                // a path no registered plane answers to names nothing: nothing to restore, the writer
-                // normalizes the address to the boot page
+                /** Nothing at `target`: the boot page stays; `root` writes its path, `keep` leaves the address. */
+                const orphan = () => {
+                    restoring.current = false;
+                    if (!target || target === '/') {
+                        // no page named (the site's front door): the boot page's address, no warning
+                        return;
+                    }
+                    warnOnce(
+                        'docking-url-orphan',
+                        `docking.url: nothing at ${target} — no plane or link reaches it; the boot page stays and `
+                        + (binding.orphan === 'keep' ? 'the address is kept.' : 'the address follows it.'),
+                        warnings,
+                    );
+                    if (binding.orphan === 'keep') {
+                        kept.current = { keeping: true, planeID: getDockedPlaneID(getState()) };
+                        synced.current = true;
+                    }
+                };
+                // a path no registered plane answers to names nothing: nothing to restore
                 const registrar = getPlanesRegistrar(latest.current.planesRegistrar);
                 if (!target || !registrar?.get(target)) {
-                    restoring.current = false;
+                    orphan();
                 } else {
                     const found = resolvePath(target, typeof window !== 'undefined' ? window.history.state : null);
                                 if (found.planeID) {
@@ -215,14 +234,7 @@ export const useDockingURL = (
                             return;
                         }
                     } else if (found.settled || attempts.current >= RESTORE_ATTEMPTS) {
-                        if (attempts.current >= RESTORE_ATTEMPTS) {
-                            warnOnce(
-                                'docking-url-orphan',
-                                `docking.url: nothing at ${target} — no plane or link reaches it; the boot page stays and the address follows it.`,
-                                warnings,
-                            );
-                        }
-                        restoring.current = false;
+                        orphan();
                     } else {
                         // the DOM is not there yet (the parent page, its link): try again shortly
                         attempts.current += 1;
@@ -247,6 +259,17 @@ export const useDockingURL = (
             return;
         }
         if (!stateDockedPlaneID) {
+            return;
+        }
+        // an orphan address kept: silent until another page is docked
+        if (kept.current.keeping) {
+            if (stateDockedPlaneID === kept.current.planeID) {
+                return;
+            }
+            kept.current = { keeping: false, planeID: '' };
+        }
+        // outside the binding's base the location is not ours
+        if (readDockingURLTarget(binding) === null) {
             return;
         }
         const plane = planeByID(stateDockedPlaneID);

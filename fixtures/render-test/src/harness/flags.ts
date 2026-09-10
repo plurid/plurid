@@ -52,7 +52,7 @@ export interface FlagDefinition {
 export const LAYOUT_KEYS = ['columns', 'rows', 'sheaves', 'faceToFace', 'zigZag'] as const;
 export type LayoutKey = typeof LAYOUT_KEYS[number];
 
-export const SIZE_SET_KEYS = ['default', 'mixed', 'wide', 'tall', 'small'] as const;
+export const SIZE_SET_KEYS = ['default', 'mixed', 'wide', 'tall', 'small', 'content'] as const;
 export type SizeSetKey = typeof SIZE_SET_KEYS[number];
 
 export const FLAGS: readonly FlagDefinition[] = [
@@ -66,11 +66,12 @@ export const FLAGS: readonly FlagDefinition[] = [
     // layout
     { key: 'layout', type: 'enum', values: LAYOUT_KEYS, default: 'columns', group: 'layout', apply: 'live', description: 'the root layout', exercises: '`space.layout` (an animated relayout on the live instance)' },
     // planes
+    { key: 'planeMaxHeight', type: 'number', group: 'planes', apply: 'live', description: 'the tallest a content-sized plane grows (a fraction ≤ 1 of the view or px): taller content scrolls inside', exercises: '`elements.plane.maxHeight` (flat `planeMaxHeight`)' },
     { key: 'planes', type: 'number', group: 'planes', apply: 'remount', description: 'N generated planes instead of the five instrument panels (stress)', exercises: 'many roots; the 8-column stress layout' },
     { key: 'pages', type: 'number', group: 'planes', apply: 'remount', description: 'the SITE set: N root pages, each with an about (long) and a contact (short) sub-page', exercises: 'view-sized pages, native scroll inside a plane, links spawning behind a docked page' },
     { key: 'siteTheme', type: 'enum', values: ['light'], group: 'planes', apply: 'remount', description: 'the site set on a light palette (default dark)', exercises: 'the rail and the leash over a light page' },
     { key: 'stickyHeader', type: 'boolean', group: 'planes', apply: 'remount', description: 'the site set with a sticky header (the links never scroll away)', exercises: 'a link that stays in view while the page scrolls' },
-    { key: 'sizes', type: 'enum', values: SIZE_SET_KEYS, default: 'default', group: 'planes', apply: 'remount', description: 'declared plane sizes: mixed (five different boxes), wide, tall, small', exercises: '`planes[].width` / `height` (declared sizes), per-column / per-row layout pitch' },
+    { key: 'sizes', type: 'enum', values: SIZE_SET_KEYS, default: 'default', group: 'planes', apply: 'remount', description: 'declared plane sizes: mixed (five different boxes), wide, tall, small; `content`: no declaration, content-sized panels of different heights (the sizing contract)', exercises: '`planes[].width` / `height` (declared sizes), per-column / per-row layout pitch' },
     { key: 'media', type: 'boolean', group: 'planes', apply: 'reload', description: 'a consumer-style media plane (lens, lazy image, button-driven video)', exercises: '`usePluridPlane()` from content; window.__rtPlaneLens' },
     { key: 'scrollable', type: 'boolean', group: 'planes', apply: 'reload', description: 'the GEOMETRY readout is a scroller (28 filler rows in a 120px box)', exercises: 'the wheel over scrollable content stays the content\'s' },
     // links
@@ -89,6 +90,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'dockMotion', type: 'enum', values: ['instant'], group: 'navigation', apply: 'reload', description: 'the page presentation: a move that lands docked (a link, back, Escape) jumps instead of swinging', exercises: '`space.docking.motion: instant`' },
     { key: 'dockChrome', type: 'enum', values: ['shown'], group: 'navigation', apply: 'reload', description: 'the page presentation: the chrome shows during a docking swing (default: hidden, the pages swing alone)', exercises: '`space.docking.chrome: shown`' },
     { key: 'url', type: 'enum', values: ['0', '1'], group: 'navigation', apply: 'reload', description: 'the address bar is the page: `1` turns the binding on in the space presentation, `0` turns it off in the page presentation (on by default there)', exercises: '`space.docking.url`' },
+    { key: 'urlBase', type: 'string', group: 'navigation', apply: 'reload', description: 'the pathname prefix the site is hosted under (`/docs`): the page path is written after it', exercises: '`space.docking.url.base`' },
+    { key: 'urlOrphan', type: 'enum', values: ['keep'], group: 'navigation', apply: 'reload', description: 'a location naming no page at boot keeps its address (default: the boot page\'s path is written)', exercises: '`space.docking.url.orphan`' },
     { key: 'vpURL', type: 'boolean', group: 'navigation', apply: 'reload', description: 'the camera viewpoint written to and restored from ?v=', exercises: '`viewpointURLWrite` / `viewpointURLRestore`' },
     { key: 'vp', type: 'enum', values: ['2'], group: 'navigation', apply: 'reload', description: 'full-camera (v2) viewpoints in the URL and the callback', exercises: '`viewpointURLVersion: 2`' },
     // gestures
@@ -110,10 +113,15 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'culling', type: 'boolean', group: 'rendering', apply: 'reload', description: 'frustum / distance culling', exercises: '`space.culling.enabled`' },
     { key: 'cullDistance', type: 'number', group: 'rendering', apply: 'reload', description: 'the culling distance', exercises: '`space.culling.distance`' },
     { key: 'freezeDistance', type: 'number', group: 'rendering', apply: 'reload', description: 'the freeze distance', exercises: '`space.culling.freezeDistance`' },
+    { key: 'cullDetach', type: 'enum', values: ['retain', 'unmount'], group: 'rendering', apply: 'reload', description: 'the detach tier: a hidden plane\'s content is retained (state kept, effects off) or unmounted after cullDelay; the shell stays', exercises: '`space.culling.detach`' },
+    { key: 'cullDelay', type: 'number', group: 'rendering', apply: 'reload', description: 'ms a plane stays hidden before its content detaches (default 1000)', exercises: '`space.culling.detach.delay`' },
+    { key: 'cullMax', type: 'number', group: 'rendering', apply: 'reload', description: 'the most hidden-but-mounted planes kept; the farthest beyond it detach at once', exercises: '`space.culling.detach.max`' },
+    { key: 'cullDetachDistance', type: 'number', group: 'rendering', apply: 'reload', description: 'only hidden planes farther than this (camera-space) detach', exercises: '`space.culling.detach.distance`' },
     { key: 'depthFade', type: 'boolean', group: 'rendering', apply: 'reload', description: 'far planes fade and blur', exercises: '`elements.plane.depthFade`' },
     { key: 'spaceW', type: 'number', group: 'rendering', apply: 'reload', description: 'the roots container width', exercises: '`space.dimensions.width`' },
     { key: 'spaceH', type: 'number', group: 'rendering', apply: 'reload', description: 'the roots container height', exercises: '`space.dimensions.height`' },
-    { key: 'bench', type: 'boolean', group: 'rendering', apply: 'reload', description: 'a scripted orbit + pan + zoom over 240 frames → window.__rtBench', exercises: 'the per-frame camera path (bench.spec.ts)' },
+    { key: 'bench', type: 'boolean', group: 'rendering', apply: 'reload', description: 'a scripted run over 240 frames → window.__rtBench (the scenario: benchScenario)', exercises: 'the per-frame camera path (bench.spec.ts)' },
+    { key: 'benchScenario', type: 'enum', values: ['orbit', 'relayout', 'spawn'], default: 'orbit', group: 'rendering', apply: 'reload', description: 'what the bench drives: the camera (orbit + pan + zoom), the view size (relayouts), or a link opened and closed (spawns)', exercises: 'the relayout and spawn paths under a frame budget' },
     // ui
     { key: 'hostileCss', type: 'boolean', group: 'ui', apply: 'reload', description: 'a host stylesheet with aggressive global resets', exercises: 'the chrome reset (chrome.spec.ts)' },
     { key: 'slotToolbar', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom toolbar through the render slot', exercises: '`renderToolbar`' },
@@ -148,6 +156,7 @@ export interface HarnessFlags {
     siteTheme?: 'light';
     stickyHeader: boolean;
     sizes: SizeSetKey;
+    planeMaxHeight?: number;
     media: boolean;
     scrollable: boolean;
     links?: 'dense';
@@ -162,6 +171,8 @@ export interface HarnessFlags {
     perspective?: number;
     dockMotion?: 'instant';
     url?: '0' | '1';
+    urlBase?: string;
+    urlOrphan?: 'keep';
     vpURL: boolean;
     dockChrome?: 'shown';
     vp?: '2';
@@ -181,10 +192,15 @@ export interface HarnessFlags {
     culling: boolean;
     cullDistance?: number;
     freezeDistance?: number;
+    cullDetach?: 'retain' | 'unmount';
+    cullDelay?: number;
+    cullMax?: number;
+    cullDetachDistance?: number;
     depthFade: boolean;
     spaceW?: number;
     spaceH?: number;
     bench: boolean;
+    benchScenario: 'orbit' | 'relayout' | 'spawn';
     hostileCss: boolean;
     slotToolbar: boolean;
     slotDockRail: boolean;

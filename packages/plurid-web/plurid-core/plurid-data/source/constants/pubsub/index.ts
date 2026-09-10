@@ -112,6 +112,17 @@ export const PLURID_PUBSUB_TOPIC = {
 } as const;
 
 
+/**
+ * The topics the ENGINE publishes (the host listens): a publish of one of these with no subscriber
+ * is not a dropped command, so the bus never warns about it. Every other topic is a command TO the
+ * engine, dropped with a development warning when nothing is mounted to take it.
+ */
+export const PLURID_PUBSUB_EMITTED_TOPICS: readonly string[] = [
+    PLURID_PUBSUB_TOPIC.CHANGED,
+    PLURID_PUBSUB_TOPIC.COLLABORATION_MUTATION,
+];
+
+
 export type PluridPubSubTopic = typeof PLURID_PUBSUB_TOPIC;
 export type PluridPubSubTopicKeys = keyof typeof PLURID_PUBSUB_TOPIC;
 export type PluridPubSubTopicKeysType = typeof PLURID_PUBSUB_TOPIC[PluridPubSubTopicKeys];

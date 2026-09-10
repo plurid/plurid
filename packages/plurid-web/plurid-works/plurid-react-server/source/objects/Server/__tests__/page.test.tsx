@@ -34,8 +34,8 @@ const configuration = (): PluridServerConfiguration => ({
         {
             value: '/site',
             exterior: Shell,
-            planes: [['/p', Page]],
-            view: ['/p'],
+            planes: [['/p', Page], ['/p2', Page]],
+            view: ['/p', '/p2'],
             defaultConfiguration: { space: { presentation: 'page' } },
         },
         {
@@ -95,6 +95,15 @@ describe('the page presentation on the server', () => {
             expect(body).toContain('--plurid-space:');
             // the chrome's docked rule ships in the collected styles: hidden before any script runs
             expect(body).toMatch(/\[data-plurid-docked\][^{]*\{[^}]*visibility:\s*hidden/);
+            // the first page is the one docked
+            expect(body).toMatch(/data-plurid-docked="[^"]*\/p@/);
+            // THE ADDRESS BAR IS THE PAGE on the server: a deep link (the query mode inside the router)
+            // renders docked on ITS root — no frame of the first page
+            const deep = await get(instance, '/site?page=%2Fp2');
+            expect(deep.status).toBe(200);
+            expect(deep.body).toMatch(/data-plurid-docked="[^"]*\/p2@/);
+            expect(deep.body).toMatch(/data-plurid-plane="[^"]*\/p2@[^"]*"[^>]*data-plurid-page="docked"/);
+            expect(deep.body).not.toMatch(/data-plurid-plane="[^"]*\/p@[^"]*"[^>]*data-plurid-page="docked"/);
             // the space presentation: no such attribute
             const space = await get(instance, '/space');
             expect(space.status).toBe(200);

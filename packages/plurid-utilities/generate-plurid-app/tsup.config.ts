@@ -1,5 +1,6 @@
 import { defineConfig } from 'tsup';
-import { cp } from 'node:fs/promises';
+import { cp, readFile, writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 
 // Modern build (2026-06-17): tsup (esbuild) replacing the bespoke esbuild script.
@@ -18,5 +19,13 @@ export default defineConfig({
     treeshake: false,
     async onSuccess() {
         await cp('./templates', './distribution/templates', { recursive: true });
+        // the versions the generated manifest asks for: the workspace's siblings (the kit, the engine, the server)
+        const version = async (relative: string) => JSON.parse(await readFile(resolve(relative), 'utf8')).version;
+        await writeFile('./distribution/versions.json', JSON.stringify({
+            kit: await version('../../plurid-web/plurid-works/plurid-kit/package.json'),
+            react: await version('../../plurid-web/plurid-works/plurid-react/package.json'),
+            server: await version('../../plurid-web/plurid-works/plurid-react-server/package.json'),
+            generator: JSON.parse(await readFile(resolve('./package.json'), 'utf8')).version,
+        }, null, 4));
     },
 });

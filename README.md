@@ -160,7 +160,7 @@ plurid-pubsub ──────────────────────
 | [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) | Server rendering and static "stills" for the React adapter. |
 | [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) | The framework layer: `plurid.config.ts`, the `plurid` CLI, client and server bootstraps. In build-out, unpublished ([`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)). |
 | `@plurid/plurid-{themes,icons-react,ui-components-react,ui-state-react,functions,functions-react}` | Supporting utilities. |
-| [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | The scaffolding CLI. |
+| [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | The scaffolding CLI: a plurid-kit application in one command. |
 
 React 19 · TypeScript 6 · Node 22 or later. Legacy and experimental packages are listed in
 [`docs/CONTEXT-MAP.md`](./docs/CONTEXT-MAP.md).

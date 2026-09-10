@@ -2,13 +2,11 @@
     // #region libraries
     import React, {
         useEffect,
-        useRef,
         useState,
     } from 'react';
 
     import {
         connect,
-        ReactReduxContext,
     } from 'react-redux';
 
     import styled from 'styled-components';
@@ -20,6 +18,7 @@
     import {
         CameraState,
         CameraMotion,
+        PluridInspectorRegistry,
         PLURID_ENTITY_SPACE_DEBUGGER,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -68,11 +67,17 @@ export interface PluridSpaceDebuggerStateProperties {
     statePlanesMounted: number;
     statePlanesHidden: number;
     statePlanesFrozen: number;
+    statePlanesDetached: number;
     stateSelectionCount: number;
     stateActivePlaneID: string;
 }
 
-export type PluridSpaceDebuggerProperties = PluridSpaceDebuggerStateProperties;
+export interface PluridSpaceDebuggerOwnProperties {
+    /** The diagnostic registry: the gesture in flight, the planes' renders, the dispatches. */
+    inspector?: PluridInspectorRegistry;
+}
+
+export type PluridSpaceDebuggerProperties = PluridSpaceDebuggerOwnProperties & PluridSpaceDebuggerStateProperties;
 
 
 const countShown = (
@@ -96,71 +101,75 @@ const countShown = (
 
 
 /**
- * The performance HUD (`development.spaceDebugger` / `?debug=1`): frames per second (a rAF EMA),
- * store dispatches per second, planes mounted / culled / frozen, the camera and the motion state.
- * Reads the store through the context so the counters never re-render the space.
+ * The performance HUD (`development.spaceDebugger`): frames per second (a rAF EMA), the registry's
+ * dispatches and renders per second (its deltas, read on the same frame), the gesture in flight,
+ * planes mounted / hidden / frozen / detached, the camera and the motion state.
  */
 const PluridSpaceDebugger: React.FC<PluridSpaceDebuggerProperties> = (
     properties,
 ) => {
     const {
+        inspector,
         stateGeneralTheme,
         stateCamera,
         stateMotion,
         statePlanesMounted,
         statePlanesHidden,
         statePlanesFrozen,
+        statePlanesDetached,
         stateSelectionCount,
         stateActivePlaneID,
     } = properties;
 
-    const reduxContext = React.useContext(StateContext as unknown as typeof ReactReduxContext);
     const [fps, setFps] = useState(0);
     const [dispatchesPerSecond, setDispatchesPerSecond] = useState(0);
-    const dispatches = useRef(0);
+    const [rendersPerSecond, setRendersPerSecond] = useState(0);
+    const [gesture, setGesture] = useState<string | null>(null);
+    const totalRenders = () => {
+        let sum = 0;
+        inspector?.renders.forEach((count) => { sum += count; });
+        return sum;
+    };
 
     useEffect(() => {
-        const store = reduxContext?.store;
-        const unsubscribe = store
-            ? store.subscribe(() => { dispatches.current += 1; })
-            : undefined;
-
         let frame: number | null = null;
         let last = performance.now();
         let ema = 60;
         let windowStart = last;
-        let frames = 0;
+        let dispatchesSeen = inspector?.dispatches ?? 0;
+        let rendersSeen = totalRenders();
         const tick = (now: number) => {
             const dt = now - last;
             last = now;
             if (dt > 0) {
                 ema = ema * 0.9 + (1000 / dt) * 0.1;
             }
-            frames += 1;
             if (now - windowStart >= 500) {
+                const seconds = (now - windowStart) / 1000;
                 setFps(Math.round(ema));
-                setDispatchesPerSecond(Math.round(dispatches.current * 1000 / (now - windowStart)));
-                dispatches.current = 0;
+                const dispatches = inspector?.dispatches ?? 0;
+                setDispatchesPerSecond(Math.round((dispatches - dispatchesSeen) / seconds));
+                dispatchesSeen = dispatches;
+                const renders = totalRenders();
+                setRendersPerSecond(Math.round((renders - rendersSeen) / seconds));
+                rendersSeen = renders;
+                setGesture(inspector?.gesture ?? null);
                 windowStart = now;
-                frames = 0;
             }
             frame = requestAnimationFrame(tick);
         };
         frame = requestAnimationFrame(tick);
 
         return () => {
-            if (unsubscribe) {
-                unsubscribe();
-            }
             if (frame !== null) {
                 cancelAnimationFrame(frame);
             }
         };
-    }, [reduxContext]);
+    }, [inspector]);
 
     const lines = [
-        `fps ${fps}   dispatch/s ${dispatchesPerSecond}`,
-        `planes ${statePlanesMounted}   hidden ${statePlanesHidden}   frozen ${statePlanesFrozen}`,
+        `fps ${fps}   dispatch/s ${dispatchesPerSecond}   renders/s ${rendersPerSecond}   gesture ${gesture ?? '-'}`,
+        `planes ${statePlanesMounted}   live ${statePlanesMounted - statePlanesDetached}   hidden ${statePlanesHidden}   frozen ${statePlanesFrozen}   detached ${statePlanesDetached}`,
         `yaw ${stateCamera.yaw.toFixed(1)}  pitch ${stateCamera.pitch.toFixed(1)}  zoom ${stateCamera.scale.toFixed(3)}`,
         `pivot ${Math.round(stateCamera.pivot.x)},${Math.round(stateCamera.pivot.y)},${Math.round(stateCamera.pivot.z)}  offset ${Math.round(stateCamera.offset.x)},${Math.round(stateCamera.offset.y)},${Math.round(stateCamera.offset.z)}`,
         `motion ${stateMotion}   selected ${stateSelectionCount}   active ${stateActivePlaneID || '-'}`,
@@ -186,8 +195,9 @@ const mapStateToProperties = (
     stateCamera: state.space.camera,
     stateMotion: state.space.motion,
     statePlanesMounted: countShown(state.space.tree),
-    statePlanesHidden: state.space.culled?.hidden.length ?? 0,
-    statePlanesFrozen: state.space.culled?.frozen.length ?? 0,
+    statePlanesHidden: state.space.culled.hidden.length,
+    statePlanesFrozen: state.space.culled.frozen.length,
+    statePlanesDetached: state.space.culled.detached.length,
     stateSelectionCount: state.space.selectedPlaneIDs.length,
     stateActivePlaneID: state.space.activePlaneID,
 });

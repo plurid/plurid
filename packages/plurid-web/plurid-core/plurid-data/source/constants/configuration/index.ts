@@ -191,6 +191,7 @@ export const defaultConfigurationNetwork: PluridConfigurationNetwork = {
 
 export const defaultConfigurationDevelopment: PluridConfigurationDevelopment = {
     warnings: true,
+    inspector: false,
     planeDebugger: false,
     spaceDebugger: false,
 };

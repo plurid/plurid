@@ -1,53 +1,46 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/identity/plurid-p-logo.png" height="250px">
-    <br />
-    <br />
-    <a target="_blank" href="https://www.npmjs.com/package/@plurid/generate-plurid-app">
-        <img src="https://img.shields.io/npm/v/@plurid/generate-plurid-app.svg?logo=npm&colorB=1380C3&style=for-the-badge" alt="Version">
-    </a>
-    <a target="_blank" href="https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/LICENSE">
-        <img src="https://img.shields.io/badge/license-DEL-blue.svg?colorB=1380C3&style=for-the-badge" alt="License: DEL">
-    </a>
-</p>
+# @plurid/generate-plurid-app
 
+Generate a plurid application in one command — the shape `@plurid/plurid-kit` runs.
 
+```
+npx @plurid/generate-plurid-app                      the prompts
+npx @plurid/generate-plurid-app -d my-site           straight to it
+npx @plurid/generate-plurid-app -d my-site -m pnpm -v git --no-install
+```
 
-<h1 align="center">
-    generate plurid' application
-</h1>
+## What you get
 
+```
+my-site/
+    plurid.config.ts            the one configuration (routes, shell, head, server options)
+    source/client/index.tsx     createPluridClient(config)
+    source/server/index.ts      startPluridServer(config)
+    source/shared/routes/       the routes and their planes (a page-presentation site to start)
+    source/shared/shell/        the shell around every route
+    source/shared/planes/       the pages
+    source/server/preserves/    server-only work per request (a typed stub)
+    source/public/              favicon, manifest, robots
+    package.json                dev · build · start · check · test
+    tsconfig.json               the `~client` / `~server` / `~shared` aliases the kit reads
+```
 
-Generate a [plurid'](https://github.com/plurid/plurid) application with one command (and some choices).
+`npm run dev` (or `pnpm dev`, `yarn dev`) serves it on port 33721 with the client and the server rebuilt on change; `build` writes `build/`; `start` runs it.
 
+## Flags
 
-<p align="center">
-    <img src="https://raw.githubusercontent.com/plurid/plurid/master/about/demo/plurid-com-example.png" height="600px">
-</p>
+| flag | values | default |
+| --- | --- | --- |
+| `-d, --directory <path>` | where to write (must be empty or new) | `plurid-app` |
+| `-m, --manager <name>` | `npm`, `pnpm`, `yarn` | `npm` |
+| `-v, --versioning <name>` | `git`, `none` | `none` |
+| `--no-install` | write the files, skip the install | installs |
 
+TypeScript and React only: the kit's shape. Another `--language` or `--ui` is refused with a message.
 
+## Versions
 
-## Usage
+The generated `package.json` asks for the engine, the server and the kit at the versions this generator was built with (`distribution/versions.json`); bump them as you would any dependency.
 
-Run the command
+## Verification
 
-    npx @plurid/generate-plurid-app
-
-or
-
-    yarn global add @plurid/generate-plurid-app
-
-    generate-plurid-app
-
-
-The command can be run as is and will get you through an interactive setup, or can receive the following flags:
-
-    -d, --directory <path>           set the application directory (default: "plurid-app")
-    -l, --language <language>        set language ("typescript" -> TypeScript || "javascript" -> JavaScript) (default: "typescript")
-    -u, --ui <ui-engine>             set UI engine ("html" -> HTML Custom Elements || "react" -> React || "vue" -> Vue || "angular" -> Angular) (default:
-                                    "react")
-    -r, --renderer <renderer>        set the application rendering side ("client" -> Client-Side Rendering || "server" -> Server-Side Rendering) (default:
-                                    "server")
-    -m, --manager <package-manager>  set the package manager ("npm" || "yarn") (default: "yarn")
-    -s, --services <service-list>    pass additional services as a comma-separated list (graphql, redux, stripe) (default: "graphql,redux,stripe")
-    -c, --containerize               use Docker to containerize the application (default: false)
-    -p, --pluridapp                  deploy the application to plurid.app (default: true)
+`pnpm test` (the answers, the deterministic file list, an end-to-end generation) and the repository's `pnpm smoke.pack`, which generates an application, installs it from the packed tarballs, runs `plurid build`, starts it and asserts the space at `/`.

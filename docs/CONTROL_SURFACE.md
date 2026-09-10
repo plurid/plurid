@@ -65,6 +65,8 @@ let plurid: PluridApi;
   (`registerPlanes(planes)` without a registrar) stay readable through the application's registrar as a
   fallback; pass `planesRegistrar` to share one deliberately.
 
+THE ROUTE-DRIVEN MODE: `PluridRouterBrowser` takes `onReady` and `pubsub` too — the application it renders for the matched route fires the router's `onReady` with its api (again for the next route's application, a new one) and uses the router's bus, so a host inside a route has the same contract as a direct embed. A command published BEFORE readiness (or after an unmount) reaches no subscriber: the BUS warns once per topic in development (`[plurid] 'space.frame' was published with no subscriber and dropped…`) unless its `onDrop` option says otherwise — a function reports instead, `null` silences. The engine's own emit topics (`PLURID_PUBSUB_EMITTED_TOPICS`: `space.changed`, the collaboration mutation) are never reported. No buffering: a command is executed when it is published or not at all.
+
 ## Tier 0.5 — the imperative handle (`ref`)
 
 `PluridApplication` takes a `ref`: a `PluridApplicationHandle` — the `onReady` api plus TYPED commands, for the host's own code (a command palette, a sidebar) without threading the api around.
@@ -166,14 +168,26 @@ plurid.pubsub.subscribe({
 
 In development the engine warns ONCE per page about the mistakes it can see: a `planes` array rebuilt on every render (memoize it), a `view` route with no registered plane, a container with a width but no height, a `space.perspective` outside 500–5000. `{ extend: { development: { warnings: false } } }` mutes them; production never prints.
 
+### Diagnostics (`api.inspect()`, `development.inspector`, the debuggers)
+
+`api.inspect()` (the `onReady` api, the `ref` handle, `usePluridApi()`) returns ONE plain snapshot of what the engine is doing: the camera, the motion, the pointer gesture in flight (its intent), the view, the counts (dispatches, renders, shown / mounted / hidden / frozen / detached planes), every shown plane — its id, parent, source, route, box, size mode, pin, spawning link, culling tier and render count — and the links. Safe to serialize, never a live reference.
+
+`development.inspector` (flat `inspector`, default `false`) turns the counters on: the per-plane RENDER counts (an effect after each commit) and the DISPATCH count are kept only while it — or a debugger — is on; the gesture and everything else are always there.
+
+The two debuggers are loaded lazily (`React.lazy` behind their flags, so a bundle that never sets them never loads their code) and never render on the server. `development.spaceDebugger` is the HUD: fps, dispatch/s, renders/s, the gesture, the planes live / hidden / frozen / detached, the camera. `development.planeDebugger` is the per-plane readout: id, route, placement, size, depth, culling, parent, renders, pin. The `renderDebugger` slot receives the inspection (`api.inspect()`'s shape) in place of the HUD.
+
+`pnpm bench` runs the harness's scripted scenarios (`orbit` + pan + zoom, `relayout`, `spawn`; `?bench=1&benchScenario=`) and prints one table — the repeatable performance numbers next to the counters.
+
 ## Tier 2 — opt out the always-on
 
 ### Undo
 
-A peer's applied change (`space.applyRemoteMutation`) CLEARS the local undo/redo stacks (2026-09-06): a
-snapshot recorded before it would restore the arrangement without the peer's work and broadcast that
-rollback as yours. Hosts see `canUndo` drop through `state.space.history` / `usePluridHistory()`. Undo that
-rebases over remote changes is the follow-up; until then, local history is valid between peer changes.
+A peer's applied change (`space.applyRemoteMutation`) REBASES the local undo/redo stacks (2026-09-10; the
+interim rule of 2026-09-06 cleared them): every snapshot is replayed over the peer's arrangement —
+`apply(remote, diff(before, snapshot))` — so undo restores YOUR change on the planes it touched (shown /
+hidden, a pin, a hand-set size, a link) and keeps the peer's work everywhere else; a plane the peer removed
+stays removed; a snapshot with nothing local left is dropped, and `canUndo` follows. Not operational
+transformation: a local drag and a peer's drag of the SAME plane resolve to the local intent on undo.
 
 
 History is on by default. Drop the middleware entirely (no per-action cost, no snapshot memory) when you own undo or never mutate the arrangement — `space.undo` / `space.redo` then become no-ops.
@@ -336,6 +350,8 @@ Content taller than a declared height scrolls inside the plane (the wheel over i
 
 For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = the view width) and `planeHeight` (`elements.plane.height`; ≤ 1 a fraction of the view height, > 1 px, unset = content-driven). The layouts pitch their columns and rows by these; a declared size wins for its plane.
 
+THE SIZING CONTRACT (2026-09-10, ARCHITECTURE §5.3.1): a plane's width is never the content's; its height is the content's unless declared, configured or hand-set; a content-sized height can be CAPPED — `planeMaxHeight` (`elements.plane.maxHeight`, ≤ 1 a fraction of the view height, > 1 px) for every content-sized plane, `planes[].maxHeight` (px) for one — and taller content scrolls inside the cap. The layouts place the roots by their CURRENT sizes (measured included), and a measured height change relays the roots once per frame, gliding, never mid-motion (`sheaves` and a configured height excepted); a dragged child stays where it was dropped, through relayouts and a host `setTree`.
+
 ### The page presentation (`presentation: 'page'`)
 
 **Reading a plane in the space presentation** (2026-09-06). Docking is not the page presentation's alone: the rail (fit · back · page/cube) renders in both presentations, and in the space presentation its page pill reads the SELECTED plane (else the plane under the pointer, else the nearest) as a page — the camera frames it face-on at its FILL scale (the box filling the view along its tighter dimension; 1 for a view-sized page), the chrome hides, the other planes are set aside and `inert`, the wheel and the keys are the plane's, `data-plurid-docked` is set. Escape or the cube pill reveals the space; `space.dock { planeID }` / `space.reveal`, `useCamera().dock()` / `.reveal()` work the same in both. The viewcube no longer carries its own fit button.
@@ -378,7 +394,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 | `aside` | `'lineage'` | `'lineage'` sets every plane outside the docked page's lineage aside; `'none'` keeps them |
 | `focus` | `true` | the docked page's scroller takes the focus (the keys scroll it); `false` leaves the focus where it was |
 | `epsilon` | `0.5` | px: how far the page's center may sit from the view center and still count as docked |
-| `url` | `true` on a page, off in the space | THE ADDRESS BAR IS THE PAGE: `true`, `false`, or `{ write, restore, history: 'push' \| 'replace', param }` — see below |
+| `url` | `true` on a page, off in the space | THE ADDRESS BAR IS THE PAGE: `true`, `false`, or `{ write, restore, history: 'push' \| 'replace', param, base, orphan: 'root' \| 'keep' }` — see below |
 
 ```tsx
 definePluridConfiguration({ presentation: 'page', docking: { motion: 'instant' } })   // a site with plurid links that simply switch pages
@@ -390,7 +406,7 @@ definePluridConfiguration({ presentation: 'page', docking: { reveal: { scale: 0.
 - Focus and accessibility: the chrome hidden while docked is `visibility: hidden` (out of the tab order and the accessibility tree); an aside page is `inert`; the rail's pills and the `?` trigger are one persistent pill (32 px, a light rim, a dark halo, a two-tone focus ring that reads on any page); the controls bar hangs above the sheet and is the page's top: it moves with the sheet, clipped with it when that top leaves the view.
 - Mobile: size the application's container yourself (`height: 100dvh`; safe-area padding on your own chrome — the engine's rail keeps a 16 px margin); the viewcube already collapses under 800 px; one finger scrolls, two pinch.
 - SSR renders the identity camera, so the HTML is the docked page with the chrome hidden by the stylesheet it ships — a site to a crawler and to the first paint; the client hydrates into the same pose.
-- **The address bar is the page** (`docking.url`, 2026-09-06; on by default in the page presentation, opt-in in the space): while docked, the page's path is the location's pathname — the query and the hash untouched, so your flags and a `?v=` survive; docking on another page pushes a history entry (`history: 'push'`; `'replace'` follows without entries); the reveal keeps the last page's path (the space is one move away); the entry the reader arrived on is rewritten to the page they are on (`replaceState`), so Back leaves the site rather than landing on a non-page path; Back / Forward dock the entry's page with the configured `motion`, or reveal when the entry names no page; a load at a page's path boots docked on it — a root at once, a registered sub-page SPAWNED behind its parent through the parent's `PluridLink` exactly as a click would (the bridge, the lineage, Escape to the parent), a deeper path one link per commit; a deep link wins over a persisted camera (the persisted tree stays). The entry's `history.state.plurid` records `{ docked, path }`. Inside a `PluridRouterBrowser` route the router owns the pathname: the page rides `?page=<path>` by `replaceState` (`url: { param }` picks the parameter for any host router). `docking: { url: false }` opts out. Hosting: a page path must serve the application (an SPA fallback); the server renders the first root docked and the client docks the deep link after hydration.
+- **The address bar is the page** (`docking.url`, 2026-09-06; on by default in the page presentation, opt-in in the space): while docked, the page's path is the location's pathname — the query and the hash untouched, so your flags and a `?v=` survive; docking on another page pushes a history entry (`history: 'push'`; `'replace'` follows without entries); the reveal keeps the last page's path (the space is one move away); the entry the reader arrived on is rewritten to the page they are on (`replaceState`), so Back leaves the site rather than landing on a non-page path; Back / Forward dock the entry's page with the configured `motion`, or reveal when the entry names no page; a load at a page's path boots docked on it — a root at once, a registered sub-page SPAWNED behind its parent through the parent's `PluridLink` exactly as a click would (the bridge, the lineage, Escape to the parent), a deeper path one link per commit; a deep link wins over a persisted camera (the persisted tree stays). The entry's `history.state.plurid` records `{ docked, path }`. Inside a `PluridRouterBrowser` route the router owns the pathname: the page rides `?page=<path>` by `replaceState` (`url: { param }` picks the parameter for any host router). `docking: { url: false }` opts out. A deep link to a ROOT page is docked AT STORE TIME (the client store and the server's render alike, 2026-09-10): the roots are laid out and the camera seeded with that root's dock pose before the first frame, so no frame of the first page is ever painted; a sub-page is spawned through its parent's link after mount. `url: { base: '/docs' }` hosts the site under a prefix: the page path is written after it (`/docs/page-1`, the root page at the base itself) and read from under it, and a location outside the base leaves the binding passive. `url: { orphan }` decides a location naming no page at boot: `root` (default) keeps the boot page and writes its path over the address; `keep` keeps the boot page and leaves the address as typed until the next dock (a host's not-found can read it); `/` is never an orphan (the site's front door). Hosting: a page path must serve the application (an SPA fallback, or a parametric route on the server).
 
 Migrating a site-like consumer (hypod, `generate-plurid-app`'s `/planes` width hack): the configuration becomes `presentation: 'page'`; the `planeWidth: 1`, `controls.show: false` and fade-in overrides go, and the pages finally scroll.
 
@@ -399,10 +415,31 @@ Migrating a site-like consumer (hypod, `generate-plurid-app`'s `/planes` width h
 ```tsx
 definePluridConfiguration({
     culling: { enabled: true, distance: 6000, freezeDistance: 3500, frustumMargin: 0.25, hysteresis: 0.15 }, // far / off-screen planes stop painting (state kept)
+    // THE DETACH TIER (content virtualization): a hidden plane's CONTENT is detached after `delay` ms — `'retain'`
+    // keeps its state (React's Activity: effects off, updates deferred), `'unmount'` frees its DOM; the string form
+    // takes the defaults, the object form tunes them:
+    // culling: {
+    //     enabled: true,
+    //     detach: {
+    //         mode: 'retain',   // or 'unmount'
+    //         delay: 1000,      // ms a plane stays hidden before its content detaches (a quick pan never detaches)
+    //         distance: 0,      // camera-space distance a hidden plane must exceed; 0 detaches any hidden plane
+    //         max: 200,         // the most hidden-but-mounted planes kept; the farthest detachable beyond it go at once
+    //     },
+    // },
     planeDepthFade: { enabled: true, start: 800, end: 2500, minOpacity: 0.35, blur: 0 },              // planes fade with distance
     planeBackface: 'hidden',                                                                              // planes seen from behind stop painting
 });
-// inside a plane: const { culled, frozen } = usePluridPlane(); — pause video / polling while unseen
+// inside a plane: const { culled, frozen, detached } = usePluridPlane(); — pause video / polling while unseen; a retained plane reads `detached`
+//
+// The detach tier's rules: the plane's SHELL stays (its box at the tree's size, its focus anchor, its bridge), so the
+// geometry, the minimap, the beams and the culling never change; the shell carries `data-plurid-culled="detached"`;
+// a plane re-attaches the moment it is not hidden (the frustum's half-margin show hysteresis is the overscan); nothing
+// NEW is detached while the camera moves or a relayout glides; the active, selected, isolated and focused planes and the
+// docked page's lineage never detach; a parent whose child is in view keeps its content (the child's leash reads the
+// parent's link); a PAINTED plane is never detached (a blank shell in view would be a hole); the content scroller's
+// position survives either tier. `unmount` drops React state — the content persistence seam is the product's memory.
+// `space.changed` kind `culling` and `handle.tree.culling()` give the counts; `customPlane` hosts are outside it.
 ```
 
 ### UI — replace overlays or hide elements
@@ -481,7 +518,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
-`data-plurid-overlay`, `data-plurid-culled`, `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
+`data-plurid-overlay`, `data-plurid-culled`, a plane's `role="group"` + `aria-roledescription="plane"` + `aria-label` (the declared document title, else the route path; 2026-09-10), `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; a `PluridLink` renders an anchor WITH an `href` (the plane's address — a plain click is the engine's, a modifier-click is the browser's), every plane outside the docked page is `inert` while a page is docked (the reading scope), the settings drawers are native `button[aria-expanded][aria-controls]`s, the shortcuts dialog has a `shortcuts-close` control; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
@@ -589,7 +626,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Read state synchronously | `api.getSnapshot()` / `api.getViewpoint()` / `pluridSelectors` |
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
 | Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
-| Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane |
+| Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane · `planes[].maxHeight` / `planeMaxHeight` cap a content-sized height (the content scrolls inside) |
 | Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` · `useLook()` |
 | Present the space as a site (a page first, the space one move away) | `{ presentation: 'page', docking: { motion, chrome, reveal, fade, aside, focus, epsilon, url } }` · the address bar is the page (`docking.url`, Back / Forward, deep links) · `space.dock` / `space.reveal` · `useCamera().dock / reveal / docked` · `space.changed` kind `docked` · `[data-plurid-docked]` on the view · `renderDockRail` / `dockRail: { show }` · Escape docks (a spawned page: its parent), G / the rail / a pinch reveal |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
@@ -600,11 +637,12 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Tune snapping, let users resize planes | `{ snap: { threshold, grid } }` · `{ planeResizable: true }` |
 | Read undo/redo availability | `pluridSelectors.getHistory` · `space.changed` kind `history` |
 | Stop painting far / off-screen planes, fade with depth | `{ culling: { enabled: true } }` · `{ planeDepthFade: { enabled: true } }` · `usePluridPlane().culled` |
+| Virtualize the content of hidden planes (retain the state, or free the DOM) | `{ culling: { enabled: true, detach: 'retain' \| 'unmount' \| { mode, delay, distance, max } } }` · `usePluridPlane().detached` · `handle.tree.culling()` |
 | Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `focus`) |
 | Read or drive the engine from a component under it | `useCamera` · `useSelection` · `usePluridHistory` · `usePluridPubSub` · `usePluridApi` |
 | Test the integration in jsdom | `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `flushFrames`, `expectCamera`) |
 | Mute the development warnings | `extend.development.warnings: false` |
-| See fps / dispatches / culled counts | `extend.development.spaceDebugger` (+ `planeDebugger`) |
+| See fps / dispatches / culled counts | `extend.development.spaceDebugger` (+ `planeDebugger`, lazily loaded) · `api.inspect()` for one plain snapshot (the commit / dispatch counters with `extend.development.inspector`) · `pnpm bench` |
 | Tune orbit limits, pivot policy, motion, home | `{ navigation: { … } }` |
 | React to selection / tree / links changes | `pubsub.subscribe({ topic: …CHANGED })` |
 | React to camera moves | `onViewpointChange` (debounced) |

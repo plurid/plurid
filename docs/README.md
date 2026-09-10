@@ -1,6 +1,6 @@
 # Plurid Engine Documentation
 
-Current as of **2026-09-06**.
+Current as of **2026-09-10**.
 
 ## Authority order
 
@@ -23,13 +23,11 @@ Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the main
 
 ## Current priorities
 
-1. Measure retained content under culling and define virtualization (mount / retain / unmount) semantics with memory budgets — culling itself is wired.
-2. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines, `e2e/page.spec.ts` for the page presentation frame by frame; `docs/HARNESS.md`); extend the catalog as features land.
-3. Keep CI on the repository's own gates (type checks, module imports, generated tables and the chromium suite run on every change since 2026-09-06; the strict visual comparisons stay local, their baselines are macOS renders).
-4. Move Denote onto the public engine control/persistence/collaboration seams.
-5. Use Depict and Dechat to validate content and interaction generality.
-6. Complete kit adoption and replace the CRA-era generator.
-7. Define a renderer abstraction and WebXR path only after the DOM renderer has measured budgets and stable product contracts.
+1. Protect rendering and interaction with browser and visual regression tests — in place since 2026-09-05 (`fixtures/render-test/e2e/fixtures.spec.ts` for every fixture of the catalog, the `visual` Playwright project for the screenshot baselines, `e2e/page.spec.ts` for the page presentation frame by frame; `docs/HARNESS.md`); extend the catalog as features land.
+2. Keep CI on the repository's own gates (type checks, module imports, generated tables and the chromium suite run on every change since 2026-09-06; the strict visual comparisons stay local, their baselines are macOS renders).
+3. Move Denote onto the public engine control/persistence/collaboration seams.
+4. Use Depict and Dechat to validate content and interaction generality.
+5. Define a renderer abstraction and WebXR path only after the DOM renderer has measured budgets and stable product contracts.
 
 ## Verification baseline
 

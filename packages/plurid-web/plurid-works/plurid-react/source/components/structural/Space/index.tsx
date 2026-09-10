@@ -9,7 +9,10 @@
         AnyAction,
         ThunkDispatch,
     } from '@reduxjs/toolkit';
-    import { connect } from 'react-redux';
+    import {
+        connect,
+        ReactReduxContext,
+    } from 'react-redux';
 
 
     import {
@@ -30,12 +33,16 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+    import {
+        buildInspection,
+    } from '~services/logic/inspector';
     // import actions from '~services/state/actions';
     // #endregion external
 
 
     // #region internal
-    import PluridSpaceDebugger from './components/SpaceDebugger';
+    /** The HUD, loaded only when `development.spaceDebugger` asks for it (never in a production bundle's main chunk). */
+    const PluridSpaceDebugger = React.lazy(() => import('./components/SpaceDebugger'));
     import {
         StyledPluridSpace,
     } from './styled';
@@ -67,6 +74,7 @@ export type PluridSpaceProperties =
 const PluridSpace: React.FC<PluridSpaceProperties> = (
     properties,
 ) => {
+    const reduxContext = React.useContext(StateContext as unknown as typeof ReactReduxContext);
     const pluridContext = useReactContext(Context);
     // #region properties
     const {
@@ -119,10 +127,17 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         >
             <PluridRoots />
 
-            {stateConfiguration.development?.spaceDebugger && (
+            {stateConfiguration.development?.spaceDebugger && typeof window !== 'undefined' && (
+                // never on the server: a lazy chunk would stall a streamed render
                 pluridContext?.chrome?.renderDebugger
-                    ? pluridContext.chrome.renderDebugger(undefined) as React.ReactNode
-                    : <PluridSpaceDebugger />
+                    ? pluridContext.chrome.renderDebugger(
+                        reduxContext?.store ? buildInspection(reduxContext.store.getState() as AppState, pluridContext.inspector) : undefined,
+                    ) as React.ReactNode
+                    : (
+                        <React.Suspense fallback={null}>
+                            <PluridSpaceDebugger inspector={pluridContext?.inspector} />
+                        </React.Suspense>
+                    )
             )}
         </StyledPluridSpace>
     );

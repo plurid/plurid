@@ -1,0 +1,25 @@
+{
+    "name": "__#APP_NAME#__",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev": "plurid dev --watch",
+        "build": "plurid build",
+        "start": "plurid start",
+        "check": "tsc --noEmit",
+        "test": "echo \"no tests yet\""
+    },
+    "dependencies": {
+        "@plurid/plurid-kit": "__#VERSION_KIT#__",
+        "@plurid/plurid-react": "__#VERSION_REACT#__",
+        "@plurid/plurid-react-server": "__#VERSION_SERVER#__",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
+        "styled-components": "^6.1.0"
+    },
+    "devDependencies": {
+        "@types/react": "^19.2.0",
+        "@types/react-dom": "^19.2.0",
+        "typescript": "^5.9.0"
+    }
+}

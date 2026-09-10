@@ -55,7 +55,7 @@ const resolveThemes = (
     }
 
     // THE LOOK DECIDES: unless the host set a theme of its own, the legacy Theme that plane content
-    // and the drawers' inputs still read is derived from the look, so it matches (2026-09-06).
+    // and the drawers' inputs still read is derived from the look, so it matches.
     const fromLook = themeFromLook(resolveLook(configuration.global.look));
     const explicit = (theme: Theme | undefined) => (theme && theme !== themes.plurid ? theme : fromLook);
     const stateThemes: PluridStateThemes = {

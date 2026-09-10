@@ -26,7 +26,7 @@
 
 // #region module
 /**
- * DOCKING — the derived state of reading a plane as a page, in BOTH presentations (2026-09-06). A
+ * DOCKING — the derived state of reading a plane as a page, in BOTH presentations. A
  * camera is docked on a plane when it shows that plane face-on at the plane's FILL scale with the
  * plane's center under the view center: `pitch = −rotateX`, `yaw = −rotateY`, `scale = dockScale`,
  * `offset 0`, the pivot at the plane's center. The fill scale lets the plane's box fill the view along

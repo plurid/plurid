@@ -34,6 +34,12 @@
 export interface ComputeOptions {
     /** The `configuration` argument changed since the last compute: it overrides the current state's. */
     configurationAuthoritative?: boolean;
+    /**
+     * THE ADDRESS BAR IS THE PAGE at store time: the page path the location names, read against the
+     * MERGED configuration's `docking.url` (the page defaults apply there), so a root deep link boots
+     * docked from the first frame. Ignored when a store already runs.
+     */
+    dockPath?: (configuration: PluridConfiguration) => string | null;
 }
 
 
@@ -86,6 +92,7 @@ const compute = <C>(
         precomputedState,
         contextState,
         hostname,
+        currentState ? null : options.dockPath?.(stateConfiguration),
     );
 
     const stateThemes = resolveThemes(

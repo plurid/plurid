@@ -38,7 +38,7 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 | `@plurid/plurid-icons-react` | icon set | **LIVE (utilities)** | BTL | ✅ | All-icons bundle, treeshake off — subpath exports pending. |
 | `@plurid/plurid-ui-components-react` | UI components | **LIVE (utilities)** | BTL | ✅ | Aggregate bundle, treeshake off. |
 | `@plurid/plurid-ui-state-react` | UI state slices | **LIVE (utilities)** | BTL | ✅ | Add reducer tests per action. |
-| `@plurid/generate-plurid-app` | scaffolding CLI | **LIVE (tooling)** | BTL | ✅ | Still scaffolds CRA - superseded: `docs/FRAMEWORK_PLAN.md` P5 reworks the templates to emit the plurid-kit shape. `--versioning` fixed. |
+| `@plurid/generate-plurid-app` | scaffolding CLI | **LIVE (tooling)** | BTL | ✅ | Emits the plurid-kit shape (TypeScript; 2026-09-10): `plurid.config.ts`, the two entries, routes / shell / planes, `dev` / `build` / `start` / `check`. The generated app is built and served in `pnpm smoke.pack`. `--versioning` fixed. |
 | `fixtures/render-test` | CAD verification harness | **FIXTURE** | B | build-only | The engine's integration harness (port 5273). In the workspace; dev-served. |
 | `@plurid/plurid-canvas` | canvas render adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed from the workspace (`!` in `pnpm-workspace.yaml`, 2026-06-20). Source kept on disk; out of every gate. |
 | `@plurid/plurid-html` | Stencil HTML adapter | **ARCHIVED** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`). Stale Stencil duplicate of the engine; source kept on disk. |

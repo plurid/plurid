@@ -32,6 +32,11 @@
     import {
         resolvePlaneFallbackSize,
     } from '~services/logic/camera';
+    import {
+        getCulledSets,
+        planeCullingState,
+        PlaneCullingState,
+    } from '~services/state/modules/space/selectors';
     // #endregion external
 // #endregion imports
 
@@ -61,6 +66,8 @@ const StyledPluridPlaneDebugger = styled.pre<{ theme: Theme }>`
 
 export interface PluridPlaneDebuggerOwnProperties {
     treePlane: TreePlane;
+    /** Renders of the plane since mount (`development.inspector`). */
+    renders?: number;
 }
 
 export interface PluridPlaneDebuggerStateProperties {
@@ -68,7 +75,7 @@ export interface PluridPlaneDebuggerStateProperties {
     stateCamera: CameraState;
     stateViewSize: ViewSize;
     stateFallback: { width: number; height: number };
-    stateCulled: 'visible' | 'hidden' | 'frozen';
+    stateCulled: PlaneCullingState;
 }
 
 export type PluridPlaneDebuggerProperties =
@@ -80,6 +87,7 @@ export type PluridPlaneDebuggerProperties =
 const PluridPlaneDebugger: React.FC<PluridPlaneDebuggerProperties> = (
     {
         treePlane,
+        renders,
         stateGeneralTheme,
         stateCamera,
         stateViewSize,
@@ -95,6 +103,7 @@ const PluridPlaneDebugger: React.FC<PluridPlaneDebuggerProperties> = (
         `at ${Math.round(location.translateX)},${Math.round(location.translateY)},${Math.round(location.translateZ)}  rot ${Math.round(location.rotateX)},${Math.round(location.rotateY)}`,
         `size ${Math.round(treePlane.width)}×${Math.round(treePlane.height)} ${treePlane.sizeMode || 'measured'}  depth ${Math.round(stateCamera.perspective - depth)}  ${stateCulled}`,
         treePlane.spawnedByLinkID ? `link ${treePlane.spawnedByLinkID}` : 'root',
+        `parent ${treePlane.parentPlaneID || '-'}  renders ${renders ?? 0}${treePlane.manuallyPositioned ? '  pinned' : ''}`,
     ];
 
     return (
@@ -113,14 +122,13 @@ const mapStateToProperties = (
     state: AppState,
     ownProperties: PluridPlaneDebuggerOwnProperties,
 ): PluridPlaneDebuggerStateProperties => {
-    const culled = state.space.culled;
     const id = ownProperties.treePlane.planeID;
     return {
         stateGeneralTheme: selectors.themes.getGeneralTheme(state),
         stateCamera: state.space.camera,
         stateViewSize: state.space.viewSize,
         stateFallback: resolvePlaneFallbackSize(state.configuration, state.space.viewSize),
-        stateCulled: culled?.hidden.includes(id) ? 'hidden' : (culled?.frozen.includes(id) ? 'frozen' : 'visible'),
+        stateCulled: planeCullingState(getCulledSets(state), id),
     };
 };
 

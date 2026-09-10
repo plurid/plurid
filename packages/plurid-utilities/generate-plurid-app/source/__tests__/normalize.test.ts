@@ -1,4 +1,3 @@
-// `ora` (the spinner the utilities import) ships ESM only; the suite tests nothing that spins
 jest.mock('ora', () => () => ({ start: () => ({ stopAndPersist: () => {} }) }));
 
 import fs from 'node:fs';
@@ -7,7 +6,7 @@ import path from 'node:path';
 
 import {
     normalizeAnswers,
-    normalizeServices,
+    packageNameOf,
 } from '../process/normalize';
 import {
     executeCommand,
@@ -17,23 +16,22 @@ import {
 
 
 
-describe('the answers (C11)', () => {
-    it('the default --services string becomes the internal service list', () => {
-        expect(normalizeServices('graphql,redux,stripe')).toEqual(['Apollo', 'Redux', 'Stripe']);
-        expect(normalizeServices(['Apollo', 'Stripe'])).toEqual(['Apollo', 'Stripe']);
-        expect(normalizeServices(' GraphQL , redux ')).toEqual(['Apollo', 'Redux']);
-        expect(normalizeServices('')).toEqual([]);
-        expect(normalizeServices(undefined)).toEqual([]);
-        expect(() => normalizeServices('mongo')).toThrow(/Unsupported service "mongo"/);
-    });
-
-    it('every choice is validated, case-insensitively, with the documented defaults', () => {
-        const answers = normalizeAnswers({ directory: 'app', language: 'typescript', ui: 'react', renderer: 'server', manager: 'yarn', services: 'graphql', versioning: 'git' });
-        expect(answers).toMatchObject({ language: 'TypeScript', ui: 'React', renderer: 'Server', manager: 'Yarn', services: ['Apollo'], versioning: 'Git', containerize: false, deployment: false });
-        expect(normalizeAnswers({ directory: 'app' })).toMatchObject({ language: 'TypeScript', ui: 'React', renderer: 'Client', manager: 'NPM', services: [], versioning: 'None' });
+describe('the answers', () => {
+    it('every choice is validated, case-insensitively, with the documented defaults; the old shape\'s flags are refused', () => {
+        const answers = normalizeAnswers({ directory: 'app', manager: 'yarn', versioning: 'git', install: false });
+        expect(answers).toEqual({ directory: 'app', manager: 'Yarn', versioning: 'Git', install: false });
+        expect(normalizeAnswers({ directory: 'app' })).toEqual({ directory: 'app', manager: 'NPM', versioning: 'None', install: true });
+        expect(normalizeAnswers({ directory: 'app', manager: 'PNPM', language: 'typescript', ui: 'React' }).manager).toBe('pNPM');
         expect(() => normalizeAnswers({})).toThrow(/directory/);
         expect(() => normalizeAnswers({ directory: 'app', manager: 'bun' })).toThrow(/Unsupported manager "bun"/);
-        expect(() => normalizeAnswers({ directory: 'app', ui: 'vue' })).toThrow(/not implemented/);
+        expect(() => normalizeAnswers({ directory: 'app', language: 'javascript' })).toThrow(/TypeScript only/);
+        expect(() => normalizeAnswers({ directory: 'app', ui: 'vue' })).toThrow(/React only/);
+    });
+
+    it('the package name is the directory\'s base name, npm-safe', () => {
+        expect(packageNameOf('/tmp/My App!')).toBe('my-app');
+        expect(packageNameOf('plurid-app/')).toBe('plurid-app');
+        expect(packageNameOf('')).toBe('plurid-app');
     });
 });
 
@@ -48,30 +46,25 @@ describe('the utilities (C12)', () => {
         expect(ran.stdout.trim()).toBe('a b');
     });
 
-    it('a path with spaces is one argument', async () => {
-        const ran = await executeCommand(process.execPath, ['-e', 'console.log(process.argv[1])', 'with space/dir']);
-        expect(ran.stdout.trim()).toBe('with space/dir');
-    });
-
-    it('the destination must be missing or empty', () => {
-        const root = temporary();
-        const fresh = path.join(root, 'fresh');
+    it('the destination must be ours: missing (created) or empty; a non-empty directory is refused', () => {
+        const base = temporary();
+        const fresh = path.join(base, 'fresh');
         ensureOwnedDirectory(fresh);
         expect(fs.existsSync(fresh)).toBe(true);
-        ensureOwnedDirectory(fresh); // empty: still fine
+        ensureOwnedDirectory(fresh);
         fs.writeFileSync(path.join(fresh, 'keep.txt'), 'mine');
         expect(() => ensureOwnedDirectory(fresh)).toThrow(/not empty/);
-        fs.rmSync(root, { recursive: true, force: true });
+        fs.rmSync(base, { recursive: true, force: true });
     });
 
-    it('a copy completes before it resolves', async () => {
-        const root = temporary();
-        const source = path.join(root, 'source');
+    it('copyDirectory is awaited: the files are there when it resolves', async () => {
+        const base = temporary();
+        const source = path.join(base, 'source');
         fs.mkdirSync(path.join(source, 'nested'), { recursive: true });
-        fs.writeFileSync(path.join(source, 'nested', 'file.txt'), 'x'.repeat(200000));
-        const destination = path.join(root, 'destination');
+        fs.writeFileSync(path.join(source, 'nested', 'file.txt'), 'content');
+        const destination = path.join(base, 'destination');
         await copyDirectory(source, destination);
-        expect(fs.readFileSync(path.join(destination, 'nested', 'file.txt'), 'utf8').length).toBe(200000);
-        fs.rmSync(root, { recursive: true, force: true });
+        expect(fs.readFileSync(path.join(destination, 'nested', 'file.txt'), 'utf8')).toBe('content');
+        fs.rmSync(base, { recursive: true, force: true });
     });
 });

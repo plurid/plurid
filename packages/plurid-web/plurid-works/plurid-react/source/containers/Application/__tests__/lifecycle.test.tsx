@@ -128,4 +128,53 @@ describe('registrars', () => {
         expect(alpha.container.querySelector('[data-who]')?.getAttribute('data-who')).toBe('alpha');
         await alpha.unmount();
     });
+
+    describe('THE READINESS CONTRACT in the route-driven mode', () => {
+        it('the router\'s onReady fires for the matched route\'s application and a synchronous command executes; a command published before or after is reported, once per topic', async () => {
+            installPointerEvents();
+            installMatchMedia();
+            (Element.prototype as any).scrollIntoView = () => {};
+            window.history.replaceState(null, '', '/');
+            const warnings: string[] = [];
+            const warn = jest.spyOn(console, 'warn').mockImplementation((message: string) => { warnings.push(String(message)); });
+            const { default: PluridRouterBrowser } = await import('../../RouterBrowser');
+            const { default: PluridPubSub } = await import('@plurid/plurid-pubsub');
+            const bus = new PluridPubSub();
+            // the contract's case: a command published BEFORE the engine mounted is dropped and reported once
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO, data: { value: 1 } } as any);
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO, data: { value: 2 } } as any);
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.CHANGED, data: {} } as any);
+            expect(warnings.filter((message) => message.includes('space.rotateXTo'))).toHaveLength(1);
+            expect(warnings.filter((message) => message.includes('space.changed'))).toHaveLength(0);
+            const container = document.createElement('div');
+            document.body.appendChild(container);
+            const root = createRoot(container);
+            let ready: PluridApi | undefined;
+            let seen = 0;
+            await act(async () => {
+                root.render(
+                    <PluridRouterBrowser
+                        routes={[{ value: '/', planes: [['/one', () => <p>one</p>]] as any, view: ['/one'] }] as any}
+                        pubsub={bus}
+                        onReady={(api) => {
+                            ready = api;
+                            rotateTo(api, 30);
+                            seen = api.getSnapshot().space.rotationX;
+                        }}
+                    />,
+                );
+            });
+            expect(ready).toBeTruthy();
+            expect(seen).toBe(30);
+            expect(ready!.pubsub).toBe(bus);
+            await act(async () => { root.unmount(); });
+            container.remove();
+            // after the unmount the bus has no subscriber again: another command is reported, once
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW } as any);
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW } as any);
+            expect(warnings.filter((message) => message.includes('space.fitToView'))).toHaveLength(1);
+            warn.mockRestore();
+        });
+    });
 });
+

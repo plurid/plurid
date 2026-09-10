@@ -22,7 +22,7 @@ type RegistrarFallback<C> = IPluridPlanesRegistrar<C> | (() => IPluridPlanesRegi
 
 
 /**
- * The planes registrar: every application owns one (client and server alike, 2026-09-06 — C04: the
+ * The planes registrar: every application owns one (client and server alike: the
  * window-global `__pluridPlanesRegistrar__` used to be the default on the client, so two applications
  * registering the same route overwrote each other). An optional FALLBACK is consulted for reads only —
  * the application passes the window-global registry, so planes a host registered globally (the older
@@ -90,6 +90,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 head: match.data.head,
                 width: match.data.width,
                 height: match.data.height,
+                maxHeight: match.data.maxHeight,
             };
 
             return registeredPlane;
@@ -122,6 +123,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 head: plane.data.head,
                 width: plane.data.width,
                 height: plane.data.height,
+                maxHeight: plane.data.maxHeight,
             };
 
             all.set(

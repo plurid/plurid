@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { PluridLink } from '@plurid/plurid-react';
 
@@ -16,6 +16,10 @@ export interface PanelProps {
     scrollable?: boolean;
     /** The plane declared a height: the panel fills it instead of its own 360px. */
     fill?: boolean;
+    /** `?sizes=content`: the panel is as tall as its readout (no fixed 360px) and a `more` button grows it. */
+    grow?: boolean;
+    /** A counter button: state the retained tier keeps and the unmount tier drops (`?cullDetach=`). */
+    counter?: boolean;
 }
 
 const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) => [
@@ -28,14 +32,17 @@ const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) =>
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable, fill }) => {
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable, fill, grow, counter }) => {
     const allLinks = [...(link ? [link] : []), ...(links ?? [])];
-    const readout = scrollable ? [...rows, ...FILLER_ROWS] : rows;
+    // `more` (the content-sized set): six filler rows per click, so the plane GROWS after boot
+    const [extra, setExtra] = useState(0);
+    const [count, setCount] = useState(0);
+    const readout = scrollable ? [...rows, ...FILLER_ROWS] : [...rows, ...(grow ? FILLER_ROWS.slice(0, extra) : [])];
 
     return (
     <div
         style={{
-            height: fill ? '100%' : 360,
+            height: grow ? 'auto' : (fill ? '100%' : 360),
             minHeight: fill ? 0 : undefined,
             width: '100%',
             boxSizing: 'border-box',
@@ -98,6 +105,32 @@ const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, s
                 </div>
             ))}
         </div>
+
+        {counter && (
+            <div style={{ padding: '0 16px 12px' }}>
+                <button
+                    type="button"
+                    data-rt-counter
+                    onClick={() => setCount((value) => value + 1)}
+                    style={{ font: 'inherit', fontSize: 11, letterSpacing: '0.06em', color: accent, background: 'transparent', border: `1px dashed ${accent}66`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}
+                >
+                    count {count}
+                </button>
+            </div>
+        )}
+
+        {grow && (
+            <div style={{ padding: '0 16px 12px' }}>
+                <button
+                    type="button"
+                    data-rt-more
+                    onClick={() => setExtra((value) => value + 6)}
+                    style={{ font: 'inherit', fontSize: 11, letterSpacing: '0.06em', color: accent, background: 'transparent', border: `1px dashed ${accent}66`, borderRadius: 6, padding: '4px 10px', cursor: 'pointer' }}
+                >
+                    more
+                </button>
+            </div>
+        )}
 
         {allLinks.length > 0 && (
             <div style={{ padding: '0 16px 14px', display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-start' }}>

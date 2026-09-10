@@ -129,10 +129,11 @@ describe('createHistoryMiddleware', () => {
         expect(show(store)).toBe(true);
     });
 
-    it("a peer's applied change clears the local undo/redo stacks: undo never restores a snapshot that predates peer work (C03 interim)", () => {
+    it("a peer's applied change REBASES the local undo/redo stacks: undo restores the local change on its plane and keeps the peer's work (2026-09-10)", () => {
         const store = makeStore();
         store.dispatch({ type: 'TOGGLE_SHOW' });                       // local: A hidden — one entry
         const afterLocal = store.getState().space.tree;
+        // the peer, who saw A hidden, adds B (hidden)
         store.dispatch({
             type: 'space/restoreArrangement',
             payload: { tree: [{ planeID: '/a', show: false }, { planeID: '/b', show: false }], links: [] },
@@ -141,9 +142,26 @@ describe('createHistoryMiddleware', () => {
         const afterRemote = store.getState().space.tree;
         expect(afterRemote).not.toBe(afterLocal);
         store.dispatch({ type: 'space/undo' });
-        // nothing to undo: the peer's arrangement stands
-        expect(store.getState().space.tree).toBe(afterRemote);
+        // the local change undone (A shown again), the peer's plane kept
+        const undone = store.getState().space.tree;
+        expect(undone.map((node: any) => node.planeID)).toEqual(['/a', '/b']);
+        expect(undone[0].show).toBe(true);
+        expect(undone[1].show).toBe(false);
         store.dispatch({ type: 'space/redo' });
+        expect(store.getState().space.tree[0].show).toBe(false);
+        expect(store.getState().space.tree[1].show).toBe(false);
+    });
+
+    it("a peer's change identical to the local history's target drops the snapshot: nothing local is left to undo", () => {
+        const store = makeStore();
+        store.dispatch({ type: 'TOGGLE_SHOW' });                       // local: A hidden
+        store.dispatch({
+            type: 'space/restoreArrangement',
+            payload: { tree: [{ planeID: '/a', show: true }], links: [] },   // the peer shows A: the undo target
+            meta: { remote: true },
+        });
+        const afterRemote = store.getState().space.tree;
+        store.dispatch({ type: 'space/undo' });
         expect(store.getState().space.tree).toBe(afterRemote);
     });
 });

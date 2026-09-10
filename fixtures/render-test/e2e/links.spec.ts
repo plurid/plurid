@@ -12,6 +12,7 @@ import {
     camera,
     spaceState,
     viewRect,
+    dispatches,
 } from './helpers';
 
 
@@ -158,7 +159,9 @@ test.describe('links and tree', () => {
     });
 
     test('the wrappers and bridges never take a hit: with the uv plane open, every detail link is clickable from the fin\'s front', async ({ page }) => {
-        await openHarness(page, '?reducedMotion=1');
+        // one row: the fin hangs below GEOMETRY with no plane in the row below it (since the sizing
+        // contract packs the rows by the panels' heights, a second row would sit right where the fin is)
+        await openHarness(page, '?reducedMotion=1&layout=rows');
         const root = rootByRoute(await tree(page), '/geometry');
         await clickLink(page, root.planeID, '/geometry/detail');
         await waitForChildren(page, root.planeID, 1);
@@ -291,9 +294,9 @@ test.describe('links and tree', () => {
         await page.waitForTimeout(1200);
 
         // idle: no periodic dispatches with a link open
-        const idleBefore = await page.evaluate(() => (window as any).__rtPerf.dispatches);
+        const idleBefore = await dispatches(page);
         await page.waitForTimeout(1500);
-        const idleAfter = await page.evaluate(() => (window as any).__rtPerf.dispatches);
+        const idleAfter = await dispatches(page);
         const idleChanges = await page.evaluate((count) => (window as any).__rtChanges.slice(-count), idleAfter - idleBefore);
         expect(idleAfter - idleBefore, 'idle dispatches: ' + JSON.stringify(idleChanges)).toBe(0);
 
@@ -301,11 +304,11 @@ test.describe('links and tree', () => {
         const beforeRoots = await tree(page);
         const before = findPlane(beforeRoots, root.planeID);
         const planeCount = await page.locator('[data-plurid-plane]').count();
-        const resizeBefore = await page.evaluate(() => (window as any).__rtPerf.dispatches);
+        const resizeBefore = await dispatches(page);
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.viewSize.width === 1100);
         await page.waitForTimeout(600);
-        const resizeAfter = await page.evaluate(() => (window as any).__rtPerf.dispatches);
+        const resizeAfter = await dispatches(page);
         expect(resizeAfter - resizeBefore).toBeLessThanOrEqual(planeCount * 2 + 8);
 
         const rootsAfter = await tree(page);

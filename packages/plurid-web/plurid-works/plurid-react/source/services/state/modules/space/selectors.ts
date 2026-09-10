@@ -162,25 +162,47 @@ export const makeGetIsPlaneAside = () => createSelector(
     (lineage, index, planeID): boolean => !!planeID && lineage.size > 0 && index.has(planeID) && !lineage.has(planeID),
 );
 
-export type PlaneCullingState = 'visible' | 'hidden' | 'frozen';
+export type PlaneCullingState = 'visible' | 'hidden' | 'frozen' | 'detached';
+
+const EMPTY_SET: ReadonlySet<string> = new Set();
+
+/** The culling pass's lists as sets — one per pass, shared by every plane's selector (O(1) per plane). */
+export const getCulledSets = createSelector(
+    [getCulled],
+    (culled): { hidden: ReadonlySet<string>; frozen: ReadonlySet<string>; detached: ReadonlySet<string> } => ({
+        hidden: culled?.hidden?.length ? new Set(culled.hidden) : EMPTY_SET,
+        frozen: culled?.frozen?.length ? new Set(culled.frozen) : EMPTY_SET,
+        detached: culled?.detached?.length ? new Set(culled.detached) : EMPTY_SET,
+    }),
+);
+
+/** How one plane is culled: `detached` (its content gone or retained) over `hidden` over `frozen`. */
+export const planeCullingState = (
+    sets: ReturnType<typeof getCulledSets>,
+    planeID: string | undefined,
+): PlaneCullingState => {
+    if (!planeID) {
+        return 'visible';
+    }
+    if (sets.detached.has(planeID)) {
+        return 'detached';
+    }
+    if (sets.hidden.has(planeID)) {
+        return 'hidden';
+    }
+    if (sets.frozen.has(planeID)) {
+        return 'frozen';
+    }
+    return 'visible';
+};
+
 /** Factory: one memoized "how is THIS plane culled" selector per plane. */
 export const makeGetPlaneCulling = () => createSelector(
     [
-        getCulled,
+        getCulledSets,
         (_state: AppState, planeID: string | undefined) => planeID,
     ],
-    (culled, planeID): PlaneCullingState => {
-        if (!planeID || !culled) {
-            return 'visible';
-        }
-        if (culled.hidden.includes(planeID)) {
-            return 'hidden';
-        }
-        if (culled.frozen.includes(planeID)) {
-            return 'frozen';
-        }
-        return 'visible';
-    },
+    planeCullingState,
 );
 
 /**

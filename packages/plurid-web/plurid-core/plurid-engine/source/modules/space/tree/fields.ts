@@ -10,11 +10,40 @@
 
 
 // #region module
+/** A root's identity across relayouts: its source and route (duplicates share one and pair in order). */
+export const rootIdentity = (
+    root: TreePlane,
+): string => root.sourceID + '@' + root.route;
+
 /**
- * Patch fields on ONE plane, path-copying only the spine above it (structural sharing). Returns
- * the SAME tree reference when the plane is absent or every patched field is already `===`, so
- * callers can detect a no-op without diffing and connected planes keep their memo bailouts.
+ * Pair a recomputed tree's roots with the previous tree's by IDENTITY — never by location, a
+ * relayout exists to move things: `take(root)` hands out the next unpaired previous root of that
+ * identity, `remaining` holds the previous roots nobody took, by identity.
  */
+export const pairRootsByIdentity = (
+    previousTree: TreePlane[],
+) => {
+    const remaining = new Map<string, TreePlane[]>();
+    for (const root of previousTree) {
+        const key = rootIdentity(root);
+        const list = remaining.get(key);
+        if (list) {
+            list.push(root);
+        } else {
+            remaining.set(key, [root]);
+        }
+    }
+    return {
+        take: (root: TreePlane): TreePlane | undefined => remaining.get(rootIdentity(root))?.shift(),
+        remaining,
+    };
+};
+
+/** A plane sized by hand (a resize handle): its size is its own and wins over every other source. */
+export const isHandSized = (
+    plane: TreePlane,
+): boolean => plane.sizeMode === 'manual' && plane.width > 0;
+
 /** A location is compared by value (a fresh object with the same five numbers is not a change). */
 const sameField = (
     key: keyof TreePlane,
@@ -33,6 +62,11 @@ const sameField = (
     return false;
 };
 
+/**
+ * Patch fields on ONE plane, path-copying only the spine above it (structural sharing). Returns
+ * the SAME tree reference when the plane is absent or every patched field is already `===`, so
+ * callers can detect a no-op without diffing and connected planes keep their memo bailouts.
+ */
 export const updateTreePlaneFields = (
     tree: TreePlane[],
     planeID: string,

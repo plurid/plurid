@@ -4,6 +4,12 @@
         PluridRoute,
         PluridRoutePlane,
     } from './route';
+    import {
+        PluridApi,
+    } from '../application';
+    import {
+        PluridPubSub,
+    } from '../pubsub';
     // #endregion internal
 // #endregion imports
 
@@ -101,12 +107,23 @@ export interface PluridRouterProperties<C> {
      * Default: `10`
      */
     fadeIn?: number;
+
+    /**
+     * THE READINESS CONTRACT in the route-driven mode: fired by the application the router renders
+     * for the matched route once its bus is bridged — a command published synchronously from it
+     * executes. A route change renders a new application, and it fires again for that one.
+     */
+    onReady?: (api: PluridApi) => void;
+    /** The bus the router's applications use (one instance for every route), else each creates its own. */
+    pubsub?: PluridPubSub;
 }
 
 
 export interface PluridRouterStatic {
     path: string;
     directPlane?: string;
+    /** The request's query (`?page=…`), for THE ADDRESS BAR IS THE PAGE on the server. */
+    search?: string;
 }
 // #endregion module
 

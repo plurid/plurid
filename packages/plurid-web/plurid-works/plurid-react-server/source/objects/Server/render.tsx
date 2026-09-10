@@ -46,6 +46,7 @@ export const buildRequestTree = (
         pluridMetastate,
         documentRegistry,
         pathname,
+        search,
         directPlane,
         routes,
         planes,
@@ -62,6 +63,7 @@ export const buildRequestTree = (
         >
             <PluridRouterStatic
                 path={pathname}
+                search={search}
                 directPlane={directPlane}
                 routes={routes}
                 planes={planes}

@@ -25,6 +25,9 @@
 
     import {
         interaction,
+        generalEngine,
+        routing,
+        state as stateEngine,
     } from '~services/engine';
     // #endregion external
 // #endregion imports
@@ -37,6 +40,8 @@ export const serverComputeMetastate = async (
     paths: PluridRoute<PluridReactComponent>[],
     globals: Record<string, string> | undefined,
     hostname = 'origin',
+    /** The request's location, for THE ADDRESS BAR IS THE PAGE: a root deep link renders docked. */
+    location?: { pathname: string; search: string },
 ): Promise<PluridMetastate> => {
     const protocol = 'http';
 
@@ -61,18 +66,34 @@ export const serverComputeMetastate = async (
         //     continue;
         // }
 
+        // the server's view is a fixed guess; the client re-measures and follows the docked page
+        const viewSize = { width: 1440, height: 821 };
         const {
             computedTree,
             appConfiguration,
+            dockPath,
         } = computeApplication(
             planes,
             (isoMatch.data as any).defaultConfiguration,
             view,
             hostname,
+            {
+                viewSize,
+                // the application always sits inside the static router here: the binding's query mode
+                dockPath: (merged) => {
+                    const binding = generalEngine.configuration.resolveDockingURL(merged.space.docking?.url, { router: true });
+                    return binding?.restore && location ? routing.dockingURLTarget(binding, location) : null;
+                },
+            },
         );
         // console.log({
         //     computedTree,
         // });
+
+        const cameraLimits = interaction.camera.resolveCameraLimits(appConfiguration.space.navigation);
+        const identity = interaction.camera.identityCamera(viewSize, appConfiguration.space.perspective);
+        const camera = stateEngine.dockedBootCamera(identity, computedTree, appConfiguration, viewSize, cameraLimits, dockPath) ?? identity;
+        const legacy = interaction.camera.toLegacy(camera, viewSize);
 
         const state = {
             configuration: {
@@ -94,26 +115,20 @@ export const serverComputeMetastate = async (
             space: {
                 loading: false,
                 resolvedLayout: false,
-                transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
-                scale: 1,
-                rotationX: 0,
-                rotationY: 0,
-                translationX: 0,
-                translationY: 0,
-                translationZ: 0,
+                transform: interaction.camera.cameraMatrix3d(camera, viewSize),
+                scale: legacy.scale,
+                rotationX: legacy.rotationX,
+                rotationY: legacy.rotationY,
+                translationX: legacy.translationX,
+                translationY: legacy.translationY,
+                translationZ: legacy.translationZ,
                 tree: computedTree,
                 activeUniverseID: '',
-                camera: interaction.camera.identityCamera(
-                    { width: 1440, height: 821 },
-                    appConfiguration.space.perspective,
-                ),
-                cameraLimits: interaction.camera.resolveCameraLimits(appConfiguration.space.navigation),
+                camera,
+                cameraLimits,
                 motion: 'idle',
                 dockingPlaneID: '',
-                viewSize: {
-                    width: 1440,
-                    height: 821,
-                },
+                viewSize,
                 spaceSize: {
                     width: 1440,
                     height: 821,
@@ -126,6 +141,11 @@ export const serverComputeMetastate = async (
                 },
                 view,
                 culledView: [],
+                culled: {
+                    hidden: [],
+                    frozen: [],
+                    detached: [],
+                },
                 selectedPlaneIDs: [],
                 draggingSelection: false,
                 history: {

@@ -34,6 +34,7 @@ const baseSpace = () => ({
     isolatePlane: '',
     resolvedLayout: false,
     loading: false,
+    culled: { hidden: [] as string[], frozen: [] as string[], detached: [] as string[] },
 });
 
 describe('useEngineEvents', () => {
@@ -47,7 +48,7 @@ describe('useEngineEvents', () => {
         // selection / tree / links / activePlane / isolate / layoutResolved / loading
         const kinds = publish.mock.calls.map((c) => c[0].data.kind).sort();
         expect(kinds).toEqual(
-            ['activePlane', 'bookmarks', 'docked', 'history', 'isolate', 'layoutResolved', 'links', 'loading', 'motion', 'selection', 'tree'],
+            ['activePlane', 'bookmarks', 'culling', 'docked', 'history', 'isolate', 'layoutResolved', 'links', 'loading', 'motion', 'selection', 'tree'],
         );
         // every call rides the single CHANGED topic
         expect(publish.mock.calls.every((c) => c[0].topic === PLURID_PUBSUB_TOPIC.CHANGED)).toBe(true);

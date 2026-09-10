@@ -110,6 +110,7 @@ const initialState: PluridStateSpace = {
     culled: {
         hidden: [],
         frozen: [],
+        detached: [],
     },
     selectedPlaneIDs: [],
     draggingSelection: false,
@@ -1007,7 +1008,7 @@ export const space = createSlice({
         /** The culling pass's result (equality-gated by the caller). */
         setCulled: (
             state,
-            action: PayloadAction<{ hidden: string[]; frozen: string[] }>,
+            action: PayloadAction<{ hidden: string[]; frozen: string[]; detached: string[] }>,
         ) => {
             state.culled = action.payload;
         },

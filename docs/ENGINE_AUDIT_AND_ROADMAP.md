@@ -86,7 +86,7 @@ The plane tree is the engine's core domain structure. Continue moving tree trans
 
 ### Lifecycle and readiness
 
-Denote still contains one-tick publication deferrals because child effects and View subscriptions have mount-order coupling. Provide a documented readiness or buffered command path instead of making every product guess when the engine can receive a command.
+RESOLVED 2026-09-10: the readiness contract — the bus is bridged before `onReady` fires (a layout effect), the router forwards `onReady` / `pubsub` to the matched route's application, and a command published before readiness is reported as dropped in development. Denote's one-tick deferrals can go.
 
 **Done when:** a product can publish initial restore/navigation commands deterministically with no `setTimeout` protocol.
 

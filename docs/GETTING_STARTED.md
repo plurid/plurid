@@ -51,8 +51,10 @@ npm install \
     cross-fetch
 ```
 
-> **Prefer scaffolding?** `npx @plurid/generate-plurid-app` produces a batteries-included starter. The
-> manual route above is the precise dependency set if you're adding plurid' to an existing app.
+> **Prefer scaffolding?** `npx @plurid/generate-plurid-app -d my-site` writes a plurid-kit application — `plurid.config.ts`,
+> a client and a server entry, a routes / shell / planes trio, `dev` / `build` / `start` / `check` scripts — and installs it;
+> `cd my-site && npm run dev` serves it on port 33721. Flags: `-m npm|pnpm|yarn`, `-v git|none`, `--no-install`.
+> TypeScript only: the shape the kit runs.
 
 
 
@@ -99,7 +101,7 @@ export default App;
   (Ctrl + wheel, or two fingers on touch), or click the small cube in that rail — the page pulls back and
   tilts, the chrome fades in, and you are in the 3D space of §2.
 - **Return**: **Escape** docks the nearest page again (on a spawned page, Escape goes to its parent instead).
-- **The address bar is the page**: the docked page's path is the location (`/page-1/about`), a click is a history entry, the browser's Back and Forward dock the pages, and a link to a page's path opens the site docked on it. Serve every page path with the application (an SPA fallback); `docking: { url: false }` opts out.
+- **The address bar is the page**: the docked page's path is the location (`/page-1/about`), a click is a history entry, the browser's Back and Forward dock the pages, and a link to a page's path opens the site docked on it. Serve every page path with the application (an SPA fallback); a site under a prefix sets `docking: { url: { base: '/docs' } }`; `docking: { url: false }` opts out.
 
 There is no mode: the pose of the camera is the whole state. Every undeclared plane takes the view's size
 (`planeHeight: 1`); a plane can still declare its own `width` / `height`. Details in
@@ -263,6 +265,10 @@ primitives — is in the control surface's ["The look"](./CONTROL_SURFACE.md#the
 [DESIGN.md](./DESIGN.md).
 
 
+
+### Large spaces
+
+Hundreds of planes: turn the culling on and let hidden planes lose their content — `definePluridConfiguration({ culling: { enabled: true, detach: 'retain' } })` keeps each plane's React state (an editor's draft, a scroll position) while it is out of view and frees its effects; `detach: 'unmount'` frees the DOM too and your content's state is yours to keep (the persistence seam). The plane's box, its minimap dot and its links never change; `usePluridPlane().detached` tells content it is being retained.
 
 ## 6 · Persistence
 

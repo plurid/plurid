@@ -35,6 +35,8 @@
 
     import {
         makeGetTreePlaneByID,
+        getCulledSets,
+        planeCullingState,
     } from '~services/state/modules/space/selectors';
 
     import type {
@@ -90,10 +92,13 @@ export interface PluridPlaneLens {
     /**
      * The culling pass's verdict (`space.culling`): `hidden` planes stop painting (state intact),
      * `frozen` ones paint but skip layout-affecting work — a plane can pause video, polling or
-     * animation while it is not seen.
+     * animation while it is not seen; `detached` ones (`culling.detach`) have their content
+     * retained (state kept, effects unmounted) or unmounted — a retained plane reads it on reveal.
      */
-    culled: 'visible' | 'hidden' | 'frozen';
+    culled: 'visible' | 'hidden' | 'frozen' | 'detached';
     frozen: boolean;
+    /** The content is detached (`culling.detach`): retained or unmounted while the plane is hidden. */
+    detached: boolean;
     /**
      * The space zoom factor.
      */
@@ -249,18 +254,7 @@ export const usePluridPlane = (): PluridPlaneLens => {
     const getIsAside = useMemo(() => makeGetIsPlaneAside(), []);
     const aside = useEngineSelector((state: AppState) => getIsAside(state, planeID));
     const culled = useEngineSelector(
-        (state: AppState): 'visible' | 'hidden' | 'frozen' => {
-            if (planeID === undefined || !state.space.culled) {
-                return 'visible';
-            }
-            if (state.space.culled.hidden.includes(planeID)) {
-                return 'hidden';
-            }
-            if (state.space.culled.frozen.includes(planeID)) {
-                return 'frozen';
-            }
-            return 'visible';
-        },
+        (state: AppState): 'visible' | 'hidden' | 'frozen' | 'detached' => planeCullingState(getCulledSets(state), planeID),
     );
 
     const commands = useMemo(() => ({
@@ -309,6 +303,7 @@ export const usePluridPlane = (): PluridPlaneLens => {
         sizeMode,
         culled,
         frozen: culled === 'frozen',
+        detached: culled === 'detached',
         route: details?.value,
         parameters: details?.parameters ?? EMPTY_RECORD,
         query: details?.query ?? EMPTY_RECORD,

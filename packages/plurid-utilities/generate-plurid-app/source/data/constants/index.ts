@@ -1,49 +1,13 @@
 // #region imports
-    // #region external
     import {
-        ILanguage,
-        IUI,
-        IRenderer,
         IManager,
-        IServices,
         IVersioning,
     } from '../interfaces';
-    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-export const VERSION = '__#VERSION#__';
-
-
-export const languageTypeScript = 'TypeScript';
-export const languageJavaScript = 'JavaScript';
-export const language: ILanguage = {
-    typescript: languageTypeScript,
-    javascript: languageJavaScript,
-};
-
-
-export const uiHTML = 'HTML';
-export const uiReact = 'React';
-export const uiVue = 'Vue';
-export const uiAngular = 'Angular';
-export const ui: IUI = {
-    html: uiHTML,
-    react: uiReact,
-    vue: uiVue,
-    angular: uiAngular,
-};
-
-
-export const rendererClient = 'Client';
-export const rendererServer = 'Server';
-export const renderer: IRenderer = {
-    client: rendererClient,
-    server: rendererServer,
-};
-
 
 export const managerNPM = 'NPM';
 export const managerYarn = 'Yarn';
@@ -54,22 +18,14 @@ export const manager: IManager = {
     pnpm: managerPNPM,
 };
 
-
-export const serviceApollo = 'Apollo';
-export const serviceRedux = 'Redux';
-export const serviceStripe = 'Stripe';
-export const services: IServices = {
-    apollo: serviceApollo,
-    redux: serviceRedux,
-    stripe: serviceStripe,
-};
-
-
-
 export const versioningGit = 'Git';
 export const versioningNone = 'None';
 export const versioning: IVersioning = {
     git: versioningGit,
     none: versioningNone,
 };
+
+/** The one template: the kit's shape, TypeScript (the user's decision, 2026-09-09). */
+export const TEMPLATE = 'kit-typescript';
+
 // #endregion module

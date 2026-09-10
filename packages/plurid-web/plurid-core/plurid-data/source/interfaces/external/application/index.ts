@@ -4,6 +4,14 @@
         PluridState,
     } from '../../internal/state';
 
+    import {
+        CameraState,
+    } from '../../internal/camera';
+
+    import {
+        PlaneLink,
+    } from '../../internal/tree';
+
 
     import {
         PluridPlane,
@@ -86,6 +94,53 @@ export interface PluridApi {
      * with `{ version: 2 }` / `space.viewpointURLVersion: 2`.
      */
     getViewpoint(options?: { version?: 1 | 2 }): string;
+    /**
+     * THE DIAGNOSTIC SURFACE: one plain snapshot of what the engine is doing — the camera, the motion,
+     * the gesture, the view, the counts, every shown plane and the links ({@link PluridInspection}).
+     * The render and dispatch counters are live only while `development.inspector` is on.
+     */
+    inspect(): PluridInspection;
+}
+
+
+export interface PluridInspectionPlane {
+    planeID: string;
+    parentPlaneID?: string;
+    sourceID: string;
+    route: string;
+    location: { translateX: number; translateY: number; translateZ: number; rotateX: number; rotateY: number };
+    width: number;
+    height: number;
+    sizeMode: 'measured' | 'manual' | 'declared';
+    manuallyPositioned: boolean;
+    spawnedByLinkID?: string;
+    culled: 'visible' | 'frozen' | 'hidden' | 'detached';
+    /** Renders of the plane component since mount (`development.inspector` on), else 0. */
+    renders: number;
+}
+
+export interface PluridInspection {
+    camera: CameraState;
+    motion: 'idle' | 'gesture' | 'fling' | 'tween';
+    /** The pointer gesture in flight (its intent), `null` between gestures. */
+    gesture: string | null;
+    view: { width: number; height: number };
+    counts: {
+        /** Store notifications since mount (`development.inspector` on), else 0. */
+        dispatches: number;
+        /** The sum of the planes' render counts. */
+        renders: number;
+        shown: number;
+        /** Shown planes whose content is mounted (not detached). */
+        mounted: number;
+        hidden: number;
+        frozen: number;
+        detached: number;
+    };
+    planes: PluridInspectionPlane[];
+    links: PlaneLink[];
+    /** Whether the counters are live (`development.inspector`). */
+    inspector: boolean;
 }
 
 

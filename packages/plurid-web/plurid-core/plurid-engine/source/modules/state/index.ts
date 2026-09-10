@@ -5,6 +5,9 @@
     import {
         resolveThemes,
     } from './compute/themes';
+    import {
+        dockedBootCamera,
+    } from './compute/space';
     // #endregion internal
 // #endregion imports
 
@@ -15,5 +18,6 @@ export {
     compute,
     local,
     resolveThemes,
+    dockedBootCamera,
 };
 // #endregion exports

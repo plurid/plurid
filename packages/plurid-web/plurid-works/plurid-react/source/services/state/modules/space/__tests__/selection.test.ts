@@ -137,5 +137,23 @@ describe('selection reducers', () => {
         const far = reducer(withTree([plane('a', 0), plane('b', 300)]), actions.setSelection(['b']));
         expect(reducer(far, actions.snapSelection({ threshold: 12 })).tree).toBe(far.tree);
     });
+
+    it('a dragged CHILD stays where it was dropped (the sizing contract): the recompute keeps a pinned child, its own child follows it', () => {
+        const grandchild = plane('g', 900, 0, { parentPlaneID: 'c', linkCoordinates: { x: 40, y: 0 }, bridgeLength: 100, planeAngle: 90 });
+        const child = plane('c', 400, 0, { parentPlaneID: 'a', linkCoordinates: { x: 100, y: 0 }, bridgeLength: 100, planeAngle: 90, children: [grandchild] });
+        let state = withTree([plane('a', 0, 0, { children: [child] })]);
+        state = reducer(state, actions.setSelection(['c']));
+        state = reducer(state, actions.transformSelectedPlanes({ deltaX: 50, deltaY: 30 }));
+        const dragged = state.tree[0].children![0];
+        expect(dragged.manuallyPositioned).toBe(true);
+        expect(dragged.location.translateX).toBe(450);
+        expect(dragged.location.translateY).toBe(30);
+        // its own child rides with it (placed from the pinned location)
+        expect(dragged.children![0].location.translateY).toBeCloseTo(30, 6);
+        // a later parent recompute (the parent dragged) leaves the pinned child where it is
+        state = reducer(state, actions.setSelection(['a']));
+        state = reducer(state, actions.transformSelectedPlanes({ deltaX: 10, deltaY: 0 }));
+        expect(state.tree[0].children![0].location.translateX).toBe(450);
+    });
 });
 // #endregion module

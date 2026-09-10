@@ -252,4 +252,11 @@ test.describe('navigation feel', () => {
         await expect(page.locator('[data-plurid-entity="PluridEmpty"]')).toBeVisible();
         expect(await page.locator('[data-plurid-plane]').count()).toBe(0);
     });
+
+    test('the route-driven mode is ready at the router\'s onReady: a synchronous command executes', async ({ page }) => {
+        // the demo's `/space` route renders an application (the home route is an exterior alone)
+        await page.goto('/space?router=1&reducedMotion=1');
+        await page.waitForFunction(() => !!(window as unknown as { __rtRouterReady?: unknown }).__rtRouterReady);
+        expect(await page.evaluate(() => (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation)).toBe(15);
+    });
 });

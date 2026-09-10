@@ -2,6 +2,7 @@
     // #region libraries
     import {
         useMemo,
+        useContext,
     } from 'react';
 
     import {
@@ -23,6 +24,10 @@
         useEngineStore,
         useEnginePubSub,
     } from '../engine';
+    import PluridContext from '~services/context';
+    import {
+        buildInspection,
+    } from '~services/logic/inspector';
     // #endregion internal
 // #endregion imports
 
@@ -37,6 +42,7 @@
 export const usePluridApi = (): PluridApi => {
     const store = useEngineStore();
     const pubsub = useEnginePubSub();
+    const context = useContext(PluridContext);
 
     return useMemo<PluridApi>(() => ({
         store: store as any,
@@ -47,6 +53,7 @@ export const usePluridApi = (): PluridApi => {
             const version = options?.version ?? state.configuration.space.viewpointURLVersion ?? 1;
             return encodeCameraViewpoint(state.space.camera, state.space.viewSize, version as 1 | 2);
         },
-    }), [store, pubsub]);
+        inspect: () => buildInspection(store.getState() as any, context?.inspector),
+    }), [store, pubsub, context?.inspector]);
 };
 // #endregion module

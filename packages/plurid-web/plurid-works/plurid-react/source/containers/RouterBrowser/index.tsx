@@ -6,6 +6,7 @@
         useEffect,
         useContext,
         useMemo,
+        useCallback,
     } from 'react';
 
 
@@ -93,8 +94,21 @@ const PluridRouterBrowser = (
         view: cleanNavigationView,
         cleanNavigation,
         notFoundPath: notFoundPathProperty,
+        onReady,
+        pubsub: routerPubSub,
     } = properties;
     // console.log('staticContext', staticContext)
+
+    // the location handler is subscribed once: it reads the CURRENT props through this ref, never
+    // the first render's (a host may change `cleanNavigation`, `view` or `scrollToTop` after mount)
+    const latest = useRef({ cleanNavigation, cleanNavigationView, scrollToTop });
+    latest.current = { cleanNavigation, cleanNavigationView, scrollToTop };
+    /** THE READINESS CONTRACT: one stable `onReady` for the route's application, calling the host's current one. */
+    const onReadyRef = useRef(onReady);
+    onReadyRef.current = onReady;
+    const routerOnReady = useCallback((api: Parameters<NonNullable<typeof onReady>>[0]) => {
+        onReadyRef.current?.(api);
+    }, []);
 
     const notFoundPath = notFoundPathProperty || '/not-found';
     const fadeIn = fadeInProperty ?? 10;
@@ -184,6 +198,7 @@ const PluridRouterBrowser = (
                     'route',
                 ) : undefined,
             hostname,
+            routerPubSub,
         ),
     );
     // #endregion state
@@ -191,6 +206,7 @@ const PluridRouterBrowser = (
 
     // #region handlers
     const scrollTop = () => {
+        const { scrollToTop } = latest.current;
         if (!topContainer.current || scrollToTop === false) {
             return;
         }
@@ -210,6 +226,7 @@ const PluridRouterBrowser = (
         event?: any,
     ) => {
         let matchedPath: string | undefined;
+        const { cleanNavigation, cleanNavigationView } = latest.current;
 
         if (
             event && event.detail && event.detail.path
@@ -300,6 +317,7 @@ const PluridRouterBrowser = (
                 pluridIsoMatcher.current,
                 undefined,
                 hostname,
+                routerPubSub,
             ),
         );
     }, [
@@ -360,11 +378,13 @@ const PluridRouterBrowser = (
     }
 
     // the pathname is the router's: an application inside a route reads this (its address-bar binding
-    // rides a query parameter instead)
+    // rides a query parameter instead) and takes the router's `onReady` and bus
     const routerContextValue = useMemo(() => ({
         path: matchedPath,
         navigate: pluridRouterNavigate,
-    }), [matchedPath]);
+        onReady: routerOnReady,
+        pubsub: routerPubSub,
+    }), [matchedPath, routerOnReady, routerPubSub]);
 
     return (
         <PluridRouterContext.Provider value={routerContextValue}>

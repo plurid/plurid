@@ -162,7 +162,7 @@ describe('the address bar is the page', () => {
         await act(async () => {
             root = createRoot(container);
             root.render(
-                <PluridRouterContext.Provider value={{ path: '/route', navigate: () => {} }}>
+                <PluridRouterContext.Provider value={{ path: '/route', navigate: () => {}, onReady: () => {} }}>
                     <PluridApplication
                         planes={[{ route: '/one', component: Page }, { route: '/two', component: Page }] as any}
                         view={['/one', '/two'] as any}
@@ -183,5 +183,46 @@ describe('the address bar is the page', () => {
         expect(window.history.length).toBe(length);
         await act(async () => { root!.unmount(); });
         container.remove();
+    });
+
+    it('a deep link to a root is docked at STORE time: the first render is docked on it, before any effect', async () => {
+        window.history.replaceState(null, '', '/two');
+        const rendered = await renderPlurid({
+            planes: [{ route: '/one', component: Page }, { route: '/two', component: Page }],
+            view: ['/one', '/two'],
+            configuration: page,
+        });
+        const [, two] = rendered.api.getSnapshot().space.tree;
+        // no flush: the store booted docked on the deep link (the roots laid out at store time)
+        expect(rendered.view.getAttribute('data-plurid-docked')).toBe(two.planeID);
+        await flush();
+        expect(rendered.view.getAttribute('data-plurid-docked')).toBe(two.planeID);
+        expect(window.location.pathname).toBe('/two');
+        await rendered.unmount();
+    });
+
+    it('an orphan address: the boot page\'s path is written by default; orphan: keep leaves the address until the next dock', async () => {
+        window.history.replaceState(null, '', '/nowhere');
+        const written = await renderPlurid({ planes: [{ route: '/page', component: Page }], view: ['/page'], configuration: page });
+        await flush();
+        expect(window.location.pathname).toBe('/page');
+        await written.unmount();
+
+        window.history.replaceState(null, '', '/nowhere');
+        const kept = await renderPlurid({
+            planes: [{ route: '/site', component: Site }, { route: '/site/about', component: Page }],
+            view: ['/site'],
+            configuration: { space: { presentation: 'page', docking: { url: { orphan: 'keep' } }, navigation: { motion: { duration: 0 } } } },
+        });
+        await flush();
+        expect(kept.view.getAttribute('data-plurid-docked')).toBeTruthy();
+        expect(window.location.pathname).toBe('/nowhere');
+        shimLinks(kept.container);
+        await act(async () => {
+            (kept.container.querySelector('[data-plurid-link-route]') as HTMLElement).click();
+        });
+        await flush();
+        expect(window.location.pathname).toBe('/site/about');
+        await kept.unmount();
     });
 });

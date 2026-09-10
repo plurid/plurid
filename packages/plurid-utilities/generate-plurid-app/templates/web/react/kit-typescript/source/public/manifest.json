@@ -1,0 +1,9 @@
+{
+    "short_name": "__#APP_NAME#__",
+    "name": "__#APP_NAME#__",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0a0c0f",
+    "theme_color": "#0a0c0f",
+    "icons": []
+}

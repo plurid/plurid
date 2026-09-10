@@ -3,7 +3,6 @@
     import {
         /** constants */
         PLANE_DEFAULT_ANGLE,
-        PLURID_ROUTE_SEPARATOR,
 
         /** enumerations */
         LAYOUT_TYPES,
@@ -16,8 +15,6 @@
         TreePlane,
         TreePlaneLocation,
         LinkCoordinates,
-        PathParameters,
-        PluridRoute,
         PluridPlane,
         ViewSize,
     } from '@plurid/plurid-data';
@@ -29,6 +26,9 @@
 
 
     // #region external
+    import {
+        configuredPlaneSize,
+    } from '../layout/size';
     import {
         computeColumnLayout,
         computeRowLayout,
@@ -53,13 +53,13 @@
     } from '../utilities';
 
     import {
-        IsoMatcher,
-    } from '~modules/routing';
+        isHandSized,
+        pairRootsByIdentity,
+    } from './fields';
 
     import {
-        computeComparingPath,
-        extractParametersValues,
-    } from '~modules/routing/Parser/logic';
+        IsoMatcher,
+    } from '~modules/routing';
 
     import {
         computePlaneAddress,
@@ -70,212 +70,6 @@
 
 
 // #region module
-const matchRouteElements = (
-    routePath: string,
-    viewPath: string,
-) => {
-    // routePath = routePath[0] === '/'
-    //     ? routePath.slice(1)
-    //     : routePath;
-    // viewPath = viewPath[0] === '/'
-    //     ? viewPath.slice(1)
-    //     : viewPath;
-
-    // console.log('viewPath', viewPath);
-    // console.log('routePath', routePath);
-
-    if (routePath === viewPath) {
-        return {
-            value: viewPath,
-            parameters: {},
-            query: {},
-        };
-    }
-
-    // console.log('viewPath', viewPath);
-    // console.log('routePath', routePath);
-
-
-    // check if viewPath is a parametrization of routePath
-    const parameters: string[] = [];
-    const routeSplit = routePath.slice(1).split('/');
-    // console.log('routeSplit', routeSplit);
-
-    routeSplit.forEach(routeElement => {
-        if (routeElement[0] === ':') {
-            parameters.push(routeElement);
-        } else {
-            parameters.push('');
-        }
-    });
-    // console.log('parameters', parameters);
-
-    const {
-        locationElements,
-        comparingPath,
-    } = computeComparingPath(viewPath, parameters);
-    // console.log('comparingPath', comparingPath);
-    // console.log('routePath', routePath);
-    // console.log('locationElements', locationElements);
-
-    // if (comparingPath !== '/' + routePath) {
-    //     return;
-    // }
-    if (comparingPath !== routePath) {
-        return;
-    }
-
-    const parametersValues = extractParametersValues(
-        parameters,
-        locationElements,
-    );
-    // console.log('parametersValues', parametersValues);
-    return {
-        value: viewPath,
-        parameters: parametersValues,
-        query: {},
-    };
-}
-
-
-const matchRouteToView = (
-    route: string,
-    view: string,
-): undefined | any => {
-    // const routeSplit = route.split(PLURID_ROUTE_SEPARATOR);
-    // const viewSplit = view.split(PLURID_ROUTE_SEPARATOR);
-
-    // console.log('route', route);
-    // console.log('view', view);
-    // console.log('routeSplit', routeSplit);
-    // console.log('viewSplit', viewSplit);
-
-
-    // if (routeSplit.length !== viewSplit.length) {
-    //     return;
-    // }
-
-    const pathMatch = matchRouteElements(
-        route,
-        view,
-    );
-    // console.log('pathMatch', pathMatch);
-
-    return {
-        path: {
-            ...pathMatch,
-        },
-        space: {
-            // ...spaceMatch,
-        },
-        universe: {
-            // ...universeMatch,
-        },
-        cluster: {
-            // ...clusterMatch,
-        },
-        plane: {
-            // ...planeMatch,
-        },
-    };
-
-
-
-
-    // if (routeSplit.length !== viewSplit.length) {
-    //     return;
-    // }
-
-    // const routePath = routeSplit[2];
-    // // if (!routePath) return;
-    // const viewPath = viewSplit[2];
-    // // if (!viewPath) return;
-    // console.log('viewPath', viewPath);
-    // const pathMatch = matchRouteElements(
-    //     routePath,
-    //     viewPath,
-    // );
-    // console.log('pathMatch', pathMatch);
-    // if (!pathMatch) {
-    //     return;
-    // }
-
-
-    // const routeSpace = routeSplit[3];
-    // // if (!routeSpace) return;
-    // const viewSpace = viewSplit[3];
-    // // if (!viewSpace) return;
-    // const spaceMatch = matchRouteElements(
-    //     routeSpace,
-    //     viewSpace,
-    // );
-    // // console.log('spaceMatch', spaceMatch);
-    // if (!spaceMatch) {
-    //     return;
-    // }
-
-
-    // const routeUniverse = routeSplit[4];
-    // // if (!routeUniverse) return;
-    // const viewUniverse = viewSplit[4];
-    // // if (!viewUniverse) return;
-    // const universeMatch = matchRouteElements(
-    //     routeUniverse,
-    //     viewUniverse,
-    // );
-    // // console.log('universeMatch', universeMatch);
-    // if (!universeMatch) {
-    //     return;
-    // }
-
-
-    // const routeCluster = routeSplit[5];
-    // // if (!routeCluster) return;
-    // const viewCluster = viewSplit[5];
-    // // if (!viewCluster) return;
-    // const clusterMatch = matchRouteElements(
-    //     routeCluster,
-    //     viewCluster,
-    // );
-    // // console.log('clusterMatch', clusterMatch);
-    // if (!clusterMatch) {
-    //     return;
-    // }
-
-
-    // const routePlane = routeSplit[6];
-    // // if (!routePlane) return;
-    // const viewPlane = viewSplit[6];
-    // // if (!viewPlane) return;
-    // const planeMatch = matchRouteElements(
-    //     routePlane,
-    //     viewPlane,
-    // );
-    // // console.log('planeMatch', planeMatch);
-    // if (!planeMatch) {
-    //     return;
-    // }
-
-    // return {
-    //     path: {
-    //         ...pathMatch,
-    //     },
-    //     space: {
-    //         ...spaceMatch,
-    //     },
-    //     universe: {
-    //         ...universeMatch,
-    //     },
-    //     cluster: {
-    //         ...clusterMatch,
-    //     },
-    //     plane: {
-    //         ...planeMatch,
-    //     },
-    // };
-}
-
-
 /**
  * Given a view resolve it to an absolute view
  * and compute a TreePlane if there is a RegisteredPluridPlane
@@ -418,72 +212,52 @@ export const resolveViewItem = <C>(
         return treePlane;
     }
 
-    // for (const [route, _] of planes) {
-    //     // const routeMatch = matchRouteToView(
-    //     //     route,
-    //     //     resolvedView.route,
-    //     // );
-    //     // console.log('route', route);
-    //     // console.log('resolvedView.route', resolvedView.route);
-    //     // console.log('routeMatch', routeMatch);
-
-    //     if (resolvedView.route !== routeMatch.path.value) {
-    //         continue;
-    //     }
-    //     // if (!routeMatch) {
-    //     //     continue;
-    //     // }
-
-    //     const treePlane: TreePlane = {
-    //         sourceID: route,
-
-    //         planeID: uuid.generate(),
-
-    //         route: resolvedView.route,
-
-    //         routeDivisions: {
-    //             protocol: {
-    //                 value: '',
-    //                 secure: false,
-    //             },
-    //             host: {
-    //                 value: host,
-    //                 controlled: true,
-    //             },
-    //             path: routeMatch.path,
-    //             space: routeMatch.space,
-    //             universe: routeMatch.universe,
-    //             cluster: routeMatch.cluster,
-    //             plane: routeMatch.plane,
-    //             valid: true,
-    //         },
-
-    //         height: 0,
-    //         width: 0,
-    //         location: {
-    //             translateX: 0,
-    //             translateY: 0,
-    //             translateZ: 0,
-    //             rotateX: 0,
-    //             rotateY: 0,
-    //         },
-    //         show: true,
-    //     };
-
-    //     return treePlane;
-    // }
-
     return;
 }
 
 
 /**
- * Compute the space based on the layout.
- * If there is no configuration.space.layout, it uses the default '2 COLUMNS' layout.
- *
- * @param planes
- * @param configuration
+ * THE SIZING CONTRACT: the layouts place the roots by their CURRENT sizes — a fresh root carries
+ * only a declared dimension, so the previous tree's sizes are copied onto the matching roots
+ * (`pairRootsByIdentity`) before placement. A hand-set size is the plane's own and wins over
+ * everything; a declared dimension is never overridden by a measurement; a measured dimension is
+ * copied only where the configuration leaves that dimension to the content — where it sets it the
+ * measurement is an observation of it, made for the PREVIOUS view (copying a measured width after a
+ * resize would pitch the grid by a stale width).
  */
+export const applyKnownSizes = (
+    roots: TreePlane[],
+    previousTree: TreePlane[] | undefined,
+    configured: { width: number; height: number } = { width: 0, height: 0 },
+): TreePlane[] => {
+    if (!previousTree || previousTree.length === 0) {
+        return roots;
+    }
+    const pairing = pairRootsByIdentity(previousTree);
+    return roots.map((root) => {
+        const previous = pairing.take(root);
+        if (!previous) {
+            return root;
+        }
+        const manual = isHandSized(previous);
+        const width = manual
+            ? previous.width
+            : (root.width || (configured.width > 0 ? 0 : previous.width) || 0);
+        const height = manual
+            ? previous.height
+            : (root.height || (configured.height > 0 ? 0 : previous.height) || 0);
+        if (width === root.width && height === root.height) {
+            return root;
+        }
+        return {
+            ...root,
+            width,
+            height,
+        };
+    });
+};
+
+
 export const computeSpaceTree = <C>(
     planes: Map<string, RegisteredPluridPlane<C>>,
     view: PluridApplicationView,
@@ -492,6 +266,7 @@ export const computeSpaceTree = <C>(
     origin = 'origin',
     getCount: () => number,
     viewSize?: ViewSize,
+    previousTree?: TreePlane[],
 ): TreePlane[] => {
     // console.log('computeSpaceTree');
     // console.log('planes', planes);
@@ -499,7 +274,7 @@ export const computeSpaceTree = <C>(
     // console.log('computeSpaceTree view', view);
     // console.log('computeSpaceTree origin', origin);
 
-    const treePlanes: TreePlane[] = [];
+    const freshPlanes: TreePlane[] = [];
 
     for (const viewItem of view) {
         const treePlane = resolveViewItem(
@@ -511,9 +286,16 @@ export const computeSpaceTree = <C>(
         );
 
         if (treePlane) {
-            treePlanes.push(treePlane);
+            freshPlanes.push(treePlane);
         }
     }
+
+    // the roots are placed by what is known of their sizes (the sizing contract)
+    const configuredView = viewSize ?? {
+        width: typeof window === 'undefined' ? 1440 : window.innerWidth,
+        height: typeof window === 'undefined' ? 840 : window.innerHeight,
+    };
+    const treePlanes = applyKnownSizes(freshPlanes, previousTree, configuredPlaneSize(configuration, configuredView));
 
     if (!layout) {
         const layoutlessTreePlanes = treePlanes.map(plane => {
@@ -1069,10 +851,18 @@ const sameLocation = (
     && a.rotateX === b.rotateX
     && a.rotateY === b.rotateY;
 
+const sameLinkCoordinates = (
+    a: TreePlane['linkCoordinates'],
+    b: TreePlane['linkCoordinates'],
+): boolean => (a === b) || (!!a && !!b && a.x === b.x && a.y === b.y);
+
 /**
- * Every field the renderer/engine reads off a node EXCEPT `children` (reconciled recursively) and
- * `width`/`height` (carry-forward, handled by the caller). `routeDivisions`/`linkCoordinates` are
- * derived from `route`, so an equal `route` implies they match too.
+ * Every field the renderer/engine reads off a node EXCEPT `children` (reconciled recursively),
+ * `location` (compared by the caller) and `width` / `height` / `manuallyPositioned` (carried
+ * forward by the caller). `routeDivisions` derive from `route`, so an equal `route` implies they
+ * match; the spawn geometry does NOT — `linkCoordinates` are the link's MEASURED position in the
+ * parent, `bridgeSide` / `bridgeOffset` / `spawnedByLinkID` are stored at the spawn — so each is
+ * compared, and so is `sizeMode` (a hand resize is a change).
  */
 const sameNodeOwnFieldsExceptLocation = (
     a: TreePlane,
@@ -1085,6 +875,10 @@ const sameNodeOwnFieldsExceptLocation = (
     && a.show === b.show
     && a.bridgeLength === b.bridgeLength
     && a.planeAngle === b.planeAngle
+    && a.bridgeSide === b.bridgeSide
+    && a.bridgeOffset === b.bridgeOffset
+    && a.spawnedByLinkID === b.spawnedByLinkID
+    && sameLinkCoordinates(a.linkCoordinates, b.linkCoordinates)
     && a.sizeMode === b.sizeMode;
 
 const sameNodeOwnFields = (

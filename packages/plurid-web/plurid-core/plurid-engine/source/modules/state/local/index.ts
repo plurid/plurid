@@ -38,7 +38,7 @@ let serializeFailureWarned = false;
  * about the view center), so a camera without the view it was framed in is ambiguous — restored
  * with it, a docked page is docked from the first frame, and the first real measurement re-pivots
  * the camera the way a live resize does (the picture kept) instead of from a fallback size the
- * camera never saw (2026-09-06).
+ * camera never saw.
  */
 const PERSISTED_SPACE_FIELDS = [
     'rotationX',

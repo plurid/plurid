@@ -130,6 +130,8 @@ export interface FlatPluridConfiguration {
     planeWidth?: number;
     /** `elements.plane.height` — a fraction of the view height (≤ 1) or px (> 1); unset = the content's height. */
     planeHeight?: number;
+    /** `elements.plane.maxHeight` — the tallest a content-sized plane grows (a fraction ≤ 1 or px); taller content scrolls inside. */
+    planeMaxHeight?: number;
     /** `elements.plane.opacity`. */
     planeOpacity?: number;
     /** `elements.plane.controls.show` — per-plane control buttons. */
@@ -267,6 +269,10 @@ export interface DockingURLBinding {
     /** `path`: the pathname is the page's; `query`: the page rides `?<param>=<path>`. */
     mode: 'path' | 'query';
     param: string;
+    /** The pathname prefix the site lives under (`/docs`), `''` for none; the query mode ignores it. */
+    base: string;
+    /** What a path naming no page does at boot: `root` (the boot page's path is written), `keep` (the address stays). */
+    orphan: 'root' | 'keep';
 }
 
 export interface PluridConfigurationSpaceDockingURL {
@@ -278,6 +284,18 @@ export interface PluridConfigurationSpaceDockingURL {
     history?: 'push' | 'replace';
     /** The QUERY-PARAMETER mode: the page rides `?<param>=<path>` and the pathname stays the host's. Set to `page` automatically inside a `PluridRouterBrowser` route. */
     param?: string;
+    /**
+     * The pathname prefix the site is hosted under (`/docs`): the page's path is written after it and
+     * read from under it; a location outside it leaves the binding passive. Default none. The query
+     * mode ignores it (the pathname is the host's there).
+     */
+    base?: string;
+    /**
+     * A location naming no page at boot (nothing registered or reachable there): `root` (default) —
+     * the boot page stays and its path is written over the address; `keep` — the boot page stays and
+     * the address is left as typed until the next dock, so a host can show its own not-found.
+     */
+    orphan?: 'root' | 'keep';
 }
 
 export interface PluridConfigurationSpace {
@@ -560,6 +578,28 @@ export interface PluridConfigurationSpaceCulling {
     frustumMargin?: number;
     /** Distance beyond which a painted plane is contained (no measurements). Default `3500`. */
     freezeDistance?: number;
+    /**
+     * THE DETACH TIER (content virtualization): what a HIDDEN plane's content does after `delay` ms.
+     * `false` (default): it stays mounted, its state and effects intact. `'retain'`: it is wrapped
+     * in React's `Activity` (`hidden`) — its state kept, its effects unmounted, its updates deferred
+     * (React ≥ 19.2; an older React falls back to `'unmount'` with a development warning);
+     * `'unmount'`: it is not rendered at all — its DOM freed, its state the product's to keep. In
+     * both the plane's SHELL stays (its box, its focus anchor, its bridge), so the geometry, the
+     * minimap, the beams and the culling never change; it carries `data-plurid-culled="detached"`
+     * and re-attaches as soon as it is no longer hidden. The object form tunes it — see
+     * {@link PluridConfigurationSpaceCullingDetach}. Needs `enabled`.
+     */
+    detach?: false | 'retain' | 'unmount' | PluridConfigurationSpaceCullingDetach;
+}
+
+export interface PluridConfigurationSpaceCullingDetach {
+    mode: 'retain' | 'unmount';
+    /** ms a plane must stay hidden before it is detached, unless the `max` budget is exceeded (a quick pan never detaches). Default `1000`. */
+    delay?: number;
+    /** Camera-space distance a hidden plane must exceed to be detached; `0` (default) detaches any hidden plane. */
+    distance?: number;
+    /** The most hidden-but-mounted planes kept (exceptions and parents of shown planes count); the farthest detachable beyond it are detached at once. Default unbounded. */
+    max?: number;
 }
 
 
@@ -886,6 +926,13 @@ export interface PluridConfigurationElementsPlane {
      * scrolls its content inside it; a registered plane's own `height` overrides it.
      */
     height?: number;
+    /**
+     * The tallest a content-sized plane grows, like `height` (a fraction of the view up to `1`,
+     * px above): taller content scrolls inside the plane and the plane's measured height is the cap.
+     * Unset (the default) leaves the height to the content; a declared, configured or hand-set
+     * height ignores it; a registered plane's own `maxHeight` overrides it.
+     */
+    maxHeight?: number;
 
     controls: PluridConfigurationElementsPlaneControls;
 
@@ -956,6 +1003,11 @@ export interface PluridConfigurationNetwork {
 
 
 export interface PluridConfigurationDevelopment {
+    /**
+     * The diagnostic counters (`api.inspect()`: per-plane render counts, the dispatch count, the
+     * gesture in flight). Default `false`; the debuggers turn the counters on as well.
+     */
+    inspector?: boolean;
     /**
      * Show debugging information for each plane.
      */

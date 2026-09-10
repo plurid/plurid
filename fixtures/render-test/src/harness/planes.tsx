@@ -74,7 +74,17 @@ export const SIZE_SETS: Record<SizeSetKey, (index: number) => DeclaredSize | und
     wide: () => ({ width: 640, height: 300 }),
     tall: () => ({ width: 320, height: 560 }),
     small: () => ({ width: 260, height: 200 }),
+    // no declaration: the panels are content-sized and of different heights (the sizing contract)
+    content: () => undefined,
 };
+
+/** The `content` set's extra readout rows per panel: a coprime stride, so neighbours differ. */
+export const contentRows = (
+    index: number,
+): [string, string][] => Array.from({ length: (index * 5) % 11 }, (_, row) => [
+    'field-' + String(row + 1).padStart(2, '0'),
+    ((index + 1) * (row + 3) * 1.5).toFixed(1),
+]);
 
 export const DETAIL_ROUTE = '/geometry/detail';
 
@@ -145,6 +155,7 @@ export const buildPlanes = (
         ...((flags.nested ?? 0) > 0 ? [{ route: '/chain-1', label: 'chain' }] : []),
     ];
 
+    const content = flags.sizes === 'content';
     const roots: PluridReactPlane[] = source.map((panel, index) => {
         const size = sizeOf(index);
         if (size) {
@@ -159,11 +170,13 @@ export const buildPlanes = (
                         title={panel.title}
                         code={panel.code}
                         accent={panel.accent}
-                        rows={panel.rows}
-                        link={panel.route === '/geometry' ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
+                        rows={content ? [...panel.rows, ...contentRows(index)] : panel.rows}
+                        link={panel.route === '/geometry' || (stress && index === 0 && flags.benchScenario === 'spawn') ? { route: DETAIL_ROUTE, label: 'open detail' } : undefined}
                         links={panel.route === '/geometry' ? geometryLinks : undefined}
                         scrollable={flags.scrollable && panel.route === '/geometry'}
                         fill={!!size?.height}
+                        grow={content}
+                        counter={stress && !!flags.cullDetach}
                     />
                 </>
             ),

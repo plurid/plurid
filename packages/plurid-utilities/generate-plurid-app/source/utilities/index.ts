@@ -11,9 +11,6 @@
 
 
     // #region external
-    import {
-        AddScriptConfiguration,
-    } from '~data/interfaces';
     // #endregion external
 // #endregion imports
 
@@ -21,8 +18,8 @@
 
 // #region module
 /**
- * Copy a directory tree, AWAITED (C12, 2026-09-06: the old stream copy returned before the bytes were
- * written, so a later step could read a half-copied file). Symlinks are copied as links.
+ * Copy a directory tree, AWAITED (a stream copy that returns before the bytes are written lets a
+ * later step read a half-copied file). Symlinks are copied as links.
  */
 export const copyDirectory = async (
     src: string,
@@ -33,14 +30,6 @@ export const copyDirectory = async (
         force: true,
         verbatimSymlinks: true,
     });
-};
-
-
-export const copyFile = async (
-    src: string,
-    dest: string,
-) => {
-    await fs.promises.copyFile(src, dest);
 };
 
 
@@ -55,32 +44,9 @@ export const resolveAppDirectory = (
 }
 
 
-export const makeDirectory = (
-    directory: string,
-) => {
-    if (!fs.existsSync(directory)) {
-        fs.mkdirSync(directory);
-    }
-}
-
-
-export const removeDirectory = async (
-    directory: string,
-) => {
-    await fs.promises.rm(
-        directory,
-        {
-            recursive: true,
-            force: true,
-        },
-    );
-}
-
-
 /**
  * The destination must be OURS: missing (created) or an empty directory. A non-empty directory is
- * refused before anything is written or removed (C12: the client path removes `public`, `src` and
- * `.git` under the destination, so it must never be someone else's project).
+ * refused before anything is written, so the generation never lands in someone else's project.
  */
 export const ensureOwnedDirectory = (
     directory: string,
@@ -105,7 +71,7 @@ export interface ExecutedCommand {
 
 /**
  * Run a program with an ARGUMENT ARRAY — never a shell string — so a path with spaces or a
- * metacharacter is one argument (C12). Rejects when the program exits with a failure or cannot be
+ * metacharacter is one argument. Rejects when the program exits with a failure or cannot be
  * started, so a failed step stops the generation instead of being reported as a success.
  */
 export const executeCommand = (
@@ -143,27 +109,6 @@ export const executeCommand = (
 }
 
 
-export const addScript = async (
-    configuration: AddScriptConfiguration,
-) => {
-    const {
-        name,
-        value,
-        path,
-    } = configuration;
-
-    const file = fs.readFileSync(path);
-    const jsonFile = JSON.parse(file.toString());
-
-    if (!jsonFile.scripts) {
-        jsonFile.scripts = {};
-    }
-
-    jsonFile.scripts[name] = value;
-
-    const data = JSON.stringify(jsonFile, null, 4);
-    fs.writeFileSync(path, data);
-}
 
 
 const defaultLoadingSpinnerOptions = {

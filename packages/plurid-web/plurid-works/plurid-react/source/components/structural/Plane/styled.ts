@@ -39,8 +39,10 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
         ? 'opacity: var(--plurid-plane-fade, 1); filter: blur(var(--plurid-plane-blur, 0px));'
         : '')}
 
-    /* Culled: kept mounted (state intact), not painted, not interactive. Frozen: painted, contained. */
-    &[data-plurid-culled='hidden'] {
+    /* Culled: kept mounted (state intact), not painted, not interactive. Detached: the content
+       retained or unmounted, the shell not painted. Frozen: painted, contained. */
+    &[data-plurid-culled='hidden'],
+    &[data-plurid-culled='detached'] {
         visibility: hidden;
         pointer-events: none;
         contain: layout paint style;

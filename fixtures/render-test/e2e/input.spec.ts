@@ -9,6 +9,7 @@ import {
     spaceState,
     publish,
     viewRect,
+    dispatches,
 } from './helpers';
 
 
@@ -41,7 +42,7 @@ test.describe('input layer', () => {
         // empty space in the bottom band, clear of the toolbar (center) and the viewcube (right)
         const start = { x: rect.left + 120, y: rect.top + rect.height - 60 };
         const before = await camera(page);
-        const dispatchesBefore = await page.evaluate(() => (window as any).__rtPerf.dispatches);
+        const dispatchesBefore = await dispatches(page);
         const framesBefore = await page.evaluate(() => (window as any).__rtPerf.frames);
 
         await drag(page, start, { x: start.x + 150, y: start.y }, { steps: 40 });
@@ -49,10 +50,10 @@ test.describe('input layer', () => {
         const after = await camera(page);
         expect(after.yaw).toBeGreaterThan(before.yaw + 20);
         expect(after.pitch).toBeCloseTo(before.pitch, 3);
-        const dispatches = await page.evaluate(() => (window as any).__rtPerf.dispatches) - dispatchesBefore;
+        const committed = await dispatches(page) - dispatchesBefore;
         const frames = await page.evaluate(() => (window as any).__rtPerf.frames) - framesBefore;
         // pivot + per-frame commits, never per-event (40 moves)
-        expect(dispatches).toBeLessThanOrEqual(frames + 3);
+        expect(committed).toBeLessThanOrEqual(frames + 3);
     });
 
     test('a left drag over a plane is the page\'s; grab mode makes it orbit', async ({ page }) => {

@@ -105,38 +105,36 @@ export const useTreeUpdate = (
                 view: treeView,
                 layout,
                 viewSize,
+                // THE SIZING CONTRACT: the roots are placed by their measured / hand-set sizes
+                previousTree: tree,
             },
             hostname,
         );
 
         const computedTree = spaceTree.compute();
 
-        const previousByKey = new Map<string, TreePlane[]>();
-        for (const root of tree) {
-            const key = root.sourceID + '@' + root.route;
-            const list = previousByKey.get(key) || [];
-            list.push(root);
-            previousByKey.set(key, list);
-        }
-
+        // the identities the view still lists: a previous root of another identity was REMOVED
+        // from the view (`view.removePlane`) and goes; an extra root of a listed identity (a
+        // duplicate, `duplicateSelection`) is kept as it is
+        const pairing = space.tree.fields.pairRootsByIdentity(tree);
+        const listed = new Set<string>();
         const nextTree = computedTree.map((computed) => {
-            const candidates = previousByKey.get(computed.sourceID + '@' + computed.route);
-            const previous = candidates && candidates.length > 0
-                ? candidates.shift()
-                : undefined;
+            listed.add(space.tree.fields.rootIdentity(computed));
+            const previous = pairing.take(computed);
             if (!previous) {
                 return computed;
             }
 
+            const manual = space.tree.fields.isHandSized(previous);
             const merged: TreePlane = {
                 ...computed,
                 planeID: previous.planeID,
                 show: previous.show,
                 // A hand-set size wins over everything; otherwise the recompute's declared size
                 // (a live change of a declaration flows) and the measurement fills the rest.
-                width: previous.sizeMode === 'manual' ? previous.width : (computed.width || previous.width),
-                height: previous.sizeMode === 'manual' ? previous.height : (computed.height || previous.height),
-                ...(previous.sizeMode === 'manual'
+                width: manual ? previous.width : (computed.width || previous.width),
+                height: manual ? previous.height : (computed.height || previous.height),
+                ...(manual
                     ? { sizeMode: 'manual' as const }
                     : (computed.sizeMode
                         ? { sizeMode: computed.sizeMode }
@@ -155,6 +153,14 @@ export const useTreeUpdate = (
 
             return space.location.recomputeSubtree(merged);
         });
+
+        // The extra roots of a listed identity (duplicates) are kept as they are: a relayout
+        // arranges the view's roots and never drops a copy the user made.
+        for (const [key, extras] of pairing.remaining) {
+            if (listed.has(key)) {
+                nextTree.push(...extras);
+            }
+        }
 
         // An animated relayout: arm the transition window BEFORE the tree write so the planes'
         // first paint at the new placements is the transition's start, never a jump. Only for a

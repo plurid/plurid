@@ -57,6 +57,7 @@ const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
     bridgePlaneAngle: { value: 33, path: 'space.bridge.planeAngle' },
     planeWidth: { value: 0.4, path: 'elements.plane.width' },
     planeHeight: { value: 0.6, path: 'elements.plane.height' },
+    planeMaxHeight: { value: 0.8, path: 'elements.plane.maxHeight' },
     planeOpacity: { value: 0.5, path: 'elements.plane.opacity' },
     planeControls: { value: false, path: 'elements.plane.controls.show' },
     planeResizable: { value: true, path: 'elements.plane.resizable' },

@@ -25,7 +25,7 @@ export const FALLBACK_CHILD_WIDTH = 400;
  * plane's top is the top of its controls bar, and the bridge — one strip, centred on the link's
  * line — is flush with it. In the space presentation the bar is the plane's first row, so the plane
  * hangs half a strip above the link; on a page the bar hangs `PLANE_BAR_HEIGHT` above the sheet,
- * so the sheet sits that much lower (the user's rule, 2026-09-06).
+ * so the sheet sits that much lower.
  */
 export const resolveBridgeOffset = (
     presentation: 'space' | 'page' | undefined,
@@ -92,8 +92,7 @@ export const childLocation = (
  * it there; a negative angle turns it in front, and only a bridge from the right edge — the plane
  * mirrored to the other side of the link — keeps it behind (`forward` is the exact opposite). The
  * alternating fan therefore mirrors every even generation: a grandchild faces the way its
- * grandparent does AND sits behind the fin it hangs from, instead of between the viewer and it
- * (the "mesh in front of detail" report, 2026-09-05).
+ * grandparent does AND sits behind the fin it hangs from, instead of between the viewer and it.
  */
 export const resolveBridgeSide = (
     planeAngle: number,
@@ -115,7 +114,7 @@ export const resolveBridgeSide = (
  * clicked) only through the gaps between them until the camera goes around or in; `forward` starts
  * negative, the chain grows out of the wall toward the eye. `fixed` (the default fan) applies the
  * same turn every generation — each child 90° to the right of its parent, behind its parent's
- * face, exactly like the first link off a root (the user's rule, 2026-09-05); `alternate` flips
+ * face, exactly like the first link off a root; `alternate` flips
  * the sign every generation, so a grandchild turns back parallel to its grandparent (and then
  * hangs on the side its parent faces, see `resolveBridgeSide`).
  */
@@ -146,8 +145,10 @@ const sameLocation = (
 /**
  * Re-place every link-spawned descendant of `plane` from ITS current location (after a relayout,
  * a drag, a snap, or a link-coordinate change), recursively, including the children's facing.
- * Children that carry no link coordinates (host-authored subtrees) keep their location. Returns
- * the SAME reference when nothing moved, so structural sharing survives.
+ * Children that carry no link coordinates (host-authored subtrees) and children the user PINNED
+ * (`manuallyPositioned`: a dragged child stays where it was dropped) keep their
+ * location — their own descendants still follow them. Returns the SAME reference when nothing
+ * moved, so structural sharing survives.
  */
 export const recomputeSubtree = (
     plane: TreePlane,
@@ -159,7 +160,7 @@ export const recomputeSubtree = (
     let changed = false;
     const children = plane.children.map((child) => {
         let relocated = child;
-        if (child.linkCoordinates) {
+        if (child.linkCoordinates && !child.manuallyPositioned) {
             const location = childLocation(
                 plane.location,
                 child.linkCoordinates,

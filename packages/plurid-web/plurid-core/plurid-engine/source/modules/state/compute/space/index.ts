@@ -7,6 +7,9 @@
         PluridState,
         PluridMetastateState,
         PluridStateSpace,
+        TreePlane,
+        CameraState,
+        CameraLimits,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -21,12 +24,48 @@
     import {
         camera as cameraEngine,
     } from '~modules/interaction';
+
+    import {
+        planeAddressPath,
+    } from '~modules/routing/logic/general';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
+/**
+ * THE ADDRESS BAR IS THE PAGE, at store time: the camera that boots docked on the ROOT whose path
+ * (`planeAddressPath` of its route) is `dockPath` — its dock pose for this view, the same pose the
+ * View's follow effect carries through the first measurement — or `undefined` when no root answers
+ * (a sub-page is spawned through its parent's link by the View after mount). One rule for the client
+ * store and the server's render, so a deep link never paints a frame of another page.
+ */
+export const dockedBootCamera = (
+    camera: CameraState,
+    tree: TreePlane[],
+    configuration: PluridConfiguration,
+    viewSize: { width: number; height: number },
+    limits: CameraLimits,
+    dockPath: string | null | undefined,
+): CameraState | undefined => {
+    if (!dockPath) {
+        return undefined;
+    }
+    const root = tree.find((node) => node.show !== false && planeAddressPath(node.route) === dockPath);
+    if (!root) {
+        return undefined;
+    }
+    const configured = space.layout.configuredPlaneSize(configuration, viewSize);
+    return cameraEngine.dockPose(
+        camera,
+        cameraEngine.dockGeometry(root, configured),
+        viewSize,
+        limits,
+    );
+};
+
+
 const resolveSpace = <C>(
     view: PluridApplicationView,
     configuration: PluridConfiguration,
@@ -36,15 +75,33 @@ const resolveSpace = <C>(
     precomputedState: Partial<PluridState> | undefined,
     contextState: PluridMetastateState | undefined,
     hostname = 'origin',
+    dockPath?: string | null,
 ) => {
     const registeredPlanes = getRegisteredPlanes(planesRegistrar);
     // console.log('resolveSpace > registeredPlanes', registeredPlanes);
+
+    const initialViewSize = {
+        width: 771,
+        height: 764,
+    };
+    // A deep link docks at store time on a LAID-OUT tree: the layout-less boot tree stacks every root
+    // at the origin, where every root's dock pose is the first root's. The fresh tree is laid out for
+    // the view the state layers know (a persisted tree was laid out for its persisted view; else the
+    // boot fallback); the View's first measurement relays the roots for the real view and the follow
+    // effect carries the docked page along.
+    const dockAtBoot = !!dockPath && !currentState;
+    const bootViewSize = currentState?.space.viewSize
+        ?? localState?.space.viewSize
+        ?? contextState?.space?.viewSize
+        ?? precomputedState?.space?.viewSize
+        ?? initialViewSize;
 
     const spaceTree = new space.tree.Tree(
         {
             planes: registeredPlanes,
             configuration,
             view,
+            ...(dockAtBoot ? { layout: true, viewSize: bootViewSize } : {}),
         },
         hostname,
     );
@@ -56,10 +113,6 @@ const resolveSpace = <C>(
 
     const perspective = configuration.space.perspective || cameraEngine.DEFAULT_PERSPECTIVE;
     const cameraLimits = cameraEngine.resolveCameraLimits(configuration.space.navigation);
-    const initialViewSize = {
-        width: 771,
-        height: 764,
-    };
 
     const stateSpace: PluridStateSpace = {
         loading: true,
@@ -105,10 +158,6 @@ const resolveSpace = <C>(
         links: [],
         bookmarks: {},
         layoutTransition: 0,
-        culled: {
-            hidden: [],
-            frozen: [],
-        },
 
         ...precomputedState?.space,
         ...contextState?.space,
@@ -116,6 +165,11 @@ const resolveSpace = <C>(
         ...currentState?.space,
 
         view,
+        // the culling pass's result is never durable: a running store keeps its own, anything
+        // else (a snapshot, a precomputed state) starts clean
+        culled: currentState
+            ? currentState.space.culled
+            : { hidden: [], frozen: [], detached: [] },
     };
     // console.log({
     //     stateSpace,
@@ -152,7 +206,7 @@ const resolveSpace = <C>(
             ? localState.space.camera
             : undefined;
 
-    const resolvedCamera = cameraEngine.clampCamera(
+    let resolvedCamera = cameraEngine.clampCamera(
         restoredCamera
             ? {
                 ...restoredCamera,
@@ -173,6 +227,13 @@ const resolveSpace = <C>(
             ),
         cameraLimits,
     );
+
+    // a deep link to a root page wins over a persisted camera (docked on the tree the state layers
+    // settled on, for the view it was laid out for); a running store keeps its camera
+    if (dockAtBoot) {
+        resolvedCamera = dockedBootCamera(resolvedCamera, stateSpace.tree, configuration, stateSpace.viewSize, cameraLimits, dockPath)
+            ?? resolvedCamera;
+    }
 
     const legacy = cameraEngine.toLegacy(resolvedCamera, stateSpace.viewSize);
 

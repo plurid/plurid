@@ -44,11 +44,14 @@ export const stringRemoveTrailing = (
 
 const PATH_SEPARATOR = '/';
 
+/** A path with one leading separator and no trailing ones (`'/'` alone becomes `''`). */
 export const cleanupPath = (
     value: string,
 ) => {
     value = stringInsertInitial(value, PATH_SEPARATOR);
-    value = stringRemoveTrailing(value, PATH_SEPARATOR);
+    while (value.endsWith(PATH_SEPARATOR)) {
+        value = value.slice(0, value.length - PATH_SEPARATOR.length);
+    }
     return value;
 }
 
@@ -111,6 +114,50 @@ export const planeAddressPath = (
     value = value.replace(/(?<=[^/])@[A-Za-z0-9_-]+$/, '');
     return cleanupPath(value) || '/';
 }
+
+
+/** A location's pathname or query value as a page path: a leading slash, no trailing one, `null` for nothing. */
+const cleanDockingPath = (
+    value: string | null | undefined,
+): string | null => value ? (cleanupPath(value) || '/') : null;
+
+/** A pathname as written when its escapes are malformed (`decodeURIComponent` throws on them). */
+const decodePathname = (
+    pathname: string,
+): string => {
+    try {
+        return decodeURIComponent(pathname);
+    } catch {
+        return pathname;
+    }
+};
+
+/**
+ * The page path a location names under an address-bar binding (`docking.url`): the query parameter
+ * in the query mode (the first of its name, `+` a space, as `URLSearchParams` reads it); else the
+ * decoded pathname under `base` (`/docs/page-1` → `/page-1`, `/docs` → `/`), or `null` OUTSIDE
+ * the base — the binding is passive there. Pure: the browser gives `window.location`, the server
+ * the request.
+ */
+export const dockingURLTarget = (
+    binding: { mode: 'path' | 'query'; param: string; base: string },
+    location: { pathname: string; search: string },
+): string | null => {
+    if (binding.mode === 'query') {
+        return cleanDockingPath(new URLSearchParams(location.search).get(binding.param));
+    }
+    const pathname = cleanDockingPath(decodePathname(location.pathname)) || '/';
+    if (!binding.base) {
+        return pathname;
+    }
+    if (pathname === binding.base) {
+        return '/';
+    }
+    if (!pathname.startsWith(binding.base + '/')) {
+        return null;
+    }
+    return pathname.slice(binding.base.length);
+};
 
 
 export const isAbsolutePlane = (

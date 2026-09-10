@@ -82,10 +82,20 @@ const applyPageDefaults = (
 };
 
 
+/** A `docking.url.base` as the binding carries it: a leading slash, no trailing one, `''` for none. */
+/** `docking.url.base` normalised: one leading slash, no trailing one, no doubled ones; `''` for none. */
+export const normalizeDockingURLBase = (
+    base: string | undefined,
+): string => ('/' + (base || '').trim())
+    .replace(/\/{2,}/g, '/')
+    .replace(/\/+$/, '');
+
+
 /**
  * Resolve `space.docking.url`: unset / `false` → no binding; `true` → both directions, the pathname,
  * history entries; an object → its flags (`write` / `restore` default on; both off → no binding), a
- * `param` selects the query mode. Inside a host router (`context.router`) the pathname is the
+ * `param` selects the query mode, `base` the pathname prefix (the query mode ignores it), `orphan`
+ * what a path naming no page does. Inside a host router (`context.router`) the pathname is the
  * router's: the query mode with `page` (or the given `param`) and `replace` history, whatever was
  * asked — a router entry must never be shadowed by ours.
  */
@@ -109,6 +119,8 @@ export const resolveDockingURL = (
         history: context.router ? 'replace' : (options.history ?? (query ? 'replace' : 'push')),
         mode: query ? 'query' : 'path',
         param: options.param || PLURID_DOCKING_URL_PARAM,
+        base: query ? '' : normalizeDockingURLBase(options.base),
+        orphan: options.orphan === 'keep' ? 'keep' : 'root',
     };
 };
 
@@ -225,6 +237,7 @@ export const definePluridConfiguration = (
     const plane: NonNullable<PluridPartialConfiguration['elements']>['plane'] = {};
     if (flat.planeWidth !== undefined) { plane.width = flat.planeWidth; }
     if (flat.planeHeight !== undefined) { plane.height = flat.planeHeight; }
+    if (flat.planeMaxHeight !== undefined) { plane.maxHeight = flat.planeMaxHeight; }
     if (flat.planeOpacity !== undefined) { plane.opacity = flat.planeOpacity; }
     if (flat.planeControls !== undefined) { plane.controls = { show: flat.planeControls }; }
     if (flat.planeResizable !== undefined) { plane.resizable = flat.planeResizable; }

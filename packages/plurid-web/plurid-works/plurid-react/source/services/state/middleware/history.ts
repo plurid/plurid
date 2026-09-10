@@ -10,6 +10,10 @@
     import {
         arrangementSignature,
     } from '~services/logic/arrangement/signature';
+    import {
+        rebaseSnapshot,
+        Arrangement,
+    } from '~services/logic/arrangement/rebase';
     // #endregion external
 // #endregion imports
 
@@ -48,10 +52,11 @@ interface ArrangementSnapshot {
  * into ONE entry — a drag that dispatches per frame is one undo, not sixty. `meta.history === 'skip'`
  * bypasses recording for one action. Restore re-sets tree + links atomically via `restoreArrangement`
  * (raw, exact, no reconcile). Remote collaboration mutations (`meta.remote`) are skipped — a peer's
- * change isn't in YOUR undo — AND they clear both stacks (C03, 2026-09-06): a snapshot recorded before a
- * peer's change would restore the arrangement WITHOUT that change and broadcast the rollback as ours.
- * Until history is rebased over remote changes, a remote apply invalidates local history; hosts see
- * `canUndo` drop through `state.space.history`. After every stack change the availability is written to
+ * change isn't in YOUR undo — AND every local snapshot is REBASED over them (2026-09-10; the interim
+ * rule of 2026-09-06 cleared the stacks): `apply(remote, diff(before, snapshot))` keeps the local
+ * changes on the planes they touch and the peer's work everywhere else, so an undo after a peer's
+ * change never restores the arrangement without that change; a snapshot with nothing local left is
+ * dropped. After every stack change the availability is written to
  * `state.space.history` (`setHistoryStatus`) so hosts can render undo/redo controls.
  */
 export const createHistoryMiddleware = (): Middleware => {
@@ -164,10 +169,22 @@ export const createHistoryMiddleware = (): Middleware => {
         // Don't record our own restores, a peer's remotely-applied change, an explicitly skipped
         // action, or anything inside a transaction (recorded once at its end).
         if (action.meta?.remote) {
-            // a peer's arrangement landed: every local snapshot predates it — drop them (see above)
-            if (undoStack.length > 0 || redoStack.length > 0) {
+            // REBASED UNDO: a peer's arrangement landed — every local snapshot is replayed over it
+            // (`apply(remote, diff(before, snapshot))`): the local changes on the planes they touch,
+            // the peer's work everywhere else; a snapshot with nothing local left — one that differed
+            // only in automatic positions, say — is dropped
+            if (undoStack.length > 0 || redoStack.length > 0 || transactionBefore) {
+                const remote = snapshotOf(store.getState());
+                const rebase = (stack: ArrangementSnapshot[]) => stack
+                    .map((snapshot) => rebaseSnapshot(snapshot as Arrangement, before as Arrangement, remote as Arrangement))
+                    .filter((snapshot): snapshot is Arrangement => snapshot !== null);
+                const undoRebased = rebase(undoStack);
                 undoStack.length = 0;
-                redoStack = [];
+                undoStack.push(...undoRebased);
+                redoStack = rebase(redoStack);
+                if (transactionBefore) {
+                    transactionBefore = rebaseSnapshot(transactionBefore as Arrangement, before as Arrangement, remote as Arrangement) ?? remote;
+                }
                 publishStatus(store);
             }
             return result;

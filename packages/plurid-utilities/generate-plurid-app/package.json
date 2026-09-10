@@ -20,18 +20,16 @@
         "email": "source@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/generate-plurid-app/README.md",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-utilities/generate-plurid-app/README.md",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "main": "distribution/index.js",
     "module": "distribution/index.mjs",
-    "typings": "distribution/types/index.d.ts",
     "bin": {
         "generate-plurid-app": "binder/generate-plurid-app"
     },
@@ -43,10 +41,6 @@
     "scripts": {
         "clean": "rimraf ./distribution",
         "test": "jest ./source --config ./configurations/jest.config.js --rootDir ./",
-        "copy.templates": "cp -r ./templates ./distribution",
-        "build.clean": "rm -rf `find ./distribution -type d -name __tests__ -not -path './distribution/templates/*'`",
-        "build.run": "node scripts/build.js",
-        "build.development": "pnpm clean && pnpm build.run",
         "build.production": "tsup",
         "build": "tsup",
         "check": "tsc --noEmit --project tsconfig.json",
@@ -71,5 +65,6 @@
         "tslib": "^2.6.1",
         "typescript": "^6.0.3",
         "tsup": "^8.5.1"
-    }
+    },
+    "types": "distribution/index.d.ts"
 }

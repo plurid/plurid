@@ -28,7 +28,7 @@ export const extractPathname = (
         : location.substring(0, queryIndex);
 
     // any hash — an ordinary anchor (`#details`) as much as a plurid directive (`#:~:text=…`) — is not
-    // part of the pathname (C06, 2026-09-06: `/a#details` used to miss `/a`)
+    // part of the pathname (`/a#details` matches `/a`)
     const fragmentIndex = noQueryPath.indexOf('#');
     const noFragmentPath = fragmentIndex === -1
         ? noQueryPath

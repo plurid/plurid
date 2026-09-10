@@ -1,6 +1,12 @@
 // #region imports
     // #region external
     import {
+        PluridInspection,
+    } from '../../external/application';
+    // #endregion external
+
+    // #region external
+    import {
         PluridPlaneContext,
     } from '~interfaces/external/plane';
 
@@ -21,6 +27,17 @@
 
 
 // #region module
+/** The diagnostic registry the engine writes while `development.inspector` is on (`api.inspect()` reads it). */
+export interface PluridInspectorRegistry {
+    enabled: boolean;
+    /** Renders per plane since mount. */
+    renders: Map<string, number>;
+    /** The pointer gesture in flight (its intent), `null` between gestures. */
+    gesture: string | null;
+    /** Store notifications since mount. */
+    dispatches: number;
+}
+
 export interface PluridContext<C> {
     planesRegistrar?: PluridPlanesRegistrar<C>;
     planeContext?: PluridPlaneContext<any>;
@@ -43,8 +60,12 @@ export interface PluridContext<C> {
         pubsub: PluridPubSub;
         renderPlaneControls?: (context: any) => unknown;
         renderPlaneBridge?: (context: any) => unknown;
-        renderDebugger?: (context: any) => unknown;
+        /** The space debugger's slot, called with the inspection (`api.inspect()`'s shape) when the space renders. */
+        renderDebugger?: (inspection: PluridInspection | undefined) => unknown;
     };
+
+    /** The diagnostic registry (the planes count their renders into it while it is enabled). */
+    inspector?: PluridInspectorRegistry;
 
     defaultPubSub: PluridPubSub,
     registerPubSub: (

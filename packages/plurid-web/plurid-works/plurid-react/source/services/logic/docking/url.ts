@@ -9,6 +9,7 @@
     // #region external
     import {
         planeAddressPath,
+        routing,
     } from '~services/engine';
     // #endregion external
 // #endregion imports
@@ -22,27 +23,17 @@ export interface DockingURLState {
     path: string;
 }
 
-const cleanPath = (
-    value: string | null | undefined,
-): string | null => {
-    if (!value) {
-        return null;
-    }
-    const trimmed = value.replace(/\/+$/, '');
-    return trimmed.startsWith('/') ? (trimmed || '/') : '/' + trimmed;
-};
-
-/** The page path the location names under `binding` (`null` on the server, or when it names nothing). */
+/**
+ * The page path the location names under `binding` (`null` on the server, when it names nothing, or
+ * outside the binding's `base`): the engine's pure reader over `window.location`.
+ */
 export const readDockingURLTarget = (
     binding: DockingURLBinding,
 ): string | null => {
     if (typeof window === 'undefined') {
         return null;
     }
-    if (binding.mode === 'query') {
-        return cleanPath(new URLSearchParams(window.location.search).get(binding.param));
-    }
-    return cleanPath(window.location.pathname);
+    return routing.dockingURLTarget(binding, window.location);
 };
 
 /** The docked page a history entry recorded, if this binding wrote it. */
@@ -54,8 +45,8 @@ export const readDockingURLState = (
 };
 
 /**
- * Write the docked page's path to the location: the pathname (the query and the hash untouched — the
- * host's flags and the viewpoint's `?v=` survive), or `?<param>=<path>` in the query mode; the entry's
+ * Write the docked page's path to the location: the pathname under the binding's `base` (the query and
+ * the hash untouched — the host's flags and the viewpoint's `?v=` survive), or `?<param>=<path>` in the query mode; the entry's
  * state keeps whatever the host put there plus `{ plurid: { docked, path } }`, so Back can resolve the
  * page by state before the path.
  */
@@ -72,7 +63,8 @@ export const writeDockingURL = (
     if (binding.mode === 'query') {
         url.searchParams.set(binding.param, path);
     } else {
-        url.pathname = path;
+        // under a base the root page lives at the base itself
+        url.pathname = binding.base ? binding.base + (path === '/' ? '' : path) : path;
     }
     const state = {
         ...((window.history.state && typeof window.history.state === 'object') ? window.history.state : {}),

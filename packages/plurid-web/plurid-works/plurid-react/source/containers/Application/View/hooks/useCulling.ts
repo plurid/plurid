@@ -28,6 +28,9 @@
     import {
         resolvePlaneFallbackSize,
     } from '~services/logic/camera';
+    import {
+        getDockedLineage,
+    } from '~services/state/modules/space/selectors';
     // #endregion external
 // #endregion imports
 
@@ -44,10 +47,10 @@ export interface UseCullingParameters {
     tree: TreePlane[];
     viewElement: React.RefObject<HTMLDivElement>;
     /**
-     * Everything else that changes a plane's eligibility (C05, 2026-09-06): the selection, the active and
-     * isolated planes, the culling and depth-fade configuration — folded into one string by the View, so
-     * a change to any of them schedules a pass with a still camera (the focused plane is caught by the
-     * `focusin` listener below).
+     * Everything else that changes a plane's eligibility — the selection, the active and isolated
+     * planes, the docked lineage, the culling and depth-fade configuration, the detach tier's gate —
+     * folded into one string by the View, so a change to any of them schedules a pass with a still
+     * camera (the focused plane is caught by the `focusin` listener below).
      */
     eligibility: string;
 }
@@ -57,11 +60,13 @@ const CULLING_INTERVAL = 100;
 
 
 /**
- * The culling + depth-cue pass: at most every 100 ms after a camera commit or a tree change,
- * decide which planes stop painting (`state.space.culled.hidden`), which are frozen
- * (`culled.frozen`), and — when `elements.plane.depthFade` is on — write each plane's depth cue as
- * CSS variables on its element (no store churn for a per-frame visual). Off unless
- * `space.culling.enabled`; the active, selected, isolated and focused planes are never culled.
+ * The culling pass, at most every 100 ms after a camera commit or a tree change: which planes stop
+ * painting (`culled.hidden`), which are frozen (`culled.frozen`), which hidden ones lose their
+ * content (`culled.detached` — the engine's `resolveDetached` holds the rules; a maturity timer
+ * re-runs the pass when the earliest candidate is due), and, with `elements.plane.depthFade`, each
+ * plane's depth cue as CSS variables on its element (no store churn for a per-frame visual). Off
+ * unless `space.culling.enabled`; the active, selected, isolated and focused planes and the docked
+ * page's lineage are never culled.
  */
 export const useCulling = (
     {
@@ -75,11 +80,30 @@ export const useCulling = (
 ) => {
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const last = useRef(0);
+    /** When each hidden plane became hidden (the detach clock). */
+    const hiddenSince = useRef(new Map<string, number>());
+    /** The maturity timer: the pass re-runs when the earliest detach candidate is due. */
+    const mature = useRef<ReturnType<typeof setTimeout> | null>(null);
     /** The latest scheduler, for the focus listener (it must not re-subscribe per frame). */
     const scheduleRef = useRef<() => void>(() => {});
 
 
     useEffect(() => {
+        const clearMature = () => {
+            if (mature.current !== null) {
+                clearTimeout(mature.current);
+                mature.current = null;
+            }
+        };
+        /** Nothing culled: the state emptied when it holds anything, the detach clock reset. */
+        const clearCulled = (culled: AppState['space']['culled']) => {
+            if (culled.hidden.length > 0 || culled.frozen.length > 0 || culled.detached.length > 0) {
+                dispatch(actions.space.setCulled({ hidden: [], frozen: [], detached: [] }));
+            }
+            hiddenSince.current = new Map();
+            clearMature();
+        };
+
         const run = () => {
             timer.current = null;
             last.current = Date.now();
@@ -92,14 +116,14 @@ export const useCulling = (
             const enabled = !!culling?.enabled;
             const fadeEnabled = !!depthFade?.enabled;
             if (!enabled && !fadeEnabled) {
-                if (spaceState.culled.hidden.length > 0 || spaceState.culled.frozen.length > 0) {
-                    dispatch(actions.space.setCulled({ hidden: [], frozen: [] }));
-                }
+                clearCulled(spaceState.culled);
                 return;
             }
 
             const fallback = resolvePlaneFallbackSize(configuration, spaceState.viewSize);
             const planes: { id: string; location: TreePlane['location']; width: number; height: number }[] = [];
+            /** each plane's SHOWN children (the detach step keeps a parent whose child is in view) */
+            const childrenOf = new Map<string, string[]>();
             const walk = (nodes: TreePlane[]) => {
                 for (const node of nodes) {
                     if (node.show === false) {
@@ -112,6 +136,7 @@ export const useCulling = (
                         height: node.height || fallback.height,
                     });
                     if (node.children) {
+                        childrenOf.set(node.planeID, node.children.filter((child) => child.show !== false).map((child) => child.planeID));
                         walk(node.children);
                     }
                 }
@@ -122,6 +147,8 @@ export const useCulling = (
                 spaceState.activePlaneID,
                 spaceState.isolatePlane,
                 ...spaceState.selectedPlaneIDs,
+                // the docked page, its ancestors and its descendants stay whole (Escape to the parent is instant)
+                ...getDockedLineage(state),
             ].filter(Boolean));
             const focused = typeof document !== 'undefined'
                 ? document.activeElement?.closest?.('[data-plurid-plane]')?.getAttribute('data-plurid-plane')
@@ -130,13 +157,8 @@ export const useCulling = (
                 exceptions.add(focused);
             }
 
-            if (!enabled && !fadeEnabled) {
-                return;
-            }
-
             const previous = {
-                hidden: spaceState.culled.hidden,
-                frozen: spaceState.culled.frozen,
+                ...spaceState.culled,
                 depths: {},
             };
             const result = spaceEngine.view.cullPlanes(
@@ -153,15 +175,44 @@ export const useCulling = (
                 exceptions,
             );
 
-            if (enabled) {
-                if (!spaceEngine.view.sameCulling(previous, result)) {
-                    dispatch(actions.space.setCulled({
-                        hidden: result.hidden,
-                        frozen: result.frozen,
-                    }));
-                }
-            } else if (spaceState.culled.hidden.length > 0 || spaceState.culled.frozen.length > 0) {
-                dispatch(actions.space.setCulled({ hidden: [], frozen: [] }));
+            // THE DETACH TIER: which hidden planes lose their content
+            const now = Date.now();
+            const detach = spaceEngine.view.resolveDetached({
+                hidden: result.hidden,
+                depths: result.depths,
+                childrenOf,
+                previous: previous.detached,
+                hiddenSince: hiddenSince.current,
+                now,
+                exceptions,
+                // nothing new is detached while the camera moves or a relayout glides
+                gate: spaceState.motion !== 'idle' || spaceState.layoutTransition > 0,
+                options: spaceEngine.view.resolveDetachOptions(culling),
+            });
+            hiddenSince.current = detach.hiddenSince;
+            clearMature();
+            if (detach.nextDue !== null) {
+                mature.current = setTimeout(() => {
+                    mature.current = null;
+                    scheduleRef.current();
+                }, Math.max(0, detach.nextDue - now));
+            }
+            const next = {
+                hidden: result.hidden,
+                frozen: result.frozen,
+                detached: detach.detached,
+                depths: result.depths,
+            };
+
+            if (!enabled) {
+                // the depth cues alone: nothing is culled
+                clearCulled(spaceState.culled);
+            } else if (!spaceEngine.view.sameCulling(previous, next)) {
+                dispatch(actions.space.setCulled({
+                    hidden: next.hidden,
+                    frozen: next.frozen,
+                    detached: next.detached,
+                }));
             }
 
             if (fadeEnabled && viewElement.current) {
@@ -206,6 +257,14 @@ export const useCulling = (
         tree,
         eligibility,
     ]);
+
+    // the maturity timer dies with the hook
+    useEffect(() => () => {
+        if (mature.current !== null) {
+            clearTimeout(mature.current);
+            mature.current = null;
+        }
+    }, []);
 
     // A focus change inside the view makes another plane an exception: schedule a pass.
     useEffect(() => {

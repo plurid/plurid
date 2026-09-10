@@ -94,6 +94,8 @@ export interface PluridRequestTreeData {
     /** The request's document registry (route / planes / in-render layers). */
     documentRegistry: PluridDocumentRegistry;
     pathname: string;
+    /** The request's query (`?page=…`), for THE ADDRESS BAR IS THE PAGE on the server. */
+    search?: string;
     hostname: string;
     /** The directly accessed plane's route, for a `RoutePlane` match. */
     directPlane: string | undefined;

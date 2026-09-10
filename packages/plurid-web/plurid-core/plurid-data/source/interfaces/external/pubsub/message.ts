@@ -778,7 +778,9 @@ export type PluridChangeKind =
     | 'motion'
     | 'bookmarks'
     /** the page presentation: the docked page's id, `''` when the camera left the page */
-    | 'docked';
+    | 'docked'
+    /** the culling pass: `{ hidden, frozen, detached }` counts */
+    | 'culling';
 export interface PluridPubSubMessageChanged {
     kind: PluridChangeKind;
     value: any;

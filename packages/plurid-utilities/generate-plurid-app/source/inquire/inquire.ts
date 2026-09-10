@@ -23,32 +23,15 @@ const inquire = (
     inquirer
         .prompt(questions)
         .then(async (args: any) => {
-            const {
-                directory,
-                language,
-                ui,
-                renderer,
-                manager,
-                services,
-                versioning,
-                containerize,
-                deployment,
-            } = args;
-
             const answers: Answers = {
-                directory,
-                language,
-                ui,
-                renderer,
-                manager,
-                services,
-                versioning,
-                containerize,
-                deployment,
+                directory: args.directory,
+                manager: args.manager,
+                versioning: args.versioning,
+                install: args.install !== false,
             };
             await processArguments(answers);
         });
-}
+};
 // #endregion module
 
 

@@ -92,6 +92,8 @@ export interface UsePointerGesturesParameters {
     motion: CameraMotionController;
     /** Called at every press, before anything else — the View drops a gliding wheel tail here. */
     onPress?: () => void;
+    /** The gesture in flight for the diagnostics: its intent at the press, `null` when it ends. */
+    onIntent?: (intent: GestureIntent | null) => void;
 }
 
 interface Sample {
@@ -182,10 +184,14 @@ export const usePointerGestures = (
         setNavDragging,
         motion,
         onPress,
+        onIntent,
     }: UsePointerGesturesParameters,
 ) => {
     const spaceConfigRef = useRef(spaceConfiguration);
     spaceConfigRef.current = spaceConfiguration;
+    /** The host's callbacks as of the latest render (the handlers are subscribed once). */
+    const callbacks = useRef({ onPress, onIntent });
+    callbacks.current = { onPress, onIntent };
 
     const pointers = useRef<Map<number, { x: number; y: number; type: string }>>(new Map());
     /**
@@ -514,6 +520,7 @@ export const usePointerGestures = (
             if (!current) {
                 return;
             }
+            callbacks.current.onIntent?.(null);
 
             batcher.flushNow();
 
@@ -652,7 +659,7 @@ export const usePointerGestures = (
             // decides whether the engine wants it.
             const context = contextFor(event);
             const intent = resolveGestureIntent(context);
-            onPress?.();
+            callbacks.current.onPress?.();
             trace({ phase: 'down', intent, pointerType: context.pointerType, button: context.button, onPlane: context.onPlane, onControl: context.onControl, onEditable: context.onEditable, pointerId: event.pointerId });
             if (intent === 'none') {
                 if (event.pointerType === 'touch') {
@@ -682,6 +689,7 @@ export const usePointerGestures = (
                 dragDepth: 0,
                 pinch: null,
             };
+            callbacks.current.onIntent?.(intent);
             // A PRESS THE ENGINE TAKES IS THE ENGINE'S. Its default — the compatibility mousedown
             // that anchors a native selection and moves the focus — goes: an orbit that starts on
             // the empty space around a page would otherwise drag a selection into the page's text as

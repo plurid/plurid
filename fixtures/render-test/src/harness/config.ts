@@ -16,6 +16,7 @@ export const buildConfiguration = (
         center: true,
         layout: layoutByKey(flags.layout, stress),
         planeWidth: stress ? 0.16 : 0.32,
+        ...(flags.planeMaxHeight ? { planeMaxHeight: flags.planeMaxHeight } : {}),
         // The link-spawn bridge length (default 100): the gap between parent and child AND the
         // rendered bridge, so they stay aligned.
         bridgeLength: 160,
@@ -36,10 +37,16 @@ export const buildConfiguration = (
         };
     }
 
-    if (flags.url) {
+    if (flags.url || flags.urlBase || flags.urlOrphan) {
+        // `url=0` opts out; a base or an orphan rule is the object form (write / restore default on)
+        const url = flags.url === '0'
+            ? false
+            : (flags.urlBase || flags.urlOrphan)
+                ? { ...(flags.urlBase ? { base: flags.urlBase } : {}), ...(flags.urlOrphan ? { orphan: flags.urlOrphan } : {}) }
+                : true;
         flat.docking = {
             ...(flat.docking ?? {}),
-            url: flags.url === '1',
+            url,
         };
     }
     if (flags.vpURL) {
@@ -99,7 +106,7 @@ export const buildConfiguration = (
     if (flags.hideLinks || flags.debug) {
         flat.extend = {
             ...(flags.hideLinks ? { elements: { planeLinks: { show: false }, alignmentGuides: { show: false } } } : {}),
-            ...(flags.debug ? { development: { spaceDebugger: true, planeDebugger: true } } : {}),
+            ...(flags.debug ? { development: { spaceDebugger: true, planeDebugger: true, inspector: true } } : {}),
         };
     }
     if (flags.spaceW !== undefined || flags.spaceH !== undefined) {
@@ -134,6 +141,14 @@ export const buildConfiguration = (
             enabled: true,
             ...(flags.cullDistance ? { distance: flags.cullDistance } : {}),
             ...(flags.freezeDistance ? { freezeDistance: flags.freezeDistance } : {}),
+            ...(flags.cullDetach ? {
+                detach: {
+                    mode: flags.cullDetach,
+                    ...(flags.cullDelay !== undefined ? { delay: flags.cullDelay } : {}),
+                    ...(flags.cullMax !== undefined ? { max: flags.cullMax } : {}),
+                    ...(flags.cullDetachDistance !== undefined ? { distance: flags.cullDetachDistance } : {}),
+                },
+            } : {}),
         };
     }
     if (flags.depthFade) flat.planeDepthFade = { enabled: true };

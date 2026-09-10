@@ -173,6 +173,8 @@ export interface PluridRoutePlaneOptions {
     width?: number;
     /** The plane's own height in px (see `PluridPlaneOptions.height`). */
     height?: number;
+    /** The plane's own `maxHeight` (px), see `PluridPlaneOptions.maxHeight`. */
+    maxHeight?: number;
 
 
     /**

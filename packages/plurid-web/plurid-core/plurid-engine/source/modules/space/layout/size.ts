@@ -17,6 +17,8 @@ export interface ConfiguredPlaneSize {
     width: number;
     /** 0 = content-driven (no configured height). */
     height: number;
+    /** The cap of a content-driven height; 0 = none. */
+    maxHeight: number;
 }
 
 
@@ -31,6 +33,7 @@ export const configuredPlaneSize = (
     return {
         width: resolveDimension(configuration.elements.plane.width, view.width),
         height: resolveDimension(configuration.elements.plane.height, view.height),
+        maxHeight: resolveDimension(configuration.elements.plane.maxHeight, view.height),
     };
 };
 

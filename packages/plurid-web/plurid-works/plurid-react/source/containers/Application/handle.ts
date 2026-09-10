@@ -69,6 +69,8 @@ export interface PluridApplicationHandle extends PluridApi {
     };
     tree: {
         get: () => TreePlane[];
+        /** The culling pass's counts: hidden, frozen, detached (`culling.detach`) planes. */
+        culling: () => { hidden: number; frozen: number; detached: number };
         /** Replace the roots (relayout with the planes gliding). */
         setView: (view: PluridApplicationView) => void;
         /** Spawn a registered route as a child of `parentPlaneID`, joined by a bridge at `linkCoordinates`. */

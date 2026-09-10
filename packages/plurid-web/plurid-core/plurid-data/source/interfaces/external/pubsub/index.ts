@@ -22,6 +22,14 @@ export * from './payloads';
 
 export interface PluridPubSubOptions {
     debug?: boolean;
+    /**
+     * THE READINESS CONTRACT: a publish that finds no subscriber is dropped, not buffered — a
+     * command sent before the engine mounted, or after it unmounted, goes nowhere. When nothing
+     * else is set the bus warns once per topic in development (the engine's own emit topics,
+     * `PLURID_PUBSUB_EMITTED_TOPICS`, excepted: nobody has to listen to them). A function replaces
+     * the warning with the host's own report; `null` silences it.
+     */
+    onDrop?: ((topic: string) => void) | null;
 }
 
 

@@ -36,7 +36,7 @@ A plurid-kit application is three files + a config:
 ```
 plurid.config.ts            the single source of truth
 source/
-    server/index.ts         createPluridServer(config) + startPluridServer(server)
+    server/index.ts         startPluridServer(config)
     client/index.tsx        createPluridClient(config)
     public/                 favicons, manifest, robots (served statically)
 ```
@@ -75,11 +75,12 @@ export default defineConfig({
 // source/server/index.ts
 import config from '../../plurid.config';
 import {
-    createPluridServer,
     startPluridServer,
 } from '@plurid/plurid-kit/server';
 
-startPluridServer(createPluridServer(config));
+// `startPluridServer` takes the CONFIG (it creates the server itself and starts it on `$PORT`);
+// `createPluridServer(config)` alone gives you the server to start or extend by hand
+startPluridServer(config);
 ```
 
 ``` typescript
@@ -156,8 +157,8 @@ These replace the per-application `scripts/custom.js`.
 
 1. Author `plurid.config.ts` from the app's `source/server/index.ts`
    (`new PluridServer({...})` fields map one-to-one onto the config).
-2. Swap the server entry for `createPluridServer` + `startPluridServer` and
-   the client entry for `createPluridClient`.
+2. Swap the server entry for `startPluridServer(config)` (`createPluridServer(config)`
+   when you extend the server by hand) and the client entry for `createPluridClient`.
 3. Replace the `scripts/workings/` build with the three package scripts:
    `"dev": "plurid dev --watch"`, `"build": "plurid build"`, `"start": "plurid start"`.
 4. Delete the `SC_DISABLE_SPEEDY` defines and the styled-components

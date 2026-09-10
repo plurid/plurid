@@ -66,7 +66,17 @@
 
     import {
         reportPlaneSize,
+        resolvePlaneFallbackSize,
     } from '~services/logic/camera';
+    import {
+        recordRender,
+    } from '~services/logic/inspector';
+    import {
+        warnOnce,
+    } from '~services/logic/development/warn';
+    import {
+        planeAddressPath,
+    } from '~services/engine';
 
     import {
         PluridPlaneDetailsContext,
@@ -91,7 +101,6 @@
 
     import PlaneBridge from './components/PlaneBridge';
     import PlaneResizeHandles from './components/PlaneResizeHandles';
-    import PlaneDebugger from './components/PlaneDebugger';
     import PlaneControls from './components/PlaneControls';
     import PlaneContent from './components/PlaneContent';
     // #endregion internal
@@ -100,6 +109,19 @@
 
 
 // #region module
+/** The per-plane readout, loaded only when `development.planeDebugger` asks for it (never in a production bundle's main chunk). */
+const PlaneDebugger = React.lazy(() => import('./components/PlaneDebugger'));
+
+/** React's `Activity` (19.2+; `unstable_Activity` before): the retained tier. `undefined` → unmount. */
+const ActivityComponent: React.ComponentType<{ mode: 'visible' | 'hidden'; children?: React.ReactNode }> | undefined
+    = (React as any).Activity ?? (React as any).unstable_Activity;
+
+/** The retained tier's wrapper, or a plain fragment when React has no Activity (the content mounts as usual). */
+const ActivityOrFragment: React.FC<{ mode: 'visible' | 'hidden'; children?: React.ReactNode }> = ({ mode, children }) => (
+    ActivityComponent
+        ? <ActivityComponent mode={mode}>{children}</ActivityComponent>
+        : <>{children}</>
+);
 /**
  * A plane set aside is INERT (React 19 renders the boolean attribute; the React 18 typings the
  * workspace still carries do not know it): nothing inside it is focusable or read aloud.
@@ -249,6 +271,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         remountKey,
         setRemountKey,
     ] = useState(0);
+    /** The content scroller's position, kept on the shell across a detach (a hidden or unmounted scroller forgets it). */
+    const scrollMemory = useRef({ top: 0, left: 0 });
 
     const [
         refreshing,
@@ -491,6 +515,35 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         remountKey,
         planeID,
     ]);
+
+    // the diagnostic surface: one more render of this plane, counted after the commit (a Map
+    // write only while the inspector is on)
+    useEffect(() => {
+        recordRender(context?.inspector, planeID);
+    });
+
+    // the accessible name: the plane's declared document title, else its route path
+    const planeHead = plane.head;
+    const planeAccessibleName = useMemo(() => {
+        const declaredTitle = planeHead && typeof planeHead === 'object' && typeof (planeHead as { title?: unknown }).title === 'string'
+            ? (planeHead as { title: string }).title
+            : '';
+        return declaredTitle || (planeAddressPath(treePlane.route) ?? treePlane.route ?? planeID);
+    }, [planeHead, treePlane.route, planeID]);
+
+    // THE DETACH TIER (`culling.detach`): retained (React's Activity: state kept, effects unmounted)
+    // or unmounted while the SHELL stays at the tree's size; `retain` needs an Activity
+    const culling = stateConfiguration.space.culling;
+    const detachMode = useMemo(() => spaceEngine.view.resolveDetachOptions(culling).mode, [culling]);
+    useEffect(() => {
+        if (detachMode === 'retain' && !ActivityComponent) {
+            warnOnce(
+                'culling-detach-retain',
+                `culling.detach: 'retain' needs React's Activity (19.2 or later); this React has none, so hidden planes are unmounted instead.`,
+                stateConfiguration.development?.warnings !== false,
+            );
+        }
+    }, [detachMode]);
     // #endregion effects
 
 
@@ -509,6 +562,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // registration renders exactly that (its content scrolls inside a declared height; a
     // declared width alone keeps the content-driven height); otherwise the configured width and
     // the content's own height.
+    const detached = stateCulled === 'detached';
+    const retain = detachMode === 'retain' && !!ActivityComponent;
     const manualSize = treePlane.sizeMode === 'manual' && treePlane.width > 0;
     const declaredWidth = plane.width && plane.width > 0 ? plane.width : 0;
     const declaredHeight = plane.height && plane.height > 0 ? plane.height : 0;
@@ -518,7 +573,15 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const renderHeight = manualSize && treePlane.height > 0
         ? treePlane.height + 'px'
         : (fixedHeightValue ? fixedHeightValue + 'px' : undefined);
-    const fixedHeight = !!renderHeight;
+    // THE SIZING CONTRACT: a content-sized plane may be CAPPED (`maxHeight`, the plane's own over
+    // the configured one) — taller content scrolls inside the cap and the measured height is the cap
+    const declaredMaxHeight = plane.maxHeight && plane.maxHeight > 0 ? plane.maxHeight : 0;
+    const cappedHeight = renderHeight ? 0 : (declaredMaxHeight || configuredSize.maxHeight);
+    // a detached shell keeps the box its content had (the tree's height, else the fallback)
+    const shellHeight = detached && !renderHeight
+        ? (treePlane.height > 0 ? treePlane.height : resolvePlaneFallbackSize(stateConfiguration, stateViewSize).height) + 'px'
+        : renderHeight;
+    const fixedHeight = !!shellHeight || cappedHeight > 0;
     // The page presentation: the controls bar overlays the top of the sheet (faded out while
     // docked) instead of taking a row, so the docked page is edge to edge and never jumps.
     const pagePresentation = stateConfiguration.space.presentation === 'page';
@@ -555,6 +618,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     const planeContentProperties = {
         fixedHeight,
+        scrollMemory,
+        detached,
     };
 
     return (
@@ -562,7 +627,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             key={key}
             ref={planeRef}
             theme={stateGeneralTheme}
-            planeControls={showPlaneControls}
+            // the bar's grid row exists only when a bar renders (the headless chrome has none: a row
+            // for nothing squeezed the content into 56 px and the measured height lied)
+            planeControls={showPlaneControls && showsChrome(chromeMode, 'planeControls')}
             controlsRow={!pagePresentation}
             planeOpacity={planeOpacity}
             fixedHeight={fixedHeight}
@@ -570,7 +637,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             id={planeID}
             style={{
                 width: renderWidth,
-                height: renderHeight,
+                height: shellHeight,
+                maxHeight: cappedHeight > 0 ? cappedHeight + 'px' : undefined,
                 transform,
                 // Animated relayout (FLIP): planes glide to their new placements only while the
                 // View holds the transition window open — never during a spawn or a drag.
@@ -588,6 +656,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             selected={stateIsSelected}
             transparentUI={transparentUI}
             mouseOver={mouseOver}
+            // access: a plane is a named group (its document title when declared, else its path)
+            role="group"
+            aria-roledescription="plane"
+            aria-label={planeAccessibleName}
             data-plurid-plane={planeID}
             data-plurid-entity={PLURID_ENTITY_PLANE}
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
@@ -600,7 +672,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             <StyledFocusAnchor
                 tabIndex={0}
                 id={focusAnchorID}
-                aria-label={'plane ' + (treePlane.route || planeID)}
+                // the tab stop that reaches the plane: a button that frames it (Enter), named after it
+                role="button"
+                aria-label={'focus ' + planeAccessibleName}
             />
 
             {treePlane.show && (
@@ -617,64 +691,72 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         />
                     )}
 
-                    {resizable && showsChrome(chromeMode, 'resizeHandles') && (
-                        <PlaneResizeHandles
-                            planeID={planeID}
-                            width={treePlane.width || width}
-                            height={treePlane.height || (planeRef.current?.offsetHeight ?? 0)}
-                        />
-                    )}
+                    {detached && !retain ? null : (
+                        <ActivityOrFragment mode={detached ? 'hidden' : 'visible'}>
+                            {resizable && showsChrome(chromeMode, 'resizeHandles') && (
+                                <PlaneResizeHandles
+                                    planeID={planeID}
+                                    width={treePlane.width || width}
+                                    height={treePlane.height || (planeRef.current?.offsetHeight ?? 0)}
+                                />
+                            )}
 
-                    {stateConfiguration.development?.planeDebugger && (
-                        <PlaneDebugger
-                            treePlane={treePlane}
-                        />
-                    )}
+                            {stateConfiguration.development?.planeDebugger && typeof window !== 'undefined' && (
+                                // never on the server: a lazy chunk would stall a streamed render
+                                <React.Suspense fallback={null}>
+                                    <PlaneDebugger
+                                        treePlane={treePlane}
+                                        renders={context?.inspector?.renders.get(planeID) ?? 0}
+                                    />
+                                </React.Suspense>
+                            )}
 
-                    {showPlaneControls && showsChrome(chromeMode, 'planeControls') && chrome?.renderPlaneControls && (
-                        chrome.renderPlaneControls(planeChromeContext) as React.ReactNode
-                    )}
-                    {showPlaneControls && showsChrome(chromeMode, 'planeControls') && !chrome?.renderPlaneControls && (
-                        <PlaneControls
-                            overlay={pagePresentation}
-                            plane={plane}
-                            treePlane={treePlane}
-                            parentTreePlane={parentTreePlane}
-                            mouseOver={mouseOver}
+                            {showPlaneControls && showsChrome(chromeMode, 'planeControls') && chrome?.renderPlaneControls && (
+                                chrome.renderPlaneControls(planeChromeContext) as React.ReactNode
+                            )}
+                            {showPlaneControls && showsChrome(chromeMode, 'planeControls') && !chrome?.renderPlaneControls && (
+                                <PlaneControls
+                                    overlay={pagePresentation}
+                                    plane={plane}
+                                    treePlane={treePlane}
+                                    parentTreePlane={parentTreePlane}
+                                    mouseOver={mouseOver}
 
-                            refreshing={refreshing}
-                            refreshPlane={refreshPlane}
-                            isolatePlane={isolatePlane}
-                            closePlane={closePlane}
-                        />
-                    )}
+                                    refreshing={refreshing}
+                                    refreshPlane={refreshPlane}
+                                    isolatePlane={isolatePlane}
+                                    closePlane={closePlane}
+                                />
+                            )}
 
-                    {planeRenderError ? (
-                        <ErrorBoundary
-                            renderError={typeof planeRenderError !== 'boolean'
-                                ? planeRenderError : undefined
-                            }
-                        >
-                            <PlaneContent
-                                {...planeContentProperties}
-                            >
-                                <PluridPlaneDetailsContext.Provider
-                                    value={planeDetails}
+                            {planeRenderError ? (
+                                <ErrorBoundary
+                                    renderError={typeof planeRenderError !== 'boolean'
+                                        ? planeRenderError : undefined
+                                    }
                                 >
-                                    {children}
-                                </PluridPlaneDetailsContext.Provider>
-                            </PlaneContent>
-                        </ErrorBoundary>
-                    ) : (
-                        <PlaneContent
-                            {...planeContentProperties}
-                        >
-                            <PluridPlaneDetailsContext.Provider
-                                value={planeDetails}
-                            >
-                                {children}
-                            </PluridPlaneDetailsContext.Provider>
-                        </PlaneContent>
+                                    <PlaneContent
+                                        {...planeContentProperties}
+                                    >
+                                        <PluridPlaneDetailsContext.Provider
+                                            value={planeDetails}
+                                        >
+                                            {children}
+                                        </PluridPlaneDetailsContext.Provider>
+                                    </PlaneContent>
+                                </ErrorBoundary>
+                            ) : (
+                                <PlaneContent
+                                    {...planeContentProperties}
+                                >
+                                    <PluridPlaneDetailsContext.Provider
+                                        value={planeDetails}
+                                    >
+                                        {children}
+                                    </PluridPlaneDetailsContext.Provider>
+                                </PlaneContent>
+                            )}
+                        </ActivityOrFragment>
                     )}
                 </>
             )}
