@@ -185,6 +185,38 @@ describe('the address bar is the page', () => {
         container.remove();
     });
 
+    it('inside a router with no page parameter yet, the first write adds it (the query mode has no base to be outside of)', async () => {
+        (globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+        installPointerEvents();
+        installMatchMedia();
+        window.history.replaceState(null, '', '/route');
+        const length = window.history.length;
+        const container = document.createElement('div');
+        document.body.appendChild(container);
+        let api: any;
+        let root: Root | undefined;
+        await act(async () => {
+            root = createRoot(container);
+            root.render(
+                <PluridRouterContext.Provider value={{ path: '/route', navigate: () => {}, onReady: () => {} }}>
+                    <PluridApplication
+                        planes={[{ route: '/one', component: Page }] as any}
+                        view={['/one'] as any}
+                        configuration={page as any}
+                        onReady={(instance) => { api = instance; }}
+                    />
+                </PluridRouterContext.Provider>,
+            );
+        });
+        await flush();
+        expect(api.getSnapshot().space.tree[0].planeID).toBeTruthy();
+        expect(new URLSearchParams(window.location.search).get('page')).toBe('/one');
+        expect(window.location.pathname).toBe('/route');
+        expect(window.history.length).toBe(length);
+        await act(async () => { root!.unmount(); });
+        container.remove();
+    });
+
     it('a deep link to a root is docked at STORE time: the first render is docked on it, before any effect', async () => {
         window.history.replaceState(null, '', '/two');
         const rendered = await renderPlurid({

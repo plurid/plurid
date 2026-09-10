@@ -268,8 +268,9 @@ export const useDockingURL = (
             }
             kept.current = { keeping: false, planeID: '' };
         }
-        // outside the binding's base the location is not ours
-        if (readDockingURLTarget(binding) === null) {
+        // outside the binding's base the location is not ours (the query mode has no base, and no
+        // parameter before its first write)
+        if (binding.mode === 'path' && readDockingURLTarget(binding) === null) {
             return;
         }
         const plane = planeByID(stateDockedPlaneID);

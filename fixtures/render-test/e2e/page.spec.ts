@@ -279,9 +279,13 @@ test.describe('the page presentation', () => {
         expect(swing.filter((frame) => frame.toolbar === 'visible')).toEqual([]);
         expect(await dockedID(page)).toBe(about.planeID);
 
-        // back from the revealed space: the chrome vanishes at the swing's first frame, not at its end
+        // back from the revealed space: the chrome vanishes at the swing's first frame, not at its end.
+        // Escape docks the page under the pointer (else the nearest): the pointer is put on `about`, so
+        // the destination does not depend on where a runner's mouse happens to rest
         await publish(page, 'space.reveal', { animate: false });
         await waitChromeShown(page);
+        const revealed = await planeRect(page, about.planeID);
+        await page.mouse.move(revealed.left + revealed.width / 2, revealed.top + revealed.height / 2);
         recording = await recordFrames(page);
         await page.keyboard.press('Escape');
         await settle(page);

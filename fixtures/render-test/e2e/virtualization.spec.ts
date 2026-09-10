@@ -115,9 +115,11 @@ test.describe('content virtualization', () => {
 
     test('the gate releases when a layout transition ends: no camera commit follows, and every plane it hid detaches', async ({ page }) => {
         test.slow();
-        // a real transition duration (no reduced motion): the layout switch glides for 380 ms, and the
-        // pass that runs on the tree change is GATED — the planes the new layout hides stay attached
-        await openHarness(page, '?planes=500&culling=1&cullDetach=unmount&cullDelay=0&momentum=0');
+        // a real transition, long enough to outlive the 500-plane relayout burst on a slow runner (a
+        // transition shorter than the burst is over before the pass runs, and nothing is gated): the
+        // layout switch glides for 4 s, and the pass that runs on the tree change is GATED — the planes
+        // the new layout hides stay attached
+        await openHarness(page, '?planes=500&culling=1&cullDetach=unmount&cullDelay=0&momentum=0&motionMs=4000');
         await expect.poll(async () => (await mounted(page)).detached).toBeGreaterThan(0);
         const before = await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.transform);
         await page.evaluate(() => {
@@ -126,7 +128,7 @@ test.describe('content virtualization', () => {
             api.pubsub.publish({ topic: 'configuration', data: { ...configuration, space: { ...configuration.space, layout: { ...configuration.space.layout, type: 'ROWS' } } } } as any);
         });
         await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.layoutTransition > 0);
-        await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.layoutTransition === 0);
+        await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.layoutTransition === 0, undefined, { timeout: 30000 });
         // the transition's end is not a camera commit: the pass re-runs because the gate changed
         await expect.poll(async () => {
             const space = await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space);

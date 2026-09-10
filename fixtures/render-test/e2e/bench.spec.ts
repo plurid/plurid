@@ -12,16 +12,19 @@ import {
 
 /**
  * The scripted runs (`?bench=1&benchScenario=…`, 240 frames each): the orbit + pan + zoom at three
- * plane counts, the relayout and the spawn at two — one test per scenario and size, so each fits
- * its own budget on a slow machine, run in order in one worker so the scaling assertion can read
- * the 40-plane orbit measured in the same run.
+ * plane counts, the relayout and the spawn at two — one test per scenario and size, each
+ * independent (a larger orbit measures its own 40-plane baseline first, so the scaling assertion
+ * compares two runs of the same machine in the same state), so each fits its own budget and a
+ * failure stops nothing else.
  *
  * What is ALWAYS asserted are the properties a regression breaks regardless of the machine:
  *   - every frame produced exactly one camera commit (a per-frame re-render or double dispatch
  *     shows up as extra store notifications),
- *   - no frame stalled (a per-frame layout or a per-plane render shows up as a long frame),
+ *   - no frame stalled: the longest frame stays within a fixed floor or ten times the run's own
+ *     median, whichever is larger (a per-frame layout or a per-plane render shows up as a frame far
+ *     longer than the run's typical one; a slow shared runner raises the median with it),
  *   - the cost scales sub-linearly with the plane count relative to the 40-plane baseline
- *     measured in the same run (per-plane work on the camera path shows up as a linear blow-up).
+ *     measured in the same test (per-plane work on the camera path shows up as a linear blow-up).
  *
  * ABSOLUTE budgets (p95 ms) are a property of the machine: a CI runner is several times slower
  * than a development laptop with a GPU. They are enforced only with `BENCH_STRICT=1` (the local
@@ -36,15 +39,24 @@ const STRICT_BUDGETS: Record<number, number> = {
     500: 100,
 };
 
-/** No frame may take longer than this, on any machine (a stall, not a slow frame). */
+/** The stall floor: no frame may take longer than this on a fast machine (a stall, not a slow frame). */
 const STALL_MS = 500;
+
+/** On a slow machine the stall budget follows the run: this many times its median frame. */
+const STALL_FACTOR = 10;
 
 /**
  * A relayout of 100 planes is a burst by design (every plane re-measures and reports alone: the
  * batching follow-up in the roadmap); under the full suite's load it passes 500 ms, so its stall
- * budget is the burst's, not the per-frame one.
+ * floor is the burst's, not the per-frame one.
  */
 const RELAYOUT_STALL_MS = STALL_MS * 4;
+
+/** The longest frame allowed for this run: the floor, or the run's own median times the factor. */
+const stallBudget = (
+    result: BenchResult,
+    floor: number,
+): number => Math.max(floor, result.p50FrameMs * STALL_FACTOR);
 
 /** Relative to the 40-plane p50 in the same run: the cost must scale sub-linearly. */
 const SCALING: Record<number, number> = {
@@ -76,27 +88,24 @@ const report = (
 
 
 test.describe('benchmark', () => {
-    // in order, one worker: the scaling assertion reads the 40-plane orbit of the same run
-    test.describe.configure({ mode: 'serial' });
     const strict = !!process.env.BENCH_STRICT;
-    const orbit = new Map<number, BenchResult>();
 
     for (const planes of SIZES) {
         test(`orbit + pan + zoom on ${planes} planes: one commit per frame, no stall, sub-linear scaling (absolute budgets with BENCH_STRICT=1)`, async ({ page }) => {
             test.slow();
+            // the baseline of this very run, for the scaling assertion (the 40-plane test is its own baseline)
+            const baseline = planes === 40 ? undefined : await runBench(page, 40, 'orbit');
             const result = await runBench(page, planes, 'orbit');
-            orbit.set(planes, result);
             report('orbit', planes, result);
 
             expect(result.frames).toBe(239);
             // exactly one camera commit per frame: the dispatch count tracks the frame count
             expect(result.dispatches).toBeLessThanOrEqual(result.frames + 12);
-            expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(STALL_MS);
+            expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(stallBudget(result, STALL_MS));
             if (strict) {
                 expect(result.p95FrameMs).toBeLessThanOrEqual(STRICT_BUDGETS[planes]);
             }
-            const baseline = orbit.get(40);
-            if (planes !== 40 && baseline) {
+            if (baseline) {
                 expect(result.p50FrameMs).toBeLessThanOrEqual(Math.max(4, baseline.p50FrameMs) * SCALING[planes]);
             }
         });
@@ -109,7 +118,7 @@ test.describe('benchmark', () => {
                 const result = await runBench(page, planes, scenario);
                 report(scenario, planes, result);
                 expect(result.frames).toBe(239);
-                expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(scenario === 'relayout' ? RELAYOUT_STALL_MS : STALL_MS);
+                expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(stallBudget(result, scenario === 'relayout' ? RELAYOUT_STALL_MS : STALL_MS));
             });
         }
     }
