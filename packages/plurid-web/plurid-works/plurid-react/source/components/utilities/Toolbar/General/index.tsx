@@ -325,7 +325,7 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                     type="button"
                     aria-label="More"
                     title="More"
-                    data-plurid-control="toolbar-button"
+                    data-plurid-control="toolbar-more"
                     onClick={() => handleShowMenu(MENUS.MORE)}
                     active={showMenu === MENUS.MORE}
                     button={true}

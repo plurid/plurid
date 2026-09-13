@@ -685,6 +685,15 @@ export const usePluridPubSub = (
                 },
             },
             {
+                topic: PLURID_PUBSUB_TOPIC.HISTORY_GO_TO,
+                callback: (data) => {
+                    const index = (data as { index?: number } | undefined)?.index;
+                    if (typeof index === 'number') {
+                        dispatch(actions.space.historyGoTo({ index }));
+                    }
+                },
+            },
+            {
                 topic: PLURID_PUBSUB_TOPIC.SET_TREE,
                 callback: (data) => {
                     const tree = (data as any)?.tree;

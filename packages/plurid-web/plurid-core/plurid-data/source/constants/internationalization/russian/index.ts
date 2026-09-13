@@ -62,6 +62,7 @@ const russian: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'расстояние выбраковки',
 
     toolbarDrawerShortcutsTitle: 'сочетания',
+    toolbarDrawerHistoryTitle: 'история',
     toolbarDrawerShortcutsToggleFirstPerson: 'переключить от первого лица',
     toolbarDrawerShortcutsMoveForward: 'двигаться вперед',
     toolbarDrawerShortcutsMoveBackward: 'двигаться назад',

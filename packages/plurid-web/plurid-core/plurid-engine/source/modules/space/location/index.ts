@@ -6,6 +6,8 @@
 
     import {
         childLocation,
+        linkWorldPoint,
+        childLeashPoint,
         resolvePlaneAngle,
         resolveBridgeSide,
         recomputeSubtree,
@@ -35,6 +37,8 @@ export {
     computePath,
 
     childLocation,
+    linkWorldPoint,
+    childLeashPoint,
     resolvePlaneAngle,
     resolveBridgeSide,
     recomputeSubtree,

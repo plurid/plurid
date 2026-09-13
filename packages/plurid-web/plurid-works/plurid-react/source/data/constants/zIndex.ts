@@ -22,6 +22,8 @@ export const Z_INDEX = {
     SHORTCUTS_TRIGGER: 60,
     /** The shortcuts dialog and its backdrop. */
     SHORTCUTS_DIALOG: 70,
+    /** The command palette and its backdrop: over every other overlay but the HUD. */
+    PALETTE: 75,
     /** The performance HUD. */
     DEBUGGER: 80,
 } as const;

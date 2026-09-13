@@ -93,5 +93,6 @@ export enum TOOLBAR_DRAWERS {
     MINIMAP = 'MINIMAP',
     TECHNICAL = 'TECHNICAL',
     SHORTCUTS = 'SHORTCUTS',
+    HISTORY = 'HISTORY',
 }
 // #endregion module

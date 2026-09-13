@@ -32,6 +32,8 @@ export interface UIState {
     grabHold: boolean;
     /** The keyboard-shortcuts help overlay. */
     shortcutsOverlayVisible: boolean;
+    /** The command palette (⌘/Ctrl+K). */
+    paletteVisible: boolean;
     /** The rubber-band selection rectangle in view px while a ⌘/Ctrl-drag on empty space is in progress. */
     marquee: MarqueeRect | null;
 }
@@ -42,6 +44,7 @@ const initialState: UIState = {
     grabMode: false,
     grabHold: false,
     shortcutsOverlayVisible: false,
+    paletteVisible: false,
     marquee: null,
 };
 
@@ -92,6 +95,17 @@ export const ui = createSlice({
         ) => {
             state.shortcutsOverlayVisible = !state.shortcutsOverlayVisible;
         },
+        setPaletteVisible: (
+            state,
+            action: PayloadAction<boolean>,
+        ) => {
+            state.paletteVisible = action.payload;
+        },
+        togglePalette: (
+            state,
+        ) => {
+            state.paletteVisible = !state.paletteVisible;
+        },
     },
 });
 // #endregion module
@@ -107,12 +121,14 @@ export const getToolbarScrollPosition = (state: AppState) => state.ui.toolbarScr
 export const getGrabMode = (state: AppState) => state.ui.grabMode || state.ui.grabHold;
 export const getGrabToggled = (state: AppState) => state.ui.grabMode;
 export const getShortcutsOverlayVisible = (state: AppState) => state.ui.shortcutsOverlayVisible;
+export const getPaletteVisible = (state: AppState) => state.ui.paletteVisible;
 
 export const selectors = {
     getToolbarScrollPosition,
     getGrabMode,
     getGrabToggled,
     getShortcutsOverlayVisible,
+    getPaletteVisible,
 };
 
 

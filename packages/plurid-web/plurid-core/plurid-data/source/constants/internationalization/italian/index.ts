@@ -62,6 +62,7 @@ const italian: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'distanza di abbattimento',
 
     toolbarDrawerShortcutsTitle: 'scorciatoie',
+    toolbarDrawerHistoryTitle: 'cronologia',
     toolbarDrawerShortcutsToggleFirstPerson: 'attiva la prima persona',
     toolbarDrawerShortcutsMoveForward: 'andare avanti',
     toolbarDrawerShortcutsMoveBackward: 'tornare indietro',

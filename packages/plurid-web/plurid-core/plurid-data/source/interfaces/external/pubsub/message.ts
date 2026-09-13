@@ -571,6 +571,19 @@ export interface PluridPubSubSubscribeMessageRedo {
     callback: PluridPubSubCallback<any>;
 }
 
+/** Jump through the arrangement history: `index` steps, negative into undo, positive into redo. */
+export interface PluridPubSubMessageHistoryGoTo {
+    index: number;
+}
+export interface PluridPubSubPublishMessageHistoryGoTo {
+    topic: typeof PLURID_PUBSUB_TOPIC.HISTORY_GO_TO;
+    data: PluridPubSubMessageHistoryGoTo;
+}
+export interface PluridPubSubSubscribeMessageHistoryGoTo {
+    topic: typeof PLURID_PUBSUB_TOPIC.HISTORY_GO_TO;
+    callback: PluridPubSubCallback<PluridPubSubMessageHistoryGoTo>;
+}
+
 export interface PluridPubSubMessageSetTree {
     tree: TreePlane[];
 }
@@ -844,6 +857,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageResetTransform
     | PluridPubSubPublishMessageUndo
     | PluridPubSubPublishMessageRedo
+    | PluridPubSubPublishMessageHistoryGoTo
     | PluridPubSubPublishMessageSetTree
     | PluridPubSubPublishMessageCameraDelta
     | PluridPubSubPublishMessageFrame
@@ -911,6 +925,7 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageResetTransform
     | PluridPubSubSubscribeMessageUndo
     | PluridPubSubSubscribeMessageRedo
+    | PluridPubSubSubscribeMessageHistoryGoTo
     | PluridPubSubSubscribeMessageSetTree
     | PluridPubSubSubscribeMessageCameraDelta
     | PluridPubSubSubscribeMessageFrame

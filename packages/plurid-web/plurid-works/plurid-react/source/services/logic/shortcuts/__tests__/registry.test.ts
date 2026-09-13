@@ -37,12 +37,13 @@ describe('shortcut registry', () => {
     it('generates the help groups with the keymap applied and disabled ids removed', () => {
         const groups = describeShortcuts({
             keymap: { grabMode: 'KeyH' },
-            disabled: ['help'],
+            disabled: ['help', 'palette'],
         });
         const navigate = groups.find((group) => group.id === 'navigate');
         expect(navigate).toBeDefined();
         const grab = navigate!.items.find((item) => item.id === 'grabMode');
         expect(grab!.keys).toEqual(['H']);
+        // the whole group goes when its every member is disabled
         expect(groups.find((group) => group.id === 'help')).toBeUndefined();
         expect(groups.find((group) => group.id === 'pointer')).toBeDefined();
     });

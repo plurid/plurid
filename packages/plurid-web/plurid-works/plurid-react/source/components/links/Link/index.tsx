@@ -88,6 +88,7 @@
 
         resolveRoute,
         computePlaneAddress,
+        routeSuffix,
 
         space,
     } from '~services/engine';
@@ -188,9 +189,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         stateConfiguration.network.protocol,
         hostname || stateConfiguration.network.host,
     );
-    const route = absolutePlaneRoute?.route || planeRouteResolved;
+    // THE QUERY TRAVELS: the route a link spawns keeps its `?query#fragment` — part of the plane's
+    // identity (two queries, two planes) and of its props; the address is the pathname's
+    const route = (absolutePlaneRoute?.route || planeRouteResolved) + routeSuffix(planeRoute);
 
     const suffix = suffixProperty ?? PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX;
+    // a link is the space's: no native link drag out of a plane unless the host asks for one
+    const linkDraggable = stateConfiguration.elements.link?.draggable === true;
     const devisible = devisibleProperty ?? false;
     // #endregion properties
 
@@ -463,6 +468,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             theme={stateGeneralTheme}
             suffix={suffix}
             devisible={devisible}
+            draggable={linkDraggable}
             style={{
                 ...style,
             }}
@@ -547,6 +553,9 @@ const PluridLinkFallback: React.FC<PluridLinkPublicProperties> = ({
         style={style}
         className={className}
         onClick={atClick ? (event) => atClick(event) : undefined}
+        // outside an application there is no space to drag in and no configuration to read: the
+        // default is the engine's (a link is not dragged), as it is inside one
+        draggable={false}
         data-plurid-entity={PLURID_ENTITY_LINK}
         data-plurid-link-route={route}
     >

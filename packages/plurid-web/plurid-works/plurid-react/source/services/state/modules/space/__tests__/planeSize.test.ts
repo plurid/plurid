@@ -37,6 +37,34 @@ const withTree = (tree: TreePlane[]) => reducer(
 );
 
 
+describe('setPlaneSizes: a frame\'s reports are one write', () => {
+    it('patches every plane, re-places the tree once, keeps the reference when nothing changed', () => {
+        let state = withTree([plane('a'), plane('b', { width: 10, height: 10, sizeMode: 'manual' }), plane('c')]);
+        const before = state.tree;
+        state = reducer(state, actions.setPlaneSizes([
+            { planeID: 'a', width: 400, height: 300 },
+            { planeID: 'b', width: 400, height: 300 },
+            { planeID: 'c', width: 400, height: 200 },
+            { planeID: 'nobody', width: 1, height: 1 },
+        ]));
+        expect(state.tree).not.toBe(before);
+        expect(state.tree[0]).toMatchObject({ width: 400, height: 300 });
+        // a hand-sized plane ignores a measured report; an unknown id is ignored
+        expect(state.tree[1]).toMatchObject({ width: 10, height: 10, sizeMode: 'manual' });
+        expect(state.tree[2]).toMatchObject({ width: 400, height: 200 });
+        expect(state.tree).toHaveLength(3);
+        const after = state.tree;
+        state = reducer(state, actions.setPlaneSizes([
+            { planeID: 'a', width: 400, height: 300 },
+            { planeID: 'c', width: 400, height: 200 },
+        ]));
+        expect(state.tree).toBe(after);
+        state = reducer(state, actions.setPlaneSizes([]));
+        expect(state.tree).toBe(after);
+    });
+});
+
+
 describe('setPlaneSize with declared sizes', () => {
     it('a measurement fills the undeclared dimension of a declared plane and keeps it declared', () => {
         let state = withTree([plane('a', { width: 480, height: 0, sizeMode: 'declared' })]);

@@ -63,6 +63,7 @@ const english: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'culling distance',
 
     toolbarDrawerShortcutsTitle: 'shortcuts',
+    toolbarDrawerHistoryTitle: 'history',
     toolbarDrawerShortcutsToggleFirstPerson: 'toggle first person',
     toolbarDrawerShortcutsMoveForward: 'move forward',
     toolbarDrawerShortcutsMoveBackward: 'move backward',

@@ -120,6 +120,7 @@ const compute = <C>(
             grabMode: false,
             grabHold: false,
             shortcutsOverlayVisible: false,
+            paletteVisible: false,
             marquee: null,
             ...precomputedState?.ui,
             ...contextState?.ui,

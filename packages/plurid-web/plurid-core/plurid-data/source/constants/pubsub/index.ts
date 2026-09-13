@@ -69,6 +69,8 @@ export const PLURID_PUBSUB_TOPIC = {
     RESET_TRANSFORM: 'space.resetTransform',
     UNDO: 'space.undo',
     REDO: 'space.redo',
+    /** Jump to a step of the history: data `{ index }` — negative into undo (`-1` = one undo), positive into redo. */
+    HISTORY_GO_TO: 'space.historyGoTo',
     SET_TREE: 'space.setTree',          // data: { tree }
 
     /**

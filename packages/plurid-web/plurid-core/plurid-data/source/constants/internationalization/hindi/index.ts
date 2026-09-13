@@ -62,6 +62,7 @@ const hindi: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'कलिंग दूरी',
 
     toolbarDrawerShortcutsTitle: 'शॉर्टकट',
+    toolbarDrawerHistoryTitle: 'इतिहास',
     toolbarDrawerShortcutsToggleFirstPerson: 'पहले व्यक्ति को टॉगल करें',
     toolbarDrawerShortcutsMoveForward: 'आगे बढ़ो',
     toolbarDrawerShortcutsMoveBackward: 'पीछे की ओर जाएं',

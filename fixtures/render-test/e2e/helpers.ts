@@ -449,6 +449,13 @@ export const openFixture = async (
             await page.focus(`[data-plurid-control="${step.control}"]`);
             continue;
         }
+        if (step.kind === 'key') {
+            // the engine's keydown listener lives on the view: the key is pressed there
+            await page.locator('[data-plurid-entity="PluridView"]').focus();
+            await page.keyboard.press(step.press);
+            await settle(page);
+            continue;
+        }
         const parent = planeByRoute(await tree(page), step.plane);
         if (!parent) throw new Error('fixture ' + name + ': no plane ' + step.plane);
         if (step.kind === 'scroll') {
@@ -458,6 +465,10 @@ export const openFixture = async (
         if (step.kind === 'dock') {
             await publish(page, 'space.dock', { planeID: parent.planeID, animate: false });
             await settle(page);
+            continue;
+        }
+        if (step.kind === 'move') {
+            await movePlane(page, parent.planeID, step.deltaX, step.deltaY);
             continue;
         }
         // on a DOCKED page a link is a link: clicking an OPEN one navigates to it and spawns nothing
@@ -511,6 +522,17 @@ export const cdpMetrics = async (page: Page) => {
 };
 
 export const historyDocked = (page: Page) => page.evaluate(() => (window.history.state as { plurid?: { docked?: string } } | null)?.plurid?.docked ?? null);
+
+/** Move a plane by hand through the store (selected, dragged, deselected): it is pinned where it lands. */
+export const movePlane = async (page: Page, planeID: string, deltaX: number, deltaY: number) => {
+    await page.evaluate(({ id, dx, dy }) => {
+        const api = (window as unknown as HarnessWindow).__pluridApi;
+        api.store.dispatch({ type: 'space/setSelection', payload: [id] });
+        api.store.dispatch({ type: 'space/transformSelectedPlanes', payload: { deltaX: dx, deltaY: dy } });
+        api.store.dispatch({ type: 'space/setSelection', payload: [] });
+    }, { id: planeID, dx: deltaX, dy: deltaY });
+    await settle(page);
+};
 
 /** The store's notification count (`__rtPerf`): a still space dispatches nothing. */
 export const dispatches = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__rtPerf.dispatches);

@@ -1164,6 +1164,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                         renderMinimap={properties.renderMinimap as any}
                         renderDockRail={properties.renderDockRail as any}
                         renderShortcuts={properties.renderShortcuts as any}
+                        renderPalette={properties.renderPalette as any}
                     />
                 ) : (
                     stateResolvedLayout

@@ -3,6 +3,9 @@
     import type {
         CameraMotionController,
     } from '~services/logic/motion';
+    import type {
+        PlaneMeasurer,
+    } from '~services/logic/size';
     // #endregion external
 // #endregion imports
 
@@ -28,6 +31,8 @@ export interface PluridThunkExtra {
         planeID: string;
         animate: boolean;
     };
+    /** The application's one plane measurer (`observePlaneSize`), created on the first plane's mount. */
+    measurer?: PlaneMeasurer;
 }
 
 

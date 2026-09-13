@@ -182,6 +182,14 @@ The two debuggers are loaded lazily (`React.lazy` behind their flags, so a bundl
 
 ### Undo
 
+EVERY STEP HAS A NAME. An entry's label is derived from what the change did, never authored
+(`describeArrangementChange`): "closed /geometry/detail", "moved 3 planes", "linked two planes",
+"arranged 2 planes (closed)". `space.history` carries them — `past` (oldest first) and `future`
+(nearest first), each `{ label, at }` — so a scrubber is a list, and `handle.history.goTo(index)` /
+`usePluridHistory().goTo(index)` / `space.historyGoTo { index }` jumps several steps as ONE restore
+(negative undoes, positive redoes, clamped to what exists). The engine's own list is the toolbar's
+History drawer (undo · redo · the steps, the present marked).
+
 A peer's applied change (`space.applyRemoteMutation`) REBASES the local undo/redo stacks (2026-09-10; the
 interim rule of 2026-09-06 cleared them): every snapshot is replayed over the peer's arrangement —
 `apply(remote, diff(before, snapshot))` — so undo restores YOUR change on the planes it touched (shown /
@@ -325,6 +333,12 @@ definePluridConfiguration({
 
 `PluridShortcutID` = `undo · clearSelection · fitToView · frameSelection · home · navigateLeft · navigateRight · navigateUp · navigateDown · frameActive · selectAll · invertSelection · duplicateSelection · grabMode · grabHold · exitGrabMode · help · toggleFirstPerson · flyForward · flyBack · flyLeft · flyRight · flyUp · flyDown · flySprint · modeRotation · modeTranslation · modeScale · transformNudge · focusPlane · focusParent · refreshPlane · isolatePlane · openClosedPlane · closePlane · focusPreviousRoot · focusNextRoot · cycleRoot · focusRootIndex`.
 
+### The command palette (⌘/Ctrl+K)
+
+One list over the space: every command that applies right now (the shortcut table through the same `when` gate and the same `keymap` / `disabled` the keys use), the space's bookmarks and the configured presets, and every shown plane. Typing filters it, the arrows walk it, Enter runs the row, Escape closes it. A row runs the SAME code its key press runs — `runShortcut(id, { dispatch, state, pubsub })`, exported from `@plurid/plurid-react` — so a command never has a second implementation; the two commands whose key IS the argument (the arrow nudge, Alt+digit) are not rows.
+
+`elements.palette.show: false` (flat `palette`) drops the engine's palette but keeps the shortcut, so a host's own list can read `ui.paletteVisible` and open on the same key; `renderPalette` replaces it with that list; `chrome: 'none'` renders neither. The rows are read when the palette opens (a list that moves while it is read is unusable).
+
 The full table, generated from the data: [`SHORTCUTS.md`](./SHORTCUTS.md). The bindings are ONE data table (`PLURID_SHORTCUTS` in plurid-data): the keyboard dispatcher, the `?` help overlay and the toolbar's shortcuts drawer are all generated from it with your `keymap`/`disabled` applied, so they cannot drift. Hold-keys (Space = grab, the fly keys) are part of the same system. Typing into any field, editor or ARIA textbox never triggers a shortcut or a gesture.
 
 ### Snapping and resizing (`space.snap`, `elements.plane.resizable`)
@@ -372,6 +386,8 @@ POSE IS THE STATE. There is no mode flag: "page mode" is the camera docked on a 
 | `G` (one grab: the next drag orbits anywhere, then the page is a page again), Ctrl / ⌘ + wheel, a drag-zoom, two fingers on touch | `Escape`: from the revealed space the nearest page (grab mode ends too); docked on a spawned page, its parent; on a root, nothing |
 | `0` (fit) and the viewcube faces — a legitimate undock | `Home` from outside plane content (the first page); `onClose: 'parent'`; `space.frame` |
 | `space.reveal` `{ animate? }` · `useCamera().reveal()` · `handle.camera.reveal()` · the lens `reveal()` | `space.dock` `{ planeID?, animate? }` (that page, else the docked one, else the nearest) · `useCamera().dock(planeID?)` · `handle.camera.dock()` · the lens `dock()` |
+
+A DOCKED PAGE IS NOT A GRABBED SPACE (2026-09-13): every landing ends an armed grab — a link, the back chevron, the rail's cube, `Escape`, `space.dock`, `onClose: 'parent'`, a frame that fills the view — so `G` on the page that arrived is the door OUT again (it reveals the space) instead of a flag to switch off, and the page's next drag scrolls its prose rather than orbiting. The rule lives at the one camera commit (`commitCameraTarget`), so a host's own move obeys it too; a reveal never lands docked, so `G` still arms the grab there, and Space held (`grabHold`) is the key's own state, ended by its keyup.
 
 Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''` off every page), `usePluridPlane().docked` / `.aside` / `.presentation` from inside a page, `pluridSelectors.space.getDockedPlaneID(state)`, `space.changed` kind `docked` (a navigation, for a host that syncs a title or an analytics page view), and ONE DOM attribute, `data-plurid-docked="<planeID>"` on the `PluridView` element — style your own chrome under the view with `[data-plurid-docked] .mine { opacity: 0 }`; chrome OUTSIDE the space toggles on the kind or the hook (`:has([data-plurid-docked])` works in CSS too).
 
@@ -654,8 +670,11 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Replace the toolbar / viewcube / minimap | `renderToolbar` / `renderViewcube` / `renderMinimap` |
 | Hide link beams / alignment guides | `extend.elements.{planeLinks,alignmentGuides}.show: false` |
 | Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
+| Let a plurid link be dragged like a browser link | `extend.elements.link.draggable: true` (flat `linkDraggable`). Default `false`: an anchor with an `href` is natively draggable, so a drag from a link would tear a link ghost out of the plane; the engine turns that off (the anchor's `draggable` attribute and `-webkit-user-drag`). A press on a link stays the LINK's either way — the intent table returns `none` on a control, so a drag from one moves nothing. |
+| Pass a query or a fragment to the plane a link opens | THE QUERY TRAVELS: `<PluridLink route="/detail?mode=wire#:~:text=lod">` opens a plane whose `plurid.plane.query` / `.fragments` are the requested ones (the registered route's when the request carries none); two links with different queries open two planes (the query is part of the link's identity, `spawnedByLinkID`); the address bar and the tree's `route` keep the pathname |
 | The same 90° turn every generation (default), or alternate it; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'fixed' \| 'alternate'`, `extend.space.bridge.direction: 'backward' \| 'forward'`, `extend.space.bridge.keepBehind: true` (mirror the generations that would hang on the side their parent faces) (+ `bridgeLength` / `planeAngle`) |
 | A link scrolls inside its plane | Nothing to configure: the child stays where it is, the bridge follows the link (a leash) and rests at the fold once the link is beyond it; a re-measure (resize) anchors a hidden link at the edge, never off the sheet. `--plurid-bridge-reach` / `--plurid-bridge-angle` on the child plane element carry it |
+| A child was dragged by hand | Nothing to configure: the child stays where it was dropped (`manuallyPositioned`) and its bridge becomes a LEASH — a straight segment from the link's point on the parent to the child's edge, redrawn per commit; `elements.planeBridge.show` hides it with the bands; undo brings the band back. |
 | Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |
 
 See [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the design rationale and the engine⟷product boundary, and [`ARCHITECTURE.md`](./ARCHITECTURE.md) for how the machinery under this surface actually works.

@@ -119,6 +119,8 @@ const initialState: PluridStateSpace = {
         canRedo: false,
         undoDepth: 0,
         redoDepth: 0,
+        past: [],
+        future: [],
     },
 };
 
@@ -278,6 +280,37 @@ const fallbackSizeOf = (
 });
 
 /** Move the selected planes by one delta (pinning them) and re-place their subtrees. */
+/** `setPlaneSizes`: every entry patched onto the tree, the tree re-placed once when any changed. */
+const applyPlaneSizes = (
+    state: PluridStateSpace,
+    sizes: SetPlaneSizePayload[],
+) => {
+    const previousTree = original(state.tree) as TreePlane[] | undefined;
+    if (!previousTree) {
+        return;
+    }
+    let tree = previousTree;
+    for (const { planeID, width, height, sizeMode } of sizes) {
+        if (!sizeMode) {
+            const existing = spaceEngine.tree.logic.getTreePlaneByID(tree, planeID);
+            if (existing?.sizeMode === 'manual') {
+                continue;
+            }
+        }
+        const patch: Partial<TreePlane> = { width, height };
+        if (sizeMode) {
+            patch.sizeMode = sizeMode;
+        }
+        tree = spaceEngine.tree.fields.updateTreePlaneFields(tree, planeID, patch);
+    }
+    if (tree !== previousTree) {
+        // A plane placed by its own width (a mirrored child, `bridgeSide: 'end'`) moves with its
+        // first measurement; unmoved subtrees keep their references.
+        state.tree = spaceEngine.location.recomputeTree(tree);
+    }
+};
+
+
 const moveSelected = (
     state: { tree: TreePlane[] },
     selected: Set<string>,
@@ -772,53 +805,25 @@ export const space = createSlice({
             }
         },
         /**
-         * The measured (or manually set) size of one plane. Structurally shared and equality-gated:
-         * the tree reference is untouched when the size did not change, so a ResizeObserver
-         * re-report costs nothing downstream.
+         * The measured (or manually set) sizes of planes — a FRAME's reports land as one write (THE
+         * SIZING CONTRACT: the application's one measurer delivers them together). Structurally
+         * shared and equality-gated: one path-copy per changed plane, one `recomputeTree` at the
+         * end, the tree reference untouched when nothing changed. A MEASURED report (no `sizeMode`)
+         * never overrides a hand-sized plane: the observer may still fire once for the size the
+         * resize itself set.
          */
+        setPlaneSizes: (
+            state,
+            action: PayloadAction<SetPlaneSizePayload[]>,
+        ) => {
+            applyPlaneSizes(state, action.payload);
+        },
+        /** One plane's size (the resize handles, a host): a batch of one. */
         setPlaneSize: (
             state,
             action: PayloadAction<SetPlaneSizePayload>,
         ) => {
-            const {
-                planeID,
-                width,
-                height,
-                sizeMode,
-            } = action.payload;
-
-            const previousTree = original(state.tree) as TreePlane[] | undefined;
-            if (!previousTree) {
-                return;
-            }
-
-            // A MEASURED report (no `sizeMode`) never overrides a hand-sized plane: the observer
-            // may still fire once for the size the resize itself set.
-            if (!sizeMode) {
-                const existing = spaceEngine.tree.logic.getTreePlaneByID(previousTree, planeID);
-                if (existing?.sizeMode === 'manual') {
-                    return;
-                }
-            }
-
-            const patch: Partial<TreePlane> = {
-                width,
-                height,
-            };
-            if (sizeMode) {
-                patch.sizeMode = sizeMode;
-            }
-
-            const updatedTree = spaceEngine.tree.fields.updateTreePlaneFields(
-                previousTree,
-                planeID,
-                patch,
-            );
-            if (updatedTree !== previousTree) {
-                // A plane placed by its own width (a mirrored child, `bridgeSide: 'end'`) moves
-                // with its first measurement; unmoved subtrees keep their references.
-                state.tree = spaceEngine.location.recomputeTree(updatedTree);
-            }
+            applyPlaneSizes(state, [action.payload]);
         },
         /**
          * A link's measured position on its plane changed: re-place the spawned plane (and its
@@ -1269,17 +1274,14 @@ export const space = createSlice({
             state,
             action: PayloadAction<PluridStateHistory>,
         ) => {
-            const next = action.payload;
-            const current = state.history;
-            if (
-                current.canUndo !== next.canUndo
-                || current.canRedo !== next.canRedo
-                || current.undoDepth !== next.undoDepth
-                || current.redoDepth !== next.redoDepth
-            ) {
-                state.history = next;
-            }
+            // the middleware only publishes a CHANGED status (it compares before dispatching)
+            state.history = action.payload;
         },
+        /** A no-op marker: the history middleware jumps `index` steps (negative undoes, positive redoes). */
+        historyGoTo: (
+            _state,
+            _action: PayloadAction<{ index: number }>,
+        ) => {},
     },
 });
 // #endregion module

@@ -417,6 +417,7 @@ class PluridApplicationShell extends Component<
                 get: () => getState().space.history,
                 undo: () => dispatch(actions.space.undo()),
                 redo: () => dispatch(actions.space.redo()),
+                goTo: (index) => dispatch(actions.space.historyGoTo({ index })),
             },
             tree: {
                 get: () => getState().space.tree,

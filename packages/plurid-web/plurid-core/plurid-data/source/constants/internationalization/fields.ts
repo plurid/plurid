@@ -53,6 +53,7 @@ const internationalizationFields = {
     toolbarDrawerTechnicalCullingDistance: 'toolbarDrawerTechnicalCullingDistance',
 
     toolbarDrawerShortcutsTitle: 'toolbarDrawerShortcutsTitle',
+    toolbarDrawerHistoryTitle: 'toolbarDrawerHistoryTitle',
     toolbarDrawerShortcutsToggleFirstPerson: 'toolbarDrawerShortcutsToggleFirstPerson',
     toolbarDrawerShortcutsMoveForward: 'toolbarDrawerShortcutsMoveForward',
     toolbarDrawerShortcutsMoveBackward: 'toolbarDrawerShortcutsMoveBackward',

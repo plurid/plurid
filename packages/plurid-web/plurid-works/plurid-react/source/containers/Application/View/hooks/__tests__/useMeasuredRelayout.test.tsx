@@ -8,6 +8,7 @@
 import React, { act } from 'react';
 
 import actions from '../../../../../services/state/actions';
+import { reportPlaneSizes } from '../../../../../services/logic/camera';
 import { measuredSizesSignature } from '../useMeasuredRelayout';
 import {
     renderPlurid,
@@ -41,15 +42,46 @@ describe('the measured relayout', () => {
         expect(after[1].location.translateY).toBeGreaterThan(b.location.translateY);
         expect(after[2].location.translateY).toBeGreaterThan(c.location.translateY);
         expect(after[1].location.translateY - after[0].location.translateY).toBeGreaterThanOrEqual(after[0].height);
-        // the same report again: no tree write at all (the reference is kept)
-        const dispatch = jest.spyOn(store, 'dispatch');
+        // the same report again: one notification (the equality-gated write), no relayout, the
+        // reference kept (a thunk's inner dispatches bypass a spy on `store.dispatch`: count the
+        // store's notifications instead)
+        let notifications = 0;
+        const unsubscribe = store.subscribe(() => { notifications += 1; });
         await act(async () => {
             store.dispatch(actions.space.setPlaneSize({ planeID: a.planeID, width: 400, height: b.location.translateY + 500 }));
         });
         await flush();
-        expect(dispatch.mock.calls.filter(([action]) => (action as { type?: string })?.type === 'space/setTree')).toHaveLength(0);
+        expect(notifications).toBe(1);
         expect(store.getState().space.tree).toBe(after);
-        dispatch.mockRestore();
+        unsubscribe();
+        rendered.unmount();
+    });
+
+    it('a frame\'s reports of several roots are one tree write and one relayout', async () => {
+        const rendered = await renderPlurid({
+            planes: [{ route: '/a', component: Page }, { route: '/b', component: Page }, { route: '/c', component: Page }],
+            view: ['/a', '/b', '/c'],
+            configuration: { space: { layout: { type: 'COLUMNS', columns: 1 }, navigation: { motion: { duration: 0 } } } } as any,
+        });
+        await flush();
+        const store = rendered.api.store;
+        const [a, b] = store.getState().space.tree;
+        // two store notifications: the one sizes write, the one relayout it causes
+        let notifications = 0;
+        const unsubscribe = store.subscribe(() => { notifications += 1; });
+        await act(async () => {
+            store.dispatch(reportPlaneSizes([
+                { planeID: a.planeID, width: 400, height: b.location.translateY + 300 },
+                { planeID: b.planeID, width: 400, height: 250 },
+            ]) as any);
+        });
+        await flush();
+        expect(notifications).toBe(2);
+        const after = store.getState().space.tree;
+        expect(after[0].height).toBe(b.location.translateY + 300);
+        expect(after[1].height).toBe(250);
+        expect(after[1].location.translateY).toBeGreaterThan(b.location.translateY);
+        unsubscribe();
         rendered.unmount();
     });
 

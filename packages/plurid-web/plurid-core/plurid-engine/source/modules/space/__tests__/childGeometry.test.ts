@@ -10,6 +10,8 @@
     // #region external
     import {
         childLocation,
+        linkWorldPoint,
+        childLeashPoint,
         resolvePlaneAngle,
         resolveBridgeSide,
         recomputeSubtree,
@@ -26,6 +28,7 @@
         findPlaneByLinkID,
         pruneLinks,
         collectPlaneIDs,
+        collectLeashes,
     } from '../tree/fields';
     // #endregion external
 // #endregion imports
@@ -326,5 +329,38 @@ describe('pruneLinks()', () => {
         const relaid = recomputeSubtree(plane('p', {}, { children: [loose] })).children![0];
         expect(relaid.location.translateX).toBeCloseTo(300, 9);
     });
+
+    it('the leash: the link\'s world point is where the child hangs from; the child end is its bridge-side edge on the line', () => {
+        const flat = { translateX: 100, translateY: 50, translateZ: 0, rotateX: 0, rotateY: 0 };
+        expect(linkWorldPoint(flat, { x: 300, y: 120 })).toEqual({ x: 400, y: 170, z: 0 });
+        const turned = { ...flat, rotateY: 90 };
+        const point = linkWorldPoint(turned, { x: 300, y: 120 });
+        expect(point.x).toBeCloseTo(100, 9);
+        expect(point.z).toBeCloseTo(-300, 9);
+        // `childLocation` hangs the child a bridge length past that point, `bridgeOffset` lower
+        const placed = childLocation(flat, { x: 300, y: 120 }, 100, 90, 'start', 0, -15);
+        expect(placed.translateY).toBe(170 - 15);
+        // the child end: the edge midpoint on the link's line (bridgeOffset above the top), both sides
+        const child = plane('c', placed, { width: 400, bridgeSide: 'start' as const, bridgeOffset: -15 });
+        const start = childLeashPoint(child);
+        expect(start.y).toBeCloseTo(170, 9);
+        expect(start.x).toBeCloseTo(placed.translateX, 9);
+        const mirrored = plane('m', placed, { width: 400, bridgeSide: 'end' as const, bridgeOffset: -15 });
+        const end = childLeashPoint(mirrored);
+        expect(end.y).toBeCloseTo(170, 9);
+        // the right edge of a child turned 90°: along its own axis, which runs along world −Z
+        expect(end.z).toBeCloseTo(placed.translateZ - 400, 9);
+    });
+
+    it('collectLeashes lists the moved children that still hang from a link, under shown parents only', () => {
+        const pinned = plane('c', { translateX: 700 }, { parentPlaneID: 'p', linkCoordinates: { x: 300, y: 120 }, manuallyPositioned: true });
+        const loose = plane('l', { translateX: 700 }, { parentPlaneID: 'p', linkCoordinates: { x: 300, y: 120 } });
+        const orphan = plane('o', { translateX: 700 }, { parentPlaneID: 'p', manuallyPositioned: true });
+        const hidden = plane('h', { translateX: 700 }, { parentPlaneID: 'p', linkCoordinates: { x: 1, y: 1 }, manuallyPositioned: true, show: false });
+        const grand = plane('g', {}, { parentPlaneID: 'c', linkCoordinates: { x: 5, y: 5 }, manuallyPositioned: true });
+        const tree = [plane('p', {}, { children: [{ ...pinned, children: [grand] }, loose, orphan, hidden] }), plane('q', {}, { show: false, children: [plane('x', {}, { parentPlaneID: 'q', linkCoordinates: { x: 1, y: 1 }, manuallyPositioned: true })] })];
+        expect(collectLeashes(tree).map(({ parent, child }) => parent.planeID + '>' + child.planeID)).toEqual(['p>c', 'c>g']);
+    });
 });
+
 // #endregion module

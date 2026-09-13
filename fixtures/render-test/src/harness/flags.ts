@@ -76,6 +76,8 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'scrollable', type: 'boolean', group: 'planes', apply: 'reload', description: 'the GEOMETRY readout is a scroller (28 filler rows in a 120px box)', exercises: 'the wheel over scrollable content stays the content\'s' },
     // links
     { key: 'links', type: 'enum', values: ['dense'], group: 'links', apply: 'reload', description: 'six links on the GEOMETRY plane, two to the same route', exercises: 'link ordinals, distinct children' },
+    { key: 'linkDraggable', type: 'boolean', group: 'links', apply: 'live', description: 'plurid links keep the browser\'s native link drag (off by default: a press on a link is the space\'s)', exercises: '`elements.link.draggable`' },
+    { key: 'linkQuery', type: 'boolean', group: 'links', apply: 'reload', description: 'two links on GEOMETRY to the DETAIL route with different queries (wire, solid): the query travels with the plane', exercises: 'one plane per query; `plurid.plane.query` read by the DETAIL panel' },
     { key: 'nested', type: 'number', group: 'links', apply: 'reload', description: 'a chain of N planes each linking to the next; GEOMETRY links to the first', exercises: 'the spawn fan (90° every generation), bridges' },
     // document
     { key: 'document', type: 'boolean', group: 'document', apply: 'reload', description: 'the document model: GEOMETRY declares a title / description / lang / JSON-LD, DETAIL a title through children + a `planes[].head`', exercises: '`usePluridDocument`, `<PluridDocument>`, `planes[].head`' },
@@ -126,6 +128,7 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'hostileCss', type: 'boolean', group: 'ui', apply: 'reload', description: 'a host stylesheet with aggressive global resets', exercises: 'the chrome reset (chrome.spec.ts)' },
     { key: 'slotToolbar', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom toolbar through the render slot', exercises: '`renderToolbar`' },
     { key: 'slotDockRail', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom dock rail through the render slot (the page presentation)', exercises: '`renderDockRail`' },
+    { key: 'slotPalette', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom command palette through the render slot', exercises: '`renderPalette`' },
     { key: 'slotViewcube', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom viewcube through the render slot', exercises: '`renderViewcube`' },
     { key: 'slotPlaneControls', type: 'boolean', group: 'ui', apply: 'reload', description: 'a custom plane bar through the render slot (called with the plane)', exercises: '`renderPlaneControls`' },
     { key: 'look', type: 'enum', values: ['graphite', 'noir', 'slate', 'ink', 'ember', 'moss', 'plum', 'paper', 'snow', 'sand', 'mint', 'cobalt'], group: 'ui', apply: 'reload', description: 'the look: one of the twelve presets (default graphite)', exercises: '`look`, the `--plurid-*` tokens on every piece of chrome' },
@@ -160,6 +163,8 @@ export interface HarnessFlags {
     media: boolean;
     scrollable: boolean;
     links?: 'dense';
+    linkQuery?: boolean;
+    linkDraggable?: boolean;
     nested?: number;
     document: boolean;
     reducedMotion: boolean;
@@ -205,6 +210,7 @@ export interface HarnessFlags {
     slotToolbar: boolean;
     slotDockRail: boolean;
     slotViewcube: boolean;
+    slotPalette: boolean;
     slotPlaneControls: boolean;
     look?: string;
     chrome?: 'minimal' | 'none';

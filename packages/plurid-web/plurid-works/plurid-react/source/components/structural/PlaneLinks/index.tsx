@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
-    import React from 'react';
+    import React, {
+        useMemo,
+    } from 'react';
 
     import { connect } from 'react-redux';
 
@@ -15,6 +17,8 @@
         ViewSize,
 
         PLURID_ENTITY_PLANE_LINKS,
+        PLURID_ENTITY_PLANE_LEASH,
+        BRIDGE_STRIP_HEIGHT,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -26,6 +30,7 @@
 
     import {
         interaction,
+        space as spaceEngine,
     } from '~services/engine';
 
     import {
@@ -38,6 +43,7 @@
     import {
         StyledPluridPlaneLinks,
         StyledPluridPlaneLink,
+        StyledPluridPlaneLeash,
     } from './styled';
 
     import {
@@ -55,6 +61,7 @@ const THICKNESS = 3;
 
 export interface PluridPlaneLinksStateProperties {
     stateLinks: PlaneLink[];
+    stateTree: TreePlane[];
     statePlaneIndex: Map<string, TreePlane>;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
@@ -86,6 +93,7 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     // #region properties
     const {
         stateLinks,
+        stateTree,
         statePlaneIndex,
         stateGeneralTheme,
         stateConfiguration,
@@ -93,15 +101,44 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     } = properties;
 
     const fallbackSize = resolvePlaneFallbackSize(stateConfiguration, stateViewSize);
+    // THE LEASH: a child moved by hand keeps its link — its bridge band (a stub off its own edge)
+    // would point nowhere, so the beams layer draws the segment from the link's point to the
+    // child's edge instead (the Plane skips the band for a `manuallyPositioned` child).
+    const leashes = useMemo(() => spaceEngine.tree.fields.collectLeashes(stateTree), [stateTree]);
     // #endregion properties
 
 
     // #region render
-    if (!stateLinks || stateLinks.length === 0) {
+    if ((!stateLinks || stateLinks.length === 0) && leashes.length === 0) {
         return null;
     }
 
-    const beams = stateLinks.map(link => {
+    const leashBeams = leashes.map(({ parent, child }) => {
+        const {
+            transform,
+            length,
+        } = computeEdgeTransform(
+            spaceEngine.location.linkWorldPoint(parent.location, child.linkCoordinates!),
+            spaceEngine.location.childLeashPoint(child),
+            BRIDGE_STRIP_HEIGHT,
+        );
+        return (
+            <StyledPluridPlaneLeash
+                key={'leash:' + child.planeID}
+                theme={stateGeneralTheme}
+                thickness={BRIDGE_STRIP_HEIGHT}
+                // the length inline like the transform: both change per drag frame (no class per frame)
+                style={{
+                    transform,
+                    width: length + 'px',
+                }}
+                data-plurid-entity={PLURID_ENTITY_PLANE_LEASH}
+                data-plurid-leash-for={child.planeID}
+            />
+        );
+    });
+
+    const beams = (stateLinks ?? []).map(link => {
         const source = statePlaneIndex.get(link.sourcePlaneID);
         const target = statePlaneIndex.get(link.targetPlaneID);
 
@@ -141,6 +178,7 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         <StyledPluridPlaneLinks
             data-plurid-entity={PLURID_ENTITY_PLANE_LINKS}
         >
+            {leashBeams}
             {beams}
         </StyledPluridPlaneLinks>
     );
@@ -152,6 +190,7 @@ const mapStateToProperties = (
     state: AppState,
 ): PluridPlaneLinksStateProperties => ({
     stateLinks: selectors.space.getPlaneLinks(state),
+    stateTree: selectors.space.getTree(state),
     statePlaneIndex: selectors.space.getPlaneIndex(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
@@ -160,8 +199,8 @@ const mapStateToProperties = (
 
 
 // `React.memo` like `PluridRoot`: `<PluridRoots>` re-renders on every orbit frame (it subscribes to
-// the transform matrix), but the edges layer's inputs (`links`, the memoized `planeIndex`, theme) are
-// referentially stable across those frames, so `connect` + `memo` bail the re-render. The beams ride
+// the transform matrix), but the edges layer's inputs (`links`, the tree, the memoized `planeIndex`,
+// theme) are referentially stable across those frames, so `connect` + `memo` bail the re-render. The beams ride
 // the camera transform on the parent `StyledPluridRoots` — no per-frame JS.
 const ConnectedPluridPlaneLinks = connect(
     mapStateToProperties,

@@ -73,6 +73,7 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | Keys | Action | Id | Kind | When |
 | --- | --- | --- | --- | --- |
 | `Shift` + `?` | Toggle the shortcuts panel | `help` | press | - |
+| `⌘/Ctrl` + `K` | Open the command palette: every command, the bookmarks and presets, every plane | `palette` | press | - |
 
 ## Pointer
 

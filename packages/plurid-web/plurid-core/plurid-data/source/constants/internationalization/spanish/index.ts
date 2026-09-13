@@ -62,6 +62,7 @@ const spanish: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'distancia de sacrificio',
 
     toolbarDrawerShortcutsTitle: 'atajos',
+    toolbarDrawerHistoryTitle: 'historial',
     toolbarDrawerShortcutsToggleFirstPerson: 'alternar en primera persona',
     toolbarDrawerShortcutsMoveForward: 'avanzar',
     toolbarDrawerShortcutsMoveBackward: 'mover hacia atrás',

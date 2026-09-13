@@ -468,7 +468,8 @@ class IsoMatcher<C> {
         }
 
 
-        const routePlane = this.matchPlane(routeValue);
+        // the raw value: the plane match reads the query and the fragment off it (its address is the pathname's)
+        const routePlane = this.matchPlane(value);
         // console.log('routePlane', value, this.planesIndex, routePlane);
 
         if (routePlane) {

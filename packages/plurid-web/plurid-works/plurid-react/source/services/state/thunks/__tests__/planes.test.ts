@@ -14,6 +14,7 @@
 
     import {
         reportPlaneSize,
+        reportPlaneSizes,
         resolveCameraTarget,
     } from '~services/logic/camera';
     import {
@@ -80,6 +81,23 @@ const parameters = (
 
 
 describe('toggleLinkPlane()', () => {
+    it('THE QUERY TRAVELS: two links to one route with different queries open two planes, each carrying its query', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ route: '/detail?mode=wire', linkID: 'a#/detail?mode=wire#0' })));
+        store.dispatch(toggleLinkPlane(parameters({ route: '/detail?mode=solid#:~:text=lod', linkID: 'a#/detail?mode=solid#0' })));
+        const children = store.tree()[0].children!;
+        expect(children).toHaveLength(2);
+        expect(children[0].planeID).not.toBe(children[1].planeID);
+        // the address is the pathname's; the query and the fragment ride the node
+        expect(children.map((node) => node.route)).toEqual(['plurid://origin/detail', 'plurid://origin/detail']);
+        expect(children[0].routeDivisions.plane.query).toEqual({ mode: 'wire' });
+        expect(children[1].routeDivisions.plane.query).toEqual({ mode: 'solid' });
+        expect(children[1].routeDivisions.plane.fragments.texts.length).toBe(1);
+        // the same link again toggles ITS plane, not the other
+        store.dispatch(toggleLinkPlane(parameters({ route: '/detail?mode=wire', linkID: 'a#/detail?mode=wire#0' })));
+        expect(store.tree()[0].children!.map((node) => node.show)).toEqual([false, true]);
+    });
+
     it('spawns once, then toggles the SAME plane by the link id', () => {
         const store = makeStore();
 
@@ -167,6 +185,28 @@ describe('toggleLinkPlane()', () => {
 
         // a later measurement is just a size
         store.dispatch(reportPlaneSize({ planeID, width: 910, height: 500 }));
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+    });
+
+    it('a batch of measurements re-frames the awaited plane once, whatever else it carries', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        const planeID = child(store).planeID;
+        store.extra.pendingFrame = { planeID, animate: false };
+        const commitsBefore = store.cameraCommits().length;
+        const root = store.getState().space.tree[0];
+        store.dispatch(reportPlaneSizes([
+            { planeID: root.planeID, width: 700, height: 500 },
+            { planeID, width: 900, height: 500 },
+        ]));
+        expect(store.getState().space.tree[0].width).toBe(700);
+        expect(child(store).width).toBe(900);
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.extra.pendingFrame).toBeUndefined();
+        // a batch without the awaited plane leaves the frame pending
+        store.extra.pendingFrame = { planeID, animate: false };
+        store.dispatch(reportPlaneSizes([{ planeID: root.planeID, width: 710, height: 500 }]));
+        expect(store.extra.pendingFrame).toEqual({ planeID, animate: false });
         expect(store.cameraCommits().length).toBe(commitsBefore + 1);
     });
 

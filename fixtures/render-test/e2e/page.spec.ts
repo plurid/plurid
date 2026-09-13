@@ -472,6 +472,45 @@ test.describe('the page presentation', () => {
         expectIdentity(await camera(page));
     });
 
+    test('a page brought in from the revealed space ends the grab: G is the door out again (2026-09-13)', async ({ page }) => {
+        await openFixture(page, 'page-docked');
+        const root = (await tree(page))[0];
+        const grabMode = () => page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().ui.grabMode);
+
+        // G opens the space...
+        await page.keyboard.press('KeyG');
+        await settle(page);
+        expect(await grabMode()).toBe(true);
+        expect(await dockedID(page)).toBeNull();
+
+        // ...a link from there brings a page in: the space is no longer grabbed
+        await clickLink(page, root.planeID, '/page-1/about');
+        await waitForChildren(page, root.planeID, 1);
+        await settle(page);
+        const about = (await tree(page))[0].children[0];
+        expect(await dockedID(page)).toBe(about.planeID);
+        expect(await grabMode()).toBe(false);
+
+        // so G is the door OUT again, not a flag to toggle off
+        await page.keyboard.press('KeyG');
+        await settle(page);
+        expect(await grabMode()).toBe(true);
+        expect(await dockedID(page)).toBeNull();
+        await waitChromeShown(page);
+
+        // and the rail's page control ends it the same way: the landing is what counts
+        await page.locator(TOGGLE).click();
+        await settle(page);
+        expect(await dockedID(page)).toBe(about.planeID);
+        expect(await grabMode()).toBe(false);
+
+        // the back control leaves the page for its parent, still ungrabbed
+        await page.locator(BACK).click();
+        await settle(page);
+        expect(await dockedID(page)).toBe(root.planeID);
+        expect(await grabMode()).toBe(false);
+    });
+
     test('touch: one finger scrolls the page, the camera stays', async ({ browser }) => {
         const context = await browser.newContext({ hasTouch: true, viewport: { width: 1000, height: 700 } });
         const page = await context.newPage();

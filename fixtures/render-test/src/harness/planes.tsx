@@ -153,6 +153,11 @@ export const buildPlanes = (
             { route: '/transform', label: 'transform' },
         ] : []),
         ...((flags.nested ?? 0) > 0 ? [{ route: '/chain-1', label: 'chain' }] : []),
+        // the query travels: two links to ONE route, two planes, each reading its own query
+        ...(flags.linkQuery ? [
+            { route: DETAIL_ROUTE + '?mode=wire', label: 'wire' },
+            { route: DETAIL_ROUTE + '?mode=solid', label: 'solid' },
+        ] : []),
     ];
 
     const content = flags.sizes === 'content';
@@ -189,7 +194,7 @@ export const buildPlanes = (
     // sub-planes, each of which links further, and the leaves link back to an already-shown root.
     const detailPlane: PluridReactPlane = {
         route: DETAIL_ROUTE,
-        component: () => (
+        component: (properties: { plurid?: { plane?: { query?: Record<string, string> } } }) => (
             <>
                 {flags.document && (
                     <PluridDocument>
@@ -201,6 +206,7 @@ export const buildPlanes = (
                     title="GEOMETRY · DETAIL"
                     code="G-01·D"
                     accent="#4da3ff"
+                    query={properties.plurid?.plane?.query}
                     rows={[['edges', '6 140'], ['normals', 'per-vertex'], ['uv sets', '2'], ['lod', '3']]}
                     links={[
                         { route: DETAIL_ROUTE + '/mesh', label: 'mesh' },

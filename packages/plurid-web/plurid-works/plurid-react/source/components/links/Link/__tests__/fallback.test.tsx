@@ -70,7 +70,29 @@ describe('PluridLink outside and inside an application', () => {
         expect(link.getAttribute('href')).toMatch(/\/two$/);
         // the engine resolves the route against the application's host
         expect(link.getAttribute('data-plurid-link-route')).toMatch(/\/two$/);
+        // A PRESS ON A LINK IS THE SPACE'S: the anchor is not natively draggable (`elements.link.draggable`)
+        expect(link.getAttribute('draggable')).toBe('false');
 
+        await rendered.unmount();
+        clock.restore();
+    });
+
+    it('a link outside an application is not draggable either, and the knob gives the drag back', async () => {
+        const outside = render(<PluridLink route="/detail">detail</PluridLink>);
+        expect(outside.container.querySelector('a')!.getAttribute('draggable')).toBe('false');
+        cleanup();
+
+        const clock = installFrameClock();
+        const rendered = await renderPlurid({
+            planes: [
+                { route: '/one', component: () => <PluridLink route="/two">go</PluridLink> },
+                { route: '/two', component: () => <div>two</div> },
+            ],
+            view: ['/one'],
+            configuration: { elements: { link: { draggable: true } } } as any,
+        });
+        const link = rendered.container.querySelector('[data-plurid-entity="PluridLink"]') as HTMLElement;
+        expect(link.getAttribute('draggable')).toBe('true');
         await rendered.unmount();
         clock.restore();
     });

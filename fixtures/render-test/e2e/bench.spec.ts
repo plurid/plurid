@@ -46,11 +46,11 @@ const STALL_MS = 500;
 const STALL_FACTOR = 10;
 
 /**
- * A relayout of 100 planes is a burst by design (every plane re-measures and reports alone: the
- * batching follow-up in the roadmap); under the full suite's load it passes 500 ms, so its stall
- * floor is the burst's, not the per-frame one.
+ * A relayout is a handful of writes whatever the plane count: the view size, the relayout, ONE batch
+ * of the planes' sizes (the application's one measurer), the measured relayout and its transition
+ * window — this many per toggle of the relayout scenario (12 toggles in 240 frames).
  */
-const RELAYOUT_STALL_MS = STALL_MS * 4;
+const RELAYOUT_DISPATCHES_PER_TOGGLE = 8;
 
 /** The longest frame allowed for this run: the floor, or the run's own median times the factor. */
 const stallBudget = (
@@ -118,7 +118,11 @@ test.describe('benchmark', () => {
                 const result = await runBench(page, planes, scenario);
                 report(scenario, planes, result);
                 expect(result.frames).toBe(239);
-                expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(stallBudget(result, scenario === 'relayout' ? RELAYOUT_STALL_MS : STALL_MS));
+                expect(result.maxFrameMs ?? result.p95FrameMs).toBeLessThanOrEqual(stallBudget(result, STALL_MS));
+                if (scenario === 'relayout') {
+                    // one batch of sizes per relayout, not one report per plane
+                    expect(result.dispatches).toBeLessThanOrEqual(12 * RELAYOUT_DISPATCHES_PER_TOGGLE);
+                }
             });
         }
     }

@@ -62,6 +62,7 @@ const french: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'distance d\'abattage',
 
     toolbarDrawerShortcutsTitle: 'raccourcis',
+    toolbarDrawerHistoryTitle: 'historique',
     toolbarDrawerShortcutsToggleFirstPerson: 'basculer à la première personne',
     toolbarDrawerShortcutsMoveForward: 'avancer',
     toolbarDrawerShortcutsMoveBackward: 'recule',

@@ -62,6 +62,7 @@ const romanian: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'distanță ascundere',
 
     toolbarDrawerShortcutsTitle: 'scurtături',
+    toolbarDrawerHistoryTitle: 'istoric',
     toolbarDrawerShortcutsToggleFirstPerson: 'comutare persoana întâi',
     toolbarDrawerShortcutsMoveForward: 'mutare înainte',
     toolbarDrawerShortcutsMoveBackward: 'mutare înapoi',

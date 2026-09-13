@@ -122,11 +122,23 @@ export interface PluridStateSpace {
 }
 
 
+/** One step of the arrangement history: what it was, and when it happened. */
+export interface PluridHistoryEntry {
+    /** Derived from the change itself ("closed /geometry/detail", "moved 3 planes"), never authored. */
+    label: string;
+    /** `Date.now()` when the change was recorded. */
+    at: number;
+}
+
 export interface PluridStateHistory {
     canUndo: boolean;
     canRedo: boolean;
     undoDepth: number;
     redoDepth: number;
+    /** The steps behind the present, oldest first (the last is what one undo restores). */
+    past: PluridHistoryEntry[];
+    /** The steps ahead of it, nearest first (the first is what one redo restores). */
+    future: PluridHistoryEntry[];
 }
 
 
@@ -144,6 +156,8 @@ export interface PluridStateUI {
     grabHold: boolean;
     /** The keyboard-shortcuts help overlay. */
     shortcutsOverlayVisible: boolean;
+    /** The command palette (⌘/Ctrl+K). */
+    paletteVisible: boolean;
     /** The rubber-band selection rectangle (view px) while a marquee drag is in progress. */
     marquee: { left: number; top: number; right: number; bottom: number } | null;
 }

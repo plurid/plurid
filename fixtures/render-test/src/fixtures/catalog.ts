@@ -35,6 +35,19 @@ export type FixtureStep =
         kind: 'focus';
         /** the `data-plurid-control` value of the control to focus (its focus ring is the picture) */
         control: string;
+    }
+    | {
+        kind: 'key';
+        /** a Playwright key expression pressed on the focused view (`ControlOrMeta+KeyK`) */
+        press: string;
+    }
+    | {
+        kind: 'move';
+        /** the registered route of the plane to move by hand (selected, dragged, deselected) */
+        plane: string;
+        /** the drag, world px */
+        deltaX: number;
+        deltaY: number;
     };
 
 export interface FixtureExpectations {
@@ -107,6 +120,8 @@ export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'links-dense', title: 'Dense links', description: 'Six links on GEOMETRY, two to the same route.', query: { links: 'dense' }, viewpoints: [FRONT], expect: { planes: 5 } },
     { name: 'nested-chain-3', title: 'Nested chain', description: 'A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent.', query: { nested: '3' }, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/chain-1' }, { kind: 'clickLink', plane: '/chain-1', route: '/chain-2' }, { kind: 'clickLink', plane: '/chain-2', route: '/chain-3' }], viewpoints: [FRONT, ORBIT], expect: { planes: 8, overlap: 'expected', links: false } },
     { name: 'detail-spawned', title: 'Detail spawned', description: 'The DETAIL plane opened from GEOMETRY, behind the wall.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }], viewpoints: [FRONT, ORBIT], expect: { planes: 6, overlap: 'expected', links: false } },
+    { name: 'detail-dragged', title: 'Detail dragged', description: 'The DETAIL plane dragged away from its link: it stays where it was dropped, on a leash to the link.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }, { kind: 'move', plane: '/geometry/detail', deltaX: -340, deltaY: 220 }], viewpoints: [ORBIT], expect: { planes: 6, overlap: 'expected', links: false } },
+    { name: 'palette-open', title: 'The command palette', description: 'The palette open over the space: every command that applies, the bookmarks, every plane.', query: {}, steps: [{ kind: 'key', press: 'ControlOrMeta+KeyK' }], viewpoints: [FRONT], expect: { planes: 5, links: false, minimap: false } },
     { name: 'media', title: 'Media plane', description: 'A consumer-built media plane beside the panels.', query: { media: '1' }, viewpoints: [FRONT], expect: { planes: 6 } },
     { name: 'page-docked', title: 'A page, docked', description: 'The page presentation: one view-sized page, the camera docked on it, no chrome but the corner control.', query: { presentation: 'page', pages: '1' }, viewpoints: [FRONT], expect: { planes: 1 } },
     { name: 'page-revealed', title: 'A page, revealed', description: 'The same page pulled back and tilted: the sheet in the space behind the site.', query: { presentation: 'page', pages: '1' }, viewpoints: [REVEALED], expect: { planes: 1 } },

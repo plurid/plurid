@@ -21,6 +21,7 @@
     import MenuMoreMinimap from './components/Minimap';
     import MenuMoreTechnical from './components/Technical';
     import MenuMoreShortcuts from './components/Shortcuts';
+import MenuMoreHistory from './components/History';
     // #endregion internal
 // #endregion imports
 
@@ -74,6 +75,11 @@ export const moreMenusRecord: Record<string, MoreMenu> = {
         name: internationalization.fields.toolbarDrawerShortcutsTitle,
         drawer: TOOLBAR_DRAWERS.SHORTCUTS,
         component: (<MenuMoreShortcuts />),
+    },
+    HISTORY: {
+        name: internationalization.fields.toolbarDrawerHistoryTitle,
+        drawer: TOOLBAR_DRAWERS.HISTORY,
+        component: (<MenuMoreHistory />),
     },
 };
 

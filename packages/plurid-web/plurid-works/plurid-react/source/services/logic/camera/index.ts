@@ -27,6 +27,9 @@
     import { AppState } from '~services/state/store';
     import { PluridThunkExtra } from '~services/state/extra';
     import { SetPlaneSizePayload } from '~services/state/modules/space/types';
+    import {
+        createPlaneMeasurer,
+    } from '~services/logic/size';
 
     import {
         interaction,
@@ -300,6 +303,17 @@ export const commitCameraTarget = (
     } = options;
 
     const landing = landingDockPlaneID(state, target);
+
+    // A DOCKED PAGE IS NOT A GRABBED SPACE (2026-09-13). Whatever brings a page in — a link, the back
+    // control, a close handing the camera to the parent, `space.dock`, the rail's page pill, a frame
+    // that fills the view — ends the armed grab: while docked, G is the door OUT (it reveals the
+    // space), so a grab left armed would eat that press and turn the page's next drag into an orbit.
+    // The reveal never lands docked, so G still arms the grab there. Space held (`grabHold`) is the
+    // key's own state and is not touched: its keyup ends it.
+    if (landing && state.ui.grabMode) {
+        dispatch(actions.ui.setUIGrabMode(false));
+    }
+
     const instant = !!landing && state.configuration.space.docking?.motion === 'instant';
     const controller = extra?.motion;
     if (animate && controller && !instant) {
@@ -519,16 +533,17 @@ export const framePlaneNode = (
 
 
 /**
- * A plane's measurement (the plane's ResizeObserver): write it, then settle a pending re-frame for
- * that plane. Never while the user drives the camera — a gesture or a fling is not hijacked.
+ * A frame's measurements (the application's one ResizeObserver, `observePlaneSize`): ONE tree write,
+ * then a pending re-frame settled for the plane it was waiting on, when the batch carries it. Never
+ * while the user drives the camera — a gesture or a fling is not hijacked.
  */
-export const reportPlaneSize = (
-    payload: SetPlaneSizePayload,
+export const reportPlaneSizes = (
+    sizes: SetPlaneSizePayload[],
 ): CameraThunk => (dispatch, getState, extra) => {
-    dispatch(actions.space.setPlaneSize(payload));
+    dispatch(actions.space.setPlaneSizes(sizes));
 
     const pending = extra?.pendingFrame;
-    if (!extra || !pending || pending.planeID !== payload.planeID) {
+    if (!extra || !pending || !sizes.some((size) => size.planeID === pending.planeID)) {
         return;
     }
     extra.pendingFrame = undefined;
@@ -538,7 +553,36 @@ export const reportPlaneSize = (
         return;
     }
 
-    dispatch(framePlaneByID(payload.planeID, pending.animate) as any);
+    dispatch(framePlaneByID(pending.planeID, pending.animate) as any);
+};
+
+/** One plane's measurement: a batch of one (a host, a test). */
+export const reportPlaneSize = (
+    payload: SetPlaneSizePayload,
+): CameraThunk => reportPlaneSizes([payload]);
+
+/**
+ * Watch a plane's element for its size (the Plane's mount effect): every plane of the application
+ * shares one measurer (`extra.measurer`), so a frame's reports land as one `reportPlaneSizes`. Returns
+ * the function that stops watching; watches nothing where the platform has no ResizeObserver.
+ */
+export const observePlaneSize = (
+    element: HTMLElement,
+    planeID: string,
+) => (
+    dispatch: Dispatch,
+    _getState: GetState,
+    extra?: PluridThunkExtra,
+): (() => void) => {
+    if (!extra) {
+        return () => {};
+    }
+    if (!extra.measurer) {
+        extra.measurer = createPlaneMeasurer((sizes) => {
+            dispatch(reportPlaneSizes(sizes) as any);
+        });
+    }
+    return extra.measurer ? extra.measurer.observe(element, planeID) : () => {};
 };
 
 

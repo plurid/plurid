@@ -20,6 +20,8 @@ export interface PanelProps {
     grow?: boolean;
     /** A counter button: state the retained tier keeps and the unmount tier drops (`?cullDetach=`). */
     counter?: boolean;
+    /** The plane's requested query (`plurid.plane.query`): shown as a row and as `data-rt-query`. */
+    query?: Record<string, string>;
 }
 
 const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) => [
@@ -32,15 +34,17 @@ const FILLER_ROWS: [string, string][] = Array.from({ length: 28 }, (_, index) =>
  * A CAD-like instrument panel. Monospace, technical readout, accent rule —
  * each plane in the space reads like a module in a control surface.
  */
-const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable, fill, grow, counter }) => {
+const Panel: React.FC<PanelProps> = ({ title, code, accent, rows, link, links, scrollable, fill, grow, counter, query }) => {
     const allLinks = [...(link ? [link] : []), ...(links ?? [])];
     // `more` (the content-sized set): six filler rows per click, so the plane GROWS after boot
     const [extra, setExtra] = useState(0);
     const [count, setCount] = useState(0);
-    const readout = scrollable ? [...rows, ...FILLER_ROWS] : [...rows, ...(grow ? FILLER_ROWS.slice(0, extra) : [])];
+    const queryRows: [string, string][] = Object.entries(query ?? {}).map(([key, value]) => ['?' + key, value]);
+    const readout = scrollable ? [...rows, ...FILLER_ROWS] : [...rows, ...queryRows, ...(grow ? FILLER_ROWS.slice(0, extra) : [])];
 
     return (
     <div
+        data-rt-query={queryRows.length > 0 ? JSON.stringify(query) : undefined}
         style={{
             height: grow ? 'auto' : (fill ? '100%' : 360),
             minHeight: fill ? 0 : undefined,

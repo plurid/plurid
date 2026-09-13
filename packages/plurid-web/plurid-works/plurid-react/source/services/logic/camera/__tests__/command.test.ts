@@ -17,6 +17,9 @@
     import {
         actions,
     } from '~services/state/modules/space';
+    import {
+        actions as uiActions,
+    } from '~services/state/modules/ui';
 
     import {
         encodeCameraViewpoint,
@@ -86,6 +89,13 @@ describe('cameraCommand()', () => {
         store.dispatch(cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: false }));
         expect(store.cameraCommits()).toHaveLength(1);
         expect(store.space().camera.pivot.x).toBeCloseTo(300, 6);
+    });
+
+    it('framing in the space keeps grab mode: only a DOCKED landing ends it', () => {
+        const store = makeStore();
+        store.dispatch(uiActions.setUIGrabMode(true));
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'a' }, { animate: false }));
+        expect(store.getState().ui.grabMode).toBe(true);
     });
 
     it('jumps when no motion controller is registered (no View mounted)', () => {
@@ -234,6 +244,23 @@ describe('the page presentation: framing docks', () => {
         expect(store.tweens).toHaveLength(0);
         store.dispatch(cameraCommand({ kind: 'reveal' }));
         expect(store.tweens).toHaveLength(1);
+    });
+
+    it('a move that LANDS DOCKED ends grab mode; the reveal that G opens keeps it (2026-09-13)', () => {
+        const store = makePageStore();
+        // page mode, grab armed (G), then a link, the back control or the rail brings a page in
+        store.dispatch(uiActions.setUIGrabMode(true));
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
+        expect(store.getState().ui.grabMode).toBe(false);
+        // docked, G is the door out: it arms the grab and reveals — the reveal is no landing
+        store.dispatch(uiActions.setUIGrabMode(true));
+        store.dispatch(cameraCommand({ kind: 'reveal' }));
+        expect(store.getState().ui.grabMode).toBe(true);
+        // and the ending is the LANDING's, not the animation's: an instant dock ends it too
+        const instant = makePageStore(pageConfiguration({ space: { docking: { motion: 'instant' } } }));
+        instant.dispatch(uiActions.setUIGrabMode(true));
+        instant.dispatch(cameraCommand({ kind: 'dock', planeID: 'p1' }, { animate: false }));
+        expect(instant.getState().ui.grabMode).toBe(false);
     });
 
     it('a jump cancels a running motion before it commits (a tween frame never overwrites it)', () => {

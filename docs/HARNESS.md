@@ -43,6 +43,8 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | Param | Default | Applies | Does | Exercises |
 | --- | --- | --- | --- | --- |
 | `?links=dense` | - | reload | six links on the GEOMETRY plane, two to the same route | link ordinals, distinct children |
+| `?linkDraggable=1` | - | live | plurid links keep the browser's native link drag (off by default: a press on a link is the space's) | `elements.link.draggable` |
+| `?linkQuery=1` | - | reload | two links on GEOMETRY to the DETAIL route with different queries (wire, solid): the query travels with the plane | one plane per query; `plurid.plane.query` read by the DETAIL panel |
 | `?nested=<n>` | - | reload | a chain of N planes each linking to the next; GEOMETRY links to the first | the spawn fan (90° every generation), bridges |
 
 ### document
@@ -117,6 +119,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?hostileCss=1` | - | reload | a host stylesheet with aggressive global resets | the chrome reset (chrome.spec.ts) |
 | `?slotToolbar=1` | - | reload | a custom toolbar through the render slot | `renderToolbar` |
 | `?slotDockRail=1` | - | reload | a custom dock rail through the render slot (the page presentation) | `renderDockRail` |
+| `?slotPalette=1` | - | reload | a custom command palette through the render slot | `renderPalette` |
 | `?slotViewcube=1` | - | reload | a custom viewcube through the render slot | `renderViewcube` |
 | `?slotPlaneControls=1` | - | reload | a custom plane bar through the render slot (called with the plane) | `renderPlaneControls` |
 | `?look=graphite\|noir\|slate\|ink\|ember\|moss\|plum\|paper\|snow\|sand\|mint\|cobalt` | - | reload | the look: one of the twelve presets (default graphite) | `look`, the `--plurid-*` tokens on every piece of chrome |
@@ -166,6 +169,8 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `links-dense` | Dense links — Six links on GEOMETRY, two to the same route. | `links=dense` | - | `front` | planes: 5 |
 | `nested-chain-3` | Nested chain — A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent. | `nested=3` | `/geometry → /chain-1`, `/chain-1 → /chain-2`, `/chain-2 → /chain-3` | `front`, `orbit` | planes: 8, overlap: expected, links: false |
 | `detail-spawned` | Detail spawned — The DETAIL plane opened from GEOMETRY, behind the wall. | - | `/geometry → /geometry/detail` | `front`, `orbit` | planes: 6, overlap: expected, links: false |
+| `detail-dragged` | Detail dragged — The DETAIL plane dragged away from its link: it stays where it was dropped, on a leash to the link. | - | `/geometry → /geometry/detail`, `⇢ /geometry/detail -340,220` | `orbit` | planes: 6, overlap: expected, links: false |
+| `palette-open` | The command palette — The palette open over the space: every command that applies, the bookmarks, every plane. | - | `⌘ ControlOrMeta+KeyK` | `front` | planes: 5, links: false, minimap: false |
 | `media` | Media plane — A consumer-built media plane beside the panels. | `media=1` | - | `front` | planes: 6 |
 | `page-docked` | A page, docked — The page presentation: one view-sized page, the camera docked on it, no chrome but the corner control. | `presentation=page` `pages=1` | - | `front` | planes: 1 |
 | `page-revealed` | A page, revealed — The same page pulled back and tilted: the sheet in the space behind the site. | `presentation=page` `pages=1` | - | `revealed` | planes: 1 |

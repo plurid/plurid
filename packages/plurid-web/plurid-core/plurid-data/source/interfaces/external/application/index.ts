@@ -297,6 +297,8 @@ export interface PluridApplication<C> {
     renderDockRail?: PluridRenderSlot;
     renderMinimap?: PluridRenderSlot;
     renderShortcuts?: PluridRenderSlot;
+    /** The command palette (⌘/Ctrl+K) — a host's own list over `api.runCommand` / the palette rows. */
+    renderPalette?: PluridRenderSlot;
     /** Rendered in place of the space when it holds no planes (the layout resolved to nothing). */
     renderEmpty?: PluridRenderSlot;
     /** A plane's controls bar (the path, back, close …); called with the plane's chrome context (its id, route, tree node). */

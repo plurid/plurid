@@ -182,14 +182,13 @@ export const resolveViewItem = <C>(
                     query: {},
                     value: '',
                 },
+                // THE QUERY TRAVELS: what the requested route carried beyond its pathname — the
+                // matcher read it off the raw route; the plane's component reads it from here
                 plane: {
-                    parameters: {},
-                    fragments: {
-                        elements: [],
-                        texts: [],
-                    },
-                    query: {},
-                    value: '',
+                    value: match.match.value,
+                    parameters: match.match.parameters ?? {},
+                    fragments: match.match.fragments ?? { elements: [], texts: [] },
+                    query: match.match.query ?? {},
                 },
                 valid: true,
             },

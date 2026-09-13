@@ -31,6 +31,7 @@ const {
     IsoMatcher: PluridIsoMatcher,
     resolveRoute,
     computePlaneAddress,
+    routeSuffix,
     planeAddressPath,
 } = routing;
 // #endregion module
@@ -60,6 +61,7 @@ export {
     PluridIsoMatcher,
     resolveRoute,
     computePlaneAddress,
+    routeSuffix,
     planeAddressPath,
 };
 // #endregion exports

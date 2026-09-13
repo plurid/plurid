@@ -22,6 +22,9 @@
 
     // #region external
     import { AppState } from '~services/state/store';
+    import {
+        isShortcutDisabled,
+    } from '~services/logic/shortcuts/registry';
     import actions from '~services/state/actions';
     import {
         getDockedPlaneID,
@@ -103,11 +106,12 @@ const insidePlaneContent = (
  * unlocked). The whole table is data so the config can disable / remap by `id` and a help overlay can
  * generate from it.
  */
-interface ShortcutContext {
+export interface ShortcutContext {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     state: AppState;
     pubsub: IPluridPubSub;
-    event: KeyboardEvent;
+    /** The keydown that matched — absent when a command is run without one (the palette, a host). */
+    event?: KeyboardEvent;
     firstPerson: boolean;
     locks: PluridConfigurationSpaceTransformLocks;
     noModifiers: boolean;
@@ -126,6 +130,9 @@ interface ShortcutBinding {
 const runTransformNudge = (ctx: ShortcutContext): boolean => {
     const { event: e, locks, dispatch, prevent } = ctx;
 
+    if (!e) {
+        return false;
+    }
     if (e.key === 'ArrowRight') {
         if (e.shiftKey && locks.rotationY) { prevent(); dispatch(actions.space.rotateLeft()); return true; }
         if (e.altKey && locks.translationX) { prevent(); dispatch(actions.space.translateRight()); return true; }
@@ -161,7 +168,23 @@ export const SHORTCUTS: ShortcutBinding[] = [
         match: (e, code) => (e.metaKey || e.ctrlKey) && e.code === code,
         run: ({ dispatch, event, prevent }) => {
             prevent();
-            dispatch(event.shiftKey ? actions.space.redo() : actions.space.undo());
+            dispatch(event?.shiftKey ? actions.space.redo() : actions.space.undo());
+        },
+    },
+    {
+        // ⌘/Ctrl+K opens the command palette; Escape closes it while it is open (before `dock`, which
+        // also matches Escape). The shortcut works whatever `elements.palette.show` says: the flag
+        // hides the engine's own palette, a host that replaces it still wants the key.
+        id: 'palette', code: 'KeyK',
+        match: (e, code, ctx) => ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.code === code)
+            || (e.code === 'Escape' && !!ctx.state.ui?.paletteVisible),
+        run: ({ dispatch, event, prevent }) => {
+            prevent();
+            if (event?.code === 'Escape') {
+                dispatch(actions.ui.setPaletteVisible(false));
+            } else {
+                dispatch(actions.ui.togglePalette());
+            }
         },
     },
     {
@@ -173,7 +196,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
             || (e.code === 'Escape' && !!ctx.state.ui?.shortcutsOverlayVisible),
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
-            if (event.code === 'Escape') {
+            if (event?.code === 'Escape') {
                 dispatch(actions.ui.setShortcutsOverlayVisible(false));
             } else {
                 dispatch(actions.ui.toggleShortcutsOverlay());
@@ -367,7 +390,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         match: (e, code) => e.altKey && e.code === code,
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
-            if (event.shiftKey) { focusPreviousRoot(dispatch, state); } else { focusNextRoot(dispatch, state); }
+            if (event?.shiftKey) { focusPreviousRoot(dispatch, state); } else { focusNextRoot(dispatch, state); }
         },
     },
     {
@@ -377,6 +400,9 @@ export const SHORTCUTS: ShortcutBinding[] = [
         match: (e) => e.altKey && e.code.startsWith('Digit'),
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
+            if (!event) {
+                return;
+            }
             const index = parseInt(event.code.replace('Digit', '')) - 1;
             focusRootIndex(dispatch, state, index);
         },
@@ -447,5 +473,45 @@ export const handleGlobalShortcuts = (
 }
 
 
+/** The bindings that cannot run without the keydown that matched them (the key IS the argument). */
+const NEEDS_EVENT = new Set<PluridShortcutID>(['transformNudge', 'focusRootIndex']);
+
+export interface RunShortcutContext {
+    dispatch: ThunkDispatch<{}, {}, AnyAction>;
+    state: AppState;
+    pubsub: IPluridPubSub;
+    firstPerson?: boolean;
+    locks?: PluridConfigurationSpaceTransformLocks;
+}
+
+/**
+ * Run a shortcut BY ID, without a key press — the command palette, a host's own menu. The binding's
+ * own `run` is what executes, so a command has ONE implementation whatever invokes it; `false` when
+ * the id has no binding, is disabled by the configuration, or needs the keydown that matched it
+ * (the arrow nudge, the root-by-index jump: the key is the argument).
+ */
+export const runShortcut = (
+    id: PluridShortcutID,
+    context: RunShortcutContext,
+    shortcuts?: PluridConfigurationSpaceShortcuts,
+): boolean => {
+    if (NEEDS_EVENT.has(id) || isShortcutDisabled(id, shortcuts)) {
+        return false;
+    }
+    const binding = SHORTCUTS.find((entry) => entry.id === id);
+    if (!binding) {
+        return false;
+    }
+    const ran = binding.run({
+        dispatch: context.dispatch,
+        state: context.state,
+        pubsub: context.pubsub,
+        firstPerson: context.firstPerson ?? context.state.configuration.space.firstPerson,
+        locks: context.locks ?? context.state.configuration.space.transformLocks,
+        noModifiers: true,
+        prevent: () => {},
+    });
+    return ran !== false;
+};
 
 // #endregion module

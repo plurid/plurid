@@ -151,6 +151,7 @@ export const buildConfiguration = (
             } : {}),
         };
     }
+    if (flags.linkDraggable) flat.linkDraggable = true;
     if (flags.depthFade) flat.planeDepthFade = { enabled: true };
 
     return definePluridConfiguration(flat as any);

@@ -98,6 +98,7 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
 
     // help
     { id: 'help', code: 'Slash', keys: ['?'], modifiers: { shift: true }, kind: 'press', group: 'help', label: 'Toggle the shortcuts panel' },
+    { id: 'palette', code: 'KeyK', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'help', label: 'Open the command palette: every command, the bookmarks and presets, every plane' },
 ];
 
 

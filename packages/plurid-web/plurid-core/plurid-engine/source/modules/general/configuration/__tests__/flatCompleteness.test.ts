@@ -70,7 +70,9 @@ const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
     chrome: { value: 'none', path: 'elements.chrome' },
     origin: { value: false, path: 'elements.origin.show' },
     planeBridge: { value: false, path: 'elements.planeBridge.show' },
+    linkDraggable: { value: true, path: 'elements.link.draggable' },
     shortcutsTrigger: { value: false, path: 'elements.shortcuts.show' },
+    palette: { value: false, path: 'elements.palette.show' },
     marquee: { value: false, path: 'elements.marquee.show' },
     // `extend` is the nested escape hatch itself, not a flat key with one location
     extend: null,

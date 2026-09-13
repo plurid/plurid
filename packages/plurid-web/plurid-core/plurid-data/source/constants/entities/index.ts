@@ -12,6 +12,7 @@ export const PLURID_ENTITY_LINK = 'PluridLink';
 export const PLURID_ENTITY_ROOT = 'PluridRoot';
 export const PLURID_ENTITY_ROOTS = 'PluridRoots';
 export const PLURID_ENTITY_PLANE_LINKS = 'PluridPlaneLinks';
+export const PLURID_ENTITY_PLANE_LEASH = 'PluridPlaneLeash';
 export const PLURID_ENTITY_ALIGNMENT_GUIDES = 'PluridAlignmentGuides';
 export const PLURID_ENTITY_SPACE = 'PluridSpace';
 export const PLURID_ENTITY_SPACE_DEBUGGER = 'PluridSpaceDebugger';
@@ -26,6 +27,7 @@ export const PLURID_ENTITY_LIVE_REGION = 'PluridLiveRegion';
 export const PLURID_ENTITY_PLANE_RESIZE_HANDLE = 'PluridPlaneResizeHandle';
 /** The shortcuts dialog (a lowercase historical value: it is a documented selector, so it stays). */
 export const PLURID_ENTITY_SHORTCUTS_OVERLAY = 'shortcuts-overlay';
+export const PLURID_ENTITY_PALETTE = 'PluridPalette';
 
 
 /** The DOM attributes of the contract (`docs/CONTROL_SURFACE.md`, "Stable DOM contract"). */

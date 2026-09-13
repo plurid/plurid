@@ -22,7 +22,13 @@ import {
     overlaps,
     rootBoxes,
     dispatches,
+    movePlane,
 } from './helpers';
+
+
+
+/** The bridge strip's height (`BRIDGE_STRIP_HEIGHT` in plurid-data): the leash beam is this thick. */
+const STRIP = 30;
 
 
 
@@ -135,6 +141,20 @@ test.describe('the sizing contract', () => {
         expect(dragged.manuallyPositioned).toBe(true);
         expect(dragged.location.translateX).toBeCloseTo(child.location.translateX + 120, 6);
         expect(dragged.location.translateY).toBeCloseTo(child.location.translateY + 80, 6);
+        // the bridge band is gone; a leash runs from the link's point on the parent to the child
+        expect(await page.locator(`[data-plurid-plane="${child.planeID}"] [data-plurid-entity="PluridPlaneBridge"]`).count()).toBe(0);
+        const leash = page.locator(`[data-plurid-entity="PluridPlaneLeash"][data-plurid-leash-for="${child.planeID}"]`);
+        await expect(leash).toHaveCount(1);
+        const leashStart = async () => leash.evaluate((node) => {
+            const match = /translate3d\(([-\d.]+)px, ([-\d.]+)px, ([-\d.]+)px\)/.exec((node as HTMLElement).style.transform)!;
+            return { x: Number(match[1]), y: Number(match[2]), width: parseFloat((node as HTMLElement).style.width) };
+        });
+        const start = await leashStart();
+        const parent = findPlane(await tree(page), root.planeID);
+        const turn = parent.location.rotateY * Math.PI / 180;
+        expect(start.x).toBeCloseTo(parent.location.translateX + dragged.linkCoordinates.x * Math.cos(turn), 1);
+        // the beam is centred on the link's line: its top edge sits half a strip above it
+        expect(start.y + STRIP / 2).toBeCloseTo(parent.location.translateY + dragged.linkCoordinates.y, 1);
         // a resize relays the roots: the child keeps its own place
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.viewSize.width === 1100);
@@ -153,6 +173,12 @@ test.describe('the sizing contract', () => {
         expect(afterSet.location).toEqual(afterResize.location);
         expect(afterSet.linkCoordinates).toEqual(afterResize.linkCoordinates);
         expect(afterSet.spawnedByLinkID).toBe(afterResize.spawnedByLinkID);
+        // a second drag: the leash follows (its length changes, its start — the link's point — does not)
+        const before = await leashStart();
+        await movePlane(page, child.planeID, 100, 0);
+        const again = await leashStart();
+        expect(again.x).toBeCloseTo(before.x, 1);
+        expect(again.width).not.toBeCloseTo(before.width, 0);
     });
 
     test('a capped plane scrolls inside its cap and reports the cap as its height', async ({ page }) => {

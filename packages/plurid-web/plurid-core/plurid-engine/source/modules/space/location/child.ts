@@ -4,10 +4,18 @@
         TreePlane,
         TreePlaneLocation,
         LinkCoordinates,
+        Vec3,
         PLANE_BAR_HEIGHT,
         BRIDGE_STRIP_HEIGHT,
     } from '@plurid/plurid-data';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        planeBasis,
+    } from '../../interaction/camera/project';
+    // #endregion external
 // #endregion imports
 
 
@@ -68,20 +76,52 @@ export const childLocation = (
     /** the plane's top relative to the link's midline (`resolveBridgeOffset`); 0 puts the top on the line */
     bridgeOffset = 0,
 ): TreePlaneLocation => {
-    const parentAngle = parent.rotateY * DEG;
-    const linkX = parent.translateX + linkCoordinates.x * Math.cos(parentAngle);
-    const linkZ = parent.translateZ - linkCoordinates.x * Math.sin(parentAngle);
-    const linkY = parent.translateY + linkCoordinates.y + bridgeOffset;
+    const link = linkWorldPoint(parent, linkCoordinates);
     const bridgeAngle = (parent.rotateY + planeAngle) * DEG;
     const reach = bridgeSide === 'end'
         ? -(bridgeLength + (childWidth || FALLBACK_CHILD_WIDTH))
         : bridgeLength;
     return {
-        translateX: linkX + reach * Math.cos(bridgeAngle),
-        translateY: linkY,
-        translateZ: linkZ - reach * Math.sin(bridgeAngle),
+        translateX: link.x + reach * Math.cos(bridgeAngle),
+        translateY: link.y + bridgeOffset,
+        translateZ: link.z - reach * Math.sin(bridgeAngle),
         rotateX: parent.rotateX,
         rotateY: parent.rotateY + planeAngle,
+    };
+};
+
+/**
+ * The link's point on the parent's face, in world space — where a child's bridge leaves from: the
+ * parent's origin, the link's `x` along the parent's turned axis, the link's `y` down (a parent is
+ * never pitched by a link).
+ */
+export const linkWorldPoint = (
+    parent: TreePlaneLocation,
+    linkCoordinates: LinkCoordinates,
+): Vec3 => {
+    const parentAngle = parent.rotateY * DEG;
+    return {
+        x: parent.translateX + linkCoordinates.x * Math.cos(parentAngle),
+        y: parent.translateY + linkCoordinates.y,
+        z: parent.translateZ - linkCoordinates.x * Math.sin(parentAngle),
+    };
+};
+
+/**
+ * The far end of a leash: the middle of the child's bridge-side edge at the link's line — the
+ * bridge strip's centre, `bridgeOffset` above the plane's top (the plane is placed that much below
+ * the line), on the right edge for a mirrored child (`bridgeSide: 'end'`).
+ */
+export const childLeashPoint = (
+    child: Pick<TreePlane, 'location' | 'width' | 'bridgeSide' | 'bridgeOffset'>,
+): Vec3 => {
+    const basis = planeBasis(child.location);
+    const along = child.bridgeSide === 'end' ? (child.width || FALLBACK_CHILD_WIDTH) : 0;
+    const down = -(child.bridgeOffset ?? 0);
+    return {
+        x: basis.origin.x + basis.u.x * along + basis.v.x * down,
+        y: basis.origin.y + basis.u.y * along + basis.v.y * down,
+        z: basis.origin.z + basis.u.z * along + basis.v.z * down,
     };
 };
 

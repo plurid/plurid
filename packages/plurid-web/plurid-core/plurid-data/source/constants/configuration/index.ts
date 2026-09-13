@@ -52,6 +52,9 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
     shortcuts: {
         show: true,
     },
+    palette: {
+        show: true,
+    },
     marquee: {
         show: true,
     },
@@ -90,6 +93,8 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
     },
     link: {
         suffix: PLURID_DEFAULT_CONFIGURATION_LINK_SUFFIX,
+        // a press on a link is the space's: no browser link-drag out of a plane
+        draggable: false,
         preview: {
             show: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_SHOW,
             fadeIn: PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN,

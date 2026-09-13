@@ -6,6 +6,13 @@
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        CHROME_OPACITY_AMBIENT,
+    } from '~services/styled/chrome';
+    // #endregion external
 // #endregion imports
 
 
@@ -46,5 +53,23 @@ export const StyledPluridPlaneLink = styled.div<IStyledPluridPlaneLink>`
     background-color: var(--plurid-ink);
     border-radius: ${({ thickness }) => thickness}px;
     opacity: var(--plurid-opacity-ambient);
+`;
+
+
+/**
+ * A leash: the bridge's strip drawn as a beam — from the link's point on the parent's face to the
+ * moved child's edge — with the band's own colours (the chrome's solid surface under a light film),
+ * in the roots' frame like every beam, so it rides the camera and follows a drag per commit.
+ */
+export const StyledPluridPlaneLeash = styled.div<Pick<IStyledPluridPlaneLink, 'theme' | 'thickness'>>`
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: ${({ thickness }) => thickness}px;
+    transform-origin: 0 0;
+    background-color: var(--plurid-surface-solid);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+    opacity: ${CHROME_OPACITY_AMBIENT};
+    pointer-events: none;
 `;
 // #endregion module

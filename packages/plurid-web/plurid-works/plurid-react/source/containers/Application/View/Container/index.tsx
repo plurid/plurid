@@ -11,6 +11,7 @@
     import PluridMinimap from '~components/utilities/Minimap';
     import PluridDockRail from '~components/utilities/DockRail';
     import PluridShortcuts from '~components/utilities/Shortcuts';
+    import PluridPalette from '~components/utilities/Palette';
 
     import {
         ChromeMode,
@@ -40,6 +41,8 @@ export interface PluridViewContainerProperties {
     renderViewcube?: Slot;
     renderMinimap?: Slot;
     renderShortcuts?: Slot;
+    /** The command palette (⌘/Ctrl+K). */
+    renderPalette?: Slot;
     /** The page presentation's rail (fit · back · the page / cube toggle). */
     renderDockRail?: Slot;
 }
@@ -56,6 +59,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
         renderViewcube,
         renderMinimap,
         renderShortcuts,
+        renderPalette,
         renderDockRail,
     } = properties;
 
@@ -72,6 +76,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
     };
 
     const shortcutsShown = context.configuration.elements?.shortcuts?.show !== false;
+    const paletteShown = context.configuration.elements?.palette?.show !== false;
 
     // #region render
     return (
@@ -83,6 +88,7 @@ const PluridViewContainer: React.FC<PluridViewContainerProperties> = (
             {piece(renderMinimap, 'minimap', <PluridMinimap />)}
             {piece(renderDockRail, 'dockRail', <PluridDockRail />)}
             {piece(renderShortcuts, 'shortcuts', <PluridShortcuts />, shortcutsShown)}
+            {piece(renderPalette, 'palette', <PluridPalette />, paletteShown)}
         </>
     );
     // #endregion render

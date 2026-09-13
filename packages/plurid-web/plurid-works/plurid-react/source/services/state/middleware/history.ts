@@ -14,6 +14,9 @@
         rebaseSnapshot,
         Arrangement,
     } from '~services/logic/arrangement/rebase';
+    import {
+        describeArrangementChange,
+    } from '~services/logic/arrangement/describe';
     // #endregion external
 // #endregion imports
 
@@ -22,6 +25,7 @@
 // #region module
 const UNDO = 'space/undo';
 const REDO = 'space/redo';
+const GO_TO = 'space/historyGoTo';
 const BEGIN = 'space/historyBegin';
 const END = 'space/historyEnd';
 const STATUS = 'space/setHistoryStatus';
@@ -33,6 +37,20 @@ const HISTORY_LIMIT = 100;
 interface ArrangementSnapshot {
     tree: unknown;
     links: unknown;
+}
+
+/** A stack entry: the arrangement to restore, and what the step that made it was called. */
+interface HistoryStep {
+    snapshot: ArrangementSnapshot;
+    label: string;
+    at: number;
+}
+
+/** A stack entry: the arrangement to restore, and what the step that made it was called. */
+interface HistoryStep {
+    snapshot: ArrangementSnapshot;
+    label: string;
+    at: number;
 }
 
 
@@ -56,12 +74,15 @@ interface ArrangementSnapshot {
  * rule of 2026-09-06 cleared the stacks): `apply(remote, diff(before, snapshot))` keeps the local
  * changes on the planes they touch and the peer's work everywhere else, so an undo after a peer's
  * change never restores the arrangement without that change; a snapshot with nothing local left is
- * dropped. After every stack change the availability is written to
- * `state.space.history` (`setHistoryStatus`) so hosts can render undo/redo controls.
+ * dropped. After every stack change the availability AND the steps' names are written to `state.space.history`
+ * (`setHistoryStatus`): every entry carries a LABEL derived from what the change did
+ * (`describeArrangementChange` — never authored, so it cannot drift) and the time it happened, which
+ * is what a scrubber lists. `space/historyGoTo` jumps `index` steps (negative undoes, positive
+ * redoes) as ONE restore.
  */
 export const createHistoryMiddleware = (): Middleware => {
-    const undoStack: ArrangementSnapshot[] = [];
-    let redoStack: ArrangementSnapshot[] = [];
+    const undoStack: HistoryStep[] = [];
+    let redoStack: HistoryStep[] = [];
     let applying = false;
     let transactionDepth = 0;
     let transactionBefore: ArrangementSnapshot | null = null;
@@ -71,6 +92,12 @@ export const createHistoryMiddleware = (): Middleware => {
         links: state.space.links,
     });
 
+    const entriesOf = (stack: HistoryStep[]) => stack.map(({ label, at }) => ({ label, at }));
+    const signatureOf = (history: any) => JSON.stringify([
+        history?.canUndo, history?.canRedo, history?.undoDepth, history?.redoDepth,
+        history?.past, history?.future,
+    ]);
+
     const publishStatus = (store: any) => {
         const current = store.getState().space.history;
         const next = {
@@ -78,14 +105,10 @@ export const createHistoryMiddleware = (): Middleware => {
             canRedo: redoStack.length > 0,
             undoDepth: undoStack.length,
             redoDepth: redoStack.length,
+            past: entriesOf(undoStack),
+            future: entriesOf(redoStack).slice().reverse(),
         };
-        if (
-            !current
-            || current.canUndo !== next.canUndo
-            || current.canRedo !== next.canRedo
-            || current.undoDepth !== next.undoDepth
-            || current.redoDepth !== next.redoDepth
-        ) {
+        if (signatureOf(current) !== signatureOf(next)) {
             store.dispatch({ type: STATUS, payload: next });
         }
     };
@@ -99,7 +122,11 @@ export const createHistoryMiddleware = (): Middleware => {
         if (previousSignature === nextSignature) {
             return;
         }
-        undoStack.push(before);
+        undoStack.push({
+            snapshot: before,
+            label: describeArrangementChange(before as Arrangement, after as Arrangement),
+            at: Date.now(),
+        });
         if (undoStack.length > HISTORY_LIMIT) {
             undoStack.shift();
         }
@@ -117,24 +144,37 @@ export const createHistoryMiddleware = (): Middleware => {
     };
 
     return (store) => (next) => (action: any) => {
-        if (action.type === UNDO) {
-            if (undoStack.length === 0) {
+        if (action.type === UNDO || action.type === REDO || action.type === GO_TO) {
+            // one step by default; a jump names how many, and which way (negative undoes)
+            const asked = action.type === GO_TO
+                ? Math.trunc(action.payload?.index ?? 0)
+                : (action.type === UNDO ? -1 : 1);
+            const steps = asked < 0
+                ? -Math.min(-asked, undoStack.length)
+                : Math.min(asked, redoStack.length);
+            if (steps === 0) {
                 return undefined;
             }
-            const previous = undoStack.pop() as ArrangementSnapshot;
-            redoStack.push(snapshotOf(store.getState()));
-            restore(store.dispatch, previous);
-            publishStatus(store);
-            return undefined;
-        }
-
-        if (action.type === REDO) {
-            if (redoStack.length === 0) {
-                return undefined;
+            // the arrangement to land on is the LAST step walked over; the ones before it move across
+            let landing: HistoryStep | undefined;
+            for (let walked = 0; walked < Math.abs(steps); walked += 1) {
+                const present: HistoryStep = {
+                    snapshot: snapshotOf(store.getState()),
+                    label: '',
+                    at: Date.now(),
+                };
+                if (steps < 0) {
+                    const step = undoStack.pop()!;
+                    // the step's own name travels with it: redoing it is doing that change again
+                    redoStack.push({ ...present, label: step.label });
+                    landing = step;
+                } else {
+                    const step = redoStack.pop()!;
+                    undoStack.push({ ...present, label: step.label });
+                    landing = step;
+                }
             }
-            const future = redoStack.pop() as ArrangementSnapshot;
-            undoStack.push(snapshotOf(store.getState()));
-            restore(store.dispatch, future);
+            restore(store.dispatch, landing!.snapshot);
             publishStatus(store);
             return undefined;
         }
@@ -175,9 +215,16 @@ export const createHistoryMiddleware = (): Middleware => {
             // only in automatic positions, say — is dropped
             if (undoStack.length > 0 || redoStack.length > 0 || transactionBefore) {
                 const remote = snapshotOf(store.getState());
-                const rebase = (stack: ArrangementSnapshot[]) => stack
-                    .map((snapshot) => rebaseSnapshot(snapshot as Arrangement, before as Arrangement, remote as Arrangement))
-                    .filter((snapshot): snapshot is Arrangement => snapshot !== null);
+                const rebase = (stack: HistoryStep[]): HistoryStep[] => {
+                    const rebased: HistoryStep[] = [];
+                    for (const step of stack) {
+                        const snapshot = rebaseSnapshot(step.snapshot as Arrangement, before as Arrangement, remote as Arrangement);
+                        if (snapshot) {
+                            rebased.push({ ...step, snapshot });
+                        }
+                    }
+                    return rebased;
+                };
                 const undoRebased = rebase(undoStack);
                 undoStack.length = 0;
                 undoStack.push(...undoRebased);

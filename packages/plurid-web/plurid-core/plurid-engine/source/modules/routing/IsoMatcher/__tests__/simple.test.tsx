@@ -34,7 +34,7 @@ const routes: PluridRoute<string>[] = [
                 'route-plane',
             ],
             [
-                '/some-parametric-plane/:id',
+                'some-parametric-plane/:id',
                 'parametric-plane',
             ],
         ],
@@ -265,30 +265,30 @@ describe('IsoMatcher general', () => {
 
 
 
-    // SKIPPED: parametric ROUTE-PLANE matching (a route-plane whose path has a `:param`) returns
-    // undefined — a separate, deeper matcher bug from the `return`→`continue` + query fixes in
-    // this sweep (non-parametric route-planes pass, see the test above). Re-enable with the
-    // route-plane matcher rework.
-    xit('matches parametric routes planes', () => {
+    // A route plane's path is RELATIVE to its route when it has no leading slash (`some-parametric-plane/:id`
+    // under `/1` is `/1/some-parametric-plane/:id`); an absolute one is absolute. The parametric sweep of the
+    // planes index resolves the parameter, and the query is read off the raw value.
+    it('matches parametric route planes nested under their route, with their query', () => {
         const isoMatcher = new IsoMatcher<string>({
             routes,
             routePlanes,
             planes,
         });
 
-        const routePlanSomePlaneResult = isoMatcher.match(
-            '/1/some-parametric-plane/one',
+        const nested = isoMatcher.match(
+            '/1/some-parametric-plane/one?tab=2',
             'route',
         );
-        expect(routePlanSomePlaneResult).toBeTruthy();
-        if (routePlanSomePlaneResult) {
-            expect(routePlanSomePlaneResult.kind).toEqual('RoutePlane');
-
-            if (routePlanSomePlaneResult.kind === 'RoutePlane') {
-                expect(routePlanSomePlaneResult.match.value).toEqual('/1/some-parametric-plane/one');
-                expect(routePlanSomePlaneResult.match.parameters.id).toEqual('one');
-            }
+        expect(nested).toBeTruthy();
+        if (nested) {
+            expect(nested.kind).toEqual('RoutePlane');
+            expect(nested.match.value).toEqual('/1/some-parametric-plane/one');
+            expect(nested.match.parameters.id).toEqual('one');
+            expect(nested.match.query.tab).toEqual('2');
         }
+        // an absolute route plane stays absolute: `/some-other-plane` under `/1` is not `/1/some-other-plane`
+        expect(isoMatcher.match('/1/some-other-plane', 'route')).toBeUndefined();
+        expect(isoMatcher.match('/some-other-plane', 'route')?.kind).toEqual('RoutePlane');
     });
 });
 

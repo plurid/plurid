@@ -84,6 +84,16 @@ const App = () => {
                         </div>
                     )
                     : undefined}
+                renderPalette={flags.slotPalette
+                    ? () => (
+                        <div
+                            id="rt-custom-palette"
+                            style={{ position: 'fixed', top: 12, left: '50%', zIndex: 9999, color: '#7ee787' }}
+                        >
+                            CUSTOM PALETTE
+                        </div>
+                    )
+                    : undefined}
                 renderDockRail={flags.slotDockRail
                     ? () => (
                         <div

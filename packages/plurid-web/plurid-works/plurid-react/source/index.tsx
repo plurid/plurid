@@ -182,6 +182,19 @@
 // member would inline anonymously and trip TS4094 on the classes' private members).
 
 
+import {
+    runShortcut,
+} from '~services/logic/shortcuts';
+import {
+    describeShortcuts,
+} from '~services/logic/shortcuts/registry';
+import {
+    paletteRows,
+    filterRows,
+    scoreMatch,
+} from '~services/logic/palette';
+
+
 const internals = {
     /** The vocabulary's css fragments (styled-components `css`): compose your own chrome on the look's tokens. */
     chrome: {
@@ -198,6 +211,17 @@ const internals = {
     PluridPlaneControls,
     PluridPlaneDebugger,
     PluridSpaceDebugger,
+    /**
+     * THE COMMANDS, as data and as one call: `runShortcut(id, { dispatch, state, pubsub })` runs a
+     * binding without a key press (a host's menu, a custom palette), `describeShortcuts` is what the
+     * help and the palette render, `paletteRows` / `filterRows` / `scoreMatch` build a list like the
+     * engine's own.
+     */
+    runShortcut,
+    describeShortcuts,
+    paletteRows,
+    filterRows,
+    scoreMatch,
 };
 
 /**

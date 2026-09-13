@@ -188,6 +188,35 @@ export const refreshHiddenPlaneSizes = (
 };
 
 
+export interface Leash {
+    parent: TreePlane;
+    child: TreePlane;
+}
+
+/**
+ * The leashes to draw: every SHOWN child moved by hand (`manuallyPositioned`) that still hangs from
+ * a link (`linkCoordinates`) under a shown parent — its bridge band would point nowhere, a segment
+ * from the link's point to the child's edge is drawn instead.
+ */
+export const collectLeashes = (
+    tree: TreePlane[],
+    into: Leash[] = [],
+): Leash[] => {
+    for (const parent of tree) {
+        if (parent.show === false || !parent.children) {
+            continue;
+        }
+        for (const child of parent.children) {
+            if (child.show !== false && child.manuallyPositioned && child.linkCoordinates) {
+                into.push({ parent, child });
+            }
+        }
+        collectLeashes(parent.children, into);
+    }
+    return into;
+};
+
+
 /** Every plane id in the tree, children included. */
 export const collectPlaneIDs = (
     tree: TreePlane[],

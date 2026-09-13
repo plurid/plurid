@@ -26,6 +26,7 @@ const initialState = {
         rotationX: 0, // a camera-ish scalar — changing it must NOT record history
         tree: [{ planeID: '/a', show: true }],
         links: [] as any[],
+        history: { canUndo: false, canRedo: false, undoDepth: 0, redoDepth: 0, past: [] as any[], future: [] as any[] },
     },
 };
 
@@ -40,6 +41,8 @@ const reducer = (state = initialState, action: any) => {
             return { space: { ...state.space, rotationX: state.space.rotationX + 10 } };
         case 'space/restoreArrangement':
             return { space: { ...state.space, tree: action.payload.tree, links: action.payload.links } };
+        case 'space/setHistoryStatus':
+            return { space: { ...state.space, history: action.payload } };
         default:
             return state;
     }
@@ -163,5 +166,61 @@ describe('createHistoryMiddleware', () => {
         const afterRemote = store.getState().space.tree;
         store.dispatch({ type: 'space/undo' });
         expect(store.getState().space.tree).toBe(afterRemote);
+    });
+
+    it('every entry carries the name of its change and when it happened; the status lists them', () => {
+        const store = makeStore();
+        const history = () => store.getState().space.history;
+
+        store.dispatch({ type: 'TOGGLE_SHOW' });
+        store.dispatch({ type: 'TOGGLE_SHOW' });
+        expect(history().past.map((entry: any) => entry.label)).toEqual(['closed /a', 'opened /a']);
+        expect(history().future).toEqual([]);
+        for (const entry of history().past) {
+            expect(entry.at).toBeGreaterThan(0);
+        }
+
+        // an undo moves the newest step into the future, carrying its own name
+        store.dispatch({ type: 'space/undo' });
+        expect(history().past.map((entry: any) => entry.label)).toEqual(['closed /a']);
+        expect(history().future.map((entry: any) => entry.label)).toEqual(['opened /a']);
+        expect(history().canUndo).toBe(true);
+        expect(history().canRedo).toBe(true);
+    });
+
+    it('goTo jumps several steps as ONE restore, in both directions, and clamps to what exists', () => {
+        const store = makeStore();
+        const history = () => store.getState().space.history;
+
+        store.dispatch({ type: 'TOGGLE_SHOW' });
+        store.dispatch({ type: 'ADD_LINK', payload: { id: 'l1', sourcePlaneID: '/a', targetPlaneID: '/b' } });
+        store.dispatch({ type: 'TOGGLE_SHOW' });
+        expect(history().past).toHaveLength(3);
+        expect(show(store)).toBe(true);
+        expect(linkCount(store)).toBe(1);
+
+        // two steps back, as ONE restore: the link is undone with the second show toggle
+        store.dispatch({ type: 'space/historyGoTo', payload: { index: -2 } });
+        expect(show(store)).toBe(false);
+        expect(linkCount(store)).toBe(0);
+        expect(history().past).toHaveLength(1);
+        expect(history().future).toHaveLength(2);
+
+        // and forward again: both steps redone in one restore
+        store.dispatch({ type: 'space/historyGoTo', payload: { index: 2 } });
+        expect(show(store)).toBe(true);
+        expect(linkCount(store)).toBe(1);
+        expect(history().past).toHaveLength(3);
+        expect(history().future).toHaveLength(0);
+
+        // past the end: clamped to what exists — the arrangement the space started from
+        store.dispatch({ type: 'space/historyGoTo', payload: { index: -99 } });
+        expect(history().past).toHaveLength(0);
+        expect(history().canUndo).toBe(false);
+        expect(show(store)).toBe(true);
+        expect(linkCount(store)).toBe(0);
+        const before = JSON.stringify(store.getState().space.tree);
+        store.dispatch({ type: 'space/historyGoTo', payload: { index: -1 } });
+        expect(JSON.stringify(store.getState().space.tree)).toBe(before);
     });
 });

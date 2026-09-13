@@ -251,7 +251,9 @@ export const definePluridConfiguration = (
     if (flat.chrome !== undefined) { elements.chrome = flat.chrome; }
     if (flat.origin !== undefined) { elements.origin = { show: flat.origin }; }
     if (flat.planeBridge !== undefined) { elements.planeBridge = { show: flat.planeBridge }; }
+    if (flat.linkDraggable !== undefined) { elements.link = { ...(elements.link as any), draggable: flat.linkDraggable }; }
     if (flat.shortcutsTrigger !== undefined) { elements.shortcuts = { show: flat.shortcutsTrigger }; }
+    if (flat.palette !== undefined) { elements.palette = { show: flat.palette }; }
     if (flat.marquee !== undefined) { elements.marquee = { show: flat.marquee }; }
     if (Object.keys(elements).length > 0) { partial.elements = elements; }
     // #endregion elements

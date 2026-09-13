@@ -56,6 +56,43 @@
 
 
 // #region module
+const hasEntries = (
+    record: Record<string, string> | undefined,
+): boolean => !!record && Object.keys(record).length > 0;
+
+/**
+ * The `plurid` prop a plane's component receives. THE QUERY TRAVELS: the query, the fragment and
+ * the parameters are the REQUESTED route's (the tree node's `routeDivisions.plane`, what the link
+ * or the view asked for), the registered route's only when the request carried none.
+ */
+const pluridPropertyOf = (
+    registered: { route: { absolute: string; fragments: PluridPlaneComponentProperty['plane']['fragments']; parameters: Record<string, string>; query: Record<string, string> } },
+    node: TreePlane,
+    matchedRoute: PluridPlaneComponentProperty['route'] extends infer _ ? { match: { value: string; parameters?: Record<string, string>; query?: Record<string, string> } } | undefined : never,
+    pubSub: PluridPlaneComponentProperty['pubSub'],
+): PluridPlaneComponentProperty => {
+    const requested = node.routeDivisions?.plane;
+    const requestedFragments = requested?.fragments;
+    const hasFragments = !!requestedFragments
+        && ((requestedFragments.elements?.length ?? 0) > 0 || (requestedFragments.texts?.length ?? 0) > 0);
+    return {
+        plane: {
+            value: registered.route.absolute,
+            planeID: node.planeID,
+            parentPlaneID: node.parentPlaneID,
+            fragments: hasFragments ? requestedFragments : registered.route.fragments,
+            parameters: hasEntries(requested?.parameters) ? requested!.parameters : registered.route.parameters,
+            query: hasEntries(requested?.query) ? requested!.query : registered.route.query,
+        },
+        route: {
+            value: matchedRoute?.match.value || '',
+            parameters: matchedRoute?.match.parameters || {},
+            query: matchedRoute?.match.query || {},
+        },
+        pubSub,
+    };
+};
+
 export interface PluridRootOwnProperties {
     plane: TreePlane;
 }
@@ -143,22 +180,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     // and change the opacity
                     const Plane = activePlane.component as any; // HACK
 
-                    const pluridProperty: PluridPlaneComponentProperty = {
-                        plane: {
-                            value: activePlane.route.absolute,
-                            planeID: child.planeID,
-                            parentPlaneID: child.parentPlaneID,
-                            fragments: activePlane.route.fragments,
-                            parameters: activePlane.route.parameters,
-                            query: activePlane.route.query,
-                        },
-                        route: {
-                            value: matchedRoute?.match.value || '',
-                            parameters: matchedRoute?.match.parameters || {},
-                            query: matchedRoute?.match.query || {},
-                        },
-                        pubSub: defaultPubSub,
-                    };
+                    const pluridProperty = pluridPropertyOf(activePlane, child, matchedRoute, defaultPubSub);
                     const properties = {
                         plurid: {
                             ...pluridProperty,
@@ -277,22 +299,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log('Root Plane', Plane);
 
 
-    const pluridProperty: PluridPlaneComponentProperty = {
-        plane: {
-            value: pluridPlane.route.absolute,
-            planeID: plane.planeID,
-            parentPlaneID: plane.parentPlaneID,
-            fragments: pluridPlane.route.fragments,
-            parameters: pluridPlane.route.parameters,
-            query: pluridPlane.route.query,
-        },
-        route: {
-            value: matchedRoute?.match.value || '',
-            parameters: matchedRoute?.match.parameters || {},
-            query: matchedRoute?.match.query || {},
-        },
-        pubSub: defaultPubSub,
-    };
+    const pluridProperty = pluridPropertyOf(pluridPlane, plane, matchedRoute, defaultPubSub);
     const planeProperties = {
         plurid: {
             ...pluridProperty,

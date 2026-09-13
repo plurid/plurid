@@ -44,6 +44,16 @@ export const stringRemoveTrailing = (
 
 const PATH_SEPARATOR = '/';
 
+/** A route's `?query#fragment` part as written (`''` for none): what a link carries beyond its pathname. */
+export const routeSuffix = (
+    value: string,
+): string => {
+    const query = value.indexOf('?');
+    const hash = value.indexOf('#');
+    const at = query === -1 ? hash : (hash === -1 ? query : Math.min(query, hash));
+    return at === -1 ? '' : value.slice(at);
+};
+
 /** A path with one leading separator and no trailing ones (`'/'` alone becomes `''`). */
 export const cleanupPath = (
     value: string,

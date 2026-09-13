@@ -27,7 +27,7 @@ export const chromeModeOf = (
 /** Every piece of engine chrome, and the least mode that still renders it. */
 export type ChromePiece =
     | 'origin' | 'toolbar' | 'viewcube' | 'minimap'
-    | 'dockRail' | 'shortcuts' | 'planeControls' | 'resizeHandles' | 'marquee' | 'alignmentGuides' | 'debugger';
+    | 'dockRail' | 'shortcuts' | 'palette' | 'planeControls' | 'resizeHandles' | 'marquee' | 'alignmentGuides' | 'debugger';
 
 const MODE_RANK: Record<ChromeMode, number> = { none: 0, minimal: 1, full: 2 };
 
@@ -38,6 +38,7 @@ const LEAST_MODE: Record<ChromePiece, ChromeMode> = {
     minimap: 'full',
     dockRail: 'minimal',
     shortcuts: 'minimal',
+    palette: 'minimal',
     planeControls: 'minimal',
     resizeHandles: 'minimal',
     marquee: 'minimal',

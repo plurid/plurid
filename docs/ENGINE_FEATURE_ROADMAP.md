@@ -54,7 +54,7 @@ THE SIZING CONTRACT (`docs/ARCHITECTURE.md` §5.3.1): width is never the content
 
 ## Next 5: Browser, visual, and performance observability — DONE 2026-09-10
 
-`api.inspect()` (also on the handle and `usePluridApi()`): one plain snapshot — the camera, the motion, the gesture in flight, the view, the counts (dispatches, renders, shown / mounted / hidden / frozen / detached), every shown plane's identity, parentage, box, size mode, pin, spawning link, culling tier and render count, the links. The counters run only under `development.inspector` (`?debug=1` in the harness). The debuggers gained parentage, renders, renders/s and the gesture, and are `React.lazy` behind their flags — a bundle that never asks for them never loads their code (`e2e/diagnostics.spec.ts` asserts no debugger request without the flag, and that an orbit re-renders no plane: the render counts stand still). Repeatable performance: the bench gained the `relayout` and `spawn` scenarios next to the orbit, `pnpm bench` prints the table (`scripts/bench.mjs`). The browser and visual suites are the gates (`docs/HARNESS.md`). The bench measured that a view resize with N planes costs N `setPlaneSize` dispatches (every plane re-measures its new configured width and reports alone — 100 planes: ~110 dispatches and a 300–400 ms frame per relayout); a follow-up batches the reports of one relayout into one tree write.
+`api.inspect()` (also on the handle and `usePluridApi()`): one plain snapshot — the camera, the motion, the gesture in flight, the view, the counts (dispatches, renders, shown / mounted / hidden / frozen / detached), every shown plane's identity, parentage, box, size mode, pin, spawning link, culling tier and render count, the links. The counters run only under `development.inspector` (`?debug=1` in the harness). The debuggers gained parentage, renders, renders/s and the gesture, and are `React.lazy` behind their flags — a bundle that never asks for them never loads their code (`e2e/diagnostics.spec.ts` asserts no debugger request without the flag, and that an orbit re-renders no plane: the render counts stand still). Repeatable performance: the bench gained the `relayout` and `spawn` scenarios next to the orbit, `pnpm bench` prints the table (`scripts/bench.mjs`). The browser and visual suites are the gates (`docs/HARNESS.md`). The bench measured that a view resize with N planes cost N `setPlaneSize` dispatches (every plane re-measured and reported alone — 100 planes: ~110 dispatches and a 300–400 ms frame per relayout); since 2026-09-13 the application's one ResizeObserver delivers a frame's measurements as one `setPlaneSizes` (one tree write per relayout).
 
 ## Later: Renderer abstraction and WebXR
 
@@ -98,6 +98,8 @@ Landed 2026-09-02/03 (see ARCHITECTURE.md): the camera core and motion controlle
 
 Landed since:
 
+- DONE 2026-09-13: THE HISTORY SCRUBBER — every step carries a derived label and a time (`describeArrangementChange`), the status lists `past` / `future`, `space/historyGoTo` jumps N steps as one restore, and the toolbar's History drawer lists them with the present marked.
+- DONE 2026-09-13: THE COMMAND PALETTE (⌘/Ctrl+K) — the applicable commands with their keys, the bookmarks and presets, every shown plane, in one filtered list; a row runs the binding's own `run` (`runShortcut(id, …)`, exported), so a command has one implementation; `elements.palette.show`, `renderPalette`, `ui.paletteVisible`.
 - DONE 2026-09-10: REBASED COLLABORATIVE UNDO — a peer's applied change no longer clears the local history; every snapshot is replayed over the peer's arrangement (`services/logic/arrangement/rebase.ts`), the local change winning on its planes, the peer's everywhere else. Not OT: two drags of one plane resolve to the local intent on undo.
 - DONE 2026-09-05: `react-helmet-async` replaced by the document model (`PluridDocument` data; `<PluridDocument>` / `usePluridDocument`, `planes[].head`, `routes[].head`, a preserve's `document`, the server `document` hook; one `<title>`, hydration-clean). See ARCHITECTURE §9 and CONTROL_SURFACE "Document head". Streaming SSR stays out (late metadata from a resolved Suspense boundary lands in the body); `render: 'suspense'` is the buffered middle ground.
 - DONE 2026-09-05: the PAGE PRESENTATION (`space.presentation: 'page'`, flat `presentation`; `elements.plane.height` / `planeHeight` as the general mechanism): the space presents as a site — view-sized pages, the camera docked (`interaction.camera` dock functions), the chrome hidden by `data-plurid-docked`, the wheel the page's, links / the corner control / G / a pinch reveal, Escape docks. Pose is the state; no mode flag. See ARCHITECTURE §4 and CONTROL_SURFACE "The page presentation". hypod and `generate-plurid-app` migrate to the one knob. Left for later: a per-page scroll restoration across dock / undock is native (the scroller keeps its position); a page-transition (crossfade) between docked pages is not planned — the swing IS the transition.
@@ -105,14 +107,12 @@ Landed since:
 
 Deferred:
 
-- A command palette over the shortcut table (the table and the hooks make it a thin component).
 - A roll / free-look camera (the quaternion path is tested and off the camera path; the turntable has no roll by design).
 - Bookmarks UI beyond the toolbar drawer and the topics (a bookmark bar / thumbnails).
 - Copy / paste of planes across instances (needs a serialization of a plane subtree + link identity).
-- A history scrubber UI (the middleware exposes depths; a timeline needs snapshot labels).
 - Collision against planes when flying (no physics today).
 - `content-visibility` for culled planes (needs intrinsic sizes; `visibility: hidden` + containment is used).
 - A gallery / docs site generated from the harness scenarios.
 - A screen-reader 2D fallback (a linear list of the planes with the same commands).
 - State-preserving HMR for the kit (the dev loop restarts the server; client state survives only via persistence).
-- Query / fragment preservation on link routes (`resolveViewItem` strips them; the IsoMatcher parametric route-plane test stays skipped).
+- DONE 2026-09-13: QUERY / FRAGMENT PRESERVATION ON LINK ROUTES — a link's `?query#fragment` travels with the plane it opens (`routeSuffix`, `resolveViewItem` fills `routeDivisions.plane`, `Root` hands it to the component; two queries, two planes); the parametric route-plane test is un-skipped (a route plane nests under its route when its path is relative, an absolute path stays absolute; the route-plane branch reads the query off the raw value).

@@ -62,6 +62,7 @@ const japanese: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'カリング距離',
 
     toolbarDrawerShortcutsTitle: 'ショートカット',
+    toolbarDrawerHistoryTitle: '履歴',
     toolbarDrawerShortcutsToggleFirstPerson: '一人称を切り替える',
     toolbarDrawerShortcutsMoveForward: '前進する',
     toolbarDrawerShortcutsMoveBackward: '後退する',

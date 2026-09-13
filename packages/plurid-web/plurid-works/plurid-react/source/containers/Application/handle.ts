@@ -66,6 +66,8 @@ export interface PluridApplicationHandle extends PluridApi {
         get: () => PluridStateHistory;
         undo: () => void;
         redo: () => void;
+        /** Jump `index` steps as one restore: negative undoes, positive redoes (`history.get().past / .future` list them). */
+        goTo: (index: number) => void;
     };
     tree: {
         get: () => TreePlane[];

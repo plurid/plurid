@@ -309,7 +309,10 @@ test.describe('links and tree', () => {
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.viewSize.width === 1100);
         await page.waitForTimeout(600);
         const resizeAfter = await dispatches(page);
-        expect(resizeAfter - resizeBefore).toBeLessThanOrEqual(planeCount * 2 + 8);
+        // a resize is a handful of writes whatever the plane count: the view size, the relayout, ONE
+        // batch of the planes' new sizes (the application's one measurer), the measured relayout
+        expect(planeCount).toBeGreaterThan(1);
+        expect(resizeAfter - resizeBefore).toBeLessThanOrEqual(8);
 
         const rootsAfter = await tree(page);
         const after = findPlane(rootsAfter, root.planeID);
@@ -507,4 +510,59 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         expect(after.show).toBe(false);
         expect(await linkOpen(page, root.planeID, '/geometry/detail')).toBeNull();
     });
+
+    test('THE QUERY TRAVELS: two links to one route with different queries open two planes, each reading its own', async ({ page }) => {
+        await openHarness(page, '?linkQuery=1&reducedMotion=1&momentum=0');
+        const root = rootByRoute(await tree(page), '/geometry');
+        for (const mode of ['wire', 'solid']) {
+            await page.locator(`[data-plurid-plane="${root.planeID}"] [data-plurid-link-route$="/geometry/detail?mode=${mode}"]`).click();
+        }
+        await waitForChildren(page, root.planeID, 2);
+        const children = rootByRoute(await tree(page), '/geometry').children as any[];
+        expect(children.map((node) => node.route)).toEqual([children[0].route, children[0].route]);
+        expect(children[0].route.endsWith('/geometry/detail')).toBe(true);
+        expect(children[0].planeID).not.toBe(children[1].planeID);
+        expect(children.map((node) => node.routeDivisions.plane.query.mode)).toEqual(['wire', 'solid']);
+        // the DETAIL panel reads its query from the plane's props
+        for (const [index, mode] of ['wire', 'solid'].entries()) {
+            const readout = await page.locator(`[data-plurid-plane="${children[index].planeID}"] [data-rt-query]`).getAttribute('data-rt-query');
+            expect(JSON.parse(readout || '{}')).toEqual({ mode });
+        }
+        // the link's identity carries the query (a second click on `wire` closes the WIRE plane only)
+        await page.locator(`[data-plurid-plane="${root.planeID}"] [data-plurid-link-route$="?mode=wire"]`).click();
+        await page.waitForFunction((id) => (window as any).__rtTree().find((node: any) => node.planeID === id)?.children?.filter((child: any) => child.show !== false).length === 1, root.planeID);
+    });
+
+    test('a plurid link is not draggable: a drag from one is the space\'s, unless the host asks for the browser\'s', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        const root = rootByRoute(await tree(page), '/geometry');
+        const link = page.locator(`[data-plurid-plane="${root.planeID}"] [data-plurid-link-route$="/geometry/detail"]`);
+        await expect(link).toHaveAttribute('draggable', 'false');
+
+        // a real drag from the link: no native dragstart, no link ghost, and the plane stays put —
+        // a press on a control is the control's (the intent table returns `none`), so the drag does
+        // nothing at all rather than tearing a link out of the plane
+        await page.evaluate(() => {
+            (window as any).__rtDragStarts = 0;
+            document.addEventListener('dragstart', () => { (window as any).__rtDragStarts += 1; }, true);
+        });
+        const box = (await link.boundingBox())!;
+        const before = await camera(page);
+        const planesBefore = (await tree(page)).length;
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(box.x + box.width / 2 + 160, box.y + box.height / 2 + 60, { steps: 8 });
+        await page.mouse.up();
+        await settle(page);
+        expect(await page.evaluate(() => (window as any).__rtDragStarts)).toBe(0);
+        expect(await camera(page)).toEqual(before);
+        // a drag is not a click: the link did not open its plane either
+        expect((await tree(page)).length).toBe(planesBefore);
+
+        // the knob gives the anchor its native drag back
+        await openHarness(page, '?linkDraggable=1&reducedMotion=1&momentum=0');
+        const again = rootByRoute(await tree(page), '/geometry');
+        await expect(page.locator(`[data-plurid-plane="${again.planeID}"] [data-plurid-link-route$="/geometry/detail"]`)).toHaveAttribute('draggable', 'true');
+    });
 });
+

@@ -65,7 +65,7 @@
     import actions from '~services/state/actions';
 
     import {
-        reportPlaneSize,
+        observePlaneSize,
         resolvePlaneFallbackSize,
     } from '~services/logic/camera';
     import {
@@ -179,7 +179,8 @@ export interface PluridPlaneStateProperties {
 
 export interface PluridPlaneDispatchProperties {
     dispatchSetSpaceField: DispatchAction<typeof actions.space.setSpaceField>;
-    dispatchSetPlaneSize: DispatchAction<typeof actions.space.setPlaneSize>;
+    /** Watch the plane's element for its size through the application's one measurer; returns the unwatch. */
+    dispatchObservePlaneSize: (element: HTMLElement, planeID: string) => () => void;
     dispatchToggleSelection: DispatchAction<typeof actions.space.toggleSelection>;
 }
 
@@ -230,7 +231,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
         // #region dispatch
         dispatchSetSpaceField,
-        dispatchSetPlaneSize,
+        dispatchObservePlaneSize,
         dispatchToggleSelection,
         // #endregion dispatch
     } = properties;
@@ -408,43 +409,17 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     /**
      * Measure the rendered plane and write its size into the tree (`treePlane.width/height`) —
      * the source every geometry consumer reads (fit-to-view, framing, link beams, minimap, bounds).
-     * `offsetWidth/Height` are the untransformed layout box, so the CSS 3D transform never leaks
-     * into the measurement. The reducer is equality-gated, so a re-report costs nothing. A plane the
-     * user resized by hand (`sizeMode: 'manual'`) is left alone.
+     * The application's ONE measurer watches every plane (`observePlaneSize`): a frame's reports
+     * are one store write; the untransformed layout box is read, so the CSS 3D transform never leaks
+     * into the measurement. A plane the user resized by hand (`sizeMode: 'manual'`) and a plane
+     * that is not painted are left alone.
      */
     useEffect(() => {
         const element = planeRef.current;
-        if (
-            !element
-            || typeof ResizeObserver === 'undefined'
-            || treePlane.sizeMode === 'manual'
-            || stateCulled !== 'visible'
-        ) {
+        if (!element || treePlane.sizeMode === 'manual' || stateCulled !== 'visible') {
             return;
         }
-
-        const report = () => {
-            const width = Math.round(element.offsetWidth * 2) / 2;
-            const height = Math.round(element.offsetHeight * 2) / 2;
-            if (width <= 0 || height <= 0) {
-                return;
-            }
-            dispatchSetPlaneSize({
-                planeID,
-                width,
-                height,
-            });
-        };
-
-        report();
-        const observer = new ResizeObserver(() => {
-            report();
-        });
-        observer.observe(element);
-
-        return () => {
-            observer.disconnect();
-        };
+        return dispatchObservePlaneSize(element, planeID);
     }, [
         planeID,
         remountKey,
@@ -682,7 +657,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                     {treePlane.parentPlaneID && bridgeShown && chrome?.renderPlaneBridge && (
                         chrome.renderPlaneBridge(planeChromeContext) as React.ReactNode
                     )}
-                    {treePlane.parentPlaneID && bridgeShown && !chrome?.renderPlaneBridge && (
+                    {/* a child moved by hand keeps its link on a LEASH drawn by the beams layer; the band would point nowhere */}
+                    {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && !chrome?.renderPlaneBridge && (
                         <PlaneBridge
                             mouseOver={mouseOver}
                             bridgeLength={treePlane.bridgeLength}
@@ -804,10 +780,11 @@ const mapDispatchToProps = (
     ) => dispatch(
         actions.space.setSpaceField(payload),
     ),
-    dispatchSetPlaneSize: (
-        payload,
+    dispatchObservePlaneSize: (
+        element,
+        planeID,
     ) => dispatch(
-        reportPlaneSize(payload) as any,
+        observePlaneSize(element, planeID) as any,
     ),
     dispatchToggleSelection: (
         payload,

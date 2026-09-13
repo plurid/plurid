@@ -150,8 +150,12 @@ export interface FlatPluridConfiguration {
     origin?: boolean;
     /** `elements.planeBridge.show` — the bridge from a link to its spawned plane. */
     planeBridge?: boolean;
+    /** `elements.link.draggable` — a plurid link can be dragged like a browser link (default `false`). */
+    linkDraggable?: boolean;
     /** `elements.shortcuts.show` — the `?` trigger and its dialog. */
     shortcutsTrigger?: boolean;
+    /** `elements.palette.show` — the command palette (⌘/Ctrl+K). */
+    palette?: boolean;
     /** `elements.marquee.show` — the rubber-band selection rectangle. */
     marquee?: boolean;
     // #endregion elements
@@ -673,6 +677,7 @@ export type PluridShortcutID =
     | 'exitGrabMode'
     | 'dock'
     | 'help'
+    | 'palette'
     | 'toggleFirstPerson'
     | 'flyForward'
     | 'flyBack'
@@ -849,6 +854,8 @@ export interface PluridConfigurationElements {
     planeBridge?: PluridConfigurationElementsToggle;
     /** The `?` trigger and its dialog; the shortcuts themselves stay on. */
     shortcuts?: PluridConfigurationElementsToggle;
+    /** The command palette (⌘/Ctrl+K); its shortcut stays on when the chrome is hidden, so a host can open it. */
+    palette?: PluridConfigurationElementsToggle;
     /** The rubber-band selection rectangle. */
     marquee?: PluridConfigurationElementsToggle;
     toolbar: PluridConfigurationElementsToolbar;
@@ -977,6 +984,13 @@ export interface PluridConfigurationElementsPlaneControlsPathbar {
 
 export interface PluridConfigurationElementsLink {
     suffix: string;
+    /**
+     * Whether a plurid link can be DRAGGED like an ordinary browser link (to a tab, a bookmark bar,
+     * another window). Default `false`: in the space a press on a link is the space's — a drag from
+     * one orbits or pans, and the browser's link-drag ghost never appears. `true` gives the anchor
+     * its native drag back.
+     */
+    draggable?: boolean;
     preview: {
         show: boolean;
         fadeIn: number;

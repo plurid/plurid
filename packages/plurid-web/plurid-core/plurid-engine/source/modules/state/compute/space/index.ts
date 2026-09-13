@@ -152,6 +152,8 @@ const resolveSpace = <C>(
             canRedo: false,
             undoDepth: 0,
             redoDepth: 0,
+            past: [],
+            future: [],
         },
 
         tree: computedTree,

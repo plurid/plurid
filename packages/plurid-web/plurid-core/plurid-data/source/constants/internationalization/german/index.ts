@@ -62,6 +62,7 @@ const german: Internationalization = {
     toolbarDrawerTechnicalCullingDistance: 'keulungsentfernung',
 
     toolbarDrawerShortcutsTitle: 'verknüpfungen',
+    toolbarDrawerHistoryTitle: 'verlauf',
     toolbarDrawerShortcutsToggleFirstPerson: 'erste person umschalten',
     toolbarDrawerShortcutsMoveForward: 'vorwärts bewegen',
     toolbarDrawerShortcutsMoveBackward: 'rückwärts bewegen',
