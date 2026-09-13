@@ -1,6 +1,8 @@
 # Plurid — Package Map & Status
 
-_Last updated: 2026-07-02._
+_Last updated: 2026-09-13 (the status table was two months behind the source; the engine test count,
+the kit publication status and the testing/CI rows were corrected. The per-package notes below still
+read as of 2026-07-02 unless dated otherwise.)_
 
 This is the governance map for the monorepo: **what is live, what is legacy, what is experimental**, and how the workspace/quality gates cover each package. It exists because folder names alone don't make those distinctions clear (the lens `docs/ENGINE_AUDIT_AND_ROADMAP.md` asked for).
 
@@ -27,11 +29,11 @@ Gates: **B**uild · **T**est · **L**int (as run by the package's own scripts). 
 | Package | Role | Status | Gates | Root gates | Notes |
 |---|---|---|---|---|---|
 | `@plurid/plurid-data` | shared types/constants/enums/theme+route data | **LIVE (core)** | BTL | ✅ | Has `test` + invariant suite (default config, pubsub-topic uniqueness, `defaultTreePlane`). Locale data bundled — see subpath-export backlog. |
-| `@plurid/plurid-engine` | plane tree, layout, routing, math | **LIVE (core)** | BTL | ✅ | The deepest module. Tree mutations immutable + structurally shared. 190 tests, one skipped (`pnpm --filter @plurid/plurid-engine test`; 2026-09-06). |
+| `@plurid/plurid-engine` | plane tree, layout, routing, math | **LIVE (core)** | BTL | ✅ | The deepest module. Tree mutations immutable + structurally shared. 271 tests, none skipped (`pnpm --filter @plurid/plurid-engine test`; 2026-09-13). |
 | `@plurid/plurid-pubsub` | event bridge | **LIVE (core)** | BTL | ✅ | Thin behavioral tests. |
 | `@plurid/plurid-react` | primary render adapter | **LIVE (works)** | BTL | ✅ | 35 jest suites (205 tests: lifecycle, store, hooks, links, planes, chrome, the look) plus the browser harness (`fixtures/render-test`: 110 chromium scenarios, 38 strict visual baselines; `docs/HARNESS.md`), 2026-09-06. `View`/`router`/`Link` remain the decomposition targets. |
 | `@plurid/plurid-react-server` | SSR / static "stills" | **LIVE (works)** | BTL | ✅ | Hardened 2026-06-21: XSS-safe metastate injection, Express 5 (+ html-minifier-terser), Stiller browser-reuse/leak-safe, **stills pipeline re-wired** (Puppeteer = optional peer), template-util + Renderer SSR tests. |
-| `@plurid/plurid-kit` | framework layer (config + CLI + bootstraps) | **LIVE (framework, build-out)** | BTL | yes | Unpublished (`0.0.0-0`), bin `plurid`. `plurid.config.ts` contract + `dev/build/start/info` CLI (now config-loading) + `createPluridServer`/`createPluridClient`; bakes the styled-components v6 workarounds. Plan of record: `docs/FRAMEWORK_PLAN.md`. |
+| `@plurid/plurid-kit` | framework layer (config + CLI + bootstraps) | **LIVE (framework, build-out)** | BTL | yes | Published as a pre-release, bin `plurid`. `plurid.config.ts` contract + `dev/build/start/info` CLI (now config-loading) + `createPluridServer`/`createPluridClient`; bakes the styled-components v6 workarounds. Plan of record: `docs/FRAMEWORK_PLAN.md`. |
 | `@plurid/plurid-routes-server` | route server | **LEGACY / orphaned** | — | ❌ (de-globbed) | De-globbed (`!` in `pnpm-workspace.yaml`, 2026-06-21). Zero in-repo consumers; a pluriverse-era Express route-cache, not in the live graph. Source kept on disk. |
 | `@plurid/plurid-functions`, `…-react` | utilities | **LIVE (utilities)** | BT | ✅ | Best-covered utilities. `eval` removed. |
 | `@plurid/plurid-themes` | theme objects | **LIVE (utilities)** | BTL | ✅ | Aggregate default export — subpath exports pending. |

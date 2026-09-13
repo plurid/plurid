@@ -26,9 +26,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_EMPTY` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_EMPTY };
-
 
 const StyledPluridEmpty = styled.div<{ theme: Theme }>`
     position: absolute;

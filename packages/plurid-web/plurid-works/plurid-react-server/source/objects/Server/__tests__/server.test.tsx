@@ -224,23 +224,6 @@ describe('PluridServer over HTTP', () => {
         }
     });
 
-    it('a deprecated `helmet` option warns once and is otherwise ignored', async () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
-        try {
-            const server = new PluridServer(configuration({ helmet: {}, options: { quiet: false, debug: 'none', attachSignalHandlers: false, compression: false, hostname: 'localhost' } }));
-            expect(warn).toHaveBeenCalledTimes(1);
-            expect(warn.mock.calls[0][0]).toContain('helmet');
-            const instance = await listen(server);
-            try {
-                const { body } = await get(instance, '/');
-                expect(body).toContain('<title>in-render</title>');
-            } finally {
-                await close(instance);
-            }
-        } finally {
-            warn.mockRestore();
-        }
-    });
 
     describe('loading failures and post-response hooks (C07 / C08 / C09, 2026-09-06)', () => {
         it('an onServe failure without onError is the request\'s failure: the error page, not a normal-looking response', async () => {

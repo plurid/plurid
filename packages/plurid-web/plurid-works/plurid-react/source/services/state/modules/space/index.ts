@@ -80,12 +80,6 @@ const initialState: PluridStateSpace = {
     cameraLimits: cameraEngine.DEFAULT_CAMERA_LIMITS,
     motion: 'idle',
     dockingPlaneID: '',
-    scale: 1,
-    rotationX: 0,
-    rotationY: 0,
-    translationX: 0,
-    translationY: 0,
-    translationZ: 0,
     tree: [],
     links: [],
     activeUniverseID: '',
@@ -139,28 +133,19 @@ const commitCamera = (
     next: CameraState,
 ) => {
     const camera = cameraEngine.clampCamera(next, state.cameraLimits);
-    const legacy = cameraEngine.toLegacy(camera, state.viewSize);
 
     state.camera = camera;
-    state.rotationX = legacy.rotationX;
-    state.rotationY = legacy.rotationY;
-    state.translationX = legacy.translationX;
-    state.translationY = legacy.translationY;
-    state.translationZ = legacy.translationZ;
-    state.scale = legacy.scale;
     state.transform = cameraEngine.cameraMatrix3d(camera, state.viewSize);
 };
 
+/**
+ * The camera as the legacy six scalars. Derived, never stored: the state used to carry a mirror of
+ * these next to `camera`, which was a cache to keep in sync and a second source of truth to get
+ * wrong. `toLegacy` is the same function that filled it (2026-09-13).
+ */
 const currentLegacy = (
     state: PluridStateSpace,
-): SpaceTransform => ({
-    rotationX: state.rotationX,
-    rotationY: state.rotationY,
-    translationX: state.translationX,
-    translationY: state.translationY,
-    translationZ: state.translationZ,
-    scale: state.scale,
-});
+): SpaceTransform => cameraEngine.toLegacy(state.camera, state.viewSize);
 
 /** Commit from the legacy six scalars (the pivot re-parameterizes to the view center; lossless). */
 const commitLegacy = (
@@ -198,12 +183,12 @@ const zoomAboutCenter = (
     state: PluridStateSpace,
     nextScale: number,
 ) => {
-    if (nextScale <= 0 || nextScale === state.scale) {
+    if (nextScale <= 0 || nextScale === state.camera.scale) {
         return;
     }
     applyDelta(state, {
         zoom: {
-            factor: nextScale / state.scale,
+            factor: nextScale / state.camera.scale,
         },
     });
 };
@@ -624,22 +609,22 @@ export const space = createSlice({
         // Zoom: one multiplicative `zoomAt` for every path; the stepped actions zoom about the view
         // center by the legacy additive step so their feel is unchanged.
         scaleUp: (state) => {
-            zoomAboutCenter(state, state.scale + SCALE_STEP);
+            zoomAboutCenter(state, state.camera.scale + SCALE_STEP);
         },
         scaleDown: (state) => {
-            zoomAboutCenter(state, state.scale - SCALE_STEP);
+            zoomAboutCenter(state, state.camera.scale - SCALE_STEP);
         },
         scaleUpWith: (
             state,
             action: PayloadAction<number>,
         ) => {
-            zoomAboutCenter(state, state.scale + Math.abs(action.payload));
+            zoomAboutCenter(state, state.camera.scale + Math.abs(action.payload));
         },
         scaleDownWith: (
             state,
             action: PayloadAction<number>,
         ) => {
-            zoomAboutCenter(state, state.scale - Math.abs(action.payload));
+            zoomAboutCenter(state, state.camera.scale - Math.abs(action.payload));
         },
         /**
          * Zoom toward a view point (the cursor, a pinch midpoint) keeping the content under it
@@ -659,7 +644,7 @@ export const space = createSlice({
 
             const resolvedFactor = factor !== undefined
                 ? factor
-                : (state.scale + (deltaScale || 0)) / state.scale;
+                : (state.camera.scale + (deltaScale || 0)) / state.camera.scale;
 
             applyDelta(state, {
                 zoom: {
@@ -748,13 +733,19 @@ export const space = createSlice({
             if (width === state.viewSize.width && height === state.viewSize.height) {
                 return;
             }
-            state.viewSize = action.payload;
             // Keep the PICTURE anchored, not the pivot: re-derive the camera from the legacy
             // scalars about the new center. At rotation 0 nothing moves (a fresh identity space
             // stays identity when the measured view replaces the window guess, and the layout's
             // top-left-origin coordinates keep lining up); under rotation the orbit pivot follows
             // the new center, as it always did.
-            commitLegacy(state, currentLegacy(state));
+            //
+            // The scalars are read BEFORE the view changes and IN THE OLD VIEW — they are what the
+            // picture is anchored to. (They used to be a cached mirror on the state, last written
+            // against the old view, which made the ordering invisible; deriving them made it
+            // load-bearing, and deriving after the assignment quietly turned this into a no-op.)
+            const anchored = cameraEngine.toLegacy(state.camera, state.viewSize);
+            state.viewSize = action.payload;
+            commitLegacy(state, anchored);
         },
         // #endregion camera
 
@@ -831,13 +822,6 @@ export const space = createSlice({
          * untouched, so a re-measurement that found nothing new dispatches into a no-op.
          */
         updateLinkCoordinates: (
-            state,
-            action: PayloadAction<UpdateSpaceLinkCoordinatesPayload>,
-        ) => {
-            reduceLinkCoordinates(state, action.payload);
-        },
-        /** @deprecated Alias of `updateLinkCoordinates`. */
-        updateSpaceLinkCoordinates: (
             state,
             action: PayloadAction<UpdateSpaceLinkCoordinatesPayload>,
         ) => {

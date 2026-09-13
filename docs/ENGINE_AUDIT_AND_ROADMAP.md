@@ -74,7 +74,7 @@ The render harness production chunk is already above the default Vite warning th
 
 ### Route grammar
 
-Route parsing/matching behavior is spread across modules and parametric route coverage still contains a skipped case. Consolidate grammar and matching behind one tested contract before adding route features.
+Route parsing/matching behavior is spread across modules and parametric route coverage was un-skipped and passes (2026-09-13). Consolidate grammar and matching behind one tested contract before adding route features.
 
 **Done when:** literal, parameterized, nested, invalid, and round-trip cases share one conformance suite with no unexplained skip.
 

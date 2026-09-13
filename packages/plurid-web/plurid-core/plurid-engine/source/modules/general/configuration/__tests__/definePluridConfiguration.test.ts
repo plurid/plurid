@@ -164,7 +164,6 @@ describe('definePluridConfiguration', () => {
             opaque: false,
             camera: '/geometry',
             transformMode: 'ROTATION',
-            cullingDistance: 9999,
             fadeInTime: 42,
             transformOrigin: { show: true },
         });
@@ -172,7 +171,6 @@ describe('definePluridConfiguration', () => {
         expect(configuration.space.opaque).toBe(false);
         expect(configuration.space.camera).toBe('/geometry');
         expect(configuration.space.transformMode).toBe('ROTATION');
-        expect(configuration.space.culling?.distance).toBe(9999);
         expect(configuration.space.fadeInTime).toBe(42);
         // Merged over the default origin — `show` overridden, `size` default retained.
         expect(configuration.space.transformOrigin.show).toBe(true);

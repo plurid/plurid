@@ -141,7 +141,6 @@ class PluridServer implements PluridServerContext {
             routes,
             planes,
             preserves,
-            helmet,
             document,
             render,
             styles,
@@ -169,11 +168,6 @@ class PluridServer implements PluridServerContext {
         this.routerProperties = routerProperties || {};
         this.services = services || [];
         this.options = resolveServerOptions(options);
-        if (helmet !== undefined && !this.options.quiet) {
-            console.warn(
-                `[${this.options.serverName}] the \`helmet\` option is ignored: the head is the document model now (template.head, a route's / plane's head, <PluridDocument>, a preserve's document, the document hook).`,
-            );
-        }
         this.template = template;
         this.templateDocument = documentFromTemplate(template);
         this.usePTTP = usePTTP ?? false;

@@ -6,6 +6,7 @@
 
     import {
         TreePlane,
+        CameraState,
         defaultConfiguration,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -60,10 +61,20 @@ const plane = (
 ): TreePlane => treePlane(planeID, { location, width: size.width ?? 0, height: size.height ?? 0, children });
 
 
+/**
+ * The legacy six, DERIVED. The state used to mirror them next to `camera`; the mirror is gone
+ * (2026-09-13) and `toLegacy` is the same function that used to fill it, so these tests still assert
+ * exactly the legacy parameterization they were written for.
+ */
+const legacy = (
+    state: { camera: CameraState },
+) => cameraEngine.toLegacy(state.camera, view);
+
+
 describe('space slice camera commit path', () => {
-    it('mirrors every camera commit into the legacy scalars and the rendered matrix', () => {
+    it('every camera commit derives the legacy scalars and the rendered matrix', () => {
         const state = reducer(initial(), actions.rotateXWith(10));
-        expect(state.rotationX).toBeCloseTo(10, 9);
+        expect(legacy(state).rotationX).toBeCloseTo(10, 9);
         expect(state.camera.pitch).toBeCloseTo(10, 9);
 
         const expected = cameraEngine.cameraMatrix3d(
@@ -78,7 +89,7 @@ describe('space slice camera commit path', () => {
 
     it('setTransform() recomputes the matrix (it used to leave it stale)', () => {
         const state = reducer(initial(), actions.setTransform({ rotationY: 30 }));
-        expect(state.rotationY).toBeCloseTo(30, 9);
+        expect(legacy(state).rotationY).toBeCloseTo(30, 9);
         expect(state.transform).not.toBe(cameraEngine.IDENTITY_MATRIX3D);
         expect(state.transform).toBe(cameraEngine.cameraMatrix3d(state.camera, view));
     });
@@ -86,8 +97,8 @@ describe('space slice camera commit path', () => {
     it('legacy translate actions are exact screen-space pans at any orientation', () => {
         // at rotation 0 the legacy scalar semantics hold exactly
         const flat = reducer(initial(), actions.translateXWith(100));
-        expect(flat.translationX).toBeCloseTo(100, 6);
-        expect(flat.translationY).toBeCloseTo(0, 6);
+        expect(legacy(flat).translationX).toBeCloseTo(100, 6);
+        expect(legacy(flat).translationY).toBeCloseTo(0, 6);
 
         // pitched: the pivot-depth content must move by exactly the requested screen delta
         const pitched = reducer(initial(), actions.rotateXWith(60));
@@ -104,37 +115,37 @@ describe('space slice camera commit path', () => {
         const anchor = { x: 800, y: 100 };
         const world = cameraEngine.unprojectAtCameraZ(rotated.camera, view, anchor, 0);
         const zoomed = reducer(rotated, actions.zoomAtPoint({ deltaScale: 0.5, originX: anchor.x, originY: anchor.y }));
-        expect(zoomed.scale).toBeCloseTo(1.5, 9);
+        expect(zoomed.camera.scale).toBeCloseTo(1.5, 9);
         const projected = cameraEngine.project(zoomed.camera, view, world);
         expect(projected.x).toBeCloseTo(anchor.x, 5);
         expect(projected.y).toBeCloseTo(anchor.y, 5);
 
         const byFactor = reducer(rotated, actions.zoomAtPoint({ factor: 2, originX: anchor.x, originY: anchor.y }));
-        expect(byFactor.scale).toBeCloseTo(2, 9);
+        expect(byFactor.camera.scale).toBeCloseTo(2, 9);
     });
 
     it('stepped zoom keeps the legacy step and the limits', () => {
         const up = reducer(initial(), actions.scaleUp());
-        expect(up.scale).toBeCloseTo(1.05, 9);
+        expect(up.camera.scale).toBeCloseTo(1.05, 9);
         let state = initial();
         for (let i = 0; i < 100; i += 1) {
             state = reducer(state, actions.scaleUp());
         }
-        expect(state.scale).toBe(4);
+        expect(state.camera.scale).toBe(4);
     });
 
     it('clamps the pitch and wraps the yaw', () => {
         const state = reducer(reducer(initial(), actions.rotateXWith(200)), actions.rotateYWith(400));
-        expect(state.rotationX).toBe(89);
-        expect(state.rotationY).toBeCloseTo(40, 9);
+        expect(legacy(state).rotationX).toBe(89);
+        expect(legacy(state).rotationY).toBeCloseTo(40, 9);
     });
 
     it('spaceResetTransform() returns to the identity', () => {
         const moved = reducer(reducer(initial(), actions.rotateYWith(40)), actions.translateXWith(200));
         const reset = reducer(moved, actions.spaceResetTransform());
         expect(reset.transform).toBe(cameraEngine.IDENTITY_MATRIX3D);
-        expect(reset.rotationY).toBe(0);
-        expect(reset.translationX).toBeCloseTo(0, 9);
+        expect(legacy(reset).rotationY).toBe(0);
+        expect(legacy(reset).translationX).toBeCloseTo(0, 9);
     });
 
     it('setViewSize() re-renders the same camera about the new center', () => {
@@ -168,9 +179,9 @@ describe('space slice camera commit path', () => {
         );
 
         const fitted = reducer(arranged, actions.spaceFitToView());
-        expect(fitted.rotationX).toBe(0);
-        expect(fitted.rotationY).toBe(0);
-        expect(fitted.scale).toBeLessThan(4);
+        expect(legacy(fitted).rotationX).toBe(0);
+        expect(legacy(fitted).rotationY).toBe(0);
+        expect(fitted.camera.scale).toBeLessThan(4);
 
         const corners = [
             ...cameraEngine.planeCorners({ location: root.location, width: 400, height: 300 }),

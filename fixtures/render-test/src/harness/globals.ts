@@ -58,7 +58,7 @@ export const installHarnessGlobals = (
                 setTimeout(applyWhenMeasured, 30);
                 return;
             }
-            api.pubsub.publish({ topic: 'space.setViewpoint', data: { viewpoint: encoded, animated: false } });
+            api.pubsub.publish({ topic: 'space.setViewpoint', data: { viewpoint: encoded, animate: false } });
         };
         setTimeout(applyWhenMeasured, 30);
     }

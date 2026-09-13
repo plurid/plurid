@@ -1,0 +1,15 @@
+{
+    "@plurid/generate-plurid-app": 10,
+    "@plurid/plurid-data": 25,
+    "@plurid/plurid-engine": 40,
+    "@plurid/plurid-functions": 10,
+    "@plurid/plurid-functions-react": 5,
+    "@plurid/plurid-icons-react": 70,
+    "@plurid/plurid-kit": 5,
+    "@plurid/plurid-pubsub": 5,
+    "@plurid/plurid-react": 140,
+    "@plurid/plurid-react-server": 15,
+    "@plurid/plurid-themes": 15,
+    "@plurid/plurid-ui-components-react": 30,
+    "@plurid/plurid-ui-state-react": 5
+}

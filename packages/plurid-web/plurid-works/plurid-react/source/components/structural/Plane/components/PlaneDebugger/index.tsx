@@ -43,9 +43,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_PLANE_DEBUGGER` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_PLANE_DEBUGGER };
-
 
 const StyledPluridPlaneDebugger = styled.pre<{ theme: Theme }>`
     position: absolute;

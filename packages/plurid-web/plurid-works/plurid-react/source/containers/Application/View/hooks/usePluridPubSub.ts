@@ -328,7 +328,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
                 callback: (data) => {
-                    const plane = data?.planeID ?? data?.plane;
+                    const plane = data?.planeID;
                     if (typeof plane !== 'string') {
                         return;
                     }
@@ -359,7 +359,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
                 callback: (data) => {
-                    const plane = data?.planeID ?? data?.plane;
+                    const plane = data?.planeID;
                     if (typeof plane !== 'string') {
                         return;
                     }
@@ -389,7 +389,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
                 callback: (data) => {
-                    const id = data?.planeID ?? data?.id;
+                    const id = data?.planeID;
 
                     const plane = space.tree.logic.getTreePlaneByID(
                         latest.current.stateTree,
@@ -405,7 +405,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
                 callback: (data) => {
-                    const id = data?.planeID ?? data?.id;
+                    const id = data?.planeID;
 
                     if (typeof id !== 'string') {
                         return;
@@ -426,7 +426,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
                 callback: (data) => {
-                    const id = data?.planeID ?? data?.id;
+                    const id = data?.planeID;
                     const navigate = data?.navigate;
                     if (typeof id !== 'string') {
                         return;
@@ -528,7 +528,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION,
                 callback: (data) => {
-                    const id = data?.planeID ?? data?.id;
+                    const id = data?.planeID;
                     if (!id) {
                         return;
                     }
@@ -543,7 +543,7 @@ export const usePluridPubSub = (
             },
             {
                 // Programmatic camera control: decode the host-supplied viewpoint (v1 scalars or a v2
-                // camera) and move the camera there; `animated` routes it through the transform
+                // camera) and move the camera there; `animate` routes it through the transform
                 // animation (otherwise it jumps). Invalid encodings are ignored, never corrupting the
                 // view. Reads the live latest.current.state inside the thunk (no stale closure).
                 topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT,
@@ -552,7 +552,7 @@ export const usePluridPubSub = (
                     if (typeof encoded !== 'string') {
                         return;
                     }
-                    dispatch(setViewpoint(encoded, !!((data as any)?.animate ?? (data as any)?.animated)) as any);
+                    dispatch(setViewpoint(encoded, !!(data as any)?.animate) as any);
                 },
             },
             {

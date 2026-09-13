@@ -30,12 +30,17 @@ const makeAdapter = () => {
 
 const fakeState = () => ({
     space: {
-        rotationX: 5,
-        rotationY: -10,
-        scale: 1.5,
-        translationX: 20,
-        translationY: 30,
-        translationZ: 0,
+        // the CAMERA is what a snapshot carries (2026-09-13: the legacy scalar mirrors are gone from
+        // the state — one source of truth, `toLegacy` derives the six when something still wants them)
+        camera: {
+            pitch: 5,
+            yaw: -10,
+            roll: 0,
+            scale: 1.5,
+            offset: { x: 20, y: 30, z: 0 },
+            pivot: { x: 0, y: 0, z: 0 },
+            perspective: 1500,
+        },
         transform: 'matrix3d(...)',
         activePlaneID: '/a',
         isolatePlane: '',
@@ -68,8 +73,8 @@ describe('state.local storage adapter', () => {
         expect(localStorage.getItem('pluridState-unit')).toBeNull();
 
         const loaded = load('unit', true, adapter);
-        expect(loaded?.space.rotationX).toBe(5);
-        expect(loaded?.space.scale).toBe(1.5);
+        expect(loaded?.space.camera?.pitch).toBe(5);
+        expect(loaded?.space.camera?.scale).toBe(1.5);
         expect(loaded?.space.tree?.length).toBe(1);
         // the view the camera was framed in travels with it; the transient fields do not
         expect(loaded?.space.viewSize).toEqual({ width: 1280, height: 800 });
@@ -108,7 +113,7 @@ describe('state.local storage adapter', () => {
         expect(localStorage.getItem('pluridState-fallback')).not.toBeNull();
 
         const loaded = load('fallback', true);
-        expect(loaded?.space.rotationX).toBe(5);
+        expect(loaded?.space.camera?.pitch).toBe(5);
     });
 
     it('swallows a throwing adapter (persistence is best-effort)', () => {

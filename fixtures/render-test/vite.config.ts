@@ -4,13 +4,14 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
     plugins: [react()],
-    server: {
-        /**
-         * The VISUAL baselines are generated and compared inside the pinned Playwright container
-         * (`e2e/visual.spec.ts`), which reaches this dev server through the host gateway. Vite
-         * refuses a Host header it does not know, so the gateway's name is allowed here — it is a
-         * test harness, served on localhost, never deployed.
-         */
-        allowedHosts: ['host.docker.internal'],
-    },
+    /**
+     * NOTE (2026-09-13): `server.allowedHosts: ['host.docker.internal']` used to live here, so the
+     * pinned Playwright container could reach this dev server through the host gateway while
+     * generating the `linux` visual baselines. That recipe is WRONG and the allowance is gone: a
+     * plane's bar renders its full route, so the origin the harness is served from ends up inside
+     * every screenshot, and 28 baselines went in reading `plurid://host.docker.internal:5273/…`
+     * against a CI that renders `plurid://localhost:5273/…`. The harness must be reached at
+     * `localhost:5273` — `e2e/visual.spec.ts` now refuses anything else, and Vite refusing the
+     * gateway's Host header is the second lock on the same door.
+     */
 });

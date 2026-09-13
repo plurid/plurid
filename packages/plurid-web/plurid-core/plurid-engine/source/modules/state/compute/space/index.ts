@@ -10,6 +10,7 @@
         TreePlane,
         CameraState,
         CameraLimits,
+        SpaceTransform,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -122,12 +123,6 @@ const resolveSpace = <C>(
         cameraLimits,
         motion: 'idle',
         dockingPlaneID: '',
-        scale: 1,
-        rotationX: 0,
-        rotationY: 0,
-        translationX: 0,
-        translationY: 0,
-        translationZ: 0,
         transform: 'matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)',
         activeUniverseID: '',
         viewSize: initialViewSize,
@@ -181,27 +176,19 @@ const resolveSpace = <C>(
     //     currentState: currentState?.space,
     // });
 
-    if (currentState) {
-        stateSpace.translationX = currentState.space.translationX;
-        stateSpace.translationY = currentState.space.translationY;
-        stateSpace.translationZ = currentState.space.translationZ;
-        stateSpace.rotationX = currentState.space.rotationX;
-        stateSpace.rotationY = currentState.space.rotationY;
-        stateSpace.scale = currentState.space.scale;
-    }
-
-    if (localState && !currentState) {
-        stateSpace.translationX = localState.space.translationX;
-        stateSpace.translationY = localState.space.translationY;
-        stateSpace.translationZ = localState.space.translationZ;
-        stateSpace.rotationX = localState.space.rotationX;
-        stateSpace.rotationY = localState.space.rotationY;
-        stateSpace.scale = localState.space.scale;
-    }
+    /**
+     * A legacy caller — or a snapshot older than the camera — may carry only the six scalars instead
+     * of a `camera`. They are no longer part of the state (2026-09-13: the deprecated mirrors are
+     * gone, the camera is the one source of truth), so they are read off the INCOMING object and
+     * used for nothing but deriving a camera when there is none.
+     */
+    const incomingLegacy = (
+        currentState ? currentState.space : localState?.space
+    ) as Partial<SpaceTransform> | undefined;
 
     // The camera is the source of truth; the scalars and the matrix are derived from it. A snapshot
     // (or a legacy caller) may carry only the scalars — derive the camera from them in that case.
-    // Always re-commit so `transform` matches THIS view size and the mirrors are consistent.
+    // Always re-commit so `transform` matches THIS view size.
     const restoredCamera = (currentState?.space.camera && cameraEngine.isCameraState(currentState.space.camera))
         ? currentState.space.camera
         : (localState?.space.camera && cameraEngine.isCameraState(localState.space.camera))
@@ -216,12 +203,12 @@ const resolveSpace = <C>(
             }
             : cameraEngine.fromLegacy(
                 {
-                    rotationX: stateSpace.rotationX,
-                    rotationY: stateSpace.rotationY,
-                    translationX: stateSpace.translationX,
-                    translationY: stateSpace.translationY,
-                    translationZ: stateSpace.translationZ,
-                    scale: stateSpace.scale,
+                    rotationX: incomingLegacy?.rotationX ?? 0,
+                    rotationY: incomingLegacy?.rotationY ?? 0,
+                    translationX: incomingLegacy?.translationX ?? 0,
+                    translationY: incomingLegacy?.translationY ?? 0,
+                    translationZ: incomingLegacy?.translationZ ?? 0,
+                    scale: incomingLegacy?.scale ?? 1,
                 },
                 stateSpace.viewSize,
                 perspective,
@@ -237,17 +224,9 @@ const resolveSpace = <C>(
             ?? resolvedCamera;
     }
 
-    const legacy = cameraEngine.toLegacy(resolvedCamera, stateSpace.viewSize);
-
     stateSpace.camera = resolvedCamera;
     stateSpace.cameraLimits = cameraLimits;
     stateSpace.motion = 'idle';
-    stateSpace.rotationX = legacy.rotationX;
-    stateSpace.rotationY = legacy.rotationY;
-    stateSpace.translationX = legacy.translationX;
-    stateSpace.translationY = legacy.translationY;
-    stateSpace.translationZ = legacy.translationZ;
-    stateSpace.scale = legacy.scale;
     stateSpace.transform = cameraEngine.cameraMatrix3d(resolvedCamera, stateSpace.viewSize);
 
     return stateSpace;

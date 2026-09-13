@@ -52,7 +52,7 @@ const RouterDemo: React.FC = () => (
         onReady={(api) => {
             (window as unknown as { __rtRouterReady?: unknown; __rtRouterRotation?: number }).__rtRouterReady = api;
             api.pubsub.publish({ topic: 'space.rotateXTo', data: { value: 15 } } as never);
-            (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation = api.getSnapshot().space.rotationX;
+            (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation = api.getSnapshot().space.camera.pitch;
         }}
         routes={routes}
         planes={[]}

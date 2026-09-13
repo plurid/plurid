@@ -42,9 +42,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_MARQUEE` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_MARQUEE };
-
 
 const StyledPluridMarquee = styled.div<{ theme: Theme }>`
     ${chromeRoot}

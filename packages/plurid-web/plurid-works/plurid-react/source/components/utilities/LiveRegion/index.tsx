@@ -36,9 +36,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_LIVE_REGION` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_LIVE_REGION };
-
 
 /** Visually hidden, read by assistive technology. */
 const StyledLiveRegion = styled.div`

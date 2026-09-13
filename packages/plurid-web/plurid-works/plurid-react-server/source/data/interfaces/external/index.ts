@@ -79,9 +79,6 @@ export interface PluridServerOptions {
      */
     buildDirectory: string;
 
-    /** @deprecated Read by nothing; kept for one release. */
-    assetsDirectory: string;
-
     /**
      * Directory of static assets (favicon, og-image, manifest, robots) served at
      * the URL root `/`. Empty string (the default) resolves to
@@ -90,9 +87,6 @@ export interface PluridServerOptions {
      * points this at `source/public` during `plurid dev`.
      */
     publicDirectory: string;
-
-    /** @deprecated The gateway render never shipped; read by nothing. Kept for one release. */
-    gatewayEndpoint: string;
 
     /**
      * Provide a `max-age` in milliseconds for http caching of the static serves.
@@ -160,12 +154,6 @@ export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
     planes?: PluridRoutePlane<PluridReactComponent>[];
     preserves: PluridPreserveReact[];
-    /**
-     * @deprecated The head is the document model now (`template.head`, a route's / plane's `head`,
-     * `<PluridDocument>`, a preserve's `document`, the `document` hook); this field is ignored
-     * (a warning is logged once) and will be removed.
-     */
-    helmet?: unknown;
     /** The post-render document layer (see `PluridServerDocumentHook`). */
     document?: PluridServerDocumentHook;
     /** `'string'` (default, `renderToString`) or `'suspense'` (a buffered stream that awaits every boundary). */
@@ -176,11 +164,6 @@ export interface PluridServerConfiguration {
     exterior?: PluridReactComponent;
     shell?: PluridReactComponent;
     routerProperties?: Partial<PluridRouterProperties<PluridReactComponent>>;
-
-    /**
-     * @deprecated Never reached the router (a `PluridApplication` prop only); ignored, to be removed.
-     */
-    customPlane?: PluridReactComponent;
 
     /**
      * Services to be handled by the server.

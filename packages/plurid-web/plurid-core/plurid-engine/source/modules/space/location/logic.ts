@@ -76,7 +76,5 @@ export const computePath = (
     return path.reverse();
 }
 
-
-/** @deprecated use `childLocation` (`./child`); kept as an exact wrapper. */
 // #endregion module
 

@@ -41,12 +41,19 @@ export const getCameraLimits = (state: AppState) => state.space.cameraLimits;
 export const getMotion = (state: AppState) => state.space.motion;
 export const getPerspective = (state: AppState): number => state.space.camera.perspective;
 
-export const getRotationX = (state: AppState): number => state.space.rotationX;
-export const getRotationY = (state: AppState): number => state.space.rotationY;
-export const getTranslationX = (state: AppState): number => state.space.translationX;
-export const getTranslationY = (state: AppState): number => state.space.translationY;
-export const getTranslationZ = (state: AppState): number => state.space.translationZ;
-export const getScale = (state: AppState): number => state.space.scale;
+/**
+ * The legacy six scalars, DERIVED from the camera (2026-09-13: the state's mirrors of them are gone
+ * — one source of truth, and `toLegacy` is what filled the mirrors anyway). The viewcube, the
+ * virtual list and the plane hook read these.
+ */
+const legacyOf = (state: AppState): SpaceTransform => cameraEngine.toLegacy(state.space.camera, state.space.viewSize);
+
+export const getRotationX = (state: AppState): number => legacyOf(state).rotationX;
+export const getRotationY = (state: AppState): number => legacyOf(state).rotationY;
+export const getTranslationX = (state: AppState): number => legacyOf(state).translationX;
+export const getTranslationY = (state: AppState): number => legacyOf(state).translationY;
+export const getTranslationZ = (state: AppState): number => legacyOf(state).translationZ;
+export const getScale = (state: AppState): number => state.space.camera.scale;
 export const getTree = (state: AppState): TreePlane[] => state.space.tree;
 // Memoized: returns a stable object reference unless one of the six transform scalars
 // changes, so consumers (Viewcube, View) don't re-render on unrelated state updates.

@@ -53,7 +53,7 @@ view to the pixel. It scrolls like a page, the engine's chrome stays out of the 
 the corner is the only sign of the space behind it.
 
 ``` bash
-npm install @plurid/plurid-react react react-dom
+npm install @plurid/plurid-react react react-dom styled-components
 ```
 
 ``` tsx

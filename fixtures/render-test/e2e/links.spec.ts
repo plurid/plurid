@@ -179,7 +179,7 @@ test.describe('links and tree', () => {
         // yaw −70 / 10 and −60 / 0: the click's ray crosses the wall's EMPTY area before the fin — the
         // roots wrapper's own box used to take the hit there (the fin's links were dead)
         for (const [yaw, pitch] of [[-90, 0], [-70, 10], [-60, 0], [-80, 20]]) {
-            await publish(page, 'space.navigateToPlane', { id: detail.planeID });
+            await publish(page, 'space.navigateToPlane', { planeID: detail.planeID });
             await settle(page);
             await publish(page, 'space.cameraDelta', { absolute: { yaw, pitch }, animate: false });
             await settle(page);
@@ -330,7 +330,7 @@ test.describe('links and tree', () => {
         expect(child.location.translateZ).toBeCloseTo(expected.translateZ, 2);
 
         // removing a root through the pubsub relayouts too (no collapse to the origin)
-        await publish(page, 'view.removePlane', { plane: '/tessellation' });
+        await publish(page, 'view.removePlane', { planeID: '/tessellation' });
         await page.waitForFunction(() => (window as any).__rtTree().length === 4);
         const roots = await tree(page);
         const xs = roots.map((node: any) => Math.round(node.location.translateX));
@@ -397,7 +397,7 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         await waitForChildren(page, root.planeID, 1);
         const child = findPlane(await tree(page), root.planeID).children[0];
         await settle(page);
-        await publish(page, 'space.closePlane', { id: child.planeID });
+        await publish(page, 'space.closePlane', { planeID: child.planeID });
         await waitForShown(page, child.planeID, false);
         await settle(page);
 
@@ -448,7 +448,7 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         expect(Math.abs(reopened.linkCoordinates.y - measured.y)).toBeLessThanOrEqual(2);
 
         // close again without options: the parent comes back into view, centred
-        await publish(page, 'space.closePlane', { id: child.planeID });
+        await publish(page, 'space.closePlane', { planeID: child.planeID });
         await waitForShown(page, child.planeID, false);
         await settle(page);
         const parentRect = (await planeRect(page, root.planeID))!;
@@ -468,7 +468,7 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         const framedChild = await camera(page);
 
         // default: the closed child was in view → the parent is framed and becomes active
-        await publish(page, 'space.closePlane', { id: child.planeID });
+        await publish(page, 'space.closePlane', { planeID: child.planeID });
         await waitForShown(page, child.planeID, false);
         await settle(page);
         const afterClose = await camera(page);
@@ -487,7 +487,7 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         }, 'the reopened plane to be measured', child.planeID);
         await settle(page);
         const before = await camera(page);
-        await publish(page, 'space.closePlane', { id: child.planeID, navigate: 'stay' });
+        await publish(page, 'space.closePlane', { planeID: child.planeID, navigate: 'stay' });
         await waitForShown(page, child.planeID, false);
         await settle(page);
         const after = await camera(page);
@@ -502,7 +502,7 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         await clickLink(page, root.planeID, '/geometry/detail');
         await waitForChildren(page, root.planeID, 1);
         const child = findPlane(await tree(page), root.planeID).children[0];
-        await publish(page, 'space.closePlane', { id: child.planeID, navigate: 'stay' });
+        await publish(page, 'space.closePlane', { planeID: child.planeID, navigate: 'stay' });
         await waitForShown(page, child.planeID, false);
 
         // the same tree, new references (a host `setTree` / a collaboration echo)

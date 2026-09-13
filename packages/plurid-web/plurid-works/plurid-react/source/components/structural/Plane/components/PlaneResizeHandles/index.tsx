@@ -44,9 +44,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_PLANE_RESIZE_HANDLE` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_PLANE_RESIZE_HANDLE };
-
 const MIN_WIDTH = 120;
 const MIN_HEIGHT = 80;
 const HANDLE = 12;

@@ -45,11 +45,11 @@ describe('readiness', () => {
             ...scene,
             onReady: (ready) => {
                 rotateTo(ready, 30);
-                immediate = ready.getSnapshot().space.rotationX;
+                immediate = ready.getSnapshot().space.camera.pitch;
             },
         });
         expect(immediate).toBe(30);
-        expect(api.getSnapshot().space.rotationX).toBe(30);
+        expect(api.getSnapshot().space.camera.pitch).toBe(30);
         await unmount();
     });
 });
@@ -100,7 +100,7 @@ describe('StrictMode', () => {
             rotateTo(api!, 15);
             await wait(30);
         });
-        expect(api!.getSnapshot().space.rotationX).toBe(15);
+        expect(api!.getSnapshot().space.camera.pitch).toBe(15);
         expect(writes.length).toBeGreaterThanOrEqual(1);
         expect(viewpoints.length).toBeGreaterThanOrEqual(1);
 
@@ -159,7 +159,7 @@ describe('registrars', () => {
                         onReady={(api) => {
                             ready = api;
                             rotateTo(api, 30);
-                            seen = api.getSnapshot().space.rotationX;
+                            seen = api.getSnapshot().space.camera.pitch;
                         }}
                     />,
                 );

@@ -11,6 +11,7 @@
         "build": "pnpm -r build",
         "check": "pnpm -r check",
         "check.modules": "node scripts/check-modules.mjs",
+        "size": "node scripts/size.mjs",
         "smoke.pack": "node scripts/smoke-pack.mjs",
         "test": "pnpm -r test",
         "lint": "eslint packages/plurid-web/plurid-core packages/plurid-web/plurid-works packages/plurid-utilities fixtures/render-test/src fixtures/render-test/e2e examples scripts",
@@ -18,7 +19,7 @@
         "format.check": "prettier --check \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
         "e2e": "pnpm --filter plurid-render-test e2e",
         "bench": "node scripts/bench.mjs",
-        "verify": "pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
+        "verify": "pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm size && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
         "docs.tables": "node scripts/generate-tables.mjs",
         "docs.tables.check": "node scripts/generate-tables.mjs --check"
     },

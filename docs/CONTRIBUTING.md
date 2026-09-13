@@ -72,8 +72,9 @@ Run from the root. **CI enforces every row of this table** (2026-09-13: the brow
 | `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
 | `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
+| `pnpm size` | measures every public package's published ESM (entry + chunks) gzipped against `configurations/size-budgets.json` | Fails over budget. `pnpm size --update` rewrites the budgets from disk — do that only for a deliberate change, in the same commit, with the reason in the message. A budget is the measurement rounded up to the next 5 KB with at least 2 KB of room. |
 | `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways | The consumer's path end to end (needs the network; a minute). `--keep` leaves the project for inspection. |
-| `pnpm verify` | build → check → test → lint → check.modules → browser suite → smoke.pack | The full local gate; what to run before a publish. |
+| `pnpm verify` | build → check → test → lint → check.modules → size → docs.tables.check → browser suite → smoke.pack | The full local gate; what to run before a publish. |
 
 Because **build ≠ type-check**, a change can build and ship a broken `.d.ts` or a type error that only `tsc`
 catches. Before opening a PR: `pnpm verify` (or `pnpm build && pnpm test && pnpm lint && pnpm e2e`), plus `pnpm --filter <pkg> check` for
@@ -265,8 +266,10 @@ installed; three of them are enforced by a tool rather than by convention.
   the application handed back, and assert the STATE, never the dispatch
   (`plurid-react source/containers/Application/View/hooks/__tests__/pubsub.test.tsx`).
 - **Anything a reader can see**: a Playwright scenario in `fixtures/render-test/e2e/`.
-- Some legacy suites are intentionally skipped with a reason comment (routing/matrix/faceToFace debt tracked
-  in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) and the audit). Don't un-skip without making them pass.
+- **Nothing is skipped.** The repository has zero `describe.skip` / `it.skip` / `test.fixme` (verified
+  2026-09-13; the routing / matrix / faceToFace debt this line used to point at was either fixed or
+  deleted, and the CONTEXT-MAP section it referenced never existed). If you need to park a test, prefer
+  deleting it with the code it guards — a skipped test is a gate that does not run.
 
 ### The three browser commands
 
@@ -290,23 +293,42 @@ baseline compares — always, no opt-in flag. `darwin` baselines are generated o
 baselines are generated in the PINNED official container, which is the same image CI uses, so the bytes
 are expected to match:
 
+**THE ORIGIN IS IN THE PICTURE.** A plane's bar renders its full route — `plurid://<host>:<port>/path` —
+so the address the harness was served from is part of every screenshot showing a bar. The baselines must
+therefore be taken against **`http://localhost:5273`**, the address CI serves from; `visual.spec.ts`
+refuses any other origin, naming the one it found. (2026-09-13: 28 `linux` baselines went in reading
+`host.docker.internal:5273` and CI failed them all against its own `localhost:5273` — a ~3000-pixel text
+diff with no other difference. That guard is why it cannot happen twice.)
+
 ```bash
 # darwin, from fixtures/render-test
 npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots
-
-# linux — the image CI runs. The container has NO pnpm, so its `webServer` command (`pnpm dev`)
-# exits 127: serve the harness from the HOST and point the container at it. From the repo root:
-(cd fixtures/render-test && npx vite --port 5273 --strictPort --host &)
-docker run --rm --add-host=host.docker.internal:host-gateway \
-    -e PLURID_E2E_BASE_URL=http://host.docker.internal:5273 \
-    -v "$PWD":/work -w /work/fixtures/render-test \
-    mcr.microsoft.com/playwright:v1.62.1-noble \
-    npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots
 ```
 
-(`vite.config.ts` lists `host.docker.internal` in `server.allowedHosts` for exactly this; without it
-Vite answers the container's requests with a 403. On CI none of this applies — the container IS the
-runner and installs pnpm itself, so `pnpm dev` works there.)
+**linux** is awkward on a mac and worth reading twice. The container has no `pnpm`, so its `webServer`
+command (`pnpm dev`) exits 127; and the repository's `node_modules` is a darwin install, so `vite` inside
+the container dies on rollup's missing native binding. Both of the obvious routes are therefore closed.
+The two that work:
+
+1. **Take them from CI** — the simplest, and exact by construction. Let the `visual` job fail, then
+   download its `visual-diff` artifact: every `*-actual.png` in it is the picture CI renders, so copying
+   those over the corresponding baselines IS the regeneration. Verify with route 2 before pushing.
+2. **Reproduce CI's origin locally** — serve from the host, but present it as `localhost:5273` inside the
+   container with a TCP proxy, so the bars render the same string CI renders:
+
+```bash
+# from the repository root, with the harness served on the host:
+(cd fixtures/render-test && npx vite --port 5273 --strictPort --host &)
+docker run --rm --add-host=host.docker.internal:host-gateway \
+    -v "$PWD":/work -w /work/fixtures/render-test \
+    mcr.microsoft.com/playwright:v1.62.1-noble \
+    bash -lc 'node -e '"'"'require("net").createServer(c=>{const u=require("net").connect(5273,"host.docker.internal");c.pipe(u);u.pipe(c);c.on("error",()=>u.destroy());u.on("error",()=>c.destroy())}).listen(5273,"127.0.0.1")'"'"' &
+              for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:5273 && break; sleep 1; done
+              npx playwright test --config e2e/playwright.config.ts --project=visual'
+```
+
+On CI none of this applies — the container IS the runner, installs pnpm and builds inside Linux, so
+`pnpm dev` works there.
 
 Never regenerate on a broken build, and never regenerate to make a red run green. **A picture changes only
 with a reason written in the commit** — a changed baseline with no reason is an unreviewed visual
@@ -314,10 +336,15 @@ regression.
 
 ### Coverage floors
 
-Every package's `coverageThreshold` is its own MEASURED coverage on the day it was set, rounded down to
-the nearest five (`configurations/jest.config.js`). A floor from reality cannot be cargo-culted and cannot
-silently rot: deleting a test file fails its package. Floors only ever move UP — when a package's coverage
-rises, raise its floor in the same commit.
+Every package's `coverageThreshold` is its own MEASURED coverage on the day it was set, rounded down to a
+multiple of five — and one step further where that would have left under a point of room
+(`configurations/jest.config.js`). The extra step matters: a floor sitting exactly ON its measurement (two
+did) goes red the first time anyone adds an uncovered function, which is a failure about nothing, and a
+gate that cries wolf gets raised until it means nothing. Every floor now keeps 1–5 points of slack, which
+still fails a package that loses a test file.
+
+A floor from reality cannot be cargo-culted and cannot silently rot. Floors only ever move UP — when a
+package's coverage rises, raise its floor in the same commit that earns it.
 
 ### What CI actually runs
 
@@ -325,7 +352,7 @@ rises, raise its floor in the same commit.
 
 | Job | Steps |
 |---|---|
-| `gates` | `build` → `test` → `lint` → `check` → `check.modules` → `docs.tables.check` → `smoke.pack` |
+| `gates` | `build` → `test` → `lint` → `check` → `check.modules` → `size` → `docs.tables.check` → `smoke.pack` |
 | `browser` | the `chromium` project (needs `gates`) |
 | `perf` | the `perf` project, alone on its runner (needs `gates`) |
 | `visual` | the `visual` project INSIDE `mcr.microsoft.com/playwright:v1.62.1-noble`; uploads the differing pictures on failure (needs `gates`) |

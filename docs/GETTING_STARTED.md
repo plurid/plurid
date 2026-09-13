@@ -26,30 +26,15 @@ engine; if you want to *work on* the engine itself, read [`CONTRIBUTING.md`](./C
 
 ## Install
 
-The adapter declares its `@plurid/*` siblings and a few libraries as **peer dependencies**, so install them
-alongside it:
+Four packages. The `@plurid/*` siblings are **dependencies** of the adapter — npm installs them for you —
+so the only peers you declare are React and styled-components:
 
 ``` bash
-npm install \
-    @plurid/plurid-react \
-    @plurid/plurid-data \
-    @plurid/plurid-engine \
-    @plurid/plurid-pubsub \
-    @plurid/plurid-functions \
-    @plurid/plurid-functions-react \
-    @plurid/plurid-icons-react \
-    @plurid/plurid-themes \
-    @plurid/plurid-ui-components-react \
-    @plurid/plurid-ui-state-react \
-    @plurid/elementql \
-    @plurid/elementql-client-react \
-    @reduxjs/toolkit \
-    react-redux \
-    react \
-    react-dom \
-    styled-components \
-    cross-fetch
+npm install @plurid/plurid-react react react-dom styled-components
 ```
+
+(Before 2026-09-05 the siblings were peers and this list ran to sixteen packages. It does not any more;
+`@plurid/elementql-client-react` is an OPTIONAL peer, needed only if you use the ElementQL transport.)
 
 > **Prefer scaffolding?** `npx @plurid/generate-plurid-app -d my-site` writes a plurid-kit application — `plurid.config.ts`,
 > a client and a server entry, a routes / shell / planes trio, `dev` / `build` / `start` / `check` scripts — and installs it;
@@ -370,8 +355,12 @@ a render-slot that *substitutes* the corresponding engine overlay with your own 
 
 ## 8 · The viewpoint (share links & saved views)
 
-The **viewpoint** is the camera state encoded as a short string. The engine never touches the URL — you
-own that. Read it when it settles, and set it back, to build share links, saved views, or guided tours:
+The **viewpoint** is the camera state encoded as a short string. Read it when it settles, and set it
+back, to build share links, saved views, or guided tours:
+
+> The engine writes the address bar in exactly one case: the **page presentation**, where
+> `space.docking.url` defaults ON and the docked page's path becomes the location (one history entry per
+> page). Everywhere else the URL is yours. `space: { docking: { url: false } }` hands it back.
 
 ``` tsx
 import { PluridApplication, encodeViewpoint, decodeViewpoint } from '@plurid/plurid-react';

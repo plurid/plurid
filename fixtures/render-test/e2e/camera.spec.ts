@@ -188,7 +188,7 @@ test.describe('camera core', () => {
         await publish(page, 'space.setViewpoint', { viewpoint: v1 });
         await settle(page);
         const restored1 = await spaceState(page);
-        expect(restored1.rotationY).toBeCloseTo(25, 3);
-        expect(restored1.translationX).toBeCloseTo((await spaceState(page)).translationX, 6);
+        expect(restored1.camera.yaw).toBeCloseTo(25, 3);
+        expect(restored1.camera.offset.x).toBeCloseTo((await spaceState(page)).camera.offset.x, 6);
     });
 });

@@ -639,15 +639,6 @@ export const updateLinkCoordinates = (
 }
 
 
-/** @deprecated use `updateLinkCoordinates` (reads the parent from the live tree). */
-export const updatePlaneLocation = (
-    tree: TreePlane[],
-    _parentPlaneID: string,
-    planeID: string,
-    linkCoordinates: LinkCoordinates,
-) => updateLinkCoordinates(tree, planeID, linkCoordinates);
-
-
 // `removePageFromTree` was a byte-for-byte duplicate of `removePlaneFromTree` (below) — same
 // immutable, structurally-shared removal, only the local names differed. It had no production
 // caller (only its own test), so it was deleted and its test repointed at `removePlaneFromTree`.

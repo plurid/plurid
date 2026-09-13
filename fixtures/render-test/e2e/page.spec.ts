@@ -324,7 +324,7 @@ test.describe('the page presentation', () => {
         // after the measurement) keeps the chrome hidden and the motion in `tween` until it lands
         await page.locator(BACK).click();
         await settle(page);
-        await publish(page, 'space.closePlane', { id: about.planeID, navigate: 'stay' });
+        await publish(page, 'space.closePlane', { planeID: about.planeID, navigate: 'stay' });
         await page.waitForFunction(() => ((window as unknown as HarnessWindow).__rtTree()[0].children || []).every((child) => child.show === false));
         recording = await recordFrames(page);
         await clickLink(page, root.planeID, '/page-1/about');

@@ -15,7 +15,6 @@
         decomposeColor,
     } from './utilities';
 
-    import generateTheme from './themes/generate';
 
     import night from './themes/base/night';
     import dusk from './themes/base/dusk';
@@ -72,7 +71,6 @@ export {
     THEME_TYPES,
 
     /** functions */
-    generateTheme,
     decomposeColor,
 
     /** themes */

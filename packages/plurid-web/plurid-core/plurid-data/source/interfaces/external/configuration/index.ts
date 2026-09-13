@@ -121,8 +121,6 @@ export interface FlatPluridConfiguration {
     transformOrigin?: RecursivePartial<PluridConfigurationSpaceTransformOrigin>;
     /** `space.transformMode` — restrict to one transform type, or all. */
     transformMode?: keyof typeof TRANSFORM_MODES;
-    /** @deprecated Use `culling.distance` (`space.culling`); an alias of it. */
-    cullingDistance?: number;
     /** `space.fadeInTime` — plane fade-in duration (ms). */
     fadeInTime?: number;
     // #endregion space

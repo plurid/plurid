@@ -38,9 +38,6 @@
 
 
 // #region module
-/** @deprecated Import `PLURID_ENTITY_SPACE_DEBUGGER` from `@plurid/plurid-data`. */
-export { PLURID_ENTITY_SPACE_DEBUGGER };
-
 
 const StyledPluridSpaceDebugger = styled.pre<{ theme: Theme }>`
     position: absolute;

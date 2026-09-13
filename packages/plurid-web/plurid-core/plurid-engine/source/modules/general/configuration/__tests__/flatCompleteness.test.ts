@@ -51,7 +51,6 @@ const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
     camera: { value: '/a', path: 'space.camera' },
     transformOrigin: { value: { show: true }, path: 'space.transformOrigin.show', expect: true },
     transformMode: { value: 'ROTATION', path: 'space.transformMode' },
-    cullingDistance: { value: 4321, path: 'space.culling.distance' },
     fadeInTime: { value: 5, path: 'space.fadeInTime' },
     bridge: { value: { fan: 'alternate' }, path: 'space.bridge.fan', expect: 'alternate' },
     bridgeLength: { value: 55, path: 'space.bridge.length' },

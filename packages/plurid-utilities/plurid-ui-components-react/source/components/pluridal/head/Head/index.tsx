@@ -50,11 +50,9 @@ export interface HeadDefaults {
 export interface HeadOwnProperties {
     /**
      * The component that turns the head children into the document head — plurid-react's
-     * `PluridDocument` (`<Head Document={PluridDocument} …/>`), or any Helmet-shaped component.
+     * `PluridDocument` (`<Head Document={PluridDocument} …/>`), or any component of that shape.
      */
     Document?: React.ComponentType<React.PropsWithChildren<{}>>;
-    /** @deprecated Pass `Document` (a `PluridDocument`-shaped component) instead. */
-    Helmet?: any;
     defaults?: Partial<head.HeadState> & HeadDefaults;
     selectors: HeadSelectors;
     context: React.Context<any>;
@@ -81,7 +79,6 @@ const Head: React.FC<HeadProperties> = (
     const {
         // #region own
         Document,
-        Helmet,
         defaults,
         children,
         // #endregion own
@@ -124,7 +121,7 @@ const Head: React.FC<HeadProperties> = (
 
 
     // #region render
-    const Renderer = Document ?? Helmet;
+    const Renderer = Document;
     if (!Renderer) {
         if (process.env.NODE_ENV !== 'production' && typeof console !== 'undefined') {
             console.warn('[plurid] <Head> needs a `Document` component (plurid-react\'s `PluridDocument`); nothing was rendered.');

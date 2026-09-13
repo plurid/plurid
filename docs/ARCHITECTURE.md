@@ -61,23 +61,23 @@ L0  plurid-themes        plurid-functions     plurid-functions-react
 
 ## 2. Package layers
 
-The workspace (`pnpm-workspace.yaml`) globs `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, and `fixtures/render-test`. Layer rule: a package imports only from layers below it (verified against each `package.json`'s `@plurid/*` dependencies, 2026-07-13).
+The workspace (`pnpm-workspace.yaml`) globs `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, and `fixtures/render-test`. Layer rule: a package imports only from layers below it (verified against each `package.json`'s `@plurid/*` dependencies, 2026-07-13). Versions are the WORKSPACE's, refreshed 2026-09-13 for the release.
 
 | Layer | Package | Version | Directory | Role |
 | --- | --- | --- | --- | --- |
-| L0 | `@plurid/plurid-themes` | 0.0.0-3 | plurid-utilities/plurid-themes | theme objects (no @plurid deps) |
+| L0 | `@plurid/plurid-themes` | 0.0.0-4 | plurid-utilities/plurid-themes | theme objects (no @plurid deps) |
 | L0 | `@plurid/plurid-functions` | 0.0.0-32 | plurid-utilities/plurid-functions | pure utilities (`objects.merge`/`clone`, mathematics, ...) |
-| L0 | `@plurid/plurid-functions-react` | 0.0.0-6 | plurid-utilities/plurid-functions-react | React utility hooks (`useDebouncedCallback`, ...) |
-| L1 | `@plurid/plurid-data` | 0.0.0-22 | plurid-core/plurid-data | ALL shared types, constants, enums, defaults, pubsub topics |
-| L1 | `@plurid/plurid-icons-react` | 0.0.0-10 | plurid-utilities/plurid-icons-react | icon set |
-| L1 | `@plurid/plurid-ui-state-react` | 0.0.0-13 | plurid-utilities/plurid-ui-state-react | host-app UI state slices + `composePluridUIState` |
-| L2 | `@plurid/plurid-pubsub` | 0.0.0-10 | plurid-core/plurid-pubsub | the event bus class |
-| L2 | `@plurid/plurid-engine` | 0.0.0-20 | plurid-core/plurid-engine | plane tree, layout, routing, matrix math, state compute/persist (framework-agnostic) |
-| L2 | `@plurid/plurid-ui-components-react` | 0.0.0-32 | plurid-utilities/plurid-ui-components-react | UI component library (48 styled files on the shared filtered `styled` factory) |
-| L3 | `@plurid/plurid-react` | 0.0.0-36 | plurid-works/plurid-react | the render adapter: `PluridApplication`, routers, links, hooks |
-| L4 | `@plurid/plurid-react-server` | 0.0.0-17 | plurid-works/plurid-react-server | SSR server (Express 5), stills, template |
-| L5 | `@plurid/plurid-kit` | 0.0.0-5 (registry: 0.0.0-4) | plurid-works/plurid-kit | framework pre-release: config contract + CLI + bootstraps |
-| L5 | `@plurid/generate-plurid-app` | 0.0.0-14 | plurid-utilities/generate-plurid-app | scaffolding CLI; emits the plurid-kit shape (TypeScript, one template, the workspace's versions stamped at build; 2026-09-10) — `pnpm smoke.pack` generates, installs from the tarballs, builds and serves it |
+| L0 | `@plurid/plurid-functions-react` | 0.0.0-7 | plurid-utilities/plurid-functions-react | React utility hooks (`useDebouncedCallback`, ...) |
+| L1 | `@plurid/plurid-data` | 0.0.0-24 | plurid-core/plurid-data | ALL shared types, constants, enums, defaults, pubsub topics |
+| L1 | `@plurid/plurid-icons-react` | 0.0.0-12 | plurid-utilities/plurid-icons-react | icon set |
+| L1 | `@plurid/plurid-ui-state-react` | 0.0.0-15 | plurid-utilities/plurid-ui-state-react | host-app UI state slices + `composePluridUIState` |
+| L2 | `@plurid/plurid-pubsub` | 0.0.0-12 | plurid-core/plurid-pubsub | the event bus class |
+| L2 | `@plurid/plurid-engine` | 0.0.0-22 | plurid-core/plurid-engine | plane tree, layout, routing, matrix math, state compute/persist (framework-agnostic) |
+| L2 | `@plurid/plurid-ui-components-react` | 0.0.0-36 | plurid-utilities/plurid-ui-components-react | UI component library (48 styled files on the shared filtered `styled` factory) |
+| L3 | `@plurid/plurid-react` | 0.0.0-38 | plurid-works/plurid-react | the render adapter: `PluridApplication`, routers, links, hooks |
+| L4 | `@plurid/plurid-react-server` | 0.0.0-19 | plurid-works/plurid-react-server | SSR server (Express 5), stills, template |
+| L5 | `@plurid/plurid-kit` | 0.0.0-5 | plurid-works/plurid-kit | framework pre-release: config contract + CLI + bootstraps |
+| L5 | `@plurid/generate-plurid-app` | 0.0.0-15 | plurid-utilities/generate-plurid-app | scaffolding CLI; emits the plurid-kit shape (TypeScript, one template, the workspace's versions stamped at build; 2026-09-10) — `pnpm smoke.pack` generates, installs from the tarballs, builds and serves it |
 | L5 | `fixtures/render-test` | private | fixtures/render-test | the CAD verification harness (Vite, port 5273) |
 
 Where things live, by rule:
@@ -174,7 +174,7 @@ PluridViewContainer
 - OVERLAYS are `position: absolute` INSIDE the `position: relative` view (an embedded space keeps its minimap, viewcube, toolbar, shortcuts dialog and HUD inside its container; nothing is `position: fixed`), stacked by the one ladder in `plurid-react data/constants/zIndex.ts` (`Z_INDEX`), and marked `data-plurid-overlay` so a wheel over them never reaches the camera (the toolbar's button strip deliberately is NOT an overlay: a drag or a wheel on its background is the space's, as it always was; its drawer menu is). ACCESSIBILITY: the view is `role="application"` with an `aria-roledescription`; every engine control — toolbar buttons, viewcube arrows, fit button and face zones, minimap dots, the plane controls — is a real `<button>` with an `aria-label` and a `:focus-visible` ring (the viewcube's controls stay in the DOM and show on hover or keyboard focus); `PluridLiveRegion` announces the active plane, the selection size and the end of a camera move politely. The `SpaceDebugger` (`development.spaceDebugger`) is the performance HUD — fps, dispatches/s, planes mounted / hidden / frozen, camera, motion — and `PlaneDebugger` (`development.planeDebugger`) the per-plane readout (id, route, placement, size, depth, link).
 - THE ARRANGEMENT FRAGMENT (2026-09-13): a piece of a space as TEXT — `services/logic/arrangement/fragment.ts`, the one definition a copy, a cut and a paste are all written in terms of. Addressed by PATH (`planePath`: the plane's path plus the query that is part of its identity), never by plane id (local, a uuid) and never by address (it carries the host it was copied from), so a fragment cut on one site pastes on another. `materializeFragment` does not build planes itself: it asks the TARGET to make one for each path the way opening it would — `PluridThunkExtra.resolvePlane`, the application's own `resolveViewItem` against its registrar and hostname — and then carries the geometry over (location offset and pinned for a root, the bridge and the `#<route>#<ordinal>` link suffix for a child, the copied size unless the target declares one), remaps the links onto the new ids and returns the paths it had to drop. The transport is the browser's own `copy` / `cut` / `paste` events (`useClipboard` in the View: no permission, no prompt, and the only way a page can READ a clipboard), with the async clipboard API and a module SLOT behind a host's `space.copy` / `space.paste`. The reducer is `insertPlanes` — an APPEND, so a paste is one action, one render and one history entry.
 - THE NAMED VIEWPOINTS (2026-09-13): a saved camera comes from three places — the reader's bookmarks (`space.bookmarks`, persisted), the host's presets (`space.navigation.presets`) and the one home viewpoint — and they are ONE derived list, `PluridNamedViewpoint` (`services/logic/viewpoints`: `namedViewpoints`, `goViewpoint`), which the toolbar's Bookmarks drawer, the command palette, `usePluridBookmarks()` and `handle.bookmarks` all read; travelling to one dispatches the command its own kind names, so a row can never drift from a key press. The drawer's thumbnail (`components/utilities/ViewpointThumb`) is THE MINIMAP'S OWN PROJECTION at thumb size with the saved camera's FOOTPRINT over it — the view's four corners unprojected at the depth it looks at (`computeMinimapFootprint`), so the picture says which planes the view frames and stays right after any relayout; the list computes the projection ONCE and every row draws the same one. A rename is a reducer of its own (`renameBookmark`), so the row keeps its place instead of being deleted and re-added.
-- SLOTS: `renderToolbar` / `renderViewcube` / `renderMinimap` / `renderShortcuts` - when provided, each REPLACES the engine's default overlay at the same spot; the `elements.*.show` flags and `global.micro` still govern the defaults but a slot bypasses them (the host owns that element).
+- SLOTS: `renderToolbar` / `renderViewcube` / `renderMinimap` / `renderShortcuts` - when provided, each REPLACES the engine's default overlay at the same spot; the `elements.*.show` flags still govern the defaults but a slot bypasses them (the host owns that element).
 - `Roots` applies ONE inline style: `transform: spaceTransformMatrix` (from `selectors.space.getTransformMatrix`) and NO CSS transition — programmatic camera moves tween through the View's motion controller (one commit per frame, interruptible by any input), which a CSS transition on the camera would fight. It sizes itself via the opt-in `space.dimensions` (`resolveDimension`: number -> px, string passthrough; defaults width `'100%'`, height `window.innerHeight` - the historical behavior). It hosts `PluridPlaneLinks` and `AlignmentGuides` INSIDE the transformed container so beams and guides ride the camera.
 - `Root` (per `TreePlane` in `state.space.tree`) deliberately subscribes to NOTHING (`mapStateToProperties` is empty) and is wrapped `connect(...)(React.memo(PluridRoot))`: with the tree immutable + structurally shared, an unchanged root's `plane` ownProp is referentially stable and the memo bails the re-render - this is what keeps per-frame work off the planes. It renders the root plane and recursively the SHOWN spawned children (a closed child takes its subtree out of the DOM; nothing hidden is mounted), and provides `PluridPlaneIDContext` at BOTH injection sites (the root plane and each child plane) - the context `usePluridPlane` reads. Each plane component receives the injected `plurid` prop: `{ plane: { value, planeID, parentPlaneID, fragments, parameters, query }, route, pubSub }`.
 - The plane CONTROLS bar keeps the route on ONE line (its end visible, the start elided) and drops it entirely on planes narrower than 340 px (`COMPACT_WIDTH`), so a narrow plane shows icons only instead of a bar that wraps into three lines; the icon groups keep their size (`auto minmax(0, 1fr) auto`).
@@ -375,8 +375,8 @@ THE HISTORY MIDDLEWARE (`services/state/middleware/history.ts` : `createHistoryM
 
 THE PERSISTENCE CONTRACT (`plurid-engine source/modules/state/local`):
 
-- `PERSISTED_STATE_VERSION = 2` - a stored snapshot with a different version is IGNORED on load (fresh space) rather than risking a partial mis-merge.
-- `PERSISTED_SPACE_FIELDS`: `rotationX`, `rotationY`, `scale`, `translationX`, `translationY`, `translationZ`, `transform`, `camera`, `viewSize` (the view the camera was framed in, since v3 — see §4.1), `activePlaneID`, `isolatePlane`, `lastClosedPlane`, `tree`, `links`, plus the runtime `home` and `bookmarks`. Deliberately excluded: transient flags (`loading`, `resolvedLayout`, `transformTime`, `motion`, `dockingPlaneID`), the container sizes re-measured on mount (`spaceSize`, `culledView`, `view`), and the other slices (they come from props/defaults). The one schema description is §4 “Persistence” (`PERSISTED_STATE_VERSION = 3`, a v2 snapshot upgraded on load).
+- `PERSISTED_STATE_VERSION = 3` - a v2 snapshot is UPGRADED on load (its scalars derive the camera); any other version is IGNORED (fresh space) rather than risking a partial mis-merge.
+- `PERSISTED_SPACE_FIELDS`: `transform`, `camera`, `viewSize` (the view the camera was framed in, since v3 — see §4.1), `activePlaneID`, `isolatePlane`, `lastClosedPlane`, `tree`, `links`, plus the runtime `home` and `bookmarks`. Deliberately excluded: transient flags (`loading`, `resolvedLayout`, `transformTime`, `motion`, `dockingPlaneID`), the container sizes re-measured on mount (`spaceSize`, `culledView`, `view`), and the other slices (they come from props/defaults). The one schema description is §4 “Persistence” (`PERSISTED_STATE_VERSION = 3`, a v2 snapshot upgraded on load).
 - Keys: `pluridState-<id>` (the versioned space snapshot) and `pluridContent-<id>` (the OPAQUE product blob from `onPersistContent` - no version stamp; the content shape and its migration are the product's concern; the engine never inspects it).
 - Backend: the caller's `storageAdapter` wins; else a `localStorage` adapter; else (SSR/no storage) every entry point no-ops. Writes are best-effort (full/private-mode storage is swallowed), but a SERIALIZATION failure warns once - it means a cycle/DOM/function ref leaked into the persisted fields, a real bug that would otherwise silently disable persistence forever.
 - The debounce + pagehide/visibility flush around all of this lives in the Application shell (3.1).
@@ -394,28 +394,16 @@ The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PU
 | Constant | Topic string | Direction | Handled in |
 | --- | --- | --- | --- |
 | CONFIGURATION | `configuration` | host -> engine (+ internal re-publish) | usePluridPubSub |
-| SPACE_ANIMATED_TRANSFORM | `space.animatedTransform` | host -> engine | usePluridPubSub |
-| SPACE_ROTATE_UP | `space.rotateUp` | declared | - |
-| SPACE_ROTATE_DOWN | `space.rotateDown` | declared | - |
-| SPACE_ROTATE_LEFT | `space.rotateLeft` | declared | - |
-| SPACE_ROTATE_RIGHT | `space.rotateRight` | declared | - |
 | SPACE_ROTATE_X_WITH | `space.rotateXWith` | host -> engine | usePluridPubSub |
 | SPACE_ROTATE_Y_WITH | `space.rotateYWith` | host -> engine | usePluridPubSub |
 | SPACE_ROTATE_X_TO | `space.rotateXTo` | host -> engine | usePluridPubSub |
 | SPACE_ROTATE_Y_TO | `space.rotateYTo` | host -> engine | usePluridPubSub |
-| SPACE_TRANSLATE_UP | `space.translateUp` | declared | - |
-| SPACE_TRANSLATE_DOWN | `space.translateDown` | declared | - |
-| SPACE_TRANSLATE_LEFT | `space.translateLeft` | declared | - |
-| SPACE_TRANSLATE_RIGHT | `space.translateRight` | declared | - |
 | SPACE_TRANSLATE_X_WITH | `space.translateXWith` | host -> engine | usePluridPubSub |
 | SPACE_TRANSLATE_Y_WITH | `space.translateYWith` | host -> engine | usePluridPubSub |
 | SPACE_TRANSLATE_Z_WITH | `space.translateZWith` | host -> engine | usePluridPubSub |
 | SPACE_TRANSLATE_X_TO | `space.translateXTo` | host -> engine | usePluridPubSub |
 | SPACE_TRANSLATE_Y_TO | `space.translateYTo` | host -> engine | usePluridPubSub |
 | SPACE_TRANSLATE_Z_TO | `space.translateZTo` | host -> engine | usePluridPubSub |
-| SPACE_SCALE_UP | `space.scaleUp` | declared | - |
-| SPACE_SCALE_DOWN | `space.scaleDown` | declared | - |
-| SPACE_SCALE_WITH | `space.scaleWith` | declared | - |
 | SPACE_TRANSFORM | `space.transform` | host -> engine (+ internal re-publish) | usePluridPubSub |
 | VIEW_ADD_PLANE | `view.addPlane` | host -> engine | usePluridPubSub |
 | VIEW_SET_PLANES | `view.setPlanes` | host -> engine | usePluridPubSub |
@@ -454,7 +442,6 @@ The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PU
 | SPACE_SELECT_ALL | `space.selectAll` | host -> engine | usePluridPubSub |
 | SPACE_INVERT_SELECTION | `space.invertSelection` | host -> engine | usePluridPubSub |
 | CHANGED | `space.changed` | engine -> host (emit) | useEngineEvents |
-| SET_PLANE_PATH | `plane.setPath` | declared | - |
 
 Notes on the special rows:
 
@@ -659,7 +646,7 @@ The verbatim export lists, transcribed from the sources on 2026-07-02 and spot-c
 
 ### @plurid/plurid-react (`source/index.tsx`)
 
-Regenerated 2026-09-03 from the source export blocks (a script-assisted transcription; the source order is kept); re-anchored 2026-09-05 for the document model — new: `PluridDocument` (the component), `PluridDocumentScope`, `usePluridDocument`, `createDocumentRegistry`, `composePluridProviders`, and the type exports listed below; `PluridLink`'s default export is now the gate that renders a plain anchor outside an application; `usePluridPlane()` gained the plane identity, the pubsub and `close` / `navigateToParent` / `frame`. New on 2026-09-03: the hooks (`useCamera`, `useSelection`, `usePluridHistory`, `usePluridPubSub`, `usePluridApi`), the `PluridApplicationHandle` type (the `ref` of `PluridApplication`, which is now a `forwardRef` around `PluridApplicationShell`), `CameraMotionOptions` / `CameraCommand`, and the second entry `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `installFrameClock`, `flushFrames`, `expectCamera`, `installPointerEvents`, `installMatchMedia`). Removed: the `general` state slice (so `pluridStateModules.general` and `pluridSelectors.general` are gone), the `computeMatrix` shim, `beginAnimatedTransform` / `useAnimatedTransform` (the `animatedTransform` state field, its reducer and the `space.animatedTransform` topic remain for wire compatibility but nothing renders from them). (+ `width` / `height` / `sizeMode` since 2026-09-05)
+Regenerated 2026-09-03 from the source export blocks (a script-assisted transcription; the source order is kept); re-anchored 2026-09-05 for the document model — new: `PluridDocument` (the component), `PluridDocumentScope`, `usePluridDocument`, `createDocumentRegistry`, `composePluridProviders`, and the type exports listed below; `PluridLink`'s default export is now the gate that renders a plain anchor outside an application; `usePluridPlane()` gained the plane identity, the pubsub and `close` / `navigateToParent` / `frame`. New on 2026-09-03: the hooks (`useCamera`, `useSelection`, `usePluridHistory`, `usePluridPubSub`, `usePluridApi`), the `PluridApplicationHandle` type (the `ref` of `PluridApplication`, which is now a `forwardRef` around `PluridApplicationShell`), `CameraMotionOptions` / `CameraCommand`, and the second entry `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `installFrameClock`, `flushFrames`, `expectCamera`, `installPointerEvents`, `installMatchMedia`). Removed: the `general` state slice (so `pluridStateModules.general` and `pluridSelectors.general` are gone), the `computeMatrix` shim, `beginAnimatedTransform` / `useAnimatedTransform` (the `animatedTransform` state field, its reducer and the `space.animatedTransform` topic are gone — 2026-09-13; they were kept for wire compatibility for one release and nothing ever rendered from them). (+ `width` / `height` / `sizeMode` since 2026-09-05)
 
 Value exports (the named `export { ... }` block, in source order):
 

@@ -308,7 +308,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         defaultPubSub?.publish({
             topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
             data: {
-                id,
+                planeID: id,
             },
         });
     }
@@ -332,7 +332,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         defaultPubSub?.publish({
             topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
             data: {
-                id: planeID,
+                planeID,
             },
         });
     }
@@ -472,10 +472,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
             callback: (data) => {
                 const {
-                    id,
+                    planeID: refreshing,
                 } = data;
 
-                if (id === planeID) {
+                if (refreshing === planeID) {
                     refreshPlane();
                 }
             },

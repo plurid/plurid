@@ -41,13 +41,9 @@ export type ServerOnly<T> =
  * `titleTemplate`, description, canonical, meta, links, styles, scripts, JSON-LD, html / body
  * attributes. The kit's `head` is the LOWEST layer; a route's / plane's `head`, in-render
  * `<PluridDocument>` declarations, a preserve's `document` and the server `document` hook layer
- * above it. `PluridHead*` are kept as aliases for one release.
+ * above it. `PluridHead` remains the name a kit config uses for the document.
  */
 export type PluridHead = PluridDocument;
-/** @deprecated Use `PluridDocumentMeta`. */
-export type PluridHeadMeta = PluridDocumentMeta;
-/** @deprecated Use `PluridDocumentLink`. */
-export type PluridHeadLink = PluridDocumentLink;
 
 /**
  * Favicon set. A bare string is shorthand for the primary icon; the object form

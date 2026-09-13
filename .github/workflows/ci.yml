@@ -52,6 +52,12 @@ jobs:
       - name: Module imports (ESM + CommonJS)
         run: pnpm check.modules
 
+      # what a consumer downloads, gzipped, against a committed per-package budget. Growth is
+      # invisible without a number (2026-09-13: the audit asked for this twice and `pnpm size` was
+      # named in the docs as a target that did not exist).
+      - name: Bundle budgets
+        run: pnpm size
+
       - name: Generated tables are current
         run: pnpm docs.tables.check
 

@@ -26,9 +26,12 @@ pre-rendering routes ahead of time.
 
 `@plurid/plurid-react-server` is normally scaffolded by
 [`@plurid/generate-plurid-app`](https://github.com/plurid/plurid/tree/master/packages/plurid-utilities/generate-plurid-app)
-(server templates). The two runnable references are
-[`fixtures/plurid-react-typescript-server`](https://github.com/plurid/plurid/tree/master/fixtures) and its
-JavaScript twin.
+(server templates), which is the runnable reference — it generates an application, and `pnpm smoke.pack`
+builds and serves one on every CI run.
+
+(The `fixtures/plurid-react-*-server` directories are NOT references: they are pinned to versions from
+the 0.0.0-3x era, are outside the workspace, and are neither built nor type-checked. Use the generator,
+or `fixtures/render-test` for the client side.)
 
 ``` bash
 npm install @plurid/plurid-react-server

@@ -52,38 +52,6 @@ export interface PluridPubSubSubscribeMessageConfiguration {
 
 
 
-export interface PluridPubSubPublishMessageSpaceRotateUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceRotateDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_DOWN;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceRotateLeft {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_LEFT;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceRotateRight {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_RIGHT;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubSubscribeMessageSpaceRotateUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceRotateDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_DOWN;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceRotateLeft {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_LEFT;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceRotateRight {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_RIGHT;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
 
 export interface PluridPubSubPublishMessageSpaceRotateXWith {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH;
@@ -121,38 +89,6 @@ export interface PluridPubSubSubscribeMessageSpaceRotateYTo {
 
 
 
-export interface PluridPubSubPublishMessageSpaceTranslateUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_UP;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceTranslateDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_DOWN;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceTranslateLeft {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_LEFT;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceTranslateRight {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_RIGHT;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubSubscribeMessageSpaceTranslateUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_UP;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceTranslateDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_DOWN;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceTranslateLeft {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_LEFT;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceTranslateRight {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_RIGHT;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
 
 export interface PluridPubSubPublishMessageSpaceTranslateXWith {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH;
@@ -206,30 +142,6 @@ export interface PluridPubSubSubscribeMessageSpaceTranslateZTo {
 
 
 
-export interface PluridPubSubPublishMessageSpaceScaleUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_UP;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceScaleDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_DOWN;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubPublishMessageSpaceScaleWith {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH;
-    data: PluridPubSubDataValueNumber;
-}
-export interface PluridPubSubSubscribeMessageSpaceScaleUp {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_UP;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceScaleDown {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_DOWN;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
-export interface PluridPubSubSubscribeMessageSpaceScaleWith {
-    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH;
-    callback: PluridPubSubCallback<PluridPubSubDataValueNumber>;
-}
 
 
 export interface SpaceTransform {
@@ -259,8 +171,6 @@ export interface PluridPubSubSubscribeMessageSpaceTransform {
 export interface PluridPubSubMessageViewAddPlaneData {
     /** the route of the plane to add to the view */
     planeID?: string;
-    /** @deprecated use `planeID` */
-    plane?: string;
 }
 export interface PluridPubSubPublishMessageViewAddPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE;
@@ -289,8 +199,6 @@ export interface PluridPubSubSubscribeMessageViewSetPlanes {
 
 export interface PluridPubSubMessageViewRemovePlaneData {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    plane?: string;
 }
 export interface PluridPubSubPublishMessageViewRemovePlane {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE;
@@ -303,8 +211,6 @@ export interface PluridPubSubSubscribeMessageViewRemovePlane {
 
 export interface PluridPubSubMessageNavigateToPlane {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
 }
 export interface PluridPubSubPublishMessageNavigateToPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE;
@@ -317,8 +223,6 @@ export interface PluridPubSubSubscribeMessageNavigateToPlane {
 
 export interface PluridPubSubMessageRefreshPlane {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
 }
 export interface PluridPubSubPublishMessageRefreshPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.REFRESH_PLANE;
@@ -331,8 +235,6 @@ export interface PluridPubSubSubscribeMessageRefreshPlane {
 
 export interface PluridPubSubMessageIsolatePlane {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
 }
 export interface PluridPubSubPublishMessageIsolatePlane {
     topic: typeof PLURID_PUBSUB_TOPIC.ISOLATE_PLANE;
@@ -354,8 +256,6 @@ export interface PluridPubSubSubscribeMessageOpenClosedPlane {
 
 export interface PluridPubSubMessageClosePlane {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
     /** Where the camera goes when the closed plane is in view; defaults to `space.navigation.onClose`. */
     navigate?: 'parent' | 'stay';
 }
@@ -403,17 +303,7 @@ export interface PluridPubSubSubscribeMessageNavigateToRoot {
 
 export type PluridPubSubMessageSetPlanePath = {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
     value: string;
-}
-export interface PluridPubSubPublishMessageSetPlanePath {
-    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_PATH;
-    data: PluridPubSubMessageSetPlanePath;
-}
-export interface PluridPubSubSubscribeMessageSetPlanePath {
-    topic: typeof PLURID_PUBSUB_TOPIC.SET_PLANE_PATH;
-    callback: PluridPubSubCallback<PluridPubSubMessageSetPlanePath>;
 }
 
 
@@ -467,8 +357,6 @@ export interface PluridPubSubSubscribeMessageSetSelection {
 
 export interface PluridPubSubMessageToggleSelection {
     planeID?: string;
-    /** @deprecated use `planeID` */
-    id?: string;
 }
 export interface PluridPubSubPublishMessageToggleSelection {
     topic: typeof PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION;
@@ -521,8 +409,6 @@ export interface PluridPubSubMessageSetViewpoint {
     viewpoint: string;
     /** Smoothly animate the camera to it (vs jump instantly). Default `false`. */
     animate?: boolean;
-    /** @deprecated use `animate` */
-    animated?: boolean;
 }
 export interface PluridPubSubPublishMessageSetViewpoint {
     topic: typeof PLURID_PUBSUB_TOPIC.SET_VIEWPOINT;
@@ -861,27 +747,16 @@ export interface PluridPubSubSubscribeMessageChanged {
 
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
-    | PluridPubSubPublishMessageSpaceRotateUp
-    | PluridPubSubPublishMessageSpaceRotateDown
-    | PluridPubSubPublishMessageSpaceRotateLeft
-    | PluridPubSubPublishMessageSpaceRotateRight
     | PluridPubSubPublishMessageSpaceRotateXWith
     | PluridPubSubPublishMessageSpaceRotateYWith
     | PluridPubSubPublishMessageSpaceRotateXTo
     | PluridPubSubPublishMessageSpaceRotateYTo
-    | PluridPubSubPublishMessageSpaceTranslateUp
-    | PluridPubSubPublishMessageSpaceTranslateDown
-    | PluridPubSubPublishMessageSpaceTranslateLeft
-    | PluridPubSubPublishMessageSpaceTranslateRight
     | PluridPubSubPublishMessageSpaceTranslateXWith
     | PluridPubSubPublishMessageSpaceTranslateYWith
     | PluridPubSubPublishMessageSpaceTranslateZWith
     | PluridPubSubPublishMessageSpaceTranslateXTo
     | PluridPubSubPublishMessageSpaceTranslateYTo
     | PluridPubSubPublishMessageSpaceTranslateZTo
-    | PluridPubSubPublishMessageSpaceScaleUp
-    | PluridPubSubPublishMessageSpaceScaleDown
-    | PluridPubSubPublishMessageSpaceScaleWith
     | PluridPubSubPublishMessageSpaceTransform
     | PluridPubSubPublishMessageViewAddPlane
     | PluridPubSubPublishMessageViewSetPlanes
@@ -894,7 +769,6 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessagePreviousRoot
     | PluridPubSubPublishMessageNextRoot
     | PluridPubSubPublishMessageNavigateToRoot
-    | PluridPubSubPublishMessageSetPlanePath
     | PluridPubSubPublishMessageAddPlaneLink
     | PluridPubSubPublishMessageRemovePlaneLink
     | PluridPubSubPublishMessageSetPlaneLinks
@@ -932,27 +806,16 @@ export type PluridPubSubPublishMessage =
 
 export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageConfiguration
-    | PluridPubSubSubscribeMessageSpaceRotateUp
-    | PluridPubSubSubscribeMessageSpaceRotateDown
-    | PluridPubSubSubscribeMessageSpaceRotateLeft
-    | PluridPubSubSubscribeMessageSpaceRotateRight
     | PluridPubSubSubscribeMessageSpaceRotateXWith
     | PluridPubSubSubscribeMessageSpaceRotateYWith
     | PluridPubSubSubscribeMessageSpaceRotateXTo
     | PluridPubSubSubscribeMessageSpaceRotateYTo
-    | PluridPubSubSubscribeMessageSpaceTranslateUp
-    | PluridPubSubSubscribeMessageSpaceTranslateDown
-    | PluridPubSubSubscribeMessageSpaceTranslateLeft
-    | PluridPubSubSubscribeMessageSpaceTranslateRight
     | PluridPubSubSubscribeMessageSpaceTranslateXWith
     | PluridPubSubSubscribeMessageSpaceTranslateYWith
     | PluridPubSubSubscribeMessageSpaceTranslateZWith
     | PluridPubSubSubscribeMessageSpaceTranslateXTo
     | PluridPubSubSubscribeMessageSpaceTranslateYTo
     | PluridPubSubSubscribeMessageSpaceTranslateZTo
-    | PluridPubSubSubscribeMessageSpaceScaleUp
-    | PluridPubSubSubscribeMessageSpaceScaleDown
-    | PluridPubSubSubscribeMessageSpaceScaleWith
     | PluridPubSubSubscribeMessageSpaceTransform
     | PluridPubSubSubscribeMessageViewAddPlane
     | PluridPubSubSubscribeMessageViewSetPlanes
@@ -965,7 +828,6 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessagePreviousRoot
     | PluridPubSubSubscribeMessageNextRoot
     | PluridPubSubSubscribeMessageNavigateToRoot
-    | PluridPubSubSubscribeMessageSetPlanePath
     | PluridPubSubSubscribeMessageAddPlaneLink
     | PluridPubSubSubscribeMessageRemovePlaneLink
     | PluridPubSubSubscribeMessageSetPlaneLinks

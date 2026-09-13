@@ -1,37 +1,25 @@
 // #region imports
+    // #region libraries
     import {
+        FOCUS_ANCHOR_SUFFIX,
         PLURID_ATTRIBUTE_ENTITY,
         PLURID_ATTRIBUTE_PLANE,
         PLURID_ENTITY_PLANE_CONTENT,
     } from '@plurid/plurid-data';
-    // #region libraries
-    import {
-        FOCUS_ANCHOR_SUFFIX,
-
-        PluridStateSpace,
-    } from '@plurid/plurid-data';
     // #endregion libraries
-
-
-    // #region external
-    import {
-        interaction,
-    } from '~services/engine';
-    // #endregion external
 // #endregion imports
 
 
 
 // #region module
-const {
-    camera: cameraEngine,
-} = interaction;
-
-
 /**
- * @deprecated The camera core (`interaction.camera` in `@plurid/plurid-engine`) owns the matrix;
- * the space slice commits through `cameraMatrix3d`. Kept as an exact shim over the legacy six
- * scalars for any external caller.
+ * Move the keyboard focus INTO a plane. A plane whose content scrolls inside it (a declared or
+ * configured height) focuses the scroller, so the arrow keys scroll that page; any other plane
+ * focuses its invisible anchor.
+ *
+ * (A deprecation tag used to sit here, left behind by a refactor: it described a matrix shim over
+ * the legacy six scalars that no longer exists in this file, while the function under it is live
+ * and is what `navigatePlane` calls on every landing. Removed 2026-09-13.)
  */
 export const focusPluridPlaneAnchor = (
     planeID: string,

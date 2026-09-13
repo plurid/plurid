@@ -31,7 +31,7 @@ export const refreshActivePlane = (
     pubsub.publish({
         topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
         data: {
-            id,
+            planeID: id,
         },
     });
 }
@@ -50,7 +50,7 @@ export const isolateActivePlane = (
         pubsub.publish({
             topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
             data: {
-                id: '',
+                planeID: '',
             },
         });
         return;
@@ -63,7 +63,7 @@ export const isolateActivePlane = (
     pubsub.publish({
         topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
         data: {
-            id,
+            planeID: id,
         },
     });
 }
@@ -93,7 +93,7 @@ export const closeActivePlane = (
     pubsub.publish({
         topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
         data: {
-            id,
+            planeID: id,
         },
     });
 }

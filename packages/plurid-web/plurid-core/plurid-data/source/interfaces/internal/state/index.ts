@@ -70,18 +70,6 @@ export interface PluridStateSpace {
      * derived from the camera): the one fact about a tween the camera cannot tell yet.
      */
     dockingPlaneID: string;
-    /** @deprecated mirror of `camera` (legacy parameterization); read-only for consumers. */
-    scale: number;
-    /** @deprecated mirror of `camera.pitch`. */
-    rotationX: number;
-    /** @deprecated mirror of `camera.yaw`. */
-    rotationY: number;
-    /** @deprecated mirror of `camera` (legacy parameterization). */
-    translationX: number;
-    /** @deprecated mirror of `camera` (legacy parameterization). */
-    translationY: number;
-    /** @deprecated mirror of `camera` (legacy parameterization). */
-    translationZ: number;
     /** The rendered `matrix3d(...)`, derived from `camera` + `viewSize`. */
     transform: string;
     tree: TreePlane[];

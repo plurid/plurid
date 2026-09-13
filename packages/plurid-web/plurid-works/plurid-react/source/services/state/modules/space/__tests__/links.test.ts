@@ -88,11 +88,6 @@ describe('updateLinkCoordinates', () => {
         expect(child.children![0].location.translateY).toBe(140);
     });
 
-    it('keeps the deprecated alias', () => {
-        const state = withTree(spawnedTree());
-        const next = reducer(state, actions.updateSpaceLinkCoordinates({ planeID: 'b', linkCoordinates: { x: 50, y: 40 } }));
-        expect(next.tree[0].children![0].location.translateX).toBeCloseTo(50, 9);
-    });
 });
 
 

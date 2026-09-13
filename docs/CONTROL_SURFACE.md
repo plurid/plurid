@@ -1,6 +1,6 @@
 # Plurid Developer-Control Surface
 
-Verified: **2026-09-02** against the current public types and source (camera core: `navigation`, `viewpointURLVersion`, `space.cameraDelta`, `space.frame`). Engine delivery does not imply product adoption; see [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the consumer status.
+Verified: **2026-09-13** against the current public types and source — the page presentation and its docking/URL knobs, the clipboard, the command palette, camera `roll` and viewpoint `v3`, the bookmarks UI, the detach tier, and the release sweep that removed every deprecated alias (see [`MIGRATION.md`](./MIGRATION.md)). Engine delivery does not imply product adoption; see [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) for the consumer status.
 
 Plurid is **transparent infrastructure**: it facilitates 3D spatial navigation and arrangement, and otherwise stays out of your way — _you_ decide what the app is for. So every imposed behavior has an opt-out, every engine action a programmatic trigger, every state change an observation seam, and there is one master escape hatch for the things we didn't anticipate.
 
@@ -500,7 +500,7 @@ definePluridConfiguration({
 
 ### UI — replace overlays or hide elements
 
-Render-slots **substitute** an engine overlay with your own (rendered at the same spot); the `elements.*.show` flags / `global.micro` **hide** the defaults.
+Render-slots **substitute** an engine overlay with your own (rendered at the same spot); the `elements.*.show` flags **hide** the defaults.
 
 ```tsx
 <PluridApplication
@@ -640,7 +640,7 @@ import { space, interaction } from '@plurid/plurid-engine'; // space.tree, space
 
 ### Flat-preset completeness
 
-`definePluridConfiguration` maps every common knob flat (no nested object needed) — including `opaque`, `camera`, `transformOrigin`, `transformMode`, `transformMultimode`, `transformTouch`, `cullingDistance`, `fadeInTime`. Anything not covered is reachable via `extend` (a normal nested partial, merged last so it wins).
+`definePluridConfiguration` maps every common knob flat (no nested object needed) — including `opaque`, `camera`, `transformOrigin`, `transformMode`, `fadeInTime`. (`transformMultimode` and `transformTouch` were retired on 2026-09-06 — see `gestures.touchOne`; the flat `cullingDistance` on 2026-09-13 — use `culling: { distance }`.) Anything not covered is reachable via `extend` (a normal nested partial, merged last so it wins).
 
 ---
 

@@ -79,7 +79,7 @@ test.describe('the document head', () => {
 
         // close it: the geometry layer is the head again, the detail's meta is withdrawn
         const child = (await tree(page)).find((node: any) => node.route.endsWith('/geometry')).children[0];
-        await publish(page, 'space.closePlane', { id: child.planeID });
+        await publish(page, 'space.closePlane', { planeID: child.planeID });
         await waitForHead(page, (value) => value.title === 'GEOMETRY · rt · plurid' && value.robots === null);
         value = await head(page);
         expect(value.titles).toBe(1);

@@ -221,9 +221,6 @@ export const definePluridConfiguration = (
     if (flat.camera !== undefined) { space.camera = flat.camera; }
     if (flat.transformOrigin !== undefined) { space.transformOrigin = flat.transformOrigin; }
     if (flat.transformMode !== undefined) { space.transformMode = flat.transformMode; }
-    if (flat.cullingDistance !== undefined) {
-        space.culling = { ...(space.culling || {}), distance: flat.cullingDistance };
-    }
     if (flat.fadeInTime !== undefined) { space.fadeInTime = flat.fadeInTime; }
     if (flat.bridge !== undefined || flat.bridgeLength !== undefined || flat.bridgePlaneAngle !== undefined) {
         space.bridge = { ...(flat.bridge || {}) };

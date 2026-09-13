@@ -16,7 +16,10 @@
  * are upgraded in `upgradeSnapshot`.
  *
  * - v2: the six legacy camera scalars + `transform`, `camera` was a dead `{x,y,z}`.
- * - v3: `camera` is the `CameraState`; the scalars are mirrors (still stored, still readable).
+ * - v3: `camera` is the `CameraState`, and the only camera fact stored. (Until 2026-09-13 the six
+ *   legacy scalars were mirrored onto the state and written alongside it; they are derived now
+ *   — `toLegacy(camera, viewSize)` — so a v3 snapshot from an older build simply carries six extra
+ *   fields that are read and ignored. No version bump: the camera is what a v3 snapshot is.)
  */
 const PERSISTED_STATE_VERSION = 3;
 
@@ -41,12 +44,6 @@ let serializeFailureWarned = false;
  * camera never saw.
  */
 const PERSISTED_SPACE_FIELDS = [
-    'rotationX',
-    'rotationY',
-    'scale',
-    'translationX',
-    'translationY',
-    'translationZ',
     'transform',
     'camera',
     'viewSize',

@@ -18,9 +18,12 @@ module.exports = {
         '/node_modules/',
         '/distribution/',
     ],
-    // THE FLOORS ARE MEASURED, not aspired to (2026-09-13): each is this package's own coverage on
-    // the day it was set, rounded down to the nearest five. A floor from reality cannot be
-    // cargo-culted and cannot silently rot — it only ever moves up, by `pnpm test` and this number.
+    // THE FLOORS ARE MEASURED, not aspired to (2026-09-13, re-measured after the deprecation sweep):
+    // each is this package's own coverage on the day it was set, rounded down to a multiple of five —
+    // and one step further where that would have left under a point of room, because a floor sitting
+    // ON its measurement goes red the first time anyone adds an uncovered function, which is a
+    // failure about nothing. A floor from reality cannot be cargo-culted and cannot silently rot; it
+    // only ever moves UP, in the commit that earns it.
     coverageThreshold: {
         global: {
             branches: 55,
