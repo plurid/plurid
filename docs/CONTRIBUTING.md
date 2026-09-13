@@ -72,6 +72,7 @@ Run from the root. **CI enforces every row of this table** (2026-09-13: the brow
 | `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
 | `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
+| `pnpm release` | preflight → bump the changed chain (+ its `>=` peer ranges) → `pnpm verify` → `pnpm -r publish` → tag | The whole release. `--dry-run` first, always. |
 | `pnpm size` | measures every public package's published ESM (entry + chunks) gzipped against `configurations/size-budgets.json` | Fails over budget. `pnpm size --update` rewrites the budgets from disk — do that only for a deliberate change, in the same commit, with the reason in the message. A budget is the measurement rounded up to the next 5 KB with at least 2 KB of room. |
 | `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways | The consumer's path end to end (needs the network; a minute). `--keep` leaves the project for inspection. |
 | `pnpm verify` | build → check → test → lint → check.modules → size → docs.tables.check → browser suite → smoke.pack | The full local gate; what to run before a publish. |
@@ -230,6 +231,26 @@ Gets a Playwright scenario in `fixtures/render-test/e2e/*.spec.ts` (camera / inp
 The packages are a dependency CHAIN (`plurid-data → plurid-engine / plurid-pubsub → plurid-react → plurid-react-server → plurid-kit`, with `plurid-icons-react`, `plurid-ui-state-react` and `plurid-ui-components-react` feeding the React adapter). A new React adapter needs the engine APIs of the same round, so:
 
 - THE CONSUMER CONTRACT (since 2026-09-05): an app installs `@plurid/plurid-react` plus `react`, `react-dom` and `styled-components` — everything else (`plurid-data`, `plurid-engine`, `plurid-pubsub`, `plurid-functions*`, `plurid-icons-react`, `plurid-themes`, `plurid-ui-components-react`, `plurid-ui-state-react`, `@reduxjs/toolkit`, `react-redux`) is a DEPENDENCY of the package that imports it (`workspace:^`, packed as `^0.0.0-N`), never a peer the app must declare. Only singletons stay peers: `react`, `react-dom`, `styled-components` everywhere; `react-redux` + `@reduxjs/toolkit` for `plurid-ui-components-react` (it connects to the HOST's store); `@plurid/plurid-react` for the server and the kit (one copy: React contexts); `@plurid/elementql-client-react` is an OPTIONAL peer of plurid-react (loaded lazily by the external plane); `puppeteer` an optional peer of the server (stills only).
+**`pnpm release` does the whole thing** (`scripts/release.mjs`, added 2026-09-13 — there was no release
+automation at all before it, and the cost showed: the 2026-09-05 round was bumped and then never
+published, so the workspace integers sat one ahead of npm for eight days and nothing said so).
+
+```bash
+pnpm release --dry-run     # say exactly what would happen, touch nothing (works on a dirty tree)
+pnpm release               # bump what changed → pnpm verify → publish → tag
+pnpm release --skip-verify # only if you just ran the gate
+pnpm release --no-bump     # publish the versions as they stand
+```
+
+It refuses to run on a dirty tree, off `master`, out of sync with `origin`, or unauthenticated, and it
+warns when CI on the commit is not green. **What counts as changed** is a package's SHIPPED source
+(`source/**` minus `__tests__`) since the last `release/<date>` tag — tests do not ship, so a test-only
+change is not a release. With no tag yet it falls back to "the workspace version is ahead of the
+registry", which is what a hand-bump leaves behind. Publishing itself is `pnpm -r publish`, which walks
+the workspace topologically and skips anything already on the registry.
+
+After publishing it prints the one check nothing else can do — see the note on `smoke.pack` below.
+
 - Bump and publish the CHANGED CHAIN TOGETHER, never one package alone. The peer ranges are `>=<the version of the sibling this round>` (not `*`), so an old sibling from the registry is refused instead of crashing at runtime; `devDependencies` keep `workspace:*` (pnpm rewrites them to the exact version on pack — `pnpm smoke.pack` fails if one survives).
 - `pnpm verify` first. Its last three steps exist for the release: `check` (a type error in a translation table or a leaf package is invisible to `build`), `check.modules` and `smoke.pack` (the packed ESM + CommonJS entry points, which is how the styled-components / react-helmet-async interop breakage was found).
 - Native Node ESM interop: `styled-components@6` resolves to its CommonJS build under Node — a plain `import styled from 'styled-components'` in our ESM output yields the `module.exports` object. `scripts/tsup/cjs-interop.mjs` (an esbuild plugin wired in the React, server, kit, icons and UI-components tsup configs, together with `noExternal` for the module) redirects the import through a shim that resolves the default and named exports for every interop shape, and keeps the real module external. Add a module to `INTEROP_MODULES` if another CommonJS peer is read through a default or named import.
