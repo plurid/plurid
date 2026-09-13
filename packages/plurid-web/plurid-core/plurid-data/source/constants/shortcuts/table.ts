@@ -75,6 +75,8 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     { id: 'flyUp', code: 'KeyE', kind: 'hold', group: 'fly', label: 'Ascend', when: 'firstPerson' },
     { id: 'flyDown', code: 'KeyQ', kind: 'hold', group: 'fly', label: 'Descend', when: 'firstPerson' },
     { id: 'flySprint', code: 'ShiftLeft', keys: ['Shift'], kind: 'hold', group: 'fly', label: 'Sprint', when: 'firstPerson' },
+    { id: 'rollLeft', code: 'KeyZ', kind: 'hold', group: 'fly', label: 'Tilt the horizon left', when: 'firstPerson' },
+    { id: 'rollRight', code: 'KeyC', kind: 'hold', group: 'fly', label: 'Tilt the horizon right (0 puts it back)', when: 'firstPerson' },
 
     // transform
     { id: 'modeRotation', code: 'KeyR', kind: 'press', group: 'transform', label: 'Rotate mode (drag / wheel rotates)' },

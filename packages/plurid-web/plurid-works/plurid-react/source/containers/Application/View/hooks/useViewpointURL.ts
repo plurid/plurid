@@ -39,7 +39,7 @@ export interface UseViewpointURLParameters {
     /** `configuration.space.viewpointURLParam` — the query-param name. Default `v`. */
     param: string;
     /** `configuration.space.viewpointURLVersion` — the encoding written. Default `1`. */
-    version?: 1 | 2;
+    version?: 1 | 2 | 3;
     /** Debounce (ms) before reflecting a changed camera into the URL. Default 400. */
     debounce?: number;
 }

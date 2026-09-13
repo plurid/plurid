@@ -49,8 +49,9 @@ const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 
 /**
  * Interpolate between two cameras: `from` is first re-parameterized about `to`'s pivot (lossless),
- * then the offset and pitch lerp, the yaw takes the shortest arc, and the scale interpolates
- * geometrically so a zoom feels constant-rate. `t` is already eased.
+ * then the offset and pitch lerp, the yaw AND the roll take the shortest arc (a tween from 170° to
+ * −170° turns 20°, not 340°), and the scale interpolates geometrically so a zoom feels
+ * constant-rate. `t` is already eased.
  */
 export const interpolateCamera = (
     from: CameraState,
@@ -70,6 +71,7 @@ export const interpolateCamera = (
     return {
         yaw: normalizeYaw(start.yaw + shortestArc(start.yaw, to.yaw) * t),
         pitch: lerp(start.pitch, to.pitch, t),
+        roll: normalizeYaw(start.roll + shortestArc(start.roll, to.roll) * t),
         scale: start.scale * Math.pow(to.scale / start.scale, t),
         perspective: lerp(start.perspective, to.perspective, t),
         pivot: { ...to.pivot },

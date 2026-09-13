@@ -107,6 +107,8 @@ export const dockPose = (
         yaw: normalizeYaw(-plane.location.rotateY),
         // `0 - x`, not `-x`: a face-on plane must dock at +0 (a `-0` leaks into serialized viewpoints)
         pitch: 0 - plane.location.rotateX,
+        // a page is read LEVEL: every framing the engine computes lands the horizon at 0
+        roll: 0,
         scale: dockScale(plane, view, limits),
         pivot: planeCenter(plane),
         offset: { x: 0, y: 0, z: 0 },
@@ -144,6 +146,10 @@ export const isDocked = (
         return false;
     }
     if (Math.abs(camera.pitch + plane.location.rotateX) > DOCK_TOLERANCE) {
+        return false;
+    }
+    // a tilted horizon is not a docked page, however exactly the page fills the view
+    if (Math.abs(normalizeYaw(camera.roll)) > DOCK_TOLERANCE) {
         return false;
     }
     // the center under the view center AT THE PIVOT DEPTH: a parallel page a few hundred units in

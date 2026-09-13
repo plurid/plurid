@@ -66,14 +66,18 @@ const FLY_IDS: PluridShortcutID[] = [
     'flyUp',
     'flyDown',
     'flySprint',
+    'rollLeft',
+    'rollRight',
 ];
 
 
 /**
  * First-person "fly" controls, active only in `firstPerson` mode. The held keys come from the
- * shortcut registry (WASD move, E up, Q down, Shift sprint — remappable / disableable like every
- * other shortcut), movement is TIME-based (`flySpeed` is px per 60 Hz frame, applied per real
- * frame duration) with normalized diagonals, and the loop runs only while a key is down. Typing in
+ * shortcut registry (WASD move, E up, Q down, Z / C tilt the horizon, Shift sprint — remappable /
+ * disableable like every other shortcut), movement is TIME-based (`flySpeed` is px per 60 Hz frame,
+ * `flyRollSpeed` degrees likewise, both applied per real frame duration) with normalized diagonals,
+ * and the loop runs only while a key is down. THE ROLL IS FIRST PERSON'S ALONE: nothing else in the
+ * engine tilts the horizon, and any framing (0, a link, a dock) puts it back level. Typing in
  * a field never flies. Mouse-look: click the view to lock the pointer and steer (Esc releases);
  * the look rotates about the EYE. Drag-to-look while not locked lives in the pointer hook.
  */
@@ -140,13 +144,25 @@ export const useFlyControls = (
                 strafe /= planar;
             }
 
-            if (forward !== 0 || strafe !== 0 || vertical !== 0) {
+            // the horizon tilts with the same held-key loop, at its own speed in degrees
+            let roll = 0;
+            if (held.has('rollRight')) { roll += 1; }
+            if (held.has('rollLeft')) { roll -= 1; }
+
+            if (forward !== 0 || strafe !== 0 || vertical !== 0 || roll !== 0) {
                 batcher.add({
-                    fly: {
-                        forward: forward * speed * sprint,
-                        strafe: strafe * speed * sprint,
-                        vertical: vertical * speed * sprint * (7 / 9),
-                    },
+                    ...(forward !== 0 || strafe !== 0 || vertical !== 0
+                        ? {
+                            fly: {
+                                forward: forward * speed * sprint,
+                                strafe: strafe * speed * sprint,
+                                vertical: vertical * speed * sprint * (7 / 9),
+                            },
+                        }
+                        : {}),
+                    ...(roll !== 0
+                        ? { roll: roll * (gestures.flyRollSpeed ?? 1.5) * (dt / REFERENCE_FRAME_MS) * sprint }
+                        : {}),
                 });
             }
 

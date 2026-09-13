@@ -71,7 +71,7 @@ export const setPivot = (
         return camera;
     }
 
-    const rotation = cameraRotation(camera.pitch, camera.yaw);
+    const rotation = cameraRotation(camera.pitch, camera.yaw, camera.roll);
     const delta = transformDirection(rotation, {
         x: (pivot.x - camera.pivot.x) * camera.scale,
         y: (pivot.y - camera.pivot.y) * camera.scale,
@@ -187,20 +187,40 @@ export const orbitBy = (
 };
 
 
+/**
+ * TILT THE HORIZON: roll about the axis the camera looks along. Unlike an orbit it moves nothing in
+ * the world and nothing on screen except the picture's angle, so it needs no pivot and no view.
+ */
+export const rollBy = (
+    camera: CameraState,
+    roll: number,
+): CameraState => {
+    if (roll === 0) {
+        return camera;
+    }
+
+    return {
+        ...camera,
+        roll: camera.roll + roll,
+    };
+};
+
+
 /** Rotate about the eye (first-person look) and keep the original pivot point afterwards. */
 export const lookBy = (
     camera: CameraState,
     yaw: number,
     pitch: number,
     view: ViewSize,
+    roll = 0,
 ): CameraState => {
-    if (yaw === 0 && pitch === 0) {
+    if (yaw === 0 && pitch === 0 && roll === 0) {
         return camera;
     }
 
     const eye = eyeWorld(camera, view);
     const aboutEye = setPivot(camera, eye);
-    const turned = orbitBy(aboutEye, yaw, pitch);
+    const turned = rollBy(orbitBy(aboutEye, yaw, pitch), roll);
 
     return setPivot(turned, camera.pivot);
 };
@@ -250,8 +270,8 @@ export const dollyBy = (
 
 
 /**
- * Apply one camera delta. Field order: pivot → look → orbit → pan → dolly → fly → zoom → absolute,
- * then the limits. Returns the same reference when the delta changes nothing.
+ * Apply one camera delta. Field order: pivot → look → orbit → roll → pan → dolly → fly → zoom →
+ * absolute, then the limits. Returns the same reference when the delta changes nothing.
  */
 export const applyCameraDelta = (
     camera: CameraState,
@@ -266,11 +286,15 @@ export const applyCameraDelta = (
     }
 
     if (delta.look) {
-        next = lookBy(next, delta.look.yaw || 0, delta.look.pitch || 0, view);
+        next = lookBy(next, delta.look.yaw || 0, delta.look.pitch || 0, view, delta.look.roll || 0);
     }
 
     if (delta.yaw || delta.pitch) {
         next = orbitBy(next, delta.yaw || 0, delta.pitch || 0);
+    }
+
+    if (delta.roll) {
+        next = rollBy(next, delta.roll);
     }
 
     if (delta.pan) {
@@ -301,6 +325,7 @@ export const applyCameraDelta = (
             ...next,
             ...(absolute.yaw !== undefined ? { yaw: absolute.yaw } : {}),
             ...(absolute.pitch !== undefined ? { pitch: absolute.pitch } : {}),
+            ...(absolute.roll !== undefined ? { roll: absolute.roll } : {}),
             ...(absolute.scale !== undefined ? { scale: absolute.scale } : {}),
             ...(absolute.perspective !== undefined ? { perspective: absolute.perspective } : {}),
             ...(absolute.pivot ? { pivot: { ...absolute.pivot } } : {}),

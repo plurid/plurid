@@ -31,13 +31,19 @@
  *
  *   toLegacy:   rotationX = pitch, rotationY = yaw, t = Rᵀ·offset + C − scale·pivot
  *   fromLegacy: offset = 0, pivot = (C − t) / scale
+ *
+ * THE MIRROR IS LOSSY IN ONE PLACE: six scalars have no third angle, so a ROLLED camera's legacy
+ * rotationX/Y are its unrolled shadow (the translation is exact — it un-rotates by the full
+ * rotation, roll included). Nothing in the engine reads the scalars back to move the camera; they
+ * are a compatibility mirror, and `transform` (the matrix) carries the roll. A camera can only be
+ * rolled in first person or by a host's own delta, so the ordinary space never meets this.
  */
 export const toLegacy = (
     camera: CameraState,
     view: ViewSize,
 ): SpaceTransform => {
     const center = viewCenter(view);
-    const rotation = cameraRotation(camera.pitch, camera.yaw);
+    const rotation = cameraRotation(camera.pitch, camera.yaw, camera.roll);
     const unrotated = transformDirectionTransposed(rotation, camera.offset);
 
     return {
@@ -66,6 +72,8 @@ export const fromLegacy = (
         {
             yaw: normalizeYaw(transform.rotationY),
             pitch: transform.rotationX,
+            // six scalars carry no horizon: a camera read back from them is level
+            roll: 0,
             scale,
             pivot: {
                 x: (center.x - transform.translationX) / scale,

@@ -38,6 +38,8 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | `E` | Ascend | `flyUp` | hold | firstPerson |
 | `Q` | Descend | `flyDown` | hold | firstPerson |
 | `Shift` | Sprint | `flySprint` | hold | firstPerson |
+| `Z` | Tilt the horizon left | `rollLeft` | hold | firstPerson |
+| `C` | Tilt the horizon right (0 puts it back) | `rollRight` | hold | firstPerson |
 
 ## Transform
 

@@ -25,10 +25,16 @@ export const mergeCameraDeltas = (
     if (b.pitch) {
         merged.pitch = (merged.pitch || 0) + b.pitch;
     }
+    if (b.roll) {
+        merged.roll = (merged.roll || 0) + b.roll;
+    }
     if (b.look) {
         merged.look = {
             yaw: (merged.look?.yaw || 0) + (b.look.yaw || 0),
             pitch: (merged.look?.pitch || 0) + (b.look.pitch || 0),
+            ...(b.look.roll || merged.look?.roll
+                ? { roll: (merged.look?.roll || 0) + (b.look.roll || 0) }
+                : {}),
         };
     }
     if (b.pan) {
@@ -69,6 +75,7 @@ export const isEmptyDelta = (
 ): boolean => !delta.pivot
     && !delta.yaw
     && !delta.pitch
+    && !delta.roll
     && !delta.look
     && !delta.pan
     && !delta.dolly

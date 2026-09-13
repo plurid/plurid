@@ -6,10 +6,12 @@ import {
 import {
     openHarness,
     camera,
+    settle,
     spaceState,
     publish,
     viewRect,
     dispatches,
+    waitForBoot,
 } from './helpers';
 
 
@@ -230,6 +232,53 @@ test.describe('input layer', () => {
         expect(insideDialog).toBe(true);
         await page.keyboard.press('Escape');
         await expect(dialog).toHaveCount(0);
+    });
+
+    test('first person tilts the horizon: Z / C roll the view, the cube leans with it, and a fit puts it back', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        await publish(page, 'configuration', { space: { firstPerson: true } });
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        expect((await camera(page)).roll).toBe(0);
+
+        // the horizon is a held key, like every other fly control
+        await page.keyboard.down('KeyC');
+        await expect.poll(async () => (await camera(page)).roll).toBeGreaterThan(2);
+        await page.keyboard.up('KeyC');
+        const tilted = (await camera(page)).roll;
+
+        // the rendered matrix carries it: the roots container is no longer axis-aligned
+        const matrix = await page.evaluate(() => getComputedStyle(
+            document.querySelector('[data-plurid-entity="PluridRoots"]') as HTMLElement,
+        ).transform);
+        const [a, b] = matrix.replace(/^matrix(3d)?\(/, '').split(',').map(Number);
+        expect(Math.abs(b)).toBeGreaterThan(0.01);
+        expect(a).toBeLessThan(1);
+
+        // the other way takes it back toward level
+        await page.keyboard.down('KeyZ');
+        await expect.poll(async () => (await camera(page)).roll).toBeLessThan(tilted - 1);
+        await page.keyboard.up('KeyZ');
+
+        // a framing lands LEVEL — the way out of a rolled view
+        await publish(page, 'configuration', { space: { firstPerson: false } });
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press('Digit0');
+        await settle(page);
+        expect((await camera(page)).roll).toBe(0);
+    });
+
+    test('a tilted horizon travels: the viewpoint is written as v3 and restores the tilt', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0&vpURL=1');
+        await publish(page, 'space.cameraDelta', { absolute: { roll: 30, yaw: 15 } });
+        await settle(page);
+
+        const encoded = await page.evaluate(() => (window as any).__rtViewpoint2());
+        expect(encoded.startsWith('v3|')).toBe(true);
+
+        await page.goto('/?reducedMotion=1&momentum=0&viewpoint=' + encodeURIComponent(encoded));
+        await waitForBoot(page);
+        await expect.poll(async () => (await camera(page)).roll).toBeCloseTo(30, 1);
+        expect((await camera(page)).yaw).toBeCloseTo(15, 1);
     });
 
     test('a drag-move of a selected plane is one undo entry and keeps the history status current', async ({ page }) => {

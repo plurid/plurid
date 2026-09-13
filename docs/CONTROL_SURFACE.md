@@ -241,6 +241,7 @@ definePluridConfiguration({
     perspective: 1600,              // the CSS lens (px); the camera reads it
     navigation: {
         pitchLimit: 89,             // the orbit never flips past vertical
+        rollLimit: undefined,       // how far the horizon may tilt; unset = free, 0 = never
         zoomMin: 0.1, zoomMax: 4,   // scale range
         dollyLimitFraction: 0.6,    // the pivot stops this fraction of `perspective` from the eye
         orbitPivot: 'cursor',       // 'cursor' | 'selection' | 'view' — what an orbit rotates about
@@ -254,9 +255,14 @@ definePluridConfiguration({
 
 api.getViewpoint();                 // v1 `rX,rY,tX,tY,tZ,s` (unless configured otherwise)
 api.getViewpoint({ version: 2 });   // `v2|yaw|pitch|scale|pivot…|offset…|perspective`
+api.getViewpoint({ version: 3 });   // `v3|yaw|pitch|roll|scale|…` — the same, with the horizon's tilt
 ```
 
-The camera itself is `api.getSnapshot().space.camera` (`CameraState`: `yaw`, `pitch`, `scale`, `pivot`, `offset`, `perspective`); the legacy `rotationX/Y`, `translationX/Y/Z`, `scale` fields remain as read-only mirrors. `encodeCameraViewpoint` / `decodeCameraViewpoint` are exported next to the v1 `encodeViewpoint` / `decodeViewpoint`.
+The camera itself is `api.getSnapshot().space.camera` (`CameraState`: `yaw`, `pitch`, `roll`, `scale`, `pivot`, `offset`, `perspective`); the legacy `rotationX/Y`, `translationX/Y/Z`, `scale` fields remain as read-only mirrors. `encodeCameraViewpoint` / `decodeCameraViewpoint` are exported next to the v1 `encodeViewpoint` / `decodeViewpoint`.
+
+**THE HORIZON (`roll`)** is the camera's third angle, about the axis it looks along: it turns the picture, not the world (`Rz · Rx · Ry`, applied first in camera space). It is 0 in EVERY framing the engine computes — a dock, a fit, a frame, home, a preset, a viewcube face — so the ordinary space is a turntable and stays one, and pressing `0` is always the way back to level. Two things tilt it: the fly keys `Z` / `C` in first person (`gestures.flyRollSpeed`, degrees per frame, default `1.5`), and a host's own `space.cameraDelta` (`{ roll }`, `{ look: { roll } }`, `{ absolute: { roll } }`). `navigation.rollLimit` holds it near level, `0` forbids it. A docked page is never tilted: `docked` requires a level horizon, so a roll reveals the space like any other move off the pose.
+
+The viewcube leans with the horizon (it is the one cue that says which way is up while flying); the minimap does not, because it is a map of the WORLD and the tilt belongs to the picture. The legacy six scalars have no third angle, so a rolled camera's `rotationX/Y` are its unrolled shadow — the rendered `transform` carries the tilt, and nothing reads the scalars back to move the camera.
 
 ---
 

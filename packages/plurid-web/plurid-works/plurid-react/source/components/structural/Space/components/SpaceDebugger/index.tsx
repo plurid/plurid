@@ -170,7 +170,9 @@ const PluridSpaceDebugger: React.FC<PluridSpaceDebuggerProperties> = (
     const lines = [
         `fps ${fps}   dispatch/s ${dispatchesPerSecond}   renders/s ${rendersPerSecond}   gesture ${gesture ?? '-'}`,
         `planes ${statePlanesMounted}   live ${statePlanesMounted - statePlanesDetached}   hidden ${statePlanesHidden}   frozen ${statePlanesFrozen}   detached ${statePlanesDetached}`,
-        `yaw ${stateCamera.yaw.toFixed(1)}  pitch ${stateCamera.pitch.toFixed(1)}  zoom ${stateCamera.scale.toFixed(3)}`,
+        `yaw ${stateCamera.yaw.toFixed(1)}  pitch ${stateCamera.pitch.toFixed(1)}`
+            + (stateCamera.roll ? `  roll ${stateCamera.roll.toFixed(1)}` : '')
+            + `  zoom ${stateCamera.scale.toFixed(3)}`,
         `pivot ${Math.round(stateCamera.pivot.x)},${Math.round(stateCamera.pivot.y)},${Math.round(stateCamera.pivot.z)}  offset ${Math.round(stateCamera.offset.x)},${Math.round(stateCamera.offset.y)},${Math.round(stateCamera.offset.z)}`,
         `motion ${stateMotion}   selected ${stateSelectionCount}   active ${stateActivePlaneID || '-'}`,
     ];

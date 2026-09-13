@@ -196,6 +196,14 @@ export const applyLocks = (
             next.look = { ...next.look, yaw: 0 };
         }
     }
+    // the horizon's tilt is a rotation about the view axis: a space that locks BOTH rotations locks
+    // it too (a `rollLimit: 0` is the knob for forbidding just this one)
+    if (!locks.rotationX && !locks.rotationY) {
+        delete next.roll;
+        if (next.look) {
+            next.look = { ...next.look, roll: 0 };
+        }
+    }
     if (next.pan && (!locks.translationX || !locks.translationY)) {
         next.pan = {
             x: locks.translationX ? next.pan.x : 0,

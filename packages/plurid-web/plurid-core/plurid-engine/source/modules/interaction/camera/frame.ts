@@ -72,6 +72,9 @@ export const framePoints = (
         ...camera,
         yaw: normalizeYaw(options.yaw ?? camera.yaw),
         pitch: clampNumber(options.pitch ?? camera.pitch, -limits.pitchLimit, limits.pitchLimit),
+        // A FRAMING LANDS LEVEL. Fitting, framing a plane, going home: the picture is put straight,
+        // which is also the way out of a rolled first-person view (press 0 and the horizon is back).
+        roll: 0,
         pivot: { ...center },
         offset: { x: 0, y: 0, z: 0 },
     };

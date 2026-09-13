@@ -65,14 +65,45 @@ export const rotationYMatrix = (
 };
 
 
-/** The turntable rotation `Rx(pitch) · Ry(yaw)` — the same composition CSS applies for `rotateX() rotateY()`. */
+/**
+ * CSS `rotateZ(deg)` as a column-major matrix (x' = x·cos − y·sin, y' = x·sin + y·cos).
+ */
+export const rotationZMatrix = (
+    degrees: number,
+): Mat4 => {
+    const radians = degrees * DEG_TO_RAD;
+    const c = Math.cos(radians);
+    const s = Math.sin(radians);
+
+    return [
+        c, s, 0, 0,
+        -s, c, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1,
+    ];
+};
+
+
+/**
+ * The camera's rotation `Rz(roll) · Rx(pitch) · Ry(yaw)` — the same composition CSS applies for
+ * `rotateZ() rotateX() rotateY()`. The roll comes FIRST in camera space, which is what makes it a
+ * tilt of the HORIZON: it turns the picture the camera is already looking at, wherever it is aimed.
+ * A caller with no roll of its own (a plane's rotation, the legacy mirror) passes none.
+ */
 export const cameraRotation = (
     pitch: number,
     yaw: number,
-): Mat4 => multiplyMatrices(
-    rotationXMatrix(pitch),
-    rotationYMatrix(yaw),
-);
+    roll = 0,
+): Mat4 => {
+    const turntable = multiplyMatrices(
+        rotationXMatrix(pitch),
+        rotationYMatrix(yaw),
+    );
+
+    return roll === 0
+        ? turntable
+        : multiplyMatrices(rotationZMatrix(roll), turntable);
+};
 
 
 export const viewCenter = (
@@ -85,8 +116,8 @@ export const viewCenter = (
 
 
 /**
- * The camera matrix `T(C + offset) · Rx(pitch) · Ry(yaw) · S(scale) · T(−pivot)`: world → camera
- * space (the roots container's coordinates, before the CSS perspective divide).
+ * The camera matrix `T(C + offset) · Rz(roll) · Rx(pitch) · Ry(yaw) · S(scale) · T(−pivot)`:
+ * world → camera space (the roots container's coordinates, before the CSS perspective divide).
  */
 export const cameraMatrix = (
     camera: CameraState,
@@ -100,6 +131,7 @@ export const cameraMatrix = (
             center.y + camera.offset.y,
             camera.offset.z,
         ),
+        ...(camera.roll ? [rotationZMatrix(camera.roll)] : []),
         rotationXMatrix(camera.pitch),
         rotationYMatrix(camera.yaw),
         scaleMatrix(camera.scale),
@@ -223,7 +255,7 @@ const cacheKey = (
     camera: CameraState,
     view: ViewSize,
 ): string => (
-    camera.yaw + '|' + camera.pitch + '|' + camera.scale + '|'
+    camera.yaw + '|' + camera.pitch + '|' + camera.roll + '|' + camera.scale + '|'
     + camera.pivot.x + '|' + camera.pivot.y + '|' + camera.pivot.z + '|'
     + camera.offset.x + '|' + camera.offset.y + '|' + camera.offset.z + '|'
     + view.width + '|' + view.height

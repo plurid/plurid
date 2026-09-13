@@ -50,7 +50,7 @@ const at = (
     pivotX: number,
     scale = 1,
 ) => encodeCameraViewpoint(
-    { yaw: 0, pitch: 0, scale, pivot: { x: pivotX, y: 300, z: 0 }, offset: { x: 0, y: 0, z: 0 }, perspective: 2000 },
+    { yaw: 0, pitch: 0, roll: 0, scale, pivot: { x: pivotX, y: 300, z: 0 }, offset: { x: 0, y: 0, z: 0 }, perspective: 2000 },
     view,
     2,
 );

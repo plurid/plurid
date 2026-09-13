@@ -20,6 +20,7 @@ export const DEFAULT_PERSPECTIVE = 2000;
 
 export const DEFAULT_CAMERA_LIMITS: CameraLimits = {
     pitchLimit: 89,
+    // no rollLimit: the horizon is free to turn all the way round (it only ever moves in first person)
     zoomMin: 0.1,
     zoomMax: 4,
     dollyLimitFraction: 0.6,
@@ -34,6 +35,7 @@ export const resolveCameraLimits = (
     zoomMin: partial?.zoomMin ?? DEFAULT_CAMERA_LIMITS.zoomMin,
     zoomMax: partial?.zoomMax ?? DEFAULT_CAMERA_LIMITS.zoomMax,
     dollyLimitFraction: partial?.dollyLimitFraction ?? DEFAULT_CAMERA_LIMITS.dollyLimitFraction,
+    ...(partial?.rollLimit !== undefined ? { rollLimit: partial.rollLimit } : {}),
 });
 
 
@@ -54,6 +56,7 @@ export const createCamera = (
 ): CameraState => ({
     yaw: 0,
     pitch: 0,
+    roll: 0,
     scale: 1,
     pivot: vec3(),
     offset: vec3(),
@@ -112,6 +115,11 @@ export const clampCamera = (
 ): CameraState => {
     const pitch = clampNumber(camera.pitch, -limits.pitchLimit, limits.pitchLimit);
     const yaw = normalizeYaw(camera.yaw);
+    // the horizon wraps like the yaw; a `rollLimit` holds it near level (0 forbids the tilt)
+    const wrappedRoll = normalizeYaw(camera.roll);
+    const roll = limits.rollLimit === undefined
+        ? wrappedRoll
+        : clampNumber(wrappedRoll, -limits.rollLimit, limits.rollLimit);
     const scale = clampNumber(camera.scale, limits.zoomMin, limits.zoomMax);
     const dollyMax = camera.perspective * limits.dollyLimitFraction;
     const dollyMin = -camera.perspective * 8;
@@ -120,6 +128,7 @@ export const clampCamera = (
     if (
         pitch === camera.pitch
         && yaw === camera.yaw
+        && roll === camera.roll
         && scale === camera.scale
         && offsetZ === camera.offset.z
     ) {
@@ -130,6 +139,7 @@ export const clampCamera = (
         ...camera,
         pitch,
         yaw,
+        roll,
         scale,
         offset: offsetZ === camera.offset.z
             ? camera.offset
@@ -157,6 +167,7 @@ export const sameCamera = (
     || (
         near(a.yaw, b.yaw, epsilon)
         && near(a.pitch, b.pitch, epsilon)
+        && near(a.roll, b.roll, epsilon)
         && near(a.scale, b.scale, epsilon)
         && near(a.perspective, b.perspective, epsilon)
         && near(a.pivot.x, b.pivot.x, epsilon)
@@ -186,6 +197,8 @@ export const isCameraState = (
 
     return Number.isFinite(camera.yaw)
         && Number.isFinite(camera.pitch)
+        // a camera persisted before the horizon could tilt has no roll: it reads as level
+        && (camera.roll === undefined || Number.isFinite(camera.roll))
         && Number.isFinite(camera.scale)
         && (camera.scale as number) > 0
         && Number.isFinite(camera.perspective)

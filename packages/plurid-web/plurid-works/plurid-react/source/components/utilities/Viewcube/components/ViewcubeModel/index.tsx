@@ -66,6 +66,8 @@ export interface PluridViewcubeModelStateProperties {
     stateLanguage: InternationalizationLanguageType;
     spaceRotationX: number;
     spaceRotationY: number;
+    /** The horizon's tilt: the cube leans with the view, or it stops telling the truth. */
+    spaceRoll: number;
     stateMotion: string;
     stateTransformTime: number;
 }
@@ -92,6 +94,7 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         stateLanguage,
         spaceRotationX,
         spaceRotationY,
+        spaceRoll,
         stateMotion,
         stateTransformTime,
         // #endregion state
@@ -123,9 +126,10 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
         };
         const scale = 1;
 
-        // The SAME turntable rotation the scene renders with (`Rx(pitch) · Ry(yaw)`), so the cube
-        // always agrees with the space's orientation.
-        const rotationMatrix = cameraRotation(spaceRotationX, spaceRotationY);
+        // The SAME rotation the scene renders with (`Rz(roll) · Rx(pitch) · Ry(yaw)`), so the cube
+        // always agrees with the space's orientation — the horizon's tilt included, which is the
+        // one cue that says which way is up while flying.
+        const rotationMatrix = cameraRotation(spaceRotationX, spaceRotationY, spaceRoll);
         const translationMatrix = translateMatrix(offsets.x, offsets.y, offsets.z);
         const scalationMatrix = scaleMatrix(scale);
 
@@ -154,6 +158,7 @@ const PluridViewcubeModel: React.FC<PluridViewcubeModelProperties> = (
     }, [
         spaceRotationX,
         spaceRotationY,
+        spaceRoll,
     ]);
     // #endregion effects
 
@@ -244,6 +249,8 @@ const mapStateToProperties = (
     stateLanguage: selectors.configuration.getConfiguration(state).global.language,
     spaceRotationX: selectors.space.getRotationX(state),
     spaceRotationY: selectors.space.getRotationY(state),
+    // the legacy scalars cannot carry a horizon: the roll comes from the camera itself
+    spaceRoll: selectors.space.getCamera(state).roll,
     stateMotion: selectors.space.getMotion(state),
     stateTransformTime: selectors.space.getTransformTime(state),
 });

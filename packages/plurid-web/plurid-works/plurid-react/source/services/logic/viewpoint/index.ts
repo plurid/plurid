@@ -28,11 +28,18 @@ const {
  * A "viewpoint" is the camera as a first-class, encodable value, so it can ride the URL
  * (deep-links, "share from here"), be bookmarked, or be sequenced into a tour.
  *
- * Two encodings are supported, both always accepted on decode:
+ * Three encodings, ALL always accepted on decode:
  *  - v1 — the six legacy scalars `rotationX,rotationY,translationX,translationY,translationZ,scale`
  *    (what existing share links carry; exact, with the orbit pivot at the view center);
  *  - v2 — the full camera `v2|yaw|pitch|scale|pivotX|pivotY|pivotZ|offsetX|offsetY|offsetZ|perspective`,
- *    which preserves the orbit pivot and the pan offset.
+ *    which preserves the orbit pivot and the pan offset;
+ *  - v3 — the same with the horizon's tilt, the three angles together:
+ *    `v3|yaw|pitch|roll|scale|pivot…|offset…|perspective`.
+ *
+ * A camera whose horizon is LEVEL (every one the engine frames) is written in the version asked
+ * for; a TILTED one is written as v3 whatever was asked, because no earlier encoding can hold it —
+ * silently dropping the tilt would share a different picture than the one on screen. So every link
+ * that exists today keeps its shape, and v3 appears only where a reader rolled the view.
  *
  * Restore by dispatching `setCamera` with the decoded camera (or `setCameraFromLegacy` with the
  * decoded scalars) — both recompute the rendered matrix.
@@ -42,6 +49,7 @@ const {
 export const VIEWPOINT_PARAM = 'v';
 
 export const VIEWPOINT_V2_PREFIX = 'v2';
+export const VIEWPOINT_V3_PREFIX = 'v3';
 const V2_SEPARATOR = '|';
 
 const PRECISION = 4;
@@ -84,21 +92,37 @@ export const encodeViewpoint = (
 export const encodeCameraViewpoint = (
     camera: CameraState,
     view: ViewSize,
-    version: 1 | 2 = 1,
+    version: 1 | 2 | 3 = 1,
 ): string => {
+    const body = [
+        round(camera.scale),
+        round(camera.pivot.x),
+        round(camera.pivot.y),
+        round(camera.pivot.z),
+        round(camera.offset.x),
+        round(camera.offset.y),
+        round(camera.offset.z),
+        round(camera.perspective),
+    ];
+
+    // a tilted horizon forces v3: no earlier encoding can hold it, and a link must show what the
+    // reader is looking at
+    if (version === 3 || round(camera.roll) !== 0) {
+        return [
+            VIEWPOINT_V3_PREFIX,
+            round(camera.yaw),
+            round(camera.pitch),
+            round(camera.roll),
+            ...body,
+        ].join(V2_SEPARATOR);
+    }
+
     if (version === 2) {
         return [
             VIEWPOINT_V2_PREFIX,
             round(camera.yaw),
             round(camera.pitch),
-            round(camera.scale),
-            round(camera.pivot.x),
-            round(camera.pivot.y),
-            round(camera.pivot.z),
-            round(camera.offset.x),
-            round(camera.offset.y),
-            round(camera.offset.z),
-            round(camera.perspective),
+            ...body,
         ].join(V2_SEPARATOR);
     }
 
@@ -106,17 +130,26 @@ export const encodeCameraViewpoint = (
 };
 
 
-export const isViewpointV2 = (
+export const isViewpointV3 = (
     encoded: string | null | undefined,
 ): boolean => typeof encoded === 'string'
-    && encoded.startsWith(VIEWPOINT_V2_PREFIX + V2_SEPARATOR);
+    && encoded.startsWith(VIEWPOINT_V3_PREFIX + V2_SEPARATOR);
+
+/** Whether the string is one of the CAMERA encodings (v2 or v3) rather than the legacy tuple. */
+export const isViewpointV2 = (
+    encoded: string | null | undefined,
+): boolean => (typeof encoded === 'string'
+    && encoded.startsWith(VIEWPOINT_V2_PREFIX + V2_SEPARATOR))
+    || isViewpointV3(encoded);
 
 
-const parseV2 = (
+/** v2 (11 parts, a level horizon) and v3 (12, with the roll) share everything but the angles. */
+const parseCamera = (
     encoded: string,
 ): CameraState | null => {
     const parts = encoded.split(V2_SEPARATOR);
-    if (parts.length !== 11 || parts[0] !== VIEWPOINT_V2_PREFIX) {
+    const rolled = parts[0] === VIEWPOINT_V3_PREFIX;
+    if (rolled ? parts.length !== 12 : (parts.length !== 11 || parts[0] !== VIEWPOINT_V2_PREFIX)) {
         return null;
     }
 
@@ -128,6 +161,9 @@ const parseV2 = (
     const [
         yaw,
         pitch,
+    ] = numbers;
+    const roll = rolled ? numbers[2] : 0;
+    const [
         scale,
         pivotX,
         pivotY,
@@ -136,7 +172,7 @@ const parseV2 = (
         offsetY,
         offsetZ,
         perspective,
-    ] = numbers;
+    ] = numbers.slice(rolled ? 3 : 2);
 
     if (scale <= 0 || perspective <= 0) {
         return null;
@@ -145,6 +181,7 @@ const parseV2 = (
     return {
         yaw,
         pitch,
+        roll,
         scale,
         pivot: { x: pivotX, y: pivotY, z: pivotZ },
         offset: { x: offsetX, y: offsetY, z: offsetZ },
@@ -202,7 +239,7 @@ export const decodeViewpoint = (
     }
 
     if (isViewpointV2(encoded)) {
-        const camera = parseV2(encoded);
+        const camera = parseCamera(encoded);
         return camera
             ? cameraEngine.toLegacy(camera, view)
             : null;
@@ -227,7 +264,7 @@ export const decodeCameraViewpoint = (
     }
 
     if (isViewpointV2(encoded)) {
-        const camera = parseV2(encoded);
+        const camera = parseCamera(encoded);
         if (!camera) {
             return null;
         }

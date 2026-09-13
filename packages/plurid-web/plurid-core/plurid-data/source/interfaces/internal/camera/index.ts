@@ -14,12 +14,15 @@ export interface Vec3 {
 /**
  * The camera — the engine's canonical description of where the viewer is.
  *
- * The rendered matrix is `T(C + offset) · Rx(pitch) · Ry(yaw) · S(scale) · T(-pivot)`, where `C`
- * is the view center. So:
+ * The rendered matrix is `T(C + offset) · Rz(roll) · Rx(pitch) · Ry(yaw) · S(scale) · T(-pivot)`,
+ * where `C` is the view center. So:
  *  - `pivot` is the world point that orbit and zoom rotate/scale about;
  *  - `offset` is where that pivot sits in camera space, relative to the view center: `x`/`y` are
  *    the screen-space pan, `z` is the dolly (positive = the pivot is closer to the eye);
- *  - `yaw`/`pitch` are the turntable angles (degrees), `scale` the uniform zoom.
+ *  - `yaw`/`pitch` are the turntable angles (degrees), `scale` the uniform zoom;
+ *  - `roll` tilts the HORIZON — the whole view about the axis you look along. It is 0 in every
+ *    framing the engine computes (dock, fit, frame, home, a preset, a viewcube face), so the
+ *    ordinary space is a turntable and stays one; only first person and a host's own delta set it.
  *
  * Pan is applied AFTER rotation (it is a camera-space translation), so it is screen-exact at any
  * orientation; orbit leaves the pivot fixed on screen; re-pivoting is a lossless re-parameterization.
@@ -31,6 +34,11 @@ export interface CameraState {
     yaw: number;
     /** Rotation about the camera X axis, degrees, clamped to ±`CameraLimits.pitchLimit`. */
     pitch: number;
+    /**
+     * Rotation about the view axis, degrees, wrapped to (-180, 180] — the horizon's tilt. `0`
+     * everywhere except first person and a host's own `CameraDelta.roll`.
+     */
+    roll: number;
     /** Uniform zoom factor, clamped to [`zoomMin`, `zoomMax`]. */
     scale: number;
     /** World-space point that orbit and zoom act about. */
@@ -51,6 +59,11 @@ export interface CameraLimits {
     zoomMax: number;
     /** The pivot may dolly no closer to the eye than this fraction of `perspective`. Default `0.6`. */
     dollyLimitFraction: number;
+    /**
+     * Maximum |roll| in degrees. Unset (the default) leaves the horizon free to turn all the way
+     * round, wrapping like the yaw; a number holds it near level (`0` forbids roll entirely).
+     */
+    rollLimit?: number;
 }
 
 
@@ -66,10 +79,14 @@ export interface CameraDelta {
     /** Orbit about the pivot, degrees. */
     yaw?: number;
     pitch?: number;
+    /** Tilt the horizon, degrees — about the axis the camera looks along, wherever it is. */
+    roll?: number;
     /** Rotate about the eye instead of the pivot (first-person look), degrees. */
     look?: {
         yaw: number;
         pitch: number;
+        /** Tilt the horizon while looking; the same rotation `roll` applies. */
+        roll?: number;
     };
     /** Screen-space pan in px; the content on the pivot-depth plane follows the pointer exactly. */
     pan?: Vec2;
@@ -90,7 +107,7 @@ export interface CameraDelta {
         anchor?: Vec2;
     };
     /** Direct writes, applied last (still clamped/wrapped). */
-    absolute?: Partial<Pick<CameraState, 'yaw' | 'pitch' | 'scale' | 'pivot' | 'offset' | 'perspective'>>;
+    absolute?: Partial<Pick<CameraState, 'yaw' | 'pitch' | 'roll' | 'scale' | 'pivot' | 'offset' | 'perspective'>>;
 }
 
 

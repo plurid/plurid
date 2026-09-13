@@ -85,8 +85,8 @@ export interface FlatPluridConfiguration {
     viewpointURLParam?: string;
     /** `space.viewpointURLDebounce` — ms to coalesce URL writes during an orbit. */
     viewpointURLDebounce?: number;
-    /** `space.viewpointURLVersion` — viewpoint encoding written to the URL / `onViewpointChange` (`1` default, `2` = full camera). */
-    viewpointURLVersion?: 1 | 2;
+    /** `space.viewpointURLVersion` — viewpoint encoding written to the URL / `onViewpointChange` (`1` default, `2` = full camera, `3` = with the horizon's tilt). */
+    viewpointURLVersion?: 1 | 2 | 3;
     /** `space.navigation` — camera limits, orbit pivot policy, motion (tween) settings, home and presets. */
     navigation?: PluridConfigurationSpaceNavigation;
     /** `space.snap` — drag-release snapping: edges/centers within a threshold, optional grid. */
@@ -433,9 +433,12 @@ export interface PluridConfigurationSpace {
      * Which viewpoint encoding the engine WRITES (to the URL and `onViewpointChange`): `1` — the
      * six-scalar `rX,rY,tX,tY,tZ,s` tuple (default, what existing share links carry); `2` — the
      * full camera (`v2|yaw|pitch|scale|pivot…|offset…|perspective`), which preserves the orbit
-     * pivot and pan exactly. Both versions are always ACCEPTED on restore. Default `1`.
+     * pivot and pan exactly; `3` — the same with the horizon's tilt
+     * (`v3|yaw|pitch|roll|scale|…`). EVERY version is always ACCEPTED on restore, and a camera whose
+     * horizon is tilted is written as `v3` whatever this says, because no earlier encoding can hold
+     * it. Default `1`.
      */
-    viewpointURLVersion?: 1 | 2;
+    viewpointURLVersion?: 1 | 2 | 3;
 
     /**
      * Camera navigation: limits (pitch, zoom, dolly), the orbit-pivot policy, motion (tween)
@@ -560,6 +563,12 @@ export interface PluridConfigurationSpaceNavigation {
     zoomMax?: number;
     /** The pivot may dolly no closer to the eye than this fraction of the perspective distance. Default `0.6`. */
     dollyLimitFraction?: number;
+    /**
+     * Maximum |roll| in degrees — how far the horizon may tilt. Unset (the default) lets it turn all
+     * the way round in first person; `0` forbids roll, so the space is a turntable and nothing can
+     * tip it.
+     */
+    rollLimit?: number;
     /**
      * What an orbit rotates about: the point under the cursor at gesture start (`cursor`, the
      * default — CAD-style), the center of the current selection (`selection`), or the world point at
@@ -703,6 +712,8 @@ export type PluridShortcutID =
     | 'flyUp'
     | 'flyDown'
     | 'flySprint'
+    | 'rollLeft'
+    | 'rollRight'
     | 'modeRotation'
     | 'modeTranslation'
     | 'modeScale'
@@ -782,6 +793,8 @@ export interface PluridConfigurationSpaceGestures {
     flyLookSensitivity?: number;
     /** Fly-mode planar move speed, pixels per frame (WASD). Default `9`. */
     flySpeed?: number;
+    /** Fly-mode roll speed, degrees per frame (Z / C tilt the horizon). Default `1.5`. */
+    flyRollSpeed?: number;
     /** Pixels a press must travel before it becomes an orbit (below it stays a click). Default `4`. */
     dragThreshold?: number;
     /** Per-frame momentum velocity decay, 0–1 (lower = stops sooner). Default `0.92`. */

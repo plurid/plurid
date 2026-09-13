@@ -98,6 +98,7 @@ Landed 2026-09-02/03 (see ARCHITECTURE.md): the camera core and motion controlle
 
 Landed since:
 
+- DONE 2026-09-13: ROLL AND FREE LOOK — `CameraState.roll`, the camera's third angle, applied FIRST in camera space (`T(C+offset) · Rz(roll) · Rx(pitch) · Ry(yaw) · S · T(−pivot)`), so it tilts the horizon rather than the world. `Z` / `C` hold it in first person (`gestures.flyRollSpeed`), `CameraDelta.roll` / `look.roll` / `absolute.roll` for a host, `navigation.rollLimit` to hold it near level (`0` forbids it). EVERY framing the engine computes lands at roll 0 (dock, fit, frame, home, presets, the viewcube), `isDocked` requires a level horizon, and a tween takes the short way round it. The viewpoint codec gains `v3` (`v3|yaw|pitch|roll|scale|…`), written only for a tilted camera, so every existing link keeps its shape; the legacy six scalars stay roll-less by definition (documented). The quaternion module stays where it is: roll is an Euler angle here.
 - DONE 2026-09-13: COPY / CUT / PASTE OF PLANES ACROSS INSTANCES — the ARRANGEMENT FRAGMENT (`services/logic/arrangement/fragment.ts`): the selection as JSON text with a marker and a version, addressed by PATH, so a copy on one host pastes on another as that host's own planes (`resolvePlane` on the thunk extra runs the application's `resolveViewItem`); a path the target does not register is dropped with its subtree and named in a warning. On the browser's own `copy` / `cut` / `paste` events (`useClipboard`), so no permission and no prompt; `space.copy` / `space.cut` / `space.paste` and `useSelection().copy / cut / paste` for a host's own transport; `space.clipboard: false` opts out.
 - DONE 2026-09-13: THE BOOKMARKS UI — the toolbar's Bookmarks drawer: name the view you are on and save it, every saved view listed with A COMPUTED PICTURE of what it frames (`ViewpointThumb`: the minimap's projection of the live tree under the saved camera's footprint), a click travelling there, an in-place rename (`space.bookmark { action: 'rename', to }`, the row keeping its position), remove, and the home viewpoint as a row of its own. The bookmarks, the host's presets and home are ONE list (`PluridNamedViewpoint`, `namedViewpoints`) — the drawer, the palette and `usePluridBookmarks()` read it, so a row can never drift from a command.
 - DONE 2026-09-13: THE HISTORY SCRUBBER — every step carries a derived label and a time (`describeArrangementChange`), the status lists `past` / `future`, `space/historyGoTo` jumps N steps as one restore, and the toolbar's History drawer lists them with the present marked.
@@ -109,7 +110,6 @@ Landed since:
 
 Deferred:
 
-- A roll / free-look camera (the quaternion path is tested and off the camera path; the turntable has no roll by design).
 - Collision against planes when flying (no physics today).
 - `content-visibility` for culled planes (needs intrinsic sizes; `visibility: hidden` + containment is used).
 - A gallery / docs site generated from the harness scenarios.
