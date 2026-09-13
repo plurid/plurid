@@ -29,9 +29,13 @@
     } from '~services/logic/shortcuts';
 
     import {
-        cameraCommand,
         framePlaneByID,
     } from '~services/logic/camera';
+    import {
+        bookmarkViewpoints,
+        presetViewpoints,
+        goViewpoint,
+    } from '~services/logic/viewpoints';
     // #endregion external
 // #endregion imports
 
@@ -154,24 +158,16 @@ export const paletteRows = (
         });
     }
 
-    for (const name of Object.keys(state.space.bookmarks ?? {})) {
+    // the saved views, from the ONE list the Bookmarks drawer reads, each row travelling by the
+    // command its own kind names (`goViewpoint`); home is a shortcut row already, so it is not
+    // repeated here
+    for (const entry of [...bookmarkViewpoints(state), ...presetViewpoints(state)]) {
         rows.push({
-            id: 'bookmark:' + name,
-            title: 'Go to the bookmark ' + name,
+            id: entry.id,
+            title: 'Go to the ' + entry.source + ' ' + entry.name,
             group: 'Bookmarks',
             run: ({ dispatch }) => {
-                dispatch(cameraCommand({ kind: 'bookmark', name, action: 'go' }, { animate: true }) as any);
-            },
-        });
-    }
-
-    for (const name of Object.keys(configuration.space.navigation?.presets ?? {})) {
-        rows.push({
-            id: 'preset:' + name,
-            title: 'Go to the preset ' + name,
-            group: 'Bookmarks',
-            run: ({ dispatch }) => {
-                dispatch(cameraCommand({ kind: 'preset', name }, { animate: true }) as any);
+                dispatch(goViewpoint(entry) as any);
             },
         });
     }

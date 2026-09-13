@@ -98,6 +98,7 @@ Landed 2026-09-02/03 (see ARCHITECTURE.md): the camera core and motion controlle
 
 Landed since:
 
+- DONE 2026-09-13: THE BOOKMARKS UI — the toolbar's Bookmarks drawer: name the view you are on and save it, every saved view listed with A COMPUTED PICTURE of what it frames (`ViewpointThumb`: the minimap's projection of the live tree under the saved camera's footprint), a click travelling there, an in-place rename (`space.bookmark { action: 'rename', to }`, the row keeping its position), remove, and the home viewpoint as a row of its own. The bookmarks, the host's presets and home are ONE list (`PluridNamedViewpoint`, `namedViewpoints`) — the drawer, the palette and `usePluridBookmarks()` read it, so a row can never drift from a command.
 - DONE 2026-09-13: THE HISTORY SCRUBBER — every step carries a derived label and a time (`describeArrangementChange`), the status lists `past` / `future`, `space/historyGoTo` jumps N steps as one restore, and the toolbar's History drawer lists them with the present marked.
 - DONE 2026-09-13: THE COMMAND PALETTE (⌘/Ctrl+K) — the applicable commands with their keys, the bookmarks and presets, every shown plane, in one filtered list; a row runs the binding's own `run` (`runShortcut(id, …)`, exported), so a command has one implementation; `elements.palette.show`, `renderPalette`, `ui.paletteVisible`.
 - DONE 2026-09-10: REBASED COLLABORATIVE UNDO — a peer's applied change no longer clears the local history; every snapshot is replayed over the peer's arrangement (`services/logic/arrangement/rebase.ts`), the local change winning on its planes, the peer's everywhere else. Not OT: two drags of one plane resolve to the local intent on undo.
@@ -108,7 +109,6 @@ Landed since:
 Deferred:
 
 - A roll / free-look camera (the quaternion path is tested and off the camera path; the turntable has no roll by design).
-- Bookmarks UI beyond the toolbar drawer and the topics (a bookmark bar / thumbnails).
 - Copy / paste of planes across instances (needs a serialization of a plane subtree + link identity).
 - Collision against planes when flying (no physics today).
 - `content-visibility` for culled planes (needs intrinsic sizes; `visibility: hidden` + containment is used).

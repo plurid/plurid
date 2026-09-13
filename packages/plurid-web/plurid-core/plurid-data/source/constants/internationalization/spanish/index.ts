@@ -63,6 +63,7 @@ const spanish: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'atajos',
     toolbarDrawerHistoryTitle: 'historial',
+    toolbarDrawerBookmarksTitle: 'marcadores',
     toolbarDrawerShortcutsToggleFirstPerson: 'alternar en primera persona',
     toolbarDrawerShortcutsMoveForward: 'avanzar',
     toolbarDrawerShortcutsMoveBackward: 'mover hacia atrás',

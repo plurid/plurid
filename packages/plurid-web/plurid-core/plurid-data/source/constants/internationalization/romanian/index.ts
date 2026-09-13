@@ -63,6 +63,7 @@ const romanian: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'scurtături',
     toolbarDrawerHistoryTitle: 'istoric',
+    toolbarDrawerBookmarksTitle: 'semne de carte',
     toolbarDrawerShortcutsToggleFirstPerson: 'comutare persoana întâi',
     toolbarDrawerShortcutsMoveForward: 'mutare înainte',
     toolbarDrawerShortcutsMoveBackward: 'mutare înapoi',

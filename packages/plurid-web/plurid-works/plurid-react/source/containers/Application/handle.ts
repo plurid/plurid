@@ -8,6 +8,7 @@
         CameraDelta,
         CameraMotion,
         PluridBookmarkAction,
+        PluridNamedViewpoint,
         PluridStateHistory,
         LinkCoordinates,
     } from '@plurid/plurid-data';
@@ -61,6 +62,20 @@ export interface PluridApplicationHandle extends PluridApi {
         align: (edge: 'left' | 'right' | 'top' | 'bottom' | 'centerX' | 'centerY') => void;
         distribute: (axis: 'x' | 'y') => void;
         duplicate: (offset?: number) => void;
+    };
+    /**
+     * THE NAMED VIEWPOINTS: the reader's bookmarks, the host's presets and home — one shape for the
+     * three (`PluridNamedViewpoint`), each with the camera it decodes to.
+     */
+    bookmarks: {
+        get: () => PluridNamedViewpoint[];
+        /** Save the current camera under `name` (an existing name is overwritten). */
+        save: (name: string) => void;
+        /** Travel to one: a bookmark by default, a preset or home by `source`. */
+        go: (entry: string | Pick<PluridNamedViewpoint, 'source' | 'name'>, options?: CameraMotionOptions) => void;
+        remove: (name: string) => void;
+        /** Rename a bookmark, keeping its place in the list. */
+        rename: (from: string, to: string) => void;
     };
     history: {
         get: () => PluridStateHistory;

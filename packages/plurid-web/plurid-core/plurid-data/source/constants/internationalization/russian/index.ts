@@ -63,6 +63,7 @@ const russian: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'сочетания',
     toolbarDrawerHistoryTitle: 'история',
+    toolbarDrawerBookmarksTitle: 'закладки',
     toolbarDrawerShortcutsToggleFirstPerson: 'переключить от первого лица',
     toolbarDrawerShortcutsMoveForward: 'двигаться вперед',
     toolbarDrawerShortcutsMoveBackward: 'двигаться назад',

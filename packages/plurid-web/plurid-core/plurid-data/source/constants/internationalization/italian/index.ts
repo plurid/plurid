@@ -63,6 +63,7 @@ const italian: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'scorciatoie',
     toolbarDrawerHistoryTitle: 'cronologia',
+    toolbarDrawerBookmarksTitle: 'segnalibri',
     toolbarDrawerShortcutsToggleFirstPerson: 'attiva la prima persona',
     toolbarDrawerShortcutsMoveForward: 'andare avanti',
     toolbarDrawerShortcutsMoveBackward: 'tornare indietro',

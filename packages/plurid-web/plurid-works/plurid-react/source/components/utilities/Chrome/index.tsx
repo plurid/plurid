@@ -11,6 +11,7 @@
         chromePill,
         chromePanel,
         chromeKey,
+        chromeField,
         chromeDocked,
     } from '~services/styled/chrome';
     // #endregion external
@@ -52,5 +53,11 @@ export const PluridPanel = styled.div`
 /** A keyboard key. */
 export const PluridKey = styled.kbd`
     ${chromeKey}
+`;
+
+/** A text field: the look's material, ink and focus ring; the caller gives it its width. */
+export const PluridField = styled.input`
+    ${chromeControl}
+    ${chromeField}
 `;
 // #endregion module

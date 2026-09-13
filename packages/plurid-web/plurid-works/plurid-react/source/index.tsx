@@ -136,6 +136,7 @@
         useCamera,
         useSelection,
         usePluridHistory,
+        usePluridBookmarks,
         usePluridPubSub,
         usePluridApi,
         useLook,
@@ -146,6 +147,7 @@
         PluridPanel,
         PluridIconButton,
         PluridKey,
+        PluridField,
     } from './components/utilities/Chrome';
     import {
         PluridLookStyle,
@@ -159,6 +161,8 @@
         chromeLine,
         chromeDocked,
         chromeKey,
+        chromeField,
+        chromeFocusRing,
     } from './services/styled/chrome';
     import {
         chromeModeOf,
@@ -193,6 +197,10 @@ import {
     filterRows,
     scoreMatch,
 } from '~services/logic/palette';
+import {
+    namedViewpoints,
+    goViewpoint,
+} from '~services/logic/viewpoints';
 
 
 const internals = {
@@ -205,6 +213,8 @@ const internals = {
         chromeLine,
         chromeDocked,
         chromeKey,
+        chromeField,
+        chromeFocusRing,
     },
     PluridPlaneBridge,
     PluridPlaneContent,
@@ -222,6 +232,12 @@ const internals = {
     paletteRows,
     filterRows,
     scoreMatch,
+    /**
+     * THE NAMED VIEWPOINTS: the bookmarks, the presets and home as ONE list — what the Bookmarks
+     * drawer and the palette both read; `goViewpoint(entry)` travels to any of them.
+     */
+    namedViewpoints,
+    goViewpoint,
 };
 
 /**
@@ -339,6 +355,7 @@ export {
     useCamera,
     useSelection,
     usePluridHistory,
+    usePluridBookmarks,
     usePluridPubSub,
     usePluridApi,
     useLook,
@@ -346,6 +363,7 @@ export {
     PluridPanel,
     PluridIconButton,
     PluridKey,
+    PluridField,
     PluridLookStyle,
     lookStylesheet,
     chromeModeOf,
@@ -395,6 +413,7 @@ export type {
     PluridProviderLayer,
 } from './services/utilities/providers';
 export type {
+    PluridNamedViewpoint,
     PluridDocument as PluridDocumentDescriptor,
     PluridDocumentMeta,
     PluridDocumentLink,
@@ -413,6 +432,9 @@ export type {
 export type {
     PluridHistoryHandle,
 } from './services/hooks/history';
+export type {
+    PluridBookmarksHandle,
+} from './services/hooks/bookmarks';
 export type {
     PluridApplicationHandle,
 } from './containers/Application/handle';

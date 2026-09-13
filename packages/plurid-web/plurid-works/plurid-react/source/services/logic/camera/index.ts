@@ -237,7 +237,12 @@ export const selectionTarget = (
 };
 
 
-const decodeTarget = (
+/**
+ * An encoded viewpoint as a camera, read against the LIVE view (its size, perspective and limits) —
+ * so a viewpoint saved in another window, or before a resize, lands where it meant to. `undefined`
+ * when the string is missing or is not a viewpoint this build can read.
+ */
+export const decodeTarget = (
     spaceState: PluridStateSpace,
     encoded: string | undefined,
 ): CameraState | undefined => (encoded
@@ -343,7 +348,7 @@ export type CameraCommand =
     | { kind: 'reset' }
     | { kind: 'home' }
     | { kind: 'preset'; name: string }
-    | { kind: 'bookmark'; name: string; action?: PluridBookmarkAction }
+    | { kind: 'bookmark'; name: string; action?: PluridBookmarkAction; to?: string }
     | { kind: 'viewpoint'; viewpoint: string }
     | { kind: 'delta'; delta: CameraDelta }
     /** Dock on a page (the page presentation): this plane, else the docked one, else the nearest. */
@@ -447,6 +452,10 @@ export const cameraCommand = (
         }
         if (action === 'remove') {
             dispatch(actions.space.removeBookmark(command.name));
+            return;
+        }
+        if (action === 'rename') {
+            dispatch(actions.space.renameBookmark({ from: command.name, to: command.to ?? '' }));
             return;
         }
     }
@@ -640,9 +649,10 @@ export const bookmarkCommand = (
     {
         name,
         action = 'go',
+        to,
         animate = true,
-    }: { name: string; action?: PluridBookmarkAction; animate?: boolean },
-): CameraThunk => cameraCommand({ kind: 'bookmark', name, action }, { animate });
+    }: { name: string; action?: PluridBookmarkAction; to?: string; animate?: boolean },
+): CameraThunk => cameraCommand({ kind: 'bookmark', name, action, to }, { animate });
 
 
 /** Make `viewpoint` (encoded) the home viewpoint, or the current camera when omitted. */

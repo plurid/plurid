@@ -21,7 +21,8 @@
     import MenuMoreMinimap from './components/Minimap';
     import MenuMoreTechnical from './components/Technical';
     import MenuMoreShortcuts from './components/Shortcuts';
-import MenuMoreHistory from './components/History';
+    import MenuMoreHistory from './components/History';
+    import MenuMoreBookmarks from './components/Bookmarks';
     // #endregion internal
 // #endregion imports
 
@@ -80,6 +81,11 @@ export const moreMenusRecord: Record<string, MoreMenu> = {
         name: internationalization.fields.toolbarDrawerHistoryTitle,
         drawer: TOOLBAR_DRAWERS.HISTORY,
         component: (<MenuMoreHistory />),
+    },
+    BOOKMARKS: {
+        name: internationalization.fields.toolbarDrawerBookmarksTitle,
+        drawer: TOOLBAR_DRAWERS.BOOKMARKS,
+        component: (<MenuMoreBookmarks />),
     },
 };
 

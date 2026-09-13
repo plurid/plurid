@@ -6,6 +6,7 @@ export * from './engine';
 export * from './camera';
 export * from './selection';
 export * from './history';
+export * from './bookmarks';
 export * from './pubsub';
 export * from './api';
 export * from './look';

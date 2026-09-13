@@ -54,6 +54,7 @@ const internationalizationFields = {
 
     toolbarDrawerShortcutsTitle: 'toolbarDrawerShortcutsTitle',
     toolbarDrawerHistoryTitle: 'toolbarDrawerHistoryTitle',
+    toolbarDrawerBookmarksTitle: 'toolbarDrawerBookmarksTitle',
     toolbarDrawerShortcutsToggleFirstPerson: 'toolbarDrawerShortcutsToggleFirstPerson',
     toolbarDrawerShortcutsMoveForward: 'toolbarDrawerShortcutsMoveForward',
     toolbarDrawerShortcutsMoveBackward: 'toolbarDrawerShortcutsMoveBackward',

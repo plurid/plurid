@@ -59,6 +59,10 @@
         setHome,
     } from '~services/logic/camera';
     import {
+        namedViewpoints,
+        goViewpoint,
+    } from '~services/logic/viewpoints';
+    import {
         alignSelection,
         distributeSelection,
         duplicateSelection,
@@ -412,6 +416,16 @@ class PluridApplicationShell extends Component<
                 align: (edge) => dispatch(alignSelection(edge)),
                 distribute: (axis) => dispatch(distributeSelection(axis)),
                 duplicate: (offset) => dispatch(duplicateSelection(offset)),
+            },
+            bookmarks: {
+                get: () => namedViewpoints(getState()),
+                save: (name) => dispatch(cameraCommand({ kind: 'bookmark', name, action: 'save' })),
+                go: (entry, options = {}) => dispatch(goViewpoint(
+                    typeof entry === 'string' ? { source: 'bookmark', name: entry } : entry,
+                    { animate: true, ...options },
+                )),
+                remove: (name) => dispatch(cameraCommand({ kind: 'bookmark', name, action: 'remove' })),
+                rename: (from, to) => dispatch(cameraCommand({ kind: 'bookmark', name: from, action: 'rename', to })),
             },
             history: {
                 get: () => getState().space.history,

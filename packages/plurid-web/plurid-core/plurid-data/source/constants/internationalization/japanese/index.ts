@@ -63,6 +63,7 @@ const japanese: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'ショートカット',
     toolbarDrawerHistoryTitle: '履歴',
+    toolbarDrawerBookmarksTitle: 'ブックマーク',
     toolbarDrawerShortcutsToggleFirstPerson: '一人称を切り替える',
     toolbarDrawerShortcutsMoveForward: '前進する',
     toolbarDrawerShortcutsMoveBackward: '後退する',

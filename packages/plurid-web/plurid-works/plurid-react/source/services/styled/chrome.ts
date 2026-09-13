@@ -72,6 +72,19 @@ export const chromeDocked = css`
     }
 `;
 
+/**
+ * THE FOCUS RING — two tones, never the browser's own: the look's focus colour as the outline and a
+ * soft halo around it, so a focused control reads on the dark space and on a light page alike. The
+ * offset is the caller's (a pill breathes, a field sits tight).
+ */
+export const chromeFocusRing = (
+    offset = 2,
+) => css`
+    outline: 2px solid var(--plurid-focus);
+    outline-offset: ${offset}px;
+    box-shadow: 0 0 0 1px var(--plurid-halo), 0 0 0 5px var(--plurid-focus-halo);
+`;
+
 export const chromeControl = css`
     appearance: none;
     -webkit-appearance: none;
@@ -133,9 +146,7 @@ export const chromePill = css`
         border-color: var(--plurid-ink-muted);
     }
     &:focus-visible {
-        outline: 2px solid var(--plurid-focus);
-        outline-offset: 2px;
-        box-shadow: 0 0 0 1px var(--plurid-halo), 0 0 0 5px var(--plurid-focus-halo);
+        ${chromeFocusRing(2)}
     }
     /* ACTIVE is the accent as INK, never a fill: the glyph takes the colour, the pill keeps its material */
     &[data-plurid-active='true'] {
@@ -160,6 +171,32 @@ export const chromePanel = css`
     background: var(--plurid-surface-solid);
     box-shadow: 0 0 0 1px var(--plurid-halo), var(--plurid-shadow);
     color: var(--plurid-ink);
+`;
+
+/**
+ * A FIELD — a text input: the panel's material at a control's height, the look's ink and a faint
+ * placeholder, the chrome's own focus ring. Placed on top of `chromeControl`; the caller adds its
+ * width and, in a flex column, its `flex` (a field never gives way — the list next to it does).
+ */
+export const chromeField = css`
+    box-sizing: border-box;
+    height: var(--plurid-control);
+    padding: 0 10px;
+    border: 1px solid var(--plurid-rim);
+    border-radius: var(--plurid-radius);
+    background-color: var(--plurid-surface);
+    color: var(--plurid-ink);
+    font-family: var(--plurid-font);
+    font-size: var(--plurid-font-size);
+    cursor: text;
+
+    &::placeholder {
+        color: var(--plurid-ink-faint);
+    }
+
+    &:focus-visible {
+        ${chromeFocusRing(1)}
+    }
 `;
 
 /**

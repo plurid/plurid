@@ -700,11 +700,18 @@ export interface PluridPubSubSubscribeMessagePreset {
 export type PluridBookmarkAction =
     | 'go'
     | 'save'
-    | 'remove';
+    | 'remove'
+    | 'rename';
 export interface PluridPubSubMessageBookmark {
     name: string;
-    /** `go` (default) moves the camera to the bookmark; `save` stores the current camera; `remove` deletes it. */
+    /**
+     * `go` (default) moves the camera to the bookmark; `save` stores the current camera under the
+     * name (an existing one is overwritten); `remove` deletes it; `rename` gives it the name `to`,
+     * keeping its place in the list.
+     */
     action?: PluridBookmarkAction;
+    /** `rename`: the new name. */
+    to?: string;
     /** Tween instead of jumping (`go`). Default `true`. */
     animate?: boolean;
 }

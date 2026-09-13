@@ -63,6 +63,7 @@ const german: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'verknüpfungen',
     toolbarDrawerHistoryTitle: 'verlauf',
+    toolbarDrawerBookmarksTitle: 'lesezeichen',
     toolbarDrawerShortcutsToggleFirstPerson: 'erste person umschalten',
     toolbarDrawerShortcutsMoveForward: 'vorwärts bewegen',
     toolbarDrawerShortcutsMoveBackward: 'rückwärts bewegen',

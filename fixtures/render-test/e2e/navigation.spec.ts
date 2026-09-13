@@ -7,10 +7,12 @@ import {
 import {
     openHarness,
     camera,
+    settle,
     spaceState,
     publish,
     viewRect,
     openSetup,
+    waitForBoot,
 } from './helpers';
 
 
@@ -244,6 +246,62 @@ test.describe('navigation feel', () => {
         expect(after.pivot).toEqual(atPress.pivot);
         expect(after.offset.x - atPress.offset.x).toBeCloseTo(60, 0);
         expect(after.offset.y - atPress.offset.y).toBeCloseTo(0, 0);
+    });
+
+    test('the bookmarks drawer: name a view, save it, travel back to it, rename it in place — and it survives a reload', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0&persist=1');
+        const openDrawer = async () => {
+            await page.locator('[data-plurid-control="toolbar-more"]').click();
+            await page.locator('button', { hasText: /^bookmarks$/ }).click();
+            await expect(page.locator('[data-plurid-control="bookmark-name"]')).toBeVisible();
+        };
+        const saved = () => page.evaluate(() => (window as any).__pluridApi.getSnapshot().space.bookmarks);
+        await openDrawer();
+
+        // home is a row before anything is saved, with a picture of the space
+        await expect(page.locator('[data-plurid-bookmark="home"]')).toHaveCount(1);
+        expect(await page.locator('[data-plurid-viewpoint-thumb]').count()).toBe(1);
+
+        await publish(page, 'space.cameraDelta', { absolute: { yaw: 24, pitch: -12 } });
+        await settle(page);
+        const wide = await camera(page);
+
+        await page.locator('[data-plurid-control="bookmark-name"]').fill('wide');
+        await page.locator('[data-plurid-control="bookmark-save"]').click();
+        expect(Object.keys(await saved())).toEqual(['wide']);
+
+        // the row's picture is computed from the live tree: a dot per shown plane, the saved eye
+        const row = page.locator('[data-plurid-bookmark="wide"]');
+        expect(await row.locator('[data-plurid-thumb-plane]').count()).toBe(await page.locator('[data-plurid-plane]').count());
+        await expect(row.locator('[data-plurid-thumb-look]')).toHaveCount(1);
+
+        // orbit away, then travel back by the row
+        await publish(page, 'space.cameraDelta', { absolute: { yaw: -60, pitch: 20 } });
+        await settle(page);
+        expect((await camera(page)).yaw).toBeCloseTo(-60, 3);
+        await row.locator('[data-plurid-control="bookmark-go"]').click();
+        await settle(page);
+        expect((await camera(page)).yaw).toBeCloseTo(wide.yaw, 3);
+        expect((await camera(page)).pitch).toBeCloseTo(wide.pitch, 3);
+
+        // a rename keeps the row where it is
+        await page.locator('[data-plurid-control="bookmark-name"]').fill('near');
+        await page.locator('[data-plurid-control="bookmark-save"]').click();
+        expect(Object.keys(await saved())).toEqual(['wide', 'near']);
+        await row.locator('[data-plurid-control="bookmark-rename"]').click();
+        await page.locator('[data-plurid-control="bookmark-rename-input"]').fill('the wide one');
+        await page.keyboard.press('Enter');
+        expect(Object.keys(await saved())).toEqual(['the wide one', 'near']);
+
+        // the bookmarks are the space's: a reload brings them back
+        await page.reload();
+        await waitForBoot(page);
+        expect(Object.keys(await saved())).toEqual(['the wide one', 'near']);
+        await openDrawer();
+        await expect(page.locator('[data-plurid-bookmark="the wide one"]')).toHaveCount(1);
+
+        await page.locator('[data-plurid-bookmark="near"] [data-plurid-control="bookmark-remove"]').click();
+        expect(Object.keys(await saved())).toEqual(['the wide one']);
     });
 
     test('an empty space renders the empty state', async ({ page }) => {

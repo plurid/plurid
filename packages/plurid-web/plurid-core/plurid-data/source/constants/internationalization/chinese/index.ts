@@ -63,6 +63,7 @@ const chinese: Internationalization = {
 
     toolbarDrawerShortcutsTitle: '捷径',
     toolbarDrawerHistoryTitle: '历史',
+    toolbarDrawerBookmarksTitle: '书签',
     toolbarDrawerShortcutsToggleFirstPerson: '切换第一人称',
     toolbarDrawerShortcutsMoveForward: '前进',
     toolbarDrawerShortcutsMoveBackward: '往后退',

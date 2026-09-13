@@ -63,6 +63,7 @@ const french: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'raccourcis',
     toolbarDrawerHistoryTitle: 'historique',
+    toolbarDrawerBookmarksTitle: 'signets',
     toolbarDrawerShortcutsToggleFirstPerson: 'basculer à la première personne',
     toolbarDrawerShortcutsMoveForward: 'avancer',
     toolbarDrawerShortcutsMoveBackward: 'recule',

@@ -341,6 +341,22 @@ One list over the space: every command that applies right now (the shortcut tabl
 
 The full table, generated from the data: [`SHORTCUTS.md`](./SHORTCUTS.md). The bindings are ONE data table (`PLURID_SHORTCUTS` in plurid-data): the keyboard dispatcher, the `?` help overlay and the toolbar's shortcuts drawer are all generated from it with your `keymap`/`disabled` applied, so they cannot drift. Hold-keys (Space = grab, the fly keys) are part of the same system. Typing into any field, editor or ARIA textbox never triggers a shortcut or a gesture.
 
+### The bookmarks, the presets and home — the NAMED VIEWPOINTS
+
+A saved camera reaches the space from three places: the bookmarks a reader saves (`space.bookmarks`, persisted with the space), the presets a host configures (`space.navigation.presets`, read-only) and the one home viewpoint. They are ONE list — `PluridNamedViewpoint { id, source, name, label, viewpoint, camera, editable }` — and everything that shows them reads it (`namedViewpoints(state)`, exported through `internals`), so a row can never drift from the command it runs (`goViewpoint(entry)`, the same one the key press and the topic dispatch).
+
+The toolbar's **Bookmarks drawer** is that list: a field to name the view you are on and a save (an existing name says `update`), then a row per viewpoint with A PICTURE OF WHAT IT FRAMES — the minimap's projection of the LIVE tree with the saved camera's footprint over it (the view's four corners at the depth it looks at) and a mark on its look-at point. Computed, never rasterised: a thumbnail is right after any relayout, spawn or resize, and costs no canvas, no image and no screenshot. A click travels there; the pencil renames in place (Enter commits, Escape abandons) and the row KEEPS ITS POSITION; the cross removes. Presets and home cannot be edited, only visited — home's own button re-points it at the view you are on.
+
+```tsx
+const { bookmarks, presets, home, save, go, remove, rename, setHome } = usePluridBookmarks();
+save('the whole board');                       // the current camera, under a name
+go({ source: 'bookmark', name: 'the whole board' });   // or { source: 'preset' | 'home' }
+rename('the whole board', 'the board');        // keeps its place in the list
+plurid.current?.bookmarks.get();               // the same list from the imperative handle
+```
+
+Through the bus: `space.bookmark { name, action: 'go' | 'save' | 'remove' | 'rename', to?, animate? }`, `space.setHome`, `space.home`, `space.preset`. `space.changed` kind `bookmarks` carries the record after every edit.
+
 ### Snapping and resizing (`space.snap`, `elements.plane.resizable`)
 
 ```tsx
@@ -643,9 +659,9 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Trigger fit / reset / undo / redo / setTree | `pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.* })` |
 | Move the camera by one delta / frame a plane | `SPACE_CAMERA_DELTA` / `SPACE_FRAME` topics |
 | Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane · `planes[].maxHeight` / `planeMaxHeight` cap a content-sized height (the content scrolls inside) |
-| Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` · `useLook()` |
+| Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` / `PluridField` · `useLook()` |
 | Present the space as a site (a page first, the space one move away) | `{ presentation: 'page', docking: { motion, chrome, reveal, fade, aside, focus, epsilon, url } }` · the address bar is the page (`docking.url`, Back / Forward, deep links) · `space.dock` / `space.reveal` · `useCamera().dock / reveal / docked` · `space.changed` kind `docked` · `[data-plurid-docked]` on the view · `renderDockRail` / `dockRail: { show }` · Escape docks (a spawned page: its parent), G / the rail / a pinch reveal |
-| Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (+ `navigation.home` / `presets`) |
+| Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (`go` / `save` / `remove` / `rename`) (+ `navigation.home` / `presets`) · `usePluridBookmarks()` · `handle.bookmarks` · the toolbar's Bookmarks drawer |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
 | Show something when the space is empty | `renderEmpty` slot |

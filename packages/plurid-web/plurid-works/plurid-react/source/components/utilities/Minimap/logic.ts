@@ -268,6 +268,54 @@ export const computeMinimapRing = (
 };
 
 
+export interface MinimapFootprint {
+    /** The visible quad at the look-at depth, in map px — a line when the view is edge-on. */
+    corners: MinimapPoint[];
+    /** The look-at point (the camera pivot) in map px. */
+    pivot: MinimapPoint;
+    /** The quad's area in map px: 0 when it collapses (an edge-on view), large when zoomed out. */
+    area: number;
+}
+
+/**
+ * WHAT A CAMERA COVERS, on the map: the four view corners unprojected onto the plane the camera
+ * looks at (the pivot's depth) and projected into the map — so a saved viewpoint can be shown as
+ * the region it frames rather than as a dot, and a reader sees at a glance which planes it holds.
+ * The quad is a rectangle in camera space, so an orbited camera gives a slanted quad and a fully
+ * edge-on one a line (`area` 0).
+ */
+export const computeMinimapFootprint = (
+    layout: MinimapLayout,
+    camera: CameraState,
+    viewSize: ViewSize,
+): MinimapFootprint => {
+    const pivotDepth = interaction.camera.project(camera, viewSize, camera.pivot).cameraZ;
+    const corners = [
+        { x: 0, y: 0 },
+        { x: viewSize.width, y: 0 },
+        { x: viewSize.width, y: viewSize.height },
+        { x: 0, y: viewSize.height },
+    ].map((corner) => {
+        const world = interaction.camera.unprojectAtCameraZ(camera, viewSize, corner, pivotDepth);
+        return layout.project(world);
+    });
+
+    // the shoelace area of the quad, as drawn on the map
+    let area = 0;
+    for (let index = 0; index < corners.length; index += 1) {
+        const current = corners[index];
+        const next = corners[(index + 1) % corners.length];
+        area += current.x * next.y - next.x * current.y;
+    }
+
+    return {
+        corners,
+        pivot: layout.project({ x: camera.pivot.x, y: camera.pivot.y }),
+        area: Math.abs(area) / 2,
+    };
+};
+
+
 export interface MinimapProjection extends MinimapLayout {
     ring: MinimapRing;
 }

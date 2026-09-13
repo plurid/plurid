@@ -94,5 +94,6 @@ export enum TOOLBAR_DRAWERS {
     TECHNICAL = 'TECHNICAL',
     SHORTCUTS = 'SHORTCUTS',
     HISTORY = 'HISTORY',
+    BOOKMARKS = 'BOOKMARKS',
 }
 // #endregion module

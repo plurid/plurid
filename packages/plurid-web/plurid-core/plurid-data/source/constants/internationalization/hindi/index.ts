@@ -63,6 +63,7 @@ const hindi: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'शॉर्टकट',
     toolbarDrawerHistoryTitle: 'इतिहास',
+    toolbarDrawerBookmarksTitle: 'बुकमार्क',
     toolbarDrawerShortcutsToggleFirstPerson: 'पहले व्यक्ति को टॉगल करें',
     toolbarDrawerShortcutsMoveForward: 'आगे बढ़ो',
     toolbarDrawerShortcutsMoveBackward: 'पीछे की ओर जाएं',

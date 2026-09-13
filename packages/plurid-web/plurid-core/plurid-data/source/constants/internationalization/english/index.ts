@@ -64,6 +64,7 @@ const english: Internationalization = {
 
     toolbarDrawerShortcutsTitle: 'shortcuts',
     toolbarDrawerHistoryTitle: 'history',
+    toolbarDrawerBookmarksTitle: 'bookmarks',
     toolbarDrawerShortcutsToggleFirstPerson: 'toggle first person',
     toolbarDrawerShortcutsMoveForward: 'move forward',
     toolbarDrawerShortcutsMoveBackward: 'move backward',

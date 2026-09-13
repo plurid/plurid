@@ -624,6 +624,7 @@ export const usePluridPubSub = (
                     dispatch(bookmarkCommand({
                         name,
                         action: (data as any)?.action,
+                        to: (data as any)?.to,
                         animate: (data as any)?.animate ?? true,
                     }) as any);
                 },

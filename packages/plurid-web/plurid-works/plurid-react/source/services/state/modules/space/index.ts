@@ -984,6 +984,37 @@ export const space = createSlice({
                 [action.payload.name]: action.payload.viewpoint,
             };
         },
+        /**
+         * Rename a bookmark IN PLACE: the list keeps its order (a rename is not a delete and a new
+         * save), so the drawer's rows never jump. An empty or unchanged name is a no-op; a name
+         * already taken is overwritten by the renamed one.
+         */
+        renameBookmark: (
+            state,
+            action: PayloadAction<{ from: string; to: string }>,
+        ) => {
+            const {
+                from,
+                to,
+            } = action.payload;
+            const bookmarks = state.bookmarks || {};
+            if (!to || from === to || !(from in bookmarks)) {
+                return;
+            }
+
+            const next: Record<string, string> = {};
+            for (const [name, viewpoint] of Object.entries(bookmarks)) {
+                if (name === from) {
+                    next[to] = viewpoint;
+                    continue;
+                }
+                if (name === to) {
+                    continue;
+                }
+                next[name] = viewpoint;
+            }
+            state.bookmarks = next;
+        },
         removeBookmark: (
             state,
             action: PayloadAction<string>,

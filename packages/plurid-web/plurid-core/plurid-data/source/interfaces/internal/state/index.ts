@@ -122,6 +122,29 @@ export interface PluridStateSpace {
 }
 
 
+/**
+ * A NAMED VIEWPOINT: the one shape every saved camera takes, whatever saved it — the runtime
+ * bookmarks (`space.bookmarks`), the configured presets (`space.navigation.presets`) and the home
+ * viewpoint. The chrome's Bookmarks drawer, the command palette and a host's own menu read this
+ * list instead of three records with three vocabularies.
+ */
+export interface PluridNamedViewpoint {
+    /** Unique in the list: `home`, `bookmark:<name>`, `preset:<name>`. */
+    id: string;
+    source: 'home' | 'bookmark' | 'preset';
+    /** The name it is commanded by (`space.bookmark { name }`); `''` for the home viewpoint. */
+    name: string;
+    /** What to show: the name, or `Home`. */
+    label: string;
+    /** The encoded viewpoint; `''` when home was never set (the identity camera is home then). */
+    viewpoint: string;
+    /** The decoded camera, `null` when the string is not a viewpoint this build can read. */
+    camera: CameraState | null;
+    /** Whether the user can rename and remove it: the bookmarks, never a preset or home. */
+    editable: boolean;
+}
+
+
 /** One step of the arrangement history: what it was, and when it happened. */
 export interface PluridHistoryEntry {
     /** Derived from the change itself ("closed /geometry/detail", "moved 3 planes"), never authored. */
