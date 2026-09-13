@@ -1,8 +1,14 @@
 name: CI
 
 # Enforces the repository's deterministic gates on every change (2026-09-06: type checks, module
-# imports and the generated tables joined build / test / lint) and runs the chromium browser suite
-# in its own job; the strict visual comparisons stay local (their baselines are macOS renders).
+# imports and the generated tables joined build / test / lint).
+#
+# THE BROWSER SUITE IS THREE JOBS (2026-09-13), because the three ask different questions and must not
+# share a machine: `browser` runs the behavioural scenarios; `perf` runs the benchmark and the
+# virtualization budgets ALONE (a 240-frame run beside 160 other tests measures the runner, not the
+# engine — that is how CI #53 failed); `visual` compares every committed picture inside the PINNED
+# Playwright container, the same image the baselines are generated in, so the bytes are expected to
+# match. Nothing retries: a flake is a failure.
 # (The archival plurid-canvas / plurid-html packages are excluded at the source —
 #  via the `!` globs in pnpm-workspace.yaml — so the recursive root scripts skip them.)
 
@@ -49,6 +55,13 @@ jobs:
       - name: Generated tables are current
         run: pnpm docs.tables.check
 
+      # the consumer's path: pack every public package, install the tarballs into a throwaway
+      # project and import every entry point as ESM and as CommonJS. A workspace never sees a file
+      # missing from `files`, a `workspace:` range left unrewritten or a peer the siblings fail
+      # (2026-09-13: it was in `pnpm verify` but not on CI, so nothing enforced it between releases)
+      - name: The published packages import (smoke.pack)
+        run: pnpm smoke.pack
+
   browser:
     runs-on: ubuntu-latest
     needs: gates
@@ -75,3 +88,67 @@ jobs:
 
       - name: Browser scenarios (chromium)
         run: pnpm --filter plurid-render-test exec playwright test --config e2e/playwright.config.ts --project=chromium
+
+  perf:
+    runs-on: ubuntu-latest
+    needs: gates
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Install Chromium
+        run: pnpm --filter plurid-render-test exec playwright install --with-deps chromium
+
+      # alone on the runner: the frame budgets are relative to the run, and a neighbour would skew it
+      - name: Frame budgets (perf)
+        run: pnpm --filter plurid-render-test exec playwright test --config e2e/playwright.config.ts --project=perf
+
+  visual:
+    runs-on: ubuntu-latest
+    needs: gates
+    # the PINNED image the `linux` baselines were generated in: same fonts, same rasterisation
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+      options: --user root
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Visual baselines (linux)
+        run: pnpm --filter plurid-render-test exec playwright test --config e2e/playwright.config.ts --project=visual
+
+      - name: The pictures that differ
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-diff
+          path: fixtures/render-test/test-results/
+          retention-days: 7

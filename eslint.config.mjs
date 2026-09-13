@@ -13,7 +13,9 @@ export default tseslint.config(
             '**/node_modules/**',
             '**/templates/**',
             '**/unsource/**',
-            '**/scripts/**',
+            // a package's own dev scripts stay out; the ROOT `scripts/` are the gate and are linted
+            'packages/**/scripts/**',
+            'fixtures/**/scripts/**',
             '**/tests/**',
             '**/configurations/**',
             '**/*.config.*',
@@ -54,6 +56,37 @@ export default tseslint.config(
             // wants `{ cause }` on every rethrow. Adopt them as a follow-up quality pass.
             'no-useless-assignment': 'off',
             'preserve-caught-error': 'off',
+        },
+    },
+
+    {
+        // The gate scripts are Node programs: they run the build, the module check, the docs tables and
+        // the packed smoke test, and a mistake in one of them fails the repository's verification —
+        // so they are linted like everything else (they were ignored wholesale until 2026-09-13).
+        files: ['scripts/**/*.mjs'],
+        languageOptions: {
+            ecmaVersion: 2022,
+            sourceType: 'module',
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
+
+    {
+        /**
+         * A TEST WAITS ON STATE, NEVER ON TIME (2026-09-13). A `page.waitForTimeout` is a guess about
+         * a machine: right on a development laptop, wrong on a loaded CI runner — which is how a
+         * suite starts failing for reasons that say nothing about the code. `e2e/helpers.ts` carries
+         * the vocabulary that replaces every one of them, and the suite has none left, so this rule
+         * has no exceptions to make.
+         */
+        files: ['fixtures/render-test/e2e/**/*.ts'],
+        rules: {
+            'no-restricted-syntax': ['error', {
+                selector: "CallExpression[callee.property.name='waitForTimeout']",
+                message: 'a test waits on STATE, never on time — use waitForState / afterFrames / waitQuiet / expect.poll from ./helpers (see the header of helpers.ts).',
+            }],
         },
     },
 );

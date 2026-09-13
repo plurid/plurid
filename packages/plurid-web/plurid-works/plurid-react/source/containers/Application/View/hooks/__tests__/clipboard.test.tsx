@@ -16,6 +16,10 @@ import {
     FRAGMENT_MARKER,
 } from '~services/logic/arrangement/fragment';
 
+import {
+    resetWarnings,
+} from '~services/logic/development/warn';
+
 
 
 const Page = () => <div>page</div>;
@@ -59,7 +63,20 @@ const roots = (api: any) => api.getSnapshot().space.tree.filter((plane: any) => 
 
 
 describe('the clipboard', () => {
-    beforeEach(() => clipboard.clear());
+    /** A paste that had to drop planes warns ONCE per page: the test gets a fresh page each time. */
+    let warned: string[] = [];
+    let warn: jest.SpyInstance;
+
+    beforeEach(() => {
+        clipboard.clear();
+        resetWarnings();
+        warned = [];
+        warn = jest.spyOn(console, 'warn').mockImplementation((...parts: unknown[]) => {
+            warned.push(parts.join(' '));
+        });
+    });
+
+    afterEach(() => warn.mockRestore());
 
     it('copies the selection as a fragment and pastes it back as new planes', async () => {
         const rendered = await render(['/a', '/b']);
@@ -84,11 +101,13 @@ describe('the clipboard', () => {
         expect(api.getSnapshot().space.selectedPlaneIDs).toEqual([tree[2].planeID]);
         expect(tree[2].location.translateX).not.toBe(tree[0].location.translateX);
 
-        // and a second paste does not land on the first
+        // and a second paste lands on NEITHER the first nor the original — the check that found
+        // `pasteOffset` comparing against only the last plane at a path (2026-09-13)
         await press(view, 'paste');
         const after = roots(api);
         expect(after).toHaveLength(4);
         expect(after[3].location.translateX).not.toBe(after[2].location.translateX);
+        expect(after[3].location.translateX).not.toBe(after[0].location.translateX);
         await rendered.unmount();
     });
 
@@ -129,6 +148,9 @@ describe('the clipboard', () => {
         const tree = roots(target.api);
         expect(tree).toHaveLength(2);
         expect(tree[1].route).toBe(tree[0].route);
+        // and the reader is TOLD which route was lost — the only place that name is ever spoken
+        expect(warned.join('\n')).toContain('/b');
+        expect(warned.join('\n')).toContain('does not register');
         await target.unmount();
     });
 

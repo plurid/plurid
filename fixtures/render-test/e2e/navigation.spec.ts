@@ -13,6 +13,8 @@ import {
     viewRect,
     openSetup,
     waitForBoot,
+    waitForState,
+    afterFrames,
 } from './helpers';
 
 
@@ -109,7 +111,7 @@ test.describe('navigation feel', () => {
         await page.mouse.click(rect.left + 40, rect.top + rect.height - 120);
         await publish(page, 'space.cameraDelta', { absolute: { yaw: 0 } });
         await page.keyboard.press('Home');
-        await page.waitForTimeout(50);
+        await settle(page);
         expect((await camera(page)).yaw).toBeCloseTo(25, 6);
     });
 
@@ -125,7 +127,8 @@ test.describe('navigation feel', () => {
             const root = (window as any).__rtTree().find((node: any) => node.planeID === id);
             return root && root.children && root.children.length === 1;
         }, geometry.planeID);
-        await page.waitForTimeout(600);
+        await settle(page);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the spawn to settle');
         const child = (await tree(page)).find((node: any) => node.planeID === geometry.planeID).children[0];
         const mover = roots[roots.length - 1];
         const before = await computedTransform(page, mover.planeID);
@@ -133,7 +136,8 @@ test.describe('navigation feel', () => {
         await openSetup(page);
         await page.getByRole('button', { name: 'ROWS' }).click();
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.layoutTransition > 0);
-        await page.waitForTimeout(100);
+        // mid-flight: a few frames into the glide, with the transition still open
+        await afterFrames(page, 6);
         const midway = await computedTransform(page, mover.planeID);
         const target = await styledTransform(page, mover.planeID);
         expect(sameMatrix(midway, before)).toBe(false);
@@ -150,7 +154,7 @@ test.describe('navigation feel', () => {
         expect(sameMatrix(midway, targetNow)).toBe(false);
 
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.layoutTransition === 0);
-        await page.waitForTimeout(50);
+        await afterFrames(page, 2);
         const landed = await computedTransform(page, mover.planeID);
         expect(sameMatrix(landed, targetNow, 1)).toBe(true);
         expect(target.length).toBeGreaterThan(0);
@@ -181,14 +185,15 @@ test.describe('navigation feel', () => {
         // a double-click on the plane's CONTENT is the page's (a word selection): no camera move
         const before = await camera(page);
         await page.mouse.dblclick(box!.x + box!.width / 2, box!.y + box!.height * 0.7);
-        await page.waitForTimeout(150);
+        // a frame budget for a move that must never come
+        await afterFrames(page, 10);
         const untouched = await camera(page);
         expect(untouched.pivot).toEqual(before.pivot);
         expect(untouched.scale).toBeCloseTo(before.scale, 9);
         // the plane's chrome (its controls bar) frames it
         const bar = (await page.locator(`[data-plurid-plane="${plane.planeID}"] [data-plurid-entity="PluridPlaneControls"]`).boundingBox())!;
         await page.mouse.dblclick(bar.x + bar.width / 2, bar.y + bar.height / 2);
-        await page.waitForTimeout(100);
+        await settle(page);
         const framed = await camera(page);
         expect(framed.pivot.x).toBeCloseTo(plane.location.translateX + plane.width / 2, 0);
         expect(framed.pivot.y).toBeCloseTo(plane.location.translateY + plane.height / 2, 0);
@@ -205,15 +210,14 @@ test.describe('navigation feel', () => {
             (navigator as any).getGamepads = () => [pad];
         });
         await openHarness(page, '?gamepad=1&momentum=0');
-        await page.waitForTimeout(300);
-        expect((await camera(page)).yaw).toBeGreaterThan(5);
+        await expect.poll(async () => (await camera(page)).yaw, { message: 'the stick to orbit' }).toBeGreaterThan(5);
 
         await page.evaluate(() => {
             (navigator as any).getGamepads = () => [];
         });
-        await page.waitForTimeout(100);
+        await afterFrames(page, 8);
         const stopped = await camera(page);
-        await page.waitForTimeout(150);
+        await afterFrames(page, 12);
         expect((await camera(page)).yaw).toBeCloseTo(stopped.yaw, 6);
     });
 
@@ -236,7 +240,7 @@ test.describe('navigation feel', () => {
         const atPress = await camera(page);
         await page.mouse.move(start.x + 64, start.y, { steps: 6 });
         await page.mouse.up({ button: 'middle' });
-        await page.waitForTimeout(300);
+        await settle(page);
 
         const after = await camera(page);
         expect((await spaceState(page)).motion).toBe('idle');

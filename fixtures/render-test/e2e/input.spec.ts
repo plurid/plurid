@@ -12,6 +12,11 @@ import {
     viewRect,
     dispatches,
     waitForBoot,
+    waitForState,
+    waitQuiet,
+    afterFrames,
+    flick,
+    travelUntilIdle,
 } from './helpers';
 
 
@@ -113,53 +118,38 @@ test.describe('input layer', () => {
         expect((await camera(page)).offset.x).toBeCloseTo(after.offset.x, 6);
     });
 
-    test('a fast flick flings and stops; a pause before release does not; the wheel stops a fling', async ({ page }) => {
+    test('a flick flings and comes to rest; a pause before release does not; the wheel stops a fling', async ({ page }) => {
         await openHarness(page);
         const rect = await viewRect(page);
         const start = { x: rect.left + 120, y: rect.top + rect.height - 60 };
 
-        await page.mouse.move(start.x, start.y);
-        await page.mouse.down();
-        await page.mouse.move(start.x + 4, start.y);
-        await page.mouse.move(start.x + 250, start.y, { steps: 6 });
-        await page.mouse.up();
-        const atRelease = await camera(page);
-        await page.waitForTimeout(120);
-        const later = await camera(page);
-        // the yaw is wrapped to (-180, 180]: a strong fling on a fast machine crosses 180 within the
-        // sample window, so compare the shortest-arc delta, not the raw values
-        const flung = ((later.yaw - atRelease.yaw + 540) % 360) - 180;
-        expect(flung).toBeGreaterThan(0.5);
-        expect(await spaceState(page).then((s) => s.motion)).toBe('fling');
-        await page.waitForTimeout(1600);
+        // THE RELEASE CARRIES VELOCITY: the camera keeps turning after the pointer is up, and the
+        // turning decays to rest on its own. How FAR it gets is the machine's business; that it
+        // travelled and then stopped is the engine's.
+        await flick(page, start, { x: start.x + 250, y: start.y });
+        await waitForState(page, (state) => state.space.motion === 'fling', 'the release to start a fling');
+        const travelled = await travelUntilIdle(page, 'yaw');
+        expect(travelled).toBeGreaterThan(0.5);
+
+        // and rest means rest
         const settled = await camera(page);
-        expect(await spaceState(page).then((s) => s.motion)).toBe('idle');
-        await page.waitForTimeout(100);
+        await afterFrames(page, 10);
         expect((await camera(page)).yaw).toBeCloseTo(settled.yaw, 6);
 
-        // pause before release: no fling
-        await page.mouse.move(start.x, start.y);
-        await page.mouse.down();
-        await page.mouse.move(start.x + 4, start.y);
-        await page.mouse.move(start.x + 200, start.y, { steps: 6 });
-        await page.waitForTimeout(150);
-        await page.mouse.up();
+        // A PAUSE BEFORE RELEASE IS A STOP: the finger was still, so nothing is thrown
+        await flick(page, start, { x: start.x + 200, y: start.y }, { pauseBeforeRelease: true });
         const paused = await camera(page);
-        await page.waitForTimeout(120);
+        expect(await spaceState(page).then((s) => s.motion)).toBe('idle');
+        await afterFrames(page, 10);
         expect((await camera(page)).yaw).toBeCloseTo(paused.yaw, 6);
 
-        // a wheel during a fling stops it
-        await page.mouse.move(start.x, start.y);
-        await page.mouse.down();
-        await page.mouse.move(start.x + 4, start.y);
-        await page.mouse.move(start.x + 250, start.y, { steps: 6 });
-        await page.mouse.up();
-        await page.waitForTimeout(40);
+        // A WHEEL DURING A FLING STOPS IT
+        await flick(page, start, { x: start.x + 250, y: start.y });
+        await waitForState(page, (state) => state.space.motion === 'fling', 'the second release to fling');
         await page.keyboard.down('Control');
         await page.mouse.wheel(0, -50);
         await page.keyboard.up('Control');
-        await page.waitForTimeout(40);
-        expect(await spaceState(page).then((s) => s.motion)).toBe('idle');
+        await waitForState(page, (state) => state.space.motion === 'idle', 'the wheel to stop the fling');
     });
 
     test('touch: one finger on empty space orbits, two fingers pinch-zoom and pan', async ({ browser }) => {
@@ -209,11 +199,12 @@ test.describe('input layer', () => {
             view.appendChild(editor);
         });
         await publish(page, 'configuration', { space: { firstPerson: true } });
-        await page.waitForTimeout(50);
+        await waitForState(page, (state) => state.configuration.space.firstPerson === true, 'first person to turn on');
         const before = await camera(page);
         await page.locator('#rt-editor').click();
         await page.keyboard.type('wasdg?');
-        await page.waitForTimeout(120);
+        // the fly loop runs on animation frames: if typing had moved the camera, these would show it
+        await afterFrames(page, 10);
         const after = await camera(page);
         expect(after.offset).toEqual(before.offset);
         expect(await page.evaluate(() => (window as any).__pluridApi.getSnapshot().ui.grabMode)).toBe(false);
@@ -311,20 +302,18 @@ test.describe('input layer', () => {
         await page.mouse.move(rect.left + 120, rect.top + rect.height - 60);
         await page.mouse.click(rect.left + 120, rect.top + rect.height - 60);
         const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
+        const selected = () => spaceState(page).then((state) => state.selectedPlaneIDs.length);
+
         await page.keyboard.press(`${modifier}+KeyA`);
-        await page.waitForTimeout(50);
-        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(5);
+        await expect.poll(selected, { message: 'select all' }).toBe(5);
 
         await page.mouse.click(rect.left + 120, rect.top + rect.height - 60);
-        await page.waitForTimeout(50);
-        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(0);
+        await expect.poll(selected, { message: 'a plain click on empty space clears' }).toBe(0);
 
         await page.keyboard.press(`${modifier}+KeyA`);
-        await page.waitForTimeout(50);
-        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(5);
+        await expect.poll(selected, { message: 'select all again' }).toBe(5);
         await page.keyboard.press('Escape');
-        await page.waitForTimeout(50);
-        expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(0);
+        await expect.poll(selected, { message: 'Escape clears' }).toBe(0);
     });
 
 });

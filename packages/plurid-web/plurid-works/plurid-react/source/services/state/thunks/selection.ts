@@ -53,6 +53,10 @@
         closePlane,
     } from '~services/state/thunks/planes';
 
+    import {
+        warnOnce,
+    } from '~services/logic/development/warn';
+
     import { PluridThunkExtra } from '~services/state/extra';
     // #endregion external
 // #endregion imports
@@ -186,15 +190,25 @@ const pasteOffset = (
     fragment: ArrangementFragment,
     step = PASTE_STEP,
 ): { x: number; y: number } => {
-    const here = new Map(tree.map((root) => [planePath(root), root]));
+    // EVERY root at a path, not the last one: after the first paste a path has two planes, and a
+    // check against one of them let the second paste land exactly on the other (2026-09-13)
+    const here = new Map<string, TreePlane[]>();
+    for (const root of tree) {
+        const path = planePath(root);
+        const at = here.get(path);
+        if (at) {
+            at.push(root);
+        } else {
+            here.set(path, [root]);
+        }
+    }
+
     const occupied = (
         distance: number,
-    ) => fragment.planes.some((node) => {
-        const root = here.get(node.path);
-        return !!root
-            && Math.abs(root.location.translateX - (node.location.translateX + distance)) < 1
-            && Math.abs(root.location.translateY - (node.location.translateY + distance)) < 1;
-    });
+    ) => fragment.planes.some((node) => (here.get(node.path) ?? []).some((root) => (
+        Math.abs(root.location.translateX - (node.location.translateX + distance)) < 1
+        && Math.abs(root.location.translateY - (node.location.translateY + distance)) < 1
+    )));
 
     let distance = 0;
     // a paste never lands exactly on its own original — and a second paste steps past the first
@@ -210,7 +224,11 @@ export interface PasteFragmentOptions {
     text?: string | null;
     /** A fragment a host already holds — no text, no clipboard. */
     fragment?: ArrangementFragment;
-    /** Called with the routes this space does not register, when any were dropped. */
+    /**
+     * Called with the routes this space does not register, when any were dropped. A host that wants
+     * to say something of its own about them takes this; whether it does or not, the paste warns
+     * once in development (`development.warnings: false` mutes it).
+     */
     onDropped?: (routes: string[]) => void;
 }
 
@@ -245,7 +263,16 @@ export const pasteFragment = (
     });
 
     if (dropped.length > 0) {
+        // THE REPORT IS THE THUNK'S, not the caller's: a paste arrives from the clipboard event, the
+        // imperative handle and the `space.paste` topic, and until 2026-09-13 only the first of the
+        // three said anything at all — the other two lost planes in silence.
         options.onDropped?.(dropped);
+        warnOnce(
+            'paste-unregistered',
+            'a pasted arrangement named planes this application does not register, and they were'
+                + ' dropped: ' + dropped.join(', ') + '. Register those routes to hold them.',
+            state.configuration.development?.warnings !== false,
+        );
     }
     if (planes.length === 0) {
         return;

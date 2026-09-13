@@ -11,6 +11,8 @@ import {
     publish,
     viewRect,
     waitForBoot,
+    settle,
+    afterFrames,
 } from './helpers';
 
 
@@ -115,7 +117,8 @@ test.describe('the clipboard', () => {
         const stress = await routesOf(page);
         await page.locator('[data-plurid-entity="PluridView"]').focus();
         await page.keyboard.press(`${modifier}+KeyV`);
-        await page.waitForTimeout(200);
+        // nothing may land: a frame budget in which it would have
+        await afterFrames(page, 20);
 
         expect(await routesOf(page)).toEqual(stress);
         expect(warnings.join(' ')).toContain('does not register');
@@ -174,14 +177,12 @@ test.describe('selection and editing', () => {
         await publish(page, 'space.frame', { planeID: first.plane.planeID, animate: false });
         await page.evaluate((id) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSpaceField', payload: { field: 'activePlaneID', value: id } }), first.plane.planeID);
         await page.keyboard.press('ArrowRight');
-        await page.waitForTimeout(80);
-        expect((await spaceState(page)).activePlaneID).toBe(second.plane.planeID);
+        await expect.poll(async () => (await spaceState(page)).activePlaneID, { message: 'the arrow to walk right' }).toBe(second.plane.planeID);
         const framed = await camera(page);
         expect(framed.pivot.x).toBeCloseTo(second.plane.location.translateX + second.plane.width / 2, 0);
 
         await page.keyboard.press('ArrowLeft');
-        await page.waitForTimeout(80);
-        expect((await spaceState(page)).activePlaneID).toBe(first.plane.planeID);
+        await expect.poll(async () => (await spaceState(page)).activePlaneID, { message: 'the arrow to walk back' }).toBe(first.plane.planeID);
 
         await page.keyboard.press(`${modifier}+KeyA`);
         const all = await selection(page);
@@ -192,12 +193,10 @@ test.describe('selection and editing', () => {
         await openHarness(page, '?reducedMotion=1');
         const roots = await tree(page);
         const ids = roots.slice(0, 3).map((plane: any) => plane.planeID);
+        // the TOPIC selects: the store fallback that used to sit here hid the fact that the topic
+        // ignored `planeIDs` and did nothing at all (2026-09-13)
         await publish(page, 'space.setSelection', { planeIDs: ids });
-        await page.waitForTimeout(30);
-        if ((await selection(page)).length !== 3) {
-            await page.evaluate((planeIDs) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: planeIDs }), ids);
-        }
-        expect(await selection(page)).toEqual(ids);
+        await expect.poll(() => selection(page), { message: 'the topic to select three planes' }).toEqual(ids);
 
         await publish(page, 'space.align', { edge: 'top' });
         const aligned = (await tree(page)).slice(0, 3);
@@ -231,7 +230,7 @@ test.describe('selection and editing', () => {
         }, geometry.planeID);
         await publish(page, 'space.frame', { planeID: geometry.planeID, animate: false });
         await page.evaluate((id) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [id] }), geometry.planeID);
-        await page.waitForTimeout(100);
+        await settle(page);
 
         const handle = page.locator(`[data-plurid-plane="${geometry.planeID}"] [data-plurid-control="plane-resize-corner"]`);
         await expect(handle).toHaveCount(1);
@@ -243,7 +242,7 @@ test.describe('selection and editing', () => {
         await page.mouse.down();
         await page.mouse.move(box.x + box.width / 2 + 60, box.y + box.height / 2 + 40, { steps: 6 });
         await page.mouse.up();
-        await page.waitForTimeout(120);
+        await settle(page);
 
         const after = (await tree(page)).find((node: any) => node.planeID === geometry.planeID);
         expect(after.sizeMode).toBe('manual');

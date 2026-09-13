@@ -515,7 +515,10 @@ export const usePluridPubSub = (
                 // publish them too.
                 topic: PLURID_PUBSUB_TOPIC.SET_SELECTION,
                 callback: (data) => {
-                    const ids = (data as any)?.ids;
+                    // `planeIDs` is the alias every other plane-addressing message takes; this topic
+                    // used to accept `ids` alone and silently ignore the rest (2026-09-13 — a browser
+                    // test was quietly falling back to a store dispatch when its publish did nothing)
+                    const ids = (data as any)?.ids ?? (data as any)?.planeIDs;
                     if (!Array.isArray(ids)) {
                         return;
                     }

@@ -82,7 +82,10 @@ test.describe('the chrome mode', () => {
     test('chrome=minimal keeps the plane bars and the ?, drops the toolbar, the viewcube and the minimap', async ({ page }) => {
         await openHarness(page, '?reducedMotion=1&chrome=minimal');
         expect(await page.locator('[data-plurid-control="shortcuts"]').count()).toBe(1);
-        expect(await page.locator('[data-plurid-entity="PluridPlaneControls"]').count()).toBeGreaterThan(0);
+        // one bar per plane, not "at least one": four missing bars used to pass this
+        const planes = await page.locator('[data-plurid-plane]').count();
+        expect(planes).toBeGreaterThan(1);
+        expect(await page.locator('[data-plurid-entity="PluridPlaneControls"]').count()).toBe(planes);
         expect(await page.locator('[data-plurid-entity="PluridToolbar"]').count()).toBe(0);
         expect(await page.locator('[data-plurid-entity="PluridViewcube"]').count()).toBe(0);
         expect(await page.locator('[data-plurid-control="minimap"]').count()).toBe(0);

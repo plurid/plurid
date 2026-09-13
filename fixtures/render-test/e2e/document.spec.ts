@@ -43,7 +43,8 @@ const waitForHead = (page: Page, predicate: (value: Awaited<ReturnType<typeof he
             jsonLd: Array.from(document.head.querySelectorAll('script[type="application/ld+json"]')).map((s) => s.textContent),
             titleInBody: !!document.body.querySelector('title'),
         };
-        // eslint-disable-next-line no-new-func
+        // the predicate is serialised into the page (no closure travels): the same shape
+        // `waitForState` uses in `helpers.ts`
         return new Function('value', 'return (' + source + ')(value)')(value);
     }, predicate.toString());
 

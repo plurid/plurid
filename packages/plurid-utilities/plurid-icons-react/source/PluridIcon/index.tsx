@@ -166,7 +166,7 @@ const PluridIcon: React.FC<PluridIconProperties> = (
         >
             <StyledPluridIconImage
                 theme={activeTheme}
-                iconSize={iconSize}
+                $iconSize={iconSize}
                 inactive={inactive}
                 opacity={activeOpacity}
                 color={color}
@@ -177,7 +177,7 @@ const PluridIcon: React.FC<PluridIconProperties> = (
             {renderTitle && (
                 <StyledPluridIconTitle
                     theme={activeTheme}
-                    iconSize={iconSize}
+                    $iconSize={iconSize}
                     position={activeTitlePosition}
                     location={activeTitleLocation}
                 >

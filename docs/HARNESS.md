@@ -150,7 +150,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 
 ## Fixtures
 
-Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants: boots without console errors, every shown plane measured, a declared size is the plane's box, the roots of a grid layout do not overlap in world X/Y, one minimap dot per shown plane, every on-screen link hit by itself, the space idle) and `visual.spec.ts` (a screenshot baseline per viewpoint under `e2e/__snapshots__/<platform>/`, compared strictly with `VISUAL_STRICT=1`; regenerate with `npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots` from `fixtures/render-test`).
+Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants: boots without console errors, every shown plane measured, a declared size is the plane's box, the roots of a grid layout do not overlap in world X/Y, one minimap dot per shown plane, every on-screen link hit by itself, the space idle) and `visual.spec.ts` (a screenshot baseline per viewpoint under `e2e/__snapshots__/<platform>/`, compared on every run; `darwin` and `linux` baselines are committed, and the `linux` set is generated in the pinned `mcr.microsoft.com/playwright:v1.62.1-noble` container CI uses. Regenerate with `npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots` from `fixtures/render-test`).
 
 | Fixture | Title | Flags | Steps | Viewpoints | Expectations |
 | --- | --- | --- | --- | --- | --- |

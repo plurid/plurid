@@ -39,7 +39,7 @@ export const StyledPluridIcon = styled.div`
 export interface IStyledPluridIconImage {
     theme: Theme;
     inactive: boolean | undefined;
-    iconSize: number;
+    $iconSize: number;
     opacity: number;
     color: string | undefined;
 }
@@ -74,18 +74,18 @@ export const StyledPluridIconImage = styled.div<IStyledPluridIconImage>`
         };
         width: ${
             ({
-                iconSize,
-            }: IStyledPluridIconImage) => iconSize + px
+                $iconSize,
+            }: IStyledPluridIconImage) => $iconSize + px
         };
         max-width: ${
             ({
-                iconSize,
-            }: IStyledPluridIconImage) => iconSize + px
+                $iconSize,
+            }: IStyledPluridIconImage) => $iconSize + px
         };
         height: ${
             ({
-                iconSize,
-            }: IStyledPluridIconImage) => iconSize + px
+                $iconSize,
+            }: IStyledPluridIconImage) => $iconSize + px
         };
     }
 `;
@@ -94,7 +94,7 @@ export const StyledPluridIconImage = styled.div<IStyledPluridIconImage>`
 
 export interface IStyledPluridIconTitle {
     theme: Theme;
-    iconSize: number;
+    $iconSize: number;
     position: PluridIconPosition;
     location: PluridIconLocation;
 }
@@ -103,22 +103,22 @@ export interface IStyledPluridIconTitle {
 export const StyledPluridIconTitle = styled.div<IStyledPluridIconTitle>`
     top: ${
         ({
-            iconSize,
+            $iconSize,
             location,
         }: IStyledPluridIconTitle) => {
             let value = 0;
 
             switch (location) {
                 case PLURID_ICON_LOCATION.above:
-                    value = -1 * (iconSize + 22);
+                    value = -1 * ($iconSize + 22);
                     break;
                 case PLURID_ICON_LOCATION.left:
                 case PLURID_ICON_LOCATION.right:
-                    value = -1 * (iconSize / 2 - 1);
+                    value = -1 * ($iconSize / 2 - 1);
                     break;
                 case PLURID_ICON_LOCATION.under:
                 default:
-                    value = iconSize + 10;
+                    value = $iconSize + 10;
             }
 
             return value + px;
@@ -128,14 +128,14 @@ export const StyledPluridIconTitle = styled.div<IStyledPluridIconTitle>`
         ({
             position,
             location,
-            iconSize,
+            $iconSize,
         }: IStyledPluridIconTitle) => {
             if (location) {
                 switch (location) {
                     case PLURID_ICON_LOCATION.left:
                         return initial;
                     case PLURID_ICON_LOCATION.right:
-                        return (iconSize + 10) + px;
+                        return ($iconSize + 10) + px;
                 }
             }
 
@@ -154,12 +154,12 @@ export const StyledPluridIconTitle = styled.div<IStyledPluridIconTitle>`
     right: ${
         ({
             location,
-            iconSize,
+            $iconSize,
         }: IStyledPluridIconTitle) => {
             if (location) {
                 switch (location) {
                     case PLURID_ICON_LOCATION.left:
-                        return (iconSize + 10) + px;
+                        return ($iconSize + 10) + px;
                 }
             }
 

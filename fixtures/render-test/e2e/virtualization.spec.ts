@@ -17,6 +17,7 @@ import {
     mounted,
     cdpMetrics,
     leavePlane,
+    waitForState,
     HarnessWindow,
 } from './helpers';
 
@@ -56,10 +57,20 @@ test.describe('content virtualization', () => {
     test('the selected plane never detaches; the budget bounds the hidden-but-mounted pool', async ({ page }) => {
         const max = 5;
         await openHarness(page, VIRTUAL + '&cullMax=' + max);
-        await expect.poll(async () => (await mounted(page)).detached).toBeGreaterThan(0);
+        // 500 planes, a handful on screen: the tier must hold HUNDREDS, not "more than zero"
+        await expect.poll(async () => (await mounted(page)).detached, { message: 'the detach tier to fill' }).toBeGreaterThan(100);
         const roots = await tree(page);
         const far = roots[roots.length - 1];
-        await page.evaluate((id) => (window as unknown as HarnessWindow).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [id] }), far.planeID);
+        // THROUGH THE PUBLIC SEAM, not a store dispatch (2026-09-13): the far plane is detached — it
+        // has no DOM to click — so a host selecting it does so the only way it can, by the topic. What
+        // is under test is the culling exception, and it must hold for whoever made the selection.
+        await publish(page, 'space.setSelection', { ids: [far.planeID] });
+        await waitForState(
+            page,
+            (state, id) => state.space.selectedPlaneIDs.includes(id as string),
+            'the far plane to be selected',
+            far.planeID,
+        );
         // the exceptions among the hidden planes count toward the budget and are never detached
         await expect.poll(async () => {
             const space = await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space);
@@ -120,7 +131,7 @@ test.describe('content virtualization', () => {
         // layout switch glides for 4 s, and the pass that runs on the tree change is GATED — the planes
         // the new layout hides stay attached
         await openHarness(page, '?planes=500&culling=1&cullDetach=unmount&cullDelay=0&momentum=0&motionMs=4000');
-        await expect.poll(async () => (await mounted(page)).detached).toBeGreaterThan(0);
+        await expect.poll(async () => (await mounted(page)).detached, { message: 'the detach tier to fill' }).toBeGreaterThan(100);
         const before = await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.transform);
         await page.evaluate(() => {
             const api = (window as unknown as HarnessWindow).__pluridApi;

@@ -73,9 +73,13 @@ export const extractParametersAndMatch = (
         locationElements,
         comparingPath,
     } = computeComparingPath(location, parameters);
-    // console.log('locationElements', locationElements);
-    // console.log('comparingPath', comparingPath);
-    if (comparingPath !== route) {
+    // `computeComparingPath` joins the path's elements, so it never carries a leading separator: the
+    // route it is compared against must not either. The IsoMatcher slices its own inputs before
+    // calling (`routePath.slice(1)`); the Parser hands its route in whole, and that mismatch made
+    // EVERY `Parser.extract()` report `match: false` — found 2026-09-13 by writing the first live
+    // test of the class. Normalising here makes the helper total, and leaves the sliced callers alone.
+    const comparingRoute = route.startsWith('/') ? route.slice(1) : route;
+    if (comparingPath !== comparingRoute) {
         return {
             match: false,
             parameters: {},

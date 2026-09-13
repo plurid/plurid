@@ -59,7 +59,7 @@ are outside the workspace entirely. See [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) for
 
 ## The quality gates
 
-Run from the root. CI enforces the first three (`build`, `test`, `lint`); the browser suite is a LOCAL gate — `pnpm verify` runs everything in order (build → test → lint → browser) and is what to run at every build:
+Run from the root. **CI enforces every row of this table** (2026-09-13: the browser suite is three CI jobs, and `smoke.pack` joined the gates job); `pnpm verify` runs them all in order locally and is what to run at every build:
 
 | Command | What it does | Notes |
 |---|---|---|
@@ -68,7 +68,7 @@ Run from the root. CI enforces the first three (`build`, `test`, `lint`); the br
 | `pnpm test` | `jest` across the workspace | jest 30. Hook/DOM tests use jsdom. |
 | `pnpm lint` | one flat-config ESLint 10 pass over the live source | Single root `eslint.config.mjs` — there are no per-package eslint configs. |
 | `pnpm format` / `pnpm format.check` | Prettier write / check | |
-| `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. `BENCH_STRICT=1` also enforces the absolute frame-time budgets of the benchmark (a development-machine gate; the machine-independent invariants always run). Two projects: `chromium` (every scenario, `fixtures.spec.ts` included) and `visual` (a screenshot per fixture × viewpoint against `e2e/__snapshots__/<platform>/`, compared strictly only with `VISUAL_STRICT=1`; the baselines are macOS / headless / DPR 1). |
+| `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. THREE projects, run as three commands on CI (see [Tests](#tests)): `chromium` (the behavioural scenarios), `perf` (the benchmark and the virtualization budgets, alone on a machine — `BENCH_STRICT=1` adds the absolute frame-time budgets on top of the always-on relative ones) and `visual` (a screenshot per fixture × viewpoint against `e2e/__snapshots__/<platform>/`, compared unconditionally; `darwin` and `linux` baselines are committed). `retries: 0` — a flake is a failure. |
 | `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
 | `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
@@ -129,7 +129,7 @@ run `npx playwright test --config e2e/playwright.config.ts --project=visual --up
 baselines under `e2e/__snapshots__/`. `fixtures.spec.ts` picks the fixture up by itself. A new flag goes into the
 registry the same way (the panel and the docs follow).
 
-Four traps: the suite REUSES a server already listening on 5273 (`reuseExistingServer`), so a server orphaned by a killed run keeps serving an old bundle — `lsof -nP -i :5273` before trusting a browser result; the strict / regenerate decision lives in `visual.spec.ts` (from `testInfo.config.updateSnapshots` and `VISUAL_STRICT`), never in the config, because a worker process does not see the CLI's arguments; a nested `test.use({ reducedMotion })` inside a `describe` did not reach the page (2026-09-06) — a scenario that needs an emulation makes its own `browser.newContext(...)`, as the touch scenarios do; and a plane's compositing layer includes everything it draws outside its box (its bridge, its controls bar), so an element of a plane that reaches PAST the parent's plane is split by Chrome's 3D sorting and everything outside the box disappears (the tilted leash, 2026-09-06 — now a band inside an axis-aligned box that ends at the parent's face). The budget is an absolute `maxDiffPixels` (120): a ratio let a 22×20 control vanish unnoticed.
+Four traps: the suite REUSES a server already listening on 5273 (`reuseExistingServer`), so a server orphaned by a killed run keeps serving an old bundle — `lsof -nP -i :5273` before trusting a browser result; the regenerate decision lives in `visual.spec.ts` (from `testInfo.config.updateSnapshots`), never in the config, because a worker process does not see the CLI's arguments; a nested `test.use({ reducedMotion })` inside a `describe` did not reach the page (2026-09-06) — a scenario that needs an emulation makes its own `browser.newContext(...)`, as the touch scenarios do; and a plane's compositing layer includes everything it draws outside its box (its bridge, its controls bar), so an element of a plane that reaches PAST the parent's plane is split by Chrome's 3D sorting and everything outside the box disappears (the tilted leash, 2026-09-06 — now a band inside an axis-aligned box that ends at the parent's face). The budget is an absolute `maxDiffPixels` (120): a ratio let a 22×20 control vanish unnoticed.
 
 
 
@@ -236,19 +236,109 @@ The packages are a dependency CHAIN (`plurid-data → plurid-engine / plurid-pub
 
 ## Tests
 
+### The five rules (2026-09-13)
+
+A suite is only worth its runtime if a green run MEANS something. These five are what the testing pass
+installed; three of them are enforced by a tool rather than by convention.
+
+1. **A test waits on STATE, never on TIME.** Every wait is a state predicate, a frame step, or a knob that
+   removes the delay. *Lint-enforced*: `page.waitForTimeout` is a `no-restricted-syntax` error inside
+   `fixtures/render-test/e2e/**` — use `waitForState` / `afterFrames` / `waitQuiet` / `expect.poll` from
+   `e2e/helpers.ts`. (The browser suite went from 71 sleeps and 16.8 s of dead clock to zero.)
+2. **A budget is relative to the RUN.** An absolute millisecond is a property of the machine; it lives
+   behind `BENCH_STRICT=1`. What always runs is the shape — a p95 against the run's own median, with the
+   single worst frame held only to a separate freeze ceiling.
+3. **A test drives the SEAM it claims to test.** Setup may reach into the store; the behaviour under test
+   may not. A test named "a drag" drives a pointer; a test of a pubsub topic publishes on the bus.
+4. **A gate that does not run is not a gate** — and a new gate is not finished until it has been PROVEN to
+   bite: break the thing it guards, watch it go red, restore.
+5. **One toolkit per layer.** `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`,
+   `installFrameClock`, `makeSpaceStore`, `motionStub`, `expectCamera`) and `e2e/helpers.ts` are the
+   vocabularies. A new test composes them; it does not copy a snippet.
+
+### Where a test goes
+
 - **Engine / data** logic: jest unit tests next to the code under `__tests__/`.
 - **React hooks / components**: jsdom + `@testing-library/react` — add the
-  `/** @jest-environment jsdom */` docblock and use `renderHook`.
+  `/** @jest-environment jsdom */` docblock and use `renderHook`, or `renderPlurid` for a whole application.
+- **A host-facing seam** (a pubsub topic, a handle command): drive it as a host does — publish on the bus
+  the application handed back, and assert the STATE, never the dispatch
+  (`plurid-react source/containers/Application/View/hooks/__tests__/pubsub.test.tsx`).
+- **Anything a reader can see**: a Playwright scenario in `fixtures/render-test/e2e/`.
 - Some legacy suites are intentionally skipped with a reason comment (routing/matrix/faceToFace debt tracked
   in [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) and the audit). Don't un-skip without making them pass.
+
+### The three browser commands
+
+The browser suite is three Playwright projects, because the three ask different questions and must not
+share a machine. From `fixtures/render-test`:
+
+```bash
+npx playwright test --config e2e/playwright.config.ts --project=chromium   # the behavioural scenarios
+npx playwright test --config e2e/playwright.config.ts --project=perf       # the frame budgets, ALONE
+npx playwright test --config e2e/playwright.config.ts --project=visual     # the committed pictures
+```
+
+`pnpm e2e` still runs all three. `perf` is separate because a 240-frame benchmark run beside 160 other
+tests measures the runner, not the engine — that is how CI #53 failed. **Nothing retries** (`retries: 0`):
+a flake is a failure, and is to be fixed as one.
+
+### The visual baseline ritual
+
+A baseline exists PER PLATFORM under `e2e/__snapshots__/<platform>/`, and a run on a platform with a
+baseline compares — always, no opt-in flag. `darwin` baselines are generated on this machine; `linux`
+baselines are generated in the PINNED official container, which is the same image CI uses, so the bytes
+are expected to match:
+
+```bash
+# darwin, from fixtures/render-test
+npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots
+
+# linux — the image CI runs. The container has NO pnpm, so its `webServer` command (`pnpm dev`)
+# exits 127: serve the harness from the HOST and point the container at it. From the repo root:
+(cd fixtures/render-test && npx vite --port 5273 --strictPort --host &)
+docker run --rm --add-host=host.docker.internal:host-gateway \
+    -e PLURID_E2E_BASE_URL=http://host.docker.internal:5273 \
+    -v "$PWD":/work -w /work/fixtures/render-test \
+    mcr.microsoft.com/playwright:v1.62.1-noble \
+    npx playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots
+```
+
+(`vite.config.ts` lists `host.docker.internal` in `server.allowedHosts` for exactly this; without it
+Vite answers the container's requests with a 403. On CI none of this applies — the container IS the
+runner and installs pnpm itself, so `pnpm dev` works there.)
+
+Never regenerate on a broken build, and never regenerate to make a red run green. **A picture changes only
+with a reason written in the commit** — a changed baseline with no reason is an unreviewed visual
+regression.
+
+### Coverage floors
+
+Every package's `coverageThreshold` is its own MEASURED coverage on the day it was set, rounded down to
+the nearest five (`configurations/jest.config.js`). A floor from reality cannot be cargo-culted and cannot
+silently rot: deleting a test file fails its package. Floors only ever move UP — when a package's coverage
+rises, raise its floor in the same commit.
+
+### What CI actually runs
+
+`.github/workflows/ci.yml`, four jobs on Node 24:
+
+| Job | Steps |
+|---|---|
+| `gates` | `build` → `test` → `lint` → `check` → `check.modules` → `docs.tables.check` → `smoke.pack` |
+| `browser` | the `chromium` project (needs `gates`) |
+| `perf` | the `perf` project, alone on its runner (needs `gates`) |
+| `visual` | the `visual` project INSIDE `mcr.microsoft.com/playwright:v1.62.1-noble`; uploads the differing pictures on failure (needs `gates`) |
 
 
 
 ## CI, versioning & style
 
-- **CI** (`.github/workflows/ci.yml`) runs on **Node 24**: `pnpm install --frozen-lockfile` → `build` →
-  `test` → `lint`. A PR must be green. If you change dependencies, commit the updated `pnpm-lock.yaml`
-  (CI installs frozen).
+- **CI** (`.github/workflows/ci.yml`) runs on **Node 24**, in four jobs: `gates`
+  (`install --frozen-lockfile` → `build` → `test` → `lint` → `check` → `check.modules` →
+  `docs.tables.check` → `smoke.pack`), then `browser`, `perf` and `visual` in parallel behind it. A PR
+  must be green in all four, and nothing retries. If you change dependencies, commit the updated
+  `pnpm-lock.yaml` (CI installs frozen).
 - **Versioning** is [αver](https://github.com/ly3xqhl8g9/alpha-versioning) (the `0.0.0-N` package versions).
 - **Build artifacts** (`distribution/`) are git-ignored; never commit them.
 - **Style**: Prettier (`.prettierrc.json`) + the flat ESLint config. The source uses the `// #region` folding

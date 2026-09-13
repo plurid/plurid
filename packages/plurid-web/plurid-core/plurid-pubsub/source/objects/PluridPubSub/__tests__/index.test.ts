@@ -7,55 +7,82 @@
 
 
 // #region module
+/**
+ * THE BUS: a publish reaches every subscriber of that topic, with the data it was published with.
+ * This used to be asserted as `expect(true).toBeTruthy()` after a publish (2026-09-13) — deleting the
+ * whole `publish` implementation left the suite green. What follows asserts the delivery.
+ */
 describe('PluridPubSub', () => {
-    it('publishes and subscribes', () => {
-        const pluridPubSub = new PluridPubSub();
+    it('delivers a publish to the subscriber, with its data', () => {
+        const bus = new PluridPubSub();
+        const received: unknown[] = [];
 
-        pluridPubSub.subscribe({
+        bus.subscribe({
             topic: 'space.rotateYWith',
-            callback: data => {
-                const {
-                    value,
-                } = data;
-
-                // increase the rotateY with value
-                // console.log('called topic space.rotateYWith with value:', value);
+            callback: (data) => {
+                received.push(data);
             },
         });
 
-        pluridPubSub.publish({
+        bus.publish({
             topic: 'space.rotateYWith',
             data: { value: 1 },
         });
 
-        expect(true).toBeTruthy();
+        expect(received).toEqual([{ value: 1 }]);
     });
 
-    it('subscribes and unsubscribes', () => {
-        const pluridPubSub = new PluridPubSub();
+    it('delivers to EVERY subscriber of the topic, and to no other topic', () => {
+        const bus = new PluridPubSub();
+        const first: number[] = [];
+        const second: number[] = [];
+        const other: number[] = [];
 
-        const index = pluridPubSub.subscribe({
+        bus.subscribe({ topic: 'space.rotateYWith', callback: (data) => first.push((data as { value: number }).value) });
+        bus.subscribe({ topic: 'space.rotateYWith', callback: (data) => second.push((data as { value: number }).value) });
+        bus.subscribe({ topic: 'space.rotateXWith', callback: (data) => other.push((data as { value: number }).value) });
+
+        bus.publish({ topic: 'space.rotateYWith', data: { value: 7 } });
+        bus.publish({ topic: 'space.rotateYWith', data: { value: 8 } });
+
+        expect(first).toEqual([7, 8]);
+        expect(second).toEqual([7, 8]);
+        expect(other).toEqual([]);
+    });
+
+    it('an unsubscribed callback stops receiving; the others keep going', () => {
+        const bus = new PluridPubSub();
+        const leaving: number[] = [];
+        const staying: number[] = [];
+
+        const index = bus.subscribe({
             topic: 'space.rotateYWith',
-            callback: data => {
-                const {
-                    value,
-                } = data;
-
-                // increase the rotateY with value
-                // console.log('called topic space.rotateYWith with value:', value);
-            },
+            callback: (data) => leaving.push((data as { value: number }).value),
+        });
+        bus.subscribe({
+            topic: 'space.rotateYWith',
+            callback: (data) => staying.push((data as { value: number }).value),
         });
 
-        pluridPubSub.publish({
-            topic: 'space.rotateYWith',
-            data: { value: 1 },
-        });
+        bus.publish({ topic: 'space.rotateYWith', data: { value: 1 } });
+        expect(bus.unsubscribe(index)).toBe(true);
+        bus.publish({ topic: 'space.rotateYWith', data: { value: 2 } });
 
-        const unsubscribed = pluridPubSub.unsubscribe(
-            index,
-        );
+        expect(leaving).toEqual([1]);
+        expect(staying).toEqual([1, 2]);
+    });
 
-        expect(unsubscribed).toBe(true);
+    it('a callback that throws does not stop the bus', () => {
+        const bus = new PluridPubSub();
+        const after: number[] = [];
+        const errors = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        bus.subscribe({ topic: 'space.rotateYWith', callback: () => { throw new Error('the host broke'); } });
+        bus.subscribe({ topic: 'space.rotateYWith', callback: (data) => after.push((data as { value: number }).value) });
+
+        expect(() => bus.publish({ topic: 'space.rotateYWith', data: { value: 3 } })).not.toThrow();
+        expect(after).toEqual([3]);
+        errors.mockRestore();
     });
 });
 

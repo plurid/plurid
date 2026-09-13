@@ -11,6 +11,8 @@ import {
     spaceState,
     publish,
     viewRect,
+    settle,
+    afterFrames,
 } from './helpers';
 
 
@@ -20,7 +22,7 @@ const tree = (page: Page) => page.evaluate(() => (window as any).__rtTree());
 test.describe('rendering, overlays, accessibility', () => {
     test('culling hides off-screen planes, never the selected one, and shows them again', async ({ page }) => {
         await openHarness(page, '?culling=1&reducedMotion=1&momentum=0');
-        await page.waitForTimeout(250);
+        await settle(page);
         const roots = await tree(page);
         const keep = roots[0];
         await page.evaluate((id) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [id] }), keep.planeID);
@@ -60,7 +62,10 @@ test.describe('rendering, overlays, accessibility', () => {
         const errors = collectConsoleErrors(page);
         await openHarness(page, '?depthFade=1&debug=1&reducedMotion=1');
         await publish(page, 'space.cameraDelta', { yaw: 20 });
-        await page.waitForTimeout(250);
+        await settle(page);
+        await expect.poll(async () => page.evaluate(() => Number(
+            (document.querySelector('[data-plurid-plane]') as HTMLElement).style.getPropertyValue('--plurid-plane-depth'),
+        )), { message: 'the depth cue to reach the plane' }).toBeGreaterThan(0);
         const fade = await page.evaluate(() => {
             const element = document.querySelector('[data-plurid-plane]') as HTMLElement;
             return {
@@ -86,8 +91,8 @@ test.describe('rendering, overlays, accessibility', () => {
 
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
         await page.mouse.wheel(0, 120);
-        await page.waitForTimeout(100);
-        expect(await list.evaluate((node) => node.scrollTop)).toBeGreaterThan(0);
+        await expect.poll(async () => list.evaluate((node) => node.scrollTop), { message: 'the content to scroll' }).toBeGreaterThan(0);
+        await afterFrames(page, 10);
         expect((await camera(page)).scale).toBeCloseTo(before.scale, 9);
 
         // scrolled to the end: further wheel — a mouse notch, then a trackpad-sized tick — neither
@@ -95,21 +100,39 @@ test.describe('rendering, overlays, accessibility', () => {
         await list.evaluate((node) => { node.scrollTop = node.scrollHeight; });
         await page.mouse.wheel(0, 300);
         await page.mouse.wheel(0, 12.5);
-        await page.waitForTimeout(100);
+        // the camera must not move: a frame budget it could have moved in
+        await afterFrames(page, 12);
         const after = await camera(page);
         expect(after.scale).toBeCloseTo(before.scale, 9);
         expect(after.offset.x).toBeCloseTo(before.offset.x, 6);
         expect(after.offset.y).toBeCloseTo(before.offset.y, 6);
 
-        // the same wheel over the plane's non-scrolling content zooms (after the trackpad stream
-        // above has ended: a notch inside a trackpad stream counts as the trackpad)
-        await page.waitForTimeout(400);
+    });
+
+    /**
+     * The device of a wheel STREAM wins (`WHEEL_STREAM_MS`): a notch inside a trackpad stream is the
+     * trackpad's. Each half runs on its own page, so neither has to wait out the other's stream —
+     * the old single test slept 400 ms for exactly that.
+     */
+    test('a mouse notch over non-scrolling plane content zooms; the same notch inside a trackpad stream does not', async ({ page }) => {
+        await openHarness(page, '?scrollable=1&momentum=0&reducedMotion=1');
         const footer = page.locator('[data-plurid-plane$="/geometry@0"]').getByText('PLURID · SPATIAL UNIT');
         const foot = (await footer.boundingBox())!;
+        const before = await camera(page);
+
         await page.mouse.move(foot.x + foot.width / 2, foot.y + foot.height / 2);
         await page.mouse.wheel(0, -300);
-        await page.waitForTimeout(100);
-        expect((await camera(page)).scale).not.toBeCloseTo(before.scale, 3);
+        await expect.poll(async () => (await camera(page)).scale, { message: 'a notch to zoom' }).not.toBeCloseTo(before.scale, 3);
+
+        // a fresh page: a trackpad tick first, then the same notch — the stream's device wins
+        await openHarness(page, '?scrollable=1&momentum=0&reducedMotion=1');
+        const again = (await page.locator('[data-plurid-plane$="/geometry@0"]').getByText('PLURID · SPATIAL UNIT').boundingBox())!;
+        const rest = await camera(page);
+        await page.mouse.move(again.x + again.width / 2, again.y + again.height / 2);
+        await page.mouse.wheel(0, 12.5);
+        await page.mouse.wheel(0, -300);
+        await afterFrames(page, 12);
+        expect((await camera(page)).scale).toBeCloseTo(rest.scale, 3);
     });
 
     test('a wheel over the minimap never zooms the space; overlays sit inside the view', async ({ page }) => {
@@ -120,15 +143,14 @@ test.describe('rendering, overlays, accessibility', () => {
         const before = await camera(page);
         await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
         await page.mouse.wheel(0, -300);
-        await page.waitForTimeout(100);
+        await afterFrames(page, 12);
         expect((await camera(page)).scale).toBeCloseTo(before.scale, 9);
 
         // the same wheel on empty space zooms
         const rect = await viewRect(page);
         await page.mouse.move(rect.left + 40, rect.top + rect.height - 160);
         await page.mouse.wheel(0, -300);
-        await page.waitForTimeout(100);
-        expect((await camera(page)).scale).not.toBeCloseTo(before.scale, 3);
+        await expect.poll(async () => (await camera(page)).scale, { message: 'the wheel on empty space to zoom' }).not.toBeCloseTo(before.scale, 3);
 
         // overlays are positioned inside the view (no `position: fixed`)
         const positions = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-overlay]')).map((node) => getComputedStyle(node).position));

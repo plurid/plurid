@@ -47,6 +47,24 @@ test.describe('the command palette', () => {
         const filtered = await page.locator(ROW).count();
         expect(filtered).toBeGreaterThan(0);
         expect(filtered).toBeLessThan(all);
+        // and every row that is left MATCHES what was typed — by the palette's own rule, which is a
+        // subsequence ("select" keeps "paste planes copied…", whose letters appear in that order),
+        // not a substring
+        const subsequence = (query: string, title: string) => {
+            let at = 0;
+            for (const character of query) {
+                at = title.indexOf(character, at);
+                if (at === -1) {
+                    return false;
+                }
+                at += 1;
+            }
+            return true;
+        };
+        for (const row of await page.locator(ROW).all()) {
+            const title = (await row.innerText()).toLowerCase();
+            expect({ title, matches: subsequence('select', title) }).toEqual({ title, matches: true });
+        }
 
         await page.keyboard.press('Enter');
         await expect(page.locator(PALETTE)).toHaveCount(0);

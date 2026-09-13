@@ -13,6 +13,7 @@ import {
     viewRect,
     visibleCorners,
     settle,
+    afterFrames,
 } from './helpers';
 
 
@@ -75,7 +76,8 @@ test.describe('camera core', () => {
             await page.mouse.wheel(0, 12.5);
         }
         const midway = await camera(page);
-        await page.waitForTimeout(400);
+        // the smoothed wheel releases its burst over frames: let it finish gliding
+        await afterFrames(page, 24);
         const panned = await camera(page);
         const movedMid = Math.hypot(midway.offset.x - before.offset.x, midway.offset.y - before.offset.y);
         const movedAll = Math.hypot(panned.offset.x - before.offset.x, panned.offset.y - before.offset.y);
@@ -91,7 +93,7 @@ test.describe('camera core', () => {
             await page.mouse.wheel(0, -10);
         }
         await page.keyboard.up('Control');
-        await page.waitForTimeout(400);
+        await afterFrames(page, 24);
         const pinched = await camera(page);
         expect(pinched.scale / panned.scale).toBeGreaterThan(1.7);
         expect(pinched.scale / panned.scale).toBeLessThan(1.95);
@@ -110,7 +112,7 @@ test.describe('camera core', () => {
         await page.keyboard.down('Control');
         await page.mouse.wheel(0, -100);
         await page.keyboard.up('Control');
-        await page.waitForTimeout(50);
+        await afterFrames(page, 12);
 
         const after = await camera(page);
         expect(after.scale).toBeGreaterThan(1);
@@ -123,7 +125,7 @@ test.describe('camera core', () => {
         const state = await spaceState(page);
         const target = state.tree[2];
         await publish(page, 'space.frame', { planeID: target.planeID, animate: false });
-        await page.waitForTimeout(50);
+        await settle(page);
 
         const framed = await camera(page);
         expect(framed.yaw).toBeCloseTo(-target.location.rotateY, 6);
@@ -177,14 +179,14 @@ test.describe('camera core', () => {
 
         await publish(page, 'space.resetTransform', { animate: false });
         await publish(page, 'space.setViewpoint', { viewpoint: v2 });
-        await page.waitForTimeout(30);
+        await settle(page);
         const restored2 = await camera(page);
         expect(restored2.yaw).toBeCloseTo(before.yaw, 3);
         expect(restored2.offset.x).toBeCloseTo(before.offset.x, 3);
 
         await publish(page, 'space.resetTransform', { animate: false });
         await publish(page, 'space.setViewpoint', { viewpoint: v1 });
-        await page.waitForTimeout(30);
+        await settle(page);
         const restored1 = await spaceState(page);
         expect(restored1.rotationY).toBeCloseTo(25, 3);
         expect(restored1.translationX).toBeCloseTo((await spaceState(page)).translationX, 6);

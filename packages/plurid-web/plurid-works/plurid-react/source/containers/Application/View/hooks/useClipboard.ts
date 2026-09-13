@@ -24,9 +24,6 @@
         selectionFragmentText,
     } from '~services/state/thunks/selection';
 
-    import {
-        warnOnce,
-    } from '~services/logic/development/warn';
     // #endregion external
 // #endregion imports
 
@@ -39,8 +36,6 @@ export interface UseClipboardParameters {
     getState: () => AppState;
     /** `space.clipboard` — off drops the listeners entirely (the page keeps every ⌘C / ⌘V). */
     enabled: boolean;
-    /** Whether a host's warnings are on (a paste that had to drop planes says so once). */
-    warnings: boolean;
 }
 
 
@@ -67,7 +62,6 @@ export const useClipboard = (
         dispatch,
         getState,
         enabled,
-        warnings,
     } = parameters;
 
     useEffect(() => {
@@ -120,18 +114,8 @@ export const useClipboard = (
             }
             const text = event.clipboardData?.getData('text/plain') ?? '';
             const before = getState().space.tree.length;
-            dispatch(pasteFragment({
-                text,
-                onDropped: (routes) => {
-                    warnOnce(
-                        'paste-unregistered',
-                        'a pasted arrangement named planes this application does not register, and they were dropped: '
-                            + routes.join(', ')
-                            + '. Register those routes to hold them.',
-                        warnings,
-                    );
-                },
-            }) as any);
+            // what could not be held is reported by the thunk, the same way for every paste path
+            dispatch(pasteFragment({ text }) as any);
             // only when something actually landed is the paste the space's
             if (getState().space.tree.length !== before) {
                 event.preventDefault();
@@ -149,7 +133,6 @@ export const useClipboard = (
         };
     }, [
         enabled,
-        warnings,
         viewElement,
         dispatch,
         getState,

@@ -13,6 +13,9 @@ import {
     spaceState,
     viewRect,
     dispatches,
+    waitForState,
+    waitQuiet,
+    afterFrames,
 } from './helpers';
 
 
@@ -168,7 +171,6 @@ test.describe('links and tree', () => {
         const detail = findPlane(await tree(page), root.planeID).children[0];
         await clickLink(page, detail.planeID, '/geometry/detail/uv');
         await waitForChildren(page, detail.planeID, 1);
-        await page.waitForTimeout(150);
 
         const bridge = page.locator('[data-plurid-plane*="/detail/uv@"] [data-plurid-entity="PluridPlaneBridge"]');
         await expect(bridge).toHaveAttribute('data-plurid-bridge-side', 'start');
@@ -178,9 +180,9 @@ test.describe('links and tree', () => {
         // roots wrapper's own box used to take the hit there (the fin's links were dead)
         for (const [yaw, pitch] of [[-90, 0], [-70, 10], [-60, 0], [-80, 20]]) {
             await publish(page, 'space.navigateToPlane', { id: detail.planeID });
-            await page.waitForTimeout(80);
+            await settle(page);
             await publish(page, 'space.cameraDelta', { absolute: { yaw, pitch }, animate: false });
-            await page.waitForTimeout(150);
+            await settle(page);
             const hits = await page.evaluate(() => Array.from(document.querySelectorAll('[data-plurid-plane*="/geometry/detail@"] [data-plurid-link-route]')).map((link) => {
                 const rect = link.getBoundingClientRect();
                 const top = document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -290,13 +292,13 @@ test.describe('links and tree', () => {
         const root = rootByRoute(await tree(page), '/geometry');
         await clickLink(page, root.planeID, '/geometry/detail');
         await waitForChildren(page, root.planeID, 1);
-        // let the spawn's navigation settle (its transition window and active-plane timers)
-        await page.waitForTimeout(1200);
+        // the spawn's navigation is over when the camera rests and the layout transition has closed
+        await settle(page);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the spawn\'s layout transition to close');
 
         // idle: no periodic dispatches with a link open
         const idleBefore = await dispatches(page);
-        await page.waitForTimeout(1500);
-        const idleAfter = await dispatches(page);
+        const idleAfter = await waitQuiet(page, 90);
         const idleChanges = await page.evaluate((count) => (window as any).__rtChanges.slice(-count), idleAfter - idleBefore);
         expect(idleAfter - idleBefore, 'idle dispatches: ' + JSON.stringify(idleChanges)).toBe(0);
 
@@ -307,8 +309,9 @@ test.describe('links and tree', () => {
         const resizeBefore = await dispatches(page);
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as any).__pluridApi.getSnapshot().space.viewSize.width === 1100);
-        await page.waitForTimeout(600);
-        const resizeAfter = await dispatches(page);
+        await settle(page);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the resize relayout to finish');
+        const resizeAfter = await waitQuiet(page, 20);
         // a resize is a handful of writes whatever the plane count: the view size, the relayout, ONE
         // batch of the planes' new sizes (the application's one measurer), the measured relayout
         expect(planeCount).toBeGreaterThan(1);
@@ -407,8 +410,12 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         await clickLink(page, root.planeID, '/geometry/detail');
         await waitForShown(page, child.planeID, true);
         await page.waitForFunction((planeID) => !!document.querySelector(`[data-plurid-plane="${planeID}"]`), child.planeID);
-        await settle(page);
-        await page.waitForTimeout(120);
+        // the reopened plane re-frames once its FIRST measurement lands (`pendingFrame`): wait for the
+        // measurement, then for the camera it retargets
+        await waitForState(page, (state, id) => {
+            const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === id) return node; const found = node.children ? find(node.children) : undefined; if (found) return found; } return undefined; };
+            return (find(state.space.tree as any[])?.width ?? 0) > 0;
+        }, 'the reopened plane to be measured', child.planeID);
         await settle(page);
 
         const rect = (await planeRect(page, child.planeID))!;
@@ -474,8 +481,10 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         // stay: the camera does not move
         await clickLink(page, root.planeID, '/geometry/detail');
         await waitForShown(page, child.planeID, true);
-        await settle(page);
-        await page.waitForTimeout(120);
+        await waitForState(page, (state, id) => {
+            const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === id) return node; const found = node.children ? find(node.children) : undefined; if (found) return found; } return undefined; };
+            return (find(state.space.tree as any[])?.width ?? 0) > 0;
+        }, 'the reopened plane to be measured', child.planeID);
         await settle(page);
         const before = await camera(page);
         await publish(page, 'space.closePlane', { id: child.planeID, navigate: 'stay' });
@@ -502,9 +511,9 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
                 const api = (window as any).__pluridApi;
                 api.store.dispatch({ type: 'space/setTree', payload: JSON.parse(JSON.stringify(api.store.getState().space.tree)) });
             });
-            await page.waitForTimeout(100);
+            await afterFrames(page, 2);
         }
-        await page.waitForTimeout(300);
+        await settle(page);
 
         const after = findPlane(await tree(page), child.planeID);
         expect(after.show).toBe(false);

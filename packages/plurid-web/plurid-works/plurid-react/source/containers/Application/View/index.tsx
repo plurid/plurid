@@ -536,7 +536,6 @@ const PluridView: React.FC<PluridViewProperties> = (
         dispatch,
         getState: () => stateRef.current,
         enabled: stateConfiguration.space.clipboard !== false,
-        warnings: stateConfiguration.development?.warnings !== false,
     });
 
     // Collaboration seam: emit/apply shared-arrangement snapshots on the instance pubsub (the host

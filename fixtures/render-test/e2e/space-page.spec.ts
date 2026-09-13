@@ -13,6 +13,7 @@ import {
     settle,
     dockedID,
     visibleChrome,
+    PAGE_CHROME,
     HarnessWindow,
 } from './helpers';
 
@@ -38,13 +39,18 @@ test.describe('a plane read as a page', () => {
         expect(await visibleChrome(page)).toEqual([]);
         // the other planes are outside the reading scope
         const others = page.locator('[data-plurid-plane]:not([data-plurid-page="docked"])');
-        expect(await others.count()).toBeGreaterThan(0);
-        await expect(others.first()).toHaveAttribute('inert', '');
+        const planes = await page.locator('[data-plurid-plane]').count();
+        // every plane but the docked one, and EVERY one of them inert — not merely the first
+        expect(await others.count()).toBe(planes - 1);
+        for (const other of await others.all()) {
+            await expect(other).toHaveAttribute('inert', '');
+        }
 
         await page.keyboard.press('Escape');
         await settle(page);
         expect(await dockedID(page)).toBeNull();
-        expect((await visibleChrome(page)).length).toBeGreaterThan(0);
+        // the whole chrome comes back, not one piece of it
+        expect(await visibleChrome(page)).toEqual(PAGE_CHROME);
         expect((await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.camera.scale))).toBeLessThan(1.5);
     });
 

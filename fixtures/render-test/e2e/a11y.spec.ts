@@ -17,6 +17,7 @@ import {
     spaceState,
     tree,
     HarnessWindow,
+    afterFrames,
 } from './helpers';
 
 
@@ -111,7 +112,7 @@ test.describe('access', () => {
             await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
             for (let i = 0; i < 5; i += 1) {
                 await page.mouse.wheel(0, 120);
-                await page.waitForTimeout(40);
+                await afterFrames(page, 3);
             }
             await settle(page);
             expect(await page.evaluate(() => JSON.stringify((window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.camera))).toBe(before);
@@ -139,9 +140,8 @@ test.describe('access', () => {
         const roots = await tree(page);
         await page.evaluate((id) => (window as unknown as HarnessWindow).__pluridApi.store.dispatch({ type: 'space/setSpaceField', payload: { field: 'activePlaneID', value: id } }), roots[0].planeID);
         await page.keyboard.press('ArrowRight');
-        await page.waitForTimeout(80);
+        await expect.poll(async () => (await spaceState(page)).activePlaneID, { message: 'the arrow to walk to another plane' }).not.toBe(roots[0].planeID);
         const walked = (await spaceState(page)).activePlaneID;
-        expect(walked).not.toBe(roots[0].planeID);
         await page.keyboard.press('Enter');
         await settle(page);
         const target = roots.find((node: any) => node.planeID === walked)!;

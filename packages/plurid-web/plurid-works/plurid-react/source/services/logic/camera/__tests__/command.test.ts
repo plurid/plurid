@@ -34,7 +34,7 @@
     } from '../../../../testing/fixtures';
     import {
         makeSpaceStore,
-        motionSpy,
+        motionStub,
     } from '../../../../testing/store';
     // #endregion external
 
@@ -67,8 +67,8 @@ const makeStore = (
     tree: TreePlane[] = [plane('a'), plane('b', 700)],
 ) => {
     const store = makeSpaceStore(configuration, tree);
-    const tweens = motionSpy(store);
-    return { ...store, tweens };
+    const motion = motionStub(store);
+    return { ...store, motion, tweens: motion.tweens };
 };
 
 const withNavigation = (
@@ -261,6 +261,20 @@ describe('the page presentation: framing docks', () => {
         instant.dispatch(uiActions.setUIGrabMode(true));
         instant.dispatch(cameraCommand({ kind: 'dock', planeID: 'p1' }, { animate: false }));
         expect(instant.getState().ui.grabMode).toBe(false);
+    });
+
+    it('a REFUSED tween is a jump: the camera still lands, and no docking destination is recorded', () => {
+        const store = makePageStore();
+        store.motion.refuse();
+
+        store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }, { animate: true }));
+
+        // the controller was asked, said no, and the commit fell through to a jump
+        expect(store.tweens).toHaveLength(1);
+        expect(store.cameraCommits()).toHaveLength(1);
+        expect(store.space().camera.pivot.y).toBeCloseTo(view.height + 50 + view.height / 2, 6);
+        // `setDockingPlaneID` records the destination of a SWING; a jump is docked by its camera alone
+        expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type)).toHaveLength(0);
     });
 
     it('a jump cancels a running motion before it commits (a tween frame never overwrites it)', () => {

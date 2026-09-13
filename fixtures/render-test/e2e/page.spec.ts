@@ -36,6 +36,7 @@ import {
     motionRuns,
     BootFrame,
     HarnessWindow,
+    afterFrames,
 } from './helpers';
 
 
@@ -107,7 +108,8 @@ test.describe('the page presentation', () => {
         await page.mouse.move(view.left + view.width / 2, view.top + view.height / 2);
         await page.mouse.wheel(0, 400);
         await expect.poll(() => scrollTop(page, root.planeID)).toBeGreaterThan(100);
-        await page.waitForTimeout(150);
+        // the camera must not have moved: a frame budget in which it could have
+        await afterFrames(page, 12);
         expect(await camera(page)).toEqual(before);
         expect(await dockedID(page)).toBe(root.planeID);
     });
@@ -125,7 +127,7 @@ test.describe('the page presentation', () => {
 
         await page.mouse.move(view.left + view.width / 2, view.top + view.height / 2);
         await page.mouse.wheel(0, 400);
-        await page.waitForTimeout(200);
+        await afterFrames(page, 16);
         expect(await scrollTop(page, contact.planeID)).toBe(0);
         expect(await camera(page)).toEqual(before);
         expect(await dockedID(page)).toBe(contact.planeID);
@@ -291,7 +293,8 @@ test.describe('the page presentation', () => {
         await settle(page);
         const back = await recording.stop();
         const first = back.findIndex((frame) => frame.motion === 'tween');
-        expect(first).toBeGreaterThanOrEqual(0);
+        // `>= 0` was a no-op: a findIndex of -1 means the swing never happened, which is the failure
+        expect(first, 'Escape never started a swing: ' + motionRuns(back)).toBeGreaterThan(-1);
         expect(back.slice(first).filter((frame) => !frame.docked || frame.toolbar === 'visible')).toEqual([]);
         expect(await dockedID(page)).toBe(about.planeID);
     });
@@ -389,7 +392,7 @@ test.describe('the page presentation', () => {
         const swing = await recording.stop();
         expect(await dockedID(page)).toBe(about.planeID);
         const firstTween = swing.findIndex((frame) => frame.motion === 'tween');
-        expect(firstTween).toBeGreaterThanOrEqual(0);
+        expect(firstTween, 'the link never started a swing: ' + motionRuns(swing)).toBeGreaterThan(-1);
         expect(swing.slice(firstTween).filter((frame) => frame.aside !== 1)).toEqual([]);
         await expect.poll(async () => (await asideOf(contact.planeID)).opacity).toBe('0');
         expect((await asideOf(contact.planeID)).aside).toBe('true');
@@ -606,7 +609,6 @@ test.describe('the page presentation', () => {
         const about = byRoute(await tree(page), '/about');
         expect(await dockedID(page)).toBe(about.planeID);
         await expect.poll(() => page.evaluate(() => Object.keys(localStorage).some((key) => /plurid/i.test(key)))).toBe(true);
-        await page.waitForTimeout(200);
 
         await page.reload();
         await waitForBoot(page);
@@ -745,7 +747,7 @@ test.describe('the page presentation', () => {
         await settle(page);
         const before = await camera(page);
         await page.mouse.wheel(0, 400);
-        await page.waitForTimeout(200);
+        await afterFrames(page, 16);
         expect(await page.evaluate(() => window.scrollY)).toBe(0);
         expect(await camera(page)).toEqual(before);
     });

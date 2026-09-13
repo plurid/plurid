@@ -452,7 +452,9 @@ export interface PluridPubSubSubscribeMessageSetPlaneLinks {
 
 
 export interface PluridPubSubMessageSetSelection {
-    ids: string[];
+    /** The planes to select. `planeIDs` is the alias the other plane-addressing messages take. */
+    ids?: string[];
+    planeIDs?: string[];
 }
 export interface PluridPubSubPublishMessageSetSelection {
     topic: typeof PLURID_PUBSUB_TOPIC.SET_SELECTION;

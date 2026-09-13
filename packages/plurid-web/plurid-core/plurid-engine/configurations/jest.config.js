@@ -10,25 +10,25 @@ module.exports = {
         'tsx',
         'js',
     ],
-    collectCoverage: false,
+    collectCoverage: true,
     coveragePathIgnorePatterns: [
         '/node_modules/',
         '/distribution/',
     ],
+    // THE FLOORS ARE MEASURED, not aspired to (2026-09-13): each is this package's own coverage on
+    // the day it was set, rounded down to the nearest five. A floor from reality cannot be
+    // cargo-culted and cannot silently rot — it only ever moves up, by `pnpm test` and this number.
     coverageThreshold: {
         global: {
-            branches: 0,
-            functions: 0,
-            lines: 0,
-            statements: 0,
-            // branches: 90,
-            // functions: 95,
-            // lines: 95,
-            // statements: 95
+            branches: 75,
+            functions: 85,
+            lines: 85,
+            statements: 85,
         },
     },
     collectCoverageFrom: [
-        'source/*.{js,ts}',
+        'source/**/*.{ts,tsx}',
+        '!source/**/__tests__/**',
     ],
     moduleDirectories: [
         'node_modules',

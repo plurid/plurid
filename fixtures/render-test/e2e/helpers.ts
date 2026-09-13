@@ -9,6 +9,7 @@ import type {
     TreePlane,
     PluridApi,
     PluridInspection,
+    PluridState,
 } from '@plurid/plurid-react';
 
 import type {
@@ -144,10 +145,172 @@ export const camera = (page: Page) => page.evaluate(() => (window as unknown as 
 /** The page presentation's reveal pose, as configured (`space.docking.reveal`). */
 export const revealPose = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().configuration.space.docking!.reveal!);
 
+/**
+ * THE WAITING VOCABULARY (2026-09-13). A test waits on STATE, never on a duration: a sleep is a guess
+ * about a machine, and a guess that is right on this laptop is wrong on a loaded CI runner — which is
+ * how a suite starts failing for reasons that say nothing about the code. Everything below names the
+ * state it waits for, so a timeout reports what never happened instead of "30 s elapsed".
+ *
+ * `waitForState` — a predicate on the engine's own state, with a message.
+ * `afterFrames`   — let the browser paint N frames (a rAF chain, not a clock).
+ * `settle`        — the camera is idle AND the frame that follows it has run.
+ * `waitQuiet`     — the dispatch count after N still frames: the "nothing oscillates" probe.
+ *
+ * A `page.waitForTimeout` in this directory is a lint error (`eslint.config.mjs`).
+ */
+
+/** Let the page paint: a chain of `requestAnimationFrame`s, resolved inside the browser. */
+export const afterFrames = (
+    page: Page,
+    frames = 1,
+) => page.evaluate((count) => new Promise<void>((resolve) => {
+    let left = Math.max(1, count);
+    const step = () => {
+        left -= 1;
+        if (left <= 0) {
+            resolve();
+            return;
+        }
+        requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+}), frames);
+
+
+/**
+ * Wait until the engine's state satisfies `predicate`. `what` is what the failure says, so a timeout
+ * reads "waiting for: the camera to come to rest" instead of a stack trace. The predicate runs IN THE
+ * PAGE, so it cannot close over the test's variables — whatever it needs comes through `argument`.
+ */
+export const waitForState = async <T = undefined>(
+    page: Page,
+    predicate: (state: PluridState, argument: T) => boolean,
+    what: string,
+    argument?: T,
+    options: { timeout?: number } = {},
+) => {
+    try {
+        await page.waitForFunction(
+            ({ source, value }) => {
+                const test = new Function('state', 'argument', 'return (' + source + ')(state, argument);');
+                return !!test((window as unknown as HarnessWindow).__pluridApi.getSnapshot(), value);
+            },
+            { source: predicate.toString(), value: (argument ?? null) as T },
+            { timeout: options.timeout ?? 10_000 },
+        );
+    } catch (error) {
+        throw new Error('waiting for: ' + what + ' — it never happened (' + String(error).split('\n')[0] + ')');
+    }
+};
+
+
 /** Wait for any camera tween / fling to finish (programmatic moves are animated by default). */
 export const settle = async (page: Page) => {
-    await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.motion === 'idle');
-    await page.waitForTimeout(30);
+    await waitForState(page, (state) => state.space.motion === 'idle', 'the camera to come to rest');
+    // the store is idle; the frame that renders that state has still to run
+    await afterFrames(page, 2);
+};
+
+
+/**
+ * A FLICK, DISPATCHED IN THE PAGE (2026-09-13). `page.mouse.*` round-trips every event through CDP, so
+ * on a loaded machine the last move can land more than `estimateVelocity`'s staleness window (60 ms)
+ * before the release — and the engine correctly reads that as "the finger stopped", so no fling starts
+ * and a test about flinging fails for a reason that is about the machine. Dispatching the whole gesture
+ * inside ONE page task removes the round trip: the moves are paced by the browser's own frame clock
+ * (the same clock the engine samples on, so they stretch together) and the release follows the last
+ * move in the same task. What the test then asserts — a release with velocity keeps the camera moving
+ * — is the engine's behaviour and nothing else.
+ */
+export const flick = (
+    page: Page,
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+    options: { steps?: number; pauseBeforeRelease?: boolean } = {},
+) => page.evaluate(async ({ from, to, steps, pause }) => {
+    const view = document.querySelector('[data-plurid-entity="PluridView"]') as HTMLElement;
+    const at = (type: string, x: number, y: number, buttons: number) => {
+        view.dispatchEvent(new PointerEvent(type, {
+            pointerId: 1,
+            isPrimary: true,
+            pointerType: 'mouse',
+            button: type === 'pointermove' ? -1 : 0,
+            buttons,
+            clientX: x,
+            clientY: y,
+            bubbles: true,
+            cancelable: true,
+        }));
+    };
+    const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+    at('pointerdown', from.x, from.y, 1);
+    // past the drag threshold first, so the gesture is a drag and not a click
+    at('pointermove', from.x + 6, from.y, 1);
+    await frame();
+    for (let step = 1; step <= steps; step += 1) {
+        const t = step / steps;
+        at('pointermove', from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, 1);
+        await frame();
+    }
+    if (pause) {
+        // THE FINGER CAME TO REST before lifting, and "at rest" is defined by the engine: a sample
+        // older than `estimateVelocity`'s staleness window (60 ms) is not a throw. The pause is
+        // counted in REAL elapsed time, not in frames — a 120 Hz display makes eight frames 66 ms and
+        // a 240 Hz one 33 ms, which is how this test could still flake once in a thousand runs.
+        const start = performance.now();
+        while (performance.now() - start < 150) {
+            await frame();
+        }
+    }
+    at('pointerup', to.x, to.y, 0);
+}, { from, to, steps: options.steps ?? 6, pause: !!options.pauseBeforeRelease });
+
+
+/**
+ * HOW FAR THE CAMERA TRAVELLED BEFORE IT STOPPED: the total arc of `axis` accumulated frame by frame
+ * in the page, resolving when the motion goes idle. A fling's REACH depends on the machine (a faster
+ * flick throws further, and a strong one can pass half a turn, which wrecks any before/after
+ * comparison of a wrapped angle) — the total travelled does not. What it asserts is the behaviour: a
+ * release with velocity keeps the camera moving, and the movement decays to rest on its own.
+ */
+export const travelUntilIdle = (
+    page: Page,
+    axis: 'yaw' | 'pitch' = 'yaw',
+    limitFrames = 900,
+) => page.evaluate(({ axis, limitFrames }) => new Promise<number>((resolve) => {
+    const api = (window as unknown as { __pluridApi: PluridApi }).__pluridApi;
+    let last = (api.getSnapshot().space.camera as unknown as Record<string, number>)[axis];
+    let total = 0;
+    let frames = 0;
+    const tick = () => {
+        const space = api.getSnapshot().space;
+        const value = (space.camera as unknown as Record<string, number>)[axis];
+        // the shortest arc per frame: an angle that wraps past 180 still accumulates honestly
+        total += Math.abs(((value - last + 540) % 360) - 180);
+        last = value;
+        frames += 1;
+        if (space.motion === 'idle' || frames > limitFrames) {
+            resolve(total);
+            return;
+        }
+        requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+}), { axis, limitFrames });
+
+
+/**
+ * THE QUIESCENCE PROBE: the store's dispatch count after `frames` still frames. A space that nobody
+ * touches must dispatch NOTHING — the assertion is `after === before`, and the wait is frames of the
+ * browser's own clock rather than a guess at how long an internal timer lasts.
+ */
+export const waitQuiet = async (
+    page: Page,
+    frames = 30,
+): Promise<number> => {
+    await afterFrames(page, frames);
+    return dispatches(page);
 };
 
 export const spaceState = (page: Page) => page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space);
@@ -325,17 +488,21 @@ export const elementRect = (page: Page, selector: string): Promise<Rect | null> 
     return { left: r.left, top: r.top, width: r.width, height: r.height };
 }, selector);
 
-/** Wait for a plane's (smooth) scroll to come to rest, then return the offset. */
+/**
+ * Wait for a plane's (smooth) scroll to come to rest, then return the offset. A scroll that never
+ * settles FAILS the test — the old loop returned the last value it saw, so a runaway scroll was
+ * asserted against mid-flight (2026-09-13).
+ */
 export const settledScrollTop = async (page: Page, planeID: string): Promise<number> => {
     let last = await scrollTop(page, planeID);
-    for (let index = 0; index < 60; index += 1) {
-        await page.waitForTimeout(50);
+    let still = 0;
+    await expect.poll(async () => {
         const next = await scrollTop(page, planeID);
-        if (next === last) {
-            return next;
-        }
+        still = next === last ? still + 1 : 0;
         last = next;
-    }
+        // two consecutive equal readings: the smooth scroll has stopped, not merely paused
+        return still >= 2;
+    }, { message: 'the plane\'s content scroll never came to rest' }).toBe(true);
     return last;
 };
 
@@ -523,8 +690,56 @@ export const cdpMetrics = async (page: Page) => {
 
 export const historyDocked = (page: Page) => page.evaluate(() => (window.history.state as { plurid?: { docked?: string } } | null)?.plurid?.docked ?? null);
 
-/** Move a plane by hand through the store (selected, dragged, deselected): it is pinned where it lands. */
-export const movePlane = async (page: Page, planeID: string, deltaX: number, deltaY: number) => {
+/**
+ * MOVE A PLANE BY HAND — with a hand. The plane is selected by clicking its controls bar, then
+ * dragged with a real pointer (past the drag threshold, in steps, released), and deselected.
+ *
+ * It used to dispatch three store actions while being named "by hand" (2026-09-13): the gesture
+ * recogniser, the hit test, the threshold and the pointer capture were all bypassed, so the scenario
+ * called "a dragged child stays where it was dropped" — and the `detail-dragged` picture — never
+ * dragged anything. `movePlaneByStore` is still there for SETUP that is not about the drag.
+ */
+export const movePlane = async (
+    page: Page,
+    planeID: string,
+    deltaX: number,
+    deltaY: number,
+) => {
+    const plane = `[data-plurid-plane="${planeID}"]`;
+    // the controls bar is the plane's handle: a press on its CONTENT would be the page's
+    const bar = page.locator(`${plane} [data-plurid-entity="PluridPlaneControls"]`).first();
+    const box = await bar.boundingBox();
+    if (!box) {
+        throw new Error('no plane bar to drag for ' + planeID);
+    }
+
+    // select it the way a reader does (the modifier-click the selection contract names)
+    const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
+    const from = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+    await page.keyboard.down(modifier);
+    await page.mouse.click(from.x, from.y);
+    await page.keyboard.up(modifier);
+    await waitForState(
+        page,
+        (state, id) => state.space.selectedPlaneIDs.includes(id as string),
+        'the plane to be selected by the click',
+        planeID,
+    );
+
+    await page.mouse.move(from.x, from.y);
+    await page.mouse.down();
+    // past the drag threshold first, then the move itself
+    await page.mouse.move(from.x + 6, from.y, { steps: 2 });
+    await page.mouse.move(from.x + deltaX, from.y + deltaY, { steps: 8 });
+    await page.mouse.up();
+
+    await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: [] }));
+    await settle(page);
+};
+
+
+/** The same move, through the store: SETUP for a test that is not about dragging. */
+export const movePlaneByStore = async (page: Page, planeID: string, deltaX: number, deltaY: number) => {
     await page.evaluate(({ id, dx, dy }) => {
         const api = (window as unknown as HarnessWindow).__pluridApi;
         api.store.dispatch({ type: 'space/setSelection', payload: [id] });

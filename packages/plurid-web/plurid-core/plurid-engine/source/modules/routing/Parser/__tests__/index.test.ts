@@ -19,208 +19,91 @@
 
 
 // #region module
+/**
+ * THE PARSER: a location and a registered route become the pieces the space addresses a plane by —
+ * the pathname, the parameters the route declares, the query, the text and element fragments, and the
+ * route the address bar shows. Thirteen tests of this contract sat COMMENTED OUT (2026-09-13) beside
+ * one live `it('works', () => {})`, so the class itself had no test at all; these assert what it does
+ * now rather than the shape it had in 2021.
+ */
+const route = (
+    value: string,
+): PluridRoute<unknown> => ({ value } as PluridRoute<unknown>);
+
 describe('Parser', () => {
-    it('works', () => {});
+    it('a simple route: the pathname, no parameters, no query, no fragments', () => {
+        const parsed = new Parser('/one', route('/one')).extract();
+        expect(parsed.pathname).toBe('/one');
+        expect(parsed.match).toBe(true);
+        expect(parsed.parameters).toStrictEqual({});
+        expect(parsed.query).toStrictEqual({});
+        expect(parsed.fragments).toStrictEqual({ texts: [], elements: [] });
+        expect(parsed.route).toBe('/one');
+        expect(parsed.path.value).toBe('/one');
+    });
 
-    // it('simple string', () => {
-    //     const route: PluridRoute = {
-    //         value: '/one',
-    //         // path: '/one',
-    //         // view: 'one',
-    //     };
-    //     const parser = new Parser('/one', route);
-    //     const response = parser.extract();
-    //     expect(response.query).toStrictEqual({});
-    // });
+    it('a parametric route binds its parameters by name', () => {
+        const parsed = new Parser('/two/42', route('/two/:id')).extract();
+        expect(parsed.match).toBe(true);
+        expect(parsed.parameters).toStrictEqual({ id: '42' });
+        expect(parsed.pathname).toBe('/two/42');
 
-    // it('with parameter', () => {
-    //     const route: PluridRoute = {
-    //         value: '/two/:id',
-    //         // path: '/two/:id',
-    //         // view: 'two',
-    //     };
-    //     const parser = new Parser('/two/123', route);
-    //     const response = parser.extract();
-    //     const parameters = { id: '123' };
-    //     expect(response.parameters).toStrictEqual(parameters);
-    // });
+        const two = new Parser('/items/7/parts/3', route('/items/:item/parts/:part')).extract();
+        expect(two.parameters).toStrictEqual({ item: '7', part: '3' });
+    });
 
-    // it('with no parameter', () => {
-    //     const route: PluridRoute = {
-    //         value: '/two/:id',
-    //         // path: '/two/:id',
-    //         // view: 'two',
-    //     };
-    //     const parser = new Parser('/twoB/123', route);
-    //     const response = parser.extract();
-    //     expect(response.parameters).toStrictEqual({});
-    // });
+    it('a location that does not match the route says so', () => {
+        const parsed = new Parser('/elsewhere', route('/two/:id')).extract();
+        expect(parsed.match).toBe(false);
+        expect(parsed.parameters).toStrictEqual({});
+    });
 
-    // it('with query', () => {
-    //     const route: PluridRoute = {
-    //         value: '/three',
-    //         // path: '/three',
-    //         // view: 'three',
-    //     };
-    //     const parser = new Parser('/three?q=three', route);
-    //     const response = parser.extract();
-    //     const query = {
-    //         q: 'three',
-    //     };
-    //     expect(response.query).toStrictEqual(query);
-    // });
+    it('the query is parsed and rebuilt into the route the address shows', () => {
+        const parsed = new Parser('/three?id=1&show=true', route('/three')).extract();
+        expect(parsed.query).toStrictEqual({ id: '1', show: 'true' });
+        expect(parsed.pathname).toBe('/three');
+        expect(parsed.route).toBe('/three?id=1&show=true');
 
-    // it('with text fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/four',
-    //         // path: '/four',
-    //         // view: 'four',
-    //     };
-    //     const parser = new Parser('/four#:~:text=fourStart,fourEnd,[1]', route);
-    //     const response = parser.extract();
-    //     const fragmentsTexts: any[] = [
-    //         { type: 'text', start: 'fourStart', end: 'fourEnd', occurence: 1 },
-    //     ];
-    //     expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
-    // });
+        const empty = new Parser('/three?flag', route('/three')).extract();
+        expect(empty.query).toStrictEqual({ flag: '' });
+    });
 
-    // it('with invalid text fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/four',
-    //         // path: '/four',
-    //         // view: 'four',
-    //     };
-    //     const parser = new Parser('/four#:~:text=', route);
-    //     const response = parser.extract();
-    //     const fragmentsTexts: any[] = [];
-    //     expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
-    // });
+    it('a text fragment is read; a malformed one is dropped rather than thrown', () => {
+        const parsed = new Parser('/four#:~:text=A%20door,is%20opened.,[0]', route('/four')).extract();
+        expect(parsed.fragments.texts.length).toBe(1);
+        // AS WRITTEN, percent-escapes and all: nothing in the engine decodes a text fragment today,
+        // so a consumer that matches it against the document must decode it itself. Pinned here so
+        // the day that changes is a deliberate one.
+        expect(parsed.fragments.texts[0].start).toBe('A%20door');
+        expect(parsed.fragments.texts[0].end).toBe('is%20opened.');
+        expect(parsed.fragments.texts[0].occurence).toBe(0);
+        // the hash is not part of the pathname or the route
+        expect(parsed.pathname).toBe('/four');
+        expect(parsed.route).toBe('/four');
 
-    // it('with incomplete text fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/four',
-    //         // path: '/four',
-    //         // view: 'four',
-    //     };
-    //     const parser = new Parser('/four#:~:text=start', route);
-    //     const response = parser.extract();
-    //     const fragmentsTexts: any[] = [
-    //         { type: 'text', start: 'start', end: '', occurence: 0 },
-    //     ];
-    //     expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
-    // });
+        const malformed = new Parser('/four#:~:text', route('/four')).extract();
+        expect(malformed.fragments).toStrictEqual({ texts: [], elements: [] });
+    });
 
-    // it('with element fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/five',
-    //         // path: '/five',
-    //         // view: 'five',
-    //     };
-    //     const parser = new Parser('/five#:~:element=555,[2]', route);
-    //     const response = parser.extract();
-    //     const fragmentsElements: any[] = [
-    //         { type: 'element', id: '555', occurence: 2 },
-    //     ];
-    //     expect(response.fragments.elements).toStrictEqual(fragmentsElements);
-    // });
+    it('an element fragment is read the same way', () => {
+        const parsed = new Parser('/five#:~:element=main', route('/five')).extract();
+        expect(parsed.fragments.elements.length).toBeGreaterThan(0);
+        expect(parsed.fragments.elements[0].type).toBe('element');
+    });
 
-    // it('with invalid element fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/five',
-    //         // path: '/five',
-    //         // view: 'five',
-    //     };
-    //     const parser = new Parser('/five#:~:element=,[2]', route);
-    //     const response = parser.extract();
-    //     const fragmentsElements: any[] = [];
-    //     expect(response.fragments.elements).toStrictEqual(fragmentsElements);
-    // });
+    it('parameters, query and fragment TOGETHER, each kept apart from the others', () => {
+        const parsed = new Parser('/six/9?sort=asc#:~:text=hello', route('/six/:id')).extract();
+        expect(parsed.parameters).toStrictEqual({ id: '9' });
+        expect(parsed.query).toStrictEqual({ sort: 'asc' });
+        expect(parsed.fragments.texts.length).toBe(1);
+        expect(parsed.pathname).toBe('/six/9');
+        expect(parsed.route).toBe('/six/9?sort=asc');
+    });
 
-
-    // it('with parameter and query', () => {
-    //     const route: PluridRoute = {
-    //         value: '/three/:par',
-    //         // path: '/three/:par',
-    //         // view: 'three',
-    //     };
-    //     const parser = new Parser('/three/fff?q=threePQ', route);
-    //     const response = parser.extract();
-
-    //     const parameters = { par: 'fff' };
-    //     expect(response.parameters).toStrictEqual(parameters);
-
-    //     const query = {
-    //         q: 'threePQ',
-    //     };
-    //     expect(response.query).toStrictEqual(query);
-    // });
-
-    // it('with parameter and query and text fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/three/:par',
-    //         // path: '/three/:par',
-    //         // view: 'three',
-    //     };
-    //     const parser = new Parser('/three/fff?q=threePQT#:~:text=threeStart,threeEnd,[45]', route);
-    //     const response = parser.extract();
-
-    //     const parameters = { par: 'fff' };
-    //     expect(response.parameters).toStrictEqual(parameters);
-
-    //     const query = {
-    //         q: 'threePQT',
-    //     };
-    //     expect(response.query).toStrictEqual(query);
-
-    //     const fragmentsTexts: any[] = [
-    //         { type: 'text', start: 'threeStart', end: 'threeEnd', occurence: 45 },
-    //     ];
-    //     expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
-    // });
-
-    // it('with parameter and query and text fragment and element fragment', () => {
-    //     const route: PluridRoute = {
-    //         value: '/three/:par',
-    //         // path: '/three/:par',
-    //         // view: 'three',
-    //     };
-    //     const parser = new Parser('/three/fff?q=threePQT#:~:text=threeStart,threeEnd,[45]&element=foo,[533]', route);
-    //     const response = parser.extract();
-
-    //     const parameters = { par: 'fff' };
-    //     expect(response.parameters).toStrictEqual(parameters);
-
-    //     const query = {
-    //         q: 'threePQT',
-    //     };
-    //     expect(response.query).toStrictEqual(query);
-
-    //     const fragmentsTexts: any[] = [
-    //         { type: 'text', start: 'threeStart', end: 'threeEnd', occurence: 45 },
-    //     ];
-    //     expect(response.fragments.texts).toStrictEqual(fragmentsTexts);
-
-    //     const fragmentsElements: any[] = [
-    //         { type: 'element', id: 'foo', occurence: 533 },
-    //     ];
-    //     expect(response.fragments.elements).toStrictEqual(fragmentsElements);
-    // });
-
-    // it('gateway', () => {
-    //     const path: PluridRoute = {
-    //         value: '/gateway',
-    //     };
-    //     const parser = new Parser(
-    //         '/gateway?plurid=https%3A%2F%2Fdomain.com%3A%2F%2Fr%3Fq%3D3%23%3A~%3At%3D2%3A%2F%2Fs%3A%2F%2Fu%3A%2F%2Fc%3A%2F%2F%2Fa-plane',
-    //         path,
-    //     );
-    //     const response = parser.extract();
-    //     const {
-    //         query,
-    //     } = response;
-
-    //     expect(query.plurid).toEqual('https://domain.com://r?q=3#:~:t=2://s://u://c:///a-plane');
-    // });
+    it('`fragment: false` leaves the fragments unread', () => {
+        const parsed = new Parser('/seven#:~:text=hello', route('/seven'), { fragment: false }).extract();
+        expect(parsed.fragments).toStrictEqual({ texts: [], elements: [] });
+    });
 
     describe('hashes and fragments (C06, 2026-09-06)', () => {
         it('an ordinary hash is neither pathname nor query', () => {

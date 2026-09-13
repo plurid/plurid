@@ -56,7 +56,8 @@ export default class Parser<C> {
         options: ParserPartialOptions | undefined,
     ) {
         const parserOptions: ParserOptions = {
-            fragment: options?.fragment || true,
+            // `|| true` could never be false: `fragment: false` was unturnoffable (2026-09-13)
+            fragment: options?.fragment ?? true,
         };
 
         return parserOptions;

@@ -20,13 +20,10 @@ module.exports = {
             functions: 0,
             lines: 0,
             statements: 0,
-            // branches: 90,
-            // functions: 95,
-            // lines: 95,
-            // statements: 95
         },
     },
     collectCoverageFrom: [
-        'source/*.{js,ts}',
+        'source/**/*.{ts,tsx}',
+        '!source/**/__tests__/**',
     ],
 }

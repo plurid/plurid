@@ -23,6 +23,8 @@ import {
     rootBoxes,
     dispatches,
     movePlane,
+    waitQuiet,
+    waitForState,
 } from './helpers';
 
 
@@ -60,10 +62,9 @@ test.describe('the sizing contract', () => {
         expect(ys.length).toBeGreaterThan(1);
         const tallest = Math.max(...rows.get(ys[0])!.map((box: Box) => box.height));
         expect(ys[1]).toBeGreaterThanOrEqual(ys[0] + tallest);
-        // idle: nothing oscillates
+        // idle: nothing oscillates — 60 still frames of the browser's own clock
         const before = await dispatches(page);
-        await page.waitForTimeout(800);
-        expect(await dispatches(page)).toBe(before);
+        expect(await waitQuiet(page, 60)).toBe(before);
     });
 
     test('a root that grows moves the roots below it (gliding), the others stay; a second identical size changes nothing', async ({ page }) => {
@@ -81,7 +82,7 @@ test.describe('the sizing contract', () => {
             const plane = (window as unknown as HarnessWindow).__rtTree().find((root) => root.planeID === id);
             return !!plane && plane.height > 0;
         }, grown.id);
-        await page.waitForTimeout(400);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the grow relayout to finish');
         await settle(page);
         const after = await rootBoxes(page);
         const grownAfter = after.find((box) => box.id === grown.id)!;
@@ -98,8 +99,7 @@ test.describe('the sizing contract', () => {
         expectNoOverlap(after);
         // still again
         const count = await dispatches(page);
-        await page.waitForTimeout(800);
-        expect(await dispatches(page)).toBe(count);
+        expect(await waitQuiet(page, 60)).toBe(count);
     });
 
     test('a resize keeps the packing; a pinned root keeps its place', async ({ page }) => {
@@ -117,7 +117,7 @@ test.describe('the sizing contract', () => {
         expect(moved.manuallyPositioned).toBe(true);
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.viewSize.width === 1100);
-        await page.waitForTimeout(600);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the resize relayout to finish');
         await settle(page);
         const after = await rootBoxes(page);
         const still = findPlane(await tree(page), pinned.planeID);
@@ -158,7 +158,7 @@ test.describe('the sizing contract', () => {
         // a resize relays the roots: the child keeps its own place
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.viewSize.width === 1100);
-        await page.waitForTimeout(600);
+        await waitForState(page, (state) => state.space.layoutTransition === 0, 'the resize relayout to finish');
         await settle(page);
         const afterResize = findPlane(await tree(page), child.planeID);
         expect(afterResize.location.translateX).toBeCloseTo(dragged.location.translateX, 6);

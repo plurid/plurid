@@ -104,9 +104,9 @@ test.describe('the address bar is the page', () => {
         await clickLink(page, root.planeID, '/page-1/about');
         await waitForChildren(page, root.planeID, 1);
         await settle(page);
-        await page.waitForTimeout(600); // the viewpoint's debounced write
         expect(await pathname(page)).toBe('/page-1/about');
-        expect(new URL(page.url()).searchParams.get('v')).toBeTruthy();
+        // the viewpoint's write is debounced: poll the address instead of guessing the delay
+        await expect.poll(() => new URL(page.url()).searchParams.get('v'), { message: 'the viewpoint to reach the address' }).toBeTruthy();
         await page.reload();
         await settle(page);
         expect(await pathname(page)).toBe('/page-1/about');
@@ -120,7 +120,10 @@ test.describe('the address bar is the page', () => {
         await clickLink(page, root.planeID, '/page-1/about');
         await waitForChildren(page, root.planeID, 1);
         await settle(page);
-        await page.waitForTimeout(200);
+        // the persistence write is debounced (`persistMs: 50`): poll the storage, do not sleep past it
+        await expect.poll(async () => page.evaluate(
+            () => Object.keys(localStorage).filter((key) => key.startsWith('pluridState')).length,
+        ), { message: 'the space to be persisted' }).toBeGreaterThan(0);
         // the same site at the ROOT's path: the persisted camera says about, the path says the site
         await openPath(page, '/page-1', 'page-docked', { persist: '1', persistMs: '50' });
         const restored = (await tree(page))[0];
@@ -149,8 +152,7 @@ test.describe('the address bar is the page', () => {
         await waitForChildren(page, root.planeID, 1);
         await settle(page);
         await page.goBack();
-        await page.waitForTimeout(50);
-        expect(await page.evaluate(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.motion)).toBe('idle');
+        await settle(page);
         expect(await dockedID(page)).toBe(root.planeID);
     });
 
