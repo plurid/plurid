@@ -240,10 +240,14 @@ pnpm release --dry-run     # say exactly what would happen, touch nothing (works
 pnpm release               # bump what changed → pnpm verify → publish → tag
 pnpm release --skip-verify # only if you just ran the gate
 pnpm release --no-bump     # publish the versions as they stand
+pnpm release --force       # publish even though CI is red or still running
 ```
 
-It refuses to run on a dirty tree, off `master`, out of sync with `origin`, or unauthenticated, and it
-warns when CI on the commit is not green. **What counts as changed** is a package's SHIPPED source
+It refuses to run on a dirty tree, off `master`, out of sync with `origin`, or unauthenticated — **and
+it refuses while CI on that commit is red or still running**, because a publish cannot be taken back and
+CI is the only independent check that the picture gate, the browser suite and the container run pass.
+`--force` is the escape and names what it is overriding. A run it cannot find (no `gh`, no CI on a fork)
+only warns: absence of evidence is not evidence of a failure. **What counts as changed** is a package's SHIPPED source
 (`source/**` minus `__tests__`) since the last `release/<date>` tag — tests do not ship, so a test-only
 change is not a release. With no tag yet it falls back to "the workspace version is ahead of the
 registry", which is what a hand-bump leaves behind. Publishing itself is `pnpm -r publish`, which walks

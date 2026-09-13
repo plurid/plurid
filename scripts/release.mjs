@@ -11,6 +11,7 @@
  *   pnpm release               bump what changed, verify, publish, tag
  *   pnpm release --skip-verify skip `pnpm verify` (only if you just ran it)
  *   pnpm release --no-bump     publish the versions as they stand
+ *   pnpm release --force       publish even though CI is red or still running
  *
  * WHAT COUNTS AS CHANGED: a package's SHIPPED source — `source/**` minus `__tests__` — against the
  * last release tag (`release/<date>`). Tests do not ship, so a test-only change is not a release.
@@ -31,6 +32,7 @@ const root = resolve(here, '..');
 const dryRun = process.argv.includes('--dry-run');
 const skipVerify = process.argv.includes('--skip-verify');
 const noBump = process.argv.includes('--no-bump');
+const force = process.argv.includes('--force');
 
 const run = (command, options = {}) => execSync(command, { cwd: root, stdio: 'inherit', ...options });
 const read = (command) => execSync(command, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
@@ -103,18 +105,45 @@ try {
 }
 say(`authenticated as ${account}`);
 
-// CI is advisory: it is the only independent check that the picture gate and the browser suite pass
+/**
+ * CI IS A GATE, NOT A NOTE. A publish cannot be taken back, and CI is the only independent check that
+ * the picture gate, the browser suite and the container run pass — so a run that is red, or still
+ * going, stops the release. `--force` is the escape, and says what it is overriding.
+ *
+ * A run that cannot be found (no `gh`, no CI on this fork) only warns: absence of evidence is not
+ * evidence of a failure, and the gate should not be unusable where CI does not exist.
+ */
+let ci = null;
 try {
-    const conclusion = read(`gh run list --limit 1 --json headSha,conclusion,status --jq '.[0] | select(.headSha=="${read('git rev-parse HEAD')}") | .conclusion + "/" + .status'`);
-    if (conclusion && !conclusion.startsWith('success')) {
-        say(`WARNING: CI on this commit is '${conclusion}', not success.`);
-    } else if (conclusion) {
-        say('CI is green on this commit');
-    } else {
-        say('WARNING: no CI run found for this commit yet.');
-    }
+    ci = JSON.parse(read('gh run list --limit 20 --json headSha,conclusion,status,displayTitle'))
+        .find((entry) => entry.headSha === read('git rev-parse HEAD')) ?? null;
 } catch {
-    say('(could not read CI status — `gh` unavailable; continuing)');
+    say('(could not read CI status — `gh` unavailable)');
+}
+
+if (!ci) {
+    say('WARNING: no CI run found for this commit.');
+} else if (ci.status !== 'completed') {
+    const message = `CI is still running on this commit (${ci.status}) — wait for it:`
+        + '\n             gh run watch --exit-status';
+    if (force) {
+        say(`WARNING (--force): ${message}`);
+    } else if (!dryRun) {
+        fail(`${message}\n\n             …or re-run with --force to publish anyway.`);
+    } else {
+        say(`WARNING: ${message}`);
+    }
+} else if (ci.conclusion !== 'success') {
+    const message = `CI on this commit concluded '${ci.conclusion}', not success.`;
+    if (force) {
+        say(`WARNING (--force): ${message}`);
+    } else if (!dryRun) {
+        fail(`${message} Fix it, or re-run with --force to publish anyway.`);
+    } else {
+        say(`WARNING: ${message}`);
+    }
+} else {
+    say('CI is green on this commit');
 }
 // #endregion preflight
 
