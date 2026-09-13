@@ -97,6 +97,58 @@ export const PLURID_PUBSUB_TOPIC = {
      * subscription covers all of them — finer than diffing snapshots, lighter than N topics.
      */
     CHANGED: 'space.changed',
+
+    /**
+     * TOTAL CONTROL (2026-09-13). Everything a reader can do, a host can do: these close the last
+     * gaps between the bus and what the engine's own chrome, keyboard and imperative handle reach.
+     *
+     * `SPACE_COMMAND` is the general one — it runs any entry of `PLURID_SHORTCUTS` BY NAME, through
+     * the same `runShortcut` the command palette uses, so every command the engine grows is reachable
+     * from the bus the day it is added, without waiting for a topic of its own.
+     */
+    SPACE_COMMAND: 'space.command',
+
+    /** Open a plane as a child of another, the way following a link does. */
+    SPACE_SPAWN_PLANE: 'space.spawnPlane',
+    /** Show or hide one plane (hiding records it as the last closed). */
+    SPACE_SET_PLANE_SHOW: 'space.setPlaneShow',
+    /** Move planes by a world delta — the selection, or the ones named. */
+    SPACE_MOVE_PLANES: 'space.movePlanes',
+    /** Resize one plane (`sizeMode: 'manual'` pins it against the layout). */
+    SPACE_RESIZE_PLANE: 'space.resizePlane',
+    /** Snap the selection to the grid / guides now. */
+    SPACE_SNAP: 'space.snap',
+    /** Select every plane whose projection meets a screen rect (the marquee, programmatically). */
+    SPACE_SELECT_IN_RECT: 'space.selectInRect',
+    /** Move the active plane to the nearest one in a screen direction, and frame it. */
+    SPACE_NAVIGATE_DIRECTION: 'space.navigateDirection',
+    /** Arm or disarm grab mode (what `G` toggles). */
+    SPACE_GRAB: 'space.grab',
+    /** Show or hide the command palette. */
+    SPACE_PALETTE: 'space.palette',
+    /** Show or hide the shortcuts overlay. */
+    SPACE_SHORTCUTS_OVERLAY: 'space.shortcutsOverlay',
+    /** Move keyboard focus to the space, so the shortcuts apply. */
+    SPACE_FOCUS: 'space.focus',
+
+    /**
+     * THE NICETIES (restored, and IMPLEMENTED, 2026-09-13). One step of the thing a reader gets from
+     * a key press — the ergonomic layer over `SPACE_CAMERA_DELTA`, which is the primitive and wants a
+     * vector. These existed as typed, documented topics with NO subscriber, so publishing one did
+     * nothing; the reducer actions behind them (`rotateUp`, `translateLeft`, `scaleUp` …) were there
+     * the whole time and were simply never wired. `value` overrides the step where it makes sense.
+     */
+    SPACE_ROTATE_UP: 'space.rotateUp',
+    SPACE_ROTATE_DOWN: 'space.rotateDown',
+    SPACE_ROTATE_LEFT: 'space.rotateLeft',
+    SPACE_ROTATE_RIGHT: 'space.rotateRight',
+    SPACE_TRANSLATE_UP: 'space.translateUp',
+    SPACE_TRANSLATE_DOWN: 'space.translateDown',
+    SPACE_TRANSLATE_LEFT: 'space.translateLeft',
+    SPACE_TRANSLATE_RIGHT: 'space.translateRight',
+    SPACE_SCALE_UP: 'space.scaleUp',
+    SPACE_SCALE_DOWN: 'space.scaleDown',
+    SPACE_SCALE_WITH: 'space.scaleWith',
 } as const;
 
 

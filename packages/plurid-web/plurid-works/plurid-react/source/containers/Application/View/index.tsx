@@ -510,6 +510,10 @@ const PluridView: React.FC<PluridViewProperties> = (
         stateTree,
         dispatch,
         treeUpdate,
+        // `space.spawnPlane` makes a plane the way a link does; `space.focus` needs the view element
+        planesRegistrar,
+        hostname,
+        viewElement,
         dispatchers: {
             dispatchSetConfiguration,
             dispatchSetGeneralTheme,

@@ -1,6 +1,6 @@
 // #region imports
     // #region libraries
-    import {
+    import React, {
         useRef,
         useState,
         useCallback,
@@ -24,6 +24,7 @@
         PluridApplicationView,
         PluridPubSub as IPluridPubSub,
         PluridPubSubSubscribeMessage,
+        PluridPlanesRegistrar as IPluridPlanesRegistrar,
     } from '@plurid/plurid-data';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -40,7 +41,12 @@
     import {
         closePlane,
         openLastClosed,
+        toggleLinkPlane,
     } from '~services/state/thunks/planes';
+
+    import {
+        runShortcut,
+    } from '~services/logic/shortcuts';
 
     import {
         alignSelection,
@@ -48,6 +54,9 @@
         duplicateSelection,
         copySelection,
         pasteFragment,
+        snapSelectionNow,
+        selectInScreenRect,
+        navigateDirection,
     } from '~services/state/thunks/selection';
 
     import {
@@ -112,6 +121,12 @@ export interface UsePluridPubSubParameters {
     stateTree: TreePlane[];
 
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
+
+    /** `space.spawnPlane` makes a plane the way a link does, which needs the application's registrar. */
+    planesRegistrar?: IPluridPlanesRegistrar<any>;
+    hostname?: string;
+    /** `space.focus` moves the keyboard focus to the space. */
+    viewElement?: React.RefObject<HTMLDivElement | null>;
     treeUpdate: (
         view: PluridApplicationView,
         configuration?: PluridConfiguration,
@@ -142,6 +157,9 @@ export const usePluridPubSub = (
         dispatch,
         treeUpdate,
         dispatchers,
+        planesRegistrar,
+        hostname,
+        viewElement,
     }: UsePluridPubSubParameters,
 ) => {
     const [
@@ -162,6 +180,9 @@ export const usePluridPubSub = (
         stateSpaceView,
         stateTree,
         treeUpdate,
+        planesRegistrar,
+        hostname,
+        viewElement,
     });
     latest.current = {
         state,
@@ -169,6 +190,9 @@ export const usePluridPubSub = (
         stateSpaceView,
         stateTree,
         treeUpdate,
+        planesRegistrar,
+        hostname,
+        viewElement,
     };
 
     const {
@@ -682,6 +706,209 @@ export const usePluridPubSub = (
                         text: (data as any)?.text,
                         fragment: (data as any)?.fragment,
                     }) as any);
+                },
+            },
+            /**
+             * TOTAL CONTROL (2026-09-13). Everything the chrome, the keyboard and the imperative
+             * handle can do, the bus can do.
+             *
+             * THE GENERAL ONE FIRST: `space.command` runs any entry of `PLURID_SHORTCUTS` by name,
+             * through the same `runShortcut` the command palette uses — so a command the engine grows
+             * next month is reachable from the bus the day it lands, with no topic of its own. The
+             * bindings that need a real keyboard event (they read `event.code`) refuse by design.
+             */
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_COMMAND,
+                callback: (data) => {
+                    const id = (data as any)?.id;
+                    if (typeof id !== 'string') {
+                        return;
+                    }
+                    runShortcut(
+                        id as never,
+                        {
+                            dispatch,
+                            state: latest.current.state,
+                            pubsub,
+                        } as never,
+                        latest.current.stateConfiguration.space.shortcuts,
+                    );
+                },
+            },
+            {
+                // open a plane as a child of another, exactly as following a link does
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE,
+                callback: (data) => {
+                    const route = (data as any)?.route;
+                    const parentPlaneID = (data as any)?.parentPlaneID;
+                    const registrar = latest.current.planesRegistrar;
+                    if (typeof route !== 'string' || typeof parentPlaneID !== 'string' || !registrar) {
+                        return;
+                    }
+                    dispatch(toggleLinkPlane({
+                        parentPlaneID,
+                        linkID: parentPlaneID + '#' + route + '#api',
+                        route,
+                        linkCoordinates: (data as any)?.linkCoordinates ?? { x: 0, y: 0 },
+                        planesRegistry: registrar.getAll(),
+                        hostname: latest.current.hostname,
+                    }) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW,
+                callback: (data) => {
+                    const planeID = (data as any)?.planeID;
+                    const show = (data as any)?.show;
+                    if (typeof planeID !== 'string' || typeof show !== 'boolean') {
+                        return;
+                    }
+                    dispatch(actions.space.setPlaneShow({ planeID, show }));
+                },
+            },
+            {
+                // the ones named, else the selection — one history entry either way
+                topic: PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES,
+                callback: (data) => {
+                    const deltaX = (data as any)?.deltaX;
+                    const deltaY = (data as any)?.deltaY;
+                    if (typeof deltaX !== 'number' || typeof deltaY !== 'number') {
+                        return;
+                    }
+                    const planeIDs = (data as any)?.planeIDs;
+                    if (Array.isArray(planeIDs)) {
+                        dispatch(actions.space.setSelection(planeIDs));
+                    }
+                    dispatch(actions.space.transformSelectedPlanes({ deltaX, deltaY }));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE,
+                callback: (data) => {
+                    const planeID = (data as any)?.planeID;
+                    const width = (data as any)?.width;
+                    const height = (data as any)?.height;
+                    if (typeof planeID !== 'string' || typeof width !== 'number' || typeof height !== 'number') {
+                        return;
+                    }
+                    dispatch(actions.space.setPlaneSize({
+                        planeID,
+                        width,
+                        height,
+                        sizeMode: (data as any)?.sizeMode ?? 'manual',
+                    }));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SNAP,
+                callback: () => {
+                    dispatch(snapSelectionNow() as any);
+                },
+            },
+            {
+                // the marquee, programmatically
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT,
+                callback: (data) => {
+                    const rect = (data as any)?.rect;
+                    if (!rect || typeof rect.left !== 'number' || typeof rect.top !== 'number'
+                        || typeof rect.right !== 'number' || typeof rect.bottom !== 'number') {
+                        return;
+                    }
+                    dispatch(selectInScreenRect(rect, (data as any)?.mode ?? 'set') as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_NAVIGATE_DIRECTION,
+                callback: (data) => {
+                    const direction = (data as any)?.direction;
+                    if (!['up', 'down', 'left', 'right'].includes(direction)) {
+                        return;
+                    }
+                    dispatch(navigateDirection(direction) as any);
+                },
+            },
+            {
+                // `on` omitted toggles, as the key does
+                topic: PLURID_PUBSUB_TOPIC.SPACE_GRAB,
+                callback: (data) => {
+                    const on = (data as any)?.on;
+                    if (typeof on === 'boolean') {
+                        dispatch(actions.ui.setUIGrabMode(on));
+                        return;
+                    }
+                    dispatch(actions.ui.toggleUIGrabMode());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_PALETTE,
+                callback: (data) => {
+                    const on = (data as any)?.on;
+                    if (typeof on === 'boolean') {
+                        dispatch(actions.ui.setPaletteVisible(on));
+                        return;
+                    }
+                    dispatch(actions.ui.togglePalette());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SHORTCUTS_OVERLAY,
+                callback: (data) => {
+                    const on = (data as any)?.on;
+                    if (typeof on === 'boolean') {
+                        dispatch(actions.ui.setShortcutsOverlayVisible(on));
+                        return;
+                    }
+                    dispatch(actions.ui.toggleShortcutsOverlay());
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_FOCUS,
+                callback: () => {
+                    const view = latest.current.viewElement?.current;
+                    if (view && typeof view.focus === 'function') {
+                        view.focus({ preventScroll: true });
+                    }
+                },
+            },
+
+            /**
+             * THE NICETIES: one step of what a key press gives a reader. `space.cameraDelta` is the
+             * primitive and wants a vector; these are the ergonomic layer over it, and the reducer
+             * actions behind them existed all along — they were simply never wired to a topic.
+             */
+            ...([
+                ['SPACE_ROTATE_UP', 'rotateUp', 'rotateXWith', -1],
+                ['SPACE_ROTATE_DOWN', 'rotateDown', 'rotateXWith', 1],
+                ['SPACE_ROTATE_LEFT', 'rotateLeft', 'rotateYWith', -1],
+                ['SPACE_ROTATE_RIGHT', 'rotateRight', 'rotateYWith', 1],
+                ['SPACE_TRANSLATE_UP', 'translateUp', 'translateYWith', -1],
+                ['SPACE_TRANSLATE_DOWN', 'translateDown', 'translateYWith', 1],
+                ['SPACE_TRANSLATE_LEFT', 'translateLeft', 'translateXWith', -1],
+                ['SPACE_TRANSLATE_RIGHT', 'translateRight', 'translateXWith', 1],
+                ['SPACE_SCALE_UP', 'scaleUp', 'scaleUpWith', 1],
+                ['SPACE_SCALE_DOWN', 'scaleDown', 'scaleDownWith', 1],
+            ] as const).map(([topic, step, withAction, sign]) => ({
+                topic: (PLURID_PUBSUB_TOPIC as any)[topic],
+                callback: (data: any) => {
+                    const value = data?.value;
+                    if (typeof value === 'number') {
+                        // an explicit amount goes through the `…With` action, in the topic's direction
+                        dispatch((actions.space as any)[withAction](sign * Math.abs(value)));
+                        return;
+                    }
+                    dispatch((actions.space as any)[step]());
+                },
+            })),
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH,
+                callback: (data) => {
+                    const value = (data as any)?.value;
+                    if (typeof value !== 'number') {
+                        return;
+                    }
+                    dispatch(value >= 0
+                        ? actions.space.scaleUpWith(value)
+                        : actions.space.scaleDownWith(Math.abs(value)));
                 },
             },
             {

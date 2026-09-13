@@ -238,6 +238,169 @@ describe('the host\'s topics reach the store', () => {
 });
 
 
+describe('TOTAL CONTROL: what the chrome and the keyboard reach, the bus reaches', () => {
+    it('`space.command` runs ANY shortcut BY NAME — the palette\'s whole vocabulary, from a host', async () => {
+        const rendered = await render();
+        const { bus } = rendered;
+
+        // a command with a visible effect on the store, reached by its id alone
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'selectAll' });
+        expect(space(rendered).selectedPlaneIDs).toHaveLength(3);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'clearSelection' });
+        expect(space(rendered).selectedPlaneIDs).toEqual([]);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'palette' });
+        expect(rendered.api.getSnapshot().ui.paletteVisible).toBe(true);
+
+        // an unknown id, and a malformed one, do nothing
+        const before = JSON.stringify(rendered.api.getSnapshot().space);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'no-such-command' });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 7 });
+        expect(JSON.stringify(rendered.api.getSnapshot().space)).toBe(before);
+
+        await rendered.unmount();
+    });
+
+    it('THE PLANE GEOMETRY: spawn, move, resize and show/hide, each landing in the tree', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const [a] = ids(rendered);
+
+        // spawn a child the way following a link does
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: '/b', parentPlaneID: a });
+        const parent = space(rendered).tree.find((plane: any) => plane.planeID === a);
+        expect(parent?.children ?? []).toHaveLength(1);
+
+        // move by a world delta, naming the planes (which selects them)
+        const before = space(rendered).tree[0].location.translateX;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES, { planeIDs: [a], deltaX: 120, deltaY: 40 });
+        expect(space(rendered).tree[0].location.translateX).toBeCloseTo(before + 120, 6);
+
+        // resize
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE, { planeID: a, width: 512, height: 384 });
+        expect(space(rendered).tree[0].width).toBe(512);
+        expect(space(rendered).tree[0].sizeMode).toBe('manual');
+
+        // hide and show
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW, { planeID: a, show: false });
+        expect(space(rendered).tree[0].show).toBe(false);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW, { planeID: a, show: true });
+        expect(space(rendered).tree[0].show).toBe(true);
+
+        await rendered.unmount();
+    });
+
+    it('THE MARQUEE, programmatically: a screen rect selects, adds and subtracts', async () => {
+        const rendered = await render();
+        const { bus } = rendered;
+
+        // a rect over the whole view takes everything
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT, {
+            rect: { left: -10000, top: -10000, right: 10000, bottom: 10000 },
+        });
+        const all = space(rendered).selectedPlaneIDs.length;
+        expect(all).toBeGreaterThan(0);
+
+        // subtract takes them away again
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT, {
+            rect: { left: -10000, top: -10000, right: 10000, bottom: 10000 },
+            mode: 'subtract',
+        });
+        expect(space(rendered).selectedPlaneIDs).toEqual([]);
+
+        // a malformed rect is ignored
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT, { rect: { left: 0 } });
+        expect(space(rendered).selectedPlaneIDs).toEqual([]);
+
+        await rendered.unmount();
+    });
+
+    it('THE CHROME\'s own switches: grab, the palette and the help overlay, set AND toggled', async () => {
+        const rendered = await render();
+        const { bus } = rendered;
+        const ui = () => rendered.api.getSnapshot().ui;
+
+        for (const [topic, field] of [
+            [PLURID_PUBSUB_TOPIC.SPACE_GRAB, 'grabMode'],
+            [PLURID_PUBSUB_TOPIC.SPACE_PALETTE, 'paletteVisible'],
+            [PLURID_PUBSUB_TOPIC.SPACE_SHORTCUTS_OVERLAY, 'shortcutsOverlayVisible'],
+        ] as [string, string][]) {
+            await publish(bus, topic, { on: true });
+            expect({ topic, on: (ui() as any)[field] }).toEqual({ topic, on: true });
+
+            await publish(bus, topic, { on: false });
+            expect({ topic, on: (ui() as any)[field] }).toEqual({ topic, on: false });
+
+            // `on` omitted TOGGLES, as the key does
+            await publish(bus, topic, {});
+            expect({ topic, on: (ui() as any)[field] }).toEqual({ topic, on: true });
+        }
+
+        await rendered.unmount();
+    });
+
+    it('THE NICETIES move the camera by one step, and `value` overrides the step', async () => {
+        const rendered = await render();
+        const { bus } = rendered;
+        const camera = () => space(rendered).camera;
+
+        const start = camera().pitch;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP);
+        const stepped = camera().pitch;
+        expect(stepped).not.toBeCloseTo(start, 6);
+
+        // down is the opposite of up: back where it started
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_DOWN);
+        expect(camera().pitch).toBeCloseTo(start, 6);
+
+        // left and right are the other axis
+        const yaw = camera().yaw;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_LEFT);
+        expect(camera().yaw).not.toBeCloseTo(yaw, 6);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_RIGHT);
+        expect(camera().yaw).toBeCloseTo(yaw, 6);
+
+        // an explicit amount, in the topic's own direction
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP, { value: 30 });
+        const explicit = camera().pitch;
+        expect(Math.abs(explicit - start)).toBeCloseTo(30, 6);
+
+        // the translations and the zoom move too
+        const offset = camera().offset.y;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_UP);
+        expect(camera().offset.y).not.toBeCloseTo(offset, 6);
+
+        const scale = camera().scale;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SCALE_UP);
+        expect(camera().scale).toBeGreaterThan(scale);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH, { value: -0.2 });
+        expect(camera().scale).toBeLessThan(camera().scale + 0.2);
+
+        await rendered.unmount();
+    });
+
+    it('EVERY declared topic has a subscriber — nothing is typed, documented and inert', async () => {
+        // every gated feature ON, so a topic that only a feature subscribes to is still covered
+        const rendered = await render(['/a', '/b', '/c'], { space: { collaboration: true } });
+        const { bus } = rendered;
+
+        // the engine's own emitted topics are the exception: nobody has to listen to those
+        const commands = Object.values(PLURID_PUBSUB_TOPIC)
+            .filter((topic) => !PLURID_PUBSUB_EMITTED_TOPICS.includes(topic as string));
+
+        for (const topic of commands) {
+            await publish(bus, topic as string, {});
+        }
+
+        // `dropped` collects exactly the commands that reached nobody (see the bus's `onDrop`)
+        expect(rendered.dropped).toEqual([]);
+
+        await rendered.unmount();
+    });
+});
+
+
 describe('a topic never corrupts the view', () => {
     it('A MALFORMED PAYLOAD IS IGNORED: every guarded topic leaves the space exactly as it was', async () => {
         const rendered = await render();

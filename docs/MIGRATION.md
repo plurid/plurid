@@ -56,22 +56,44 @@ Affected topics: `space.closePlane`, `space.openPlane`, `space.isolatePlane`, `s
 identity. TypeScript will point at each one; at runtime an unrecognised payload is ignored, so an
 unmigrated publish silently does nothing.
 
-## 3. Removed topics
+## 3. Topics: one removed, eleven repaired, twelve new
 
-Twelve topics were declared with typed payloads but **had no subscriber** — publishing one has always
-done nothing. They are gone rather than left as a trap:
+**Removed: `plane.setPath`** — declared with a typed payload and no subscriber; publishing it has
+always done nothing, and nothing replaced it because nothing ever used it. Change a plane's route
+through `space.setTree`.
 
-`space.rotateUp` · `space.rotateDown` · `space.rotateLeft` · `space.rotateRight` ·
-`space.translateUp` · `space.translateDown` · `space.translateLeft` · `space.translateRight` ·
-`space.scaleUp` · `space.scaleDown` · `space.scaleWith` · `plane.setPath`
-
-Use `space.cameraDelta` for all of them — it is the one delta entry and it animates:
+**Repaired (no action needed):** `space.rotateUp` / `rotateDown` / `rotateLeft` / `rotateRight`,
+`space.translateUp` / `translateDown` / `translateLeft` / `translateRight`, `space.scaleUp` /
+`scaleDown` / `scaleWith` were in the same inert state — typed, documented, and wired to nothing.
+They now **work**. They are the ergonomic layer over `space.cameraDelta` (which is the primitive and
+wants a vector): one step of what the matching key press gives a reader, with `value` overriding the
+step.
 
 ```ts
-pubsub.publish({ topic: 'space.cameraDelta', data: { yaw: 15, animate: true } });
-pubsub.publish({ topic: 'space.cameraDelta', data: { pan: { x: 0, y: -40 } } });
-pubsub.publish({ topic: 'space.cameraDelta', data: { zoom: { factor: 1.2 } } });
+pubsub.publish({ topic: 'space.rotateLeft' });                  // one step, as the key does
+pubsub.publish({ topic: 'space.rotateUp', data: { value: 30 } }); // 30°, in that direction
+pubsub.publish({ topic: 'space.cameraDelta', data: { yaw: 15, animate: true } }); // the primitive
 ```
+
+**New — total control (additive, nothing to migrate).** The bus now reaches everything the chrome,
+the keyboard and the imperative handle reach:
+
+| Topic | Does |
+|---|---|
+| `space.command` | runs ANY entry of `PLURID_SHORTCUTS` **by name** (`{ id }`) — the command palette's whole vocabulary, and every command the engine grows later |
+| `space.spawnPlane` | opens a plane as a child of another, the way following a link does |
+| `space.setPlaneShow` | shows / hides one plane |
+| `space.movePlanes` | moves the named planes (or the selection) by a world delta |
+| `space.resizePlane` | resizes one plane |
+| `space.snap` | snaps the selection now |
+| `space.selectInRect` | the marquee, programmatically (`set` / `add` / `subtract`) |
+| `space.navigateDirection` | moves to the nearest plane in a screen direction and frames it |
+| `space.grab` | arms / disarms grab mode (`on` omitted toggles) |
+| `space.palette`, `space.shortcutsOverlay` | show / hide (`on` omitted toggles) |
+| `space.focus` | moves keyboard focus to the space |
+
+A test now asserts that **every command topic has a subscriber**, so a typed-but-inert topic cannot
+ship again.
 
 ## 4. Removed configuration knobs
 

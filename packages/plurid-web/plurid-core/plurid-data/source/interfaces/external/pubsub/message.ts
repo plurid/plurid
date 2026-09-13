@@ -745,6 +745,201 @@ export interface PluridPubSubSubscribeMessageChanged {
 }
 
 
+
+/**
+ * TOTAL CONTROL (2026-09-13): the payloads for the topics that close the gap between the bus and
+ * what the engine's own chrome, keyboard and imperative handle can reach.
+ */
+
+/** Any entry of `PLURID_SHORTCUTS`, by name. `arguments` is passed through to the binding. */
+export interface PluridPubSubMessageCommand {
+    /** A `PluridShortcutID` — `'copy'`, `'fitToView'`, `'togglePalette'`, … */
+    id: string;
+    /** Some bindings take one (reserved; ignored by the bindings that do not). */
+    arguments?: Record<string, unknown>;
+}
+export interface PluridPubSubPublishMessageCommand {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_COMMAND;
+    data: PluridPubSubMessageCommand;
+}
+export interface PluridPubSubSubscribeMessageCommand {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_COMMAND;
+    callback: PluridPubSubCallback<PluridPubSubMessageCommand>;
+}
+
+/** Open `route` as a child of `parentPlaneID`, the way following a link does. */
+export interface PluridPubSubMessageSpawnPlane {
+    route: string;
+    parentPlaneID: string;
+    /** Where on the parent the bridge leaves from; the parent's origin by default. */
+    linkCoordinates?: { x: number; y: number };
+}
+export interface PluridPubSubPublishMessageSpawnPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE;
+    data: PluridPubSubMessageSpawnPlane;
+}
+export interface PluridPubSubSubscribeMessageSpawnPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessageSpawnPlane>;
+}
+
+export interface PluridPubSubMessageSetPlaneShow {
+    planeID: string;
+    show: boolean;
+}
+export interface PluridPubSubPublishMessageSetPlaneShow {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW;
+    data: PluridPubSubMessageSetPlaneShow;
+}
+export interface PluridPubSubSubscribeMessageSetPlaneShow {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW;
+    callback: PluridPubSubCallback<PluridPubSubMessageSetPlaneShow>;
+}
+
+/** Move planes by a world delta: the ones named, else the current selection. */
+export interface PluridPubSubMessageMovePlanes {
+    deltaX: number;
+    deltaY: number;
+    /** Defaults to the selection; naming planes selects them first. */
+    planeIDs?: string[];
+}
+export interface PluridPubSubPublishMessageMovePlanes {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES;
+    data: PluridPubSubMessageMovePlanes;
+}
+export interface PluridPubSubSubscribeMessageMovePlanes {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES;
+    callback: PluridPubSubCallback<PluridPubSubMessageMovePlanes>;
+}
+
+export interface PluridPubSubMessageResizePlane {
+    planeID: string;
+    width: number;
+    height: number;
+    /** `'manual'` pins the size against the layout; omit to leave the mode as it is. */
+    sizeMode?: 'manual' | 'declared' | 'measured';
+}
+export interface PluridPubSubPublishMessageResizePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE;
+    data: PluridPubSubMessageResizePlane;
+}
+export interface PluridPubSubSubscribeMessageResizePlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessageResizePlane>;
+}
+
+export interface PluridPubSubPublishMessageSnap {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SNAP;
+    data?: {};
+}
+export interface PluridPubSubSubscribeMessageSnap {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SNAP;
+    callback: PluridPubSubCallback<{}>;
+}
+
+/** The marquee, programmatically: every plane whose projection meets a screen rect. */
+export interface PluridPubSubMessageSelectInRect {
+    rect: { left: number; top: number; right: number; bottom: number };
+    /** Replace the selection (default), add to it, or remove from it. */
+    mode?: 'set' | 'add' | 'subtract';
+}
+export interface PluridPubSubPublishMessageSelectInRect {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT;
+    data: PluridPubSubMessageSelectInRect;
+}
+export interface PluridPubSubSubscribeMessageSelectInRect {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT;
+    callback: PluridPubSubCallback<PluridPubSubMessageSelectInRect>;
+}
+
+export interface PluridPubSubMessageNavigateDirection {
+    direction: 'up' | 'down' | 'left' | 'right';
+}
+export interface PluridPubSubPublishMessageNavigateDirection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_NAVIGATE_DIRECTION;
+    data: PluridPubSubMessageNavigateDirection;
+}
+export interface PluridPubSubSubscribeMessageNavigateDirection {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_NAVIGATE_DIRECTION;
+    callback: PluridPubSubCallback<PluridPubSubMessageNavigateDirection>;
+}
+
+/** `on` omitted toggles, as the key does. */
+export interface PluridPubSubMessageToggleable {
+    on?: boolean;
+}
+export interface PluridPubSubPublishMessageGrab {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_GRAB;
+    data?: PluridPubSubMessageToggleable;
+}
+export interface PluridPubSubSubscribeMessageGrab {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_GRAB;
+    callback: PluridPubSubCallback<PluridPubSubMessageToggleable>;
+}
+export interface PluridPubSubPublishMessagePalette {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PALETTE;
+    data?: PluridPubSubMessageToggleable;
+}
+export interface PluridPubSubSubscribeMessagePalette {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PALETTE;
+    callback: PluridPubSubCallback<PluridPubSubMessageToggleable>;
+}
+export interface PluridPubSubPublishMessageShortcutsOverlay {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SHORTCUTS_OVERLAY;
+    data?: PluridPubSubMessageToggleable;
+}
+export interface PluridPubSubSubscribeMessageShortcutsOverlay {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SHORTCUTS_OVERLAY;
+    callback: PluridPubSubCallback<PluridPubSubMessageToggleable>;
+}
+export interface PluridPubSubPublishMessageFocus {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_FOCUS;
+    data?: {};
+}
+export interface PluridPubSubSubscribeMessageFocus {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_FOCUS;
+    callback: PluridPubSubCallback<{}>;
+}
+
+/**
+ * THE NICETIES: one step of what a key press gives a reader. `value` overrides the step (degrees for
+ * a rotation, pixels for a translation, a scale amount for `scaleWith`).
+ */
+export interface PluridPubSubMessageCameraStep {
+    value?: number;
+}
+export interface PluridPubSubPublishMessageCameraStep {
+    topic:
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_LEFT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_RIGHT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_LEFT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_RIGHT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH;
+    data?: PluridPubSubMessageCameraStep;
+}
+export interface PluridPubSubSubscribeMessageCameraStep {
+    topic:
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_LEFT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_ROTATE_RIGHT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_LEFT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_RIGHT
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_UP
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_DOWN
+        | typeof PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH;
+    callback: PluridPubSubCallback<PluridPubSubMessageCameraStep>;
+}
+
+
 export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageConfiguration
     | PluridPubSubPublishMessageSpaceRotateXWith
@@ -801,6 +996,19 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageSelectAll
     | PluridPubSubPublishMessageInvertSelection
     | PluridPubSubPublishMessageChanged
+    | PluridPubSubPublishMessageCommand
+    | PluridPubSubPublishMessageSpawnPlane
+    | PluridPubSubPublishMessageSetPlaneShow
+    | PluridPubSubPublishMessageMovePlanes
+    | PluridPubSubPublishMessageResizePlane
+    | PluridPubSubPublishMessageSnap
+    | PluridPubSubPublishMessageSelectInRect
+    | PluridPubSubPublishMessageNavigateDirection
+    | PluridPubSubPublishMessageGrab
+    | PluridPubSubPublishMessagePalette
+    | PluridPubSubPublishMessageShortcutsOverlay
+    | PluridPubSubPublishMessageFocus
+    | PluridPubSubPublishMessageCameraStep
     ;
 
 
@@ -860,5 +1068,18 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageSelectAll
     | PluridPubSubSubscribeMessageInvertSelection
     | PluridPubSubSubscribeMessageChanged
+    | PluridPubSubSubscribeMessageCommand
+    | PluridPubSubSubscribeMessageSpawnPlane
+    | PluridPubSubSubscribeMessageSetPlaneShow
+    | PluridPubSubSubscribeMessageMovePlanes
+    | PluridPubSubSubscribeMessageResizePlane
+    | PluridPubSubSubscribeMessageSnap
+    | PluridPubSubSubscribeMessageSelectInRect
+    | PluridPubSubSubscribeMessageNavigateDirection
+    | PluridPubSubSubscribeMessageGrab
+    | PluridPubSubSubscribeMessagePalette
+    | PluridPubSubSubscribeMessageShortcutsOverlay
+    | PluridPubSubSubscribeMessageFocus
+    | PluridPubSubSubscribeMessageCameraStep
     ;
 // #endregion module

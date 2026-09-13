@@ -442,6 +442,29 @@ The topic catalog is `plurid-data source/constants/pubsub/index.ts` : `PLURID_PU
 | SPACE_SELECT_ALL | `space.selectAll` | host -> engine | usePluridPubSub |
 | SPACE_INVERT_SELECTION | `space.invertSelection` | host -> engine | usePluridPubSub |
 | CHANGED | `space.changed` | engine -> host (emit) | useEngineEvents |
+| SPACE_COMMAND | `space.command` | host -> engine | usePluridPubSub (runShortcut) |
+| SPACE_SPAWN_PLANE | `space.spawnPlane` | host -> engine | usePluridPubSub |
+| SPACE_SET_PLANE_SHOW | `space.setPlaneShow` | host -> engine | usePluridPubSub |
+| SPACE_MOVE_PLANES | `space.movePlanes` | host -> engine | usePluridPubSub |
+| SPACE_RESIZE_PLANE | `space.resizePlane` | host -> engine | usePluridPubSub |
+| SPACE_SNAP | `space.snap` | host -> engine | usePluridPubSub |
+| SPACE_SELECT_IN_RECT | `space.selectInRect` | host -> engine | usePluridPubSub |
+| SPACE_NAVIGATE_DIRECTION | `space.navigateDirection` | host -> engine | usePluridPubSub |
+| SPACE_GRAB | `space.grab` | host -> engine | usePluridPubSub |
+| SPACE_PALETTE | `space.palette` | host -> engine | usePluridPubSub |
+| SPACE_SHORTCUTS_OVERLAY | `space.shortcutsOverlay` | host -> engine | usePluridPubSub |
+| SPACE_FOCUS | `space.focus` | host -> engine | usePluridPubSub |
+| SPACE_ROTATE_UP | `space.rotateUp` | host -> engine | usePluridPubSub |
+| SPACE_ROTATE_DOWN | `space.rotateDown` | host -> engine | usePluridPubSub |
+| SPACE_ROTATE_LEFT | `space.rotateLeft` | host -> engine | usePluridPubSub |
+| SPACE_ROTATE_RIGHT | `space.rotateRight` | host -> engine | usePluridPubSub |
+| SPACE_TRANSLATE_UP | `space.translateUp` | host -> engine | usePluridPubSub |
+| SPACE_TRANSLATE_DOWN | `space.translateDown` | host -> engine | usePluridPubSub |
+| SPACE_TRANSLATE_LEFT | `space.translateLeft` | host -> engine | usePluridPubSub |
+| SPACE_TRANSLATE_RIGHT | `space.translateRight` | host -> engine | usePluridPubSub |
+| SPACE_SCALE_UP | `space.scaleUp` | host -> engine | usePluridPubSub |
+| SPACE_SCALE_DOWN | `space.scaleDown` | host -> engine | usePluridPubSub |
+| SPACE_SCALE_WITH | `space.scaleWith` | host -> engine | usePluridPubSub |
 
 Notes on the special rows:
 

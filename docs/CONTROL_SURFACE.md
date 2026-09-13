@@ -114,6 +114,30 @@ commands: `close(options?)` (hide this plane; when it is the one in view the cam
 
 The instance **pubsub** bus (the same one `onReady` hands back) is the stable, decoupled control + observe surface.
 
+**TOTAL CONTROL (2026-09-13).** The bus reaches everything the engine's own chrome, keyboard and
+imperative handle reach — 78 topics, and **every one of them has a subscriber** (a test asserts it, so a
+typed-but-inert topic cannot ship; eleven of them were exactly that until this release). Three layers, by
+how much you want to say:
+
+```tsx
+// 1. BY NAME — any entry of PLURID_SHORTCUTS, including every command the engine grows later
+plurid.pubsub.publish({ topic: 'space.command', data: { id: 'fitToView' } });
+plurid.pubsub.publish({ topic: 'space.command', data: { id: 'palette' } });
+
+// 2. THE NICETY — one step of what a key press gives a reader; `value` overrides the step
+plurid.pubsub.publish({ topic: 'space.rotateLeft' });
+plurid.pubsub.publish({ topic: 'space.scaleUp', data: { value: 0.25 } });
+
+// 3. THE PRIMITIVE — a vector, animated or not
+plurid.pubsub.publish({ topic: 'space.cameraDelta', data: { yaw: 15, pitch: -5, animate: true } });
+```
+
+The arrangement is as reachable as the camera: `space.spawnPlane` (open a plane as a child, the way a
+link does), `space.movePlanes`, `space.resizePlane`, `space.setPlaneShow`, `space.snap`,
+`space.selectInRect` (the marquee, programmatically), `space.navigateDirection`, and the chrome's own
+switches `space.grab` / `space.palette` / `space.shortcutsOverlay` / `space.focus` (each toggles when
+`on` is omitted, as the key does).
+
 ### Control — tell the engine to do something
 
 ```tsx
