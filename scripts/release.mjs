@@ -58,13 +58,16 @@ const listWorkspace = () => JSON.parse(
     }))
     .sort((a, b) => a.data.name.localeCompare(b.data.name));
 
-const registryVersion = (name) => {
+const registryVersion = (name, fresh = false) => {
     try {
-        return execFileSync('npm', ['view', name, 'version'], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+        const arguments_ = ['view', name, 'version', ...(fresh ? ['--prefer-online'] : [])];
+        return execFileSync('npm', arguments_, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
     } catch {
         return null;                             // never published
     }
 };
+
+const wait = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
 
 /** `0.0.0-37` → `0.0.0-38`. αver moves the trailing integer and nothing else. */
 const nextVersion = (version) => {
@@ -247,6 +250,50 @@ if (!skipVerify) {
 
 say(`publishing ${publishing.length} package(s) — pnpm walks the workspace topologically and skips what is already on the registry`);
 run('pnpm -r publish --no-git-checks');
+
+/**
+ * CONFIRM IT FROM THE REGISTRY. `pnpm -r publish` does not stop the world when one package fails, and
+ * a half-published round is worse than none: on 2026-09-13 `plurid-react-server@0.0.0-19` silently did
+ * not land while `plurid-kit@0.0.0-5` published DECLARING a peer on it, so the kit was uninstallable
+ * and the generator pinned a version that did not exist. Trusting the publisher's exit code was the
+ * mistake; this asks npm.
+ */
+/**
+ * …PATIENTLY. npm's metadata lags its own publishes by tens of seconds, so asking once right after
+ * the upload reports a package missing that is perfectly fine — which is exactly what happened on the
+ * first run of this check (2026-09-13) and would have failed a healthy release. Poll with backoff,
+ * and only call it missing when it has had time to appear.
+ */
+say('confirming every package from the registry (npm metadata lags a publish; allowing for that)');
+let missing = publishing.slice();
+for (const delay of [0, 5000, 10000, 20000, 30000, 30000]) {
+    if (missing.length === 0) {
+        break;
+    }
+    if (delay > 0) {
+        say(`  ${missing.length} not visible yet — waiting ${delay / 1000}s`);
+        wait(delay);
+    }
+    missing = missing.filter((entry) => registryVersion(entry.name, true) !== entry.target);
+}
+
+if (missing.length > 0) {
+    console.error('');
+    for (const entry of missing) {
+        console.error(`[release] ${entry.name}@${entry.target} did NOT land on the registry.`);
+    }
+    console.error('');
+    console.error('    The round is HALF PUBLISHED — a sibling may already declare a peer on what is missing.');
+    console.error('    (Check the registry by hand first — npm metadata sometimes lags longer than this waits.)');
+    console.error('    Publish the rest, from the repository root:');
+    console.error('');
+    for (const entry of missing) {
+        console.error(`        pnpm --filter ${entry.name} publish --no-git-checks`);
+    }
+    console.error('');
+    fail(`${missing.length} of ${publishing.length} package(s) are not on the registry.`);
+}
+say(`all ${publishing.length} package(s) confirmed on the registry`);
 
 const tag = `release/${new Date().toISOString().slice(0, 10)}`;
 const existing = read(`git tag -l ${tag}`);
