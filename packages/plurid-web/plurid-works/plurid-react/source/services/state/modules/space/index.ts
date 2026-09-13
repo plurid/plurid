@@ -972,6 +972,36 @@ export const space = createSlice({
                 spaceEngine.tree.fields.collectPlaneIDs(action.payload.tree),
             );
         },
+        /**
+         * APPEND an arrangement (a paste, a host's own insert): the roots join the tree as they are,
+         * their links join the graph, and they become the selection — one action, so one history
+         * entry and one render. Everything already in the space is untouched; the caller (the
+         * fragment) is what guarantees the incoming ids are free.
+         */
+        insertPlanes: (
+            state,
+            action: PayloadAction<{ tree: TreePlane[]; links?: PlaneLink[]; select?: boolean }>,
+        ) => {
+            const {
+                tree,
+                links = [],
+                select = true,
+            } = action.payload;
+            if (tree.length === 0) {
+                return;
+            }
+
+            state.tree = [...(original(state.tree) as TreePlane[]), ...tree];
+            if (links.length > 0) {
+                state.links = spaceEngine.tree.fields.pruneLinks(
+                    [...state.links, ...links],
+                    spaceEngine.tree.fields.collectPlaneIDs(state.tree as TreePlane[]),
+                );
+            }
+            if (select) {
+                state.selectedPlaneIDs = tree.map((plane) => plane.planeID);
+            }
+        },
         // #endregion link graph
 
         // #region navigation memory

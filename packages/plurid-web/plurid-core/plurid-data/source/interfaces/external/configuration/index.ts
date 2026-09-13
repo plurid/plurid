@@ -75,6 +75,8 @@ export interface FlatPluridConfiguration {
     collaboration?: boolean;
     /** `space.undo` — record spatial undo/redo history. ON by default; set false to drop the middleware. */
     undo?: boolean;
+    /** `space.clipboard` — copy / cut / paste planes through the system clipboard. ON by default. */
+    clipboard?: boolean;
     /** `space.viewpointURLWrite` — reflect the camera into the URL query param. */
     viewpointURLWrite?: boolean;
     /** `space.viewpointURLRestore` — restore the camera from the URL query param on load. */
@@ -196,6 +198,7 @@ export interface PluridConfigurationGlobal {
     /**
      * Supported languages:
      *
+     * + `arabic`
      * + `chinese`
      * + `english`
      * + `french`
@@ -203,9 +206,10 @@ export interface PluridConfigurationGlobal {
      * + `hindi`
      * + `italian`
      * + `japanese`
+     * + `norwegian`
      * + `romanian`
-     * + `russian`
      * + `spanish`
+     * + `ukrainian`
      *
      */
     language: InternationalizationLanguageType;
@@ -390,6 +394,16 @@ export interface PluridConfigurationSpace {
      * memory. When off, `space.undo` / `space.redo` (pubsub + shortcuts) are no-ops. Default `true`.
      */
     undo?: boolean;
+
+    /**
+     * COPY, CUT AND PASTE OF PLANES through the system clipboard: ⌘/Ctrl+C, X and V over the space
+     * put the selected planes on the clipboard as an arrangement fragment (JSON text with a marker)
+     * and paste one back — into this space, another tab, another window, another site running
+     * plurid. A route the target does not register is dropped with a warning naming it. The engine
+     * takes a clipboard event only when the view has the focus, the target is not a field and no
+     * text is selected; otherwise the press stays the page's. Default `true`.
+     */
+    clipboard?: boolean;
 
     /**
      * Reflect the camera viewpoint into the URL query string on every change (so a view is
@@ -667,6 +681,9 @@ export type PluridShortcutID =
     | 'selectAll'
     | 'invertSelection'
     | 'duplicateSelection'
+    | 'copy'
+    | 'cut'
+    | 'paste'
     | 'navigateLeft'
     | 'navigateRight'
     | 'navigateUp'

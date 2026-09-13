@@ -34,6 +34,7 @@ const ROWS: Record<keyof FlatPluridConfiguration, Row | null> = {
     firstPerson: { value: true, path: 'space.firstPerson' },
     collaboration: { value: true, path: 'space.collaboration' },
     undo: { value: false, path: 'space.undo' },
+    clipboard: { value: false, path: 'space.clipboard' },
     viewpointURLWrite: { value: true, path: 'space.viewpointURLWrite' },
     viewpointURLRestore: { value: true, path: 'space.viewpointURLRestore' },
     viewpointURLParam: { value: 'vp', path: 'space.viewpointURLParam' },

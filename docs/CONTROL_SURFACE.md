@@ -357,6 +357,24 @@ plurid.current?.bookmarks.get();               // the same list from the imperat
 
 Through the bus: `space.bookmark { name, action: 'go' | 'save' | 'remove' | 'rename', to?, animate? }`, `space.setHome`, `space.home`, `space.preset`. `space.changed` kind `bookmarks` carries the record after every edit.
 
+### Copy, cut and paste of planes (`space.clipboard`)
+
+⌘/Ctrl+C, X and V over the space put the selected planes on the SYSTEM clipboard and bring them back — in this space, in another tab, in another window, on another site running plurid. What travels is an ARRANGEMENT FRAGMENT: JSON text with a marker and a version, holding each copied plane's PATH, where it sat, how big it was, and how a child hung off its parent.
+
+A PLANE'S IDENTITY IS ITS PATH, and nothing else. Not its plane id, which is local to the space that made it; not its full address, which carries the host it was copied from. A paste asks the target application to make each path into a plane the way OPENING it would — the same `resolveViewItem` a link goes through — so what lands is the target's own plane: its host, its id, its declared size, its query. A path the target does not register cannot become a plane there: it is dropped with its subtree and its links, and a development warning names it.
+
+The keys are the browser's, not a binding: ⌘C fires a `copy` event carrying a `DataTransfer`, which is the only way a page reaches the clipboard without a permission prompt, so the engine listens for the EVENT. It takes one only when the space owns it — the view has the focus, the target is not a field, and no text is selected (a reader selecting words is copying words). Text that is not a fragment does nothing at all; the paste stays the page's.
+
+```tsx
+const selection = useSelection();
+selection.copy();                 // the selection, as a fragment, on the clipboard
+selection.cut();                  // and close what it copied — one history entry
+selection.paste(text?);           // a fragment's text, else what this document last copied
+plurid.current?.selection.paste(text);
+```
+
+Through the bus: `space.copy { cut? }`, `space.cut`, `space.paste { text?, fragment? }` — a host with its own transport (a websocket, a drag-and-drop payload) passes the fragment straight in. A paste appends as ONE action, so it is one history entry and one undo. The pasted roots are pinned and become the selection, stepped away from anything of their own kind already sitting there, so a second paste never lands on the first. `space.clipboard: false` (flat `clipboard`) drops the listeners entirely and every ⌘C stays the page's.
+
 ### Snapping and resizing (`space.snap`, `elements.plane.resizable`)
 
 ```tsx
@@ -536,6 +554,12 @@ rules: [DESIGN.md](./DESIGN.md); the token table and the presets: [LOOKS.md](./L
   `chromeKey`); `looks`, `LOOK_NAMES`, `LOOK_TOKENS`, `deriveLook`, `themeFromLook`, `lookStylesheet` and
   `PluridLookStyle` are re-exported. The recipe: [`examples/custom-chrome`](../examples/custom-chrome).
 
+### The chrome's language (`global.language`)
+
+The engine's own chrome — the toolbar drawers, the viewcube's faces, the shortcut names — speaks twelve languages: `arabic`, `chinese`, `english` (the default), `french`, `german`, `hindi`, `italian`, `japanese`, `norwegian`, `romanian`, `spanish`, `ukrainian`. Set `global.language` (flat `language`), or let a reader pick one in the Global drawer; `internationalization.languages` is that list, and the dropdown is generated from it.
+
+Plane CONTENT is the host's: the engine never translates it, and a host that speaks more languages than these keeps its own strings. The tables are checked by a test rather than by eye (`plurid-data`): every language carries every field in the fields' own order, nothing is empty, nothing is left in English, and two fields English tells apart are told apart everywhere — the rule that caught `left` and `right` reading the same word in Chinese, `right` reading "correct" in Japanese and Hindi, and `allow rotation y` reading "allow rotation x" in Romanian (2026-09-13). Arabic renders right-to-left inside its own labels by the browser's own bidi algorithm; the chrome's LAYOUT stays left-to-right (a mirrored chrome is not built).
+
 ### Stable DOM contract (`data-plurid-*`) and chrome isolation
 
 The engine's DOM is addressable through `data-plurid-*` attributes, which are a documented contract: tests,
@@ -666,6 +690,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
 | Show something when the space is empty | `renderEmpty` slot |
 | Align / distribute / duplicate / select all | `SPACE_ALIGN` · `SPACE_DISTRIBUTE` · `SPACE_DUPLICATE` · `SPACE_SELECT_ALL` · `SPACE_INVERT_SELECTION`; the Transform drawer buttons |
+| Copy planes between spaces, tabs or sites | ⌘/Ctrl+C · X · V over the space · `SPACE_COPY` / `SPACE_CUT` / `SPACE_PASTE` · `useSelection().copy / cut / paste` · `handle.selection.*` · `space.clipboard: false` opts out |
 | Tune snapping, let users resize planes | `{ snap: { threshold, grid } }` · `{ planeResizable: true }` |
 | Read undo/redo availability | `pluridSelectors.getHistory` · `space.changed` kind `history` |
 | Stop painting far / off-screen planes, fade with depth | `{ culling: { enabled: true } }` · `{ planeDepthFade: { enabled: true } }` · `usePluridPlane().culled` |

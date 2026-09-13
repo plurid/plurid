@@ -98,6 +98,9 @@ export const PLURID_PUBSUB_TOPIC = {
     SPACE_DISTRIBUTE: 'space.distribute',
     /** Duplicate the selected root planes (offset copies, selected afterwards): data? `{ offset }`. */
     SPACE_DUPLICATE: 'space.duplicate',
+    SPACE_COPY: 'space.copy',
+    SPACE_CUT: 'space.cut',
+    SPACE_PASTE: 'space.paste',
     /** Select every shown plane. */
     SPACE_SELECT_ALL: 'space.selectAll',
     /** Invert the selection over the shown planes. */

@@ -13,6 +13,8 @@
         alignSelection,
         distributeSelection,
         duplicateSelection,
+        copySelection,
+        pasteFragment,
     } from '~services/state/thunks/selection';
     // #endregion external
 
@@ -46,6 +48,17 @@ export interface PluridSelectionHandle {
     distribute: (axis: 'x' | 'y') => void;
     /** Offset copies of the selected root planes; the copies become the selection. */
     duplicate: (offset?: number) => void;
+    /**
+     * Put the selection on the clipboard as an arrangement fragment — the same text ⌘/Ctrl+C over
+     * the space writes, so it pastes into another tab, window or site running plurid.
+     */
+    copy: (options?: { cut?: boolean }) => void;
+    cut: () => void;
+    /**
+     * Paste a fragment: the given text, else what this document last copied. Text that is not a
+     * fragment does nothing. Routes this application does not register are dropped.
+     */
+    paste: (text?: string) => void;
 }
 
 
@@ -65,6 +78,9 @@ export const useSelection = (): PluridSelectionHandle => {
         align: (edge: PluridAlignEdge) => { dispatch(alignSelection(edge) as any); },
         distribute: (axis: 'x' | 'y') => { dispatch(distributeSelection(axis) as any); },
         duplicate: (offset?: number) => { dispatch(duplicateSelection(offset) as any); },
+        copy: (options: { cut?: boolean } = {}) => { dispatch(copySelection(options) as any); },
+        cut: () => { dispatch(copySelection({ cut: true }) as any); },
+        paste: (text?: string) => { dispatch(pasteFragment({ text }) as any); },
     }), [dispatch]);
 
     return {

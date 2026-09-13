@@ -1,4 +1,11 @@
 // #region imports
+    // #region libraries
+    import type {
+        TreePlane,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+
+
     // #region external
     import type {
         CameraMotionController,
@@ -33,6 +40,14 @@ export interface PluridThunkExtra {
     };
     /** The application's one plane measurer (`observePlaneSize`), created on the first plane's mount. */
     measurer?: PlaneMeasurer;
+    /**
+     * MAKE A PLANE OF THIS SPACE for a path, exactly as opening it would (`resolveViewItem` against
+     * this application's registrar and hostname): `undefined` for a path it does not register. A
+     * paste from another space asks this before it can hold what it was given — the planes it makes
+     * are the target's own, on the target's host, with the target's declared sizes
+     * (`materializeFragment`). The store never depends on the engine's registrar class.
+     */
+    resolvePlane?: (path: string) => TreePlane | undefined;
 }
 
 

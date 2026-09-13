@@ -7,6 +7,7 @@
 
 
 // #region module
+export type InternationalizationArabic = 'arabic';
 export type InternationalizationChinese = 'chinese';
 export type InternationalizationEnglish = 'english';
 export type InternationalizationFrench = 'french';
@@ -14,12 +15,14 @@ export type InternationalizationGerman = 'german';
 export type InternationalizationHindi = 'hindi';
 export type InternationalizationItalian = 'italian';
 export type InternationalizationJapanese = 'japanese';
+export type InternationalizationNorwegian = 'norwegian';
 export type InternationalizationRomanian = 'romanian';
-export type InternationalizationRussian = 'russian';
 export type InternationalizationSpanish = 'spanish';
+export type InternationalizationUkrainian = 'ukrainian';
 
 
 export type InternationalizationLanguageType =
+    | InternationalizationArabic
     | InternationalizationChinese
     | InternationalizationEnglish
     | InternationalizationFrench
@@ -27,9 +30,10 @@ export type InternationalizationLanguageType =
     | InternationalizationHindi
     | InternationalizationItalian
     | InternationalizationJapanese
+    | InternationalizationNorwegian
     | InternationalizationRomanian
-    | InternationalizationRussian
-    | InternationalizationSpanish;
+    | InternationalizationSpanish
+    | InternationalizationUkrainian;
 
 
 export type InternationalizationFields = typeof internationalizationFields;

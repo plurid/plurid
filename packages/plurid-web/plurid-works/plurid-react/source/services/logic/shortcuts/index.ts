@@ -53,6 +53,8 @@
     import {
         navigateDirection,
         duplicateSelection,
+        copySelection,
+        pasteFragment,
     } from '~services/state/thunks/selection';
     import {
         navigateToParent,
@@ -311,6 +313,29 @@ export const SHORTCUTS: ShortcutBinding[] = [
         id: 'duplicateSelection', code: 'KeyD',
         match: (e, code, ctx) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && ctx.state.space.selectedPlaneIDs.length > 0,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(duplicateSelection() as any); },
+    },
+    /**
+     * THE CLIPBOARD COMMANDS — reachable BY NAME, never by key. ⌘/Ctrl+C, X and V belong to the
+     * browser: preventing their keydown would cancel the `copy` / `cut` / `paste` events the engine
+     * actually listens to (`useClipboard`), and not preventing it would run each command twice. So
+     * these bindings never match a key press (`match: () => false`) and exist so that the palette,
+     * a host's menu and `runShortcut('paste')` all run the ONE implementation. A paste reached this
+     * way reads what this document last copied — the system clipboard answers only to its event.
+     */
+    {
+        id: 'copy', code: 'KeyC',
+        match: () => false,
+        run: ({ dispatch }) => { dispatch(copySelection() as any); },
+    },
+    {
+        id: 'cut', code: 'KeyX',
+        match: () => false,
+        run: ({ dispatch }) => { dispatch(copySelection({ cut: true }) as any); },
+    },
+    {
+        id: 'paste', code: 'KeyV',
+        match: () => false,
+        run: ({ dispatch }) => { dispatch(pasteFragment() as any); },
     },
     {
         // Frame the selection: `.` (the CAD "zoom to selection").

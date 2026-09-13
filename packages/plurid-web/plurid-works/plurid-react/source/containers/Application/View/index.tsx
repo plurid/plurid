@@ -141,6 +141,9 @@
     import useViewpointURL from './hooks/useViewpointURL';
     import useDockingURL from './hooks/useDockingURL';
     import useMeasuredRelayout from './hooks/useMeasuredRelayout';
+    import {
+        useClipboard,
+    } from './hooks/useClipboard';
     // #endregion internal
 // #endregion imports
 
@@ -524,6 +527,16 @@ const PluridView: React.FC<PluridViewProperties> = (
             dispatchSetSpaceField,
             dispatchSetTree,
         },
+    });
+
+    // COPY / CUT / PASTE of planes on the browser's own clipboard events (`space.clipboard`): the
+    // selection travels as an arrangement fragment — to this space, another tab, another site.
+    useClipboard({
+        viewElement,
+        dispatch,
+        getState: () => stateRef.current,
+        enabled: stateConfiguration.space.clipboard !== false,
+        warnings: stateConfiguration.development?.warnings !== false,
     });
 
     // Collaboration seam: emit/apply shared-arrangement snapshots on the instance pubsub (the host

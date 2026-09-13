@@ -96,6 +96,17 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     { id: 'cycleRoot', code: 'Tab', modifiers: { alt: true }, kind: 'press', group: 'roots', label: 'Cycle roots (+ Shift: backwards)' },
     { id: 'focusRootIndex', keys: ['Alt', '1\u20139'], kind: 'press', group: 'roots', label: 'Jump to a root by index' },
 
+    /**
+     * THE CLIPBOARD KEYS ARE THE BROWSER'S. ⌘/Ctrl+C, X and V fire `copy` / `cut` / `paste` events
+     * carrying a `DataTransfer` — the only way a page reaches the system clipboard without a
+     * permission — so the engine listens for those events (`useClipboard`) and binds NO key here:
+     * these rows exist so the keys are documented once, in the same table as every other key, and so
+     * the command palette and `runShortcut` can reach the commands by name.
+     */
+    { id: 'copy', code: 'KeyC', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'planes', label: 'Copy the selected planes (paste them into any plurid space)' },
+    { id: 'cut', code: 'KeyX', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'planes', label: 'Cut the selected planes' },
+    { id: 'paste', code: 'KeyV', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'planes', label: 'Paste planes copied from this or another space' },
+
     // help
     { id: 'help', code: 'Slash', keys: ['?'], modifiers: { shift: true }, kind: 'press', group: 'help', label: 'Toggle the shortcuts panel' },
     { id: 'palette', code: 'KeyK', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'help', label: 'Open the command palette: every command, the bookmarks and presets, every plane' },

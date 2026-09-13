@@ -768,6 +768,48 @@ export interface PluridPubSubSubscribeMessageDuplicate {
     callback: PluridPubSubCallback<PluridPubSubMessageDuplicate | undefined>;
 }
 
+/**
+ * THE ARRANGEMENT FRAGMENT — what a copy puts on the clipboard and a paste reads back: the selected
+ * planes with their subtrees and the links among them, as JSON text with a marker and a version. A
+ * plane's identity in it is its ROUTE, so a paste into another application re-makes the planes it
+ * registers and drops (with a warning) the routes it does not.
+ */
+export interface PluridPubSubMessageClipboard {
+    /** `cut`: close the copied planes afterwards (the copy itself is the same). */
+    cut?: boolean;
+}
+export interface PluridPubSubPublishMessageCopy {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_COPY;
+    data?: PluridPubSubMessageClipboard;
+}
+export interface PluridPubSubSubscribeMessageCopy {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_COPY;
+    callback: PluridPubSubCallback<PluridPubSubMessageClipboard | undefined>;
+}
+export interface PluridPubSubPublishMessageCut {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_CUT;
+    data?: undefined;
+}
+export interface PluridPubSubSubscribeMessageCut {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_CUT;
+    callback: PluridPubSubCallback<undefined>;
+}
+
+export interface PluridPubSubMessagePaste {
+    /** The fragment's text. Without it, what this document last copied. */
+    text?: string;
+    /** A fragment the host already holds (its own transport) — no clipboard involved. */
+    fragment?: unknown;
+}
+export interface PluridPubSubPublishMessagePaste {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PASTE;
+    data?: PluridPubSubMessagePaste;
+}
+export interface PluridPubSubSubscribeMessagePaste {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PASTE;
+    callback: PluridPubSubCallback<PluridPubSubMessagePaste | undefined>;
+}
+
 export interface PluridPubSubPublishMessageSelectAll {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SELECT_ALL;
     data?: undefined;
@@ -877,6 +919,9 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageAlign
     | PluridPubSubPublishMessageDistribute
     | PluridPubSubPublishMessageDuplicate
+    | PluridPubSubPublishMessageCopy
+    | PluridPubSubPublishMessageCut
+    | PluridPubSubPublishMessagePaste
     | PluridPubSubPublishMessageSelectAll
     | PluridPubSubPublishMessageInvertSelection
     | PluridPubSubPublishMessageChanged
@@ -945,6 +990,9 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageAlign
     | PluridPubSubSubscribeMessageDistribute
     | PluridPubSubSubscribeMessageDuplicate
+    | PluridPubSubSubscribeMessageCopy
+    | PluridPubSubSubscribeMessageCut
+    | PluridPubSubSubscribeMessagePaste
     | PluridPubSubSubscribeMessageSelectAll
     | PluridPubSubSubscribeMessageInvertSelection
     | PluridPubSubSubscribeMessageChanged

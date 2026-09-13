@@ -46,6 +46,8 @@
         alignSelection,
         distributeSelection,
         duplicateSelection,
+        copySelection,
+        pasteFragment,
     } from '~services/state/thunks/selection';
 
     import {
@@ -653,6 +655,30 @@ export const usePluridPubSub = (
                 topic: PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE,
                 callback: (data) => {
                     dispatch(duplicateSelection((data as any)?.offset) as any);
+                },
+            },
+            {
+                // a host's own copy: the same fragment the ⌘C over the space writes, to the system
+                // clipboard where the browser allows it and always to the document's slot
+                topic: PLURID_PUBSUB_TOPIC.SPACE_COPY,
+                callback: (data) => {
+                    dispatch(copySelection({ cut: (data as any)?.cut === true }) as any);
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_CUT,
+                callback: () => {
+                    dispatch(copySelection({ cut: true }) as any);
+                },
+            },
+            {
+                // the text, a fragment the host holds, or — with neither — what was last copied here
+                topic: PLURID_PUBSUB_TOPIC.SPACE_PASTE,
+                callback: (data) => {
+                    dispatch(pasteFragment({
+                        text: (data as any)?.text,
+                        fragment: (data as any)?.fragment,
+                    }) as any);
                 },
             },
             {

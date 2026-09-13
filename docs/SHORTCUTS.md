@@ -58,6 +58,9 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | `Alt` + `R` | Refresh the active plane | `refreshPlane` | press | - |
 | `Alt` + `W` | Close the active plane | `closePlane` | press | - |
 | `Alt` + `Shift` + `T` | Reopen the last closed plane | `openClosedPlane` | press | - |
+| `⌘/Ctrl` + `C` | Copy the selected planes (paste them into any plurid space) | `copy` | press | - |
+| `⌘/Ctrl` + `X` | Cut the selected planes | `cut` | press | - |
+| `⌘/Ctrl` + `V` | Paste planes copied from this or another space | `paste` | press | - |
 
 ## Roots
 

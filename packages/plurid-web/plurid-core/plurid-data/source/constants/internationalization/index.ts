@@ -1,5 +1,6 @@
 // #region imports
     // #region internal
+    import arabic from './arabic';
     import chinese from './chinese';
     import english from './english';
     import french from './french';
@@ -7,9 +8,10 @@
     import hindi from './hindi';
     import italian from './italian';
     import japanese from './japanese';
+    import norwegian from './norwegian';
     import romanian from './romanian';
-    import russian from './russian';
     import spanish from './spanish';
+    import ukrainian from './ukrainian';
 
     import fields from './fields';
     import languages from './languages';
@@ -20,6 +22,7 @@
 
 // #region module
 export const internationalization = {
+    arabic,
     chinese,
     english,
     french,
@@ -27,9 +30,10 @@ export const internationalization = {
     hindi,
     italian,
     japanese,
+    norwegian,
     romanian,
-    russian,
     spanish,
+    ukrainian,
 
     fields,
     languages,

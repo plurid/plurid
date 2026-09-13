@@ -66,6 +66,8 @@
         alignSelection,
         distributeSelection,
         duplicateSelection,
+        copySelection,
+        pasteFragment,
     } from '~services/state/thunks/selection';
     import {
         toggleLinkPlane,
@@ -94,6 +96,7 @@
         PluridPlanesRegistrar,
         generalEngine,
         routing,
+        space as spaceEngine,
     } from '~services/engine';
 
     import {
@@ -416,6 +419,9 @@ class PluridApplicationShell extends Component<
                 align: (edge) => dispatch(alignSelection(edge)),
                 distribute: (axis) => dispatch(distributeSelection(axis)),
                 duplicate: (offset) => dispatch(duplicateSelection(offset)),
+                copy: (options = {}) => dispatch(copySelection(options)),
+                cut: () => dispatch(copySelection({ cut: true })),
+                paste: (text) => dispatch(pasteFragment({ text })),
             },
             bookmarks: {
                 get: () => namedViewpoints(getState()),
@@ -477,6 +483,16 @@ class PluridApplicationShell extends Component<
                 this.props.hostname,
                 () => getPlanesRegistrar(undefined),
             );
+        // A thunk that must make a plane out of a PATH (a paste from another space) reaches this
+        // application's registrar the way it reaches the motion controller — through the store's
+        // thunk extra — and gets back a plane of THIS space: this host, this id shape, this
+        // application's declared sizes, exactly as opening the path would.
+        this.thunkExtra.resolvePlane = (path) => spaceEngine.tree.logic.resolveViewItem(
+            this.planesRegistrar!.getAll(),
+            path,
+            this.store.getState().configuration,
+            this.props.hostname,
+        );
     }
 
     private computeStore() {

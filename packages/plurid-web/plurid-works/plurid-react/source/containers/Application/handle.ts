@@ -62,6 +62,11 @@ export interface PluridApplicationHandle extends PluridApi {
         align: (edge: 'left' | 'right' | 'top' | 'bottom' | 'centerX' | 'centerY') => void;
         distribute: (axis: 'x' | 'y') => void;
         duplicate: (offset?: number) => void;
+        /** The selection as an arrangement fragment, on the clipboard (`cut` closes it afterwards). */
+        copy: (options?: { cut?: boolean }) => void;
+        cut: () => void;
+        /** Paste a fragment: the given text, else what this document last copied. */
+        paste: (text?: string) => void;
     };
     /**
      * THE NAMED VIEWPOINTS: the reader's bookmarks, the host's presets and home — one shape for the

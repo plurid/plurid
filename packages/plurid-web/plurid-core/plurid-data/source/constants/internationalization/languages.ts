@@ -9,7 +9,9 @@
 
 
 // #region module
+/** Every language the chrome speaks, alphabetically — the order the language dropdown lists. */
 const languages: InternationalizationLanguageType[] = [
+    'arabic',
     'chinese',
     'english',
     'french',
@@ -17,9 +19,10 @@ const languages: InternationalizationLanguageType[] = [
     'hindi',
     'italian',
     'japanese',
+    'norwegian',
     'romanian',
-    'russian',
     'spanish',
+    'ukrainian',
 ];
 // #endregion module
 

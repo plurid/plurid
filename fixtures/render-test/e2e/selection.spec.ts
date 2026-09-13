@@ -10,6 +10,7 @@ import {
     spaceState,
     publish,
     viewRect,
+    waitForBoot,
 } from './helpers';
 
 
@@ -32,6 +33,94 @@ const visibleRoots = async (page: Page) => {
 };
 
 const modifier = process.platform === 'darwin' ? 'Meta' : 'Control';
+
+
+/**
+ * COPY / CUT / PASTE of planes: the selection travels as an arrangement fragment on the SYSTEM
+ * clipboard, so it survives a reload into a fresh application — the strongest "another instance"
+ * this harness can stage — and is dropped, by name, where the target does not register the path.
+ */
+test.describe('the clipboard', () => {
+    test.use({ permissions: ['clipboard-read', 'clipboard-write'] });
+
+    const select = (page: Page, planeIDs: string[]) => page.evaluate(
+        (ids) => (window as any).__pluridApi.store.dispatch({ type: 'space/setSelection', payload: ids }),
+        planeIDs,
+    );
+    const routesOf = async (page: Page) => (await tree(page)).map((plane: any) => String(plane.route).replace(/@.*$/, ''));
+
+    test('copy, then paste into a FRESH application after a reload: the planes come back, on this host', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        const roots = await tree(page);
+        const geometry = roots.find((plane: any) => String(plane.route).endsWith('/geometry'))!;
+        await select(page, [geometry.planeID]);
+
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press(`${modifier}+KeyC`);
+        const copied = await page.evaluate(() => navigator.clipboard.readText());
+        expect(copied).toContain('plurid/arrangement');
+        // the PATH is the identity: what travels names no host
+        expect(copied).toContain('"path":"/geometry"');
+
+        // a reload is a new document, a new application, a new store — only the clipboard survives
+        await page.reload();
+        await waitForBoot(page);
+        const before = (await tree(page)).length;
+
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press(`${modifier}+KeyV`);
+        await expect.poll(async () => (await tree(page)).length).toBe(before + 1);
+
+        const after = await tree(page);
+        const pasted = after[after.length - 1];
+        expect(String(pasted.route)).toContain('/geometry');
+        expect(pasted.planeID).not.toBe(geometry.planeID);
+        // it is the selection, and it was placed away from the plane it landed on
+        expect(await selection(page)).toEqual([pasted.planeID]);
+        expect(pasted.location.translateX).not.toBe(after[0].location.translateX);
+    });
+
+    test('a cut closes what it copied, and one undo brings it back', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        const roots = await tree(page);
+        const shown = () => page.evaluate(() => (window as any).__rtTree().filter((plane: any) => plane.show !== false).length);
+        await select(page, [roots[0].planeID]);
+
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press(`${modifier}+KeyX`);
+        await expect.poll(shown).toBe(roots.length - 1);
+        // a cut is a copy first: the fragment is on the clipboard
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toContain('plurid/arrangement');
+
+        await publish(page, 'space.undo', undefined);
+        await expect.poll(shown).toBe(roots.length);
+    });
+
+    test('a paste into a space that registers other routes drops them, and says so', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1&momentum=0');
+        const roots = await tree(page);
+        await select(page, [roots[0].planeID, roots[1].planeID]);
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press(`${modifier}+KeyC`);
+
+        // the stress space registers `/plane-N` and nothing else: not one path of the copy is a
+        // plane there
+        const warnings: string[] = [];
+        page.on('console', (message) => {
+            if (message.type() === 'warning') {
+                warnings.push(message.text());
+            }
+        });
+        await openHarness(page, '?reducedMotion=1&momentum=0&planes=3');
+        const stress = await routesOf(page);
+        await page.locator('[data-plurid-entity="PluridView"]').focus();
+        await page.keyboard.press(`${modifier}+KeyV`);
+        await page.waitForTimeout(200);
+
+        expect(await routesOf(page)).toEqual(stress);
+        expect(warnings.join(' ')).toContain('does not register');
+    });
+});
 
 
 test.describe('selection and editing', () => {
