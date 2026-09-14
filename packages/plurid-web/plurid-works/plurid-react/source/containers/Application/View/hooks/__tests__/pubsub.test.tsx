@@ -54,6 +54,8 @@ const Page = () => <div>page</div>;
 const render = async (
     routes = ['/a', '/b', '/c'],
     configuration: any = {},
+    /** what the space SHOWS at mount; the routes are registered either way. */
+    view: string[] = routes,
 ): Promise<RenderedPlurid & { bus: IPluridPubSub; dropped: string[] }> => {
     // a COMMAND nobody is subscribed to is reported rather than warned about, so a test can tell
     // "the topic ran" from "the topic reached no one" instead of inferring it from an unchanged
@@ -68,7 +70,7 @@ const render = async (
     });
     const rendered = await renderPlurid({
         planes: routes.map((route) => ({ route, component: Page })),
-        view: routes,
+        view,
         pubsub: bus,
         configuration: {
             ...configuration,
@@ -287,6 +289,40 @@ describe('TOTAL CONTROL: what the chrome and the keyboard reach, the bus reaches
         expect(space(rendered).tree[0].show).toBe(false);
         await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW, { planeID: a, show: true });
         expect(space(rendered).tree[0].show).toBe(true);
+
+        await rendered.unmount();
+    });
+
+    it('THE VIEW GROWS: `view.addPlane` ADDS a root, twice, and removing takes only that one', async () => {
+        // A host that declares `view: []` and opens everything at runtime — the kit's own shape —
+        // used to end up with EXACTLY ONE root no matter how many it added: the handler read the
+        // `stateSpaceView` captured when the application mounted (the empty array) instead of the
+        // live one, so each add published `[] + plane` and replaced the whole view. Nothing threw
+        // and nothing warned; the previous plane simply vanished.
+        const rendered = await render(['/a', '/b', '/c'], {}, []);
+        const { bus } = rendered;
+
+        expect(space(rendered).tree).toHaveLength(0);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/a' });
+        expect(space(rendered).tree).toHaveLength(1);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/b' });
+        expect(space(rendered).tree).toHaveLength(2);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/c' });
+        expect(space(rendered).tree.map((plane: any) => plane.route)).toEqual([
+            expect.stringContaining('/a'),
+            expect.stringContaining('/b'),
+            expect.stringContaining('/c'),
+        ]);
+
+        // and the sibling topic removes ONE, not the rest
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, { planeID: '/b' });
+        expect(space(rendered).tree.map((plane: any) => plane.route)).toEqual([
+            expect.stringContaining('/a'),
+            expect.stringContaining('/c'),
+        ]);
 
         await rendered.unmount();
     });

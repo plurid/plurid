@@ -357,8 +357,16 @@ export const usePluridPubSub = (
                         return;
                     }
 
+                    // THROUGH `latest`, NOT THE CLOSURE. These handlers are subscribed ONCE per
+                    // pubsub instance (see `latest` above), so a captured `stateSpaceView` is
+                    // frozen at the value it had when the application mounted — for a host whose
+                    // route declares `view: []` that is the EMPTY ARRAY, forever. Every
+                    // `view.addPlane` then published `[] + plane`: the topic that exists to ADD a
+                    // root silently REPLACED the whole view with one. Its sibling
+                    // `VIEW_REMOVE_PLANE` reads `latest.current.stateSpaceView` and was right all
+                    // along.
                     const updatedView = [
-                        ...stateSpaceView,
+                        ...latest.current.stateSpaceView,
                         plane,
                     ];
                     dispatchSpaceSetView(updatedView);
