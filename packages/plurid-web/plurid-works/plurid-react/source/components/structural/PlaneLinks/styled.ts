@@ -69,7 +69,11 @@ export const StyledPluridPlaneLeash = styled.div<Pick<IStyledPluridPlaneLink, 't
     transform-origin: 0 0;
     background-color: var(--plurid-surface-solid);
     background-image: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
-    opacity: ${CHROME_OPACITY_AMBIENT};
+    /* the LIVE token, not the constant baked in: the crosslink beam beside this
+       one reads the ambient-opacity custom property, so a look that quieted one
+       quieted everything except these two (2026-09-14). NOTE no backticks in a
+       styled template - they close it, and the rest is silently discarded. */
+    opacity: var(--plurid-opacity-ambient, ${CHROME_OPACITY_AMBIENT});
     pointer-events: none;
 `;
 // #endregion module

@@ -18,7 +18,6 @@
 
         PLURID_ENTITY_PLANE_LINKS,
         PLURID_ENTITY_PLANE_LEASH,
-        BRIDGE_STRIP_HEIGHT,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -56,7 +55,20 @@
 
 
 // #region module
+/**
+ * A CONNECTOR IN A SPACE IS A LINE, NOT A WALL.
+ *
+ * The crosslink beam has always been 3px; the LEASH — the same real-3D box,
+ * drawn for a child that has been moved by hand — was `BRIDGE_STRIP_HEIGHT`
+ * (30), because it inherited the flat gradient BAND's thickness from the
+ * bridge it replaces. At the bridge's own short length that reads as a stub;
+ * the moment a product arranges its planes any distance apart it reads as an
+ * opaque slab lying across the space, which is what it looked like in dechat
+ * (2026-09-14). The band's thickness was never a reason for the beam's.
+ */
 const THICKNESS = 3;
+/** exported so a test states the centring rule rather than pinning a number */
+export const LEASH_THICKNESS = 6;
 
 
 export interface PluridPlaneLinksStateProperties {
@@ -120,13 +132,13 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         } = computeEdgeTransform(
             spaceEngine.location.linkWorldPoint(parent.location, child.linkCoordinates!),
             spaceEngine.location.childLeashPoint(child),
-            BRIDGE_STRIP_HEIGHT,
+            LEASH_THICKNESS,
         );
         return (
             <StyledPluridPlaneLeash
                 key={'leash:' + child.planeID}
                 theme={stateGeneralTheme}
-                thickness={BRIDGE_STRIP_HEIGHT}
+                thickness={LEASH_THICKNESS}
                 // the length inline like the transform: both change per drag frame (no class per frame)
                 style={{
                     transform,

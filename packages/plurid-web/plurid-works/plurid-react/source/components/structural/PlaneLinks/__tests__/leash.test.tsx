@@ -11,6 +11,10 @@ import {
     renderPlurid,
 } from '../../../../testing';
 
+import {
+    LEASH_THICKNESS,
+} from '../index';
+
 
 
 const Page = () => <div>page</div>;
@@ -48,8 +52,11 @@ describe('a moved child\'s leash', () => {
         const leash = rendered.container.querySelector(LEASH) as HTMLElement;
         expect(leash).toBeTruthy();
         expect(leash.getAttribute('data-plurid-leash-for')).toBe(b.planeID);
-        // the beam starts at the link's point on the parent's face
-        expect(leash.style.transform).toContain(`translate3d(${a.location.translateX + 120}px, ${a.location.translateY + 40 - 15}px, ${a.location.translateZ}px)`);
+        // THE BEAM IS CENTRED ON THE LINK'S POINT on the parent's face: it
+        // starts half its own thickness above it, whatever that thickness is.
+        // Pinning the number here meant thinning the beam (from the band's 30
+        // to a beam's 6, 2026-09-14) failed a test about centring.
+        expect(leash.style.transform).toContain(`translate3d(${a.location.translateX + 120}px, ${a.location.translateY + 40 - (LEASH_THICKNESS / 2)}px, ${a.location.translateZ}px)`);
         expect(parseFloat(leash.style.width)).toBeGreaterThan(0);
         // the move undone: the band is back, the leash gone
         await act(async () => {
