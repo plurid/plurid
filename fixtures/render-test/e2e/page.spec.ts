@@ -46,7 +46,16 @@ import {
  * page owns the wheel; a link, the corner control, a pinch or the G key reveal the space; Escape
  * and the back control dock again. Pose is the state: nothing here reads a mode flag.
  */
-/** The bridge strip's height, px (the band the leash is drawn as). */
+/**
+ * The bridge BAND's height, px (`BRIDGE_STRIP_HEIGHT`) — the flat, axis-aligned
+ * strip a child hangs from while it is still laid out by its parent.
+ *
+ * NOT the leash BEAM, which is the real-3D box drawn for a child that has been
+ * moved by hand: that is `LEASH_THICKNESS` (6) and it is asserted in
+ * `layout.spec.ts` by reading the element, not by a second copy of a number.
+ * The beam merely inherited the band's 30 once, and a test carrying its own
+ * copy of it failed the day the beam was thinned. (2026-09-14)
+ */
 const STRIP = 30;
 /** A page's controls bar hangs this far above its sheet (`PLANE_BAR_HEIGHT`). */
 const BAR = 56;

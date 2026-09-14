@@ -29,8 +29,6 @@ import {
 
 
 
-/** The bridge strip's height (`BRIDGE_STRIP_HEIGHT` in plurid-data): the leash beam is this thick. */
-const STRIP = 30;
 
 
 
@@ -147,14 +145,26 @@ test.describe('the sizing contract', () => {
         await expect(leash).toHaveCount(1);
         const leashStart = async () => leash.evaluate((node) => {
             const match = /translate3d\(([-\d.]+)px, ([-\d.]+)px, ([-\d.]+)px\)/.exec((node as HTMLElement).style.transform)!;
-            return { x: Number(match[1]), y: Number(match[2]), width: parseFloat((node as HTMLElement).style.width) };
+            return {
+                x: Number(match[1]),
+                y: Number(match[2]),
+                width: parseFloat((node as HTMLElement).style.width),
+                // READ, NOT PINNED. This assertion used to carry its own copy of
+                // the number (30, the flat bridge BAND's height, which the beam
+                // had merely inherited); thinning the beam to 6 then failed a
+                // test that is about CENTRING and has no business knowing the
+                // thickness. (2026-09-14)
+                thickness: parseFloat(getComputedStyle(node as HTMLElement).height),
+            };
         });
         const start = await leashStart();
         const parent = findPlane(await tree(page), root.planeID);
         const turn = parent.location.rotateY * Math.PI / 180;
         expect(start.x).toBeCloseTo(parent.location.translateX + dragged.linkCoordinates.x * Math.cos(turn), 1);
-        // the beam is centred on the link's line: its top edge sits half a strip above it
-        expect(start.y + STRIP / 2).toBeCloseTo(parent.location.translateY + dragged.linkCoordinates.y, 1);
+        // the beam is centred on the link's line: its top edge sits half its own
+        // thickness above it, whatever that thickness is
+        expect(start.thickness).toBeGreaterThan(0);
+        expect(start.y + start.thickness / 2).toBeCloseTo(parent.location.translateY + dragged.linkCoordinates.y, 1);
         // a resize relays the roots: the child keeps its own place
         await page.setViewportSize({ width: 1100, height: 720 });
         await page.waitForFunction(() => (window as unknown as HarnessWindow).__pluridApi.getSnapshot().space.viewSize.width === 1100);
