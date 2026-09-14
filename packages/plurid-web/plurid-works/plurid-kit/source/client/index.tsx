@@ -25,6 +25,7 @@
 
     import {
         serviceProperties,
+        applicationService,
         orderedServices,
         PRELOADED_REDUX_STATE_KEY,
         PRELOADED_PLURID_METASTATE_KEY,
@@ -76,7 +77,10 @@ export function createPluridClient(
 
     // Build each service's provider element once (the store is created a single
     // time here, equivalent to the previous `useRef(reduxStore(state))`).
-    const services = orderedServices(config.services).map((service) => ({
+    const services = orderedServices([
+        ...applicationService(config.application as any),
+        ...(config.services || []),
+    ]).map((service) => ({
         Provider: service.Provider,
         properties: serviceProperties(service, 'client', reduxState),
     }));

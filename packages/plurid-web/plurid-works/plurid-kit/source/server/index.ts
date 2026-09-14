@@ -25,6 +25,7 @@
         resolveServerOnly,
         serviceProperties,
         orderedServices,
+        applicationService,
     } from '../shared';
     // #endregion internal
     import {
@@ -67,7 +68,10 @@ export async function createPluridServer(
     // Services: project each PluridServiceConfig to a PluridServerService with a
     // base store (the preserve overrides it per request). Order is preserved so
     // the client can wrap providers in the identical sequence.
-    const services: PluridServerService[] = orderedServices(config.services).map(
+    const services: PluridServerService[] = orderedServices([
+        ...applicationService(config.application as any),
+        ...(config.services || []),
+    ]).map(
         (service) => ({
             name: service.name,
             Provider: service.Provider,

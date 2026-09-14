@@ -1,4 +1,11 @@
 // #region imports
+    // #region libraries
+    import {
+        PluridApplicationProvider,
+    } from '@plurid/plurid-react';
+    // #endregion libraries
+
+
     // #region internal
     import type {
         ServerOnly,
@@ -10,6 +17,36 @@
 
 
 // #region module
+/**
+ * THE APPLICATION SURFACE, AS A SERVICE.
+ *
+ * `config.application` carries the render slots, persistence and observation
+ * that `<PluridApplication …/>` takes directly and the route-driven path could
+ * not forward. It reaches both targets as an ordinary service provider, which
+ * is deliberate: services are the ONE thing the kit already composes in an
+ * identical sequence on the server and the client, and a provider present on
+ * one target and not the other is a hydration mismatch by construction.
+ *
+ * `order: -Infinity` puts it outermost, above the router and every application
+ * the router constructs. A config that declares nothing adds no service and
+ * pays no wrapper.
+ */
+export function applicationService(
+    application: Record<string, unknown> | undefined,
+): PluridServiceConfig[] {
+    if (!application || Object.keys(application).length === 0) {
+        return [];
+    }
+
+    return [{
+        name: 'plurid-application',
+        Provider: PluridApplicationProvider,
+        properties: application,
+        order: -Infinity,
+    } as PluridServiceConfig];
+}
+
+
 /** The window globals the server preserve / template emit and the client reads once. */
 export const PRELOADED_REDUX_STATE_KEY = '__PRELOADED_REDUX_STATE__';
 export const PRELOADED_PLURID_METASTATE_KEY = '__PRELOADED_PLURID_METASTATE__';

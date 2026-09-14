@@ -112,6 +112,10 @@
 
     // #region internal
     import PluridView from './View';
+    import {
+        PluridApplicationDefaultsContext,
+    } from './provider';
+
     import PluridRouterContext, {
         locationOf,
     } from '../RouterBrowser/context';
@@ -727,12 +731,22 @@ const PluridApplication = forwardRef<
         ? shell.current.getHandle()
         : (undefined as unknown as PluridApplicationHandle)), []);
 
+    /**
+     * THE HOST'S DEFAULTS, for the seventeen props the route-driven path could
+     * not forward. Spread UNDER `properties`, so an application's own prop
+     * always wins and a provider is a default rather than an override.
+     */
+    const defaults = useContext(PluridApplicationDefaultsContext);
+
     return (
         <PluridApplicationShell
             ref={shell}
+            {...defaults}
             {...properties}
-            // the route-driven mode: the router's `onReady` and bus, unless the host gave the application its own
-            onReady={properties.onReady ?? routerContext?.onReady}
+            // the route-driven mode: the router's `onReady` and bus, unless the host gave the
+            // application its own — and a provider's `onReady` sits between the two, because it
+            // is the host speaking about every application rather than about this one
+            onReady={properties.onReady ?? defaults?.onReady ?? routerContext?.onReady}
             pubsub={properties.pubsub ?? routerContext?.pubsub}
             routerHosted={routerHosted}
             routerLocation={routerLocation}
@@ -748,6 +762,17 @@ PluridApplication.displayName = 'PluridApplication';
 export {
     PluridApplicationShell,
 };
+
+export {
+    PluridApplicationProvider,
+    PluridApplicationDefaultsContext,
+    usePluridApplicationDefaults,
+} from './provider';
+
+export type {
+    PluridApplicationDefaults,
+    PluridApplicationProviderProperties,
+} from './provider';
 
 export type {
     PluridApplicationHandle,

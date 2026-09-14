@@ -15,6 +15,10 @@
         PluridDocumentMeta,
         PluridDocumentLink,
     } from '@plurid/plurid-react-server';
+
+    import type {
+        PluridApplicationDefaults,
+    } from '@plurid/plurid-react';
     // #endregion external
 // #endregion imports
 
@@ -141,6 +145,26 @@ export interface PluridConfig {
     shell?: PluridServerConfiguration['shell'];
     exterior?: PluridServerConfiguration['exterior'];
     routerProperties?: PluridServerConfiguration['routerProperties'];
+    /**
+     * THE APPLICATION SURFACE, for every application the router constructs.
+     *
+     * `<PluridApplication …/>` takes eighteen props for customization,
+     * persistence and observation; the route-driven path this config generates
+     * forwarded five, so the other seventeen could not be reached from the way
+     * the kit tells people to build. Declared here, they are wrapped around the
+     * router on BOTH targets (`PluridApplicationProvider`), so the server
+     * render and the hydration agree.
+     *
+     * ```ts
+     * application: {
+     *     renderEmpty: () => <YourEmptyState />,
+     *     renderPlaneControls: (context) => <YourPlaneBar {...context} />,
+     * }
+     * ```
+     *
+     * An application's own prop still wins: these are defaults.
+     */
+    application?: PluridApplicationDefaults;
 
     // --- services (shared provider stack) -----------------------
     services?: PluridServiceConfig[];

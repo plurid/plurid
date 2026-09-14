@@ -526,6 +526,29 @@ definePluridConfiguration({
 
 Render-slots **substitute** an engine overlay with your own (rendered at the same spot); the `elements.*.show` flags **hide** the defaults.
 
+> **Route-driven? Use the provider.** Everything on `<PluridApplication>` below — the slots,
+> persistence, `onViewpointChange`, `onReady` — is also reachable when the ENGINE constructs your
+> applications from `routes`, which is what `@plurid/plurid-kit` generates and what every product
+> ships. Wrap the router once:
+>
+> ```tsx
+> <PluridApplicationProvider renderEmpty={() => <MyEmptyState />} useLocalStorage>
+>     <PluridRouterBrowser routes={routes} shell={Shell} />
+> </PluridApplicationProvider>
+> ```
+>
+> Or, in a kit app, declare it in `plurid.config.ts` and both the server render and the hydration get
+> it:
+>
+> ```ts
+> export default { …, application: { renderEmpty: () => <MyEmptyState /> } };
+> ```
+>
+> An application's own prop always wins, so a provider is a default rather than an override, and a
+> direct `<PluridApplication>` inside one takes it too. (Before 2026-09-14 the route-driven path
+> forwarded five of eighteen props and this whole section described an API the kit's own output could
+> not call.)
+
 ```tsx
 <PluridApplication
     …

@@ -47,7 +47,7 @@ by every consumer — which is precisely what happened.
 | **Domain identity must be re-derived by regex.** `space.changed` reports selection and tree in engine plane ids; a product parses the route back into its own id. | Observations carry no `parameters`. | Every product will write the same regex. dechat now has `threadIDOfPlane`. |
 | **A connector is a wall, not a line.** A child moved by hand loses its bridge band and gains a real-3D beam — drawn at `BRIDGE_STRIP_HEIGHT` (30) while the crosslink beam beside it is 3. Any product that arranges its planes apart gets opaque slabs lying across the space. | The leash inherited the flat band's thickness; neither number was configurable. | **Fixed** 2026-09-14 (`LEASH_THICKNESS`), plus both baked `CHROME_OPACITY_AMBIENT` literals wired to the live token. Unpublished; dechat overrides the entity attribute meanwhile. |
 | **The bridge band is flat by design** — an axis-aligned box faked with angled gradients, because a rotated box's corners are 3D-sorted away by Chrome. In a 3D engine it reads as the one thing without depth. | A real workaround for a real browser bug, but its cost is now visible. | Open: drawing the band as real geometry needs a different answer to the sorting problem. |
-| **An empty space speaks in engine voice** ("no planes in this space") inside a product. | `renderEmpty` — unreachable. | Open. |
+| **An empty space speaks in engine voice** ("no planes in this space") inside a product — and, in dechat, UNDER the product's own empty state, the two overlapping into an unreadable stack. | `renderEmpty` — unreachable. | **Fixed** 2026-09-14 by §1. dechat hides the engine's from its stylesheet (needing `!important`, because the engine's rule is a component class of equal specificity injected after the global sheet) until it takes the published engine. |
 | **`bridge.planeAngle` defaults to 90°** — a spawned child stands perpendicular to its parent. Correct for a space of objects; for a space of prose it means three answers compared side by side are three *lines*. | A reading product must discover and override it. | Overridden in dechat. |
 | **There is no "frame at natural scale".** Every navigation FRAMES — it fills the view with the plane — so a product whose planes are reading cards of a fixed measure is magnified to the camera's clamp on every branch landing, reopen and library jump. Framing with `awaitMeasure` also schedules a SECOND frame when the plane's height lands, so correcting the scale afterwards is undone by a tween already in flight. | Framing is the only way to go to a plane. A host cannot place the camera itself without reproducing the camera's coordinate conventions, which are not documented (an absolute `pivot` at the plane's centre lands on empty space). | Open. The product-side answer is a `navigateToPlane` option, or a documented absolute-camera recipe. |
 | **`fitToView` is a fill.** With one plane it magnifies a 460px reading card to the window width. | No "frame at natural scale". | Avoided in dechat. |
@@ -65,7 +65,7 @@ delivered. Adoption is a product's choice; **reachability is the engine's obliga
 
 ## The proposal
 
-### 1. One configuration surface, both paths
+### 1. One configuration surface, both paths — **DELIVERED 2026-09-14**
 
 Not seventeen new fields on `PluridRoute`. A provider:
 
@@ -82,8 +82,24 @@ Not seventeen new fields on `PluridRoute`. A provider:
 
 Every application the router constructs reads it. A host configures once instead of per route, which
 also settles multi-space routes (where per-route props would have to be duplicated per space).
-`routes[].application` stays available for a genuine per-route override. The kit's `defineConfig`
-grows one field and its generated app gets the whole surface.
+
+**What landed.** `PluridApplicationProvider` and `usePluridApplicationDefaults` are exported from
+`@plurid/plurid-react`. `PluridApplication` reads the context and spreads it UNDER its own props, so a
+provider is a default and never an override, and a direct embed inside one takes it too — the two
+mount paths are genuinely one surface. Nested providers merge per field, and an explicitly passed
+`undefined` reads as "not configured here" rather than erasing an outer value.
+
+The kit grew `application` on its config, and it reaches both targets **as a service** (`order:
+-Infinity`, so it sits outermost). That is the important detail: services are the one thing the kit
+already composes in an identical sequence on the server and the client, so the SSR tree and the
+hydrated tree cannot disagree about the provider — a provider present on one target and not the other
+would be a hydration mismatch by construction.
+
+Held by `containers/Application/__tests__/provider.test.tsx` (7 tests, each proven to fail: removing
+the merge fails four, reversing the precedence fails the one about precedence) and the kit's
+`__tests__/application.test.ts` (5, the ordering proven to fail).
+
+`routes[].application` stays available for a genuine per-route override, and is not built yet.
 
 ### 2. Identity without the DOM
 
@@ -139,10 +155,11 @@ Two product features wanted now sit directly on this seam:
 
 ## Sequence
 
-1. §6 first — the route-driven fixture. Without it, every fix below is unprotected, and we are
-   guessing again. It is also the cheapest.
-2. §1 — the configuration surface. Unblocks plane names, the palette, `renderEmpty`, persistence, and
-   deletes the workarounds now carried in dechat.
+1. §6 — the route-driven fixture. Still the cheapest and still not done: §1 landed with jsdom tests
+   that mount a real `PluridRouterBrowser`, which is the shape that matters, but the fixture catalog
+   is what would catch the NEXT one of these.
+2. ~~§1 — the configuration surface.~~ **Done.** It unblocks plane names, the palette, `renderEmpty`,
+   persistence and observation; the workarounds carried in dechat can be deleted as it adopts them.
 3. §2 — identity. Unblocks programmatic arrangement and removes a workaround shared by two products.
 4. §3, §4, §5 — in whatever order a product needs them.
 

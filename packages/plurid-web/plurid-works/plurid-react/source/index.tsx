@@ -83,7 +83,10 @@
         PluridRouteMatch,
     } from './data/interfaces';
 
-    import PluridApplication from './containers/Application';
+    import PluridApplication, {
+        PluridApplicationProvider,
+        usePluridApplicationDefaults,
+    } from './containers/Application';
     import PluridRouterBrowser from './containers/RouterBrowser';
     import PluridRouterStatic from './containers/RouterStatic';
     import PluridProvider from './containers/Provider';
@@ -303,6 +306,14 @@ type PluridRouterPartialProperties = Partial<PluridRouterProperties<PluridReactC
 export {
     // #region Components
     PluridApplication,
+    /**
+     * ONE CONFIGURATION SURFACE FOR BOTH MOUNT PATHS: wrap a router with it and
+     * every application the router constructs takes the host's render slots,
+     * persistence and observation — the seventeen props the route-driven path
+     * could not forward. An application's own prop still wins.
+     */
+    PluridApplicationProvider,
+    usePluridApplicationDefaults,
     PluridRouterBrowser,
     PluridRouterStatic,
     PluridProvider,
@@ -438,6 +449,10 @@ export type {
 export type {
     PluridApplicationHandle,
 } from './containers/Application/handle';
+export type {
+    PluridApplicationDefaults,
+    PluridApplicationProviderProperties,
+} from './containers/Application/provider';
 export type {
     PluridConfigurationSpaceDocking,
     PluridConfigurationSpace,
