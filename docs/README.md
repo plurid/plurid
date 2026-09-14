@@ -17,6 +17,7 @@ Current as of **2026-09-10**.
 | [`CONTEXT-MAP.md`](./CONTEXT-MAP.md) | Package status, ownership, and gate coverage |
 | [`ENGINE_AUDIT_AND_ROADMAP.md`](./ENGINE_AUDIT_AND_ROADMAP.md) | Active engineering defects, performance work, and verification priorities |
 | [`ENGINE_FEATURE_ROADMAP.md`](./ENGINE_FEATURE_ROADMAP.md) | Delivered capabilities, adoption status, and future capability sequence |
+| [`ENGINE_PRODUCT_FUSION.md`](./ENGINE_PRODUCT_FUSION.md) | The seam between the engine and the products built on it: what a consumer can actually reach, and why seventeen of eighteen customization props cannot be reached from the way we teach |
 | [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md) | Current `@plurid/plurid-kit` adoption and generator plan |
 
 Source wins on behavior. `ARCHITECTURE.md` and `CONTROL_SURFACE.md` are the maintained descriptions. Roadmaps express intent and must not be cited as proof that a capability exists.
