@@ -138,6 +138,36 @@ link does), `space.movePlanes`, `space.resizePlane`, `space.setPlaneShow`, `spac
 switches `space.grab` / `space.palette` / `space.shortcutsOverlay` / `space.focus` (each toggles when
 `on` is omitted, as the key does).
 
+#### Which plane did that become?
+
+`view.addPlane` and `space.spawnPlane` take an optional **`token`**. The engine answers on
+`space.changed` with kind `plane` once the plane is in the tree:
+
+```tsx
+plurid.pubsub.subscribe({
+    topic: PLURID_PUBSUB_TOPIC.CHANGED,
+    callback: ({ kind, value }) => {
+        if (kind !== 'plane') return;
+        // { token, planeID, route, parameters, parentPlaneID }
+        remember(value.token, value.planeID, value.parameters.threadID);
+    },
+});
+
+plurid.pubsub.publish({
+    topic: PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
+    data: { planeID: '/thread/abc', token: 'open-abc' },
+});
+```
+
+No delay to guess and no DOM to query — and two planes of one route are distinguishable, which
+`querySelector('[data-plurid-plane*=…]')` never was: it returns the first match, so opening a route
+that is already open addressed the plane that was already there. A command without a token publishes
+nothing.
+
+`parameters` is the route's own, parsed (`/thread/:threadID` → `{ threadID }`). For a plane you
+already have an id for, `planeParameters(tree, planeID)` gives the same thing from any `tree`
+observation, so nothing ever has to parse an engine plane id with a regex.
+
 ### Control — tell the engine to do something
 
 ```tsx

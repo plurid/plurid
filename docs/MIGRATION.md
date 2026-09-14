@@ -8,6 +8,7 @@ Nothing is auto-upgraded — a `0.0.0-N` bump is deliberate — so work through 
 to move, not before.
 
 **Contents**
+0. [What is NEW and additive (nothing to migrate)](#0-what-is-new-and-additive)
 1. [Behaviours that now default ON](#1-behaviours-that-now-default-on)
 2. [Renamed payload fields](#2-renamed-payload-fields)
 3. [Removed topics](#3-removed-topics)
@@ -16,6 +17,64 @@ to move, not before.
 6. [Removed server options](#6-removed-server-options)
 7. [Semantic changes](#7-semantic-changes)
 8. [Persistence](#8-persistence)
+
+---
+
+## 0. What is NEW and additive
+
+Nothing here breaks anything. Both close a seam that made every product write the same workaround, so
+if you carry either workaround, this is where it goes.
+
+### `PluridApplicationProvider` — the route-driven path can finally be configured
+
+`<PluridApplication>` takes eighteen props for customization, persistence and observation. The
+route-driven path — `routes` → `PluridRouterBrowser`, which `@plurid/plurid-kit` generates and
+`GETTING_STARTED` teaches — forwarded **five**. The other seventeen (`renderEmpty`,
+`renderPlaneControls`, `renderPalette`, `useLocalStorage`, `storageAdapter`, `onPersistContent`,
+`onViewpointChange`, …) could not be reached from the way we tell people to build.
+
+```tsx
+<PluridApplicationProvider renderEmpty={() => <MyEmptyState />} useLocalStorage>
+    <PluridRouterBrowser routes={routes} shell={Shell} />
+</PluridApplicationProvider>
+```
+
+In a kit app, declare it once in `plurid.config.ts` and both the server render and the hydration take
+it:
+
+```ts
+export default { …, application: { renderEmpty: () => <MyEmptyState /> } };
+```
+
+An application's own prop always wins, so this is a DEFAULT and never an override; a direct
+`<PluridApplication>` inside a provider takes it too. Nested providers merge per field.
+
+**If you hid an engine overlay from your stylesheet, delete that rule and pass the slot instead.**
+
+### A correlation `token` — plane identity without the DOM
+
+`view.addPlane` and `space.spawnPlane` take an optional `token`; the engine answers on
+`space.changed` kind `plane` with `{ token, planeID, route, parameters, parentPlaneID }` once the
+plane is in the tree.
+
+```diff
+- pubsub.publish({ topic: 'view.addPlane', data: { planeID: route } });
+- setTimeout(() => {
+-     const element = document.querySelector(`[data-plurid-plane*="${route}"]`);
+-     …
+- }, 450);
++ pubsub.publish({ topic: 'view.addPlane', data: { planeID: route, token } });
++ // answered on space.changed kind 'plane' — no delay to guess, no DOM to query
+```
+
+`querySelector` returns the FIRST match, so opening a route that was already open addressed the plane
+that was already there. The token does not: the answer is the plane that was not in the tree before.
+
+`parameters` is the route's own, parsed (`/thread/:threadID` → `{ threadID }`). For a plane you
+already have an id for, the exported `planeParameters(tree, planeID)` gives the same from any `tree`
+observation — so the regex that parses an engine plane id back into your own vocabulary can go.
+
+A command without a token behaves exactly as before and publishes nothing.
 
 ---
 

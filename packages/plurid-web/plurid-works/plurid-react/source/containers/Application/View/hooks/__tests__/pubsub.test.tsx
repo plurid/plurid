@@ -293,6 +293,122 @@ describe('TOTAL CONTROL: what the chrome and the keyboard reach, the bus reaches
         await rendered.unmount();
     });
 
+    /**
+     * WHICH PLANE DID THAT BECOME?
+     *
+     * A plane's identity used to be reachable only through the DOM: publish a
+     * route, guess a delay (`setTimeout(450)`), then
+     * `querySelector('[data-plurid-plane*=…]')` — which returns the FIRST match,
+     * so a route open twice addressed the wrong plane. Two products wrote that
+     * same workaround, which is what a missing API looks like.
+     */
+    it('A TOKEN IS ANSWERED: `view.addPlane` reports the plane it became, with its parameters', async () => {
+        const rendered = await render(['/a', '/thread/:threadID'], {}, []);
+        const { bus } = rendered;
+
+        const answers: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'plane') {
+                    answers.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, {
+            planeID: '/thread/abc',
+            token: 'mine',
+        });
+
+        expect(answers).toHaveLength(1);
+        expect(answers[0].token).toBe('mine');
+        expect(answers[0].planeID).toBe(ids(rendered)[0]);
+        expect(answers[0].route).toContain('/thread/abc');
+        // the parameters the engine parsed to BUILD the plane, which every
+        // consumer used to re-derive from the id with a regex
+        expect(answers[0].parameters).toEqual({ threadID: 'abc' });
+
+        await rendered.unmount();
+    });
+
+    it('and tells two planes of ONE route apart, which the DOM could not', async () => {
+        const rendered = await render(['/thread/:threadID'], {}, []);
+        const { bus } = rendered;
+
+        const answers: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'plane') {
+                    answers.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/thread/abc', token: 'first' });
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/thread/abc', token: 'second' });
+
+        expect(answers.map((entry) => entry.token)).toEqual(['first', 'second']);
+        expect(answers[0].planeID).not.toBe(answers[1].planeID);
+        expect(ids(rendered)).toEqual([answers[0].planeID, answers[1].planeID]);
+
+        await rendered.unmount();
+    });
+
+    it('says NOTHING for a command without a token: an answer, not a firehose', async () => {
+        const rendered = await render(['/a'], {}, []);
+        const { bus } = rendered;
+
+        const answers: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'plane') {
+                    answers.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: '/a' });
+
+        expect(ids(rendered)).toHaveLength(1);
+        expect(answers).toEqual([]);
+
+        await rendered.unmount();
+    });
+
+    it('answers a `space.spawnPlane` too, naming the parent it hangs from', async () => {
+        const rendered = await render(['/a', '/thread/:threadID'], {}, ['/a']);
+        const { bus } = rendered;
+        const [parent] = ids(rendered);
+
+        const answers: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'plane') {
+                    answers.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, {
+            route: '/thread/xyz',
+            parentPlaneID: parent,
+            token: 'child',
+        });
+
+        expect(answers).toHaveLength(1);
+        expect(answers[0]).toMatchObject({
+            token: 'child',
+            parentPlaneID: parent,
+            parameters: { threadID: 'xyz' },
+        });
+
+        await rendered.unmount();
+    });
+
     it('THE VIEW GROWS: `view.addPlane` ADDS a root, twice, and removing takes only that one', async () => {
         // A host that declares `view: []` and opens everything at runtime — the kit's own shape —
         // used to end up with EXACTLY ONE root no matter how many it added: the handler read the

@@ -171,6 +171,22 @@ export interface PluridPubSubSubscribeMessageSpaceTransform {
 export interface PluridPubSubMessageViewAddPlaneData {
     /** the route of the plane to add to the view */
     planeID?: string;
+    /**
+     * A CORRELATION TOKEN, so the host learns which plane this became.
+     *
+     * A plane's identity used to be reachable only through the DOM: publish a
+     * route, guess a delay (`setTimeout(450)`), then
+     * `querySelector('[data-plurid-plane*=…]')` — which returns the FIRST
+     * match, so one route open twice addressed the wrong plane. Two separate
+     * products wrote that same workaround, which is what a missing API looks
+     * like.
+     *
+     * Pass any string here and the engine answers on `space.changed` with kind
+     * `plane` once the plane is in the tree: `{ token, planeID, route,
+     * parameters }`. No delay to guess, no DOM to query, and two planes of one
+     * route are distinguishable.
+     */
+    token?: string;
 }
 export interface PluridPubSubPublishMessageViewAddPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE;
@@ -730,7 +746,36 @@ export type PluridChangeKind =
     /** the page presentation: the docked page's id, `''` when the camera left the page */
     | 'docked'
     /** the culling pass: `{ hidden, frozen, detached }` counts */
-    | 'culling';
+    | 'culling'
+    /**
+     * A PLANE THE HOST ASKED FOR, once it exists: `PluridPlaneObservation`.
+     *
+     * Published only for a `view.addPlane` / `space.spawnPlane` that carried a
+     * `token`, so it is the answer to a question rather than a firehose.
+     */
+    | 'plane';
+/**
+ * What a `space.changed` of kind `plane` carries.
+ *
+ * `parameters` is the route's own, ALREADY PARSED — the engine parsed them to
+ * build the plane and then dropped them, so every consumer re-derived them from
+ * the id with a regex. They are the plane's identity in the HOST's vocabulary
+ * (`/thread/:threadID` → `{ threadID }`), which is the thing a product actually
+ * wants and the thing the engine alone can give without guessing.
+ */
+export interface PluridPlaneObservation {
+    /** the token the host published with the command */
+    token: string;
+    /** the engine's runtime identity for this plane */
+    planeID: string;
+    /** the full route the plane resolved to */
+    route: string;
+    /** the route's parsed parameters (`routeDivisions.plane` over `.path`) */
+    parameters: Record<string, string>;
+    /** the parent, for a spawned child; `''` for a root */
+    parentPlaneID: string;
+}
+
 export interface PluridPubSubMessageChanged {
     kind: PluridChangeKind;
     value: any;
@@ -773,6 +818,22 @@ export interface PluridPubSubMessageSpawnPlane {
     parentPlaneID: string;
     /** Where on the parent the bridge leaves from; the parent's origin by default. */
     linkCoordinates?: { x: number; y: number };
+    /**
+     * A CORRELATION TOKEN, so the host learns which plane this became.
+     *
+     * A plane's identity used to be reachable only through the DOM: publish a
+     * route, guess a delay (`setTimeout(450)`), then
+     * `querySelector('[data-plurid-plane*=…]')` — which returns the FIRST
+     * match, so one route open twice addressed the wrong plane. Two separate
+     * products wrote that same workaround, which is what a missing API looks
+     * like.
+     *
+     * Pass any string here and the engine answers on `space.changed` with kind
+     * `plane` once the plane is in the tree: `{ token, planeID, route,
+     * parameters }`. No delay to guess, no DOM to query, and two planes of one
+     * route are distinguishable.
+     */
+    token?: string;
 }
 export interface PluridPubSubPublishMessageSpawnPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE;

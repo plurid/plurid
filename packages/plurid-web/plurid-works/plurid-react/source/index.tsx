@@ -453,6 +453,22 @@ export type {
     PluridApplicationDefaults,
     PluridApplicationProviderProperties,
 } from './containers/Application/provider';
+
+/**
+ * A PLANE'S IDENTITY, WITHOUT THE DOM AND WITHOUT A REGEX.
+ *
+ * `planeParameters(tree, planeID)` gives back the route's own parsed
+ * parameters — `/thread/:threadID` → `{ threadID }` — so a host reading a
+ * `selection` or `tree` observation never has to parse an engine plane id back
+ * into its own vocabulary. `planeOf` and `planeIDsOf` walk the tree the same
+ * way the engine does.
+ */
+export {
+    planeParameters,
+    parametersOf,
+    planeOf,
+    planeIDsOf,
+} from './services/logic/correlation';
 export type {
     PluridConfigurationSpaceDocking,
     PluridConfigurationSpace,

@@ -121,6 +121,10 @@
     import useCameraMotion from './hooks/useCameraMotion';
     import useGamepad from './hooks/useGamepad';
     import PluridEmpty from '~components/structural/Empty';
+
+    import {
+        PendingPlane,
+    } from '~services/logic/correlation';
     import PluridMarquee from '~components/structural/Marquee';
     import PluridLiveRegion from '~components/utilities/LiveRegion';
     import useCulling from './hooks/useCulling';
@@ -320,6 +324,16 @@ const PluridView: React.FC<PluridViewProperties> = (
 
     // #region references
     const viewElement = useRef<HTMLDivElement | null>(null);
+
+    /**
+     * THE PLANES THE HOST IS STILL WAITING TO BE TOLD ABOUT.
+     *
+     * A ref rather than state: it is written by the pubsub handlers and read by
+     * the observation effect, and a render in between would be a render about
+     * nothing. In the View rather than a module so two applications on a page
+     * cannot answer each other's questions.
+     */
+    const pendingPlanes = useRef<PendingPlane[]>([]);
     const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
     // Always-latest snapshot of the full app state for event handlers. Lets the keydown
     // callback read fresh state without being recreated on every transform tick — which
@@ -504,6 +518,8 @@ const PluridView: React.FC<PluridViewProperties> = (
     } = usePluridPubSub({
         pubsub,
         state,
+        // a command carrying a `token` is recorded here; the tree effect answers it
+        pendingPlanes,
         stateConfiguration,
         stateTransform,
         stateSpaceView,
@@ -558,6 +574,7 @@ const PluridView: React.FC<PluridViewProperties> = (
     useEngineEvents({
         pubsub: pluridPubSub[0],
         state,
+        pendingPlanes,
     });
 
     // Optionally bind the camera viewpoint with the URL's `?<param>=` — BOTH directions opt-in

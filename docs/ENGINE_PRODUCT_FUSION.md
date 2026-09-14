@@ -43,8 +43,8 @@ by every consumer — which is precisely what happened.
 | **`view.addPlane` did not add.** The one topic a route-driven product must use to open anything appended to the `stateSpaceView` captured at mount. For a route declaring `view: []` — the kit's shape — that is the empty array forever, so every add REPLACED the space with one plane. Silent: no throw, no warning, and the topic's name says the opposite of what it did. | The handler read its closure instead of `latest.current`; its sibling `VIEW_REMOVE_PLANE` had always been right. | **Fixed** 2026-09-13, regression test proven to bite. Unpublished. `denote` holds the same latent call. |
 | **Every route-driven plane is named by its route.** A plane's accessible name and its bar read `plurid://host/thread/<128 hex>`. The documented fix is `renderPlaneControls`. | Render slot — unreachable. | Worked around: dechat puts the name in the plane's own content. |
 | **Arrangement persistence had to be rebuilt, and was rebuilt wrong.** `TreePlane.route` is absolute — protocol, host, port — so a persisted tree cannot rebuild on another origin. A moved dev-server port restored an *empty space* that looked like lost data. | `useLocalStorage` / `storageAdapter` / `onPersistContent` — unreachable. The engine's own path-addressed answer (`logic/arrangement/fragment`) exists but is exposed only for the clipboard. | Worked around: dechat persists root paths and applies geometry only on a matching origin. |
-| **Plane identity comes from the DOM.** Products publish a route, guess when the plane exists (`setTimeout(450)`), then find it with `querySelector('[data-plurid-plane*=…]')` — which returns the FIRST match, so one thread open twice addresses the wrong plane. | No creation signal, no returned identity. | Worked around in dechat AND denote. **A shared workaround is a missing API.** |
-| **Domain identity must be re-derived by regex.** `space.changed` reports selection and tree in engine plane ids; a product parses the route back into its own id. | Observations carry no `parameters`. | Every product will write the same regex. dechat now has `threadIDOfPlane`. |
+| **Plane identity comes from the DOM.** Products publish a route, guess when the plane exists (`setTimeout(450)`), then find it with `querySelector('[data-plurid-plane*=…]')` — which returns the FIRST match, so one thread open twice addresses the wrong plane. | No creation signal, no returned identity. | **Fixed** 2026-09-14 by §2: `view.addPlane` / `space.spawnPlane` take a `token`, answered on `space.changed` kind `plane`. Worked around in dechat AND denote until they adopt it. |
+| **Domain identity must be re-derived by regex.** `space.changed` reports selection and tree in engine plane ids; a product parses the route back into its own id. | Observations carry no `parameters`. | **Fixed** 2026-09-14: the `plane` observation carries them, and `planeParameters(tree, planeID)` is exported so the regex never needs writing. dechat's `threadIDOfPlane` can go when it adopts. |
 | **A connector is a wall, not a line.** A child moved by hand loses its bridge band and gains a real-3D beam — drawn at `BRIDGE_STRIP_HEIGHT` (30) while the crosslink beam beside it is 3. Any product that arranges its planes apart gets opaque slabs lying across the space. | The leash inherited the flat band's thickness; neither number was configurable. | **Fixed** 2026-09-14 (`LEASH_THICKNESS`), plus both baked `CHROME_OPACITY_AMBIENT` literals wired to the live token. Unpublished; dechat overrides the entity attribute meanwhile. |
 | **The bridge band is flat by design** — an axis-aligned box faked with angled gradients, because a rotated box's corners are 3D-sorted away by Chrome. In a 3D engine it reads as the one thing without depth. | A real workaround for a real browser bug, but its cost is now visible. | Open: drawing the band as real geometry needs a different answer to the sorting problem. |
 | **An empty space speaks in engine voice** ("no planes in this space") inside a product — and, in dechat, UNDER the product's own empty state, the two overlapping into an unreadable stack. | `renderEmpty` — unreachable. | **Fixed** 2026-09-14 by §1. dechat hides the engine's from its stylesheet (needing `!important`, because the engine's rule is a component class of equal specificity injected after the global sheet) until it takes the published engine. |
@@ -101,19 +101,39 @@ the merge fails four, reversing the precedence fails the one about precedence) a
 
 `routes[].application` stays available for a genuine per-route override, and is not built yet.
 
-### 2. Identity without the DOM
+### 2. Identity without the DOM — **DELIVERED 2026-09-14**
 
 `space.spawnPlane` and `view.addPlane` take an optional correlation token; `space.changed` kind
-`plane` reports `{ token, planeID, route, parameters }` when the plane is created and measured. Then a
-product never guesses a delay, never queries the DOM, and two planes of one route are distinguishable.
-This is the prerequisite for anything that arranges planes programmatically — including a product that
-lets a model open and place them.
+`plane` reports `{ token, planeID, route, parameters, parentPlaneID }` when the plane is in the tree.
+A product never guesses a delay, never queries the DOM, and two planes of one route are
+distinguishable. This is the prerequisite for anything that arranges planes programmatically —
+including a product that lets a model open and place them.
 
-### 3. Domain identity in observations
+**How it resolves, and why that shape.** A command carrying a token records the planes that existed
+*when it was published*; the next tree is diffed against that set. A plane the host asked for is by
+definition one that was not there before, which is what makes the answer exact even when the same
+route is already open — precisely the case `querySelector` got wrong by returning the first match.
+It is answered from the TREE rather than a timer, because the tree is the moment a plane exists, and
+not knowing that moment is what forced the `setTimeout(450)` in the first place. A request is dropped
+after four tree changes: a route matching no registered plane never arrives, and a registry that only
+ever grows is a leak. A command without a token records nothing and publishes nothing — an answer, not
+a firehose.
 
-`space.changed` kinds `selection`, `tree` and `activePlane` carry each plane's parsed `parameters`
-beside its id. The engine already parsed them to build the plane; dropping them forces every consumer
-to re-derive them from a string.
+One thing the implementation found: the parameters are on `routeDivisions.**plane**`, not `.path` —
+`path` is empty for `/thread/:threadID`. Both are read, the plane's winning, so a host never has to
+know which division its parameters landed in.
+
+Held by `services/logic/correlation/__tests__` (15) and four round-trip tests through a real bus in
+`View/hooks/__tests__/pubsub.test.tsx`, each proven to fail: silencing the answer fails three,
+removing the baseline diff fails the already-open case, reading the wrong division fails two.
+
+### 3. Domain identity in observations — **PARTLY DELIVERED 2026-09-14**
+
+The `plane` observation carries `parameters`, and `planeParameters(tree, planeID)` / `parametersOf`
+are exported so a host reading ANY observation can resolve an id to its own vocabulary without a
+regex. What is still not done is putting `parameters` inline on `selection` / `tree` / `activePlane`:
+that changes the shape of observations consumers already parse, so it wants a deliberate version
+rather than being slipped in beside a fix.
 
 ### 4. Portable arrangement as the supported persistence format
 
@@ -160,7 +180,8 @@ Two product features wanted now sit directly on this seam:
    is what would catch the NEXT one of these.
 2. ~~§1 — the configuration surface.~~ **Done.** It unblocks plane names, the palette, `renderEmpty`,
    persistence and observation; the workarounds carried in dechat can be deleted as it adopts them.
-3. §2 — identity. Unblocks programmatic arrangement and removes a workaround shared by two products.
-4. §3, §4, §5 — in whatever order a product needs them.
+3. ~~§2 — identity.~~ **Done.** Unblocks programmatic arrangement and removes a workaround shared by
+   two products, once each adopts it.
+4. §4, §5 — and the rest of §3 — in whatever order a product needs them.
 
 Publishing the `view.addPlane` fix is independent and should not wait for any of this.

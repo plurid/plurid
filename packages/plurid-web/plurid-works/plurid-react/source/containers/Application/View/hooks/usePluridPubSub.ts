@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        MutableRefObject,
         useRef,
         useState,
         useCallback,
@@ -32,6 +33,12 @@
 
 
     // #region external
+    import {
+        PendingPlane,
+        PENDING_TREE_CHANGES,
+        planeIDsOf,
+    } from '~services/logic/correlation';
+
     import { AppState } from '~services/state/store';
     import actions from '~services/state/actions';
     import {
@@ -111,6 +118,12 @@ export interface UsePluridPubSubDispatchers {
 }
 
 export interface UsePluridPubSubParameters {
+    /**
+     * The plane requests the host is waiting on. A command carrying a `token`
+     * records the planes that exist RIGHT NOW; `useEngineEvents` diffs the next
+     * tree against that set and publishes the answer.
+     */
+    pendingPlanes?: MutableRefObject<PendingPlane[]>;
     /** The initial pubsub from props (or a fresh `PluridPubSub` if absent). */
     pubsub: IPluridPubSub | undefined;
 
@@ -160,6 +173,7 @@ export const usePluridPubSub = (
         planesRegistrar,
         hostname,
         viewElement,
+        pendingPlanes,
     }: UsePluridPubSubParameters,
 ) => {
     const [
@@ -170,6 +184,33 @@ export const usePluridPubSub = (
             ? [pubsub]
             : [new PluridPubSub()]
     );
+
+    /**
+     * RECORD A PLANE REQUEST, so the host can be told which plane it became.
+     *
+     * The planes that exist RIGHT NOW are the baseline: whatever the command
+     * produces is, by definition, not among them — which is what makes the
+     * answer exact even when the same route is already open. A command without
+     * a token records nothing and costs nothing.
+     */
+    const notePending = (
+        token: unknown,
+        route: string,
+    ) => {
+        if (typeof token !== 'string' || !token || !pendingPlanes) {
+            return;
+        }
+
+        pendingPlanes.current = [
+            ...pendingPlanes.current,
+            {
+                token,
+                route,
+                known: planeIDsOf(latest.current.stateTree),
+                remaining: PENDING_TREE_CHANGES,
+            },
+        ];
+    };
 
     // Handlers read the LATEST state through a ref, so every pubsub instance is subscribed ONCE
     // (per instance) instead of re-subscribed on each tree/config change — which raced in-flight
@@ -356,6 +397,8 @@ export const usePluridPubSub = (
                     if (typeof plane !== 'string') {
                         return;
                     }
+
+                    notePending((data as any)?.token, plane);
 
                     // THROUGH `latest`, NOT THE CLOSURE. These handlers are subscribed ONCE per
                     // pubsub instance (see `latest` above), so a captured `stateSpaceView` is
@@ -753,6 +796,8 @@ export const usePluridPubSub = (
                     if (typeof route !== 'string' || typeof parentPlaneID !== 'string' || !registrar) {
                         return;
                     }
+                    notePending((data as any)?.token, route);
+
                     dispatch(toggleLinkPlane({
                         parentPlaneID,
                         linkID: parentPlaneID + '#' + route + '#api',

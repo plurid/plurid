@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import {
+        MutableRefObject,
         useEffect,
     } from 'react';
 
@@ -18,6 +19,10 @@
     import {
         cullingCounts,
     } from '~services/logic/inspector';
+    import {
+        PendingPlane,
+        resolvePending,
+    } from '~services/logic/correlation';
     // #endregion libraries
 // #endregion imports
 
@@ -28,6 +33,8 @@ export interface UseEngineEventsParameters {
     /** The instance pubsub (the one `onReady` hands back + the View's topics ride). */
     pubsub: IPluridPubSub | undefined;
     state: AppState;
+    /** the plane requests a host is waiting on (see `services/logic/correlation`). */
+    pendingPlanes?: MutableRefObject<PendingPlane[]>;
 }
 
 
@@ -43,6 +50,7 @@ export const useEngineEvents = (
     {
         pubsub,
         state,
+        pendingPlanes,
     }: UseEngineEventsParameters,
 ) => {
     const space = state.space;
@@ -62,6 +70,28 @@ export const useEngineEvents = (
 
     useEffect(() => {
         emit('tree', space.tree);
+
+        /**
+         * AND THE PLANES THE HOST ASKED FOR BY NAME.
+         *
+         * Answered here rather than on a timer because the tree IS the moment a
+         * plane exists — which is the thing a host could not know before, and
+         * why every product guessed a delay and then queried the DOM for it.
+         */
+        if (!pendingPlanes || pendingPlanes.current.length === 0) {
+            return;
+        }
+
+        const {
+            observations,
+            waiting,
+        } = resolvePending(pendingPlanes.current, space.tree);
+
+        pendingPlanes.current = waiting;
+
+        for (const observation of observations) {
+            emit('plane', observation);
+        }
     }, [pubsub, space.tree]);
 
     useEffect(() => {
