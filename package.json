@@ -22,7 +22,9 @@
         "bench": "node scripts/bench.mjs",
         "verify": "pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm size && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
         "docs.tables": "node scripts/generate-tables.mjs",
-        "docs.tables.check": "node scripts/generate-tables.mjs --check"
+        "docs.tables.check": "node scripts/generate-tables.mjs --check",
+        "sync": "node scripts/sync-consumer.mjs",
+        "sync.check": "node scripts/sync-consumer.mjs --check"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
