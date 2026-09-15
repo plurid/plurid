@@ -184,6 +184,42 @@ const rootsMatchView = (
     })
 );
 
+/**
+ * WHETHER THE SPACE HAS ANYTHING IN IT, which is not the same as whether one was DECLARED.
+ *
+ * The chrome (the origin, the toolbar, the viewcube, the shortcuts) and the
+ * empty state used to turn on `view.length !== 0` alone. But `view` is the
+ * declaration of which roots an application is showing, and closing a plane
+ * does not touch it: `setPlaneShow` hides the plane IN THE TREE and leaves it
+ * there, which is exactly what lets it be reopened.
+ *
+ * So a reader who closed every plane got a fully dressed space with nothing in
+ * it - grid, toolbar, viewcube, all of it - while the engine's own empty state
+ * stayed hidden, and the same emptiness reached on a fresh load looked like a
+ * different application. The chrome is furniture for planes; with no plane
+ * shown there is nothing for it to act on.
+ *
+ * Roots only, because a hidden plane's children hang off a plane that is not
+ * there and are hidden with it. And an EMPTY tree under a non-empty view is
+ * the moment before the first layout, not emptiness - answering "nothing here"
+ * then would flash the empty state on every first plane.
+ */
+const spaceHasPlanes = (
+    tree: TreePlane[],
+    view: PluridApplicationView,
+): boolean => {
+    if (view.length === 0) {
+        return false;
+    }
+
+    if (tree.length === 0) {
+        return true;
+    }
+
+    return tree.some((root) => root.show !== false);
+};
+
+
 export interface PluridViewOwnProperties extends PluridApplicationProperties<PluridReactComponent> {
     /** The diagnostic registry (`api.inspect()`), written by the planes and the gesture layer. */
     inspector?: PluridInspectorRegistry;
@@ -1187,7 +1223,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 <PluridLiveRegion />
                 <PluridMarquee />
 
-                {stateSpaceView.length !== 0 ? (
+                {spaceHasPlanes(stateTree, stateSpaceView) ? (
                     <PluridViewContainer
                         mode={chromeMode}
                         context={chromeContext}
