@@ -55,6 +55,7 @@
     import {
         isHandSized,
         pairRootsByIdentity,
+        rootIdentity,
     } from './fields';
 
     import {
@@ -313,6 +314,85 @@ export const computeSpaceTree = <C>(
         return layoutlessTreePlanes;
     }
 
+    /*
+        THE LAYOUT PLACES WHAT IS SHOWN.
+
+        Closing a plane hides it and leaves it in the tree, which is what lets
+        it be reopened where it was. But the layout was handed every view item
+        and placed all of them - not one of the five layout modules mentions
+        `show` - and the truth was stamped back only afterwards, by the host's
+        reconcile. So a put-away plane was given a slot in the row, and the
+        planes the reader could actually see were spread around a hole.
+
+        A hidden root keeps the location it already had, so it comes back where
+        it was left, and takes no part in the packing. Order is preserved, so
+        the roots a host addresses by index still line up.
+
+        Every other part of the engine already works this way: selection, the
+        palette, the camera, culling, docking, the inspector, and the
+        measured-relayout signature all skip `show === false`. This was the one
+        place that forgot, and it is the one place that decides where things go.
+    */
+    const hiddenIdentities = new Map<string, TreePlane[]>();
+    for (const root of previousTree || []) {
+        if (root.show === false) {
+            const identity = rootIdentity(root);
+            const bucket = hiddenIdentities.get(identity);
+            if (bucket) {
+                bucket.push(root);
+            } else {
+                hiddenIdentities.set(identity, [root]);
+            }
+        }
+    }
+
+    if (hiddenIdentities.size > 0) {
+        const laidOut: TreePlane[] = [];
+        const kept = new Map<number, TreePlane>();
+
+        treePlanes.forEach((plane, index) => {
+            const bucket = hiddenIdentities.get(rootIdentity(plane));
+            const hidden = bucket && bucket.length > 0 ? bucket.shift() : undefined;
+
+            if (hidden) {
+                kept.set(index, {
+                    ...plane,
+                    show: false,
+                    location: hidden.location,
+                });
+                return;
+            }
+
+            laidOut.push(plane);
+        });
+
+        const placed = computeSpaceTreeLayout(laidOut, configuration, viewSize);
+
+        const merged: TreePlane[] = [];
+        let taken = 0;
+        for (let index = 0; index < treePlanes.length; index += 1) {
+            const hidden = kept.get(index);
+            if (hidden) {
+                merged.push(hidden);
+                continue;
+            }
+            merged.push(placed[taken]);
+            taken += 1;
+        }
+
+        return merged;
+    }
+
+    return computeSpaceTreeLayout(treePlanes, configuration, viewSize);
+};
+
+
+/** The layout itself: the roots it is given, placed by the configured kind. */
+const computeSpaceTreeLayout = (
+    treePlanes: TreePlane[],
+    configuration: PluridConfiguration,
+    viewSize?: ViewSize,
+): TreePlane[] => {
     switch(configuration.space.layout.type) {
         case LAYOUT_TYPES.COLUMNS:
             {
