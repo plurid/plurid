@@ -194,6 +194,7 @@ plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.REDO });
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_TREE, data: { tree } });
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT, data: { viewpoint: 'v…', animate: true } }); // v1, v2 or v3
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME, data: { planeID } });   // or { selection: true }, or {} for everything
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME, data: { planeIDs, yaw: 'best' } }); // these planes, from the yaw where the narrowest reads widest
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA, data: {          // one camera mutation
     yaw: 15, pan: { x: 40, y: 0 }, zoom: { factor: 1.2, anchor: { x: 300, y: 200 } },
     animate: true,                                                                     // tween to the result

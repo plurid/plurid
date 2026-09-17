@@ -395,8 +395,8 @@ export type CameraCommand =
     | { kind: 'frame'; planeID?: string; selection?: boolean }
     /** Frame a plane AND the plane it came from, from the yaw at which both read. */
     | { kind: 'pair'; planeID: string }
-    /** Frame these planes by their real corners from a yaw (`best`: where the narrowest reads). */
-    | { kind: 'planes'; planeIDs: string[]; yaw?: number | 'best' }
+    /** Frame these planes (else the selection) by their real corners from a yaw (`best`: where the narrowest reads). */
+    | { kind: 'planes'; planeIDs?: string[]; yaw?: number | 'best' }
     | { kind: 'fit'; faceOn?: boolean }
     | { kind: 'reset' }
     | { kind: 'home' }
@@ -438,7 +438,7 @@ export const resolveCameraTarget = (
                 : undefined;
         }
         case 'planes':
-            return planesTarget(spaceState, configuration, command.planeIDs, command.yaw);
+            return planesTarget(spaceState, configuration, command.planeIDs ?? spaceState.selectedPlaneIDs, command.yaw);
         case 'fit':
             return fitTarget(spaceState, configuration, command.faceOn ?? true);
         case 'reset':
@@ -774,11 +774,18 @@ export const frameCommand = (
 ): CameraThunk => {
     const animate = message?.animate ?? true;
 
+    // a set of planes from a yaw: a fan of fins behind a parent reads from the yaw between them,
+    // never from the camera's own
+    if (message?.planeIDs && message.planeIDs.length > 0) {
+        return cameraCommand({ kind: 'planes', planeIDs: message.planeIDs, yaw: message.yaw ?? 'best' }, { animate });
+    }
     if (message?.planeID) {
         return cameraCommand({ kind: 'frame', planeID: message.planeID }, { animate });
     }
     if (message?.selection) {
-        return cameraCommand({ kind: 'frame', selection: true }, { animate });
+        return message.yaw !== undefined
+            ? cameraCommand({ kind: 'planes', yaw: message.yaw }, { animate })
+            : cameraCommand({ kind: 'frame', selection: true }, { animate });
     }
     return cameraCommand({ kind: 'fit' }, { animate });
 };

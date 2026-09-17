@@ -518,6 +518,14 @@ export interface PluridPubSubMessageFrame {
     planeID?: string;
     /** Frame the current selection. */
     selection?: boolean;
+    /** Frame THESE planes by their real corners, from `yaw`; over `planeID` and `selection`. */
+    planeIDs?: string[];
+    /**
+     * The yaw to frame `planeIDs` or the selection from: a number, or `best` (the yaw at which the
+     * narrowest of them reads widest, as a fit turns). `planeIDs` default to `best`; a selection
+     * without it keeps the camera's yaw, as it always did.
+     */
+    yaw?: number | 'best';
     /** Tween to the framing instead of jumping. Default `true`. */
     animate?: boolean;
 }

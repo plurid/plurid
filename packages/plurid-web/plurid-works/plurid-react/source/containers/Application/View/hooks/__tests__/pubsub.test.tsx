@@ -831,6 +831,28 @@ describe('bus hygiene', () => {
         await rendered.unmount();
     });
 
+    it('space.frame takes a set of planes and a yaw: a parent and its fin read from the yaw between them', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const [a] = space(rendered).tree.map((plane: any) => plane.planeID);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: '/b', parentPlaneID: a, framing: 'none' });
+        const child = (space(rendered).tree[0] as any).children[0];
+        expect(child.location.rotateY).toBeCloseTo(90.1, 3);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_FRAME, { planeIDs: [a, child.planeID], yaw: 'best', animate: false });
+        expect(Math.abs(space(rendered).camera.yaw)).toBeCloseTo(45.05, 0);
+
+        // and the selection, from a yaw asked for; without one it keeps the camera's yaw as before
+        await publish(bus, PLURID_PUBSUB_TOPIC.SET_SELECTION, { planeIDs: [a, child.planeID] });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_FRAME, { selection: true, yaw: 0, animate: false });
+        expect(space(rendered).camera.yaw).toBeCloseTo(0, 3);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH, { value: 20 });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_FRAME, { selection: true, animate: false });
+        expect(space(rendered).camera.yaw).toBeCloseTo(20, 3);
+
+        await rendered.unmount();
+    });
+
     it('a turn of the camera re-publishes the transform, never the configuration', async () => {
         const rendered = await render(['/a']);
         const { bus } = rendered;
