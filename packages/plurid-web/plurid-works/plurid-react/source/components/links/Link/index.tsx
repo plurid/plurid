@@ -168,6 +168,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         previewOffsetX,
         previewOffsetY,
         linkID: linkIDProperty,
+        mode,
         // #endregion own
 
         // #region state
@@ -313,6 +314,8 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
             linkCoordinates: coordinates,
             planesRegistry: planesRegistry.getAll(),
             hostname,
+            // a product's way back GOES to the plane it made; the space's own links toggle
+            mode,
         }) as any);
 
         defocusLink();
@@ -326,6 +329,7 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         hostname,
         linkCoordinates,
         measure,
+        mode,
     ]);
 
     const handleKeyUp = (

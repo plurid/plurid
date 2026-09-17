@@ -236,8 +236,16 @@ const letMomentaryChromeGo = (
     if (!chrome) {
         return;
     }
+    // TO THE VIEW, never to the body: the keys must still reach the space (Escape off a docked
+    // page, the mode keys) after a click, and the view is where they are heard
+    const view = event.currentTarget as HTMLElement | null;
     setTimeout(() => {
-        if (typeof document !== 'undefined' && document.activeElement === button) {
+        if (typeof document === 'undefined' || document.activeElement !== button) {
+            return;
+        }
+        if (view && typeof view.focus === 'function') {
+            view.focus({ preventScroll: true });
+        } else {
             button.blur();
         }
     }, 0);

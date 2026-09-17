@@ -55,6 +55,20 @@ export const isEditableTarget = (
 };
 
 
+/** The field an event target types into (its editable root), or nothing. */
+export const editableRootOf = (
+    target: EventTarget | null | undefined,
+): HTMLElement | null => {
+    const element = asElement(target);
+    if (!element || !isEditableTarget(element)) {
+        return null;
+    }
+    return element.isContentEditable
+        ? (element.closest('[contenteditable]') as HTMLElement | null) || (element as HTMLElement)
+        : (element.closest(EDITABLE_SELECTOR) as HTMLElement | null) || (element as HTMLElement);
+};
+
+
 /**
  * A typing target that HAS THE KEYBOARD: the field, or something inside it, is the active element.
  * A field the pointer merely hovers is not typing anything, so a press or a wheel over it is the
@@ -63,13 +77,10 @@ export const isEditableTarget = (
 export const isFocusedEditable = (
     target: EventTarget | null | undefined,
 ): boolean => {
-    const element = asElement(target);
-    if (!element || !isEditableTarget(element) || typeof document === 'undefined') {
+    const root = editableRootOf(target);
+    if (!root || typeof document === 'undefined') {
         return false;
     }
-    const root = element.isContentEditable
-        ? (element.closest('[contenteditable]') as HTMLElement | null) || element
-        : (element.closest(EDITABLE_SELECTOR) as HTMLElement | null) || element;
     const active = document.activeElement;
     return !!active && (active === root || root.contains(active));
 };

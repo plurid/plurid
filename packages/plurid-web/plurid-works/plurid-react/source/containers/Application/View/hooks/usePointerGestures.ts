@@ -44,6 +44,7 @@
     import {
         isEditableTarget,
         isFocusedEditable,
+        editableRootOf,
         isEngineControl,
         isDragHandle,
         planeElementOf,
@@ -125,7 +126,49 @@ interface Gesture {
         midY: number;
         angle: number;
     } | null;
+    /** What the press landed on: a field, released below the threshold, gets the focus. */
+    target: Element | null;
 }
+
+
+/**
+ * A CLICK ON A FIELD FOCUSES IT. A navigation press (a mode, first person, the grab) takes the
+ * pointer and prevents its default, which is also what would have moved the focus into the field
+ * and put the caret where the pointer was; a press that never became a drag is a click, and a
+ * click on a field means "type here". The caret lands where the press did, where the platform
+ * can say.
+ */
+const focusFieldAt = (
+    target: Element,
+    event: PointerEvent,
+) => {
+    const root = editableRootOf(target);
+    if (!root) {
+        return;
+    }
+    root.focus({ preventScroll: true });
+    if (!root.isContentEditable) {
+        return;
+    }
+    const doc = root.ownerDocument as Document & {
+        caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null;
+        caretRangeFromPoint?: (x: number, y: number) => Range | null;
+    };
+    let range: Range | null = null;
+    const position = doc.caretPositionFromPoint?.(event.clientX, event.clientY);
+    if (position) {
+        range = doc.createRange();
+        range.setStart(position.offsetNode, position.offset);
+        range.collapse(true);
+    } else {
+        range = doc.caretRangeFromPoint?.(event.clientX, event.clientY) || null;
+    }
+    if (range && root.contains(range.startContainer)) {
+        const selection = doc.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+    }
+};
 
 const MAX_SAMPLES = 24;
 
@@ -562,6 +605,18 @@ export const usePointerGestures = (
                 return;
             }
 
+            // a navigation press released where it landed, on a field: a click, and the field's
+            if (
+                event
+                && event.type === 'pointerup'
+                && !current.dragging
+                && current.target
+                && isEditableTarget(current.target)
+                && !isFocusedEditable(current.target)
+            ) {
+                focusFieldAt(current.target, event);
+            }
+
             // G arms ONE grab: the drag it armed ends it on release (the user's rule, 2026-09-06), so
             // the page is a page again — text selectable, links the page's. A press that never
             // dragged keeps the grab armed (G again or Escape cancels it); Space held is the way to
@@ -651,6 +706,7 @@ export const usePointerGestures = (
                     historyOpen: false,
                     dragDepth: 0,
                     pinch: null,
+                    target: null,
                 };
                 pinch.pinch = twoPointers();
                 gesture.current = pinch;
@@ -698,6 +754,7 @@ export const usePointerGestures = (
                 historyOpen: false,
                 dragDepth: 0,
                 pinch: null,
+                target: event.target instanceof Element ? event.target : null,
             };
             callbacks.current.onIntent?.(intent);
             // A PRESS THE ENGINE TAKES IS THE ENGINE'S. Its default — the compatibility mousedown

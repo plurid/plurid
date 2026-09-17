@@ -113,6 +113,15 @@ export interface PluridLink<C, S, M> {
     linkID?: string;
 
     /**
+     * What a click does when the plane this link opened is ALREADY OPEN: `toggle` (default) puts
+     * it away, as a link in the space presentation always has; `open` goes to it, framed with
+     * its parent as `navigation.childFraming` says. Either way a put-away plane comes back,
+     * framed on its first measurement. Docked on a page a link is a link in both modes;
+     * Alt-click re-navigates and Ctrl/Cmd-click is the browser's in both.
+     */
+    mode?: 'toggle' | 'open';
+
+    /**
      * Format the link as a simple anchor element. Default `false`.
      */
     devisible?: boolean;

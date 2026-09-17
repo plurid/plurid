@@ -305,7 +305,7 @@ describe('@plurid/plurid-react/testing', () => {
         await rendered.unmount();
     });
 
-    it('a toolbar button clicked with the pointer lets the focus go; activated by the keyboard it keeps it', async () => {
+    it('a toolbar button clicked with the pointer hands the focus to the view; activated by the keyboard it keeps it', async () => {
         installFrameClock();
         const rendered = await renderPlurid({ planes, view: ['/one'] });
         const button = document.querySelector('[data-plurid-entity="PluridToolbar"] button') as HTMLButtonElement;
@@ -323,11 +323,48 @@ describe('@plurid/plurid-react/testing', () => {
         });
         await tick();
         expect(document.activeElement).not.toBe(button);
+        // to the view, not to the body: the keys still reach the space after a click
+        expect(document.activeElement).toBe(rendered.view);
 
         // the keyboard: focus and activate, no pointer: the focus stays, and so would the ring
         await act(async () => { button.focus(); button.click(); });
         await tick();
         expect(document.activeElement).toBe(button);
+
+        await rendered.unmount();
+    });
+
+    it('a click on a field in a navigation mode focuses it; a drag from it is the space\'s and leaves it alone', async () => {
+        installFrameClock();
+        const rendered = await renderPlurid({
+            planes,
+            view: ['/one'],
+            configuration: { space: { firstPerson: true } } as any,
+        });
+        const field = document.createElement('textarea');
+        rendered.view.appendChild(field);
+        const Pointer = (window as any).PointerEvent;
+        const pointer = (type: string, x: number, y: number, id: number, down: boolean) => new Pointer(type, {
+            bubbles: true, cancelable: true, clientX: x, clientY: y, pointerId: id, pointerType: 'mouse', isPrimary: true, button: 0, buttons: down ? 1 : 0,
+        });
+
+        // the press is the space's (first person looks), so the default that focuses a field is gone
+        const press = pointer('pointerdown', 300, 200, 3, true);
+        await act(async () => { field.dispatchEvent(press); });
+        expect(press.defaultPrevented).toBe(true);
+        expect(document.activeElement).not.toBe(field);
+        // released where it landed: a click, and the field's
+        await act(async () => { field.dispatchEvent(pointer('pointerup', 300, 200, 3, false)); });
+        expect(document.activeElement).toBe(field);
+
+        // a press that becomes a drag is the space's to the end: the field is not focused by it
+        await act(async () => { field.blur(); rendered.view.focus(); });
+        await act(async () => {
+            field.dispatchEvent(pointer('pointerdown', 300, 200, 4, true));
+            field.dispatchEvent(pointer('pointermove', 340, 240, 4, true));
+            field.dispatchEvent(pointer('pointerup', 340, 240, 4, false));
+        });
+        expect(document.activeElement).not.toBe(field);
 
         await rendered.unmount();
     });
