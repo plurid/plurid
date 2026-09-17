@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
     openFixture,
     settle,
+    publish,
     afterFrames,
     collectConsoleErrors,
 } from './helpers';
@@ -44,8 +45,16 @@ const chromeQuiet = (
     return first === second && second === third;
 }, undefined, { timeout: 10_000, polling: 50 });
 
+/**
+ * NO FADE IN A PICTURE. The chrome fades in over `space.fadeInTime` once mounted, on a clock of its
+ * own; sampling the chrome for stillness (below) passed BEFORE the fade had begun on a slow run
+ * (CI #79: the toolbar's text and the cube's edges again, the planes identical). A fade is not a
+ * property of the space a baseline is about, so the capture turns it off: with `fadeInTime: 0`
+ * the toolbar's own rule is opacity 1 and no animation, at once, whatever the clock did.
+ */
 const stabilize = async (page: Page) => {
     await page.evaluate(() => (document as any).fonts?.ready);
+    await publish(page, 'configuration', { space: { fadeInTime: 0 } });
     await settle(page);
     await afterFrames(page, 2);
     await chromeQuiet(page);
