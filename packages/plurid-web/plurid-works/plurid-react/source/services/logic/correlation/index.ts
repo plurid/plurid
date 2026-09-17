@@ -168,7 +168,7 @@ const pathOf = (
  * same source, or the SAME PATH. Exactly the same, not a suffix: `/thread/1` used to answer for
  * `/other/thread/1`, and a product with two routes ending alike was told the wrong plane.
  */
-const answersTo = (
+export const answersTo = (
     plane: TreePlane,
     route: string,
 ) => !route

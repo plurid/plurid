@@ -453,6 +453,41 @@ describe('TOTAL CONTROL: what the chrome and the keyboard reach, the bus reaches
         await rendered.unmount();
     });
 
+    it('`view.removePlane` takes a SPAWNED plane too, by its route or its id, with its subtree and its selection', async () => {
+        const rendered = await render(['/a', '/b', '/c'], {}, ['/a']);
+        const { bus } = rendered;
+        const a = space(rendered).tree[0].planeID;
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: '/b', parentPlaneID: a });
+        const b = space(rendered).tree[0].children![0];
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: '/c', parentPlaneID: b.planeID });
+        expect(space(rendered).tree[0].children![0].children).toHaveLength(1);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SELECT_IN_RECT, {
+            rect: { left: -10000, top: -10000, right: 10000, bottom: 10000 },
+        });
+        expect(space(rendered).selectedPlaneIDs).toContain(b.planeID);
+
+        // by its route, the path a host knows: the node goes with its subtree, the root stays, and
+        // the selection forgets it (the view held only the roots, so a spawned plane used to stay:
+        // shown, bridged and empty once its host had forgotten what it rendered)
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, { planeID: '/b' });
+        expect(space(rendered).tree).toHaveLength(1);
+        expect(space(rendered).tree[0].children ?? []).toHaveLength(0);
+        expect(space(rendered).selectedPlaneIDs).not.toContain(b.planeID);
+
+        // by its runtime id
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: '/b', parentPlaneID: a });
+        const again = space(rendered).tree[0].children![0].planeID;
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, { planeID: again });
+        expect(space(rendered).tree[0].children ?? []).toHaveLength(0);
+
+        // a plane nowhere: ignored, the tree as it was
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, { planeID: '/nowhere' });
+        expect(space(rendered).tree).toHaveLength(1);
+
+        await rendered.unmount();
+    });
+
     it('THE MARQUEE, programmatically: a screen rect selects, adds and subtracts', async () => {
         const rendered = await render();
         const { bus } = rendered;

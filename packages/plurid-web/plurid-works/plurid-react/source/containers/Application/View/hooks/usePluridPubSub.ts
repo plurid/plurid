@@ -39,6 +39,8 @@
         PENDING_TREE_CHANGES,
         hiddenPlaneIDsOf,
         planeIDsOf,
+        planeOf,
+        answersTo,
     } from '~services/logic/correlation';
 
     import {
@@ -515,19 +517,58 @@ export const usePluridPubSub = (
                         return;
                     }
 
-                    /** TODO
-                     * a less naive filtering
-                     */
-                    const updatedView = latest.current.stateSpaceView.filter(view => {
-                        if (typeof view === 'string') {
-                            // REMOVE the matching plane — keep everything else. The old
-                            // `view === plane` did the inverse (kept only the plane that was
-                            // supposed to be removed, dropping all the others).
-                            return view !== plane;
-                        }
+                    const routeOf = (entry: unknown) => (typeof entry === 'string' ? entry : (entry as any)?.route);
+                    const inView = latest.current.stateSpaceView.some((entry) => routeOf(entry) === plane);
 
-                        return true;
-                    });
+                    // A SPAWNED PLANE IS NOT IN THE VIEW. The view holds the roots; a plane a link
+                    // or `space.spawnPlane` made hangs in the tree only, and matching the view
+                    // alone left it there: shown, bridged, leashed and empty once its host had
+                    // forgotten what it rendered (dechat's obliterate, 2026-09-17). By its runtime
+                    // id, or by its route (every plane at that path), the node and its subtree go.
+                    if (!inView) {
+                        const tree = latest.current.stateTree;
+                        const targets: TreePlane[] = [];
+                        const walk = (nodes: TreePlane[]) => {
+                            for (const node of nodes || []) {
+                                if (node.planeID === plane || answersTo(node, plane)) {
+                                    targets.push(node);
+                                    continue;
+                                }
+                                walk(node.children || []);
+                            }
+                        };
+                        walk(tree);
+                        if (targets.length === 0) {
+                            warn('view.removePlane', 'no plane in the view or the tree is \'' + plane + '\'');
+                            return;
+                        }
+                        const gone = new Set<string>();
+                        const forget = (nodes: TreePlane[]) => {
+                            for (const node of nodes || []) {
+                                gone.add(node.planeID);
+                                forget(node.children || []);
+                            }
+                        };
+                        forget(targets);
+                        let updated = tree;
+                        for (const target of targets) {
+                            updated = space.tree.logic.removePlaneFromTree(updated, target.planeID);
+                        }
+                        dispatch(actions.space.setTree(updated));
+                        // nothing may keep pointing at a plane that is gone
+                        const selected: string[] = latest.current.state?.space?.selectedPlaneIDs ?? [];
+                        if (selected.some((id) => gone.has(id))) {
+                            dispatch(actions.space.setSelection(selected.filter((id) => !gone.has(id))));
+                        }
+                        if (gone.has(latest.current.state?.space?.activePlaneID ?? '')) {
+                            dispatchSetSpaceField({ field: 'activePlaneID', value: '' });
+                        }
+                        return;
+                    }
+
+                    // REMOVE the matching root, keep everything else (`view === plane` once did
+                    // the inverse: kept only the plane that was supposed to go)
+                    const updatedView = latest.current.stateSpaceView.filter((entry) => routeOf(entry) !== plane);
 
                     dispatchSpaceSetView(updatedView);
 
