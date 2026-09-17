@@ -55,6 +55,26 @@ export const isEditableTarget = (
 };
 
 
+/**
+ * A typing target that HAS THE KEYBOARD: the field, or something inside it, is the active element.
+ * A field the pointer merely hovers is not typing anything, so a press or a wheel over it is the
+ * space's in a navigation mode; a field with the caret in it keeps its own selection and scroll.
+ */
+export const isFocusedEditable = (
+    target: EventTarget | null | undefined,
+): boolean => {
+    const element = asElement(target);
+    if (!element || !isEditableTarget(element) || typeof document === 'undefined') {
+        return false;
+    }
+    const root = element.isContentEditable
+        ? (element.closest('[contenteditable]') as HTMLElement | null) || element
+        : (element.closest(EDITABLE_SELECTOR) as HTMLElement | null) || element;
+    const active = document.activeElement;
+    return !!active && (active === root || root.contains(active));
+};
+
+
 /** An engine control (toolbar button, plane control, viewcube zone) — clicks belong to it. */
 export const isEngineControl = (
     target: EventTarget | null | undefined,

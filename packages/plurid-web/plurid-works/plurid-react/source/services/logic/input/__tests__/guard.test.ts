@@ -8,6 +8,7 @@
         isScrollableAlong,
         isEditableTarget,
         planeElementOf,
+        isFocusedEditable,
     } from '../guard';
     // #endregion external
 // #endregion imports
@@ -125,4 +126,30 @@ describe('isEditableTarget / planeElementOf', () => {
         expect(planeElementOf(document.body)).toBeNull();
     });
 });
+
+
+describe('isFocusedEditable', () => {
+    it('is the field that has the keyboard, never one merely under the pointer', () => {
+        const field = document.createElement('textarea');
+        const other = document.createElement('input');
+        document.body.append(field, other);
+        expect(isFocusedEditable(field)).toBe(false);
+        field.focus();
+        expect(isFocusedEditable(field)).toBe(true);
+        expect(isFocusedEditable(other)).toBe(false);
+        // a contenteditable's child, with the caret inside it
+        const editor = document.createElement('div');
+        editor.setAttribute('contenteditable', 'true');
+        editor.tabIndex = 0;
+        const word = document.createElement('span');
+        editor.append(word);
+        document.body.append(editor);
+        expect(isFocusedEditable(word)).toBe(false);
+        editor.focus();
+        expect(isFocusedEditable(word)).toBe(true);
+        expect(isFocusedEditable(document.body)).toBe(false);
+        field.remove(); other.remove(); editor.remove();
+    });
+});
 // #endregion module
+

@@ -43,6 +43,7 @@
 
     import {
         isEditableTarget,
+        isFocusedEditable,
         isEngineControl,
         isDragHandle,
         planeElementOf,
@@ -258,7 +259,8 @@ export const usePointerGestures = (
                 meta: event.metaKey,
                 onPlane: !!planeElement,
                 onSelectedPlane: !!planeID && selection.includes(planeID),
-                onEditable: isEditableTarget(target),
+                // a field keeps the press only while it HAS the keyboard: hovered, it is content
+                onEditable: isFocusedEditable(target),
                 onControl: isEngineControl(target),
                 onDragHandle: isDragHandle(target),
                 dragHandle: cfg().gestures?.dragHandle,

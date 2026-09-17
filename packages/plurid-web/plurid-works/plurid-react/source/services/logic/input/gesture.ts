@@ -40,7 +40,7 @@ export interface GestureContext {
     onPlane: boolean;
     /** … inside a plane that is part of the current selection. */
     onSelectedPlane: boolean;
-    /** … inside a text field / editor. */
+    /** … inside a text field / editor THAT HAS THE KEYBOARD (a hovered field is not typing). */
     onEditable: boolean;
     /** … on an engine control or a link / button. */
     onControl: boolean;
@@ -97,12 +97,9 @@ export const resolveGestureIntent = (
         return 'none';
     }
 
-    // THE CONTENT IS THE PAGE'S: a press on a plane's content (not its handle, grab mode off) is
-    // a word, a drag-scroll, whatever mode is on. A mode pins what the pointer does to the SPACE,
-    // and the content is not the space; it used to take the press and the reader's text with it.
-    const onContent = ctx.onPlane && !ctx.onDragHandle && !ctx.grabMode;
-
-    // Fly mode pins the intent for every button.
+    // AN EXPLICIT MODE PINS THE INTENT FOR EVERY BUTTON, content included: a reader who turned
+    // rotate mode on means to rotate wherever they press, a plane's words under the pointer or
+    // not. Only a field that HAS the keyboard (above) and a control keep the press.
     if (ctx.firstPerson) {
         if (ctx.button === 1 || ctx.button === 2 || (ctx.buttons & 32) === 32) {
             return 'pan';
@@ -110,13 +107,13 @@ export const resolveGestureIntent = (
         return 'look';
     }
     if (ctx.transformMode === 'ROTATION') {
-        return onContent ? 'none' : 'orbit';
+        return 'orbit';
     }
     if (ctx.transformMode === 'TRANSLATION') {
-        return onContent ? 'none' : (ctx.alt ? 'dolly' : 'pan');
+        return ctx.alt ? 'dolly' : 'pan';
     }
     if (ctx.transformMode === 'SCALE') {
-        return onContent ? 'none' : 'zoom';
+        return 'zoom';
     }
 
     // Drag-to-move: a plain left press on a selected plane's HANDLE (its controls bar, or what a

@@ -44,6 +44,9 @@
         SpaceTransform,
         PluridApplicationView,
         PluridInspectorRegistry,
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ENTITY_PLANE_CONTROLS,
+        PLURID_ATTRIBUTE_PLANE,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -78,6 +81,7 @@
         isEditableTarget,
         planeElementOf,
         isScrollableAlong,
+        isFocusedEditable,
     } from '~services/logic/input/guard';
 
     import {
@@ -206,6 +210,40 @@ const rootsMatchView = (
  * the moment before the first layout, not emptiness - answering "nothing here"
  * then would flash the empty state on every first plane.
  */
+/**
+ * MOMENTARY CHROME KEEPS NO FOCUS A KEY COULD LIGHT. A toolbar button, a plane control or a pill
+ * clicked with the pointer kept the focus; the next key press (a mode key, Escape) switched the
+ * browser to its keyboard focus ring, and the ring stayed on the button until the focus moved: a
+ * "focus ring left behind". After a pointer click, such a control lets the focus go (after the
+ * click has fired). Keyboard activation never comes through a pointer, so a keyboard user keeps
+ * the focus and the ring. A host's own buttons inside a plane are the host's, untouched.
+ */
+const letMomentaryChromeGo = (
+    event: React.PointerEvent,
+) => {
+    const target = event.target as Element | null;
+    const button = target && typeof target.closest === 'function'
+        ? target.closest('button')
+        : null;
+    if (!button) {
+        return;
+    }
+    // chrome is every button outside a plane (the engine's, or a host's slot), and inside a plane
+    // the plane's own bar and a `PluridPill`; a host's other buttons in its content are its own
+    const chrome = !button.closest(`[${PLURID_ATTRIBUTE_PLANE}]`)
+        || button.hasAttribute('data-plurid-pill')
+        || !!button.closest(`[${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTROLS}"]`);
+    if (!chrome) {
+        return;
+    }
+    setTimeout(() => {
+        if (typeof document !== 'undefined' && document.activeElement === button) {
+            button.blur();
+        }
+    }, 0);
+};
+
+
 const spaceHasPlanes = (
     tree: TreePlane[],
     view: PluridApplicationView,
@@ -689,11 +727,13 @@ const PluridView: React.FC<PluridViewProperties> = (
     const wheelCallback = useCallback((event: WheelEvent) => {
         handlePreventOverscroll(event);
 
-        // Typing targets keep their own scrolling; so do the engine's overlays (minimap, toolbar
-        // drawers, dialogs) — a wheel over them never reaches the camera.
-        if (isEditableTarget(event.target) || overlayOf(event.target)) {
+        // A typing target keeps its own scrolling WHILE IT HAS THE KEYBOARD; hovered, a field is
+        // content like any other, and the wheel is the space's. The engine's overlays (minimap,
+        // toolbar drawers, dialogs) keep theirs always.
+        if (isFocusedEditable(event.target) || overlayOf(event.target)) {
             return;
         }
+        const hoveredField = isEditableTarget(event.target);
 
         const spaceConfiguration = stateRef.current.configuration.space;
         const viewSize = stateRef.current.space.viewSize;
@@ -705,7 +745,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         const normalized = normalizeWheel(event, viewSize.height, wheelHistory.current);
         const rect = element.getBoundingClientRect();
         const planeElement = planeElementOf(event.target);
-        const scrollable = !!planeElement && (
+        // a field without the keyboard is not a scroller the wheel should feed
+        const scrollable = !!planeElement && !hoveredField && (
             isScrollableAlong(event.target, 'y', normalized.dy, planeElement)
             || isScrollableAlong(event.target, 'x', normalized.dx, planeElement)
         );
@@ -1209,6 +1250,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 ? 'fly'
                 : (grabMode ? 'grab' : (stateConfiguration.space.transformMode !== 'ALL' ? 'transform' : undefined))}
             data-plurid-mode={modeOf(stateConfiguration.space, grabMode)}
+            onPointerUpCapture={letMomentaryChromeGo}
             style={dockFadeStyle}
             role="application"
             aria-roledescription="3D space"

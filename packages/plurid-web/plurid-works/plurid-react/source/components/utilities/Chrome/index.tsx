@@ -27,8 +27,12 @@
  * them as chrome (pointer routing, the docked fade).
  */
 
-/** A control: 32 px, the rim, the halo, the blur; `data-plurid-active="true"` paints the glyph in the accent. Fades with the docked state. */
-export const PluridPill = styled.button`
+/**
+ * A control: 32 px, the rim, the halo, the blur; `data-plurid-active="true"` paints the glyph in the
+ * accent. Fades with the docked state. Marked `data-plurid-pill`, so the view lets it go of the
+ * focus after a pointer click (see the View: momentary chrome keeps no focus a key could light).
+ */
+export const PluridPill = styled.button.attrs({ 'data-plurid-pill': '' } as Record<string, string>)`
     ${chromeControl}
     ${chromePill}
     ${chromeDocked}

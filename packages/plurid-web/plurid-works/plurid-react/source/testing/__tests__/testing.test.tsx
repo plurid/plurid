@@ -304,5 +304,32 @@ describe('@plurid/plurid-react/testing', () => {
         expect(empty?.textContent).toBe('aucun plan dans cet espace');
         await rendered.unmount();
     });
+
+    it('a toolbar button clicked with the pointer lets the focus go; activated by the keyboard it keeps it', async () => {
+        installFrameClock();
+        const rendered = await renderPlurid({ planes, view: ['/one'] });
+        const button = document.querySelector('[data-plurid-entity="PluridToolbar"] button') as HTMLButtonElement;
+        expect(button).toBeTruthy();
+        const Pointer = (window as any).PointerEvent;
+        const box = { x: 10, y: 10 };
+        const tick = () => act(async () => { await new Promise((resolve) => setTimeout(resolve, 0)); });
+
+        // the pointer: down, up, click, as a browser sends them; the button focuses on the press
+        await act(async () => {
+            button.dispatchEvent(new Pointer('pointerdown', { bubbles: true, cancelable: true, clientX: box.x, clientY: box.y, pointerId: 1, pointerType: 'mouse', isPrimary: true, button: 0, buttons: 1 }));
+            button.focus();
+            button.dispatchEvent(new Pointer('pointerup', { bubbles: true, cancelable: true, clientX: box.x, clientY: box.y, pointerId: 1, pointerType: 'mouse', isPrimary: true, button: 0, buttons: 0 }));
+            button.click();
+        });
+        await tick();
+        expect(document.activeElement).not.toBe(button);
+
+        // the keyboard: focus and activate, no pointer: the focus stays, and so would the ring
+        await act(async () => { button.focus(); button.click(); });
+        await tick();
+        expect(document.activeElement).toBe(button);
+
+        await rendered.unmount();
+    });
 });
 // #endregion module

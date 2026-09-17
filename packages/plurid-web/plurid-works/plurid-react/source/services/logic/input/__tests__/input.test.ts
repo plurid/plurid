@@ -262,13 +262,16 @@ describe('resolveGestureIntent', () => {
         expect(resolveGestureIntent(mouse({ pointerType: 'touch', buttons: 1, touchOne: 'pan' }))).toBe('pan');
     });
 
-    it('explicit modes and fly mode pin the intent, on everything but a plane\'s content', () => {
+    it('explicit modes and fly mode pin the intent, a plane\'s content included; only a field with the keyboard keeps the press', () => {
         expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION' }))).toBe('orbit');
-        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true }))).toBe('orbit');
         expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, onDragHandle: true }))).toBe('orbit');
         expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, grabMode: true }))).toBe('orbit');
-        expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION', onPlane: true }))).toBe('none');
-        expect(resolveGestureIntent(mouse({ transformMode: 'SCALE', onPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION', onPlane: true }))).toBe('pan');
+        expect(resolveGestureIntent(mouse({ transformMode: 'SCALE', onPlane: true }))).toBe('zoom');
+        // `onEditable` is a field THAT HAS THE KEYBOARD (the hook asks `isFocusedEditable`)
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, onEditable: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, onControl: true }))).toBe('none');
         expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION' }))).toBe('pan');
         expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION', alt: true }))).toBe('dolly');
         expect(resolveGestureIntent(mouse({ transformMode: 'SCALE' }))).toBe('zoom');

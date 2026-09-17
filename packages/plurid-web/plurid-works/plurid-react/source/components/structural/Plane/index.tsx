@@ -134,6 +134,17 @@ const ActivityOrFragment: React.FC<{ mode: 'visible' | 'hidden'; children?: Reac
  * only the aside ones — is outside the reading scope: `inert` (U03, 2026-09-06: reverse-tabbing off
  * a docked page used to land on the parent's links).
  */
+/** `:focus-visible` where the browser knows it; where it does not (jsdom), a focus is visible. */
+const focusIsVisible = (
+    element: Element,
+): boolean => {
+    try {
+        return element.matches(':focus-visible');
+    } catch (_error) {
+        return true;
+    }
+};
+
 const readingScopeAttributes = (
     aside: boolean,
     docked: boolean,
@@ -662,7 +673,8 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 role="button"
                 aria-label={'focus ' + planeAccessibleName}
                 aria-pressed={stateIsSelected}
-                onFocus={() => setAnchorFocused(true)}
+                // the ring is for the KEYBOARD: a focus the mouse or a script put here draws none
+                onFocus={(event) => setAnchorFocused(focusIsVisible(event.currentTarget))}
                 onBlur={() => setAnchorFocused(false)}
                 onKeyDown={(event) => {
                     if (event.key === ' ' || event.code === 'Space') {
