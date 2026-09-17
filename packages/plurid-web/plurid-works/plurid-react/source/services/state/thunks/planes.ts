@@ -33,7 +33,7 @@
     } from '~services/logic/animation';
 
     import {
-        planeCoversViewCenter,
+        cameraLooksAt,
         resolvePlaneFallbackSize,
     } from '~services/logic/camera';
     // #endregion external
@@ -62,6 +62,18 @@ export interface ToggleLinkPlaneParameters {
     hostname?: string;
     /** Navigate to the plane when it opens. Default `true`. */
     navigate?: boolean;
+    /**
+     * `toggle` (a link's click, the default): a shown plane is put away. `open` (a product's
+     * `space.spawnPlane`): a shown plane is navigated to and never put away; a put-away one is
+     * shown again.
+     */
+    mode?: 'toggle' | 'open';
+    /** How the plane is framed when it opens: with its parent (`pair`), alone (`plane`), or the configured way. */
+    framing?: 'pair' | 'plane';
+    /** A bridge length of the host's own, over the configured one and the sibling stagger. */
+    bridgeLength?: number;
+    /** How the bridge is drawn, over what the sibling stagger decides. */
+    bridgeKind?: 'strip' | 'leash';
 }
 
 
@@ -79,8 +91,13 @@ export const toggleLinkPlane = (
         planesRegistry,
         hostname,
         navigate = true,
+        mode = 'toggle',
+        framing,
+        bridgeLength,
+        bridgeKind,
     }: ToggleLinkPlaneParameters,
 ): PlaneThunk => (dispatch, getState) => {
+    const pair = framing === undefined ? undefined : framing === 'pair';
     const state = getState();
     const tree = state.space.tree;
 
@@ -102,6 +119,8 @@ export const toggleLinkPlane = (
                 linkID,
                 // a mirrored child (`bridgeSide: 'end'`) is placed by its width before it is measured
                 fallbackWidth: resolvePlaneFallbackSize(state.configuration, state.space.viewSize).width,
+                bridgeLength,
+                bridgeKind,
             },
         );
 
@@ -111,12 +130,22 @@ export const toggleLinkPlane = (
 
         dispatch(actions.space.setTree(updatedTree));
         if (navigate) {
-            navigateToPluridPlane(dispatch, updatedTreePlane);
+            // a fresh plane has no size yet: framed from its best-known geometry, and again from
+            // its first measurement
+            navigateToPluridPlane(dispatch, updatedTreePlane, undefined, true, { awaitMeasure: true, pair });
         }
         return;
     }
 
     const show = existing.show === false;
+
+    // A PRODUCT'S SPAWN OPENS: it means "this branch, here", never "put it away if it is open"
+    if (!show && mode === 'open') {
+        if (navigate) {
+            navigateToPluridPlane(dispatch, existing, undefined, true, { pair });
+        }
+        return;
+    }
 
     // ON A PAGE — the camera docked on one, or a swing docking on one — a link is a link: it takes
     // the user to its page and never toggles it closed (the page's own close control and the back
@@ -149,7 +178,7 @@ export const toggleLinkPlane = (
     if (show) {
         if (navigate && updatedPlane) {
             // The plane was unmounted while closed: its size is stale until it measures again.
-            navigateToPluridPlane(dispatch, updatedPlane, undefined, true, { awaitMeasure: true });
+            navigateToPluridPlane(dispatch, updatedPlane, undefined, true, { awaitMeasure: true, pair });
         }
     } else {
         dispatch(actions.space.setSpaceField({
@@ -191,7 +220,7 @@ export const closePlane = (
         ?? 'parent';
     const inView = state.space.activePlaneID === planeID
         || state.space.isolatePlane === planeID
-        || planeCoversViewCenter(state.space, state.configuration, plane);
+        || cameraLooksAt(state.space, state.configuration, plane);
 
     const {
         updatedTree,

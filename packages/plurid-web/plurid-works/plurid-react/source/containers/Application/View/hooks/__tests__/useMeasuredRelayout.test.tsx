@@ -85,8 +85,11 @@ describe('the measured relayout', () => {
         rendered.unmount();
     });
 
-    it('the signature ignores hidden, pinned and hand-sized roots', () => {
+    it('the signature ignores hidden, pinned and hand-sized roots, and a fraction of a pixel', () => {
         const root = (extra: any) => ({ planeID: 'x', width: 10, height: 20, ...extra }) as any;
         expect(measuredSizesSignature([root({}), root({ show: false }), root({ manuallyPositioned: true }), root({ sizeMode: 'manual' })])).toBe('10x20|-|-|-');
+        // a 0.4px settle relays nothing; a whole pixel does
+        expect(measuredSizesSignature([root({ width: 10.4, height: 19.6 })])).toBe(measuredSizesSignature([root({})]));
+        expect(measuredSizesSignature([root({ height: 21 })])).not.toBe(measuredSizesSignature([root({})]));
     });
 });

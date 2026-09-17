@@ -22,6 +22,7 @@
         updateTreeWithNewPlane,
         updateLinkCoordinates,
         reconcileTree,
+        getTreePlaneByID,
     } from '../tree/logic';
 
     import {
@@ -210,9 +211,11 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(mirrored.updatedTreePlane!.location.translateX).toBeCloseTo(400 - 120 - 300, 9);
     });
 
-    it('the default fan: every generation turns 90° right of its parent and hangs behind its face, like the first link (the harness numbers)', () => {
+    it('the fixed fan at 90 (the objects geometry): every generation turns 90° right of its parent and hangs behind its face, like the first link (the harness numbers)', () => {
         const root = plane('geometry', {}, { width: 320, height: 416 });
-        const fin = updateTreeWithNewPlane('/detail', 'geometry', { x: 112, y: 361 }, [root], registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'a', fallbackWidth: 320 });
+        // the objects geometry, explicitly: the default is 90.1, alternating, from the edge
+        const objects = { length: 160, planeAngle: 90, fan: 'fixed' as const, anchor: 'link' as const };
+        const fin = updateTreeWithNewPlane('/detail', 'geometry', { x: 112, y: 361 }, [root], registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: objects } }, 'origin', { linkID: 'a', fallbackWidth: 320 });
         const finPlane = fin.updatedTreePlane!;
         expect(finPlane.planeAngle).toBe(90);
         expect(finPlane.location.rotateY).toBe(90);
@@ -221,7 +224,7 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(finPlane.location.translateZ).toBeCloseTo(-160, 9);
         // the mesh link sits 61 px along the fin: the mesh turns another 90° (faces −z) and hangs
         // on the fin's back side (x < 112), its bridge along local −X reaching the link
-        const mesh = updateTreeWithNewPlane('/detail', finPlane.planeID, { x: 61, y: 317 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'b', fallbackWidth: 320 }).updatedTreePlane!;
+        const mesh = updateTreeWithNewPlane('/detail', finPlane.planeID, { x: 61, y: 317 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: objects } }, 'origin', { linkID: 'b', fallbackWidth: 320 }).updatedTreePlane!;
         expect(mesh.planeAngle).toBe(90);
         expect(mesh.bridgeSide).toBe('start');
         expect(mesh.location.rotateY).toBe(180);
@@ -229,7 +232,7 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(mesh.location.translateZ).toBeCloseTo(-221, 9);
         expect(mesh.location.translateY).toBeCloseTo(678 - 30, 9);  // two generations, two offsets
         // a third turn: faces −x, behind the mesh's face (+z side of it)
-        const edges = updateTreeWithNewPlane('/detail', mesh.planeID, { x: 20, y: 300 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 160 } } }, 'origin', { linkID: 'c', fallbackWidth: 320 }).updatedTreePlane;
+        const edges = updateTreeWithNewPlane('/detail', mesh.planeID, { x: 20, y: 300 }, fin.updatedTree, registry, { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: objects } }, 'origin', { linkID: 'c', fallbackWidth: 320 }).updatedTreePlane;
         expect(edges).toBeUndefined();
     });
 
@@ -363,4 +366,40 @@ describe('pruneLinks()', () => {
     });
 });
 
+
+
+/**
+ * A CHILD PLACED BY HAND KEEPS ITS PLACE when its link is re-measured: only the leash follows.
+ * The edge anchor made this reachable: a parent resized moves its right edge and so every link's
+ * anchored x, and the child used to be relocated from the new anchor, the drag undone.
+ */
+describe('updateLinkCoordinates() and a child placed by hand', () => {
+    const registry = new Map<string, any>([
+        ['/detail', { route: { absolute: '/detail', value: '/detail', fragments: { elements: [], texts: [] }, parameters: {}, query: {} }, component: () => null }],
+    ]);
+
+    it('relocates a placed child from the new anchor, and keeps a hand-placed one where it is', () => {
+        const root = plane('geometry', {}, { width: 410, height: 416 });
+        const spawned = updateTreeWithNewPlane('/detail', 'geometry', { x: 112, y: 361 }, [root], registry, defaultConfiguration, 'origin', { linkID: 'a', fallbackWidth: 320 });
+        const child = spawned.updatedTreePlane!;
+        expect(child.bridgeAnchor).toBe('edge');
+        expect(child.linkCoordinates).toEqual({ x: 410, y: 361 });
+
+        // the parent narrows to 352: its edge moves, and so does the anchored x
+        const narrowed = spawned.updatedTree.map((node) => (node.planeID === 'geometry' ? { ...node, width: 352 } : node));
+        const placed = updateLinkCoordinates(narrowed, child.planeID, { x: 112, y: 361 });
+        const relocated = getTreePlaneByID(placed, child.planeID)!;
+        expect(relocated.linkCoordinates).toEqual({ x: 352, y: 361 });
+        expect(relocated.location.translateX).toBeCloseTo(child.location.translateX - 58, 6);
+
+        // the same, for a child the reader dragged: the coordinates follow, the place does not
+        const dragged = spawned.updatedTree.map((node) => (node.planeID === 'geometry'
+            ? { ...node, width: 352, children: node.children!.map((entry) => ({ ...entry, manuallyPositioned: true, location: { ...entry.location, translateX: 900, translateY: 700 } })) }
+            : node));
+        const kept = getTreePlaneByID(updateLinkCoordinates(dragged, child.planeID, { x: 112, y: 361 }), child.planeID)!;
+        expect(kept.linkCoordinates).toEqual({ x: 352, y: 361 });
+        expect(kept.location.translateX).toBe(900);
+        expect(kept.location.translateY).toBe(700);
+    });
+});
 // #endregion module

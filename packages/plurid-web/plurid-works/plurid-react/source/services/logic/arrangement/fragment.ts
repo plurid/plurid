@@ -53,6 +53,8 @@ export interface FragmentPlane {
     height: number;
     sizeMode?: TreePlane['sizeMode'];
     manuallyPositioned?: boolean;
+    /** Put away (`false`): a hidden plane travels hidden, and comes back so. Absent means shown. */
+    show?: boolean;
     /** A child's own spawn geometry, so a pasted subtree hangs exactly as it hung. */
     bridge?: {
         length?: number;
@@ -140,6 +142,7 @@ const describePlane = (
         // a ROOT of the fragment has no parent there: its bridge geometry was its parent's doing
         ...(parent && Object.keys(bridge).length > 0 ? { bridge } : {}),
         ...(spawned ? { linkSuffix: spawned } : {}),
+        ...(plane.show === false ? { show: false } : {}),
         ...(plane.children && plane.children.length > 0
             ? { children: plane.children.map((child) => describePlane(child, plane)) }
             : {}),
@@ -347,7 +350,7 @@ export const materializeFragment = (
             ...(bridge.coordinates !== undefined ? { linkCoordinates: bridge.coordinates } : {}),
             ...(node.linkSuffix && parentPlaneID ? { spawnedByLinkID: parentPlaneID + node.linkSuffix } : {}),
             children,
-            show: true,
+            show: node.show !== false,
         };
     };
 

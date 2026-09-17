@@ -24,7 +24,11 @@
     } from '../location';
     import {
         configuredPlaneSize,
+        fallbackPlaneSize,
     } from './size';
+    import {
+        placedHeight,
+    } from './pitch';
     // #endregion external
 // #endregion imports
 
@@ -103,7 +107,9 @@ const computeFaceToFaceLayout = (
     // an unmeasured plane counts as the configured height, else the tallest measured plane, else
     // the view height
     const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
-    const fallbackHeight = configuredHeight || Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
+    const fallbackHeight = configuredHeight
+        || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))
+        || fallbackPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
     const planeAngle = 90 - angle / 2;
     const columns = 2 + middle;
     const rows = splitIntoGroups(roots, columns);
@@ -116,7 +122,7 @@ const computeFaceToFaceLayout = (
         : gap * width;
 
     // Rows stack by their own tallest plane, plus the gap so gapped rows never overlap.
-    const rowHeights = rows.map((row) => Math.max(0, ...row.map((page) => page.height || fallbackHeight)));
+    const rowHeights = rows.map((row) => Math.max(0, ...row.map((page) => placedHeight(page, configuredHeight) || fallbackHeight)));
     let translateY = 0;
     for (const [rowIndex, row] of rows.entries()) {
         if (rowIndex > 0) {

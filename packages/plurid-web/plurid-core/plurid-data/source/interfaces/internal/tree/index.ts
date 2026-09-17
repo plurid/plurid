@@ -35,6 +35,14 @@ export interface TreePlane {
     bridgeLength?: number;
     planeAngle?: number;
     /**
+     * Where this plane's bridge leaves its parent: the link's point (`link`) or the parent's right
+     * edge at the link's height (`edge`). Stored so a re-measured link or a resized parent keeps
+     * the anchor rather than sliding the child back to the link's x.
+     */
+    bridgeAnchor?: 'link' | 'edge';
+    /** how the bridge is drawn: the strip (the first child of a parent) or a leash (a later sibling, whose strip would cross its elders) */
+    bridgeKind?: 'strip' | 'leash';
+    /**
      * The edge this plane's bridge leaves from: `start` (its left edge; the plane extends away from
      * the link) or `end` (its right edge; the plane is mirrored to the other side of the link, which
      * is what keeps a generation BEHIND its parent's face while it faces the way its grandparent

@@ -246,5 +246,20 @@ describe('the arrangement fragment', () => {
         expect(declared.planes[0].width).toBe(300);
         expect(declared.planes[0].sizeMode).toBe('declared');
     });
+
+    it('a plane put away travels put away, and comes back so', () => {
+        const { tree, links } = space();
+        tree[0].children![0].show = false;
+        tree[1].show = false;
+        const fragment = fragmentOf(tree, [tree[0].planeID, tree[1].planeID], links)!;
+        expect(fragment.planes[0].show).toBeUndefined();
+        expect(fragment.planes[0].children![0].show).toBe(false);
+        expect(fragment.planes[1].show).toBe(false);
+
+        const landed = materializeFragment(parseFragment(serializeFragment(fragment))!, { resolve: target(['/a', '/b', '/a/detail']) });
+        expect(landed.planes[0].show).toBe(true);
+        expect(landed.planes[0].children![0].show).toBe(false);
+        expect(landed.planes[1].show).toBe(false);
+    });
 });
 // #endregion module

@@ -49,6 +49,8 @@
         UpdateSpaceLinkCoordinatesPayload,
         UpdatePlaneLinkPayload,
         TransformSelectedPlanesPayload,
+        MovePlanesPayload,
+        SetPlanePinnedPayload,
         ZoomAtPointPayload,
         FitToViewPayload,
         SetPlaneSizePayload,
@@ -1144,6 +1146,101 @@ export const space = createSlice({
             // (now moved) root. `current` gives the post-move plain tree; unmoved subtrees keep
             // their references, so this is a per-root check, not a rebuild.
             state.tree = spaceEngine.location.recomputeTree(current(state.tree));
+        },
+        /**
+         * MOVE PLANES AS A COMMAND, not as a gesture. `transformSelectedPlanes` is the drag: it
+         * moves the SELECTION and pins what it moved, because a hand that dropped a plane meant
+         * it to stay. A product's `space.movePlanes` used to be routed through it, so naming
+         * planes clobbered the reader's selection and every move was a pin. This one moves the
+         * planes named (else the selection), leaves the selection alone, pins only when asked,
+         * and moves in the plane's own axes when asked (`frame: 'plane'`: `deltaX: 100` on a
+         * plane turned 90.1° goes along world z). Children ride with a moved parent.
+         */
+        movePlanes: (
+            state,
+            action: PayloadAction<MovePlanesPayload>,
+        ) => {
+            const {
+                planeIDs,
+                deltaX = 0,
+                deltaY = 0,
+                deltaZ = 0,
+                frame = 'world',
+                pinned = false,
+            } = action.payload;
+
+            const targets = new Set(planeIDs ?? state.selectedPlaneIDs);
+            if (targets.size === 0 || (deltaX === 0 && deltaY === 0 && deltaZ === 0)) {
+                return;
+            }
+
+            let movedWithChildren = false;
+            const walk = (nodes: TreePlane[]) => {
+                for (const node of nodes) {
+                    if (targets.has(node.planeID)) {
+                        if (frame === 'plane') {
+                            const basis = interaction.camera.planeBasis(node.location);
+                            node.location.translateX += basis.u.x * deltaX + basis.v.x * deltaY + basis.normal.x * deltaZ;
+                            node.location.translateY += basis.u.y * deltaX + basis.v.y * deltaY + basis.normal.y * deltaZ;
+                            node.location.translateZ += basis.u.z * deltaX + basis.v.z * deltaY + basis.normal.z * deltaZ;
+                        } else {
+                            node.location.translateX += deltaX;
+                            node.location.translateY += deltaY;
+                            node.location.translateZ += deltaZ;
+                        }
+                        if (pinned) {
+                            node.manuallyPositioned = true;
+                        }
+                        if (node.children && node.children.length > 0) {
+                            movedWithChildren = true;
+                        }
+                    }
+                    if (node.children) {
+                        walk(node.children);
+                    }
+                }
+            };
+            walk(state.tree);
+
+            // spawned children ride with a moved parent; nothing to re-place when none moved
+            if (movedWithChildren) {
+                state.tree = spaceEngine.location.recomputeTree(current(state.tree));
+            }
+        },
+        /**
+         * PIN A PLANE WHERE IT IS, or let the layout have it back: a child unpinned is re-placed
+         * from its link, a root unpinned by the next relayout.
+         */
+        setPlanePinned: (
+            state,
+            action: PayloadAction<SetPlanePinnedPayload>,
+        ) => {
+            const {
+                planeID,
+                pinned,
+            } = action.payload;
+
+            let found = false;
+            const walk = (nodes: TreePlane[]) => {
+                for (const node of nodes) {
+                    if (node.planeID === planeID) {
+                        found = true;
+                        if (pinned) {
+                            node.manuallyPositioned = true;
+                        } else {
+                            delete node.manuallyPositioned;
+                        }
+                    }
+                    if (node.children) {
+                        walk(node.children);
+                    }
+                }
+            };
+            walk(state.tree);
+
+            if (found && !pinned) {
+                state.tree = spaceEngine.location.recomputeTree(current(state.tree));
+            }
         },
         // Edge-align the selection to nearby planes (typically on drag-release): find the smallest
         // X- and Y-offset (each within `threshold`) that lines a selected plane's left/top edge up with

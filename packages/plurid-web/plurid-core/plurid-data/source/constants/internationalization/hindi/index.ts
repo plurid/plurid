@@ -106,6 +106,8 @@ const hindi: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ या नीचे स्क्रॉल',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← या बाएँ स्क्रॉल',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ या दाएँ स्क्रॉल',
+
+    spaceEmpty: 'इस स्पेस में कोई तल नहीं',
 };
 // #endregion module
 

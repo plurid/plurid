@@ -34,6 +34,8 @@ describe('computeZigZagLayout', () => {
     Object.defineProperty(window, 'innerHeight', {
         value: 800,
     });
+    // an unmeasured root is pitched by the fallback height (0.7 of the 1200 width: 840) plus the
+    // gap (50), never by the view's 800: rows at 0, 890, 1780
 
 
     it('computes the default zig zag layout', () => {
@@ -59,7 +61,7 @@ describe('computeZigZagLayout', () => {
                     rotateX: 0,
                     rotateY: -45,
                     translateX: 0,
-                    translateY: 850,
+                    translateY: 890,
                     translateZ: 0,
                 },
                 route: '/page-2',
@@ -73,7 +75,7 @@ describe('computeZigZagLayout', () => {
                     rotateX: 0,
                     rotateY: 45,
                     translateX: 0,
-                    translateY: 1700,
+                    translateY: 1780,
                     translateZ: 0,
                 },
                 route: '/page-3',
@@ -104,7 +106,7 @@ describe('computeZigZagLayout', () => {
                     rotateX: 0,
                     rotateY: -45,
                     translateX: 0,
-                    translateY: 850,
+                    translateY: 890,
                     translateZ: 0,
                 },
                 route: '/page-2',
@@ -118,7 +120,7 @@ describe('computeZigZagLayout', () => {
                     rotateX: 0,
                     rotateY: 45,
                     translateX: 0,
-                    translateY: 1700,
+                    translateY: 1780,
                     translateZ: 0,
                 },
                 route: '/page-3',

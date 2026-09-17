@@ -106,6 +106,8 @@ const arabic: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ أو التمرير للأسفل',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← أو التمرير يسارًا',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ أو التمرير يمينًا',
+
+    spaceEmpty: 'لا توجد مستويات في هذا الفضاء',
 };
 // #endregion module
 

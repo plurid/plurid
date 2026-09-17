@@ -176,11 +176,6 @@ export const framePlane = (
 };
 
 
-export interface FitAllOptions extends FrameOptions, WorldBoundsOptions {
-    /** Look at the space front-on (yaw 0, pitch 0). Default `true`. */
-    faceOn?: boolean;
-}
-
 interface FittablePlane {
     location: PlaneGeometry['location'];
     width?: number;
@@ -189,28 +184,172 @@ interface FittablePlane {
     children?: FittablePlane[];
 }
 
+const DEG = Math.PI / 180;
 
-/** Frame every visible plane (children included). Returns the camera unchanged for an empty space. */
+/** every (visible) plane, children included, flattened; sizes filled from the fallback */
+const flattenPlanes = (
+    planes: FittablePlane[],
+    options: WorldBoundsOptions = {},
+): PlaneGeometry[] => {
+    const flat: PlaneGeometry[] = [];
+    const walk = (nodes: FittablePlane[]) => {
+        for (const node of nodes) {
+            if (!options.includeHidden && node.show === false) {
+                continue;
+            }
+            flat.push({
+                location: node.location,
+                width: node.width || options.fallbackWidth || 0,
+                height: node.height || options.fallbackHeight || 0,
+            });
+            if (node.children && node.children.length > 0) {
+                walk(node.children);
+            }
+        }
+    };
+    walk(planes);
+    return flat;
+};
+
+/** The world corners of every (visible) plane, children included: what a fit frames. */
+export const worldPoints = (
+    planes: FittablePlane[],
+    options: WorldBoundsOptions = {},
+): Vec3[] => flattenPlanes(planes, options).flatMap((plane) => planeCorners(plane));
+
+
+/**
+ * THE YAW AT WHICH EVERYTHING READS.
+ *
+ * A plane turned `rotateY` seen from a camera yaw `y` projects to `|cos(rotateY + y)|` of its
+ * width. Roots alone read best from the front (0); a root and a branch at 90.1° read at 0.706 of
+ * their width each from the yaw between them (−45.05°), and from the front the branch is a line.
+ * The candidates are the face-on yaw of every distinct turn and the bisector of every pair of
+ * them; the one that maximises the NARROWEST plane's projected width wins, the nearest to the
+ * front on a tie. Widths weigh in when given, so a wide plane does not sacrifice a narrow one.
+ */
+export const bestYaw = (
+    planes: { location: { rotateY: number }; width?: number }[],
+): number => {
+    const shown = planes.filter((plane) => !!plane);
+    if (shown.length === 0) {
+        return 0;
+    }
+
+    const turns = [...new Set(shown.map((plane) => Math.round(plane.location.rotateY * 1000) / 1000))];
+    const candidates = new Set<number>();
+    for (const turn of turns) {
+        candidates.add(normalizeYaw(-turn));
+        for (const other of turns) {
+            candidates.add(normalizeYaw(-(turn + other) / 2));
+        }
+    }
+
+    const narrowest = (yaw: number) => Math.min(...shown.map((plane) => (
+        (plane.width || 1) * Math.abs(Math.cos((plane.location.rotateY + yaw) * DEG))
+    )));
+
+    let best = 0;
+    let bestWidth = -Infinity;
+    for (const yaw of [...candidates].sort((a, b) => Math.abs(a) - Math.abs(b))) {
+        const width = narrowest(yaw);
+        if (width > bestWidth + 1e-9) {
+            best = yaw;
+            bestWidth = width;
+        }
+    }
+    return best;
+};
+
+
+export interface FramePlanesOptions extends Omit<FrameOptions, 'yaw'> {
+    /** the yaw to frame from: a number, or `best` (`bestYaw`), the default */
+    yaw?: number | 'best';
+}
+
+/**
+ * Frame these planes by their REAL corners from the given yaw (level): the picture parent and
+ * child both read in. Framing by real corners rather than by the axis-aligned box lets a turned
+ * plane fit at a larger scale, since the box around a fin is wider than the fin.
+ */
+export const framePlanes = (
+    camera: CameraState,
+    planes: PlaneGeometry[],
+    view: ViewSize,
+    options: FramePlanesOptions = {},
+): CameraState => {
+    const points = planes.flatMap((plane) => planeCorners(plane));
+    const box = pointsBounds(points);
+    if (!box) {
+        return camera;
+    }
+
+    const yaw = options.yaw === undefined || options.yaw === 'best'
+        ? bestYaw(planes)
+        : options.yaw;
+
+    return framePoints(
+        camera,
+        points,
+        boxCenter(box),
+        view,
+        {
+            maxScale: 1,
+            ...options,
+            yaw,
+            pitch: options.pitch ?? 0,
+        },
+    );
+};
+
+/** Frame a parent and its child from the yaw between them: the branch and where it came from. */
+export const framePair = (
+    camera: CameraState,
+    parent: PlaneGeometry,
+    child: PlaneGeometry,
+    view: ViewSize,
+    options: FrameOptions = {},
+): CameraState => framePlanes(camera, [parent, child], view, { ...options, yaw: 'best' });
+
+
+export interface FitAllOptions extends Omit<FrameOptions, 'yaw'>, WorldBoundsOptions {
+    /** Look at the space front-on (yaw 0, pitch 0). Default `true`. */
+    faceOn?: boolean;
+    /** the yaw to fit from: a number, or `best` (`bestYaw` over the shown planes) */
+    yaw?: number | 'best';
+}
+
+
+/**
+ * Frame every visible plane (children included) by its real corners. Returns the camera unchanged
+ * for an empty space. Front-on by default; `yaw: 'best'` turns to where the narrowest plane reads.
+ */
 export const fitAll = (
     camera: CameraState,
     planes: FittablePlane[],
     view: ViewSize,
     options: FitAllOptions = {},
 ): CameraState => {
-    const box = worldBounds(planes, options);
+    const flat = flattenPlanes(planes, options);
+    const points = flat.flatMap((plane) => planeCorners(plane));
+    const box = pointsBounds(points);
     if (!box) {
         return camera;
     }
 
     const faceOn = options.faceOn ?? true;
+    const yaw = options.yaw === 'best'
+        ? bestYaw(flat)
+        : (options.yaw ?? (faceOn ? 0 : camera.yaw));
 
-    return frameBounds(
+    return framePoints(
         camera,
-        box,
+        points,
+        boxCenter(box),
         view,
         {
             ...options,
-            yaw: options.yaw ?? (faceOn ? 0 : camera.yaw),
+            yaw,
             pitch: options.pitch ?? (faceOn ? 0 : camera.pitch),
         },
     );
@@ -219,5 +358,6 @@ export const fitAll = (
 
 export {
     pointsBounds,
+    worldBounds,
 };
 // #endregion module

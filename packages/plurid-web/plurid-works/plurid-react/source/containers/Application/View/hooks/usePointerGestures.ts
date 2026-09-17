@@ -44,6 +44,7 @@
     import {
         isEditableTarget,
         isEngineControl,
+        isDragHandle,
         planeElementOf,
     } from '~services/logic/input/guard';
 
@@ -259,6 +260,8 @@ export const usePointerGestures = (
                 onSelectedPlane: !!planeID && selection.includes(planeID),
                 onEditable: isEditableTarget(target),
                 onControl: isEngineControl(target),
+                onDragHandle: isDragHandle(target),
+                dragHandle: cfg().gestures?.dragHandle,
                 grabMode: grabModeRef.current,
                 firstPerson: cfg().firstPerson,
                 transformMode: cfg().transformMode as GestureContext['transformMode'],
@@ -605,6 +608,11 @@ export const usePointerGestures = (
                         dispatch(actions.space.historyEnd());
                         current.historyOpen = false;
                     }
+                    current.intent = 'pan';
+                }
+                if (current.intent === 'marquee') {
+                    // a pinch is navigation: the rubber band comes off first
+                    dispatch(actions.ui.setMarquee(null));
                     current.intent = 'pan';
                 }
                 setNavDragging(true);

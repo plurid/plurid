@@ -1,8 +1,12 @@
 import React from 'react';
 import {
+    PluridApplicationProvider,
     PluridRouterBrowser,
     PluridRouterLink,
 } from '@plurid/plurid-react';
+
+import { installHarnessGlobals } from './harness/globals';
+import { readFlags } from './harness/flags';
 
 
 // A page "exterior" — the SPA content shown for a route. Each carries a PluridRouterLink
@@ -42,21 +46,50 @@ const routes: any[] = [
     { value: '/', exterior: () => <Page name="HOME" accent="#4da3ff" to="/about" toLabel="go to about →" /> },
     { value: '/about', exterior: () => <Page name="ABOUT" accent="#7ee787" to="/" toLabel="← back home" /> },
     // a route WITH an application: the readiness contract in the route-driven mode (navigation.spec.ts)
-    { value: '/space', exterior: () => <Page name="SPACE" accent="#ffb454" to="/" toLabel="← back home" />, planes: [['/demo', () => <div style={{ padding: 24, color: '#e6e8ea' }}>a plane inside a route</div>]], view: ['/demo'] },
+    // and the PEER scenarios (router.spec.ts): a second root, a spawned child, an arrangement kept
+    {
+        value: '/space',
+        exterior: () => <Page name="SPACE" accent="#ffb454" to="/" toLabel="← back home" />,
+        planes: [
+            ['/demo', () => <div style={{ padding: 24, color: '#e6e8ea' }}>a plane inside a route</div>],
+            ['/second', () => <div style={{ padding: 24, color: '#e6e8ea' }}>a second plane inside the route</div>],
+            ['/demo/detail', () => <div style={{ padding: 24, color: '#e6e8ea' }}>a detail of the first</div>],
+        ],
+        view: ['/demo'],
+    },
 ];
 
 
+/** A host's toolbar slot: the same one the direct fixture's chrome tests draw, so the peer can be told apart. */
+const renderHostToolbar = (context: any) => (
+    <div data-plurid-overlay="host-toolbar" data-look={context?.look?.name} style={{ position: 'absolute', left: 16, bottom: 16, color: '#e6e8ea', fontSize: 12 }}>
+        host toolbar
+    </div>
+);
+
+
+/**
+ * THE ROUTER PEER: the same provider a product wraps its router in (one configuration surface for
+ * both mount paths), the same harness globals the direct fixture installs, so the scenario suite
+ * reads the route-driven space the way it reads the direct one.
+ */
 const RouterDemo: React.FC = () => (
-    <PluridRouterBrowser
-        // the readiness contract in the route-driven mode: the api at `onReady`, a command at once
-        onReady={(api) => {
-            (window as unknown as { __rtRouterReady?: unknown; __rtRouterRotation?: number }).__rtRouterReady = api;
-            api.pubsub.publish({ topic: 'space.rotateXTo', data: { value: 15 } } as never);
-            (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation = api.getSnapshot().space.camera.pitch;
-        }}
-        routes={routes}
-        planes={[]}
-    />
+    <PluridApplicationProvider
+        renderToolbar={renderHostToolbar as any}
+        useLocalStorage={true}
+    >
+        <PluridRouterBrowser
+            // the readiness contract in the route-driven mode: the api at `onReady`, a command at once
+            onReady={(api) => {
+                (window as unknown as { __rtRouterReady?: unknown; __rtRouterRotation?: number }).__rtRouterReady = api;
+                api.pubsub.publish({ topic: 'space.rotateXTo', data: { value: 15 } } as never);
+                (window as unknown as { __rtRouterRotation?: number }).__rtRouterRotation = api.getSnapshot().space.camera.pitch;
+                installHarnessGlobals(api, readFlags(location.search, () => undefined), {});
+            }}
+            routes={routes}
+            planes={[]}
+        />
+    </PluridApplicationProvider>
 );
 
 

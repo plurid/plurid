@@ -15,7 +15,7 @@
         PluridShortcutID,
 
         PluridPubSub as IPluridPubSub,
-        FOCUS_ANCHOR_SUFFIX,
+        PLURID_ATTRIBUTE_PLANE_ANCHOR,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -33,6 +33,7 @@
 
     import {
         focusActivePlane,
+        focusPlaneByID,
         focusParentActivePlane,
         focusPreviousRoot,
         focusNextRoot,
@@ -94,11 +95,33 @@ const insidePlaneContent = (
     if (!target || typeof target.closest !== 'function') {
         return false;
     }
-    if (typeof target.id === 'string' && target.id.endsWith(FOCUS_ANCHOR_SUFFIX)) {
+    if (typeof target.hasAttribute === 'function' && target.hasAttribute(PLURID_ATTRIBUTE_PLANE_ANCHOR)) {
         return false;
     }
     return !!target.closest('[data-plurid-plane]');
 };
+
+/** The plane whose focus anchor the key came from, if it did. */
+const focusAnchorPlaneID = (
+    event: KeyboardEvent | undefined,
+): string => {
+    const target = event?.target as HTMLElement | null;
+    if (!target || typeof target.getAttribute !== 'function') {
+        return '';
+    }
+    return target.getAttribute(PLURID_ATTRIBUTE_PLANE_ANCHOR) || '';
+};
+
+/** The transform mode in force, `ALL` when the state has none to say. */
+const transformModeOf = (
+    state: AppState,
+): string => (state as any)?.configuration?.space?.transformMode ?? TRANSFORM_MODES.ALL;
+
+/** A mode key TOGGLES: pressed in its own mode it leaves it, so a key that got the reader in gets them out. */
+const toggledMode = (
+    state: AppState,
+    mode: string,
+): string => (transformModeOf(state) === mode ? TRANSFORM_MODES.ALL : mode);
 
 /**
  * One keyboard shortcut. `match` replicates the original `if`-condition verbatim (so ORDER + the
@@ -164,6 +187,16 @@ const runTransformNudge = (ctx: ShortcutContext): boolean => {
 // disable / remap / unhandled-key plumbing is new.
 /** The dispatcher's bindings, in PRECEDENCE order for a shared code (the first match wins). Every id and code is in `PLURID_SHORTCUTS`. */
 export const SHORTCUTS: ShortcutBinding[] = [
+    {
+        // Cmd/Ctrl+Shift+Z = redo, an id of its own so `space.command { id: 'redo' }` can name it;
+        // before `undo`, which matches the same code with any modifiers
+        id: 'redo', code: 'KeyZ',
+        match: (e, code) => (e.metaKey || e.ctrlKey) && e.shiftKey && e.code === code,
+        run: ({ dispatch, prevent }) => {
+            prevent();
+            dispatch(actions.space.redo());
+        },
+    },
     {
         // Cmd/Ctrl+Z = undo, +Shift = redo. The editable-target guard lets an editor keep its own undo.
         id: 'undo', code: 'KeyZ',
@@ -252,6 +285,12 @@ export const SHORTCUTS: ShortcutBinding[] = [
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.ui.setUIGrabMode(false)); },
     },
     {
+        // Escape leaves a rotate / move / scale mode: there was no way out but the toolbar
+        id: 'exitTransformMode', code: 'Escape',
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && transformModeOf(ctx.state) !== TRANSFORM_MODES.ALL,
+        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL)); },
+    },
+    {
         // Escape clears the selection — only when something is selected, so an empty Escape still
         // reaches the host (help overlay, etc.) via `onUnhandledKey`.
         id: 'clearSelection', code: 'Escape',
@@ -261,7 +300,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         // Frame all planes (CAD "fit"): 0 — animated, from the measured extents.
         id: 'fitToView', code: 'Digit0',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
         run: ({ dispatch, prevent }) => { prevent(); dispatch(fitToView({ animate: true }) as any); },
     },
     {
@@ -295,23 +334,34 @@ export const SHORTCUTS: ShortcutBinding[] = [
         run: ({ dispatch, prevent }) => { prevent(); dispatch(navigateDirection('down') as any); },
     },
     {
+        // Enter frames the plane under the keyboard's FOCUS (its anchor) when it comes from one,
+        // else the active plane: a reader who tabbed to a plane and pressed Enter meant that one.
         id: 'frameActive', code: 'Enter',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && !!ctx.state.space.activePlaneID,
-        run: ({ dispatch, state, prevent }) => { prevent(); focusActivePlane(dispatch, state); },
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && (!!focusAnchorPlaneID(e) || !!ctx.state.space.activePlaneID),
+        run: ({ dispatch, state, event, prevent }) => {
+            prevent();
+            const focused = focusAnchorPlaneID(event);
+            if (focused) {
+                focusPlaneByID(dispatch, state, focused);
+            } else {
+                focusActivePlane(dispatch, state);
+            }
+        },
     },
     {
+        // never from inside a plane's content, where ⌘A is the page's (select the text)
         id: 'selectAll', code: 'KeyA',
-        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey,
+        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && !insidePlaneContent(e),
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.selectAll()); },
     },
     {
         id: 'invertSelection', code: 'KeyI',
-        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey,
+        match: (e, code) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && !insidePlaneContent(e),
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.invertSelection()); },
     },
     {
         id: 'duplicateSelection', code: 'KeyD',
-        match: (e, code, ctx) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && ctx.state.space.selectedPlaneIDs.length > 0,
+        match: (e, code, ctx) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && !insidePlaneContent(e) && ctx.state.space.selectedPlaneIDs.length > 0,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(duplicateSelection() as any); },
     },
     /**
@@ -340,28 +390,30 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         // Frame the selection: `.` (the CAD "zoom to selection").
         id: 'frameSelection', code: 'Period',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers && ctx.state.space.selectedPlaneIDs.length > 0,
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && ctx.state.space.selectedPlaneIDs.length > 0,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(frameSelection(true) as any); },
     },
     {
+        // THE MODE KEYS: never from inside a plane's content (a focused link, a list, a field), where
+        // the letter is the page's; each toggles, so the key that got the reader in gets them out.
         id: 'toggleFirstPerson', code: 'KeyF',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.toggleConfigurationSpaceFirstPerson()); },
     },
     {
         id: 'modeRotation', code: 'KeyR',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
-        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ROTATION)); },
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, state, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(toggledMode(state, TRANSFORM_MODES.ROTATION) as any)); },
     },
     {
         id: 'modeTranslation', code: 'KeyT',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers,
-        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.TRANSLATION)); },
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e),
+        run: ({ dispatch, state, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(toggledMode(state, TRANSFORM_MODES.TRANSLATION) as any)); },
     },
     {
         id: 'modeScale', code: 'KeyS',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !ctx.firstPerson,
-        run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.SCALE)); },
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !ctx.firstPerson && !insidePlaneContent(e),
+        run: ({ dispatch, state, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(toggledMode(state, TRANSFORM_MODES.SCALE) as any)); },
     },
     {
         // Arrow-key transform nudges (rotate / translate / scale by step, gated on the axis locks).
@@ -519,13 +571,35 @@ export const runShortcut = (
     id: PluridShortcutID,
     context: RunShortcutContext,
     shortcuts?: PluridConfigurationSpaceShortcuts,
-): boolean => {
-    if (NEEDS_EVENT.has(id) || isShortcutDisabled(id, shortcuts)) {
-        return false;
-    }
+): boolean => runShortcutReported(id, context, shortcuts).ran;
+
+
+/** What running a command by id came to: for the bus, which reports it (`space.changed` kind `command`). */
+export interface ShortcutReport {
+    id: string;
+    ran: boolean;
+    reason?: 'unknown' | 'disabled' | 'needsKey' | 'declined';
+}
+
+/**
+ * The same run, with its reason. `ignoreDisabled` is the bus's: a disabled shortcut is a KEY the
+ * host took away from the reader, and a command on the bus is the host's own act.
+ */
+export const runShortcutReported = (
+    id: PluridShortcutID,
+    context: RunShortcutContext,
+    shortcuts?: PluridConfigurationSpaceShortcuts,
+    options: { ignoreDisabled?: boolean } = {},
+): ShortcutReport => {
     const binding = SHORTCUTS.find((entry) => entry.id === id);
     if (!binding) {
-        return false;
+        return { id, ran: false, reason: 'unknown' };
+    }
+    if (NEEDS_EVENT.has(id)) {
+        return { id, ran: false, reason: 'needsKey' };
+    }
+    if (!options.ignoreDisabled && isShortcutDisabled(id, shortcuts)) {
+        return { id, ran: false, reason: 'disabled' };
     }
     const ran = binding.run({
         dispatch: context.dispatch,
@@ -536,7 +610,9 @@ export const runShortcut = (
         noModifiers: true,
         prevent: () => {},
     });
-    return ran !== false;
+    return ran === false
+        ? { id, ran: false, reason: 'declined' }
+        : { id, ran: true };
 };
 
 // #endregion module

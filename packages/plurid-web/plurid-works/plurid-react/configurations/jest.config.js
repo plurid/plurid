@@ -22,10 +22,10 @@ module.exports = {
     // only ever moves UP, in the commit that earns it.
     coverageThreshold: {
         global: {
-            branches: 55,
-            functions: 60,
-            lines: 65,
-            statements: 65,
+            branches: 61,
+            functions: 61,
+            lines: 69,
+            statements: 69,
         },
     },
     collectCoverageFrom: [

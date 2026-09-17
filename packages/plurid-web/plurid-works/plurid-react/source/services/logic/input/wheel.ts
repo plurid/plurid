@@ -117,6 +117,7 @@ export const normalizeWheel = (
 export type WheelPolicy =
     | 'zoom'
     | 'scroll-first'
+    | 'plane'
     | 'disabled';
 
 export type TrackpadScrollPolicy =
@@ -182,14 +183,16 @@ const pinchFactor = (
 /**
  * Decide what a wheel/trackpad event does. `scroll` hands the event back to the page (the plane's
  * content scrolls natively); `camera` is a delta for the frame batcher. The policy:
- *  - pinch / Ctrl-or-Cmd + wheel → zoom at the cursor, always;
+ *  - a trackpad pinch → zoom at the cursor, always; Cmd + wheel and Ctrl + a mouse notch are the
+ *    browser's (its page zoom), never the space's;
  *  - an explicit transform mode pins the intent (rotate / translate / scale);
  *  - Shift + wheel orbits, Alt + wheel pans, Alt + Shift dollies (the historical modifiers);
  *  - grab mode → zoom at the cursor;
  *  - otherwise a trackpad scroll follows `trackpadScroll` (pan by default) and a mouse wheel
  *    follows `policy`: `zoom` at the cursor, unless `scroll-first` and the content under the
  *    pointer is a scroller (then the wheel is the content's — even at the end of its range, so a
- *    scroll never chains into the camera).
+ *    scroll never chains into the camera); under `plane` a plane keeps its wheel whatever it can do
+ *    (a reading surface never zooms away under a wheel) and only empty space zooms.
  */
 export const wheelToDelta = (
     wheel: NormalizedWheel,
@@ -261,8 +264,13 @@ export const wheelToDelta = (
         };
     };
 
-    if (wheel.pinch || ctx.ctrlOrMeta) {
+    // A TRACKPAD PINCH zooms, always. Cmd + wheel, and Ctrl + a mouse notch, are the browser's (its
+    // page zoom): the space used to take them, and the page zoom with them.
+    if (wheel.pinch && wheel.source === 'trackpad') {
         return pinch();
+    }
+    if (wheel.pinch || ctx.ctrlOrMeta) {
+        return { kind: 'scroll' };
     }
 
     if (ctx.transformMode === 'ROTATION') {
@@ -293,6 +301,10 @@ export const wheelToDelta = (
     // it can, else nothing — never a zoom or a pan. Pinch / Ctrl / Shift / Alt / grab above still
     // open the space.
     if (ctx.docked) {
+        return ctx.scrollable ? { kind: 'scroll' } : { kind: 'consume' };
+    }
+    if (ctx.onPlane && policy === 'plane') {
+        // the plane's, whatever it can do: it scrolls if it can, else nothing
         return ctx.scrollable ? { kind: 'scroll' } : { kind: 'consume' };
     }
     if (ctx.onPlane && ctx.scrollable && policy === 'scroll-first') {

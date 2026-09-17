@@ -106,6 +106,8 @@ const norwegian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ eller rull ned',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← eller rull til venstre',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ eller rull til høyre',
+
+    spaceEmpty: 'ingen plan i dette rommet',
 };
 // #endregion module
 

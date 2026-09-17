@@ -6,6 +6,7 @@ import {
 import {
     collectConsoleErrors,
     openFixture,
+    planeByRoute,
     shownPlanes,
     spaceState,
     tree,
@@ -109,6 +110,36 @@ test.describe('fixtures', () => {
                     return misses;
                 });
                 expect(misses).toEqual([]);
+            }
+
+            // THE PLANES THAT MUST READ at the primary viewpoint: a projected width a reader can use,
+            // and, when asked, the plane's own centre hit by the plane itself and nothing over it.
+            // A branch at 90° used to be asserted as `overlap: expected`; this is the assertion that
+            // it is READABLE, which is the thing a product needs.
+            for (const rule of fixture.expect?.visible ?? []) {
+                const plane = planeByRoute(roots, rule.route);
+                expect(plane, rule.route).toBeTruthy();
+                const seen = await page.evaluate((id) => {
+                    const element = document.querySelector(`[data-plurid-plane="${id}"]`) as HTMLElement;
+                    const rect = element.getBoundingClientRect();
+                    const x = rect.left + rect.width / 2;
+                    const y = rect.top + rect.height / 2;
+                    const top = document.elementFromPoint(x, y);
+                    return {
+                        width: rect.width,
+                        hit: !!top && top.closest('[data-plurid-plane]') === element,
+                    };
+                }, plane.planeID);
+                expect(seen.width, rule.route + ' must read: ' + seen.width.toFixed(1) + 'px wide').toBeGreaterThanOrEqual(rule.minWidth);
+                if (rule.unoccluded) {
+                    expect(seen.hit, rule.route + ' must not be under another plane').toBe(true);
+                }
+            }
+
+            // what the bus was told
+            for (const kind of fixture.expect?.changed ?? []) {
+                const changed: string[] = await page.evaluate(() => (window as any).__rtChanged ?? []);
+                expect(changed, 'space.changed kinds reported').toContain(kind);
             }
 
             expect((await spaceState(page)).motion).toBe('idle');

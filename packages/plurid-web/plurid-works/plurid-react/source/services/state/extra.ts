@@ -37,6 +37,8 @@ export interface PluridThunkExtra {
     pendingFrame?: {
         planeID: string;
         animate: boolean;
+        /** the frame is a pair: the plane and the plane it came from */
+        pair?: boolean;
     };
     /** The application's one plane measurer (`observePlaneSize`), created on the first plane's mount. */
     measurer?: PlaneMeasurer;

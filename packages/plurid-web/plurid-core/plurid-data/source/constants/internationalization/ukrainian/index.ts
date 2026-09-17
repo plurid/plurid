@@ -106,6 +106,8 @@ const ukrainian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ або прокрутка вниз',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← або прокрутка ліворуч',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ або прокрутка праворуч',
+
+    spaceEmpty: 'жодної площини в цьому просторі',
 };
 // #endregion module
 

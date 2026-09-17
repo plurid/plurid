@@ -27,6 +27,15 @@ export const installHarnessGlobals = (
         contents: Array.from(document.querySelectorAll('[data-plurid-entity="PluridPlaneContent"]')).filter((node) => (node as HTMLElement).style.display !== 'none').length,
         detached: document.querySelectorAll('[data-plurid-culled="detached"]').length,
     });
+    // every `space.changed` kind the engine reports, in order: what a product listening on the bus hears
+    const changed: string[] = (w.__rtChanged = []);
+    api.pubsub.subscribe({
+        topic: 'space.changed',
+        callback: (data: any) => {
+            changed.push(String(data?.kind ?? ''));
+            if (changed.length > 500) changed.shift();
+        },
+    } as any);
     const perf = (w.__rtPerf = { dispatches: 0, frames: 0 });
     // Which top-level slice keys changed on each notification (a no-op dispatch logs `[]`).
     const changes: string[][] = (w.__rtChanges = []);

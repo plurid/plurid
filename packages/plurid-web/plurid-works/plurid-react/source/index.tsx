@@ -178,6 +178,22 @@
     import {
         arrangementSignature,
     } from './services/logic/arrangement/signature';
+    import {
+        fragmentOf,
+        serializeFragment,
+        parseFragment,
+        materializeFragment,
+        FRAGMENT_MARKER,
+        FRAGMENT_VERSION,
+    } from './services/logic/arrangement/fragment';
+    import type {
+        ArrangementFragment,
+        FragmentPlane,
+        FragmentLink,
+        MaterializeFragmentOptions,
+        MaterializedFragment,
+    } from './services/logic/arrangement/fragment';
+    import { domID } from './services/logic/dom';
     // #endregion internal
 // #endregion imports
 
@@ -291,6 +307,15 @@ const Plurid = {
     selectors: pluridSelectors,
     definePluridConfiguration,
     arrangementSignature,
+    /** THE PERSISTENCE FORMAT: a piece of a space as text, addressed by path (see `docs/CONTROL_SURFACE.md`, the clipboard). */
+    fragmentOf,
+    serializeFragment,
+    parseFragment,
+    materializeFragment,
+    FRAGMENT_MARKER,
+    FRAGMENT_VERSION,
+    /** A plane's DOM id (`plurid-<digest>`); `data-plurid-plane` carries the plane id itself. */
+    domID,
 
     internals,
     // #endregion Utilities
@@ -410,6 +435,7 @@ export {
 // Type-only re-exports use `export type` so esbuild (per-file transpile) elides them at
 // runtime, instead of emitting runtime re-exports of names that have no JS value.
 export type {
+
     PluridPlaneLens,
     PluridPlaneIsolation,
 } from './services/hooks/plane';
@@ -495,6 +521,10 @@ export {
     BRIDGE_REACH_VARIABLE,
     BRIDGE_ANGLE_VARIABLE,
 } from './services/logic/link/bridge';
+export {
+    measureLinkCoordinates,
+    resolveLinkID,
+} from './services/logic/link/measure';
 export {
     dockCommand,
     revealCommand,
@@ -599,3 +629,12 @@ export type {
 
 export default Plurid;
 // #endregion exports
+
+/** the arrangement fragment: the persistence format's types */
+export type {
+    ArrangementFragment,
+    FragmentPlane,
+    FragmentLink,
+    MaterializeFragmentOptions,
+    MaterializedFragment,
+};

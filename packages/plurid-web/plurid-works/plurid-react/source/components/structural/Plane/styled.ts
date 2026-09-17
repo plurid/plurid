@@ -10,6 +10,7 @@
         decomposeColor,
     } from '@plurid/plurid-themes';
     // #endregion libraries
+    import { chromeFocusRing } from '~services/styled/chrome';
 // #endregion imports
 
 
@@ -32,6 +33,10 @@ export interface IStyledPluridPlane {
 }
 
 export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
+    /* the keyboard is on the plane's anchor: the plane wears the ring */
+    &[data-plurid-focus='true'] {
+        ${chromeFocusRing(2)}
+    }
     /* The wrappers above it are pointer-events: none (see Roots / Root): a plane is interactive. */
     pointer-events: auto;
     backface-visibility: ${({ backface }) => (backface === 'hidden' ? 'hidden' : 'visible')};

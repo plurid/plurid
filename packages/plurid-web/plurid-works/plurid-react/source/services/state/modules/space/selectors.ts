@@ -114,7 +114,7 @@ export const getDockedPlaneID = createSelector(
         }
         // the configured size (view-sized pages) over a measured one: a measurement lags a frame
         const configured = spaceEngine.layout.configuredPlaneSize({ elements: { plane } } as any, view);
-        return cameraEngine.findDockedPlane(camera, tree, view, configured, docking?.epsilon, limits);
+        return cameraEngine.findDockedPlane(camera, tree, view, configured, docking?.epsilon, limits, docking?.scale);
     },
 );
 export const getCulledView = (state: AppState) => state.space.culledView;

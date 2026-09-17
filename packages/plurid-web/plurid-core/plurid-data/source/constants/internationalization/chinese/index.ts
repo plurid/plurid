@@ -106,6 +106,8 @@ const chinese: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ 或向下滚动',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← 或向左滚动',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ 或向右滚动',
+
+    spaceEmpty: '此空间中没有平面',
 };
 // #endregion module
 

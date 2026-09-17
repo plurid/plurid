@@ -39,6 +39,8 @@
 
     import {
         childLocation,
+        resolveSpawnAnchor,
+        anchoredCoordinates,
         resolvePlaneAngle,
         resolveBridgeOffset,
         resolveBridgeSide,
@@ -217,18 +219,43 @@ export const resolveViewItem = <C>(
 
 
 /**
+ * ONE RULE FOR THE SIZE A NODE KEEPS FROM ITS PREVIOUS SELF. A hand-set size is the plane's own; a
+ * dimension the incoming node carries (declared, or already known) stays; a dimension it does not
+ * carry (0: unmeasured) keeps what was measured before. The layout's carry (`applyKnownSizes`,
+ * before placement) and the store's (`reconcileTree`, after) each had a rule of their own: where
+ * the configuration set a dimension the first dropped the measurement so the layout would pitch by
+ * the configuration, and the second copied it back. Now the node always keeps its measurement, and
+ * the LAYOUTS pitch by the configuration where it speaks (`placedWidth` / `placedHeight`).
+ */
+export const carryRootRuntime = (
+    previous: TreePlane,
+    next: TreePlane,
+): { width: number; height: number } => {
+    if (isHandSized(previous)) {
+        return {
+            width: previous.width,
+            height: previous.height,
+        };
+    }
+    return {
+        width: next.width || previous.width || 0,
+        height: next.height || previous.height || 0,
+    };
+};
+
+
+/**
  * THE SIZING CONTRACT: the layouts place the roots by their CURRENT sizes — a fresh root carries
  * only a declared dimension, so the previous tree's sizes are copied onto the matching roots
  * (`pairRootsByIdentity`) before placement. A hand-set size is the plane's own and wins over
  * everything; a declared dimension is never overridden by a measurement; a measured dimension is
- * copied only where the configuration leaves that dimension to the content — where it sets it the
- * measurement is an observation of it, made for the PREVIOUS view (copying a measured width after a
- * resize would pitch the grid by a stale width).
+ * kept on the node (`carryRootRuntime`), and where the configuration sets that dimension the
+ * layouts pitch by the configuration, not the measurement, which is an observation of it made for
+ * the PREVIOUS view (pitching by a measured width after a resize would freeze a stale grid).
  */
 export const applyKnownSizes = (
     roots: TreePlane[],
     previousTree: TreePlane[] | undefined,
-    configured: { width: number; height: number } = { width: 0, height: 0 },
 ): TreePlane[] => {
     if (!previousTree || previousTree.length === 0) {
         return roots;
@@ -239,13 +266,7 @@ export const applyKnownSizes = (
         if (!previous) {
             return root;
         }
-        const manual = isHandSized(previous);
-        const width = manual
-            ? previous.width
-            : (root.width || (configured.width > 0 ? 0 : previous.width) || 0);
-        const height = manual
-            ? previous.height
-            : (root.height || (configured.height > 0 ? 0 : previous.height) || 0);
+        const { width, height } = carryRootRuntime(previous, root);
         if (width === root.width && height === root.height) {
             return root;
         }
@@ -295,7 +316,7 @@ export const computeSpaceTree = <C>(
         width: typeof window === 'undefined' ? 1440 : window.innerWidth,
         height: typeof window === 'undefined' ? 840 : window.innerHeight,
     };
-    const treePlanes = applyKnownSizes(freshPlanes, previousTree, configuredPlaneSize(configuration, configuredView));
+    const treePlanes = applyKnownSizes(freshPlanes, previousTree);
 
     if (!layout) {
         const layoutlessTreePlanes = treePlanes.map(plane => {
@@ -376,7 +397,11 @@ export const computeSpaceTree = <C>(
                 merged.push(hidden);
                 continue;
             }
-            merged.push(placed[taken]);
+            // a layout that hands back fewer planes than it was given leaves a hole, not an undefined
+            const placedPlane = placed[taken];
+            if (placedPlane) {
+                merged.push(placedPlane);
+            }
             taken += 1;
         }
 
@@ -542,6 +567,10 @@ export interface UpdateTreeWithNewPlaneOptions {
     linkID?: string;
     /** The width the child renders with until measured (a mirrored child is placed by its width). */
     fallbackWidth?: number;
+    /** A bridge length of the host's own, over the configured one and the sibling stagger. */
+    bridgeLength?: number;
+    /** How the bridge is drawn, over what the sibling stagger decides. */
+    bridgeKind?: 'strip' | 'leash';
 }
 
 
@@ -619,8 +648,19 @@ export const updateTreeWithNewPlane = <C>(
         : resolvedPlane;
 
     // ONE geometry: the bridge vector AND the child's facing come from the same signed angle,
-    // fanned by generation so nested spawns never turn back-to-front.
-    const bridgeLength = configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH;
+    // fanned by generation so nested spawns never turn back-to-front. The bridge leaves the
+    // parent where the anchor says (its right edge, by default), and the i-th sibling takes a
+    // longer one, so siblings stand side by side along their own width axis rather than coincide.
+    const siblings = (parentPlane.children ?? [])
+        .filter((child) => child.show !== false && !!child.linkCoordinates)
+        .length;
+    const anchored = resolveSpawnAnchor(parentPlane.width, linkCoordinates, {
+        anchor: configuration.space.bridge?.anchor ?? 'link',
+        ordinal: siblings,
+        childWidth: treePlane.width || options.fallbackWidth,
+        bridgeLength: configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH,
+    });
+    const bridgeLength = options.bridgeLength ?? anchored.bridgeLength;
     const depth = planeDepth(tree, parentPlaneID) + 1;
     const direction = configuration.space.bridge?.direction ?? 'backward';
     const planeAngle = resolvePlaneAngle(
@@ -639,7 +679,7 @@ export const updateTreeWithNewPlane = <C>(
         parentPlaneID,
         location: childLocation(
             parentPlane.location,
-            linkCoordinates,
+            anchored.linkCoordinates,
             bridgeLength,
             planeAngle,
             bridgeSide,
@@ -650,7 +690,9 @@ export const updateTreeWithNewPlane = <C>(
         planeAngle,
         bridgeSide,
         bridgeOffset,
-        linkCoordinates,
+        bridgeAnchor: configuration.space.bridge?.anchor ?? 'link',
+        bridgeKind: options.bridgeKind ?? anchored.bridgeKind,
+        linkCoordinates: anchored.linkCoordinates,
         ...(options.linkID ? { spawnedByLinkID: options.linkID } : {}),
     };
 
@@ -690,7 +732,7 @@ export const updateLinkCoordinates = (
     linkCoordinates: LinkCoordinates,
 ): TreePlane[] => {
     const plane = getTreePlaneByPlaneID(tree, planeID);
-    if (!plane || sameCoordinates(plane.linkCoordinates, linkCoordinates)) {
+    if (!plane) {
         return tree;
     }
 
@@ -698,15 +740,31 @@ export const updateLinkCoordinates = (
         ? getTreePlaneByPlaneID(tree, plane.parentPlaneID)
         : undefined;
     if (!parentPlane) {
-        return updateTreePlane(tree, { ...plane, linkCoordinates });
+        return sameCoordinates(plane.linkCoordinates, linkCoordinates)
+            ? tree
+            : updateTreePlane(tree, { ...plane, linkCoordinates });
+    }
+    // a re-measured link moves the bridge's height; a child anchored at the edge keeps its x
+    const coordinates = anchoredCoordinates(parentPlane, { linkCoordinates, bridgeAnchor: plane.bridgeAnchor });
+    if (sameCoordinates(plane.linkCoordinates, coordinates)) {
+        return tree;
+    }
+
+    // A CHILD PLACED BY HAND STAYS WHERE IT WAS DROPPED: only its leash follows the link. The
+    // edge anchor made this reachable, since a parent resized moves its edge and every link on it.
+    if (plane.manuallyPositioned) {
+        return updateTreePlane(tree, {
+            ...plane,
+            linkCoordinates: coordinates,
+        });
     }
 
     const relocated = recomputeSubtree({
         ...plane,
-        linkCoordinates,
+        linkCoordinates: coordinates,
         location: childLocation(
             parentPlane.location,
-            linkCoordinates,
+            coordinates,
             plane.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
             plane.planeAngle ?? DEFAULT_PLANE_ANGLE,
             plane.bridgeSide ?? 'start',
@@ -896,20 +954,10 @@ export const removePlaneFromTree = (
 
 
 // #region structural sharing
-/**
- * `width`/`height` carry-forward: the layout recompute (`computeSpaceTree`) emits a root/child
- * plane with `width: 0, height: 0` because it cannot know the eventually-rendered pixel size —
- * that is measured at runtime by the plane's ResizeObserver and written back via a SEPARATE
- * `updateSpaceTreePlane` dispatch. So a `0` (or missing) incoming dimension means "unmeasured,
- * keep what we already have", NOT "the plane shrank to zero". Treating it as a change would both
- * blow away the live measurement on every relayout AND defeat reference reuse below.
- */
-const carriedDimension = (
-    next: number | undefined,
-    previous: number,
-): number => (
-    (!next && previous) ? previous : (next as number)
-);
+// `width`/`height` carry-forward: the layout recompute (`computeSpaceTree`) emits a plane with
+// `width: 0, height: 0` when it cannot know the rendered size (measured at runtime by the plane's
+// ResizeObserver and written back by a SEPARATE `updateSpaceTreePlane` dispatch), so a `0` incoming
+// dimension means "unmeasured, keep what we already have": `carryRootRuntime`, the one rule.
 
 const sameLocation = (
     a: TreePlaneLocation,
@@ -1016,8 +1064,7 @@ function reconcileNode(
         children = previous.children;
     }
 
-    const width = carriedDimension(next.width, previous.width);
-    const height = carriedDimension(next.height, previous.height);
+    const { width, height } = carryRootRuntime(previous, next);
 
     // A manually-pinned plane keeps its user-set location + flag across auto-layout recomputes —
     // the same carry-forward idea as measured `width`/`height`. (The deliberate MOVE mutates the

@@ -26,6 +26,7 @@
         PluridPubSub as IPluridPubSub,
         PluridPubSubSubscribeMessage,
         PluridPlanesRegistrar as IPluridPlanesRegistrar,
+        PluridInspectorRegistry,
     } from '@plurid/plurid-data';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -36,8 +37,17 @@
     import {
         PendingPlane,
         PENDING_TREE_CHANGES,
+        hiddenPlaneIDsOf,
         planeIDsOf,
     } from '~services/logic/correlation';
+
+    import {
+        measureLinkCoordinates,
+    } from '~services/logic/link/measure';
+
+    import {
+        buildInspection,
+    } from '~services/logic/inspector';
 
     import { AppState } from '~services/state/store';
     import actions from '~services/state/actions';
@@ -52,7 +62,7 @@
     } from '~services/state/thunks/planes';
 
     import {
-        runShortcut,
+        runShortcutReported,
     } from '~services/logic/shortcuts';
 
     import {
@@ -138,8 +148,10 @@ export interface UsePluridPubSubParameters {
     /** `space.spawnPlane` makes a plane the way a link does, which needs the application's registrar. */
     planesRegistrar?: IPluridPlanesRegistrar<any>;
     hostname?: string;
-    /** `space.focus` moves the keyboard focus to the space. */
+    /** `space.focus` moves the keyboard focus to the space; `space.blur` takes it off; `focus` reports it. */
     viewElement?: React.RefObject<HTMLDivElement | null>;
+    /** `space.describe` answers with the inspection `api.inspect()` gives. */
+    inspector?: PluridInspectorRegistry;
     treeUpdate: (
         view: PluridApplicationView,
         configuration?: PluridConfiguration,
@@ -149,6 +161,51 @@ export interface UsePluridPubSubParameters {
 
     dispatchers: UsePluridPubSubDispatchers;
 }
+
+
+/** a message the bus could not act on, said once in development, never thrown */
+const warn = (
+    topic: string,
+    reason: string,
+) => {
+    if (typeof console !== 'undefined' && typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+        console.warn('[plurid] \'' + topic + '\' was ignored: ' + reason);
+    }
+};
+
+/** the keys of a configuration that decide where the roots go */
+const layoutSignature = (
+    configuration: PluridConfiguration,
+): string => JSON.stringify([
+    configuration.space?.layout,
+    configuration.space?.center,
+    configuration.space?.dimensions,
+    configuration.space?.presentation,
+    configuration.elements?.plane?.width,
+    configuration.elements?.plane?.height,
+    configuration.elements?.plane?.maxHeight,
+]);
+
+
+/**
+ * A link named by a CSS selector inside a plane, measured the way a `PluridLink` measures itself
+ * (`measureLinkCoordinates`): where a product's own element sits on the parent, in the parent's
+ * px. Nothing on a server, or for a selector that finds nothing.
+ */
+const measureLinkInPlane = (
+    parentPlaneID: string,
+    selector: unknown,
+): { x: number; y: number } | undefined => {
+    if (typeof selector !== 'string' || !selector || typeof document === 'undefined') {
+        return undefined;
+    }
+    const planeElement = document.querySelector(`[data-plurid-plane="${parentPlaneID}"]`) as HTMLElement | null;
+    const linkElement = planeElement?.querySelector(selector) as HTMLElement | null;
+    if (!planeElement || !linkElement) {
+        return undefined;
+    }
+    return measureLinkCoordinates(linkElement, planeElement);
+};
 
 
 /**
@@ -174,6 +231,7 @@ export const usePluridPubSub = (
         hostname,
         viewElement,
         pendingPlanes,
+        inspector,
     }: UsePluridPubSubParameters,
 ) => {
     const [
@@ -207,6 +265,7 @@ export const usePluridPubSub = (
                 token,
                 route,
                 known: planeIDsOf(latest.current.stateTree),
+                hidden: hiddenPlaneIDsOf(latest.current.stateTree),
                 remaining: PENDING_TREE_CHANGES,
             },
         ];
@@ -218,6 +277,7 @@ export const usePluridPubSub = (
     const latest = useRef({
         state,
         stateConfiguration,
+        stateTransform,
         stateSpaceView,
         stateTree,
         treeUpdate,
@@ -228,6 +288,7 @@ export const usePluridPubSub = (
     latest.current = {
         state,
         stateConfiguration,
+        stateTransform,
         stateSpaceView,
         stateTree,
         treeUpdate,
@@ -266,9 +327,10 @@ export const usePluridPubSub = (
                         return;
                     }
 
+                    const previousConfiguration = latest.current.stateConfiguration;
                     const computedConfiguration = generalEngine.configuration.merge(
                         data,
-                        latest.current.stateConfiguration,
+                        previousConfiguration,
                     );
 
                     // The themes: the one resolution the store was created with (the engine's) — a
@@ -279,6 +341,13 @@ export const usePluridPubSub = (
 
 
                     dispatchSetConfiguration(computedConfiguration);
+
+                    // A LAYOUT KEY CHANGED THROUGH THE BUS: the roots are laid out again, as the
+                    // configuration PROP does. A layout published on the bus used to land in the
+                    // store and change nothing on screen until something else relaid it out.
+                    if (layoutSignature(previousConfiguration) !== layoutSignature(computedConfiguration)) {
+                        latest.current.treeUpdate(latest.current.stateSpaceView, computedConfiguration, true, { transition: true });
+                    }
                 },
             },
             {
@@ -347,10 +416,12 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    // dispatchTranslateXTo(value);
+                    const value = (data as any)?.value;
+                    if (typeof value !== 'number') {
+                        return;
+                    }
+                    // TO, not WITH: the difference from where the space is
+                    dispatchTranslateXWith(value - latest.current.stateTransform.translationX);
                 },
             },
             {
@@ -365,10 +436,11 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    // dispatchTranslateYTo(value);
+                    const value = (data as any)?.value;
+                    if (typeof value !== 'number') {
+                        return;
+                    }
+                    dispatchTranslateYWith(value - latest.current.stateTransform.translationY);
                 },
             },
             {
@@ -383,10 +455,11 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_TO,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    // dispatchTranslateZTo(value);
+                    const value = (data as any)?.value;
+                    if (typeof value !== 'number') {
+                        return;
+                    }
+                    dispatchTranslateZWith(value - latest.current.stateTransform.translationZ);
                 },
             },
 
@@ -420,9 +493,12 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
                 callback: (data) => {
-                    const {
-                        view,
-                    } = data;
+                    const view = (data as any)?.view;
+                    // a malformed view leaves the view as it was: it used to throw in a render
+                    if (!Array.isArray(view) || !view.every((entry: unknown) => typeof entry === 'string' || (!!entry && typeof entry === 'object' && typeof (entry as any).route === 'string'))) {
+                        warn('view.setPlanes', 'the view must be an array of routes (strings, or { route })');
+                        return;
+                    }
 
                     dispatchSpaceSetView([
                         ...view,
@@ -480,15 +556,17 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
                 callback: (data) => {
-                    const id = data?.planeID;
+                    const id = (data as any)?.planeID;
 
-                    if (typeof id !== 'string') {
+                    // `null` or `''` clears the isolation; it used to be ignored, and a host had
+                    // no way out through the topic that led in
+                    if (id !== null && id !== '' && typeof id !== 'string') {
                         return;
                     }
 
                     dispatchSetSpaceField({
                         field: 'isolatePlane',
-                        value: id,
+                        value: id || '',
                     });
                 },
             },
@@ -775,7 +853,9 @@ export const usePluridPubSub = (
                     if (typeof id !== 'string') {
                         return;
                     }
-                    runShortcut(
+                    // a disabled shortcut is a KEY the host took from the reader; a command on the
+                    // bus is the host's own act, and it is told what came of it
+                    const report = runShortcutReported(
                         id as never,
                         {
                             dispatch,
@@ -783,7 +863,12 @@ export const usePluridPubSub = (
                             pubsub,
                         } as never,
                         latest.current.stateConfiguration.space.shortcuts,
+                        { ignoreDisabled: true },
                     );
+                    pubsub.publish({
+                        topic: PLURID_PUBSUB_TOPIC.CHANGED,
+                        data: { kind: 'command', value: report },
+                    } as any);
                 },
             },
             {
@@ -796,15 +881,31 @@ export const usePluridPubSub = (
                     if (typeof route !== 'string' || typeof parentPlaneID !== 'string' || !registrar) {
                         return;
                     }
+                    const parent = space.tree.logic.getTreePlaneByID(latest.current.stateTree, parentPlaneID);
+                    if (!parent) {
+                        return;
+                    }
                     notePending((data as any)?.token, route);
 
+                    // WHERE THE BRIDGE LEAVES: the coordinates given; else a link named by a
+                    // selector inside the parent, measured as a PluridLink measures itself; else
+                    // the parent's middle height (the anchor puts the x at the edge). `{0, 0}`
+                    // used to be the default, which hung every branch off the parent's corner.
+                    const framing = (data as any)?.framing;
                     dispatch(toggleLinkPlane({
                         parentPlaneID,
                         linkID: parentPlaneID + '#' + route + '#api',
                         route,
-                        linkCoordinates: (data as any)?.linkCoordinates ?? { x: 0, y: 0 },
+                        linkCoordinates: (data as any)?.linkCoordinates
+                            ?? measureLinkInPlane(parentPlaneID, (data as any)?.link)
+                            ?? { x: 0, y: (parent.height || 0) / 2 },
                         planesRegistry: registrar.getAll(),
                         hostname: latest.current.hostname,
+                        mode: 'open',
+                        navigate: framing !== 'none',
+                        framing: framing === 'pair' || framing === 'plane' ? framing : undefined,
+                        bridgeLength: typeof (data as any)?.bridgeLength === 'number' ? (data as any).bridgeLength : undefined,
+                        bridgeKind: (data as any)?.bridgeKind === 'leash' || (data as any)?.bridgeKind === 'strip' ? (data as any).bridgeKind : undefined,
                     }) as any);
                 },
             },
@@ -820,7 +921,8 @@ export const usePluridPubSub = (
                 },
             },
             {
-                // the ones named, else the selection — one history entry either way
+                // the ones named, else the selection; the selection untouched, pinned only when
+                // asked, in world or plane axes: one history entry either way
                 topic: PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES,
                 callback: (data) => {
                     const deltaX = (data as any)?.deltaX;
@@ -829,10 +931,29 @@ export const usePluridPubSub = (
                         return;
                     }
                     const planeIDs = (data as any)?.planeIDs;
-                    if (Array.isArray(planeIDs)) {
-                        dispatch(actions.space.setSelection(planeIDs));
+                    const deltaZ = (data as any)?.deltaZ;
+                    const frame = (data as any)?.frame;
+                    dispatch(actions.space.movePlanes({
+                        ...(Array.isArray(planeIDs) ? { planeIDs: planeIDs.filter((id: unknown) => typeof id === 'string') } : {}),
+                        deltaX,
+                        deltaY,
+                        ...(typeof deltaZ === 'number' ? { deltaZ } : {}),
+                        frame: frame === 'plane' ? 'plane' : 'world',
+                        pinned: (data as any)?.pinned === true,
+                    }));
+                },
+            },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_PIN_PLANE,
+                callback: (data) => {
+                    const planeID = (data as any)?.planeID;
+                    if (typeof planeID !== 'string') {
+                        return;
                     }
-                    dispatch(actions.space.transformSelectedPlanes({ deltaX, deltaY }));
+                    dispatch(actions.space.setPlanePinned({
+                        planeID,
+                        pinned: (data as any)?.pinned !== false,
+                    }));
                 },
             },
             {
@@ -923,6 +1044,40 @@ export const usePluridPubSub = (
                     }
                 },
             },
+            {
+                topic: PLURID_PUBSUB_TOPIC.SPACE_BLUR,
+                callback: () => {
+                    const view = latest.current.viewElement?.current;
+                    if (!view || typeof document === 'undefined') {
+                        return;
+                    }
+                    const active = document.activeElement as HTMLElement | null;
+                    if (active && (active === view || view.contains(active)) && typeof active.blur === 'function') {
+                        active.blur();
+                    }
+                },
+            },
+            {
+                // THE SPACE, DESCRIBED, for a host that has no api (a route-driven product): the
+                // inspection `api.inspect()` gives, answered with the token on `space.changed`
+                topic: PLURID_PUBSUB_TOPIC.SPACE_DESCRIBE,
+                callback: (data) => {
+                    const token = (data as any)?.token;
+                    if (typeof token !== 'string' || !token) {
+                        return;
+                    }
+                    pubsub.publish({
+                        topic: PLURID_PUBSUB_TOPIC.CHANGED,
+                        data: {
+                            kind: 'describe',
+                            value: {
+                                token,
+                                inspection: buildInspection(latest.current.state, inspector),
+                            },
+                        },
+                    } as any);
+                },
+            },
 
             /**
              * THE NICETIES: one step of what a key press gives a reader. `space.cameraDelta` is the
@@ -1007,8 +1162,23 @@ export const usePluridPubSub = (
                 topic: PLURID_PUBSUB_TOPIC.SET_TREE,
                 callback: (data) => {
                     const tree = (data as any)?.tree;
-                    if (Array.isArray(tree)) {
-                        dispatch(actions.space.setTree(tree));
+                    // a malformed tree leaves the tree as it was, and says what was wrong with it:
+                    // it used to throw inside a render, out of the host's reach
+                    const validation = space.tree.fields.validateTree(tree);
+                    if (!validation.ok) {
+                        warn('view.setTree', validation.reason || 'a malformed tree');
+                        return;
+                    }
+                    dispatch(actions.space.setTree(tree));
+
+                    // THE VIEW AGREES WITH THE TREE: a relayout (a resize, a configuration, a
+                    // measurement) places the VIEW's roots, so a host that set its tree over an
+                    // empty view had it emptied at the first one
+                    // the tree holds absolute routes (`plurid://<host>/a`); the view holds the host's own
+                    const roots = (tree as TreePlane[]).map((root) => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, ''));
+                    const viewRoutes = (latest.current.stateSpaceView || []).map((item: any) => (typeof item === 'string' ? item : item?.route));
+                    if (roots.length !== viewRoutes.length || roots.some((route, index) => route !== viewRoutes[index])) {
+                        dispatchSpaceSetView(roots);
                     }
                 },
             },
@@ -1030,21 +1200,29 @@ export const usePluridPubSub = (
         }
     }
 
-    const handlePubSubPublish = (
+    /**
+     * THE TRANSFORM AND THE CONFIGURATION, EACH ON ITS OWN CHANGE. They used to go out together on
+     * either's change, so a gesture re-published the whole configuration sixty times a second to
+     * every subscriber that had asked only for the camera.
+     */
+    const publishTransform = (
         pubsub: IPluridPubSub,
     ) => {
-        const internalTransform = {
-            value: {
-                ...stateTransform,
-            },
-            camera: state.space.camera,
-            internal: true,
-        };
         pubsub.publish({
             topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
-            data: internalTransform,
+            data: {
+                value: {
+                    ...stateTransform,
+                },
+                camera: state.space.camera,
+                internal: true,
+            },
         });
+    }
 
+    const publishConfiguration = (
+        pubsub: IPluridPubSub,
+    ) => {
         pubsub.publish({
             topic: PLURID_PUBSUB_TOPIC.CONFIGURATION,
             data: {
@@ -1095,10 +1273,20 @@ export const usePluridPubSub = (
         pluridPubSub.length,
     ]);
 
-    /** PubSub Publish */
+    /** PubSub Publish: the transform on its change */
     useEffect(() => {
         for (const pubsub of pluridPubSub) {
-            handlePubSubPublish(pubsub);
+            publishTransform(pubsub);
+        }
+    }, [
+        pluridPubSub.length,
+        stateTransform,
+    ]);
+
+    /** and the configuration on its own */
+    useEffect(() => {
+        for (const pubsub of pluridPubSub) {
+            publishConfiguration(pubsub);
         }
     }, [
         pluridPubSub.length,
@@ -1106,7 +1294,38 @@ export const usePluridPubSub = (
         // `SET_STATE` (and `Application` now recomputes the store only when its inputs change),
         // so no per-frame `JSON.stringify`.
         stateConfiguration,
-        stateTransform,
+    ]);
+
+    /** FOCUS, REPORTED: whether the keyboard focus is inside the space, on `space.changed` kind `focus` */
+    useEffect(() => {
+        const view = viewElement?.current;
+        if (!view) {
+            return;
+        }
+        const report = (inside: boolean) => {
+            for (const pubsub of pluridPubSub) {
+                pubsub.publish({
+                    topic: PLURID_PUBSUB_TOPIC.CHANGED,
+                    data: { kind: 'focus', value: inside },
+                } as any);
+            }
+        };
+        const onFocusIn = () => report(true);
+        const onFocusOut = (event: FocusEvent) => {
+            const next = event.relatedTarget as Node | null;
+            if (!next || !view.contains(next)) {
+                report(false);
+            }
+        };
+        view.addEventListener('focusin', onFocusIn);
+        view.addEventListener('focusout', onFocusOut);
+        return () => {
+            view.removeEventListener('focusin', onFocusIn);
+            view.removeEventListener('focusout', onFocusOut);
+        };
+    }, [
+        pluridPubSub.length,
+        viewElement,
     ]);
     // #endregion effects pubsub
 

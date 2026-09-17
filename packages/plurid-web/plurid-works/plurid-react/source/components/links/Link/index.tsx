@@ -76,6 +76,9 @@
         BRIDGE_ANGLE_VARIABLE,
     } from '~services/logic/link/bridge';
     import {
+        observeResize,
+    } from '~services/logic/link/observer';
+    import {
         followPlaneScroll,
     } from '~services/logic/link/follow';
 
@@ -422,20 +425,12 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
         measureAndFollow();
         const unfollow = followPlaneScroll(planeElement, follow);
-
-        let observer: ResizeObserver | undefined;
-        if (typeof ResizeObserver !== 'undefined') {
-            observer = new ResizeObserver(() => {
-                measureAndFollow();
-            });
-            observer.observe(element);
-        }
+        // one observer for every link, not one per link
+        const unobserve = observeResize(element, measureAndFollow);
 
         return () => {
             unfollow();
-            if (observer) {
-                observer.disconnect();
-            }
+            unobserve();
             const target = findChild();
             if (target) {
                 target.style.removeProperty(BRIDGE_REACH_VARIABLE);

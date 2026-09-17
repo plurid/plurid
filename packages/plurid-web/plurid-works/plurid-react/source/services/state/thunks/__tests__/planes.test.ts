@@ -16,6 +16,7 @@
         reportPlaneSize,
         reportPlaneSizes,
         resolveCameraTarget,
+        resolvePlaneFallbackSize,
     } from '~services/logic/camera';
     import {
         getDockedPlaneID,
@@ -105,7 +106,9 @@ describe('toggleLinkPlane()', () => {
         const spawned = child(store);
         expect(spawned.spawnedByLinkID).toBe('a#/detail#0');
         expect(spawned.show).toBe(true);
-        expect(spawned.location.translateX).toBeCloseTo(400, 9);
+        // the root at 100, 400 wide: the bridge leaves its RIGHT EDGE (the edge anchor), not the
+        // link at 300, and reaches 100 at 90.1°: cos 90.1° = −0.001745
+        expect(spawned.location.translateX).toBeCloseTo(500 - 0.1745, 3);
 
         store.dispatch(toggleLinkPlane(parameters()));
         expect(store.tree()[0].children).toHaveLength(1);
@@ -163,11 +166,14 @@ describe('toggleLinkPlane()', () => {
         // the link moved (a resize): the click measures new coordinates
         store.dispatch(toggleLinkPlane(parameters({ navigate: true, linkCoordinates: { x: 300, y: 240 } })));
         expect(child(store).show).toBe(true);
-        expect(child(store).linkCoordinates).toEqual({ x: 300, y: 240 });
+        // the fresh measurement moves the bridge's HEIGHT; an edge-anchored child keeps the
+        // parent's right edge for its x, whatever the link's own
+        expect(child(store).linkCoordinates).toEqual({ x: 400, y: 240 });
         expect(child(store).location.translateY).toBe(240 - 15);
         // framed once from the best-known geometry, with a re-frame pending on the first measurement
         expect(store.cameraCommits().length).toBe(commitsBefore + 1);
-        expect(store.extra.pendingFrame).toEqual({ planeID: child(store).planeID, animate: true });
+        // a child is framed WITH its parent (`childFraming: 'pair'`), and re-framed so
+        expect(store.extra.pendingFrame).toEqual({ planeID: child(store).planeID, animate: true, pair: true });
     });
 
     it('the first measurement after a reopen re-frames the plane, then the pending frame is spent', () => {
@@ -385,7 +391,57 @@ describe('the page presentation: docking controls on the link path', () => {
         expect(tweens).toHaveLength(0);
         expect(store.cameraCommits()).toHaveLength(1);
         expect(store.space().camera.scale).toBe(1);
-        expect(Math.abs(store.space().camera.yaw)).toBeCloseTo(90, 6);
+        // the page spawned behind the site stands at 90.1° (never 90); docked face-on on it
+        expect(Math.abs(store.space().camera.yaw)).toBeCloseTo(90.1, 6);
+    });
+});
+
+
+/** what a product's spawn does that a link's click does not (2026-09-16) */
+describe('toggleLinkPlane() for a product\'s spawn', () => {
+    it('two spawns from one parent land at distinct depths: the second one bridge, a width and a gap further', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ linkID: 'a#/detail#0' })));
+        store.dispatch(toggleLinkPlane(parameters({ linkID: 'a#/detail#1' })));
+        const [first, second] = store.tree()[0].children!;
+        expect(first.bridgeKind).toBe('strip');
+        expect(second.bridgeKind).toBe('leash');
+        // a width and a gap: the unmeasured child is placed by the configured fallback width
+        const width = resolvePlaneFallbackSize(store.getState().configuration, store.space().viewSize).width;
+        expect(second.bridgeLength! - first.bridgeLength!).toBeCloseTo(width + 50, 6);
+        expect(Math.abs(second.location.translateZ - first.location.translateZ)).toBeGreaterThan(width);
+    });
+
+    it('mode open never puts a shown plane away, and shows a put-away one', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ mode: 'open' })));
+        store.dispatch(toggleLinkPlane(parameters({ mode: 'open' })));
+        expect(child(store).show).toBe(true);
+        store.dispatch(toggleLinkPlane(parameters()));
+        expect(child(store).show).toBe(false);
+        store.dispatch(toggleLinkPlane(parameters({ mode: 'open' })));
+        expect(child(store).show).toBe(true);
+    });
+
+    it('a fresh spawn frames from its best-known geometry with a re-frame pending on its first measurement', () => {
+        const store = makeStore();
+        const commitsBefore = store.cameraCommits().length;
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true })));
+        expect(store.cameraCommits().length).toBe(commitsBefore + 1);
+        expect(store.extra.pendingFrame).toEqual({ planeID: child(store).planeID, animate: true, pair: true });
+    });
+
+    it('a host\'s own bridge length and kind win over the stagger', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ bridgeLength: 240, bridgeKind: 'leash' })));
+        expect(child(store).bridgeLength).toBe(240);
+        expect(child(store).bridgeKind).toBe('leash');
+    });
+
+    it('framing plane frames the child alone', () => {
+        const store = makeStore();
+        store.dispatch(toggleLinkPlane(parameters({ navigate: true, framing: 'plane' })));
+        expect(store.extra.pendingFrame).toEqual({ planeID: child(store).planeID, animate: true, pair: false });
     });
 });
 // #endregion module

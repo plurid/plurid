@@ -24,7 +24,8 @@
         "docs.tables": "node scripts/generate-tables.mjs",
         "docs.tables.check": "node scripts/generate-tables.mjs --check",
         "sync": "node scripts/sync-consumer.mjs",
-        "sync.check": "node scripts/sync-consumer.mjs --check"
+        "sync.check": "node scripts/sync-consumer.mjs --check",
+        "sync.status": "node scripts/sync-consumer.mjs --status"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

@@ -12,6 +12,8 @@
 
     import {
         PLURID_ENTITY_EMPTY,
+        internationalization,
+        InternationalizationLanguageType,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -20,6 +22,7 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+    import { internatiolate } from '@plurid/plurid-engine';
     // #endregion external
 // #endregion imports
 
@@ -44,6 +47,7 @@ const StyledPluridEmpty = styled.div<{ theme: Theme }>`
 
 export interface PluridEmptyStateProperties {
     stateGeneralTheme: Theme;
+    stateLanguage: InternationalizationLanguageType;
 }
 
 export type PluridEmptyProperties = PluridEmptyStateProperties;
@@ -56,6 +60,7 @@ export type PluridEmptyProperties = PluridEmptyStateProperties;
 const PluridEmpty: React.FC<PluridEmptyProperties> = (
     {
         stateGeneralTheme,
+        stateLanguage,
     },
 ) => (
     <StyledPluridEmpty
@@ -63,7 +68,7 @@ const PluridEmpty: React.FC<PluridEmptyProperties> = (
         data-plurid-entity={PLURID_ENTITY_EMPTY}
         role="status"
     >
-        no planes in this space
+        {internatiolate(stateLanguage, internationalization.fields.spaceEmpty)}
     </StyledPluridEmpty>
 );
 
@@ -72,6 +77,7 @@ const mapStateToProperties = (
     state: AppState,
 ): PluridEmptyStateProperties => ({
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
+    stateLanguage: selectors.configuration.getConfiguration(state).global.language,
 });
 
 

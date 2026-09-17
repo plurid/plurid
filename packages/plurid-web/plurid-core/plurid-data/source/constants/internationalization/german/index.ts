@@ -106,6 +106,8 @@ const german: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ oder nach unten scrollen',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← oder nach links scrollen',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ oder nach rechts scrollen',
+
+    spaceEmpty: 'keine ebenen in diesem raum',
 };
 // #endregion module
 

@@ -44,6 +44,10 @@ export interface GestureContext {
     onEditable: boolean;
     /** … on an engine control or a link / button. */
     onControl: boolean;
+    /** … on the plane's handle: its controls bar, or a host's `[data-plurid-drag-handle]`. */
+    onDragHandle?: boolean;
+    /** `gestures.dragHandle`: where a selected plane is taken hold of. Default `chrome`. */
+    dragHandle?: 'chrome' | 'plane';
     /** G toggled or Space held. */
     grabMode: boolean;
     firstPerson: boolean;
@@ -79,7 +83,12 @@ export const resolveGestureIntent = (
         return 'none';
     }
 
-    // Explicit modes pin the intent for every button.
+    // THE CONTENT IS THE PAGE'S: a press on a plane's content (not its handle, grab mode off) is
+    // a word, a drag-scroll, whatever mode is on. A mode pins what the pointer does to the SPACE,
+    // and the content is not the space; it used to take the press and the reader's text with it.
+    const onContent = ctx.onPlane && !ctx.onDragHandle && !ctx.grabMode;
+
+    // Fly mode pins the intent for every button.
     if (ctx.firstPerson) {
         if (ctx.button === 1 || ctx.button === 2 || (ctx.buttons & 32) === 32) {
             return 'pan';
@@ -87,19 +96,23 @@ export const resolveGestureIntent = (
         return 'look';
     }
     if (ctx.transformMode === 'ROTATION') {
-        return 'orbit';
+        return onContent ? 'none' : 'orbit';
     }
     if (ctx.transformMode === 'TRANSLATION') {
-        return ctx.alt ? 'dolly' : 'pan';
+        return onContent ? 'none' : (ctx.alt ? 'dolly' : 'pan');
     }
     if (ctx.transformMode === 'SCALE') {
-        return 'zoom';
+        return onContent ? 'none' : 'zoom';
     }
 
-    // Drag-to-move: a plain left press on an already-selected plane moves the selection.
+    // Drag-to-move: a plain left press on a selected plane's HANDLE (its controls bar, or what a
+    // host marks `data-plurid-drag-handle`) moves the selection; `dragHandle: 'plane'` is the whole
+    // plane in hand, text selection and all.
+    const inHand = (ctx.dragHandle ?? 'chrome') === 'plane' || !!ctx.onDragHandle;
     if (
         ctx.button === 0
         && ctx.onSelectedPlane
+        && inHand
         && !ctx.shift
         && !ctx.alt
         && !ctx.grabMode

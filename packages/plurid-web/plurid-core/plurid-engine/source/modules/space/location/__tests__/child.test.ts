@@ -14,6 +14,9 @@
         childLocation,
         linkWorldPoint,
         childLeashPoint,
+        resolveSpawnAnchor,
+        anchoredCoordinates,
+        SIBLING_GAP,
         resolveBridgeOffset,
         resolveBridgeSide,
         resolvePlaneAngle,
@@ -79,12 +82,13 @@ describe('the link\'s point on the parent', () => {
 
 
 describe('where the child lands', () => {
-    it('the default: a bridge 100 px at 90° off the parent, the child turned the same way', () => {
+    it('the default: a bridge 100 px at 90.1° off the parent, the child turned the same way', () => {
         const location = childLocation(at(), { x: 0, y: 0 });
 
-        // 90° sends the bridge toward −z, behind the parent's face
-        near(location.translateX, 0);
-        near(location.translateZ, -DEFAULT_BRIDGE_LENGTH);
+        // 90.1° sends the bridge toward −z, behind the parent's face, a tenth of a degree past
+        // perpendicular: cos 90.1° = −0.001745, sin 90.1° = 0.9999985
+        expect(location.translateX).toBeCloseTo(-0.1745, 3);
+        expect(location.translateZ).toBeCloseTo(-99.99985, 3);
         expect(location.rotateY).toBe(DEFAULT_PLANE_ANGLE);
         expect(location.rotateX).toBe(0);
     });
@@ -249,6 +253,90 @@ describe('recomputing a subtree', () => {
 
         const leaf = { planeID: '/leaf', location: at() } as TreePlane;
         expect(recomputeSubtree(leaf)).toBe(leaf);
+    });
+});
+
+
+/**
+ * 90.1 AND NEVER 90 (the user's rule, 2026-09-16): the default angle is a tenth of a degree off
+ * perpendicular, so every spawned quad is a quad. The numbers here are the geometry the reading
+ * preset is built on, to a thousandth.
+ */
+describe('the default angle is 90.1', () => {
+    it('is not 90', () => {
+        expect(DEFAULT_PLANE_ANGLE).toBe(90.1);
+    });
+
+    it('places a child one bridge behind the link, a tenth of a degree off perpendicular', () => {
+        const child = childLocation(at(), { x: 460, y: 0 });
+        // cos 90.1° = −0.001745…, sin 90.1° = 0.9999985
+        expect(child.translateX).toBeCloseTo(460 - 0.1745, 3);
+        expect(child.translateZ).toBeCloseTo(-99.99985, 3);
+        expect(child.rotateY).toBeCloseTo(90.1, 9);
+    });
+
+    it('alternates back to the grandparent\'s facing, beside and behind the fin', () => {
+        const fin = childLocation(at(), { x: 460, y: 0 }, DEFAULT_BRIDGE_LENGTH, resolvePlaneAngle(1, 90.1, 'alternate'));
+        const grandchild = childLocation(fin, { x: 460, y: 0 }, DEFAULT_BRIDGE_LENGTH, resolvePlaneAngle(2, 90.1, 'alternate'));
+        expect(grandchild.rotateY).toBeCloseTo(0, 9);
+        // the fin's far end sits ~560 behind the root; the grandchild one bridge to its right
+        // the fin's far end: 460·sin 90.1° behind its own start, and 0.8px to the left of it
+        expect(grandchild.translateZ).toBeCloseTo(-559.999, 2);
+        expect(grandchild.translateX).toBeCloseTo(559.023, 2);
+    });
+});
+
+
+describe('where a spawned child hangs', () => {
+    it('leaves the link\'s own point by default, on a strip', () => {
+        expect(resolveSpawnAnchor(460, { x: 120, y: 80 })).toEqual({
+            linkCoordinates: { x: 120, y: 80 },
+            bridgeLength: DEFAULT_BRIDGE_LENGTH,
+            bridgeKind: 'strip',
+        });
+    });
+
+    it('leaves the parent\'s right edge at the link\'s height with the edge anchor', () => {
+        expect(resolveSpawnAnchor(460, { x: 120, y: 80 }, { anchor: 'edge' }).linkCoordinates).toEqual({ x: 460, y: 80 });
+        // an unmeasured parent has no edge to anchor to yet: the link point stands in
+        expect(resolveSpawnAnchor(0, { x: 120, y: 80 }, { anchor: 'edge' }).linkCoordinates).toEqual({ x: 120, y: 80 });
+    });
+
+    it('staggers siblings along the child\'s own width axis, the later ones on leashes', () => {
+        const first = resolveSpawnAnchor(460, { x: 460, y: 0 }, { anchor: 'edge', ordinal: 0, childWidth: 460 });
+        const second = resolveSpawnAnchor(460, { x: 460, y: 0 }, { anchor: 'edge', ordinal: 1, childWidth: 460 });
+        const third = resolveSpawnAnchor(460, { x: 460, y: 0 }, { anchor: 'edge', ordinal: 2, childWidth: 460 });
+        expect(first.bridgeLength).toBe(100);
+        expect(second.bridgeLength).toBe(100 + 460 + SIBLING_GAP);
+        expect(third.bridgeLength).toBe(100 + 2 * (460 + SIBLING_GAP));
+        expect([first.bridgeKind, second.bridgeKind, third.bridgeKind]).toEqual(['strip', 'leash', 'leash']);
+        // and the three fins do not overlap: each starts where the one before ends, plus the gap
+        expect(second.bridgeLength - first.bridgeLength).toBeGreaterThanOrEqual(460);
+    });
+
+    it('grows a sibling\'s bridge by the fallback width before the child is measured', () => {
+        expect(resolveSpawnAnchor(460, { x: 460, y: 0 }, { ordinal: 1, childWidth: 0 }).bridgeLength).toBe(100 + FALLBACK_CHILD_WIDTH + SIBLING_GAP);
+    });
+
+    it('keeps an edge-anchored child on the edge when its parent is resized or its link re-measured', () => {
+        expect(anchoredCoordinates({ width: 520 }, { linkCoordinates: { x: 460, y: 80 }, bridgeAnchor: 'edge' })).toEqual({ x: 520, y: 80 });
+        expect(anchoredCoordinates({ width: 520 }, { linkCoordinates: { x: 120, y: 80 }, bridgeAnchor: 'link' })).toEqual({ x: 120, y: 80 });
+        expect(anchoredCoordinates({ width: 0 }, { linkCoordinates: { x: 120, y: 80 }, bridgeAnchor: 'edge' })).toEqual({ x: 120, y: 80 });
+    });
+
+    it('a relayout keeps the edge anchor: a wider parent carries its child out with its edge', () => {
+        const child: TreePlane = {
+            sourceID: 'c', planeID: 'c', route: '/c', routeDivisions: {} as any,
+            width: 460, height: 300, show: true,
+            linkCoordinates: { x: 460, y: 0 }, bridgeAnchor: 'edge', bridgeLength: 100, planeAngle: 90.1,
+            location: childLocation(at(), { x: 460, y: 0 }, 100, 90.1),
+        };
+        const parent: TreePlane = {
+            sourceID: 'p', planeID: 'p', route: '/p', routeDivisions: {} as any,
+            width: 600, height: 300, show: true, location: at(), children: [child],
+        };
+        const relaid = recomputeSubtree(parent);
+        expect(relaid.children![0].location.translateX).toBeCloseTo(600 - 0.1745, 3);
     });
 });
 // #endregion module

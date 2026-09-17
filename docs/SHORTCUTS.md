@@ -11,6 +11,7 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | `G` | Grab once: the next drag orbits anywhere (the release ends it; G again or Esc cancels) | `grabMode` | press | - |
 | `Space` | Hold to navigate (orbit anywhere) | `grabHold` | hold | - |
 | `Esc` | Exit grab mode | `exitGrabMode` | press | grabMode |
+| `Esc` | Leave the rotate, move or scale mode | `exitTransformMode` | press | transformMode |
 | `Esc` | The docked plane: on a spawned page, its parent; on a plane read as a page (the space presentation), reveal the space; in the page presentation, from the space, dock the nearest page | `dock` | press | - |
 | `0` | Frame everything | `fitToView` | press | - |
 | `Home` | Home viewpoint | `home` | press | - |
@@ -24,6 +25,7 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | `⌘/Ctrl` + `D` | Duplicate the selected planes | `duplicateSelection` | press | - |
 | `.` | Frame the selection | `frameSelection` | press | - |
 | `⌘/Ctrl` + `Z` | Undo (+ Shift: redo) | `undo` | press | - |
+| `⌘/Ctrl` + `Shift` + `Z` | Redo | `redo` | press | - |
 | `Esc` | Clear the selection | `clearSelection` | press | - |
 
 ## Fly mode

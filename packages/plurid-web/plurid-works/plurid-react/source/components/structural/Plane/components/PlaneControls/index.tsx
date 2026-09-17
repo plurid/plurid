@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import React, {
+        useEffect,
         useState,
     } from 'react';
 
@@ -205,6 +206,16 @@ const PluridPlaneControls: React.FC<PluridPlaneControlsProperties> = (
     const [showAddress, setShowAddress] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
     // #endregion state
+
+
+    // #region effects
+    /** the bar reads the route the tree holds: a plane re-pointed (a host's tree, a link) shows its new path */
+    useEffect(() => {
+        setPath(treePlane.route);
+    }, [
+        treePlane.route,
+    ]);
+    // #endregion effects
 
 
     // #region handlers

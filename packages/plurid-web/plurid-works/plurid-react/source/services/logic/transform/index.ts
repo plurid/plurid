@@ -1,7 +1,7 @@
 // #region imports
     // #region libraries
     import {
-        FOCUS_ANCHOR_SUFFIX,
+        PLURID_ATTRIBUTE_PLANE_ANCHOR,
         PLURID_ATTRIBUTE_ENTITY,
         PLURID_ATTRIBUTE_PLANE,
         PLURID_ENTITY_PLANE_CONTENT,
@@ -37,7 +37,7 @@ export const focusPluridPlaneAnchor = (
         });
         return;
     }
-    const selector = `[id='${planeID + FOCUS_ANCHOR_SUFFIX}']`;
+    const selector = `[${PLURID_ATTRIBUTE_PLANE_ANCHOR}="${planeID}"]`;
     const focusAnchor: HTMLAnchorElement | null = document.querySelector(selector);
 
     if (focusAnchor) {

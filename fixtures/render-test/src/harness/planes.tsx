@@ -263,7 +263,8 @@ export const buildPlanes = (
         ...chainPlanes,
         ...(flags.media ? [{ route: '/media', component: MediaPlane }] : []),
     ];
-    const view = flags.empty
+    // the bus shape boots EMPTY: the roots arrive through `view.setPlanes`, as a product sends them
+    const view = flags.empty || flags.bus
         ? []
         : [
             ...source.map((panel) => panel.route),

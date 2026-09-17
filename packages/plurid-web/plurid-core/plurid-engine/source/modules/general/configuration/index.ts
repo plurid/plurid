@@ -9,6 +9,7 @@
 
         defaultConfiguration,
         pagePresentationDefaults,
+        bridgePresets,
         PLURID_DOCKING_URL_PARAM,
         PluridConfigurationSpaceDocking,
         DockingURLBinding,
@@ -165,8 +166,39 @@ export const merge = (
         },
     );
 
-    return mergedConfiguration;
+    return resolveBridgePreset(mergedConfiguration, configuration, target);
 }
+
+
+/**
+ * A NAMED BRIDGE PRESET applies UNDER the fields given explicitly: `{ preset: 'objects' }` is the
+ * old geometry whole, `{ preset: 'objects', planeAngle: 60 }` the old geometry at 60°. The
+ * defaults equal the `reading` preset, so a configuration that names none is unchanged.
+ */
+const resolveBridgePreset = (
+    merged: PluridConfiguration,
+    configuration?: PluridPartialConfiguration,
+    target?: PluridConfiguration,
+): PluridConfiguration => {
+    const explicit = configuration?.space?.bridge;
+    const preset = explicit?.preset ?? target?.space?.bridge?.preset;
+    if (!preset || !bridgePresets[preset]) {
+        return merged;
+    }
+
+    return {
+        ...merged,
+        space: {
+            ...merged.space,
+            bridge: {
+                ...merged.space.bridge,
+                ...bridgePresets[preset],
+                ...(explicit ?? {}),
+                preset,
+            },
+        },
+    };
+};
 
 
 /**

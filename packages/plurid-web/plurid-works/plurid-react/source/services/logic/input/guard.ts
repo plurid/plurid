@@ -1,3 +1,15 @@
+// #region imports
+    // #region libraries
+    import {
+        PLURID_ATTRIBUTE_ENTITY,
+        PLURID_ATTRIBUTE_DRAG_HANDLE,
+        PLURID_ENTITY_PLANE_CONTROLS,
+    } from '@plurid/plurid-data';
+    // #endregion libraries
+// #endregion imports
+
+
+
 // #region module
 const EDITABLE_SELECTOR = [
     'input',
@@ -52,6 +64,21 @@ export const isEngineControl = (
         return false;
     }
     return !!element.closest('[data-plurid-control], button, a[href], [role="button"]');
+};
+
+
+/** The handle a selected plane is dragged by: its controls bar, or what a host marks `data-plurid-drag-handle`. */
+export const DRAG_HANDLE_SELECTOR = `[${PLURID_ATTRIBUTE_DRAG_HANDLE}], [${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTROLS}"]`;
+
+/** The press landed on a plane's handle (see `gestures.dragHandle`). */
+export const isDragHandle = (
+    target: EventTarget | null | undefined,
+): boolean => {
+    const element = asElement(target);
+    if (!element) {
+        return false;
+    }
+    return !!element.closest(DRAG_HANDLE_SELECTOR);
 };
 
 

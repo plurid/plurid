@@ -138,6 +138,20 @@ link does), `space.movePlanes`, `space.resizePlane`, `space.setPlaneShow`, `spac
 switches `space.grab` / `space.palette` / `space.shortcutsOverlay` / `space.focus` (each toggles when
 `on` is omitted, as the key does).
 
+What each does to the arrangement, exactly (2026-09-17): `space.spawnPlane { route, parentPlaneID,
+link?, linkCoordinates?, bridgeLength?, bridgeKind?, framing?, token? }` opens the route as a child at
+the parent's right edge (a `link` selector is measured as a `PluridLink` measures itself), frames
+parent and child together (`framing: 'pair'`, the default), and OPENS a route already open rather
+than putting it away. `space.movePlanes { planeIDs?, deltaX, deltaY, deltaZ?, frame: 'world' |
+'plane', pinned }` moves the planes named (else the selection), leaves the selection alone, pins
+only with `pinned: true`, and with `frame: 'plane'` moves along each plane's own axes; a move that
+pins is one history step. `space.pinPlane { planeID, pinned? }` pins a plane where it is or gives it
+back to the layout. `space.describe { token }` answers on `space.changed` kind `describe` with the
+inspection `api.inspect()` gives, for a host that holds no api; `space.blur` takes the keyboard off
+the space and kind `focus` reports it; `space.command { id }` runs a shortcut by id, ignores
+`shortcuts.disabled` (a key taken from the reader, not from the host) and answers kind `command`
+`{ id, ran, reason }`. `view.setTree` makes the view agree with the tree's roots. See `MIGRATION.md`.
+
 #### Which plane did that become?
 
 `view.addPlane` and `space.spawnPlane` take an optional **`token`**. The engine answers on
@@ -178,7 +192,7 @@ plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.RESET_TRANSFORM }); // camera
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.UNDO }); // spatial undo
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.REDO });
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_TREE, data: { tree } });
-plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT, data: { viewpoint: 'v…', animated: true } }); // v1 or v2
+plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT, data: { viewpoint: 'v…', animate: true } }); // v1, v2 or v3
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_FRAME, data: { planeID } });   // or { selection: true }, or {} for everything
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_CAMERA_DELTA, data: {          // one camera mutation
     yaw: 15, pan: { x: 40, y: 0 }, zoom: { factor: 1.2, anchor: { x: 300, y: 200 } },
@@ -206,8 +220,10 @@ One channel, `space.changed`, fires `{ kind, value }` whenever a watched slice c
 plurid.pubsub.subscribe({
     topic: PLURID_PUBSUB_TOPIC.CHANGED, // 'space.changed'
     callback: ({ kind, value }) => {
-        // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved' | 'loading'
-        //     | 'history' | 'motion' ('idle' | 'gesture' | 'fling' | 'tween') | 'bookmarks'
+        // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved'
+        //     | 'loading' | 'history' | 'motion' | 'bookmarks' | 'docked' | 'culling'
+        //     | 'plane' | 'describe' | 'command' | 'focus'
+        // every kind, with its value, in docs/CHANGES.md (generated from PLURID_CHANGE_KINDS)
         if (kind === 'selection') highlightInSidebar(value);
     },
 });
@@ -332,7 +348,7 @@ The default mapping (planes are pages: content interaction always wins over a pl
 | Right drag | pan (the context menu is suppressed for the press) | the page's context menu; pan in grab mode |
 | Middle drag / Shift + left drag | pan | pan |
 | Alt + left drag | dolly | dolly (grab mode) |
-| Wheel | zoom at the cursor | zoom, unless the content under the cursor can scroll (then it scrolls); Ctrl/Cmd + wheel always zooms |
+| Wheel | zoom at the cursor | zoom, unless the content under the cursor can scroll (then it scrolls); under `wheel: 'plane'` a plane keeps its wheel whatever it can do; a trackpad pinch always zooms; Cmd + wheel and Ctrl + a mouse notch are the browser's |
 | Two-finger trackpad scroll | pan (`trackpadScroll`) | the page scrolls |
 | Pinch (trackpad or touch) | zoom at the fingers | zoom at the fingers |
 | One finger (touch) | orbit (`touchOne`) | the page scrolls |
@@ -349,7 +365,8 @@ definePluridConfiguration({
         momentumDecay: 0.92, // per 60 Hz frame; applied per real frame duration
         momentum: { orbit: true, pan: true, zoom: false },
         disableMomentum: false, // true = release stops dead
-        wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'disabled'
+        wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'plane' | 'disabled'
+        dragHandle: 'chrome',  // 'chrome' (the controls bar, or [data-plurid-drag-handle]) | 'plane'
         wheelZoomStep: 1.1, // zoom factor per mouse notch
         trackpadPinchSensitivity: 0.006, // zoom exponent per px of a trackpad pinch (≈ ×3 over a whole pinch)
         wheelSmoothing: 0.6, // fraction of the remaining wheel motion released per 60 Hz frame (≈ 90 % in 40 ms); 1 = raw
@@ -361,7 +378,7 @@ definePluridConfiguration({
         flySprintMultiplier: 2.5, // Shift while flying
 
         // (⌘/Ctrl is the SELECTION modifier: ⌘-click toggles a plane, ⌘-drag on empty space is the
-        // marquee — Shift adds, Alt subtracts; a plain drag on a selected plane moves the selection.)
+        // marquee — Shift adds, Alt subtracts; a plain drag on a selected plane's HANDLE moves the selection.)
 
         // Gamepad (opt-in): sticks pan / orbit (fly / look in first person), triggers zoom (dolly),
         // A fits, Y goes home, B undoes. Frame-rate independent.
@@ -391,7 +408,7 @@ definePluridConfiguration({
 });
 ```
 
-`PluridShortcutID` = `undo · clearSelection · fitToView · frameSelection · home · navigateLeft · navigateRight · navigateUp · navigateDown · frameActive · selectAll · invertSelection · duplicateSelection · grabMode · grabHold · exitGrabMode · help · toggleFirstPerson · flyForward · flyBack · flyLeft · flyRight · flyUp · flyDown · flySprint · modeRotation · modeTranslation · modeScale · transformNudge · focusPlane · focusParent · refreshPlane · isolatePlane · openClosedPlane · closePlane · focusPreviousRoot · focusNextRoot · cycleRoot · focusRootIndex`.
+`PluridShortcutID` = `grabMode · grabHold · exitGrabMode · exitTransformMode · dock · fitToView · home · navigateLeft · navigateRight · navigateUp · navigateDown · frameActive · selectAll · invertSelection · duplicateSelection · frameSelection · undo · redo · clearSelection · toggleFirstPerson · flyForward · flyBack · flyLeft · flyRight · flyUp · flyDown · flySprint · rollLeft · rollRight · modeRotation · modeTranslation · modeScale · transformNudge · focusPlane · focusParent · isolatePlane · refreshPlane · closePlane · openClosedPlane · focusPreviousRoot · focusNextRoot · cycleRoot · focusRootIndex · copy · cut · paste · help · palette` (the table with its keys: docs/SHORTCUTS.md, generated).
 
 ### The command palette (⌘/Ctrl+K)
 
@@ -432,6 +449,8 @@ selection.cut();                  // and close what it copied — one history en
 selection.paste(text?);           // a fragment's text, else what this document last copied
 plurid.current?.selection.paste(text);
 ```
+
+THE FRAGMENT IS THE PERSISTENCE FORMAT. A host that keeps arrangements of its own (a saved workspace, a shared link, a collaboration payload) writes and reads the same shape the clipboard carries: `fragmentOf(tree, planeIDs, links)` describes planes by path with their geometry, subtree, links and `show` (a plane put away travels put away); `serializeFragment` / `parseFragment` are the text; `materializeFragment(fragment, { resolve, offset?, taken? })` turns it into this space's own planes, `resolve` being the target's `resolveViewItem`. All four and the types (`ArrangementFragment`, `FragmentPlane`, `FragmentLink`) are exported from `@plurid/plurid-react`.
 
 Through the bus: `space.copy { cut? }`, `space.cut`, `space.paste { text?, fragment? }` — a host with its own transport (a websocket, a drag-and-drop payload) passes the fragment straight in. A paste appends as ONE action, so it is one history entry and one undo. The pasted roots are pinned and become the selection, stepped away from anything of their own kind already sitting there, so a second paste never lands on the first. `space.clipboard: false` (flat `clipboard`) drops the listeners entirely and every ⌘C stays the page's.
 

@@ -55,4 +55,14 @@ export const PLURID_ATTRIBUTE_OVERLAY = 'data-plurid-overlay';
 /** On the page presentation's rail, and (`-button`) on each of its pills. */
 export const PLURID_ATTRIBUTE_RAIL = 'data-plurid-rail';
 export const PLURID_ATTRIBUTE_RAIL_BUTTON = 'data-plurid-rail-button';
+/** On the view while a mode is on: `rotate` | `translate` | `scale` | `grab` | `fly`; the badge that names it carries the same. */
+export const PLURID_ATTRIBUTE_MODE = 'data-plurid-mode';
+/** On an element a host renders as the handle a selected plane is dragged by (`gestures.dragHandle: 'chrome'`). */
+export const PLURID_ATTRIBUTE_DRAG_HANDLE = 'data-plurid-drag-handle';
+/** On a plane's focus anchor (the tab stop that reaches it): the plane's id. The DOM id itself is a digest. */
+export const PLURID_ATTRIBUTE_PLANE_ANCHOR = 'data-plurid-plane-anchor';
+/** On a plane while its focus anchor has the keyboard: `true` (the focus ring). */
+export const PLURID_ATTRIBUTE_FOCUS = 'data-plurid-focus';
+/** The badge naming the mode the space is in. */
+export const PLURID_ENTITY_MODE_BADGE = 'PluridModeBadge';
 // #endregion module

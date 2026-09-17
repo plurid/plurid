@@ -753,7 +753,27 @@ export type PluridChangeKind =
      * Published only for a `view.addPlane` / `space.spawnPlane` that carried a
      * `token`, so it is the answer to a question rather than a firehose.
      */
-    | 'plane';
+    | 'plane'
+    /** the answer to `space.describe`: `PluridDescribeObservation` */
+    | 'describe'
+    /** what a `space.command` did: `PluridCommandObservation` */
+    | 'command'
+    /** whether the keyboard focus is inside the space */
+    | 'focus';
+
+/** What a `space.changed` of kind `describe` carries: the inspection `api.inspect()` gives, for a host without the api. */
+export interface PluridDescribeObservation {
+    token: string;
+    inspection: unknown;
+}
+
+/** What a `space.changed` of kind `command` carries. */
+export interface PluridCommandObservation {
+    id: string;
+    ran: boolean;
+    /** why it did not run: no such command, disabled by the configuration (ignored by the bus), needs the key that matched it, or declined by its own guard */
+    reason?: 'unknown' | 'disabled' | 'needsKey' | 'declined';
+}
 /**
  * What a `space.changed` of kind `plane` carries.
  *
@@ -816,8 +836,19 @@ export interface PluridPubSubSubscribeMessageCommand {
 export interface PluridPubSubMessageSpawnPlane {
     route: string;
     parentPlaneID: string;
-    /** Where on the parent the bridge leaves from; the parent's origin by default. */
+    /**
+     * Where on the parent the bridge leaves from, in the parent's px. Given, or measured from
+     * `link`; else the parent's middle height (and `space.bridge.anchor` puts the x at the edge).
+     */
     linkCoordinates?: { x: number; y: number };
+    /** A CSS selector of the element inside the parent the bridge leaves from, measured as a `PluridLink` is; used when `linkCoordinates` is absent. */
+    link?: string;
+    /** A bridge length of the host's own, over the configured one and the sibling stagger. */
+    bridgeLength?: number;
+    /** How the bridge is drawn: a strip, or a leash (a thin line, for a later sibling whose strip would cross its elders). */
+    bridgeKind?: 'strip' | 'leash';
+    /** How the camera frames the opened plane: with its parent (`pair`), alone (`plane`), as configured (unset), or not at all (`none`). */
+    framing?: 'pair' | 'plane' | 'none';
     /**
      * A CORRELATION TOKEN, so the host learns which plane this became.
      *
@@ -831,7 +862,8 @@ export interface PluridPubSubMessageSpawnPlane {
      * Pass any string here and the engine answers on `space.changed` with kind
      * `plane` once the plane is in the tree: `{ token, planeID, route,
      * parameters }`. No delay to guess, no DOM to query, and two planes of one
-     * route are distinguishable.
+     * route are distinguishable. A spawn of a route already open OPENS it (never
+     * puts it away), and a plane put away and shown again answers its token too.
      */
     token?: string;
 }
@@ -857,12 +889,56 @@ export interface PluridPubSubSubscribeMessageSetPlaneShow {
     callback: PluridPubSubCallback<PluridPubSubMessageSetPlaneShow>;
 }
 
-/** Move planes by a world delta: the ones named, else the current selection. */
+/**
+ * Move planes: the ones named, else the current selection. The SELECTION IS NOT TOUCHED (naming
+ * planes used to select them, which clobbered whatever the reader had in hand), and a moved plane
+ * is PINNED ONLY WHEN ASKED (`pinned: true`: the layout leaves it where it was put; the default
+ * leaves it to the layout, as a product arranging its own space by `setTree` wants). One history
+ * step per message.
+ */
 export interface PluridPubSubMessageMovePlanes {
     deltaX: number;
     deltaY: number;
-    /** Defaults to the selection; naming planes selects them first. */
+    deltaZ?: number;
+    /** Defaults to the selection. */
     planeIDs?: string[];
+    /** `world` (the default): the deltas are world axes. `plane`: each plane's own axes, so `deltaX: 100` on a plane turned 90.1° moves it along world z. */
+    frame?: 'world' | 'plane';
+    /** Pin the moved planes where they land. Default `false`. */
+    pinned?: boolean;
+}
+/** Ask the space to describe itself; answered on `space.changed` kind `describe`. */
+export interface PluridPubSubMessageDescribe {
+    token: string;
+}
+export interface PluridPubSubPublishMessageDescribe {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DESCRIBE;
+    data: PluridPubSubMessageDescribe;
+}
+export interface PluridPubSubSubscribeMessageDescribe {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_DESCRIBE;
+    callback: PluridPubSubCallback<PluridPubSubMessageDescribe>;
+}
+export interface PluridPubSubPublishMessageBlur {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_BLUR;
+    data?: Record<string, never>;
+}
+export interface PluridPubSubSubscribeMessageBlur {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_BLUR;
+    callback: PluridPubSubCallback<Record<string, never> | undefined>;
+}
+export interface PluridPubSubMessagePinPlane {
+    planeID: string;
+    /** `true` (the default) pins the plane where it is; `false` lets the layout have it back. */
+    pinned?: boolean;
+}
+export interface PluridPubSubPublishMessagePinPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PIN_PLANE;
+    data: PluridPubSubMessagePinPlane;
+}
+export interface PluridPubSubSubscribeMessagePinPlane {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PIN_PLANE;
+    callback: PluridPubSubCallback<PluridPubSubMessagePinPlane>;
 }
 export interface PluridPubSubPublishMessageMovePlanes {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES;
@@ -1061,6 +1137,9 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageSpawnPlane
     | PluridPubSubPublishMessageSetPlaneShow
     | PluridPubSubPublishMessageMovePlanes
+    | PluridPubSubPublishMessagePinPlane
+    | PluridPubSubPublishMessageDescribe
+    | PluridPubSubPublishMessageBlur
     | PluridPubSubPublishMessageResizePlane
     | PluridPubSubPublishMessageSnap
     | PluridPubSubPublishMessageSelectInRect
@@ -1133,6 +1212,9 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageSpawnPlane
     | PluridPubSubSubscribeMessageSetPlaneShow
     | PluridPubSubSubscribeMessageMovePlanes
+    | PluridPubSubSubscribeMessagePinPlane
+    | PluridPubSubSubscribeMessageDescribe
+    | PluridPubSubSubscribeMessageBlur
     | PluridPubSubSubscribeMessageResizePlane
     | PluridPubSubSubscribeMessageSnap
     | PluridPubSubSubscribeMessageSelectInRect

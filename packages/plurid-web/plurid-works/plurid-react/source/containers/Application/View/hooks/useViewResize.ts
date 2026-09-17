@@ -25,7 +25,6 @@
 export interface UseViewResizeParameters {
     viewElement: React.RefObject<HTMLDivElement>;
     dispatchSpaceSetViewSize: (size: { width: number; height: number }) => void;
-    treeUpdateCallback: () => void;
 }
 
 
@@ -33,14 +32,15 @@ export interface UseViewResizeParameters {
  * View-size tracking: a `ResizeObserver` on the view element (plus the window `resize` fallback)
  * feeds a debounced measure → `setViewSize`, so the camera's pivot frame follows the CONTAINER —
  * a sidebar toggle or split-pane drag re-centers the orbit without a window resize. A host that
- * did not size the view (0 px) falls back to the window, the historical behavior. A separate
- * window listener recomputes the layout via `treeUpdateCallback`.
+ * did not size the view (0 px) falls back to the window, the historical behavior. ONE window
+ * listener, debounced: the relayout follows the VIEW SIZE's change (the View's layout effect), so
+ * a second, undebounced listener that relaid the whole tree on every one of a drag's resize
+ * events was a relayout for nothing.
  */
 export const useViewResize = (
     {
         viewElement,
         dispatchSpaceSetViewSize,
-        treeUpdateCallback,
     }: UseViewResizeParameters,
 ) => {
     /** Debounced view-size measurement. */
@@ -81,21 +81,6 @@ export const useViewResize = (
             }
         }
     }, []);
-
-    /**
-     * The effect only registers `treeUpdateCallback`, so depend on the callback itself — its own
-     * deps already track view/config/tree. This drops two per-render whole-tree/whole-config
-     * `JSON.stringify`s that recomputed the exact same trigger.
-     */
-    useEffect(() => {
-        window.addEventListener('resize', treeUpdateCallback);
-
-        return () => {
-            window.removeEventListener('resize', treeUpdateCallback);
-        }
-    }, [
-        treeUpdateCallback,
-    ]);
 }
 // #endregion module
 

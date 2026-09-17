@@ -257,6 +257,14 @@ export interface PluridConfigurationSpaceDocking {
     /** px — how close to the dock pose "docked" is read (default 0.5). */
     epsilon?: number;
     /**
+     * The scale a plane is read at when docked: its box filling the view along the tighter
+     * dimension (`fill`, the default), or that scale capped at 1 (`natural`) so a plane smaller
+     * than the view is read at its own size, centred, rather than magnified. Under `natural` a
+     * plane centred at scale 1 IS its dock pose: a space that centres a root at 1 boots docked
+     * on it, so choose it only where no plane is ever framed so.
+     */
+    scale?: 'fill' | 'natural';
+    /**
      * THE ADDRESS BAR IS THE PAGE. While docked, the page's path is the location's pathname (the
      * query and the hash untouched); docking on another page is a history entry; the reveal keeps
      * the last page's path; Back / Forward dock the page at the entry's path; a load at a page's path
@@ -507,6 +515,24 @@ export interface PluridConfigurationSpace {
          * goes deeper, a grandchild hanging off the fin on the side the fin faces.
          */
         keepBehind?: boolean;
+        /**
+         * Where a spawned child's bridge leaves its parent: the link's own point (`link`), or the
+         * parent's RIGHT EDGE at the link's height (`edge`, the default), so a child standing at
+         * 90.1° stands clear of its parent's silhouette and both read from the yaw between them.
+         * Siblings spawned from one parent take longer bridges (`length + i·(childWidth + 50)`),
+         * so they line up along the child's own width axis rather than coincide; the later ones
+         * are drawn as leashes.
+         */
+        anchor?: 'link' | 'edge';
+        /**
+         * A named set of the fields above, applied UNDER any of them given explicitly.
+         * `reading` (the default): `planeAngle: 90.1`, `fan: 'alternate'`, `anchor: 'edge'`,
+         * `keepBehind: false` — a conversation of planes, every generation readable from one camera
+         * (90.1 and never 90: an exactly perpendicular plane is a zero-width quad CSS mishandles).
+         * `objects`: `planeAngle: 90`, `fan: 'fixed'`, `anchor: 'link'` — the geometry every
+         * release before 2026-09 had, for spaces of things rather than of prose.
+         */
+        preset?: 'reading' | 'objects';
     };
 
     /**
@@ -589,6 +615,18 @@ export interface PluridConfigurationSpaceNavigation {
      * always stay; a topic / call can override per close.
      */
     onClose?: 'parent' | 'stay';
+    /**
+     * What the camera frames when a child is spawned or navigated to: the plane alone, face-on
+     * (`plane`), or the plane AND its parent from the yaw at which both read (`pair`, the default:
+     * a branch at 90.1° framed face-on leaves its parent edge-on, and framed front-on is itself a line).
+     */
+    childFraming?: 'plane' | 'pair';
+    /**
+     * The yaw a fit (`space.fitToView`, the toolbar, `0`) turns to: the front (`front`, yaw 0), or
+     * the yaw that maximises the narrowest plane's projected width (`best`, the default) so a
+     * space of roots and their perpendicular branches reads as one picture.
+     */
+    fitYaw?: 'front' | 'best';
 }
 
 
@@ -681,6 +719,7 @@ export interface PluridConfigurationSpaceTransformLocks {
  */
 export type PluridShortcutID =
     | 'undo'
+    | 'redo'
     | 'clearSelection'
     | 'fitToView'
     | 'frameSelection'
@@ -699,6 +738,7 @@ export type PluridShortcutID =
     | 'grabMode'
     | 'grabHold'
     | 'exitGrabMode'
+    | 'exitTransformMode'
     | 'dock'
     | 'help'
     | 'palette'
@@ -808,11 +848,14 @@ export interface PluridConfigurationSpaceGestures {
         zoom?: boolean;
     };
     /**
-     * What a mouse wheel does: `scroll-first` (default) zooms at the cursor unless the content under
-     * it can scroll along the wheel axis (then the page scrolls); `zoom` always zooms; `disabled`
-     * leaves the wheel to the page. Ctrl/Cmd + wheel and pinch always zoom.
+     * What a wheel does over the space: `scroll-first` (default) zooms at the cursor unless the
+     * content under it can scroll along the wheel axis (then the content scrolls); `plane` gives a
+     * plane its wheel whatever it can do (it scrolls if it can, else nothing: a reading surface never
+     * zooms away under a wheel) and zooms only on empty space; `zoom` always zooms; `disabled` leaves
+     * the wheel to the page. A trackpad pinch always zooms; Cmd + wheel and Ctrl + a mouse notch are
+     * the browser's (its page zoom), never the space's.
      */
-    wheel?: 'zoom' | 'scroll-first' | 'disabled';
+    wheel?: 'zoom' | 'scroll-first' | 'plane' | 'disabled';
     /** Zoom factor per mouse-wheel notch. Default `1.1`. */
     wheelZoomStep?: number;
     /**
@@ -838,6 +881,13 @@ export interface PluridConfigurationSpaceGestures {
      * frames that plane. A double-click on plane CONTENT is the page's (a word selection). Default `true`.
      */
     doubleClickFrame?: boolean;
+    /**
+     * Where a SELECTED plane is taken hold of for a drag-move. `chrome` (default): its controls bar,
+     * or anything inside an element a host marks `data-plurid-drag-handle`; a press on its content
+     * is the page's, so a word in a selected plane can be selected with the mouse. `plane`: anywhere
+     * on it, which takes the text selection with it.
+     */
+    dragHandle?: 'chrome' | 'plane';
     /** Fly-mode sprint multiplier while Shift is held. Default `2.5`. */
     flySprintMultiplier?: number;
     /** Gamepad navigation (opt-in): sticks orbit/pan (fly in first person), triggers zoom/dolly, buttons frame/home/undo. */
@@ -977,7 +1027,7 @@ export interface PluridConfigurationElementsPlane {
     /** Fade (and optionally blur) planes with their distance from the eye; see {@link PluridConfigurationElementsPlaneDepthFade}. */
     depthFade?: PluridConfigurationElementsPlaneDepthFade;
 
-    /** `hidden` stops painting planes seen from behind (`backface-visibility`). Default `visible`. */
+    /** `hidden` (the default since 2026-09) stops painting planes seen from behind (`backface-visibility`); `visible` paints them mirrored. */
     backface?: 'visible' | 'hidden';
 }
 

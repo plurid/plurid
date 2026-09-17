@@ -76,7 +76,8 @@ describe('the slots', () => {
         expect(seen[0].docked).toBe('');
         expect(Array.isArray(seen[0].selection)).toBe(true);
         expect(typeof seen[0].pubsub.publish).toBe('function');
-        expect(typeof seen[0].camera.scale).toBe('number');
+        // never the camera: a context that carried it changed every frame
+        expect((seen[0] as any).camera).toBeUndefined();
         await unmount();
     });
 

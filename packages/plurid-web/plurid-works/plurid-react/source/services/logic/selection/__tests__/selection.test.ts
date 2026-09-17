@@ -70,6 +70,22 @@ describe('planesInScreenRect()', () => {
         expect(planesInScreenRect(tree, camera, view, { left: 320, top: 100, right: 150, bottom: 10 }, fallback)).toEqual(['a', 'b']);
         expect(planesInScreenRect(tree, camera, view, { left: 700, top: 0, right: 800, bottom: 100 }, fallback)).toEqual([]);
     });
+
+    it('an edge-on fin under the band is skipped: thinner than 4px on screen is not what the hand meant', () => {
+        // a far perspective, so the fin at 90.1 degrees reads as the sliver it is anywhere on screen
+        const camera = { ...cameraEngine.identityCamera(view), perspective: 1e7 };
+        const tree = [
+            plane('a', 0, 0),
+            plane('fin', 300, 0, { location: { translateX: 300, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 90.1 } }),
+        ];
+        const whole = { left: 0, top: 0, right: view.width, bottom: view.height };
+        expect(planesInScreenRect(tree, camera, view, whole, fallback)).toEqual(['a']);
+        // the threshold is what skips it
+        expect(planesInScreenRect(tree, camera, view, whole, fallback, 0)).toEqual(['a', 'fin']);
+        // a plane turned only a little is as wide as it looks
+        const turned = [plane('b', 0, 0, { location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 30 } })];
+        expect(planesInScreenRect(turned, camera, view, whole, fallback)).toEqual(['b']);
+    });
 });
 
 

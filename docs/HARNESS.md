@@ -17,6 +17,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?gallery=1` | - | reload | the contact sheet: every fixture in an iframe (`?gallery=looks`: the twelve looks, each on the revealed page and on the columns) | the fixture catalog, the looks |
 | `?router=1` | - | reload | the router demo instead of the space (PluridRouterBrowser) | PluridRouterBrowser / PluridRouterLink |
 | `?empty=1` | - | reload | an empty view (no roots) | the empty state |
+| `?bus=1` | - | reload | the route-driven shape a product like dechat mounts: an empty `view`, the roots through `view.setPlanes`, children through `space.spawnPlane` (with tokens), no plane bar | `view.setPlanes`, `space.spawnPlane`, `elements.plane.controls.show: false`, `space.changed` correlation |
 | `?presentation=page` | - | reload | the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed | `space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked` |
 
 ### layout
@@ -24,6 +25,25 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | Param | Default | Applies | Does | Exercises |
 | --- | --- | --- | --- | --- |
 | `?layout=columns\|rows\|sheaves\|faceToFace\|zigZag` | `columns` | live | the root layout | `space.layout` (an animated relayout on the live instance) |
+| `?bridge=reading\|objects` | - | live | the spawn geometry preset: `reading` (90.1°, an alternating fan, the bridge from the parent's right edge, so parent and child both read from one camera) or `objects` (90°, a fixed fan, the bridge from the link) | `space.bridge.preset` |
+
+### rendering
+
+| Param | Default | Applies | Does | Exercises |
+| --- | --- | --- | --- | --- |
+| `?backface=visible\|hidden` | - | live | whether a plane seen from behind paints | `elements.plane.backface` |
+| `?culling=1` | - | reload | frustum / distance culling | `space.culling.enabled` |
+| `?cullDistance=<n>` | - | reload | the culling distance | `space.culling.distance` |
+| `?freezeDistance=<n>` | - | reload | the freeze distance | `space.culling.freezeDistance` |
+| `?cullDetach=retain\|unmount` | - | reload | the detach tier: a hidden plane's content is retained (state kept, effects off) or unmounted after cullDelay; the shell stays | `space.culling.detach` |
+| `?cullDelay=<n>` | - | reload | ms a plane stays hidden before its content detaches (default 1000) | `space.culling.detach.delay` |
+| `?cullMax=<n>` | - | reload | the most hidden-but-mounted planes kept; the farthest beyond it detach at once | `space.culling.detach.max` |
+| `?cullDetachDistance=<n>` | - | reload | only hidden planes farther than this (camera-space) detach | `space.culling.detach.distance` |
+| `?depthFade=1` | - | reload | far planes fade and blur | `elements.plane.depthFade` |
+| `?spaceW=<n>` | - | reload | the roots container width | `space.dimensions.width` |
+| `?spaceH=<n>` | - | reload | the roots container height | `space.dimensions.height` |
+| `?bench=1` | - | reload | a scripted run over 240 frames → window.__rtBench (the scenario: benchScenario) | the per-frame camera path (bench.spec.ts) |
+| `?benchScenario=orbit\|relayout\|spawn` | `orbit` | reload | what the bench drives: the camera (orbit + pan + zoom), the view size (relayouts), or a link opened and closed (spawns) | the relayout and spawn paths under a frame budget |
 
 ### planes
 
@@ -95,23 +115,6 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?resizable=1` | - | reload | resize handles on a selected plane | `elements.plane.resizable`, `setPlaneSize({ sizeMode: manual })` |
 | `?snapGrid=<n>` | - | reload | a snap grid for drag-to-move | `space.snap` |
 
-### rendering
-
-| Param | Default | Applies | Does | Exercises |
-| --- | --- | --- | --- | --- |
-| `?culling=1` | - | reload | frustum / distance culling | `space.culling.enabled` |
-| `?cullDistance=<n>` | - | reload | the culling distance | `space.culling.distance` |
-| `?freezeDistance=<n>` | - | reload | the freeze distance | `space.culling.freezeDistance` |
-| `?cullDetach=retain\|unmount` | - | reload | the detach tier: a hidden plane's content is retained (state kept, effects off) or unmounted after cullDelay; the shell stays | `space.culling.detach` |
-| `?cullDelay=<n>` | - | reload | ms a plane stays hidden before its content detaches (default 1000) | `space.culling.detach.delay` |
-| `?cullMax=<n>` | - | reload | the most hidden-but-mounted planes kept; the farthest beyond it detach at once | `space.culling.detach.max` |
-| `?cullDetachDistance=<n>` | - | reload | only hidden planes farther than this (camera-space) detach | `space.culling.detach.distance` |
-| `?depthFade=1` | - | reload | far planes fade and blur | `elements.plane.depthFade` |
-| `?spaceW=<n>` | - | reload | the roots container width | `space.dimensions.width` |
-| `?spaceH=<n>` | - | reload | the roots container height | `space.dimensions.height` |
-| `?bench=1` | - | reload | a scripted run over 240 frames → window.__rtBench (the scenario: benchScenario) | the per-frame camera path (bench.spec.ts) |
-| `?benchScenario=orbit\|relayout\|spawn` | `orbit` | reload | what the bench drives: the camera (orbit + pan + zoom), the view size (relayouts), or a link opened and closed (spawns) | the relayout and spawn paths under a frame budget |
-
 ### ui
 
 | Param | Default | Applies | Does | Exercises |
@@ -167,8 +170,8 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `columns-content` | Columns, content-sized — Twelve content-sized panels of different heights, the rows as tall as their tallest panel (the sizing contract). | `sizes=content` `planes=12` | - | `fit` | planes: 12 |
 | `stress-40` | Stress, 40 planes — Forty generated planes in eight columns. | `planes=40` | - | `front` | planes: 40 |
 | `links-dense` | Dense links — Six links on GEOMETRY, two to the same route. | `links=dense` | - | `front` | planes: 5 |
-| `nested-chain-3` | Nested chain — A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent. | `nested=3` | `/geometry → /chain-1`, `/chain-1 → /chain-2`, `/chain-2 → /chain-3` | `front`, `orbit` | planes: 8, overlap: expected, links: false |
-| `detail-spawned` | Detail spawned — The DETAIL plane opened from GEOMETRY, behind the wall. | - | `/geometry → /geometry/detail` | `front`, `orbit` | planes: 6, overlap: expected, links: false |
+| `nested-chain-3` | Nested chain — A three-deep chain spawned from GEOMETRY: each generation turns behind its parent, and fitted, every generation reads. | `nested=3` | `/geometry → /chain-1`, `/chain-1 → /chain-2`, `/chain-2 → /chain-3` | `fit`, `orbit` | planes: 8, overlap: expected, links: false, visible: [object Object],[object Object],[object Object] |
+| `detail-spawned` | Detail spawned — The DETAIL plane opened from GEOMETRY, behind the wall, and fitted: the wall and the detail both read. | - | `/geometry → /geometry/detail` | `fit`, `orbit` | planes: 6, overlap: expected, links: false, visible: [object Object],[object Object] |
 | `detail-dragged` | Detail dragged — The DETAIL plane dragged away from its link: it stays where it was dropped, on a leash to the link. | - | `/geometry → /geometry/detail`, `⇢ /geometry/detail -340,220` | `orbit` | planes: 6, overlap: expected, links: false |
 | `palette-open` | The command palette — The palette open over the space: every command that applies, the bookmarks, every plane. | - | `⌘ ControlOrMeta+KeyK` | `front` | planes: 5, links: false, minimap: false |
 | `media` | Media plane — A consumer-built media plane beside the panels. | `media=1` | - | `front` | planes: 6 |
@@ -186,6 +189,12 @@ Verified by `fixtures/render-test/e2e/fixtures.spec.ts` (the generic invariants:
 | `page-revealed-paper` | A page revealed, the paper look — The revealed page under the paper look: the rail, the toolbar and the cube on light tokens over a dark site. | `presentation=page` `pages=1` `look=paper` | - | `revealed` | planes: 1 |
 | `columns-headless` | Columns, headless — No engine chrome at all (`chrome: none`): the planes, their links and the space; every key and topic still works. | `chrome=none` | - | `front` | planes: 5, minimap: false |
 | `empty` | Empty — No roots: the empty state. | `empty=1` | - | `front` | planes: 0, minimap: false, links: false |
+| `bus-root` | Bus: a root — The route-driven shape: an empty view, one root through view.setPlanes, no plane bar. | `bus=1` | `undefined → undefined` | `front` | planes: 1, links: false, visible: [object Object] |
+| `bus-branch` | Bus: a branch — A child spawned through space.spawnPlane and the space fitted: parent and child both read from the one camera. | `bus=1` | `undefined → undefined`, `/geometry → /geometry/detail` | `fit`, `orbit` | planes: 2, links: false, visible: [object Object],[object Object] |
+| `bus-fan-3` | Bus: a fan of three — Three children spawned from one parent (a fan-out): three planes, side by side, none over another. | `bus=1` | `undefined → undefined`, `/geometry → /material`, `/geometry → /topology`, `/geometry → /tessellation` | `fit` | planes: 4, links: false, visible: [object Object],[object Object],[object Object] |
+| `bus-chain-3` | Bus: a chain of three — A child, its child, and its child, spawned through the bus and fitted: a receding staircase, every step readable, none mirrored. | `bus=1` | `undefined → undefined`, `/geometry → /geometry/detail`, `/geometry/detail → /geometry/detail/mesh`, `/geometry/detail/mesh → /geometry/detail/mesh/edges` | `fit`, `orbit` | planes: 4, links: false, visible: [object Object],[object Object],[object Object] |
+| `bus-tidy` | Bus: two roots and a branch, fitted — Two roots through the bus and a branch off the first, then a fit: the fit turns to where every plane reads, not to the front. | `bus=1` | `undefined → undefined`, `/geometry → /geometry/detail`, `undefined → undefined` | `fit` | planes: 3, links: false, visible: [object Object],[object Object],[object Object] |
+| `bus-describe` | Bus: describe — A product asks the space to describe itself through the bus and is answered on space.changed. | `bus=1` | `undefined → undefined`, `undefined → undefined` | `front` | planes: 1, links: false, changed: describe |
 
 ## Assertion globals
 

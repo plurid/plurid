@@ -37,6 +37,10 @@
     import {
         PluridPlanesRegistrar,
     } from '../registrar';
+    import {
+        PluridChromeContext,
+        PluridPlaneChromeContext,
+    } from '../chrome';
 
     import {
         IsoMatcherRouteResult,
@@ -291,20 +295,20 @@ export interface PluridApplication<C> {
      * chrome context (the look's tokens, the live camera, the docked page, the presentation, the
      * selection, the history, the configuration, the bus) as its one argument.
      */
-    renderToolbar?: PluridRenderSlot;
-    renderViewcube?: PluridRenderSlot;
+    renderToolbar?: PluridRenderSlot<PluridChromeContext>;
+    renderViewcube?: PluridRenderSlot<PluridChromeContext>;
     /** The page presentation's rail (fit · back · the page / cube toggle) — its own slot, so replacing the viewcube keeps the page's affordance. */
-    renderDockRail?: PluridRenderSlot;
-    renderMinimap?: PluridRenderSlot;
-    renderShortcuts?: PluridRenderSlot;
+    renderDockRail?: PluridRenderSlot<PluridChromeContext>;
+    renderMinimap?: PluridRenderSlot<PluridChromeContext>;
+    renderShortcuts?: PluridRenderSlot<PluridChromeContext>;
     /** The command palette (⌘/Ctrl+K) — a host's own list over `api.runCommand` / the palette rows. */
-    renderPalette?: PluridRenderSlot;
+    renderPalette?: PluridRenderSlot<PluridChromeContext>;
     /** Rendered in place of the space when it holds no planes (the layout resolved to nothing). */
-    renderEmpty?: PluridRenderSlot;
+    renderEmpty?: PluridRenderSlot<PluridChromeContext>;
     /** A plane's controls bar (the path, back, close …); called with the plane's chrome context (its id, route, tree node). */
-    renderPlaneControls?: PluridRenderSlot;
+    renderPlaneControls?: PluridRenderSlot<PluridPlaneChromeContext>;
     /** A spawned plane's bridge to its link; called with the plane's chrome context. */
-    renderPlaneBridge?: PluridRenderSlot;
+    renderPlaneBridge?: PluridRenderSlot<PluridPlaneChromeContext>;
     /** The transform-origin dot. */
     renderOrigin?: PluridRenderSlot;
     /** The space debugger (rendered when `development.spaceDebugger` is on). */

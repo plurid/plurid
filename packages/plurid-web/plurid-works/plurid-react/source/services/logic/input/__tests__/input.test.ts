@@ -66,9 +66,10 @@ describe('normalizeWheel', () => {
     });
 
     it('a Firefox line notch and a Chrome pixel notch zoom within a few percent of each other', () => {
-        const chrome = normalizeWheel({ deltaX: 0, deltaY: -100, deltaMode: 0, ctrlKey: true }, 800);
-        const firefox = normalizeWheel({ deltaX: 0, deltaY: -6, deltaMode: 1, ctrlKey: true }, 800);
-        const base = { transformMode: 'ALL' as const, grabMode: false, firstPerson: false, onPlane: false, scrollable: false, shift: false, alt: false, ctrlOrMeta: true, locks, anchor: { x: 0, y: 0 } };
+        // a plain notch on empty space (Ctrl + a notch is the browser's page zoom now, not the space's)
+        const chrome = normalizeWheel({ deltaX: 0, deltaY: -100, deltaMode: 0, ctrlKey: false }, 800);
+        const firefox = normalizeWheel({ deltaX: 0, deltaY: -6, deltaMode: 1, ctrlKey: false }, 800);
+        const base = { transformMode: 'ALL' as const, grabMode: false, firstPerson: false, onPlane: false, scrollable: false, shift: false, alt: false, ctrlOrMeta: false, locks, anchor: { x: 0, y: 0 } };
         const a = wheelToDelta(chrome, base);
         const b = wheelToDelta(firefox, base);
         expect(a.kind).toBe('camera');
@@ -133,7 +134,7 @@ describe('wheelToDelta', () => {
     const mouseDown = { dx: 0, dy: 100, pinch: false, source: 'mouse' as const };
     const trackpad = { dx: -3, dy: 5.5, pinch: false, source: 'trackpad' as const };
 
-    it('a trackpad pinch zooms by an exponent per px; a Ctrl + mouse notch keeps the notch step', () => {
+    it('a trackpad pinch zooms by an exponent per px; a Ctrl + mouse notch and Cmd + wheel are the browser\'s', () => {
         const pinch = wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, base);
         expect(pinch.kind).toBe('camera');
         // e^(10 · 0.006) — the notch step would have given 1.1^0.1 ≈ 1.0096
@@ -143,8 +144,9 @@ describe('wheelToDelta', () => {
         expect((outward as any).delta.zoom.factor).toBeCloseTo(Math.exp(-0.06), 9);
         const tuned = wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, { ...base, trackpadPinchSensitivity: 0.02 });
         expect((tuned as any).delta.zoom.factor).toBeCloseTo(Math.exp(0.2), 9);
-        const notch = wheelToDelta({ dx: 0, dy: -100, pinch: false, source: 'mouse' }, { ...base, ctrlOrMeta: true });
-        expect((notch as any).delta.zoom.factor).toBeCloseTo(1.1, 9);
+        // Ctrl + a mouse notch is the page zoom; so is Cmd + wheel: the space takes neither
+        expect(wheelToDelta({ dx: 0, dy: -100, pinch: true, source: 'mouse' }, base).kind).toBe('scroll');
+        expect(wheelToDelta({ dx: 0, dy: -100, pinch: false, source: 'mouse' }, { ...base, ctrlOrMeta: true }).kind).toBe('scroll');
     });
 
     it('docked on a page, a plain wheel is the page\'s: it scrolls if it can, else nothing; pinch, Shift, Alt and grab still move the camera', () => {
@@ -155,7 +157,7 @@ describe('wheelToDelta', () => {
         expect(wheelToDelta(mouseDown, { ...docked, scrollable: true }).kind).toBe('scroll');
         expect(wheelToDelta(trackpad, { ...docked, scrollable: true }).kind).toBe('scroll');
         expect(wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, docked).kind).toBe('camera');
-        expect(wheelToDelta(mouseDown, { ...docked, ctrlOrMeta: true }).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...docked, ctrlOrMeta: true }).kind).toBe('scroll');
         expect(wheelToDelta(mouseDown, { ...docked, shift: true }).kind).toBe('camera');
         expect(wheelToDelta(mouseDown, { ...docked, grabMode: true }).kind).toBe('camera');
         // not docked, the same wheel over a non-scroller zooms
@@ -169,11 +171,23 @@ describe('wheelToDelta', () => {
         expect((resolution as any).delta.zoom.factor).toBeCloseTo(1 / 1.1, 9);
     });
 
-    it('scroll-first hands a scrollable plane its wheel, ctrl+wheel still zooms', () => {
+    it('scroll-first hands a scrollable plane its wheel, a pinch still zooms', () => {
         expect(wheelToDelta(mouseDown, { ...base, onPlane: true, scrollable: true }).kind).toBe('scroll');
-        expect(wheelToDelta(mouseDown, { ...base, onPlane: true, scrollable: true, ctrlOrMeta: true }).kind).toBe('camera');
+        expect(wheelToDelta({ dx: 0, dy: -10, pinch: true, source: 'trackpad' }, { ...base, onPlane: true, scrollable: true }).kind).toBe('camera');
         expect(wheelToDelta(mouseDown, { ...base, onPlane: true, scrollable: true, policy: 'zoom' }).kind).toBe('camera');
         expect(wheelToDelta(mouseDown, { ...base, policy: 'disabled' }).kind).toBe('scroll');
+    });
+
+    it('the plane policy gives a plane its wheel whatever it can do; empty space and the modifiers still open the space', () => {
+        const plane = { ...base, onPlane: true, policy: 'plane' as const };
+        expect(wheelToDelta(mouseDown, { ...plane, scrollable: true }).kind).toBe('scroll');
+        expect(wheelToDelta(mouseDown, plane).kind).toBe('consume');
+        expect(wheelToDelta(trackpad, plane).kind).toBe('consume');
+        expect(wheelToDelta(mouseDown, { ...base, policy: 'plane' }).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...plane, shift: true }).kind).toBe('camera');
+        expect(wheelToDelta(mouseDown, { ...plane, grabMode: true }).kind).toBe('camera');
+        // scroll-first over the same plane zooms it away
+        expect(wheelToDelta(mouseDown, { ...base, onPlane: true }).kind).toBe('camera');
     });
 
     it('a trackpad scroll pans by default and follows trackpadScroll', () => {
@@ -219,9 +233,14 @@ describe('resolveGestureIntent', () => {
         expect(resolveGestureIntent(mouse({ pointerType: 'pen', buttons: 32 }))).toBe('pan');
     });
 
-    it('a selected plane moves on a plain left drag', () => {
-        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true }))).toBe('move-selection');
-        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, shift: true }))).toBe('pan');
+    it('a selected plane moves by its handle; its content stays the page\'s unless the whole plane is the handle', () => {
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true }))).toBe('move-selection');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, dragHandle: 'plane' }))).toBe('move-selection');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, dragHandle: 'chrome' }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true, shift: true }))).toBe('pan');
+        // an unselected plane's bar is no handle for anything
+        expect(resolveGestureIntent(mouse({ onPlane: true, onDragHandle: true }))).toBe('none');
     });
 
     it('buttonMap overrides the defaults, menu releases the right button', () => {
@@ -238,8 +257,13 @@ describe('resolveGestureIntent', () => {
         expect(resolveGestureIntent(mouse({ pointerType: 'touch', buttons: 1, touchOne: 'pan' }))).toBe('pan');
     });
 
-    it('explicit modes and fly mode pin the intent', () => {
-        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true }))).toBe('orbit');
+    it('explicit modes and fly mode pin the intent, on everything but a plane\'s content', () => {
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION' }))).toBe('orbit');
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, onDragHandle: true }))).toBe('orbit');
+        expect(resolveGestureIntent(mouse({ transformMode: 'ROTATION', onPlane: true, grabMode: true }))).toBe('orbit');
+        expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION', onPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ transformMode: 'SCALE', onPlane: true }))).toBe('none');
         expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION' }))).toBe('pan');
         expect(resolveGestureIntent(mouse({ transformMode: 'TRANSLATION', alt: true }))).toBe('dolly');
         expect(resolveGestureIntent(mouse({ transformMode: 'SCALE' }))).toBe('zoom');

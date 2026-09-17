@@ -106,6 +106,8 @@ const japanese: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ または下にスクロール',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← または左にスクロール',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ または右にスクロール',
+
+    spaceEmpty: 'この空間に平面はありません',
 };
 // #endregion module
 

@@ -127,6 +127,8 @@
     } from '~services/logic/correlation';
     import PluridMarquee from '~components/structural/Marquee';
     import PluridLiveRegion from '~components/utilities/LiveRegion';
+    import PluridModeBadge from '~components/utilities/ModeBadge';
+    import { modeOf } from '~services/logic/modes';
     import useCulling from './hooks/useCulling';
     import { warnOnce } from '~services/logic/development/warn';
     import {
@@ -208,15 +210,13 @@ const spaceHasPlanes = (
     tree: TreePlane[],
     view: PluridApplicationView,
 ): boolean => {
-    if (view.length === 0) {
-        return false;
+    // THE TREE ANSWERS: a host that mounts `view: []` and sets its tree through the bus has
+    // planes, whatever the view says; the view speaks only before there is a tree
+    if (tree.length > 0) {
+        return tree.some((root) => root.show !== false);
     }
 
-    if (tree.length === 0) {
-        return true;
-    }
-
-    return tree.some((root) => root.show !== false);
+    return view.length > 0;
 };
 
 
@@ -562,10 +562,12 @@ const PluridView: React.FC<PluridViewProperties> = (
         stateTree,
         dispatch,
         treeUpdate,
-        // `space.spawnPlane` makes a plane the way a link does; `space.focus` needs the view element
+        // `space.spawnPlane` makes a plane the way a link does; `space.focus` needs the view element;
+        // `space.describe` answers with the inspection
         planesRegistrar,
         hostname,
         viewElement,
+        inspector: properties.inspector,
         dispatchers: {
             dispatchSetConfiguration,
             dispatchSetGeneralTheme,
@@ -806,12 +808,11 @@ const PluridView: React.FC<PluridViewProperties> = (
             viewElement.current,
         ]);
 
-        // Window-resize handling (debounced view-size measure + tree recompute) lives in
-        // `useViewResize`.
+        // Window-resize handling (the debounced view-size measure; the relayout follows the view
+        // size's change below) lives in `useViewResize`.
         useViewResize({
             viewElement,
             dispatchSpaceSetViewSize,
-            treeUpdateCallback,
         });
         // #endregion effects listeners
 
@@ -981,7 +982,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             if (!previous || previous === signature) {
                 return;
             }
-            if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon, undefined, spaceState.cameraLimits)) {
+            if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon, undefined, spaceState.cameraLimits, stateConfiguration.space.docking?.scale)) {
                 return;
             }
             dispatch(cameraCommand(
@@ -1118,10 +1119,11 @@ const PluridView: React.FC<PluridViewProperties> = (
     const look = lookOf(stateConfiguration);
     const chromeMode = chromeModeOf(stateConfiguration);
     const presentation: 'space' | 'page' = stateConfiguration.space.presentation === 'page' ? 'page' : 'space';
+    // never the camera: it changes every orbit frame, and a context that carried it re-rendered
+    // every slot per frame; a slot that needs it reads `useCamera`
     const chromeContext = useMemo<PluridChromeContext>(() => ({
         look,
         tokens: look.tokens,
-        camera: state.space.camera,
         docked: stateDockedPlaneID,
         presentation,
         selection: state.space.selectedPlaneIDs,
@@ -1130,7 +1132,6 @@ const PluridView: React.FC<PluridViewProperties> = (
         pubsub: pluridPubSub[0],
     }), [
         look,
-        state.space.camera,
         stateDockedPlaneID,
         presentation,
         state.space.selectedPlaneIDs,
@@ -1207,6 +1208,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             data-plurid-navigating={stateConfiguration.space.firstPerson
                 ? 'fly'
                 : (grabMode ? 'grab' : (stateConfiguration.space.transformMode !== 'ALL' ? 'transform' : undefined))}
+            data-plurid-mode={modeOf(stateConfiguration.space, grabMode)}
             style={dockFadeStyle}
             role="application"
             aria-roledescription="3D space"
@@ -1222,6 +1224,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             >
                 <PluridLiveRegion />
                 <PluridMarquee />
+                <PluridModeBadge />
 
                 {spaceHasPlanes(stateTree, stateSpaceView) ? (
                     <PluridViewContainer

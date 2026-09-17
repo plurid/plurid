@@ -106,6 +106,8 @@ const spanish: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o desplazar abajo',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← o desplazar a la izquierda',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ o desplazar a la derecha',
+
+    spaceEmpty: 'ningún plano en este espacio',
 };
 // #endregion module
 

@@ -48,7 +48,39 @@ export type FixtureStep =
         /** the drag, world px */
         deltaX: number;
         deltaY: number;
+    }
+    | {
+        /** the view, as a product sends it: `view.setPlanes` */
+        kind: 'setPlanes';
+        view: string[];
+    }
+    | {
+        /** a child opened through the bus (`space.spawnPlane`), as a product opens a branch */
+        kind: 'spawn';
+        /** the registered route of the parent */
+        plane: string;
+        /** the child's registered route */
+        route: string;
+        /** where the bridge leaves the parent, parent px; none = the engine's default */
+        linkCoordinates?: { x: number; y: number };
+        /** a correlation token, answered on `space.changed` */
+        token?: string;
+    }
+    | {
+        /** any topic, as published */
+        kind: 'publish';
+        topic: string;
+        data?: unknown;
     };
+
+/** A plane that must READ at the primary viewpoint: its projected width, and nothing over it. */
+export interface VisibleExpectation {
+    route: string;
+    /** the plane's on-screen width, px, at least */
+    minWidth: number;
+    /** the plane's own centre is hit by the plane itself */
+    unoccluded?: boolean;
+}
 
 export interface FixtureExpectations {
     /** shown planes after the steps */
@@ -61,6 +93,10 @@ export interface FixtureExpectations {
     links?: boolean;
     /** the minimap shows one dot per shown plane (default true) */
     minimap?: boolean;
+    /** planes that must read at the primary viewpoint (`VisibleExpectation`) */
+    visible?: VisibleExpectation[];
+    /** `space.changed` kinds that must have been reported by the end of the steps */
+    changed?: string[];
 }
 
 export interface FixtureDefinition {
@@ -118,8 +154,8 @@ export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'columns-content', title: 'Columns, content-sized', description: 'Twelve content-sized panels of different heights, the rows as tall as their tallest panel (the sizing contract).', query: { sizes: 'content', planes: '12' }, viewpoints: [FIT], expect: { planes: 12 } },
     { name: 'stress-40', title: 'Stress, 40 planes', description: 'Forty generated planes in eight columns.', query: { planes: '40' }, viewpoints: [FRONT], expect: { planes: 40 } },
     { name: 'links-dense', title: 'Dense links', description: 'Six links on GEOMETRY, two to the same route.', query: { links: 'dense' }, viewpoints: [FRONT], expect: { planes: 5 } },
-    { name: 'nested-chain-3', title: 'Nested chain', description: 'A three-deep chain spawned from GEOMETRY: each generation turns 90° behind its parent.', query: { nested: '3' }, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/chain-1' }, { kind: 'clickLink', plane: '/chain-1', route: '/chain-2' }, { kind: 'clickLink', plane: '/chain-2', route: '/chain-3' }], viewpoints: [FRONT, ORBIT], expect: { planes: 8, overlap: 'expected', links: false } },
-    { name: 'detail-spawned', title: 'Detail spawned', description: 'The DETAIL plane opened from GEOMETRY, behind the wall.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }], viewpoints: [FRONT, ORBIT], expect: { planes: 6, overlap: 'expected', links: false } },
+    { name: 'nested-chain-3', title: 'Nested chain', description: 'A three-deep chain spawned from GEOMETRY: each generation turns behind its parent, and fitted, every generation reads.', query: { nested: '3' }, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/chain-1' }, { kind: 'clickLink', plane: '/chain-1', route: '/chain-2' }, { kind: 'clickLink', plane: '/chain-2', route: '/chain-3' }], viewpoints: [FIT, ORBIT], expect: { planes: 8, overlap: 'expected', links: false, visible: [{ route: '/chain-1', minWidth: 100 }, { route: '/chain-2', minWidth: 100 }, { route: '/chain-3', minWidth: 100 }] } },
+    { name: 'detail-spawned', title: 'Detail spawned', description: 'The DETAIL plane opened from GEOMETRY, behind the wall, and fitted: the wall and the detail both read.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }], viewpoints: [FIT, ORBIT], expect: { planes: 6, overlap: 'expected', links: false, visible: [{ route: '/geometry', minWidth: 140 }, { route: '/geometry/detail', minWidth: 140 }] } },
     { name: 'detail-dragged', title: 'Detail dragged', description: 'The DETAIL plane dragged away from its link: it stays where it was dropped, on a leash to the link.', query: {}, steps: [{ kind: 'clickLink', plane: '/geometry', route: '/geometry/detail' }, { kind: 'move', plane: '/geometry/detail', deltaX: -340, deltaY: 220 }], viewpoints: [ORBIT], expect: { planes: 6, overlap: 'expected', links: false } },
     { name: 'palette-open', title: 'The command palette', description: 'The palette open over the space: every command that applies, the bookmarks, every plane.', query: {}, steps: [{ kind: 'key', press: 'ControlOrMeta+KeyK' }], viewpoints: [FRONT], expect: { planes: 5, links: false, minimap: false } },
     { name: 'media', title: 'Media plane', description: 'A consumer-built media plane beside the panels.', query: { media: '1' }, viewpoints: [FRONT], expect: { planes: 6 } },
@@ -137,6 +173,21 @@ export const FIXTURES: readonly FixtureDefinition[] = [
     { name: 'page-revealed-paper', title: 'A page revealed, the paper look', description: 'The revealed page under the paper look: the rail, the toolbar and the cube on light tokens over a dark site.', query: { presentation: 'page', pages: '1', look: 'paper' }, viewpoints: [REVEALED], expect: { planes: 1 } },
     { name: 'columns-headless', title: 'Columns, headless', description: 'No engine chrome at all (`chrome: none`): the planes, their links and the space; every key and topic still works.', query: { chrome: 'none' }, viewpoints: [FRONT], expect: { planes: 5, minimap: false } },
     { name: 'empty', title: 'Empty', description: 'No roots: the empty state.', query: { empty: '1' }, viewpoints: [FRONT], expect: { planes: 0, minimap: false, links: false } },
+    /*
+        THE BUS SHAPE: what a route-driven product mounts. An empty view, the roots through
+        `view.setPlanes`, every child through `space.spawnPlane`, no plane bar. These are the
+        pictures dechat is made of, and until 2026-09-16 the harness had none of them: a branch
+        at 90° was asserted as `overlap: expected` and never as READABLE.
+    */
+    { name: 'bus-root', title: 'Bus: a root', description: 'The route-driven shape: an empty view, one root through view.setPlanes, no plane bar.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry'] }], viewpoints: [FRONT], expect: { planes: 1, links: false, visible: [{ route: '/geometry', minWidth: 300 }] } },
+    { name: 'bus-branch', title: 'Bus: a branch', description: 'A child spawned through space.spawnPlane and the space fitted: parent and child both read from the one camera.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry'] }, { kind: 'spawn', plane: '/geometry', route: '/geometry/detail' }], viewpoints: [FIT, ORBIT], expect: { planes: 2, links: false, visible: [{ route: '/geometry', minWidth: 250, unoccluded: true }, { route: '/geometry/detail', minWidth: 250, unoccluded: true }] } },
+    { name: 'bus-fan-3', title: 'Bus: a fan of three', description: 'Three children spawned from one parent (a fan-out): three planes, side by side, none over another.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry'] }, { kind: 'spawn', plane: '/geometry', route: '/material' }, { kind: 'spawn', plane: '/geometry', route: '/topology' }, { kind: 'spawn', plane: '/geometry', route: '/tessellation' }], viewpoints: [FIT], expect: { planes: 4, links: false, visible: [{ route: '/material', minWidth: 140, unoccluded: true }, { route: '/topology', minWidth: 140, unoccluded: true }, { route: '/tessellation', minWidth: 140, unoccluded: true }] } },
+    { name: 'bus-chain-3', title: 'Bus: a chain of three', description: 'A child, its child, and its child, spawned through the bus and fitted: a receding staircase, every step readable, none mirrored.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry'] }, { kind: 'spawn', plane: '/geometry', route: '/geometry/detail' }, { kind: 'spawn', plane: '/geometry/detail', route: '/geometry/detail/mesh' }, { kind: 'spawn', plane: '/geometry/detail/mesh', route: '/geometry/detail/mesh/edges' }], viewpoints: [FIT, ORBIT], expect: { planes: 4, links: false, visible: [{ route: '/geometry/detail', minWidth: 160, unoccluded: true }, { route: '/geometry/detail/mesh', minWidth: 160, unoccluded: true }, { route: '/geometry/detail/mesh/edges', minWidth: 160, unoccluded: true }] } },
+    // the branch READS here; it stands behind the NEXT root, because a column layout spaces roots
+    // by 80px and a fin reaches 560 back: a product that lays roots out itself gives a root with
+    // branches that room (dechat's tidy, on `engine-next`)
+    { name: 'bus-tidy', title: 'Bus: two roots and a branch, fitted', description: 'Two roots through the bus and a branch off the first, then a fit: the fit turns to where every plane reads, not to the front.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry', '/transform'] }, { kind: 'spawn', plane: '/geometry', route: '/geometry/detail' }, { kind: 'publish', topic: 'space.fitToView', data: { animate: false } }], viewpoints: [FIT], expect: { planes: 3, links: false, visible: [{ route: '/geometry', minWidth: 200 }, { route: '/transform', minWidth: 200 }, { route: '/geometry/detail', minWidth: 200 }] } },
+    { name: 'bus-describe', title: 'Bus: describe', description: 'A product asks the space to describe itself through the bus and is answered on space.changed.', query: { bus: '1' }, steps: [{ kind: 'setPlanes', view: ['/geometry'] }, { kind: 'publish', topic: 'space.describe', data: { token: 'rt-describe' } }], viewpoints: [FRONT], expect: { planes: 1, links: false, changed: ['describe'] } },
 ];
 
 export const fixtureByName = (

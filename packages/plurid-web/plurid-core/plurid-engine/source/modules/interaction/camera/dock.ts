@@ -78,20 +78,29 @@ export const dockGeometry = (
     };
 };
 
+/** `fill`: the box fills the view along the tighter dimension; `natural`: that, capped at 1. */
+export type DockScaleMode =
+    | 'fill'
+    | 'natural';
+
 /**
  * The scale a plane is read at: its box filling the view along the tighter dimension (1 for a
- * view-sized page), clamped to the zoom limits so the pose is always reachable.
+ * view-sized page), clamped to the zoom limits so the pose is always reachable. `natural` caps
+ * the fill at 1, so a plane smaller than the view is read at its own size, centred, rather than
+ * magnified (a 460px card on an 800px view used to dock at 1.39).
  */
 export const dockScale = (
     plane: PlaneGeometry,
     view: ViewSize,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    mode: DockScaleMode = 'fill',
 ): number => {
     if (!(plane.width > 0) || !(plane.height > 0) || !(view.width > 0) || !(view.height > 0)) {
         return 1;
     }
     const fill = Math.min(view.width / plane.width, view.height / plane.height);
-    return Math.min(limits.zoomMax, Math.max(limits.zoomMin, fill));
+    const wanted = mode === 'natural' ? Math.min(1, fill) : fill;
+    return Math.min(limits.zoomMax, Math.max(limits.zoomMin, wanted));
 };
 
 
@@ -101,6 +110,7 @@ export const dockPose = (
     plane: PlaneGeometry,
     view: ViewSize,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    mode: DockScaleMode = 'fill',
 ): CameraState => clampCamera(
     {
         ...camera,
@@ -109,7 +119,7 @@ export const dockPose = (
         pitch: 0 - plane.location.rotateX,
         // a page is read LEVEL: every framing the engine computes lands the horizon at 0
         roll: 0,
-        scale: dockScale(plane, view, limits),
+        scale: dockScale(plane, view, limits, mode),
         pivot: planeCenter(plane),
         offset: { x: 0, y: 0, z: 0 },
     },
@@ -138,8 +148,9 @@ export const isDocked = (
     epsilon = 0.5,
     matrix = cameraMatrix(camera, view),
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    mode: DockScaleMode = 'fill',
 ): boolean => {
-    if (Math.abs(camera.scale - dockScale(plane, view, limits)) > DOCK_TOLERANCE) {
+    if (Math.abs(camera.scale - dockScale(plane, view, limits, mode)) > DOCK_TOLERANCE) {
         return false;
     }
     if (angleDistance(camera.yaw, -plane.location.rotateY) > DOCK_TOLERANCE) {
@@ -188,13 +199,14 @@ export const findDockedPlane = (
     fallback: DockFallbackSize,
     epsilon = 0.5,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    mode: DockScaleMode = 'fill',
 ): string => {
     // every plane has its own fill scale, so the scalar test is per plane (it is the first line of
     // `isDocked`, before any projection)
     const matrix = cameraMatrix(camera, view);
     let found = '';
     walkShown(planes, (plane) => {
-        if (isDocked(camera, dockGeometry(plane, fallback), view, epsilon, matrix, limits)) {
+        if (isDocked(camera, dockGeometry(plane, fallback), view, epsilon, matrix, limits, mode)) {
             found = plane.planeID;
             return true;
         }

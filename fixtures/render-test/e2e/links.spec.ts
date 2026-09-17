@@ -136,8 +136,9 @@ test.describe('links and tree', () => {
         // stacked links → stacked children (the y of each link), same bridge and fan
         expect(Math.abs(material.location.translateY - topology.location.translateY)).toBeGreaterThan(8);
         expect(material.bridgeLength).toBe(160);
-        expect(material.planeAngle).toBe(90);
-        expect(material.location.rotateY).toBeCloseTo(geometry.location.rotateY + 90, 6);
+        // 90.1, never 90: a tenth of a degree past perpendicular keeps every quad a quad
+        expect(material.planeAngle).toBe(90.1);
+        expect(material.location.rotateY).toBeCloseTo(geometry.location.rotateY + 90.1, 6);
         for (const child of [material, topology]) {
             const expected = expectedChildLocation(geometry.location, child.linkCoordinates, child.bridgeLength, child.planeAngle, child.bridgeSide, child.width, child.bridgeOffset);
             expect(child.location.translateX).toBeCloseTo(expected.translateX, 3);
@@ -195,8 +196,10 @@ test.describe('links and tree', () => {
         }
     });
 
-    test('a 3-deep chain turns 90° right every generation, each behind its parent (the fixed fan)', async ({ page }) => {
-        await openHarness(page, '?nested=3&reducedMotion=1');
+    test('a 3-deep chain turns 90° right every generation, each behind its parent (the fixed fan, the objects preset)', async ({ page }) => {
+        // the objects preset: the geometry every release before 2026-09 had; the default now
+        // alternates (`nested-chain-3` and `bus-chain-3` are its pictures)
+        await openHarness(page, '?nested=3&reducedMotion=1&bridge=objects');
         const root = rootByRoute(await tree(page), '/geometry');
 
         await clickLink(page, root.planeID, '/chain-1');
@@ -425,8 +428,13 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
         expect(rect.right).toBeLessThanOrEqual(view.left + view.width + 1);
         expect(rect.top).toBeGreaterThanOrEqual(view.top - 1);
         expect(rect.bottom).toBeLessThanOrEqual(view.top + view.height + 1);
-        expect(Math.abs((rect.left + rect.right) / 2 - center.x)).toBeLessThanOrEqual(12);
-        expect(Math.abs((rect.top + rect.bottom) / 2 - center.y)).toBeLessThanOrEqual(12);
+        // framed WITH its parent (`childFraming: 'pair'`): the pair's middle is at the view
+        // centre, the child on one side of it and wholly in view, the parent on the other
+        const pairParent = (await planeRect(page, root.planeID))!;
+        expect(pairParent.left).toBeGreaterThanOrEqual(view.left - 1);
+        expect(pairParent.right).toBeLessThanOrEqual(view.left + view.width + 1);
+        expect(Math.abs(((rect.left + rect.right) / 2 + (pairParent.left + pairParent.right) / 2) / 2 - center.x)).toBeLessThanOrEqual(view.width / 4);
+        expect(Math.abs((rect.top + rect.bottom) / 2 - center.y)).toBeLessThanOrEqual(view.height / 4);
 
         // the child's stored coordinates are the link's CURRENT measurement, not the narrow one
         const reopened = findPlane(await tree(page), child.planeID);
@@ -444,7 +452,9 @@ test.describe('reopen, close and the camera (the hypod issue)', () => {
             }
             return { x: left + link.offsetWidth, y: top + link.offsetHeight / 2 };
         }, { planeID: root.planeID, route: '/geometry/detail' });
-        expect(Math.abs(reopened.linkCoordinates.x - measured.x)).toBeLessThanOrEqual(2);
+        // the edge anchor: the stored x is the parent's right edge, the y the link's CURRENT height
+        expect(reopened.bridgeAnchor).toBe('edge');
+        expect(Math.abs(reopened.linkCoordinates.x - findPlane(await tree(page), root.planeID).width)).toBeLessThanOrEqual(2);
         expect(Math.abs(reopened.linkCoordinates.y - measured.y)).toBeLessThanOrEqual(2);
 
         // close again without options: the parent comes back into view, centred

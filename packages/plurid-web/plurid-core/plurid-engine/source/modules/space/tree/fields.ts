@@ -111,25 +111,51 @@ export const updateTreePlaneFields = (
 };
 
 
+const linkIndexes = new WeakMap<TreePlane[], Map<string, TreePlane>>();
+
+const linkKey = (
+    parentPlaneID: string,
+    linkID: string,
+): string => parentPlaneID + '#' + linkID;
+
+/**
+ * Every spawned plane by its parent and its link's stable id, built ONCE per tree reference: the
+ * tree is structurally shared, so an unchanged tree keeps its index and a page of two hundred
+ * links asks two hundred questions of one map rather than walking the tree two hundred times.
+ */
+export const linkIndexOf = (
+    tree: TreePlane[],
+): Map<string, TreePlane> => {
+    const cached = linkIndexes.get(tree);
+    if (cached) {
+        return cached;
+    }
+
+    const index = new Map<string, TreePlane>();
+    const walk = (planes: TreePlane[]) => {
+        for (const plane of planes || []) {
+            if (!plane) {
+                continue;
+            }
+            for (const child of plane.children || []) {
+                if (child?.spawnedByLinkID && !index.has(linkKey(plane.planeID, child.spawnedByLinkID))) {
+                    index.set(linkKey(plane.planeID, child.spawnedByLinkID), child);
+                }
+            }
+            walk(plane.children || []);
+        }
+    };
+    walk(tree);
+    linkIndexes.set(tree, index);
+    return index;
+};
+
 /** The plane a link spawned, by the link's stable id, among the parent's children. */
 export const findPlaneByLinkID = (
     tree: TreePlane[],
     parentPlaneID: string,
     linkID: string,
-): TreePlane | undefined => {
-    for (const plane of tree) {
-        if (plane.planeID === parentPlaneID) {
-            return (plane.children || []).find((child) => child.spawnedByLinkID === linkID);
-        }
-        if (plane.children && plane.children.length > 0) {
-            const found = findPlaneByLinkID(plane.children, parentPlaneID, linkID);
-            if (found) {
-                return found;
-            }
-        }
-    }
-    return undefined;
-};
+): TreePlane | undefined => linkIndexOf(tree).get(linkKey(parentPlaneID, linkID));
 
 
 /** Drop the links whose endpoints are no longer in the tree. Same reference when nothing dangles. */
@@ -196,7 +222,8 @@ export interface Leash {
 /**
  * The leashes to draw: every SHOWN child moved by hand (`manuallyPositioned`) that still hangs from
  * a link (`linkCoordinates`) under a shown parent — its bridge band would point nowhere, a segment
- * from the link's point to the child's edge is drawn instead.
+ * from the link's point to the child's edge is drawn instead — and every child whose bridge is a
+ * leash by kind (`bridgeKind: 'leash'`: a later sibling of a fan, whose strip would cross its elders).
  */
 export const collectLeashes = (
     tree: TreePlane[],
@@ -207,7 +234,7 @@ export const collectLeashes = (
             continue;
         }
         for (const child of parent.children) {
-            if (child.show !== false && child.manuallyPositioned && child.linkCoordinates) {
+            if (child.show !== false && (child.manuallyPositioned || child.bridgeKind === 'leash') && child.linkCoordinates) {
                 into.push({ parent, child });
             }
         }
@@ -229,5 +256,71 @@ export const collectPlaneIDs = (
         }
     }
     return into;
+};
+
+
+/**
+ * IS THIS A TREE THE SPACE CAN HOLD. `view.setTree` used to hand whatever it was given to the
+ * store, and a malformed node threw inside a render, out of reach of the host that sent it.
+ * Every node needs an id, a route, a location of five finite numbers, and children that are an
+ * array of the same; sizes, when given, are finite numbers.
+ */
+export interface TreeValidation {
+    ok: boolean;
+    /** what was wrong with the first bad node, for the host's console */
+    reason?: string;
+}
+
+export const validateTree = (
+    tree: unknown,
+): TreeValidation => {
+    if (!Array.isArray(tree)) {
+        return { ok: false, reason: 'a tree is an array of planes' };
+    }
+
+    const finite = (value: unknown) => typeof value === 'number' && Number.isFinite(value);
+
+    const check = (nodes: unknown[], path: string): string | undefined => {
+        for (let index = 0; index < nodes.length; index += 1) {
+            const node = nodes[index] as Record<string, unknown> | null;
+            const where = path + '[' + index + ']';
+            if (!node || typeof node !== 'object') {
+                return where + ' is not a plane';
+            }
+            if (typeof node.planeID !== 'string' || !node.planeID) {
+                return where + ' has no planeID';
+            }
+            if (typeof node.route !== 'string' || !node.route) {
+                return where + ' (' + node.planeID + ') has no route';
+            }
+            const location = node.location as Record<string, unknown> | undefined;
+            if (!location || typeof location !== 'object') {
+                return where + ' (' + node.planeID + ') has no location';
+            }
+            for (const field of ['translateX', 'translateY', 'translateZ', 'rotateX', 'rotateY']) {
+                if (!finite(location[field])) {
+                    return where + ' (' + node.planeID + ') location.' + field + ' is not a finite number';
+                }
+            }
+            for (const field of ['width', 'height']) {
+                if (node[field] !== undefined && !finite(node[field])) {
+                    return where + ' (' + node.planeID + ') ' + field + ' is not a finite number';
+                }
+            }
+            if (node.children !== undefined) {
+                if (!Array.isArray(node.children)) {
+                    return where + ' (' + node.planeID + ') children is not an array';
+                }
+                const deeper = check(node.children, where + '.children');
+                if (deeper) {
+                    return deeper;
+                }
+            }
+        }
+        return undefined;
+    };
+
+    const reason = check(tree, 'tree');
+    return reason ? { ok: false, reason } : { ok: true };
 };
 // #endregion module

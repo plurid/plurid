@@ -106,6 +106,8 @@ const french: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ ou défilement vers le bas',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← ou défilement à gauche',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ ou défilement à droite',
+
+    spaceEmpty: 'aucun plan dans cet espace',
 };
 // #endregion module
 

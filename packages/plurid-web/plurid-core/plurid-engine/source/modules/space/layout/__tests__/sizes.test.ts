@@ -12,7 +12,15 @@
     import Tree from '../../tree/object';
     import {
         applyKnownSizes,
+        carryRootRuntime,
     } from '../../tree/logic';
+    import {
+        fallbackPlaneSize,
+    } from '../size';
+    import {
+        placedWidth,
+        placedHeight,
+    } from '../pitch';
     // #endregion imports
 
 
@@ -43,18 +51,20 @@ const compute = (configuration: PluridConfiguration, previousTree?: any[]) => ne
 describe('THE SIZING CONTRACT: the roots are placed by their known sizes', () => {
     it('measured heights from the previous tree set the row pitch; without them the fallback does', () => {
         const fresh = compute(columns());
-        // two columns of two: a, b in the first, c, d in the second; unmeasured → the view height
+        // two columns of two: a, b in the first, c, d in the second; unmeasured → the fallback
+        // height (a reading proportion of the width), never the view's 600
         expect(fresh[1].location.translateY).toBe(fresh[3].location.translateY);
+        expect(fresh[1].location.translateY).toBe(fallbackPlaneSize(columns(), view).height + ROOTS_GAP);
         const measured = fresh.map((root, index) => ({ ...root, width: 400, height: [300, 200, 500, 100][index] }));
         const laid = compute(columns(), measured);
         // row 0 is as tall as its tallest plane (c: 500), then the gap
         const pitch = laid[1].location.translateY;
         expect(pitch).toBe(500 + ROOTS_GAP);
         expect(laid[3].location.translateY).toBe(pitch);
-        // the placed roots carry the content-driven heights they were placed by; the width is the
-        // configured one (a measured width is an observation of it, stale after a resize)
+        // the placed roots keep every measurement; the PITCH was by the configured width (a measured
+        // width is an observation of it, stale after a resize): the columns did not move
         expect(laid[2].height).toBe(500);
-        expect(laid[0].width).toBe(0);
+        expect(laid[0].width).toBe(400);
         expect(laid[0].location.translateX).toBe(fresh[0].location.translateX);
         expect(laid[2].location.translateX).toBe(fresh[2].location.translateX);
     });
@@ -80,9 +90,21 @@ describe('THE SIZING CONTRACT: the roots are placed by their known sizes', () =>
         expect(sized[0]).toBe(fresh[0]);
         // the previous `b` matches `b`, not `a`; nothing configured: both dimensions are the content's
         expect(sized[1]).toMatchObject({ width: 123, height: 45 });
-        // a configured height makes the measured one an observation: not copied
-        const configured = applyKnownSizes(fresh, [{ ...fresh[1], width: 123, height: 45 }], { width: 300, height: 200 });
-        expect(configured[1]).toBe(fresh[1]);
+        // one rule with the store's carry (`carryRootRuntime`): a node keeps what is known of it
+        expect(carryRootRuntime({ ...fresh[1], width: 123, height: 45 }, fresh[1])).toEqual({ width: 123, height: 45 });
+        expect(carryRootRuntime({ ...fresh[1], width: 123, height: 45 }, { ...fresh[1], width: 700, height: 0 })).toEqual({ width: 700, height: 45 });
+        expect(carryRootRuntime({ ...fresh[1], width: 123, height: 45, sizeMode: 'manual' }, { ...fresh[1], width: 700, height: 1 })).toEqual({ width: 123, height: 45 });
+    });
+
+    it('a layout pitches by the configuration where it speaks and by the measurement where it does not', () => {
+        const measured = { ...compute(columns())[0], width: 400, height: 300 };
+        expect(placedWidth(measured, 0)).toBe(400);
+        expect(placedWidth(measured, 500)).toBe(0);
+        expect(placedHeight(measured, 0)).toBe(300);
+        expect(placedHeight(measured, 700)).toBe(0);
+        // a declared or hand-set size is the plane's own, whatever the configuration says
+        expect(placedWidth({ ...measured, sizeMode: 'declared' }, 500)).toBe(400);
+        expect(placedHeight({ ...measured, sizeMode: 'manual' }, 700)).toBe(300);
     });
 
     it('sheaves ignore the sizes by design', () => {

@@ -196,9 +196,9 @@ describe('computeSpaceTree', () => {
         expect(after[1].location.translateY).toBeGreaterThanOrEqual(after[0].location.translateY + 620);
         expect(after[1].location.translateY).toBeLessThan(after[0].location.translateY + 620 + 200);
 
-        // A MEASURED WIDTH IS NOT CARRIED: it is an observation OF the configured width, and copying
-        // it forward would freeze a stale view's geometry into the next layout (the sizing contract).
-        expect(after[0].width).toBe(0);
+        // the measured width is the node's too (one carry rule); the LAYOUT pitched by the configured
+        // width, so a stale observation never freezes the next grid
+        expect(after[0].width).toBe(400);
     });
 });
 // #endregion module

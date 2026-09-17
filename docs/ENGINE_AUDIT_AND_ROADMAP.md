@@ -1,6 +1,6 @@
 # Plurid Engine Audit and Roadmap
 
-Status: **active engineering ledger, re-verified 2026-07-13**.
+Status: **active engineering ledger, re-verified 2026-09-17** (the P0 items below are delivered; the verification chain is `pnpm verify`).
 
 This document records what remains after the June/July modernization. Historical implementation detail belongs in git history; live mechanics belong in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
@@ -29,17 +29,23 @@ The root build transpiles and emits declarations but is not a complete source ty
 
 **Done when:** a deliberately introduced source type error fails local `pnpm check` and CI without relying on a package build side effect.
 
+**Delivered (2026-09):** root `pnpm check` runs every live package's `tsc --noEmit` and is part of `pnpm verify`; a type error in any package fails it without a build.
+
 ### Add browser and visual regression coverage
 
 The render harness is interactive but not a standing browser suite. Automate the critical behaviors: mount, orbit/pan/zoom, viewcube, link spawn, selection, group movement, editor input arbitration, viewpoint restore, persistence, collaboration apply/no-echo, minimap navigation, and configurable UI slots.
 
 **Done when:** the suite runs headlessly in CI across at least desktop and mobile-sized viewports, detects blank rendering and geometry regressions, and retains diagnostic screenshots/traces on failure.
 
+**Delivered (2026-09):** `fixtures/render-test/e2e` (Playwright, chromium / firefox / webkit, 166 scenarios on chromium as of 2026-09-17: input, camera, links, selection, history, page presentation, palette, a11y, visual baselines per platform, the route-driven `bus-*` fixtures with `visible` and `changed` expectations); screenshots and traces kept on failure; `docs/HARNESS.md` generated from the flags and fixtures.
+
 ### Raise weak package tests
 
 Several utilities and the generator still have sanity-only tests. Coverage output on barrel files is not evidence of behavior. Add tests around package contracts, failure paths, and generated artifacts according to risk.
 
 **Done when:** a broken generator, persistence adapter, route parser, or server lifecycle behavior produces a focused test failure.
+
+**Delivered (2026-09):** measured coverage floors that only move up (react 61/61/69/69, engine 78/85/86/87, data 95/95/85/85 as branches/functions/lines/statements), and every gate of the 2026-09-16 pass recorded with the mutation that made it fail (dechat's `docs/BUGS_2026-09-16.md`).
 
 ## P1: Establish and raise the large-space ceiling
 
@@ -151,24 +157,12 @@ Open questions include DOM overlay versus texture rendering, accessibility and t
 
 ## Required verification commands
 
-Today:
+One command, the chain every release runs (`package.json`):
 
 ```bash
-pnpm build
-pnpm test
-pnpm lint
-pnpm --filter @plurid/plurid-react check
+pnpm verify
+# = pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm size
+#   && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack
 ```
 
-Target:
-
-```bash
-pnpm build
-pnpm check
-pnpm test
-pnpm lint
-pnpm test:browser
-pnpm size
-```
-
-The target commands are roadmap contracts, not claims that those root scripts already exist.
+`docs.tables.check` refuses a stale generated table (`SHORTCUTS.md`, `CHANGES.md`, `HARNESS.md`, `LOOKS.md`: `node scripts/generate-tables.mjs` after a data build); `size` holds the bundle budgets; `smoke.pack` packs and installs the packages as a consumer would. The visual baselines are per platform: the linux ones are regenerated in the pinned Playwright container, never on a Mac.

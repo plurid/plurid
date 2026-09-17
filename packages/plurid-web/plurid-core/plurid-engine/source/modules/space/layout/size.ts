@@ -50,6 +50,24 @@ const resolveDimension = (
     }
     return configured * viewExtent;
 };
+
+/**
+ * THE SIZE AN UNMEASURED PLANE IS PLACED AT: the configured width, and where the configuration
+ * leaves the height to the content, a reading proportion of the width (0.7, at least 200). The
+ * layouts used to pitch an unmeasured root by the VIEW's height (840 on a server), so a space
+ * booted with its rows a screen apart and jumped when the first measurement came in.
+ */
+export const fallbackPlaneSize = (
+    configuration: PluridConfiguration,
+    view: ViewSize,
+): { width: number; height: number } => {
+    const configured = configuredPlaneSize(configuration, view);
+    return {
+        width: configured.width,
+        height: configured.height || Math.max(200, Math.round(configured.width * 0.7)),
+    };
+};
+
 // #endregion module
 
 

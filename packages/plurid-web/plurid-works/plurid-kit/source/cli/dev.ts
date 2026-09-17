@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
     import { spawn, type ChildProcess } from 'child_process';
+    import { join } from 'path';
 
     import * as esbuild from 'esbuild';
     // #endregion libraries
@@ -24,9 +25,10 @@
         DEFAULT_DEV_PORT,
     } from './environment';
 
-    import {
-        createRestarter,
+    import {        createRestarter,
         isPortFree,
+        claimPidfile,
+        releasePidfile,
     } from './process';
     // #endregion internal
 // #endregion imports
@@ -91,6 +93,16 @@ export async function dev(
 
     const link = `http://localhost:${port}`;
 
+    // ONE dev per root: an earlier one still running here is replaced (a stale watcher rebuilding
+    // the tree behind a live one served what the live one had just replaced), a dead one's file cleared
+    const pidfile = join(paths.buildDir, 'dev.pid');
+    const claim = await claimPidfile(pidfile, process.pid);
+    if (claim.replaced) {
+        process.stdout.write(`[plurid dev] replaced the earlier dev on this root (pid ${claim.replaced})\n`);
+    }
+    const release = () => releasePidfile(pidfile, process.pid);
+    process.once('exit', release);
+
     if (!(await isPortFree(Number(port)))) {
         process.stderr.write(`[plurid dev] port ${port} is already in use — stop the other server or pass --port <n>\n`);
         process.exit(1);
@@ -151,6 +163,7 @@ export async function dev(
             await restarter.stop();
             await clientContext.dispose();
             await serverContext.dispose();
+            release();
             process.exit(0);
         };
         process.once('SIGINT', shutdown);

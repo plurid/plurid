@@ -65,6 +65,21 @@ export interface TransformSelectedPlanesPayload {
     deltaZ?: number;
 }
 
+/** `space.movePlanes`: the ones named or the selection, in world or plane axes, pinned only when asked. */
+export interface MovePlanesPayload {
+    planeIDs?: string[];
+    deltaX?: number;
+    deltaY?: number;
+    deltaZ?: number;
+    frame?: 'world' | 'plane';
+    pinned?: boolean;
+}
+
+export interface SetPlanePinnedPayload {
+    planeID: string;
+    pinned: boolean;
+}
+
 export interface ZoomAtPointPayload {
     /** Multiplicative zoom factor (preferred). */
     factor?: number;

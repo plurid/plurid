@@ -26,10 +26,12 @@
  */
 export interface PendingPlane {
     token: string;
-    /** the route asked for, matched loosely (a host publishes a path, the tree holds an absolute route) */
+    /** the route asked for: a path, matched EXACTLY against the tree's absolute routes */
     route: string;
     /** every planeID that existed when the command was published */
     known: Set<string>;
+    /** the planeIDs that existed HIDDEN when the command was published: one of them shown again is an answer too */
+    hidden?: Set<string>;
     /** how many tree changes may pass before the request is abandoned */
     remaining: number;
 }
@@ -44,6 +46,30 @@ export interface PendingPlane {
  * no registered plane never arrives, and its request must not be kept forever.
  */
 export const PENDING_TREE_CHANGES = 4;
+
+
+/** Every planeID in a tree that is put away (`show: false`), roots and children alike. */
+export const hiddenPlaneIDsOf = (
+    tree: TreePlane[],
+): Set<string> => {
+    const ids = new Set<string>();
+
+    const walk = (planes: TreePlane[]) => {
+        for (const plane of planes || []) {
+            if (!plane?.planeID) {
+                continue;
+            }
+            if (plane.show === false) {
+                ids.add(plane.planeID);
+            }
+            walk(plane.children || []);
+        }
+    };
+
+    walk(tree || []);
+
+    return ids;
+};
 
 
 /** Every planeID in a tree, roots and children alike. */
@@ -123,14 +149,32 @@ export const planeParameters = (
 ): Record<string, string> => parametersOf(planeOf(tree, planeID));
 
 
-/** Does a tree plane's absolute route answer to the (possibly relative) route asked for. */
+/** `plurid://host/thread/1` -> `/thread/1`; a path is left alone; a query or a fragment dropped. */
+const pathOf = (
+    route: string,
+): string => {
+    const marker = route.indexOf('://');
+    let path = route;
+    if (marker !== -1) {
+        const rest = route.slice(marker + 3);
+        const slash = rest.indexOf('/');
+        path = slash === -1 ? '/' : rest.slice(slash);
+    }
+    return path.split(/[?#]/)[0] || '/';
+};
+
+/**
+ * Does a tree plane's absolute route answer to the route asked for: the same absolute route, the
+ * same source, or the SAME PATH. Exactly the same, not a suffix: `/thread/1` used to answer for
+ * `/other/thread/1`, and a product with two routes ending alike was told the wrong plane.
+ */
 const answersTo = (
     plane: TreePlane,
     route: string,
 ) => !route
     || plane.route === route
     || plane.sourceID === route
-    || plane.route.endsWith(route);
+    || pathOf(plane.route) === pathOf(route);
 
 
 /**
@@ -160,10 +204,13 @@ export const resolvePending = (
     const present = planeIDsOf(tree);
 
     for (const request of pending) {
+        // a plane that was not there, or one that was there put away and is shown again: both are
+        // what the host asked for, and until 2026-09-16 only the first was answered
         const appeared = [...present]
-            .filter((planeID) => !request.known.has(planeID))
+            .filter((planeID) => !request.known.has(planeID) || request.hidden?.has(planeID))
             .map((planeID) => planeOf(tree, planeID))
             .filter((plane): plane is TreePlane => !!plane)
+            .filter((plane) => !request.hidden?.has(plane.planeID) || plane.show !== false)
             .filter((plane) => answersTo(plane, request.route));
 
         if (appeared.length > 0) {

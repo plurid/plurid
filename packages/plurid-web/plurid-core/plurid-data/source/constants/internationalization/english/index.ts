@@ -106,6 +106,8 @@ const english: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ or scroll down',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← or scroll left',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ or scroll right',
+
+    spaceEmpty: 'no planes in this space',
 };
 // #endregion module
 

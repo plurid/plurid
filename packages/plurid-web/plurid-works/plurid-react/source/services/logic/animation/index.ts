@@ -40,24 +40,32 @@ export interface NavigatePlaneOptions {
     animate?: boolean;
     /** Frame again once the plane's first measurement lands (a plane that (re)opens with a stale size). */
     awaitMeasure?: boolean;
+    /** Frame the plane with its parent (`true`) or alone (`false`); unset: as `navigation.childFraming` says. */
+    pair?: boolean;
 }
 
 
 export const navigatePlane = (
     plane: TreePlane,
     options: NavigatePlaneOptions = {},
-): CameraThunk => (dispatch) => {
+): CameraThunk => (dispatch, getState) => {
     const {
         deisolate = true,
         animate = true,
         awaitMeasure = false,
     } = options;
 
+    // A CHILD IS FRAMED WITH ITS PARENT (`navigation.childFraming: 'pair'`): a branch at 90.1°
+    // framed face-on leaves the plane it came from edge-on, and the reader with no way back.
+    const pair = !!plane.parentPlaneID
+        && (options.pair ?? ((getState().configuration.space.navigation?.childFraming ?? 'pair') === 'pair'));
+
     // Focus follows the landing (the motion controller's settle), not a timer: an interrupted
     // move never steals the focus later, and an instant dock focuses at once. In the page
     // presentation the docked page focuses its own scroller as well (`Plane`, `docking.focus`).
     dispatch(framePlaneNode(plane, animate, {
         awaitMeasure,
+        pair,
         onSettle: () => {
             focusPluridPlaneAnchor(plane.planeID);
         },
@@ -83,7 +91,7 @@ export const navigateToPluridPlane = (
     plane: TreePlane | undefined,
     event?: React.MouseEvent,
     deisolate: boolean = true,
-    options: Pick<NavigatePlaneOptions, 'awaitMeasure'> = {},
+    options: Pick<NavigatePlaneOptions, 'awaitMeasure' | 'pair'> = {},
 ) => {
     if (event && (event.ctrlKey || event.metaKey)) {
         // Only navigate at pure link click.
@@ -137,6 +145,29 @@ export const focusActivePlane = (
         activePlane,
         event,
         deisolate,
+    );
+}
+
+
+/** Frame a plane by its id, the way the active one is framed: the one under the keyboard's focus. */
+export const focusPlaneByID = (
+    dispatch: ThunkDispatch<{}, {}, AnyAction>,
+    state: AppState,
+    planeID: string,
+) => {
+    const plane = space.tree.logic.getTreePlaneByID(
+        state.space.tree,
+        planeID,
+    );
+    if (!plane) {
+        return;
+    }
+
+    navigateToPluridPlane(
+        dispatch,
+        plane,
+        undefined,
+        false,
     );
 }
 

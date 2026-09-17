@@ -13,6 +13,33 @@
  * The size of each group (a column or a row) of a grid: the largest plane in it, a plane without
  * that dimension counting as `fallback`. A group with no plane stays 0.
  */
+/**
+ * The width a layout PLACES a root by: a hand-set or declared width is the plane's own; a measured
+ * one counts only where the configuration leaves the width to the content (`configuredWidth` 0),
+ * since where the configuration sets it the measurement is an observation of THAT, made for the
+ * previous view. 0 means "the fallback".
+ */
+export const placedWidth = (
+    root: TreePlane,
+    configuredWidth: number,
+): number => {
+    if (root.sizeMode === 'manual' || root.sizeMode === 'declared') {
+        return root.width || 0;
+    }
+    return configuredWidth > 0 ? 0 : (root.width || 0);
+};
+
+/** The height a layout places a root by (see `placedWidth`). */
+export const placedHeight = (
+    root: TreePlane,
+    configuredHeight: number,
+): number => {
+    if (root.sizeMode === 'manual' || root.sizeMode === 'declared') {
+        return root.height || 0;
+    }
+    return configuredHeight > 0 ? 0 : (root.height || 0);
+};
+
 export const groupSizes = (
     roots: TreePlane[],
     groups: number,

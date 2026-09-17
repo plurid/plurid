@@ -96,6 +96,8 @@ const internationalizationFields = {
     toolbarDrawerShortcutsArrowOrScrollDown: 'toolbarDrawerShortcutsArrowOrScrollDown',
     toolbarDrawerShortcutsArrowOrScrollLeft: 'toolbarDrawerShortcutsArrowOrScrollLeft',
     toolbarDrawerShortcutsArrowOrScrollRight: 'toolbarDrawerShortcutsArrowOrScrollRight',
+
+    spaceEmpty: 'spaceEmpty',
 } as const;
 // #endregion module
 

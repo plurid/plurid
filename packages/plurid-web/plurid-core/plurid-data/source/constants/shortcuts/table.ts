@@ -42,7 +42,7 @@ export interface PluridShortcutDefinition {
     group: PluridShortcutGroup;
     label: string;
     /** Only active in this mode. */
-    when?: 'firstPerson' | 'grabMode' | 'page';
+    when?: 'firstPerson' | 'grabMode' | 'transformMode' | 'page';
 }
 
 
@@ -51,6 +51,7 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     { id: 'grabMode', code: 'KeyG', kind: 'press', group: 'navigate', label: 'Grab once: the next drag orbits anywhere (the release ends it; G again or Esc cancels)' },
     { id: 'grabHold', code: 'Space', kind: 'hold', group: 'navigate', label: 'Hold to navigate (orbit anywhere)' },
     { id: 'exitGrabMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Exit grab mode', when: 'grabMode' },
+    { id: 'exitTransformMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Leave the rotate, move or scale mode', when: 'transformMode' },
     { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'The docked plane: on a spawned page, its parent; on a plane read as a page (the space presentation), reveal the space; in the page presentation, from the space, dock the nearest page' },
     { id: 'fitToView', code: 'Digit0', keys: ['0'], kind: 'press', group: 'navigate', label: 'Frame everything' },
     { id: 'home', code: 'Home', kind: 'press', group: 'navigate', label: 'Home viewpoint' },
@@ -64,6 +65,7 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     { id: 'duplicateSelection', code: 'KeyD', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'navigate', label: 'Duplicate the selected planes' },
     { id: 'frameSelection', code: 'Period', keys: ['.'], kind: 'press', group: 'navigate', label: 'Frame the selection' },
     { id: 'undo', code: 'KeyZ', modifiers: { ctrlOrMeta: true }, kind: 'press', group: 'navigate', label: 'Undo (+ Shift: redo)' },
+    { id: 'redo', code: 'KeyZ', modifiers: { ctrlOrMeta: true, shift: true }, kind: 'press', group: 'navigate', label: 'Redo' },
     { id: 'clearSelection', code: 'Escape', kind: 'press', group: 'navigate', label: 'Clear the selection' },
 
     // fly

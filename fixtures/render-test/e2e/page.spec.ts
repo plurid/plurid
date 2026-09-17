@@ -37,6 +37,7 @@ import {
     BootFrame,
     HarnessWindow,
     afterFrames,
+    pinch,
 } from './helpers';
 
 
@@ -142,15 +143,12 @@ test.describe('the page presentation', () => {
         expect(await dockedID(page)).toBe(contact.planeID);
     });
 
-    test('a pinch (Ctrl+wheel) undocks and the chrome appears; Escape docks the page back', async ({ page }) => {
+    test('a pinch undocks and the chrome appears; Escape docks the page back', async ({ page }) => {
         await openFixture(page, 'page-docked');
         const root = (await tree(page))[0];
         const view = await viewRect(page);
 
-        await page.mouse.move(view.left + view.width / 2, view.top + view.height / 2);
-        await page.keyboard.down('Control');
-        await page.mouse.wheel(0, 300);
-        await page.keyboard.up('Control');
+        await pinch(page, { x: view.left + view.width / 2, y: view.top + view.height / 2 }, 300);
         await settle(page);
         expect((await camera(page)).scale).toBeLessThan(0.99);
         expect(await dockedID(page)).toBeNull();
@@ -194,11 +192,12 @@ test.describe('the page presentation', () => {
         await settle(page);
         const about = (await tree(page))[0].children[0];
         expect(String(about.route).endsWith('/about')).toBe(true);
-        expect(Math.abs(about.location.rotateY)).toBeCloseTo(90, 6);
+        // the page spawned behind the site stands at 90.1° (never 90), and the camera docks on it
+        expect(Math.abs(about.location.rotateY)).toBeCloseTo(90.1, 6);
         expect(await dockedID(page)).toBe(about.planeID);
         const cam = await camera(page);
         expect(cam.scale).toBeCloseTo(1, 6);
-        expect(Math.abs(cam.yaw)).toBeCloseTo(90, 6);
+        expect(Math.abs(cam.yaw)).toBeCloseTo(90.1, 6);
         expectFills(await planeRect(page, about.planeID), view);
         await waitChromeHidden(page);
 
@@ -690,7 +689,8 @@ test.describe('the page presentation', () => {
         await settle(page);
         const about = byRoute(await tree(page), '/about');
         expect(await dockedID(page)).toBe(about.planeID);
-        await expect.poll(async () => (await planeRect(page, about.planeID)).width).toBe(900);
+        // to a hundredth: a page at 90.1° renders through a rotation whose cosine is not exact
+        await expect.poll(async () => Math.round((await planeRect(page, about.planeID)).width * 100) / 100).toBe(900);
         expectFills(await planeRect(page, about.planeID), await viewRect(page));
         expect((await camera(page)).scale).toBeCloseTo(1, 6);
         await waitChromeHidden(page);

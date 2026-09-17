@@ -101,6 +101,8 @@ the merge fails four, reversing the precedence fails the one about precedence) a
 
 `routes[].application` stays available for a genuine per-route override, and is not built yet.
 
+**Adopted by:** nobody yet (2026-09-17). dechat mounts `PluridRouterBrowser` with its own `pageConfiguration` and carries the `renderEmpty` / palette / controls workarounds the provider makes unnecessary; they go with the pin bump after the 2026-09 engine pass (dechat's `engine-next`).
+
 ### 2. Identity without the DOM — **DELIVERED 2026-09-14**
 
 `space.spawnPlane` and `view.addPlane` take an optional correlation token; `space.changed` kind
@@ -127,6 +129,8 @@ Held by `services/logic/correlation/__tests__` (15) and four round-trip tests th
 `View/hooks/__tests__/pubsub.test.tsx`, each proven to fail: silencing the answer fails three,
 removing the baseline diff fails the already-open case, reading the wrong division fails two.
 
+**Adopted by:** nobody yet (2026-09-17). dechat still waits on `whenPlaneSettles` and reads the DOM for a plane's id; `engine-next` replaces both with the token and `space.describe`. Since 2026-09-16 the token is answered exactly (the same path, never `/other/thread/1` for `/thread/1`) and by a plane put away and shown again.
+
 ### 3. Domain identity in observations — **PARTLY DELIVERED 2026-09-14**
 
 The `plane` observation carries `parameters`, and `planeParameters(tree, planeID)` / `parametersOf`
@@ -135,17 +139,35 @@ regex. What is still not done is putting `parameters` inline on `selection` / `t
 that changes the shape of observations consumers already parse, so it wants a deliberate version
 rather than being slipped in beside a fix.
 
-### 4. Portable arrangement as the supported persistence format
+**Adopted by:** nobody yet.
+
+### 4. Portable arrangement as the supported persistence format — **DELIVERED 2026-09-17**
 
 `fragmentOf` / `materializeFragment` are path-addressed and host-independent, and they already exist.
 Make them the documented way to persist and restore an arrangement — not just to copy one. Then
 `TreePlane.route` being absolute stops being a footgun for every host that stores a tree.
 
-### 5. Reading defaults, stated
+**What landed.** `fragmentOf`, `serializeFragment`, `parseFragment`, `materializeFragment` and the
+fragment types are exported from `@plurid/plurid-react` and documented in `CONTROL_SURFACE.md` (the
+clipboard section) as the persistence format; the fragment carries `show`, so a plane put away travels
+put away and comes back so.
+
+**Adopted by:** nobody yet. dechat persists its own arrangement (absolute routes, the trap the
+2026-09 spatial pass met); `engine-next` is where it moves to the fragment.
+
+### 5. Reading defaults, stated — **DELIVERED 2026-09-16**
 
 `planeAngle: 90` and `fitToView`-as-fill are object-space choices. Either ship a `reading` bridge
 preset or say so where a newcomer reads it. A text product should not have to discover geometry
 defaults by finding its own output illegible.
+
+**What landed.** `bridge.preset: 'reading'` IS the default (90.1 degrees, the fan alternating, the
+bridge from the parent's edge; `objects` is the old geometry in one word), the backface hidden, a
+spawn framing parent and child together from the yaw between them, and `fitToView` turning to the
+yaw that reads every plane widest (`fitYaw: 'best'`). `MIGRATION.md` states each default.
+
+**Adopted by:** nobody yet; the live blocker. dechat reads it only after the pin bump (until then it
+carries the no-travel interim and the zoom apologies on master).
 
 ### 6. The gate that would have caught all of it
 
@@ -153,6 +175,11 @@ Grow `RouterDemo` into a **peer** of the direct fixture and run the scenario cat
 Anything that works in one mount path and not the other is a seam bug, by definition. Start with the
 cases that failed here: open a second root plane; a render slot takes effect; an arrangement persists
 and restores; a spawned plane is addressable without the DOM.
+
+**Status (2026-09-17):** the harness runs the route-driven SHAPE (`?bus=1`: an empty view, roots
+through `view.setPlanes`, children through `space.spawnPlane` with tokens, no plane bar) through
+the six `bus-*` fixtures with `visible` and `changed` expectations, and the direct fixtures through
+the same catalog; the router peer scenarios are in `e2e/router.spec.ts` (see the harness docs).
 
 ## What this means for the products
 

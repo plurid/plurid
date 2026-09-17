@@ -2,6 +2,7 @@
     // #region libraries
     import {
         TRANSFORM_MODES,
+        PLURID_ATTRIBUTE_PLANE_ANCHOR,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -35,7 +36,18 @@ type EventOverrides = Partial<{
     ctrlKey: boolean;
     metaKey: boolean;
     composedPath: () => any[];
+    target: any;
 }>;
+
+/** a key from inside a plane's content: the target is under a `[data-plurid-plane]` */
+const insideContent = { id: '', hasAttribute: () => false, getAttribute: () => null, closest: (selector: string) => (selector === '[data-plurid-plane]' ? {} : null) };
+/** a key from a plane's focus anchor: the anchor names its plane in an attribute (the DOM id is a digest) */
+const focusAnchorOf = (planeID: string) => ({
+    id: 'plurid-digest-focus',
+    hasAttribute: (name: string) => name === PLURID_ATTRIBUTE_PLANE_ANCHOR,
+    getAttribute: (name: string) => (name === PLURID_ATTRIBUTE_PLANE_ANCHOR ? planeID : null),
+    closest: () => null,
+});
 
 const makeEvent = (over: EventOverrides = {}): KeyboardEvent => {
     const ev: any = {
@@ -95,6 +107,61 @@ const run = (
         prevented: (event as any).defaultPrevented as boolean,
     };
 }
+
+
+describe('the mode keys', () => {
+    it('R inside a plane\'s content is the page\'s: nothing runs, nothing is prevented', () => {
+        for (const code of ['KeyR', 'KeyT', 'KeyS', 'KeyF', 'Digit0']) {
+            const result = run(makeEvent({ code, target: insideContent }));
+            expect({ code, types: result.types, prevented: result.prevented }).toEqual({ code, types: [], prevented: false });
+        }
+        // and the selection keys the same
+        for (const code of ['KeyA', 'KeyI']) {
+            const result = run(makeEvent({ code, metaKey: true, target: insideContent }));
+            expect({ code, types: result.types }).toEqual({ code, types: [] });
+        }
+    });
+
+    it('a mode key toggles: R in rotation mode leaves it', () => {
+        const rotating = makeState();
+        rotating.configuration = { space: { transformMode: TRANSFORM_MODES.ROTATION } };
+        const result = run(makeEvent({ code: 'KeyR' }), { state: rotating });
+        expect(result.dispatched).toEqual([actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL)]);
+        const scaling = makeState();
+        scaling.configuration = { space: { transformMode: TRANSFORM_MODES.ROTATION } };
+        expect(run(makeEvent({ code: 'KeyS' }), { state: scaling }).dispatched)
+            .toEqual([actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.SCALE)]);
+    });
+
+    it('Escape leaves a transform mode, and is the selection\'s only when no mode is on', () => {
+        const rotating = makeState({ selectedPlaneIDs: ['/a'] });
+        rotating.configuration = { space: { transformMode: TRANSFORM_MODES.ROTATION } };
+        const result = run(makeEvent({ code: 'Escape' }), { state: rotating });
+        expect(result.dispatched).toEqual([actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL)]);
+        expect(result.prevented).toBe(true);
+    });
+
+    it('Enter on a plane\'s focus anchor frames THAT plane, not the active one', () => {
+        const state = makeState({
+            activePlaneID: 'plane-a',
+            tree: [
+                { planeID: 'plane-a', route: '/a', location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, children: [] },
+                { planeID: 'plane-b', route: '/b', location: { translateX: 500, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, children: [] },
+            ],
+        });
+        // from plane b's anchor: one navigation (a thunk), for b
+        const fromB = run(makeEvent({ code: 'Enter', target: focusAnchorOf('plane-b') }), { state });
+        expect(fromB.prevented).toBe(true);
+        expect(fromB.dispatched).toHaveLength(1);
+        expect(typeof fromB.dispatched[0]).toBe('function');
+        // from the anchor of a plane that is not there: nothing, though the ACTIVE plane could have been framed
+        const fromNowhere = run(makeEvent({ code: 'Enter', target: focusAnchorOf('plane-gone') }), { state });
+        expect(fromNowhere.dispatched).toHaveLength(0);
+        // from the view itself: the active plane
+        const fromView = run(makeEvent({ code: 'Enter' }), { state });
+        expect(fromView.dispatched).toHaveLength(1);
+    });
+});
 
 
 describe('handleGlobalShortcuts — default bindings (regression)', () => {

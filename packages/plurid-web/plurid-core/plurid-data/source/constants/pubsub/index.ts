@@ -112,8 +112,14 @@ export const PLURID_PUBSUB_TOPIC = {
     SPACE_SPAWN_PLANE: 'space.spawnPlane',
     /** Show or hide one plane (hiding records it as the last closed). */
     SPACE_SET_PLANE_SHOW: 'space.setPlaneShow',
-    /** Move planes by a world delta — the selection, or the ones named. */
+    /** Move planes: the ones named, or the selection; in world axes or the plane's own; pinned only when asked. */
     SPACE_MOVE_PLANES: 'space.movePlanes',
+    /** Pin a plane where it is (`manuallyPositioned`), or let the layout have it back. */
+    SPACE_PIN_PLANE: 'space.pinPlane',
+    /** Ask the space to describe itself: answered on `space.changed` kind `describe` with the inspection. */
+    SPACE_DESCRIBE: 'space.describe',
+    /** Take the keyboard focus off the space (the inverse of `space.focus`). */
+    SPACE_BLUR: 'space.blur',
     /** Resize one plane (`sizeMode: 'manual'` pins it against the layout). */
     SPACE_RESIZE_PLANE: 'space.resizePlane',
     /** Snap the selection to the grid / guides now. */
@@ -167,3 +173,28 @@ export type PluridPubSubTopic = typeof PLURID_PUBSUB_TOPIC;
 export type PluridPubSubTopicKeys = keyof typeof PLURID_PUBSUB_TOPIC;
 export type PluridPubSubTopicKeysType = typeof PLURID_PUBSUB_TOPIC[PluridPubSubTopicKeys];
 // #endregion module
+
+
+/**
+ * EVERY KIND A `space.changed` CAN CARRY, with what its `value` is. A runtime list so the docs
+ * table (`docs/CHANGES.md`) is generated from it and cannot drift from the type
+ * (`PluridChangeKind`, which a test holds equal to this list).
+ */
+export const PLURID_CHANGE_KINDS = [
+    ['selection', 'the selected plane ids, `string[]`'],
+    ['tree', 'the whole tree of planes, roots with their children (`TreePlane[]`)'],
+    ['links', 'the plane links (`PluridPlaneLink[]`)'],
+    ['activePlane', 'the active plane id, `\'\'` for none'],
+    ['isolate', 'the isolated plane id, `\'\'` for none'],
+    ['layoutResolved', 'the layout the roots were arranged by'],
+    ['loading', 'whether planes are still loading'],
+    ['history', 'the arrangement history: `{ canUndo, canRedo, undoDepth, redoDepth, past, future }`'],
+    ['motion', 'the camera\'s motion state: `idle`, `tween`, `gesture`, `fling`'],
+    ['bookmarks', 'the named viewpoints'],
+    ['docked', 'the page presentation: the docked page id, `\'\'` when the camera left the page'],
+    ['culling', 'the culling pass: `{ hidden, frozen, detached }` counts'],
+    ['plane', 'the answer to a `token`: `{ token, planeID, route, parameters, parentPlaneID }`'],
+    ['describe', 'the answer to `space.describe`: `{ token, inspection }`, the inspection as `api.inspect()` gives it'],
+    ['command', 'what a `space.command` did: `{ id, ran, reason }` (`unknown`, `disabled`, `needsKey`, `declined`)'],
+    ['focus', 'whether the keyboard focus is inside the space, `boolean`'],
+] as const;

@@ -117,6 +117,16 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     // would point nowhere, so the beams layer draws the segment from the link's point to the
     // child's edge instead (the Plane skips the band for a `manuallyPositioned` child).
     const leashes = useMemo(() => spaceEngine.tree.fields.collectLeashes(stateTree), [stateTree]);
+    // the geometry per leash is a function of the tree: memoised on it, not redone per render;
+    // ABOVE the early return below, so the hooks are the same on every render
+    const leashGeometry = useMemo(() => leashes.map(({ parent, child }) => ({
+        child,
+        ...computeEdgeTransform(
+            spaceEngine.location.linkWorldPoint(parent.location, child.linkCoordinates!),
+            spaceEngine.location.childLeashPoint(child),
+            LEASH_THICKNESS,
+        ),
+    })), [leashes]);
     // #endregion properties
 
 
@@ -125,15 +135,7 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         return null;
     }
 
-    const leashBeams = leashes.map(({ parent, child }) => {
-        const {
-            transform,
-            length,
-        } = computeEdgeTransform(
-            spaceEngine.location.linkWorldPoint(parent.location, child.linkCoordinates!),
-            spaceEngine.location.childLeashPoint(child),
-            LEASH_THICKNESS,
-        );
+    const leashBeams = leashGeometry.map(({ child, transform, length }) => {
         return (
             <StyledPluridPlaneLeash
                 key={'leash:' + child.planeID}

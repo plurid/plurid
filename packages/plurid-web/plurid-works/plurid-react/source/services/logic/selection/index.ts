@@ -72,28 +72,89 @@ export const planeWorldCenter = (
 
 
 /** The screen-space bounding rect of a plane's projected corners; `null` when any corner is behind the eye. */
-export const projectedPlaneRect = (
+/** A plane's four corners on screen, in order; null when any of them is behind the camera. */
+export const projectedPlaneCorners = (
     camera: CameraState,
     view: ViewSize,
     plane: TreePlane,
     fallback: { width: number; height: number },
-): ScreenRect | null => {
+): Vec2[] | null => {
     const corners = cameraEngine.planeCorners({
         location: plane.location,
         width: plane.width || fallback.width,
         height: plane.height || fallback.height,
     });
     const matrix = cameraEngine.cameraMatrix(camera, view);
-
-    let left = Infinity;
-    let top = Infinity;
-    let right = -Infinity;
-    let bottom = -Infinity;
+    const points: Vec2[] = [];
     for (const corner of corners) {
         const projected = cameraEngine.projectWithMatrix(matrix, camera.perspective, view, corner);
         if (!projected.visible || !Number.isFinite(projected.x) || !Number.isFinite(projected.y)) {
             return null;
         }
+        points.push({ x: projected.x, y: projected.y });
+    }
+    return points;
+};
+
+
+/**
+ * The narrowest extent of a plane's projected quad, in px: the width of an edge-on fin, the side of
+ * a face-on card. Independent of the corner order (the extent across every pair's direction, the
+ * least of them), so a sliver on a diagonal measures as the sliver it is, not as its bounding box.
+ */
+export const projectedPlaneThickness = (
+    camera: CameraState,
+    view: ViewSize,
+    plane: TreePlane,
+    fallback: { width: number; height: number },
+): number | null => {
+    const points = projectedPlaneCorners(camera, view, plane, fallback);
+    if (!points) {
+        return null;
+    }
+
+    let thinnest = Infinity;
+    for (let i = 0; i < points.length; i += 1) {
+        for (let j = i + 1; j < points.length; j += 1) {
+            const dx = points[j].x - points[i].x;
+            const dy = points[j].y - points[i].y;
+            const length = Math.hypot(dx, dy);
+            if (length < 1e-6) {
+                continue;
+            }
+            const nx = -dy / length;
+            const ny = dx / length;
+            let low = Infinity;
+            let high = -Infinity;
+            for (const point of points) {
+                const along = point.x * nx + point.y * ny;
+                low = Math.min(low, along);
+                high = Math.max(high, along);
+            }
+            thinnest = Math.min(thinnest, high - low);
+        }
+    }
+
+    return Number.isFinite(thinnest) ? thinnest : 0;
+};
+
+
+export const projectedPlaneRect = (
+    camera: CameraState,
+    view: ViewSize,
+    plane: TreePlane,
+    fallback: { width: number; height: number },
+): ScreenRect | null => {
+    const points = projectedPlaneCorners(camera, view, plane, fallback);
+    if (!points) {
+        return null;
+    }
+
+    let left = Infinity;
+    let top = Infinity;
+    let right = -Infinity;
+    let bottom = -Infinity;
+    for (const projected of points) {
         left = Math.min(left, projected.x);
         top = Math.min(top, projected.y);
         right = Math.max(right, projected.x);
@@ -115,13 +176,17 @@ const rectsIntersect = (
 ): boolean => a.left <= b.right && a.right >= b.left && a.top <= b.bottom && a.bottom >= b.top;
 
 
-/** The ids of the shown planes whose projected rect intersects a screen rect (the marquee). */
+/** A plane thinner than this on screen (an edge-on fin) is not what a rubber band across it meant. */
+export const MARQUEE_MIN_PROJECTED_PX = 4;
+
+/** The ids of the shown planes whose projected rect intersects a screen rect (the marquee), the edge-on ones skipped. */
 export const planesInScreenRect = (
     tree: TreePlane[],
     camera: CameraState,
     view: ViewSize,
     rect: ScreenRect,
     fallback: { width: number; height: number },
+    minThickness: number = MARQUEE_MIN_PROJECTED_PX,
 ): string[] => {
     const normalized: ScreenRect = {
         left: Math.min(rect.left, rect.right),
@@ -133,7 +198,11 @@ export const planesInScreenRect = (
     return collectShownPlanes(tree)
         .filter((plane) => {
             const projected = projectedPlaneRect(camera, view, plane, fallback);
-            return !!projected && rectsIntersect(projected, normalized);
+            if (!projected || !rectsIntersect(projected, normalized)) {
+                return false;
+            }
+            return minThickness <= 0
+                || (projectedPlaneThickness(camera, view, plane, fallback) ?? 0) >= minThickness;
         })
         .map((plane) => plane.planeID);
 };

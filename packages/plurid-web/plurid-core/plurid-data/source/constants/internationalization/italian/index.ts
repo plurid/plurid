@@ -106,6 +106,8 @@ const italian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ o scorri in basso',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← o scorri a sinistra',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ o scorri a destra',
+
+    spaceEmpty: 'nessun piano in questo spazio',
 };
 // #endregion module
 

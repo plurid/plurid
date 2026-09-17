@@ -274,10 +274,20 @@ describe('TOTAL CONTROL: what the chrome and the keyboard reach, the bus reaches
         const parent = space(rendered).tree.find((plane: any) => plane.planeID === a);
         expect(parent?.children ?? []).toHaveLength(1);
 
-        // move by a world delta, naming the planes (which selects them)
+        // move by a world delta, naming the planes: the selection is NOT touched (naming used to
+        // select, which clobbered what the reader had in hand) and the plane is not pinned
         const before = space(rendered).tree[0].location.translateX;
         await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES, { planeIDs: [a], deltaX: 120, deltaY: 40 });
         expect(space(rendered).tree[0].location.translateX).toBeCloseTo(before + 120, 6);
+        expect(space(rendered).selectedPlaneIDs).toEqual([]);
+        expect(space(rendered).tree[0].manuallyPositioned).toBeFalsy();
+
+        // pinned when asked, and in the plane's own axes when asked; a pin of its own too
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_MOVE_PLANES, { planeIDs: [a], deltaX: 0, deltaY: 0, deltaZ: 10, frame: 'plane', pinned: true });
+        expect(space(rendered).tree[0].manuallyPositioned).toBe(true);
+        expect(space(rendered).tree[0].location.translateZ).toBeCloseTo(10, 6);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_PIN_PLANE, { planeID: a, pinned: false });
+        expect(space(rendered).tree[0].manuallyPositioned).toBeFalsy();
 
         // resize
         await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE, { planeID: a, width: 512, height: 384 });
@@ -635,3 +645,212 @@ describe('a topic never corrupts the view', () => {
     });
 });
 // #endregion module
+
+
+/**
+ * THE BUS, KEPT HONEST (2026-09-16): a malformed message leaves the space as it was, a command
+ * reports what it did, the space describes itself, the focus is reported, and the configuration
+ * is not re-published with every turn of the camera.
+ */
+describe('bus hygiene', () => {
+    it('a malformed view.setPlanes leaves the view as it was; a malformed view.setTree leaves the tree', async () => {
+        const rendered = await render(['/a', '/b'], {}, ['/a']);
+        const { bus } = rendered;
+        const viewBefore = space(rendered).view;
+        const treeBefore = space(rendered).tree;
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES, { view: 'not a list' });
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES, { view: [42] });
+        expect(space(rendered).view).toBe(viewBefore);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SET_TREE, { tree: [{ planeID: 'x' }] });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SET_TREE, { tree: 'nope' });
+        expect(space(rendered).tree).toBe(treeBefore);
+
+        await rendered.unmount();
+    });
+
+    it('view: [] and a tree set through the bus RENDERS: the empty state reads the tree', async () => {
+        const rendered = await render(['/a', '/b'], {}, []);
+        const { bus } = rendered;
+        expect(space(rendered).tree).toHaveLength(0);
+        expect(rendered.container.querySelectorAll('[data-plurid-plane]')).toHaveLength(0);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES, { view: ['/a'] });
+        const tree = space(rendered).tree;
+        expect(tree).toHaveLength(1);
+
+        // the view emptied again, the tree kept: still a space with a plane in it
+        await publish(bus, PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES, { view: [] });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SET_TREE, { tree });
+        expect(space(rendered).tree).toHaveLength(1);
+        expect(rendered.container.querySelectorAll('[data-plurid-plane]').length).toBeGreaterThan(0);
+        // and the view agrees with the tree's roots, so a relayout keeps them: it used to place the
+        // EMPTY view and take the host's tree away
+        expect(space(rendered).view).toEqual(['/a']);
+        await publish(bus, PLURID_PUBSUB_TOPIC.CONFIGURATION, { space: { layout: { type: 'ROWS' } } });
+        expect(space(rendered).tree).toHaveLength(1);
+        expect(space(rendered).tree[0]).toBeDefined();
+
+        await rendered.unmount();
+    });
+
+    it('space.isolatePlane with null clears the isolation', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const [a] = ids(rendered);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.ISOLATE_PLANE, { planeID: a });
+        expect(space(rendered).isolatePlane).toBe(a);
+        await publish(bus, PLURID_PUBSUB_TOPIC.ISOLATE_PLANE, { planeID: null });
+        expect(space(rendered).isolatePlane).toBe('');
+
+        await rendered.unmount();
+    });
+
+    it('space.translateXTo goes TO the value, whatever the space was at', async () => {
+        const rendered = await render(['/a']);
+        const { bus } = rendered;
+        // what a host sees: the transform the engine publishes on its change
+        let transform: any;
+        bus.subscribe({ topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM, callback: (data: any) => { transform = data?.value; } } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH, { value: 30 });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO, { value: 100 });
+        expect(transform.translationX).toBeCloseTo(100, 6);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO, { value: -20 });
+        expect(transform.translationY).toBeCloseTo(-20, 6);
+
+        await rendered.unmount();
+    });
+
+    it('space.command reports what it did, and ignores a shortcut the host disabled for the reader', async () => {
+        const rendered = await render(['/a', '/b'], { space: { shortcuts: { disabled: ['selectAll'] } } });
+        const { bus } = rendered;
+        const reports: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'command') {
+                    reports.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'selectAll' });
+        expect(space(rendered).selectedPlaneIDs).toHaveLength(2);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'noSuchCommand' });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'focusRootIndex' });
+        expect(reports).toEqual([
+            { id: 'selectAll', ran: true },
+            { id: 'noSuchCommand', ran: false, reason: 'unknown' },
+            { id: 'focusRootIndex', ran: false, reason: 'needsKey' },
+        ]);
+
+        await rendered.unmount();
+    });
+
+    it('space.describe answers with the inspection, by token', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const answers: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'describe') {
+                    answers.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_DESCRIBE, { token: 'tell me' });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_DESCRIBE, {});
+        expect(answers).toHaveLength(1);
+        expect(answers[0].token).toBe('tell me');
+        expect(answers[0].inspection).toMatchObject({
+            motion: 'idle',
+            view: expect.any(Object),
+            camera: expect.any(Object),
+        });
+        expect(answers[0].inspection.planes.map((plane: any) => plane.planeID)).toEqual(ids(rendered));
+
+        await rendered.unmount();
+    });
+
+    it('the focus is reported, and space.blur takes it off the space', async () => {
+        const rendered = await render(['/a']);
+        const { bus } = rendered;
+        const seen: boolean[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'focus') {
+                    seen.push(data.value);
+                }
+            },
+        } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_FOCUS, {});
+        expect(document.activeElement).toBe(rendered.view);
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_BLUR, {});
+        expect(document.activeElement).not.toBe(rendered.view);
+        expect(seen).toEqual([true, false]);
+
+        await rendered.unmount();
+    });
+
+    it('an isolation makes every other plane inert: one reading scope, one tab stop', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const [a] = space(rendered).tree.map((plane: any) => plane.planeID);
+        const inert = () => rendered.container.querySelectorAll('[data-plurid-plane][inert]').length;
+        expect(inert()).toBe(0);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.ISOLATE_PLANE, { planeID: a });
+        expect(inert()).toBe(1);
+        expect(rendered.container.querySelector('[data-plurid-plane="' + a + '"]')!.hasAttribute('inert')).toBe(false);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.ISOLATE_PLANE, { planeID: null });
+        expect(inert()).toBe(0);
+
+        await rendered.unmount();
+    });
+
+    it('the controls bar shows the route the tree holds: a plane re-pointed by a host\'s tree shows its new path', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const tree = space(rendered).tree;
+        const a = tree[0];
+        const bar = () => rendered.container.querySelector('[data-plurid-plane="' + a.planeID + '"] [data-plurid-entity="PluridPlaneControls"]')?.textContent || '';
+        expect(bar()).toContain('/a');
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SET_TREE, { tree: [{ ...a, route: a.route.replace(/\/a$/, '/b') }, tree[1]] });
+        expect(bar()).toContain('/b');
+        expect(bar()).not.toContain('/a');
+
+        await rendered.unmount();
+    });
+
+    it('a turn of the camera re-publishes the transform, never the configuration', async () => {
+        const rendered = await render(['/a']);
+        const { bus } = rendered;
+        // only what the ENGINE says (`internal`): the topic also carries what a host sets
+        let configurations = 0;
+        let transforms = 0;
+        bus.subscribe({ topic: PLURID_PUBSUB_TOPIC.CONFIGURATION, callback: (data: any) => { if (data?.internal) configurations += 1; } } as any);
+        bus.subscribe({ topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM, callback: (data: any) => { if (data?.internal) transforms += 1; } } as any);
+
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH, { value: 10 });
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH, { value: 10 });
+        expect(transforms).toBeGreaterThanOrEqual(2);
+        expect(configurations).toBe(0);
+
+        // and a configuration change relays out when a layout key changes
+        await publish(bus, PLURID_PUBSUB_TOPIC.CONFIGURATION, { space: { layout: { type: 'ROWS' } } });
+        expect(configurations).toBe(1);
+        expect(rendered.api.getSnapshot().configuration.space.layout.type).toBe('ROWS');
+
+        await rendered.unmount();
+    });
+});
+

@@ -62,9 +62,12 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'gallery', type: 'boolean', group: 'scene', apply: 'reload', description: 'the contact sheet: every fixture in an iframe (`?gallery=looks`: the twelve looks, each on the revealed page and on the columns)', exercises: 'the fixture catalog, the looks' },
     { key: 'router', type: 'boolean', group: 'scene', apply: 'reload', description: 'the router demo instead of the space (PluridRouterBrowser)', exercises: 'PluridRouterBrowser / PluridRouterLink' },
     { key: 'empty', type: 'boolean', group: 'scene', apply: 'reload', description: 'an empty view (no roots)', exercises: 'the empty state' },
+    { key: 'bus', type: 'boolean', group: 'scene', apply: 'reload', description: 'the route-driven shape a product like dechat mounts: an empty `view`, the roots through `view.setPlanes`, children through `space.spawnPlane` (with tokens), no plane bar', exercises: '`view.setPlanes`, `space.spawnPlane`, `elements.plane.controls.show: false`, `space.changed` correlation' },
     { key: 'presentation', type: 'enum', values: ['page'], group: 'scene', apply: 'reload', description: 'the page presentation: every plane view-sized, the camera docked on a page, no chrome until the space is revealed', exercises: '`space.presentation: page`, docking (`space.dock` / `space.reveal`), `data-plurid-docked`' },
     // layout
     { key: 'layout', type: 'enum', values: LAYOUT_KEYS, default: 'columns', group: 'layout', apply: 'live', description: 'the root layout', exercises: '`space.layout` (an animated relayout on the live instance)' },
+    { key: 'bridge', type: 'enum', values: ['reading', 'objects'], group: 'layout', apply: 'live', description: 'the spawn geometry preset: `reading` (90.1°, an alternating fan, the bridge from the parent\'s right edge, so parent and child both read from one camera) or `objects` (90°, a fixed fan, the bridge from the link)', exercises: '`space.bridge.preset`' },
+    { key: 'backface', type: 'enum', values: ['visible', 'hidden'], group: 'rendering', apply: 'live', description: 'whether a plane seen from behind paints', exercises: '`elements.plane.backface`' },
     // planes
     { key: 'planeMaxHeight', type: 'number', group: 'planes', apply: 'live', description: 'the tallest a content-sized plane grows (a fraction ≤ 1 of the view or px): taller content scrolls inside', exercises: '`elements.plane.maxHeight` (flat `planeMaxHeight`)' },
     { key: 'planes', type: 'number', group: 'planes', apply: 'remount', description: 'N generated planes instead of the five instrument panels (stress)', exercises: 'many roots; the 8-column stress layout' },
@@ -222,6 +225,9 @@ export interface HarnessFlags {
     store?: 'memory';
     persistMs?: number;
     undoOff: boolean;
+    bus: boolean;
+    bridge?: 'reading' | 'objects';
+    backface?: 'visible' | 'hidden';
 }
 
 export const flagField = (flag: FlagDefinition): keyof HarnessFlags => (flag.name ?? flag.key) as keyof HarnessFlags;

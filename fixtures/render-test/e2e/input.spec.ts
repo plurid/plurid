@@ -283,8 +283,17 @@ test.describe('input layer', () => {
         await page.keyboard.up('Shift');
         expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(1);
 
+        // a drag on the CONTENT of a selected plane is the page's: the plane stays, and the text is
+        // still the reader's to select (it used to take the card along, and the selection with it)
+        await drag(page, inside, { x: inside.x + 90, y: inside.y }, { steps: 10 });
+        expect((await spaceState(page)).tree[0].location.translateX).toBeCloseTo(0, 1);
+        expect(await page.evaluate(() => getComputedStyle(document.querySelector('[data-plurid-entity="PluridPlaneContent"]')!).userSelect)).not.toBe('none');
+
+        // the controls bar is the plane's handle
+        const bar = (await plane.locator('[data-plurid-entity="PluridPlaneControls"]').first().boundingBox())!;
+        const handle = { x: bar.x + bar.width / 2, y: bar.y + bar.height / 2 };
         const historyBefore = await spaceState(page).then((s) => s.history);
-        await drag(page, inside, { x: inside.x + 90, y: inside.y + 20 }, { steps: 30 });
+        await drag(page, handle, { x: handle.x + 90, y: handle.y + 20 }, { steps: 30 });
         const state = await spaceState(page);
         expect(state.history.undoDepth).toBe(historyBefore.undoDepth + 1);
         expect(state.history.canUndo).toBe(true);

@@ -1,5 +1,7 @@
 // #region imports
     // #region libraries
+    import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+    import { dirname } from 'path';
     import net from 'net';
     // #endregion libraries
 // #endregion imports
@@ -155,4 +157,95 @@ export const isPortFree = (
         });
     });
 });
+
+
+/** ONE `plurid dev` PER ROOT: what the pidfile it claims records. */
+export interface PidfileClaim {
+    /** the earlier dev on this root that was told to stop, and did */
+    replaced?: number;
+    /** a pidfile left by a dev that is no longer running */
+    stale?: number;
+}
+
+export interface PidfileOptions {
+    /** whether a process is running (default: `process.kill(pid, 0)`) */
+    alive?: (pid: number) => boolean;
+    /** how an earlier dev is told to stop (default: `SIGTERM`) */
+    kill?: (pid: number) => void;
+    /** how long to wait for it to go, in ms (default 3000) */
+    timeoutMs?: number;
+    /** the poll, in ms */
+    intervalMs?: number;
+}
+
+const processAlive = (
+    pid: number,
+): boolean => {
+    try {
+        process.kill(pid, 0);
+        return true;
+    } catch (_error) {
+        return false;
+    }
+};
+
+const readPid = (
+    path: string,
+): number | undefined => {
+    if (!existsSync(path)) {
+        return undefined;
+    }
+    const value = Number.parseInt(readFileSync(path, 'utf8').trim(), 10);
+    return Number.isFinite(value) && value > 0 ? value : undefined;
+};
+
+/**
+ * Claim the root's pidfile for this dev. An earlier dev still running on the same root is told
+ * to stop and waited for (two watchers on one root rebuild the same tree behind each other, and
+ * the older one keeps serving what the newer one just replaced); one that is gone is stale and
+ * simply overwritten. The claim outlives a crash only as a stale file, which the next claim clears.
+ */
+export const claimPidfile = async (
+    path: string,
+    pid: number,
+    options: PidfileOptions = {},
+): Promise<PidfileClaim> => {
+    const alive = options.alive ?? processAlive;
+    const kill = options.kill ?? ((target: number) => { process.kill(target, 'SIGTERM'); });
+    const timeoutMs = options.timeoutMs ?? 3000;
+    const intervalMs = options.intervalMs ?? 50;
+    const claim: PidfileClaim = {};
+
+    const previous = readPid(path);
+    if (previous !== undefined && previous !== pid) {
+        if (alive(previous)) {
+            kill(previous);
+            const deadline = Date.now() + timeoutMs;
+            while (alive(previous) && Date.now() < deadline) {
+                await new Promise((resolve) => setTimeout(resolve, intervalMs));
+            }
+            if (alive(previous)) {
+                throw new Error(`[plurid dev] an earlier dev (pid ${previous}) on this root did not stop; stop it, or remove ${path}`);
+            }
+            claim.replaced = previous;
+        } else {
+            claim.stale = previous;
+        }
+    }
+
+    mkdirSync(dirname(path), { recursive: true });
+    writeFileSync(path, String(pid) + '\n');
+    return claim;
+};
+
+/** Release the pidfile, if it is still this dev's (a later claim is the later dev's to keep). */
+export const releasePidfile = (
+    path: string,
+    pid: number,
+): void => {
+    if (readPid(path) === pid) {
+        rmSync(path, { force: true });
+    }
+};
 // #endregion module
+

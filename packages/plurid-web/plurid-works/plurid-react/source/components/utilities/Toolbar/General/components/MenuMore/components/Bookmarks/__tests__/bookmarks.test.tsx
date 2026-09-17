@@ -63,6 +63,12 @@ const openDrawer = async (presets?: Record<string, string>) => {
             },
         } as any,
     });
+    // the pointer stays over the toolbar, as a reader's would: the menu conceals itself 400ms
+    // after the pointer leaves, and a slow run used to lose the drawer to that clock
+    const toolbar = rendered.container.querySelector('[data-plurid-entity="PluridToolbar"]')!;
+    await act(async () => {
+        toolbar.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+    });
     await click(rendered.container.querySelector(MORE));
     return rendered;
 };

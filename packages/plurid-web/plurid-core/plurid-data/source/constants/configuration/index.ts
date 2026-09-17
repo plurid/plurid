@@ -83,6 +83,8 @@ export const defaultConfigurationElements: PluridConfigurationElements = {
     plane: {
         width: 1,
         opacity: 1,
+        // a plane seen from behind does not paint: with an alternating fan nothing reaches 180°
+        backface: 'hidden',
         controls: {
             show: true,
             title: true,
@@ -128,6 +130,11 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         aside: 'lineage',
         focus: true,
         epsilon: 0.5,
+        // `fill`, deliberately: under `natural` a plane centred at scale 1 IS its dock pose, so a
+        // fresh space with a centred root reads as docked, hides its chrome and turns the rail
+        // the wrong way (measured 2026-09-16: 24 scenarios red). The option stays for a host
+        // whose planes are never centred at 1.
+        scale: 'fill',
     },
     transformOrigin: {
         show: true,
@@ -157,6 +164,8 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         dollyLimitFraction: 0.6,
         orbitPivot: 'cursor',
         onClose: 'parent',
+        childFraming: 'pair',
+        fitYaw: 'best',
         motion: {
             duration: 380,
             easing: 'out-cubic',
@@ -180,9 +189,35 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     },
     bridge: {
         length: 100,
-        planeAngle: 90,
-        fan: 'fixed',
+        // 90.1 AND NEVER 90: an exactly perpendicular plane is a zero-width quad that CSS 3D
+        // mishandles (the user's rule, 2026-09-16). The camera does the reading work: every act
+        // that shows a branch frames parent and child from the yaw between them.
+        planeAngle: 90.1,
+        fan: 'alternate',
         direction: 'backward',
+        keepBehind: false,
+        anchor: 'edge',
+        preset: 'reading',
+    },
+};
+
+
+/**
+ * THE BRIDGE PRESETS: a name for a set of the bridge fields, applied under any given explicitly.
+ * `reading` is the default (and equals the defaults above); `objects` is the geometry every
+ * release before 2026-09 had.
+ */
+export const bridgePresets = {
+    reading: {
+        planeAngle: 90.1,
+        fan: 'alternate' as const,
+        anchor: 'edge' as const,
+        keepBehind: false,
+    },
+    objects: {
+        planeAngle: 90,
+        fan: 'fixed' as const,
+        anchor: 'link' as const,
         keepBehind: false,
     },
 };

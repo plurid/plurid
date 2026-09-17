@@ -109,6 +109,25 @@ export const buildConfiguration = (
             ...(flags.debug ? { development: { spaceDebugger: true, planeDebugger: true, inspector: true } } : {}),
         };
     }
+    // THE BUS SHAPE: no plane bar, the way a route-driven product mounts (its planes say who they
+    // are in their own content); the backface and the bridge preset as the flags say
+    if (flags.bus || flags.backface) {
+        const plane = {
+            ...((flat.extend?.elements?.plane) ?? {}),
+            ...(flags.bus ? { controls: { show: false } } : {}),
+            ...(flags.backface ? { backface: flags.backface } : {}),
+        };
+        flat.extend = {
+            ...(flat.extend ?? {}),
+            elements: {
+                ...((flat.extend?.elements) ?? {}),
+                plane,
+            },
+        };
+    }
+    if (flags.bridge) {
+        flat.bridge = { preset: flags.bridge };
+    }
     if (flags.spaceW !== undefined || flags.spaceH !== undefined) {
         flat.spaceDimensions = {
             ...(flags.spaceW !== undefined ? { width: flags.spaceW } : {}),

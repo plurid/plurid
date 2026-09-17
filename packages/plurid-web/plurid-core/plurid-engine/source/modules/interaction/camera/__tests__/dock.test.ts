@@ -169,4 +169,26 @@ describe('docking', () => {
     });
 });
 
+
+
+/** a plane smaller than the view is READ at its own size under the natural mode, not magnified */
+describe('the natural dock scale', () => {
+    const panel = { location: { translateX: 0, translateY: 0, translateZ: 0, rotateX: 0, rotateY: 0 }, width: 460, height: 300 };
+
+    it('caps the fill at 1: a 460px card on an 800px view docks at 1, not 1.39', () => {
+        expect(dockScale(panel, view)).toBeCloseTo(800 / 300, 6);
+        expect(dockScale(panel, view, undefined, 'natural')).toBe(1);
+        // a page larger than the view still shrinks to fit
+        expect(dockScale({ ...panel, width: 2560, height: 1600 }, view, undefined, 'natural')).toBe(0.5);
+    });
+
+    it('the pose and the test agree on the mode', () => {
+        const camera = identityCamera(view);
+        const natural = dockPose(camera, panel, view, undefined, 'natural');
+        expect(natural.scale).toBe(1);
+        expect(isDocked(natural, panel, view, 0.5, undefined, undefined, 'natural')).toBe(true);
+        expect(isDocked(natural, panel, view)).toBe(false);
+        expect(findDockedPlane(natural, [{ planeID: 'panel', ...panel, sizeMode: 'declared' }], view, { width: 0, height: 0 }, 0.5, undefined, 'natural')).toBe('panel');
+    });
+});
 // #endregion module

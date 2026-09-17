@@ -21,9 +21,12 @@
     } from '../location';
     import {
         configuredPlaneSize,
+        fallbackPlaneSize,
     } from './size';
     import {
         groupSizes,
+        placedWidth,
+        placedHeight,
         prefixOffsets,
     } from './pitch';
     // #endregion external
@@ -69,9 +72,11 @@ const computeRowLayout = (
     // an unmeasured plane counts as the configured height, else the tallest measured plane, else
     // the view height
     const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
-    const fallbackHeight = configuredHeight || Math.max(0, ...roots.map((root) => root.height || 0)) || windowInnerHeight;
-    const widths = groupSizes(roots, length, columnOf, (root) => root.width, width);
-    const heights = groupSizes(roots, rowCount, rowOf, (root) => root.height, fallbackHeight);
+    const fallbackHeight = configuredHeight
+        || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))
+        || fallbackPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
+    const widths = groupSizes(roots, length, columnOf, (root) => placedWidth(root, width), width);
+    const heights = groupSizes(roots, rowCount, rowOf, (root) => placedHeight(root, configuredHeight), fallbackHeight);
     const xOffsets = prefixOffsets(widths, gapValue);
     const yOffsets = prefixOffsets(heights, gapValue);
 

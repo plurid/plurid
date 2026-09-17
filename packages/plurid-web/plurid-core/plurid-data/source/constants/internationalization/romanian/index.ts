@@ -106,6 +106,8 @@ const romanian: Internationalization = {
     toolbarDrawerShortcutsArrowOrScrollDown: '↓ sau derulare jos',
     toolbarDrawerShortcutsArrowOrScrollLeft: '← sau derulare stânga',
     toolbarDrawerShortcutsArrowOrScrollRight: '→ sau derulare dreapta',
+
+    spaceEmpty: 'niciun plan în acest spațiu',
 };
 // #endregion module
 

@@ -3,6 +3,7 @@ import {
     planeOf,
     planeParameters,
     resolvePending,
+    hiddenPlaneIDsOf,
     PENDING_TREE_CHANGES,
     PendingPlane,
 } from '../index';
@@ -205,5 +206,46 @@ describe('answering which plane a command became', () => {
 
     it('does no work at all when nothing is pending', () => {
         expect(resolvePending([], [plane('/a')])).toEqual({ observations: [], waiting: [] });
+    });
+});
+
+
+/** exact routes, and a plane shown again: two answers the correlation did not give until 2026-09-16 */
+describe('exactness, and a plane shown again', () => {
+    it('does not answer /thread/1 with /other/thread/1', () => {
+        const { observations } = resolvePending(
+            [request({ token: 'k', route: '/thread/1', known: planeIDsOf([plane('/other')]) })],
+            [plane('/other', { children: [plane('/other/thread/1')] }), plane('/thread/1')],
+        );
+        expect(observations.map((entry) => entry.planeID)).toEqual(['/thread/1']);
+    });
+
+    it('ignores a query or a fragment on the route asked for', () => {
+        const { observations } = resolvePending(
+            [request({ token: 'k', route: '/detail?mode=wire#top' })],
+            [plane('/detail')],
+        );
+        expect(observations.map((entry) => entry.planeID)).toEqual(['/detail']);
+    });
+
+    it('answers with a plane that was put away and is shown again', () => {
+        const before = [plane('/a', { children: [plane('/a/child', { show: false })] })];
+        const after = [plane('/a', { children: [plane('/a/child', { show: true })] })];
+        expect([...hiddenPlaneIDsOf(before)]).toEqual(['/a/child']);
+        const { observations } = resolvePending(
+            [request({ token: 'k', route: '/a/child', known: planeIDsOf(before), hidden: hiddenPlaneIDsOf(before) })],
+            after,
+        );
+        expect(observations.map((entry) => entry.planeID)).toEqual(['/a/child']);
+    });
+
+    it('keeps waiting while a put-away plane stays put away', () => {
+        const before = [plane('/a', { children: [plane('/a/child', { show: false })] })];
+        const { observations, waiting } = resolvePending(
+            [request({ token: 'k', route: '/a/child', known: planeIDsOf(before), hidden: hiddenPlaneIDsOf(before) })],
+            before,
+        );
+        expect(observations).toEqual([]);
+        expect(waiting).toHaveLength(1);
     });
 });

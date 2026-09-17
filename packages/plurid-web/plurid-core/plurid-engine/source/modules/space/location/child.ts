@@ -24,7 +24,14 @@
 const DEG = Math.PI / 180;
 
 export const DEFAULT_BRIDGE_LENGTH = 100;
-export const DEFAULT_PLANE_ANGLE = 90;
+/**
+ * 90.1 AND NEVER 90: an exactly perpendicular plane is a zero-width quad that CSS 3D mishandles
+ * (a hit test that misses, a paint that flickers). A tenth of a degree is invisible to a reader
+ * and keeps every quad a quad. The camera does the reading work (`bestYaw`, `framePair`).
+ */
+export const DEFAULT_PLANE_ANGLE = 90.1;
+/** the room between two siblings spawned from one parent, along the child's own width axis */
+export const SIBLING_GAP = 50;
 /** The width a mirrored child is placed with before it has been measured. */
 export const FALLBACK_CHILD_WIDTH = 400;
 
@@ -89,6 +96,67 @@ export const childLocation = (
         rotateY: parent.rotateY + planeAngle,
     };
 };
+
+export type BridgeAnchor =
+    | 'link'
+    | 'edge';
+
+export type BridgeKind =
+    | 'strip'
+    | 'leash';
+
+export interface SpawnAnchorOptions {
+    /** the link's own point (`link`) or the parent's right edge at the link's height (`edge`) */
+    anchor?: BridgeAnchor;
+    /** how many siblings the parent already has from links: the i-th takes a longer bridge */
+    ordinal?: number;
+    /** the child's width, or 0 for the fallback: what a sibling's bridge grows by */
+    childWidth?: number;
+    bridgeLength?: number;
+    gap?: number;
+}
+
+export interface SpawnAnchor {
+    linkCoordinates: LinkCoordinates;
+    bridgeLength: number;
+    bridgeKind: BridgeKind;
+}
+
+/**
+ * WHERE A SPAWNED CHILD HANGS FROM ITS PARENT, AND HOW FAR.
+ *
+ * A child at 90.1° anchored at the link's own point stands behind the part of its parent that is
+ * to the right of the link: from the yaw between them, the parent's face covers the child's near
+ * end. Anchored at the parent's RIGHT EDGE, at the link's height, the child stands one bridge
+ * clear of the parent's silhouette, and from the bisecting yaw each projects to `cos 45.05°`
+ * of its width with nothing over either (`bestYaw`).
+ *
+ * Siblings spawned from one parent used to coincide: same link point, same bridge, one on top of
+ * another. The i-th sibling takes a bridge `length + i·(childWidth + gap)` long, which lays the
+ * siblings along the child's own width axis, side by side from the reading yaw; the later ones
+ * are drawn as leashes, since a strip from the parent's edge to the third sibling would cross the
+ * first two.
+ */
+export const resolveSpawnAnchor = (
+    parentWidth: number,
+    link: LinkCoordinates,
+    options: SpawnAnchorOptions = {},
+): SpawnAnchor => {
+    const anchor = options.anchor ?? 'link';
+    const ordinal = Math.max(0, options.ordinal ?? 0);
+    const length = options.bridgeLength ?? DEFAULT_BRIDGE_LENGTH;
+    const width = options.childWidth || FALLBACK_CHILD_WIDTH;
+    const gap = options.gap ?? SIBLING_GAP;
+
+    return {
+        linkCoordinates: anchor === 'edge' && parentWidth > 0
+            ? { x: parentWidth, y: link.y }
+            : link,
+        bridgeLength: length + ordinal * (width + gap),
+        bridgeKind: ordinal > 0 ? 'leash' : 'strip',
+    };
+};
+
 
 /**
  * The link's point on the parent's face, in world space — where a child's bridge leaves from: the
@@ -172,6 +240,21 @@ export const resolvePlaneAngle = (
 };
 
 
+/**
+ * The coordinates a child's bridge leaves from, as its anchor says: a child anchored at the edge
+ * follows the parent's right edge when the parent is resized, whatever x it was spawned with.
+ */
+export const anchoredCoordinates = (
+    parent: Pick<TreePlane, 'width'>,
+    child: Pick<TreePlane, 'linkCoordinates' | 'bridgeAnchor'>,
+): LinkCoordinates => {
+    const link = child.linkCoordinates || { x: 0, y: 0 };
+    return child.bridgeAnchor === 'edge' && parent.width > 0
+        ? { x: parent.width, y: link.y }
+        : link;
+};
+
+
 const sameLocation = (
     a: TreePlaneLocation,
     b: TreePlaneLocation,
@@ -203,7 +286,7 @@ export const recomputeSubtree = (
         if (child.linkCoordinates && !child.manuallyPositioned) {
             const location = childLocation(
                 plane.location,
-                child.linkCoordinates,
+                anchoredCoordinates(plane, child),
                 child.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
                 child.planeAngle ?? DEFAULT_PLANE_ANGLE,
                 child.bridgeSide ?? 'start',

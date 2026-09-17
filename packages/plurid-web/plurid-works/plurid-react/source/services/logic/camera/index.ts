@@ -82,13 +82,10 @@ export const resolvePlaneFallbackSize = (
     configuration: PluridConfiguration,
     viewSize: ViewSize,
 ): { width: number; height: number } => {
-    // the configured width and, when there is one, the configured height (`elements.plane.height`:
-    // every plane view-sized in the page presentation); else a proportional height
-    const configured = spaceEngine.layout.configuredPlaneSize(configuration, viewSize);
-    return {
-        width: configured.width,
-        height: configured.height || Math.max(200, Math.round(configured.width * 0.7)),
-    };
+    // the engine's one answer: the configured width and, when there is one, the configured height
+    // (`elements.plane.height`: every plane view-sized in the page presentation); else a reading
+    // proportion of the width, the same the layouts pitch an unmeasured root by
+    return spaceEngine.layout.fallbackPlaneSize(configuration, viewSize);
 };
 
 
@@ -115,7 +112,7 @@ export const frameTargetForPlane = (
     plane: TreePlane,
 ): CameraState => {
     if (configuration.space.presentation === 'page') {
-        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.viewSize, spaceState.cameraLimits);
+        return cameraEngine.dockPose(spaceState.camera, dockGeometry(plane, configuration, spaceState.viewSize), spaceState.viewSize, spaceState.cameraLimits, configuration.space.docking?.scale);
     }
     return cameraEngine.framePlane(
         spaceState.camera,
@@ -125,6 +122,56 @@ export const frameTargetForPlane = (
             limits: spaceState.cameraLimits,
         },
     );
+};
+
+/**
+ * THE PAIR: a child and the plane it came from, framed from the yaw at which both read. A branch
+ * at 90.1° framed face-on leaves its parent edge-on, and framed front-on is itself a line; the
+ * bisector shows each at 0.706 of its width. A root, or a plane on a page, frames as itself.
+ */
+export const pairTargetForPlane = (
+    spaceState: PluridStateSpace,
+    configuration: PluridConfiguration,
+    plane: TreePlane,
+): CameraState => {
+    const parent = plane.parentPlaneID
+        ? spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, plane.parentPlaneID)
+        : undefined;
+    if (!parent || configuration.space.presentation === 'page') {
+        return frameTargetForPlane(spaceState, configuration, plane);
+    }
+
+    const fallback = resolvePlaneFallbackSize(configuration, spaceState.viewSize);
+    return cameraEngine.framePair(
+        spaceState.camera,
+        planeGeometry(parent, fallback),
+        planeGeometry(plane, fallback),
+        spaceState.viewSize,
+        {
+            limits: spaceState.cameraLimits,
+        },
+    );
+};
+
+/** Frame a set of planes by their real corners from a yaw (`best` by default). */
+export const planesTarget = (
+    spaceState: PluridStateSpace,
+    configuration: PluridConfiguration,
+    planeIDs: string[],
+    yaw: number | 'best' = 'best',
+): CameraState | undefined => {
+    const fallback = resolvePlaneFallbackSize(configuration, spaceState.viewSize);
+    const planes = planeIDs
+        .map((planeID) => spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, planeID))
+        .filter((plane): plane is TreePlane => !!plane)
+        .map((plane) => planeGeometry(plane, fallback));
+    if (planes.length === 0) {
+        return undefined;
+    }
+    return cameraEngine.framePlanes(spaceState.camera, planes, spaceState.viewSize, {
+        yaw,
+        limits: spaceState.cameraLimits,
+    });
 };
 
 /** The box a plane docks by: its location and the size the dock is computed with. */
@@ -155,7 +202,7 @@ const dockTargetPlane = (
         return plane && plane.show !== false ? plane.planeID : '';
     };
     const id = planeID
-        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon, spaceState.cameraLimits)
+        || cameraEngine.findDockedPlane(spaceState.camera, spaceState.tree, spaceState.viewSize, configured, configuration.space.docking?.epsilon, spaceState.cameraLimits, configuration.space.docking?.scale)
         || shown(spaceState.selectedPlaneIDs[0] || '')
         || shown(spaceState.activePlaneID || '')
         || cameraEngine.dockCandidate(spaceState.camera, spaceState.tree, spaceState.viewSize, configured);
@@ -181,6 +228,8 @@ export const fitTarget = (
         spaceState.viewSize,
         {
             faceOn,
+            // a fit turns to where the narrowest plane reads, unless the front was asked for
+            ...(faceOn && (configuration.space.navigation?.fitYaw ?? 'best') === 'best' ? { yaw: 'best' as const } : {}),
             fallbackWidth: fallback.width,
             fallbackHeight: fallback.height,
             limits: spaceState.cameraLimits,
@@ -283,7 +332,7 @@ export const landingDockPlaneID = (
     target: CameraState,
 ): string => {
     const configured = spaceEngine.layout.configuredPlaneSize(state.configuration, state.space.viewSize);
-    return cameraEngine.findDockedPlane(target, state.space.tree, state.space.viewSize, configured, state.configuration.space.docking?.epsilon, state.space.cameraLimits);
+    return cameraEngine.findDockedPlane(target, state.space.tree, state.space.viewSize, configured, state.configuration.space.docking?.epsilon, state.space.cameraLimits, state.configuration.space.docking?.scale);
 };
 
 /**
@@ -344,6 +393,10 @@ export const commitCameraTarget = (
 
 export type CameraCommand =
     | { kind: 'frame'; planeID?: string; selection?: boolean }
+    /** Frame a plane AND the plane it came from, from the yaw at which both read. */
+    | { kind: 'pair'; planeID: string }
+    /** Frame these planes by their real corners from a yaw (`best`: where the narrowest reads). */
+    | { kind: 'planes'; planeIDs: string[]; yaw?: number | 'best' }
     | { kind: 'fit'; faceOn?: boolean }
     | { kind: 'reset' }
     | { kind: 'home' }
@@ -378,6 +431,14 @@ export const resolveCameraTarget = (
             }
             return fitTarget(spaceState, configuration);
         }
+        case 'pair': {
+            const plane = spaceEngine.tree.logic.getTreePlaneByID(spaceState.tree, command.planeID);
+            return plane
+                ? pairTargetForPlane(spaceState, configuration, plane)
+                : undefined;
+        }
+        case 'planes':
+            return planesTarget(spaceState, configuration, command.planeIDs, command.yaw);
         case 'fit':
             return fitTarget(spaceState, configuration, command.faceOn ?? true);
         case 'reset':
@@ -400,6 +461,7 @@ export const resolveCameraTarget = (
                     dockGeometry(plane, configuration, spaceState.viewSize),
                     spaceState.viewSize,
                     spaceState.cameraLimits,
+                    configuration.space.docking?.scale,
                 )
                 : undefined;
         }
@@ -412,6 +474,7 @@ export const resolveCameraTarget = (
                         dockGeometry(plane, configuration, spaceState.viewSize),
                         spaceState.viewSize,
                         spaceState.cameraLimits,
+                        configuration.space.docking?.scale,
                     ),
                     spaceState.cameraLimits,
                     configuration.space.docking?.reveal,
@@ -470,6 +533,34 @@ export const cameraCommand = (
 
 
 /** Whether the view center looks at the plane: the ray through the view center hits inside it. */
+/** two cameras that render the same picture, to a hair */
+const sameCamera = (
+    a: CameraState,
+    b: CameraState,
+): boolean => Math.abs(a.scale - b.scale) < 1e-3
+    && Math.abs(cameraEngine.normalizeYaw(a.yaw - b.yaw)) < 1e-3
+    && Math.abs(a.pitch - b.pitch) < 1e-3
+    && Math.abs(a.roll - b.roll) < 1e-3
+    && Math.abs(a.pivot.x - b.pivot.x) < 0.5
+    && Math.abs(a.pivot.y - b.pivot.y) < 0.5
+    && Math.abs(a.pivot.z - b.pivot.z) < 0.5
+    && Math.abs(a.offset.x - b.offset.x) < 0.5
+    && Math.abs(a.offset.y - b.offset.y) < 0.5
+    && Math.abs(a.offset.z - b.offset.z) < 0.5;
+
+/**
+ * WHETHER THE CAMERA LOOKS AT A PLANE: the plane covers the view centre, or the camera stands
+ * where a navigation to the plane put it, which for a child framed with its parent (`pair`) is a
+ * pose in which the view centre falls between the two.
+ */
+export const cameraLooksAt = (
+    spaceState: PluridStateSpace,
+    configuration: PluridConfiguration,
+    plane: TreePlane,
+): boolean => planeCoversViewCenter(spaceState, configuration, plane)
+    || sameCamera(spaceState.camera, frameTargetForPlane(spaceState, configuration, plane))
+    || sameCamera(spaceState.camera, pairTargetForPlane(spaceState, configuration, plane));
+
 export const planeCoversViewCenter = (
     spaceState: PluridStateSpace,
     configuration: PluridConfiguration,
@@ -501,6 +592,8 @@ export interface FramePlaneNodeOptions {
      * authoritative).
      */
     awaitMeasure?: boolean;
+    /** Frame the plane AND the plane it came from, from the yaw at which both read. */
+    pair?: boolean;
 }
 
 
@@ -514,7 +607,9 @@ export const framePlaneNode = (
     commitCameraTarget(
         dispatch,
         extra,
-        frameTargetForPlane(state.space, state.configuration, plane),
+        options.pair
+            ? pairTargetForPlane(state.space, state.configuration, plane)
+            : frameTargetForPlane(state.space, state.configuration, plane),
         {
             animate,
             onSettle: options.onSettle,
@@ -533,6 +628,7 @@ export const framePlaneNode = (
         extra.pendingFrame = {
             planeID: plane.planeID,
             animate,
+            pair: !!options.pair,
         };
     } else if (extra.pendingFrame && extra.pendingFrame.planeID !== plane.planeID) {
         // Any other framing supersedes a pending re-frame.
@@ -562,7 +658,9 @@ export const reportPlaneSizes = (
         return;
     }
 
-    dispatch(framePlaneByID(pending.planeID, pending.animate) as any);
+    dispatch((pending.pair
+        ? cameraCommand({ kind: 'pair', planeID: pending.planeID }, { animate: pending.animate })
+        : framePlaneByID(pending.planeID, pending.animate)) as any);
 };
 
 /** One plane's measurement: a batch of one (a host, a test). */

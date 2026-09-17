@@ -28,14 +28,18 @@ export interface UseMeasuredRelayoutParameters {
     relayout: (options: { transition: boolean }) => void;
 }
 
-/** What a relayout depends on: the sizes of the roots the layout places (a pinned or hand-sized root is left alone). */
+/**
+ * What a relayout depends on: the sizes of the roots the layout places (a pinned or hand-sized root
+ * is left alone), to the whole pixel: a measurement that moves by a fraction (a font's subpixel
+ * settle, a zoomed browser) used to relay the roots for nothing.
+ */
 export const measuredSizesSignature = (
     tree: TreePlane[],
 ): string => tree
     .map((root) => (
         root.show === false || root.manuallyPositioned || root.sizeMode === 'manual'
             ? '-'
-            : root.width + 'x' + root.height
+            : Math.round(root.width) + 'x' + Math.round(root.height)
     ))
     .join('|');
 

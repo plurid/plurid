@@ -3,6 +3,8 @@
     import {
         updateTreePlaneFields,
         collectPlaneIDs,
+        linkIndexOf,
+        findPlaneByLinkID,
     } from '../fields';
     // #endregion external
 // #endregion imports
@@ -51,6 +53,26 @@ describe('updateTreePlaneFields', () => {
     it('collectPlaneIDs() walks children', () => {
         const ids = collectPlaneIDs([plane('a', [plane('b', [plane('c')])]), plane('d')]);
         expect([...ids].sort()).toEqual(['a', 'b', 'c', 'd']);
+    });
+});
+
+
+describe('the link index', () => {
+    const spawned = (planeID: string, spawnedByLinkID: string, children: any[] = []) => ({ ...plane(planeID, children), spawnedByLinkID });
+
+    it('finds a spawned plane at any depth by its parent and link, once per tree reference', () => {
+        const grandchild = spawned('c', 'link-2');
+        const child = spawned('b', 'link-1', [grandchild]);
+        const tree: any[] = [plane('a', [child]), plane('e')];
+        expect(findPlaneByLinkID(tree, 'a', 'link-1')).toBe(child);
+        expect(findPlaneByLinkID(tree, 'b', 'link-2')).toBe(grandchild);
+        expect(findPlaneByLinkID(tree, 'a', 'link-2')).toBeUndefined();
+        expect(findPlaneByLinkID(tree, 'nobody', 'link-1')).toBeUndefined();
+        // the same tree keeps its index; a new tree gets its own
+        expect(linkIndexOf(tree)).toBe(linkIndexOf(tree));
+        expect(linkIndexOf([...tree])).not.toBe(linkIndexOf(tree));
+        // holes in a tree are walked over
+        expect(findPlaneByLinkID([undefined as any, ...tree], 'a', 'link-1')).toBe(child);
     });
 });
 // #endregion module

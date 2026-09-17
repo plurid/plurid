@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useEffect,
+        useRef,
         useState,
     } from 'react';
 
@@ -30,6 +31,11 @@
     import {
         space as spaceEngine,
     } from '~services/engine';
+    import {
+        modeOf,
+        PluridMode,
+        MODE_LABEL,
+    } from '~services/logic/modes';
     // #endregion external
 // #endregion imports
 
@@ -56,6 +62,7 @@ const StyledLiveRegion = styled.div`
 export interface PluridLiveRegionStateProperties {
     stateActiveRoute: string;
     stateSelectionCount: number;
+    stateMode: PluridMode | undefined;
     stateMotion: string;
 }
 
@@ -71,9 +78,20 @@ const PluridLiveRegion: React.FC<PluridLiveRegionProperties> = (
         stateActiveRoute,
         stateSelectionCount,
         stateMotion,
+        stateMode,
     },
 ) => {
     const [message, setMessage] = useState('');
+
+    // the mode, when it comes and when it goes (never on mount: nothing changed yet)
+    const previousMode = useRef<PluridMode | undefined>(stateMode);
+    useEffect(() => {
+        if (stateMode === previousMode.current) {
+            return;
+        }
+        setMessage(stateMode ? MODE_LABEL[stateMode] : 'mode off');
+        previousMode.current = stateMode;
+    }, [stateMode]);
 
     useEffect(() => {
         if (stateActiveRoute) {
@@ -117,6 +135,8 @@ const mapStateToProperties = (
         stateActiveRoute: plane?.route || '',
         stateSelectionCount: selectors.space.getSelectedPlaneIDs(state).length,
         stateMotion: state.space.motion,
+        // the toggled grab (G), not the held one (Space): a hold is its own feedback
+        stateMode: modeOf(state.configuration.space, state.ui.grabMode),
     };
 };
 

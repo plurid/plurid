@@ -32,6 +32,8 @@
     import {
         PLURID_PUBSUB_TOPIC,
         FOCUS_ANCHOR_SUFFIX,
+        PLURID_ATTRIBUTE_PLANE_ANCHOR,
+        PLURID_ATTRIBUTE_FOCUS,
         PLURID_ENTITY_PLANE,
 
         RegisteredPluridPlane,
@@ -90,6 +92,7 @@
         space,
         space as spaceEngine,
     } from '~services/engine';
+    import { domID } from '~services/logic/dom';
     // #endregion external
 
 
@@ -135,7 +138,8 @@ const readingScopeAttributes = (
     aside: boolean,
     docked: boolean,
     somePageDocked: boolean,
-): Record<string, unknown> => (aside || (somePageDocked && !docked) ? { inert: true } : {});
+    isolatedOut: boolean,
+): Record<string, unknown> => (aside || (somePageDocked && !docked) || isolatedOut ? { inert: true } : {});
 
 export interface PluridPlaneOwnProperties {
     // #region required
@@ -529,7 +533,11 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
     // console.log('Render plane');
     const key = planeID + '-' + remountKey;
-    const focusAnchorID = planeID + FOCUS_ANCHOR_SUFFIX;
+    const focusAnchorID = domID(planeID) + FOCUS_ANCHOR_SUFFIX;
+    // the anchor has the keyboard: the plane wears the ring
+    const [anchorFocused, setAnchorFocused] = useState(false);
+    // an isolation makes every other plane inert: outside the reading scope, unreachable by Tab
+    const isolatedOut = !!stateIsolatePlane && stateIsolatePlane !== planeID;
     // Render the plane at its computed width (matches the layout's translateX spacing,
     // which is derived from the same `width`). A hardcoded 100% made every plane span the
     // full viewport, so fractional widths and multi-column layouts overlapped.
@@ -609,7 +617,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             planeOpacity={planeOpacity}
             fixedHeight={fixedHeight}
             show={treePlane.show}
-            id={planeID}
+            id={domID(planeID)}
             style={{
                 width: renderWidth,
                 height: shellHeight,
@@ -640,16 +648,28 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
             data-plurid-aside={stateAside ? 'true' : undefined}
             data-plurid-page={stateIsDocked ? 'docked' : undefined}
-            {...readingScopeAttributes(stateAside, stateIsDocked, stateSomePageDocked)}
+            {...{ [PLURID_ATTRIBUTE_FOCUS]: anchorFocused ? 'true' : undefined }}
+            {...readingScopeAttributes(stateAside, stateIsDocked, stateSomePageDocked, isolatedOut)}
             backface={stateConfiguration.elements.plane.backface}
             depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
             <StyledFocusAnchor
                 tabIndex={0}
                 id={focusAnchorID}
-                // the tab stop that reaches the plane: a button that frames it (Enter), named after it
+                {...{ [PLURID_ATTRIBUTE_PLANE_ANCHOR]: planeID }}
+                // the tab stop that reaches the plane: a button that frames it (Enter) and selects
+                // it (Space), named after it; the plane wears the ring while it has the keyboard
                 role="button"
                 aria-label={'focus ' + planeAccessibleName}
+                aria-pressed={stateIsSelected}
+                onFocus={() => setAnchorFocused(true)}
+                onBlur={() => setAnchorFocused(false)}
+                onKeyDown={(event) => {
+                    if (event.key === ' ' || event.code === 'Space') {
+                        event.preventDefault();
+                        dispatchToggleSelection(planeID);
+                    }
+                }}
             />
 
             {treePlane.show && (
@@ -657,8 +677,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                     {treePlane.parentPlaneID && bridgeShown && chrome?.renderPlaneBridge && (
                         chrome.renderPlaneBridge(planeChromeContext) as React.ReactNode
                     )}
-                    {/* a child moved by hand keeps its link on a LEASH drawn by the beams layer; the band would point nowhere */}
-                    {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && !chrome?.renderPlaneBridge && (
+                    {/* a child moved by hand keeps its link on a LEASH drawn by the beams layer (the band would
+                        point nowhere), and so does a later sibling of a fan (`bridgeKind: 'leash'`: its strip
+                        would cross its elders) */}
+                    {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && treePlane.bridgeKind !== 'leash' && !chrome?.renderPlaneBridge && (
                         <PlaneBridge
                             mouseOver={mouseOver}
                             bridgeLength={treePlane.bridgeLength}

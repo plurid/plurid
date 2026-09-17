@@ -56,6 +56,8 @@ export interface HarnessWindow {
     __rtPlanes: () => { route: string; width?: number; height?: number }[];
     __rtPerf: { dispatches: number; frames: number };
     __rtChanges: string[][];
+    /** every `space.changed` kind reported, in order */
+    __rtChanged: string[];
     __rtBench?: BenchResult;
     __rtRootsSize: () => { width: string; height: string } | undefined;
     __rtStore?: Map<string, string>;
@@ -429,6 +431,12 @@ export const scrollPlaneContent = async (page: Page, planeID: string, top: numbe
 };
 
 /** Wait until the plane has exactly `count` shown children, measured. */
+/** N shown, measured roots: what `view.setPlanes` leaves behind */
+export const waitForRoots = (page: Page, count: number) => page.waitForFunction((count) => {
+    const roots = ((window as any).__rtTree() as any[]).filter((node) => node.show !== false);
+    return roots.length === count && roots.every((node) => node.width > 0 && node.height > 0);
+}, count);
+
 export const waitForChildren = (page: Page, planeID: string, count: number) => page.waitForFunction(({ planeID, count }) => {
     const find = (nodes: any[]): any => { for (const node of nodes) { if (node.planeID === planeID) return node; const f = node.children ? find(node.children) : undefined; if (f) return f; } return undefined; };
     const plane = find((window as any).__rtTree());
@@ -609,9 +617,35 @@ export const openFixture = async (
     if (!fixture) throw new Error('no fixture ' + name);
     await page.goto('/' + fixtureQuery(name, options.extra));
     const planes = (fixture.expect?.planes ?? 1) > 0;
-    await waitForBoot(page, { planes });
+    // the bus shape boots EMPTY: its planes arrive through the steps
+    await waitForBoot(page, { planes: planes && !fixture.query.bus });
     const measured = () => waitForBoot(page, { planes });
     for (const step of fixture.steps ?? []) {
+        if (step.kind === 'setPlanes') {
+            await publish(page, 'view.setPlanes', { view: step.view });
+            await waitForRoots(page, step.view.length);
+            await settle(page);
+            continue;
+        }
+        if (step.kind === 'publish') {
+            await publish(page, step.topic, step.data);
+            await settle(page);
+            continue;
+        }
+        if (step.kind === 'spawn') {
+            const parent = planeByRoute(await tree(page), step.plane);
+            if (!parent) throw new Error('fixture ' + name + ': no plane ' + step.plane);
+            const shown = (parent.children ?? []).filter((child: any) => child.show !== false).length;
+            await publish(page, 'space.spawnPlane', {
+                route: step.route,
+                parentPlaneID: parent.planeID,
+                ...(step.linkCoordinates ? { linkCoordinates: step.linkCoordinates } : {}),
+                ...(step.token ? { token: step.token } : {}),
+            });
+            await waitForChildren(page, parent.planeID, shown + 1);
+            await settle(page);
+            continue;
+        }
         if (step.kind === 'focus') {
             await page.focus(`[data-plurid-control="${step.control}"]`);
             continue;
@@ -706,6 +740,12 @@ export const movePlane = async (
     deltaY: number,
 ) => {
     const plane = `[data-plurid-plane="${planeID}"]`;
+    // A HAND TAKES HOLD OF WHAT IT CAN SEE: a child is framed WITH its parent from the yaw between
+    // them (`childFraming: 'pair'`), which puts a fin at 45° and behind a neighbour's face; a
+    // reader frames the plane before dragging it, and so does this (a camera move, never a step
+    // of the arrangement history)
+    await publish(page, 'space.frame', { planeID, animate: false });
+    await settle(page);
     // the controls bar is the plane's handle: a press on its CONTENT would be the page's
     const bar = page.locator(`${plane} [data-plurid-entity="PluridPlaneControls"]`).first();
     const box = await bar.boundingBox();
@@ -810,3 +850,23 @@ export const recordDockedFrames = async (page: Page) => {
     };
 };
 // #endregion fixtures
+
+
+/**
+ * A TRACKPAD PINCH, as the browser delivers one: a burst of small Ctrl + wheel deltas. A single
+ * Ctrl + notch is the browser's page zoom now and never reaches the camera, so a test that means a
+ * pinch sends a pinch. `deltaY` is the whole gesture (negative zooms in), spread over `steps`.
+ */
+export const pinch = async (
+    page: Page,
+    at: { x: number; y: number },
+    deltaY: number,
+    steps = 8,
+) => {
+    await page.mouse.move(at.x, at.y);
+    await page.keyboard.down('Control');
+    for (let step = 0; step < steps; step += 1) {
+        await page.mouse.wheel(0, deltaY / steps);
+    }
+    await page.keyboard.up('Control');
+};

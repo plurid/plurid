@@ -1,5 +1,6 @@
 // #region exports
 export * from './application';
+export * from './chrome';
 export * from './compare';
 export * from './component';
 export * from './configuration';

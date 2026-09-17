@@ -18,14 +18,23 @@
  *   pnpm sync <path-to-consumer>        build, then sync
  *   pnpm sync <path> --no-build         sync what is already built
  *   pnpm sync <path> --check            report what differs, change nothing
+ *   pnpm sync <path> --status           what each copy runs: the registry's, or synced from <commit>
+ *
+ * `--check` compares CONTENT (a digest of every file under `distribution/`),
+ * never a directory's mtime: a rebuild that emitted the same bytes is not
+ * stale, and a copy touched by an install is not fresh. Every synced copy
+ * carries a `.synced-from.json` stamp (`{ commit, dirty, at, version }`) so a
+ * product can say `synced from <commit>` where it shows its engine version, and
+ * refuse to verify against unpublished code (dechat: `DECHAT_REQUIRE_REGISTRY=1`).
  *
  * A synced consumer is running code that does not exist on the registry. Say so
  * when reporting a result from it, and put it back with `pnpm install` there
  * before trusting anything about the published engine.
  */
 import { execFileSync } from 'node:child_process';
-import { cpSync, existsSync, readFileSync, readdirSync, rmSync, statSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { createHash } from 'node:crypto';
+import { cpSync, existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -70,6 +79,65 @@ const copiesIn = (store, name) => {
 };
 
 
+/** The stamp a synced copy carries. */
+const STAMP = '.synced-from.json';
+
+
+/** A digest of a directory's CONTENT: every file's path and bytes, in one order. */
+export const digestOf = (
+    directory,
+) => {
+    const hash = createHash('sha256');
+    const walk = (current) => {
+        for (const entry of readdirSync(current, { withFileTypes: true }).sort((a, b) => (a.name < b.name ? -1 : 1))) {
+            const path = join(current, entry.name);
+            if (entry.isDirectory()) {
+                walk(path);
+            } else if (entry.name !== STAMP) {
+                hash.update(relative(directory, path));
+                hash.update('\0');
+                hash.update(readFileSync(path));
+                hash.update('\0');
+            }
+        }
+    };
+    if (existsSync(directory)) {
+        walk(directory);
+    }
+    return hash.digest('hex');
+};
+
+
+/** This checkout, for the stamp: the commit, and whether the working tree differs from it. */
+const provenance = () => {
+    const run = (command) => {
+        try {
+            return execFileSync('git', command, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+        } catch {
+            return '';
+        }
+    };
+    const commit = run(['rev-parse', '--short', 'HEAD']) || 'unknown';
+    const dirty = run(['status', '--porcelain']).length > 0;
+    return { commit, dirty };
+};
+
+
+const readStamp = (
+    copy,
+) => {
+    const path = join(copy, 'distribution', STAMP);
+    if (!existsSync(path)) {
+        return undefined;
+    }
+    try {
+        return JSON.parse(readFileSync(path, 'utf8'));
+    } catch {
+        return undefined;
+    }
+};
+
+
 const main = () => {
     if (!args[0]) {
         console.error('sync: which consumer? pass the path to its repository root');
@@ -82,11 +150,12 @@ const main = () => {
         process.exit(1);
     }
 
-    if (!flags.has('--no-build') && !flags.has('--check')) {
+    if (!flags.has('--no-build') && !flags.has('--check') && !flags.has('--status')) {
         console.log('sync: building');
         execFileSync('pnpm', ['-r', 'build'], { cwd: root, stdio: 'inherit' });
     }
 
+    const from = provenance();
     let synced = 0;
     let stale = 0;
     let missing = 0;
@@ -107,9 +176,17 @@ const main = () => {
             const target = join(copy, 'distribution');
             const version = JSON.parse(readFileSync(join(copy, 'package.json'), 'utf8')).version;
 
+            if (flags.has('--status')) {
+                const stamp = readStamp(copy);
+                console.log(stamp
+                    ? `  ${project.name}@${version}: synced from ${stamp.commit}${stamp.dirty ? ' (dirty)' : ''} at ${stamp.at}`
+                    : `  ${project.name}@${version}: the registry's`);
+                continue;
+            }
+
             if (flags.has('--check')) {
-                const at = existsSync(target) ? statSync(target).mtimeMs : 0;
-                if (statSync(built).mtimeMs > at) {
+                // by content: the same bytes are never stale, whatever the clocks say
+                if (digestOf(built) !== digestOf(target)) {
                     console.log(`  stale  ${project.name}@${version}`);
                     stale += 1;
                 }
@@ -121,9 +198,20 @@ const main = () => {
             // no longer has
             rmSync(target, { recursive: true, force: true });
             cpSync(built, target, { recursive: true });
-            console.log(`  synced ${project.name}@${version}`);
+            writeFileSync(join(target, STAMP), JSON.stringify({
+                commit: from.commit,
+                dirty: from.dirty,
+                at: new Date().toISOString(),
+                version,
+                package: project.name,
+            }, null, 4) + '\n');
+            console.log(`  synced ${project.name}@${version} (from ${from.commit}${from.dirty ? ', dirty' : ''})`);
             synced += 1;
         }
+    }
+
+    if (flags.has('--status')) {
+        return;
     }
 
     if (flags.has('--check')) {

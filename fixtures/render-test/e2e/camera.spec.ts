@@ -14,6 +14,7 @@ import {
     visibleCorners,
     settle,
     afterFrames,
+    pinch,
 } from './helpers';
 
 
@@ -71,19 +72,33 @@ test.describe('camera core', () => {
         await page.mouse.move(rect.left + 60, rect.top + rect.height - 160);
         const before = await camera(page);
 
+        // the glide is watched FROM THE PAGE, a sample per frame: a sample taken from here after
+        // the burst raced the frames and, on a slow run, saw the glide already over
+        await page.evaluate(({ x, y }) => {
+            const w = window as any;
+            const samples: number[] = (w.__rtGlide = []);
+            w.__rtGliding = true;
+            const tick = () => {
+                const offset = w.__rtCamera().offset;
+                samples.push(Math.hypot(offset.x - x, offset.y - y));
+                if (w.__rtGliding && samples.length < 600) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+        }, { x: before.offset.x, y: before.offset.y });
+
         // eight trackpad-sized ticks (12.5 px each): released over a few frames, landing on 100 px
         for (let i = 0; i < 8; i++) {
             await page.mouse.wheel(0, 12.5);
         }
-        const midway = await camera(page);
         // the smoothed wheel releases its burst over frames: let it finish gliding
         await afterFrames(page, 24);
         const panned = await camera(page);
-        const movedMid = Math.hypot(midway.offset.x - before.offset.x, midway.offset.y - before.offset.y);
+        const samples: number[] = await page.evaluate(() => { const w = window as any; w.__rtGliding = false; return w.__rtGlide; });
         const movedAll = Math.hypot(panned.offset.x - before.offset.x, panned.offset.y - before.offset.y);
         expect(movedAll).toBeCloseTo(100, 0);
-        expect(movedMid).toBeGreaterThan(0);
-        expect(movedMid).toBeLessThan(movedAll);
+        // some frame saw the camera on its way: moved, and not yet there (a jump would show none)
+        const midway = samples.filter((moved) => moved > 0.5 && moved < movedAll - 0.5);
+        expect(midway.length).toBeGreaterThan(0);
         expect(panned.scale).toBeCloseTo(before.scale, 9);
 
         // a pinch (ctrl + trackpad-sized deltas), −100 px in all: e^(0.006 · 100) ≈ ×1.82 — the
@@ -99,7 +114,7 @@ test.describe('camera core', () => {
         expect(pinched.scale / panned.scale).toBeLessThan(1.95);
     });
 
-    test('ctrl+wheel keeps the point under the cursor fixed at yaw 30', async ({ page }) => {
+    test('a pinch keeps the point under the cursor fixed at yaw 30', async ({ page }) => {
         await openHarness(page);
         await publish(page, 'space.rotateYWith', { value: 30 });
         const rect = await viewRect(page);
@@ -108,10 +123,7 @@ test.describe('camera core', () => {
         const world = { x: plane.location.translateX + plane.width / 2, y: plane.location.translateY + plane.height / 2, z: 0 };
         const anchor = await projectWorld(page, world);
 
-        await page.mouse.move(rect.left + anchor.x, rect.top + anchor.y);
-        await page.keyboard.down('Control');
-        await page.mouse.wheel(0, -100);
-        await page.keyboard.up('Control');
+        await pinch(page, { x: rect.left + anchor.x, y: rect.top + anchor.y }, -100);
         await afterFrames(page, 12);
 
         const after = await camera(page);
