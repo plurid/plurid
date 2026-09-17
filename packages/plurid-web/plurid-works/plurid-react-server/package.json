@@ -46,7 +46,7 @@
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-react": ">=0.0.0-38",
+        "@plurid/plurid-react": ">=0.0.0-39",
         "puppeteer": ">=22",
         "react": ">=19",
         "react-dom": ">=19",
