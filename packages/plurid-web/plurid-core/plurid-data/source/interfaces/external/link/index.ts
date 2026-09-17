@@ -122,6 +122,13 @@ export interface PluridLink<C, S, M> {
     mode?: 'toggle' | 'open';
 
     /**
+     * How the camera frames the plane the link goes to: with the plane it came from, from the
+     * yaw at which both read (`pair`), or alone, face-on (`plane`). Unset, `navigation.childFraming`
+     * decides (`pair` by default). A way back that means "show me this plane" frames it alone.
+     */
+    framing?: 'pair' | 'plane';
+
+    /**
      * Format the link as a simple anchor element. Default `false`.
      */
     devisible?: boolean;

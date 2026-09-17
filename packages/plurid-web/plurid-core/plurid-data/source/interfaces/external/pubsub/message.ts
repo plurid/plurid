@@ -227,6 +227,8 @@ export interface PluridPubSubSubscribeMessageViewRemovePlane {
 
 export interface PluridPubSubMessageNavigateToPlane {
     planeID?: string;
+    /** face-on (`plane`, the default: the topic names ONE plane) or with its parent from the yaw between them (`pair`) */
+    framing?: 'pair' | 'plane';
 }
 export interface PluridPubSubPublishMessageNavigateToPlane {
     topic: typeof PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE;

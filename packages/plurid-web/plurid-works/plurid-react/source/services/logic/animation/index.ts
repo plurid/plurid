@@ -128,6 +128,12 @@ export const getActivePlane = (
 }
 
 
+/**
+ * FACE THE PLANE. An explicit frame of one plane (Alt+F on the active one, Alt+B on its parent,
+ * Enter on a plane's anchor, `space.navigateToPlane`) lands on that plane, face-on: the reader named
+ * it. The pair view, from the yaw between a branch and its parent, is for the act that SHOWS a
+ * branch (a spawn, a link that opens one), where the parent is the way back.
+ */
 export const focusActivePlane = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>,
     state: AppState,
@@ -145,6 +151,7 @@ export const focusActivePlane = (
         activePlane,
         event,
         deisolate,
+        { pair: false },
     );
 }
 
@@ -168,6 +175,7 @@ export const focusPlaneByID = (
         plane,
         undefined,
         false,
+        { pair: false },
     );
 }
 
@@ -192,6 +200,9 @@ export const focusParentActivePlane = (
     navigateToPluridPlane(
         dispatch,
         parentPlane,
+        undefined,
+        true,
+        { pair: false },
     );
 }
 

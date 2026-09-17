@@ -547,9 +547,13 @@ export const usePluridPubSub = (
                         id,
                     );
 
+                    // face-on unless the host asks for the pair: "go to this plane" names ONE plane
                     navigateToPluridPlane(
                         dispatch,
                         plane,
+                        undefined,
+                        true,
+                        { pair: data?.framing === 'pair' },
                     );
                 },
             },

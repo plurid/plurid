@@ -40,6 +40,7 @@ const instant = { space: { navigation: { motion: { duration: 0 } } } } as any;
 
 const spaceWith = (
     mode?: 'toggle' | 'open',
+    framing?: 'pair' | 'plane',
 ) => renderPlurid({
     planes: [
         {
@@ -49,6 +50,7 @@ const spaceWith = (
                     route="/two"
                     linkID="back"
                     mode={mode}
+                    framing={framing}
                 >
                     go
                 </PluridLink>
@@ -124,6 +126,35 @@ describe('PluridLink mode', () => {
         expect(child(rendered)?.planeID).toBe(opened!.planeID);
         expect(rendered.api.getSnapshot().space.activePlaneID).toBe(opened!.planeID);
         expect(pose(rendered)).toEqual(pair);
+
+        await rendered.unmount();
+        clock.restore();
+    });
+
+    it('framing plane goes to the plane alone, face-on, not to the pair', async () => {
+        const clock = installFrameClock();
+        const rendered = await spaceWith('open', 'plane');
+
+        await click(rendered);
+        const opened = child(rendered)!;
+        const alone = pose(rendered);
+
+        // the pair pose is another camera: from the yaw between the two
+        act(() => {
+            rendered.api.pubsub.publish({ topic: 'space.frame', data: { planeID: opened.planeID, animate: false } } as any);
+        });
+        await flushFrames(3);
+        const framedAlone = pose(rendered);
+        act(() => {
+            rendered.handle.camera.frame({ planeID: rendered.api.getSnapshot().space.tree[0].planeID }, { animate: false });
+        });
+        await flushFrames(3);
+        expect(pose(rendered)).not.toEqual(alone);
+
+        // the click lands on the plane alone, where `space.frame { planeID }` lands
+        await click(rendered);
+        expect(child(rendered)?.show).not.toBe(false);
+        expect(pose(rendered)).toEqual(framedAlone);
 
         await rendered.unmount();
         clock.restore();

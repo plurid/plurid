@@ -52,10 +52,12 @@ import {
  * strip a child hangs from while it is still laid out by its parent.
  *
  * NOT the leash BEAM, which is the real-3D box drawn for a child that has been
- * moved by hand: that is `LEASH_THICKNESS` (6) and it is asserted in
- * `layout.spec.ts` by reading the element, not by a second copy of a number.
- * The beam merely inherited the band's 30 once, and a test carrying its own
- * copy of it failed the day the beam was thinned. (2026-09-14)
+ * moved by hand (or a later sibling of a fan): that is `LEASH_THICKNESS`, the
+ * band's own height again since 2026-09-17 (the leash IS the strip, drawn as a
+ * beam: flush with the plane's top, centred on the link's line), and it is
+ * asserted in `layout.spec.ts` by reading the element, not by a second copy of
+ * a number. The beam was thinned to 6 once, and a test carrying its own copy
+ * of the 30 failed that day. (2026-09-14)
  */
 const STRIP = 30;
 /** A page's controls bar hangs this far above its sheet (`PLANE_BAR_HEIGHT`). */
