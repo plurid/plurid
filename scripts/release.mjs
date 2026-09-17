@@ -22,7 +22,9 @@
  * that changed is bumped, and every `>=0.0.0-N` peer range pointing at it follows.
  */
 import { execFileSync, execSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -178,6 +180,43 @@ for (const project of packages) {
 
     const target = (changed && !noBump && published === version) ? nextVersion(version) : version;
     plan.push({ ...project, name, version, published, target, changed, why });
+}
+
+// THE GENERATOR FOLLOWS ITS SIBLINGS. `generate-plurid-app` bakes the kit, react and server versions
+// into its `distribution/versions.json` at build time, so a release that moves any of them ships a
+// generator on the registry that still writes the OLD pins unless the generator goes too — and its
+// own source never changes for that (2026-09-17: the release of react 39 left the registry's
+// generator 0.0.0-15 writing 38). So the registry's copy is unpacked and its pins compared with the
+// workspace: stale pins make it changed, whatever its sources did.
+const GENERATOR = '@plurid/generate-plurid-app';
+const FOLLOWED = { kit: '@plurid/plurid-kit', react: '@plurid/plurid-react', server: '@plurid/plurid-react-server' };
+const registryGeneratorPins = (published) => {
+    if (!published) {
+        return null;
+    }
+    try {
+        const scratch = mkdtempSync(path.join(os.tmpdir(), 'plurid-generator-'));
+        const tarball = read(`npm pack ${GENERATOR}@${published} --pack-destination '${scratch}' --silent 2>/dev/null`).trim().split('\n').pop();
+        const json = read(`tar -xOf '${path.join(scratch, tarball)}' package/distribution/versions.json 2>/dev/null`);
+        rmSync(scratch, { recursive: true, force: true });
+        return json ? JSON.parse(json) : null;
+    } catch (error) {
+        say(`could not read the registry generator's pins (${error.message.split('\n')[0]}); judging by this run's siblings instead`);
+        return null;
+    }
+};
+const generator = plan.find((entry) => entry.name === GENERATOR);
+if (generator && !generator.changed) {
+    const pins = registryGeneratorPins(generator.published);
+    const workspace = Object.fromEntries(Object.entries(FOLLOWED).map(([key, name]) => [key, plan.find((entry) => entry.name === name)?.target]));
+    const stale = pins
+        ? Object.keys(FOLLOWED).filter((key) => workspace[key] && pins[key] !== workspace[key])
+        : Object.keys(FOLLOWED).filter((key) => plan.some((entry) => entry.name === FOLLOWED[key] && entry.target !== entry.published));
+    if (stale.length > 0) {
+        generator.changed = true;
+        generator.why = `its baked pins follow ${stale.map((key) => FOLLOWED[key]).join(', ')}`;
+        generator.target = (!noBump && generator.published === generator.version) ? nextVersion(generator.version) : generator.version;
+    }
 }
 
 const publishing = plan.filter((entry) => entry.target !== entry.published);
