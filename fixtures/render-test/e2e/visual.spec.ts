@@ -17,10 +17,38 @@ import { FIXTURES } from '../src/fixtures/catalog';
 const VISUAL_CSS = fileURLToPath(new URL('./visual.css', import.meta.url));
 
 /** Fonts loaded, the space idle, two painted frames: a stable picture, with nothing left to wait for. */
+/**
+ * THE CHROME HAS TO STOP MOVING TOO. `settle` waits for the CAMERA; the toolbar fades in on its own
+ * clock, the viewcube turns to the camera through a transition, and a bus-driven fixture reaches
+ * its viewpoint at a time that varies with the machine, so two runs of one fixture caught the
+ * chrome at different points of its fade (CI #77 against #78: three pictures differed in nothing
+ * but the toolbar's text and the cube's edges). Playwright freezes CSS animations for the capture,
+ * not a fade a component drives by state. So: the computed state of the chrome, sampled a frame
+ * apart, must read the same three times running before the picture is taken.
+ */
+const chromeQuiet = (
+    page: Page,
+) => page.waitForFunction(async () => {
+    const fingerprint = () => Array.from(document.querySelectorAll(
+        '[data-plurid-entity="PluridToolbar"], [data-plurid-entity="PluridViewcube"], [data-plurid-entity="PluridDockRail"], [data-plurid-entity="PluridPlane"]',
+    )).map((element) => {
+        const style = getComputedStyle(element as HTMLElement);
+        return [style.opacity, style.bottom, style.transform, style.visibility].join('|');
+    }).join(';');
+    const frame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+    const first = fingerprint();
+    await frame();
+    const second = fingerprint();
+    await frame();
+    const third = fingerprint();
+    return first === second && second === third;
+}, undefined, { timeout: 10_000, polling: 50 });
+
 const stabilize = async (page: Page) => {
     await page.evaluate(() => (document as any).fonts?.ready);
     await settle(page);
     await afterFrames(page, 2);
+    await chromeQuiet(page);
 };
 
 /**
