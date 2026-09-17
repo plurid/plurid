@@ -241,6 +241,11 @@ describe('resolveGestureIntent', () => {
         expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true, shift: true }))).toBe('pan');
         // an unselected plane's bar is no handle for anything
         expect(resolveGestureIntent(mouse({ onPlane: true, onDragHandle: true }))).toBe('none');
+        // a BUTTON inside the handle of a selected plane still takes hold; unselected, or a field, it is a control
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true, onControl: true }))).toBe('move-selection');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onDragHandle: true, onControl: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true, onEditable: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ onPlane: true, onSelectedPlane: true, onDragHandle: true, onControl: true, meta: true }))).toBe('none');
     });
 
     it('buttonMap overrides the defaults, menu releases the right button', () => {

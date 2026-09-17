@@ -79,7 +79,21 @@ const mapped = (
 export const resolveGestureIntent = (
     ctx: GestureContext,
 ): GestureIntent => {
-    if (ctx.onEditable || ctx.onControl) {
+    // A CONTROL INSIDE THE HANDLE OF A SELECTED PLANE IS STILL THE HANDLE: a plain press-and-drag on
+    // the bar's own buttons moves the plane (a click without movement still clicks, the threshold
+    // sees to that). A host's handle is mostly buttons, and a handle that could only be taken by
+    // its gaps could not be taken at all.
+    const inHandOfSelected = !!ctx.onDragHandle
+        && ctx.onSelectedPlane
+        && !ctx.onEditable
+        && ctx.button === 0
+        && !ctx.shift
+        && !ctx.alt
+        && !ctx.ctrl
+        && !ctx.meta
+        && ctx.pointerType !== 'touch';
+
+    if ((ctx.onEditable || ctx.onControl) && !inHandOfSelected) {
         return 'none';
     }
 
