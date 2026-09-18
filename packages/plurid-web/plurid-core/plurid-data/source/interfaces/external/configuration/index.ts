@@ -622,6 +622,19 @@ export interface PluridConfigurationSpaceNavigation {
      */
     childFraming?: 'plane' | 'pair';
     /**
+     * HOW CLOSE A FRAMING COMES. Framing a plane, a pair, a set or the whole space lands at the
+     * largest zoom where everything still fits the view; these say how much of the view it may
+     * fill and how far it may magnify.
+     *
+     * `fill` is the fraction of the view the framed content takes (default `0.85`: a plane with
+     * air around it). `maxScale` is the ceiling on the zoom a framing may reach; unset, every
+     * framing keeps the ceiling it always had - a plane, a pair and a set are never drawn larger
+     * than they are (`1`), a fit may magnify a small space to the camera's own limit. On a wide
+     * screen that ceiling is what leaves a 460px reading card small, so a product that wants a
+     * plane to come closer raises both.
+     */
+    framing?: PluridConfigurationSpaceNavigationFraming;
+    /**
      * The yaw a fit (`space.fitToView`, the toolbar, `0`) turns to: the front (`front`, yaw 0), or
      * the yaw that maximises the narrowest plane's projected width (`best`, the default) so a
      * space of roots and their perpendicular branches reads as one picture.
@@ -687,6 +700,17 @@ export interface PluridConfigurationSpaceSnap {
     threshold?: number;
     /** Grid pitch in space units when no edge attracts; unset = no grid. */
     grid?: number;
+}
+
+
+export interface PluridConfigurationSpaceNavigationFraming {
+    /** the fraction of the view the framed content may fill; `0.85` by default */
+    fill?: number;
+    /**
+     * the ceiling on a framing's zoom; unset, each framing keeps its own (a plane is never
+     * magnified past its own size, a fit may magnify up to the camera's `zoomMax`)
+     */
+    maxScale?: number;
 }
 
 

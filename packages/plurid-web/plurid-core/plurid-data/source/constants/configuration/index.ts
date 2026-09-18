@@ -165,6 +165,9 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         orbitPivot: 'cursor',
         onClose: 'parent',
         childFraming: 'pair',
+        framing: {
+            fill: 0.85,
+        },
         fitYaw: 'best',
         motion: {
             duration: 380,

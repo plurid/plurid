@@ -106,6 +106,33 @@ const planeGeometry = (
  * one place the presentation enters the camera logic, so every framing path (the frame control, a
  * link spawn, the back control, `onClose: 'parent'`, the arrows, the minimap, `space.frame`) docks.
  */
+/**
+ * HOW CLOSE A FRAMING COMES, as the configuration says (`navigation.framing`).
+ *
+ * The engine frames at the largest zoom where the content still fits a margin of the view, and
+ * never magnifies a plane past its own size. Both were constants; on a wide screen that left a
+ * reading card adrift in the middle of the view, which is the reader's own complaint. They are
+ * the product's to set now.
+ *
+ * A ceiling the product did not set is LEFT OUT of the result rather than defaulted here: each
+ * framing in the engine carries the ceiling it always had (`framePlane`, `framePair` and
+ * `framePlanes` never magnify past `1`; a fit may go to the camera's `zoomMax`), and a `maxScale`
+ * key spread over them as `undefined` would take those away.
+ */
+export const framingOf = (
+    configuration: PluridConfiguration,
+): { margin: number; maxScale?: number } => {
+    const framing = configuration.space.navigation?.framing;
+    const margin = typeof framing?.fill === 'number' && framing.fill > 0
+        ? Math.min(1, framing.fill)
+        : 0.85;
+
+    return typeof framing?.maxScale === 'number' && framing.maxScale > 0
+        ? { margin, maxScale: framing.maxScale }
+        : { margin };
+};
+
+
 export const frameTargetForPlane = (
     spaceState: PluridStateSpace,
     configuration: PluridConfiguration,
@@ -119,6 +146,7 @@ export const frameTargetForPlane = (
         planeGeometry(plane, resolvePlaneFallbackSize(configuration, spaceState.viewSize)),
         spaceState.viewSize,
         {
+            ...framingOf(configuration),
             limits: spaceState.cameraLimits,
         },
     );
@@ -148,6 +176,7 @@ export const pairTargetForPlane = (
         planeGeometry(plane, fallback),
         spaceState.viewSize,
         {
+            ...framingOf(configuration),
             limits: spaceState.cameraLimits,
         },
     );
@@ -169,6 +198,7 @@ export const planesTarget = (
         return undefined;
     }
     return cameraEngine.framePlanes(spaceState.camera, planes, spaceState.viewSize, {
+        ...framingOf(configuration),
         yaw,
         limits: spaceState.cameraLimits,
     });
@@ -230,6 +260,7 @@ export const fitTarget = (
             faceOn,
             // a fit turns to where the narrowest plane reads, unless the front was asked for
             ...(faceOn && (configuration.space.navigation?.fitYaw ?? 'best') === 'best' ? { yaw: 'best' as const } : {}),
+            ...framingOf(configuration),
             fallbackWidth: fallback.width,
             fallbackHeight: fallback.height,
             limits: spaceState.cameraLimits,
