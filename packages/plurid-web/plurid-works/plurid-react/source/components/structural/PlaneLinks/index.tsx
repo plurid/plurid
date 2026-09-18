@@ -19,6 +19,8 @@
         PLURID_ENTITY_PLANE_LINKS,
         PLURID_ENTITY_PLANE_LEASH,
         BRIDGE_STRIP_HEIGHT,
+        BRIDGE_BAND_RUN,
+        BRIDGE_TIP_HEIGHT,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -115,6 +117,24 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     } = properties;
 
     const fallbackSize = resolvePlaneFallbackSize(stateConfiguration, stateViewSize);
+    /**
+     * THE LEASH IS PAINTED FROM THE PLANE, NOT FROM THE CHROME. It is a bridge, and a plane's
+     * own bridge takes `--plurid-plane` wherever the plane carries no controls bar - so on a
+     * product of black planes the leash was the one grey object in the picture (the reader's
+     * screenshots, 2026-09-18). The same rules as `PlaneBridge`, minus the hover it has no
+     * pointer for.
+     */
+    const leashFill = stateConfiguration.elements.plane.opacity === 0
+        ? 'transparent'
+        : (stateConfiguration.global.transparentUI
+            ? 'var(--plurid-surface)'
+            : (stateConfiguration.elements.plane.controls.show
+                ? 'var(--plurid-surface-solid)'
+                : 'var(--plurid-plane)'));
+    // the bridge's own shape, the product's to set (`space.bridge.taper`)
+    const taper = stateConfiguration.space.bridge?.taper;
+    const taperRun = typeof taper?.run === 'number' && taper.run >= 0 ? taper.run : BRIDGE_BAND_RUN;
+    const taperTip = typeof taper?.tip === 'number' && taper.tip >= 0 ? taper.tip : BRIDGE_TIP_HEIGHT;
     // THE LEASH: a child moved by hand keeps its link — its bridge band (a stub off its own edge)
     // would point nowhere, so the beams layer draws the segment from the link's point to the
     // child's edge instead (the Plane skips the band for a `manuallyPositioned` child).
@@ -143,6 +163,9 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
                 key={'leash:' + child.planeID}
                 theme={stateGeneralTheme}
                 thickness={LEASH_THICKNESS}
+                taperRun={taperRun}
+                taperTip={taperTip}
+                fill={leashFill}
                 // the length inline like the transform: both change per drag frame (no class per frame)
                 style={{
                     transform,

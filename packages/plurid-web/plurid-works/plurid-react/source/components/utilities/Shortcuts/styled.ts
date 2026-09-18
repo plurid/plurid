@@ -115,6 +115,46 @@ export const StyledShortcutsRow = styled.div`
     }
 `;
 
+/**
+ * WHAT THIS IS. The sheet says what every key does and never said what the space itself is, which
+ * a reader meeting a plurid application for the first time has no other place to learn. One
+ * paragraph and two links, under a hairline, after the keys.
+ */
+export const StyledShortcutsAbout = styled.div`
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid var(--plurid-rim);
+    font-size: var(--plurid-font-size);
+
+    p {
+        margin: 0 0 12px;
+        max-width: 62ch;
+        line-height: 1.5;
+        color: var(--plurid-ink-muted);
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+    }
+
+    a {
+        color: var(--plurid-ink);
+        text-decoration: none;
+        border-bottom: 1px solid var(--plurid-rim);
+        padding-bottom: 1px;
+        transition: color 140ms ease, border-color 140ms ease;
+    }
+
+    a:hover,
+    a:focus-visible {
+        color: var(--plurid-accent);
+        border-bottom-color: var(--plurid-accent);
+    }
+`;
+
 export const StyledShortcutsKeys = styled.div`
     display: flex;
     align-items: center;

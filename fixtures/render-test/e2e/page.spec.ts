@@ -60,6 +60,10 @@ import {
  * of the 30 failed that day. (2026-09-14)
  */
 const STRIP = 30;
+/** Up to this tilt a bridge points exactly at its link (`BRIDGE_LEAN_KNEE`), degrees. */
+const LEAN_KNEE = 12;
+/** The tilt it leans toward and never passes (`BRIDGE_LEAN_LIMIT`), degrees. */
+const LEAN_LIMIT = 22;
 /** A page's controls bar hangs this far above its sheet (`PLANE_BAR_HEIGHT`). */
 const BAR = 56;
 /** A real swing: the fixtures are otherwise opened with reduced motion. */
@@ -232,8 +236,19 @@ test.describe('the page presentation', () => {
                 height: bridge.offsetHeight,
                 top: bridge.offsetTop,
                 transform: style.transform,
+                clip: style.clipPath,
+                mask: style.maskImage || (style as any).webkitMaskImage,
             };
         }, contact.planeID);
+
+        // A BRIDGE IS A BAND WHERE IT LEAVES THE PLANE AND A THREAD WHERE IT ARRIVES: the wedge is
+        // a clip on the axis-aligned box, and the fade a mask along its length, at rest and
+        // scrolled alike. Without them a long bridge is the grey plate the reader photographed.
+        const shaped = (drawn: { clip: string; mask: string }) => {
+            expect(drawn.clip).toContain('polygon');
+            expect(drawn.mask).toContain('gradient');
+        };
+        shaped(await leash());
 
         // scrolled past the header: the link is beyond the fold, the bridge reaches up to the top edge
         await scrollPlaneContent(page, root.planeID, 600);
@@ -241,18 +256,31 @@ test.describe('the page presentation', () => {
         expect(after.location).toEqual(contact.location);
         expect(after.linkCoordinates).toEqual(anchor);
         const stretched = await leash();
-        // the link scrolled to the fold: the far end rises by the anchor's y (the pivot is the link's line)
-        const expectedReach = Math.hypot(bridgeLength, anchor.y);
-        const tilt = Math.atan2(anchor.y, bridgeLength);
-        expect(parseFloat(stretched.reach)).toBeCloseTo(expectedReach, 0);
-        expect(parseFloat(stretched.angle)).toBeCloseTo(tilt * 180 / Math.PI, 1);
+        // THE BRIDGE LEANS, IT DOES NOT STRETCH. The link scrolled to the fold, far past the knee:
+        // the bridge leans toward it, under the limit, and its far end lands ON the parent's face
+        // (a bridge length over the cosine of the lean) instead of reaching across the space to
+        // the link's own point. Pointing exactly at a link 400px down a page turned a 100px bridge
+        // into a 400px diagonal (2026-09-18).
+        const lean = Math.abs(parseFloat(stretched.angle));
+        const tilt = Math.atan2(anchor.y, bridgeLength) * 180 / Math.PI;
+        // this fixture's link sits a tenth of a bridge down its page: UNDER the knee, so the
+        // bridge still points exactly at it and the numbers are the ones this test always pinned
+        expect(tilt).toBeLessThan(LEAN_KNEE);
+        expect(lean).toBeCloseTo(tilt, 1);
+        expect(parseFloat(stretched.reach)).toBeCloseTo(Math.hypot(bridgeLength, anchor.y), 0);
+        expect(parseFloat(stretched.reach)).toBeCloseTo(bridgeLength / Math.cos(lean * Math.PI / 180), 0);
         // the leash is a band across an axis-aligned box, never a rotated element (a plane's layer
-        // must not cross its parent's plane): as long as the bridge, as tall as the rise plus the
-        // band's cut at the box's vertical edges, pivoting about the resting strip's centre
+        // must not cross its parent's plane): as long as the bridge, as tall as the lean's drop
+        // plus the band's cut at the box's vertical edges, pivoting about the resting strip's
+        // centre. The drop is now the LEAN's, so the box stays about a strip tall.
+        const drop = Math.abs(parseFloat(stretched.reach) * Math.sin(lean * Math.PI / 180));
+        const half = STRIP / 2 / Math.cos(lean * Math.PI / 180);
         expect(stretched.transform).toBe('none');
         expect(stretched.width).toBe(bridgeLength);
-        expect(stretched.height).toBeCloseTo(anchor.y + STRIP / Math.cos(tilt), 0);
-        expect(stretched.top).toBeCloseTo(STRIP / 2 - BAR - anchor.y - STRIP / 2 / Math.cos(tilt), 0);
+        expect(stretched.height).toBeCloseTo(drop + 2 * half, 0);
+        expect(stretched.height).toBeLessThan(2 * STRIP + drop);
+        expect(stretched.top).toBeCloseTo(STRIP / 2 - BAR - drop - half, 0);
+        shaped(stretched);
 
         // back at the top: the bridge rests
         await scrollPlaneContent(page, root.planeID, 0);
@@ -274,6 +302,72 @@ test.describe('the page presentation', () => {
         expect(child.location.translateY).toBeGreaterThanOrEqual(resized.location.translateY);
         expect(child.location.translateY).toBeLessThanOrEqual(resized.location.translateY + resized.height);
         expect(child.linkCoordinates.y).toBe(0);
+    });
+
+    /**
+     * THE LEAN. A bridge points at its link while the tilt is small and LEANS toward it after that,
+     * easing to a limit it never passes, with the far end always landing on the parent's face. A
+     * link scrolled far down a tall plane used to drag the bridge into a long diagonal band across
+     * the space, cutting through every plane it passed (the reader's screenshots, 2026-09-18).
+     * The fixture's own link is a tenth of a bridge down its page, so the knee is brought to it.
+     */
+    test('the bridge leans toward a scrolled link as far as the product allows, and no further', async ({ page }) => {
+        await openFixture(page, 'page-docked');
+        const root = (await tree(page))[0];
+        await clickLink(page, root.planeID, '/page-1/contact');
+        await waitForChildren(page, root.planeID, 1);
+        await settle(page);
+        await publish(page, 'space.reveal', { animate: false });
+        await settle(page);
+        const contact = (await tree(page))[0].children[0];
+        const anchor = contact.linkCoordinates;
+        const bridgeLength = contact.bridgeLength;
+        const tilt = Math.atan2(anchor.y, bridgeLength) * 180 / Math.PI;
+
+        const drawn = () => page.evaluate((id) => {
+            const plane = document.querySelector(`[data-plurid-plane="${id}"]`) as HTMLElement;
+            const bridge = plane.querySelector('[data-plurid-entity="PluridPlaneBridge"]') as HTMLElement;
+            return {
+                reach: parseFloat(plane.style.getPropertyValue('--plurid-bridge-reach')),
+                angle: Math.abs(parseFloat(plane.style.getPropertyValue('--plurid-bridge-angle'))),
+                height: bridge.offsetHeight,
+            };
+        }, contact.planeID);
+
+        await publish(page, 'configuration', { space: { bridge: { lean: { knee: 2, limit: 6 } } } });
+        await scrollPlaneContent(page, root.planeID, 600);
+        await settle(page);
+
+        const leaned = await drawn();
+        // it leans toward the link it can no longer point at, and stops short of the limit
+        expect(leaned.angle).toBeLessThan(tilt);
+        expect(leaned.angle).toBeGreaterThan(2);
+        expect(leaned.angle).toBeLessThanOrEqual(6);
+        // and lands on the parent's face: a bridge length over the cosine of the lean, never the
+        // hypotenuse to the link's own point
+        expect(leaned.reach).toBeCloseTo(bridgeLength / Math.cos(leaned.angle * Math.PI / 180), 0);
+        expect(leaned.reach).toBeLessThan(Math.hypot(bridgeLength, anchor.y));
+        // so the box the band is drawn across stays about a strip tall
+        expect(leaned.height).toBeLessThan(2 * STRIP + bridgeLength * Math.sin(6 * Math.PI / 180));
+
+        // AND A CONFIGURATION CHANGE WHILE SCROLLED MOVES NOTHING. The follower re-measures the
+        // link and RE-ANCHORS the child when it runs, so carrying the lean in the effect's
+        // dependency list re-placed a plane at the link's clamped point every time any
+        // configuration changed: the page jumped 20px after a scroll, which two visual baselines
+        // caught. The lean rides a ref instead. An arrangement is the reader's.
+        await publish(page, 'configuration', { space: { fadeInTime: 0 } });
+        await settle(page);
+        const settled = (await tree(page))[0].children[0];
+        expect(settled.location).toEqual(contact.location);
+        expect(settled.linkCoordinates).toEqual(anchor);
+
+        // back at the top the bridge rests, whatever the lean allows
+        await scrollPlaneContent(page, root.planeID, 0);
+        await settle(page);
+        const rested = await drawn();
+        expect(rested.angle).toBe(0);
+        expect(rested.reach).toBeCloseTo(bridgeLength, 6);
+        expect(rested.height).toBe(STRIP);
     });
 
     test('a docking swing never paints the chrome: the destination counts as docked for the whole tween (the default)', async ({ page }) => {

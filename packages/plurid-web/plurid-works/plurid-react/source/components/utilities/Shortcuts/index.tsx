@@ -19,6 +19,9 @@
     import {
         PluridConfigurationSpaceShortcuts,
         PLURID_ENTITY_SHORTCUTS_OVERLAY,
+        PLURID_ABOUT,
+        PLURID_SITE,
+        PLURID_REPOSITORY,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -48,6 +51,7 @@
         StyledShortcutsKeys,
         StyledShortcutsKey,
         StyledShortcutsClose,
+        StyledShortcutsAbout,
     } from './styled';
     // #endregion internal
 // #endregion imports
@@ -244,6 +248,33 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
                         </StyledShortcutsGroup>
                     ))}
                 </StyledShortcutsGroups>
+
+                {/* WHAT THIS IS, after what the keys do: a reader meeting a plurid
+                    application has no other place in the chrome to learn what the
+                    space around them is. The links leave the space in a new tab
+                    (`noopener`), so nothing a reader is in the middle of is lost. */}
+                <StyledShortcutsAbout>
+                    <p>{PLURID_ABOUT}</p>
+
+                    <nav aria-label="About plurid">
+                        <a
+                            href={PLURID_SITE}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-plurid-control="shortcuts-site"
+                        >
+                            plurid.com
+                        </a>
+                        <a
+                            href={PLURID_REPOSITORY}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-plurid-control="shortcuts-repository"
+                        >
+                            github.com/plurid/plurid
+                        </a>
+                    </nav>
+                </StyledShortcutsAbout>
             </StyledShortcutsPanel>
         </StyledShortcutsBackdrop>
         )}

@@ -26,6 +26,10 @@ describe('the bridge preset', () => {
             keepBehind: false,
             anchor: 'edge',
             preset: 'reading',
+            // the LOOK of a bridge, beside its geometry: a band at the plane tapering to a
+            // thread, and how far it leans toward a scrolled link (2026-09-18)
+            taper: { run: 60, tip: 4 },
+            lean: { knee: 12, limit: 22 },
         });
     });
 

@@ -533,6 +533,23 @@ export interface PluridConfigurationSpace {
          * release before 2026-09 had, for spaces of things rather than of prose.
          */
         preset?: 'reading' | 'objects';
+        /**
+         * THE SHAPE OF A BRIDGE ALONG ITS LENGTH. It leaves the plane as the full strip, flush
+         * with the plane's top, and narrows to a thread as it travels: `run` is how far the full
+         * band goes before the taper starts (default 60), `tip` the height it ends at (default 4).
+         * At the resting length the taper is barely visible; a long bridge (a link scrolled far, a
+         * fan's later sibling) stops reading as a plate across the space. `run: 0` and a `tip` of
+         * the strip's height give the flat band every release before 2026-09-18 drew.
+         */
+        taper?: PluridConfigurationSpaceBridgeTaper;
+        /**
+         * HOW FAR A BRIDGE FOLLOWS A SCROLLED LINK. The link moves inside its parent and the child
+         * does not, so the bridge tilts: exactly at the link up to `knee` degrees (default 12),
+         * easing after that toward `limit` (default 22) and never reaching it. Every scroll still
+         * moves the bridge, less and less, and the far end always lands on the parent's face
+         * instead of stretching across the space to the link's point.
+         */
+        lean?: PluridConfigurationSpaceBridgeLean;
     };
 
     /**
@@ -700,6 +717,22 @@ export interface PluridConfigurationSpaceSnap {
     threshold?: number;
     /** Grid pitch in space units when no edge attracts; unset = no grid. */
     grid?: number;
+}
+
+
+export interface PluridConfigurationSpaceBridgeTaper {
+    /** how far the full strip runs off the plane's edge before the taper, px; `60` by default */
+    run?: number;
+    /** the height the bridge ends at, px; `4` by default */
+    tip?: number;
+}
+
+
+export interface PluridConfigurationSpaceBridgeLean {
+    /** up to this tilt the bridge points exactly at the link, degrees; `12` by default */
+    knee?: number;
+    /** the tilt the bridge leans toward and never reaches, degrees; `22` by default */
+    limit?: number;
 }
 
 

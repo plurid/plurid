@@ -32,6 +32,7 @@
         TreePlane,
         PluridConfiguration,
         LinkCoordinates,
+        PluridConfigurationSpaceBridgeLean,
         // #endregion interfaces
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -240,12 +241,22 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const pluridPlaneID = childPlane?.planeID || '';
     // the spawn geometry the leash is drawn with (stored on the tree node at spawn); the refs are
     // synced after the commit (never during a render), before the tracking effect below reads them
-    const bridgeRef = useRef<{ length: number; side: 'start' | 'end' }>({ length: DEFAULT_BRIDGE_LENGTH, side: 'start' });
+    const bridgeRef = useRef<{
+        length: number;
+        side: 'start' | 'end';
+        lean: PluridConfigurationSpaceBridgeLean | undefined;
+    }>({ length: DEFAULT_BRIDGE_LENGTH, side: 'start', lean: undefined });
     useEffect(() => {
         storedCoordinates.current = childPlane?.linkCoordinates;
         bridgeRef.current = {
             length: childPlane?.bridgeLength ?? DEFAULT_BRIDGE_LENGTH,
             side: childPlane?.bridgeSide ?? 'start',
+            // THE LEAN RIDES THE REF, NEVER THE EFFECT'S DEPENDENCIES. The tracking effect
+            // re-measures the link and RE-ANCHORS the child when it runs (`update()`), so a
+            // configuration change in its dependency list moved a plane the reader had put
+            // where it is: two visual baselines caught the page jumping 20px after a scroll
+            // (2026-09-18). An arrangement is the reader's.
+            lean: stateConfiguration.space.bridge?.lean,
         };
     });
     // #endregion state
@@ -421,7 +432,13 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 return;
             }
             const current = measureLinkCoordinates(element, planeElement);
-            const geometry = bridgeGeometry(storedCoordinates.current, current, bridgeRef.current.length, bridgeRef.current.side);
+            const geometry = bridgeGeometry(
+                storedCoordinates.current,
+                current,
+                bridgeRef.current.length,
+                bridgeRef.current.side,
+                bridgeRef.current.lean,
+            );
             target.style.setProperty(BRIDGE_REACH_VARIABLE, geometry.reach + 'px');
             target.style.setProperty(BRIDGE_ANGLE_VARIABLE, geometry.angle + 'deg');
         };

@@ -16,6 +16,8 @@
     import {
         /** constants */
         PLURID_ENTITY_PLANE_BRIDGE,
+        BRIDGE_BAND_RUN,
+        BRIDGE_TIP_HEIGHT,
 
         /** interfaces */
         PluridConfiguration,
@@ -95,6 +97,11 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     // The bridge is drawn at the length the plane was SPAWNED with (stored on the tree node), so a
     // later configuration change never detaches existing bridges from their link points.
     const bridgeLength = bridgeLengthProperty ?? stateConfiguration.space.bridge?.length ?? 100;
+    // The taper is the product's (`space.bridge.taper`), read live: it is a look, not the geometry
+    // the plane was placed by, so a change reaches every bridge already in the space.
+    const taper = stateConfiguration.space.bridge?.taper;
+    const taperRun = typeof taper?.run === 'number' && taper.run >= 0 ? taper.run : BRIDGE_BAND_RUN;
+    const taperTip = typeof taper?.tip === 'number' && taper.tip >= 0 ? taper.tip : BRIDGE_TIP_HEIGHT;
     // #endregion properties
 
 
@@ -109,6 +116,8 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
             bridgeLength={bridgeLength}
             bridgeSide={bridgeSide}
             raise={raise}
+            taperRun={taperRun}
+            taperTip={taperTip}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
             data-plurid-bridge-side={bridgeSide}
         />

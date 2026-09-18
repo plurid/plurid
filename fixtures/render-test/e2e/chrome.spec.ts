@@ -81,6 +81,41 @@ test.describe('the chrome mode', () => {
         await expect(page.locator('[data-plurid-entity="PluridView"]')).not.toHaveAttribute('data-plurid-navigating', 'grab');
     });
 
+    /**
+     * THE HELP SHEET SAYS WHAT THIS IS. It listed every key and never named the thing the keys
+     * drive, which a reader meeting a plurid application for the first time has nowhere else in
+     * the chrome to learn (2026-09-18). One paragraph and two links, and the links leave in a new
+     * tab so nothing a reader is in the middle of is lost.
+     */
+    test('the shortcuts sheet says what plurid is and where to read more', async ({ page }) => {
+        await openHarness(page, '?reducedMotion=1');
+        await page.locator('[data-plurid-control="shortcuts"]').click();
+        const panel = page.locator('[data-plurid-control="shortcuts-overlay"] [role="dialog"]');
+        await expect(panel).toBeVisible();
+
+        const about = panel.locator('p').first();
+        await expect(about).toBeVisible();
+        const paragraph = (await about.textContent()) || '';
+        expect(paragraph.length).toBeGreaterThan(80);
+        expect(paragraph.toLowerCase()).toContain('plurid');
+
+        for (const [control, href] of [
+            ['shortcuts-site', 'https://plurid.com'],
+            ['shortcuts-repository', 'https://github.com/plurid/plurid'],
+        ]) {
+            const link = panel.locator(`[data-plurid-control="${control}"]`);
+            await expect(link).toHaveAttribute('href', href);
+            await expect(link).toHaveAttribute('target', '_blank');
+            expect(await link.getAttribute('rel')).toContain('noopener');
+        }
+
+        // and they are inside the dialog's focus trap, which takes every focusable it holds
+        const reachable = await panel.evaluate((element) => Array.from(
+            element.querySelectorAll('a[href]'),
+        ).length);
+        expect(reachable).toBeGreaterThanOrEqual(2);
+    });
+
     test('chrome=minimal keeps the plane bars and the ?, drops the toolbar, the viewcube and the minimap', async ({ page }) => {
         await openHarness(page, '?reducedMotion=1&chrome=minimal');
         expect(await page.locator('[data-plurid-control="shortcuts"]').count()).toBe(1);

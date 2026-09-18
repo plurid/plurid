@@ -27,6 +27,13 @@
 
         PLURID_DEFAULT_CONFIGURATION_NETWORK_HOST,
     } from '../defaults';
+
+    import {
+        BRIDGE_BAND_RUN,
+        BRIDGE_TIP_HEIGHT,
+        BRIDGE_LEAN_KNEE,
+        BRIDGE_LEAN_LIMIT,
+    } from '../space';
     // #endregion external
 // #endregion imports
 
@@ -201,6 +208,14 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         keepBehind: false,
         anchor: 'edge',
         preset: 'reading',
+        taper: {
+            run: BRIDGE_BAND_RUN,
+            tip: BRIDGE_TIP_HEIGHT,
+        },
+        lean: {
+            knee: BRIDGE_LEAN_KNEE,
+            limit: BRIDGE_LEAN_LIMIT,
+        },
     },
 };
 
