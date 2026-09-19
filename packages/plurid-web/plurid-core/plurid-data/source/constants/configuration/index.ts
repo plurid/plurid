@@ -29,8 +29,7 @@
     } from '../defaults';
 
     import {
-        BRIDGE_BAND_RUN,
-        BRIDGE_TIP_HEIGHT,
+        BRIDGE_THREAD,
         BRIDGE_LEAN_KNEE,
         BRIDGE_LEAN_LIMIT,
     } from '../space';
@@ -208,10 +207,8 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
         keepBehind: false,
         anchor: 'edge',
         preset: 'reading',
-        taper: {
-            run: BRIDGE_BAND_RUN,
-            tip: BRIDGE_TIP_HEIGHT,
-        },
+        thickness: BRIDGE_THREAD,
+        quiet: true,
         lean: {
             knee: BRIDGE_LEAN_KNEE,
             limit: BRIDGE_LEAN_LIMIT,

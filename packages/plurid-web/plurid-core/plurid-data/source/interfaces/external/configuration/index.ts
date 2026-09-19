@@ -534,14 +534,19 @@ export interface PluridConfigurationSpace {
          */
         preset?: 'reading' | 'objects';
         /**
-         * THE SHAPE OF A BRIDGE ALONG ITS LENGTH. It leaves the plane as the full strip, flush
-         * with the plane's top, and narrows to a thread as it travels: `run` is how far the full
-         * band goes before the taper starts (default 60), `tip` the height it ends at (default 4).
-         * At the resting length the taper is barely visible; a long bridge (a link scrolled far, a
-         * fan's later sibling) stops reading as a plate across the space. `run: 0` and a `tip` of
-         * the strip's height give the flat band every release before 2026-09-18 drew.
+         * HOW THICK A BRIDGE IS DRAWN, px. A bridge is a LINE of one width at every length
+         * (default 3, the crosslink beam's own): a 30px band was a plate across the space, and a
+         * band tapering to a thread read as an arrowhead pointing at the plane. Raise it for a
+         * space of objects where a connector should have body.
          */
-        taper?: PluridConfigurationSpaceBridgeTaper;
+        thickness?: number;
+        /**
+         * WHETHER A BRIDGE RESTS QUIET. `true` (the default) draws it barely there while nothing
+         * is happening and brings it up while the camera moves or its own plane is under the
+         * pointer, so a still space is still and the structure arrives when the reader starts
+         * travelling through it. `false` holds one steady tone, for a space read from a picture.
+         */
+        quiet?: boolean;
         /**
          * HOW FAR A BRIDGE FOLLOWS A SCROLLED LINK. The link moves inside its parent and the child
          * does not, so the bridge tilts: exactly at the link up to `knee` degrees (default 12),
@@ -717,14 +722,6 @@ export interface PluridConfigurationSpaceSnap {
     threshold?: number;
     /** Grid pitch in space units when no edge attracts; unset = no grid. */
     grid?: number;
-}
-
-
-export interface PluridConfigurationSpaceBridgeTaper {
-    /** how far the full strip runs off the plane's edge before the taper, px; `60` by default */
-    run?: number;
-    /** the height the bridge ends at, px; `4` by default */
-    tip?: number;
 }
 
 

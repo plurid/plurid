@@ -694,7 +694,12 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                         would cross its elders) */}
                     {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && treePlane.bridgeKind !== 'leash' && !chrome?.renderPlaneBridge && (
                         <PlaneBridge
-                            mouseOver={mouseOver}
+                            // THE ACTIVE PLANE, not this component's own hover: the engine's active
+                            // plane is ONE value, so entering any other plane takes the line back
+                            // down, where a per-instance hover that never got its leave (a plane
+                            // transformed out from under the pointer, a docked page revealed) held
+                            // it up for good. The leash reads the same value.
+                            mouseOver={stateIsActivePlane}
                             bridgeLength={treePlane.bridgeLength}
                             bridgeSide={treePlane.bridgeSide}
                             raise={pagePresentation ? PLANE_BAR_HEIGHT : 0}

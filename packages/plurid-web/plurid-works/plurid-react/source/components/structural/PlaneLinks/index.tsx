@@ -18,9 +18,7 @@
 
         PLURID_ENTITY_PLANE_LINKS,
         PLURID_ENTITY_PLANE_LEASH,
-        BRIDGE_STRIP_HEIGHT,
-        BRIDGE_BAND_RUN,
-        BRIDGE_TIP_HEIGHT,
+        BRIDGE_THREAD,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -72,7 +70,7 @@
  */
 const THICKNESS = 3;
 /** exported so a test states the centring rule rather than pinning a number */
-export const LEASH_THICKNESS = BRIDGE_STRIP_HEIGHT;
+export const LEASH_THICKNESS = BRIDGE_THREAD;
 
 
 export interface PluridPlaneLinksStateProperties {
@@ -82,6 +80,7 @@ export interface PluridPlaneLinksStateProperties {
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
     stateViewSize: ViewSize;
+    stateActivePlaneID: string;
 }
 
 export type PluridPlaneLinksProperties = PluridPlaneLinksStateProperties;
@@ -114,27 +113,16 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         stateGeneralTheme,
         stateConfiguration,
         stateViewSize,
+        stateActivePlaneID,
     } = properties;
 
     const fallbackSize = resolvePlaneFallbackSize(stateConfiguration, stateViewSize);
-    /**
-     * THE LEASH IS PAINTED FROM THE PLANE, NOT FROM THE CHROME. It is a bridge, and a plane's
-     * own bridge takes `--plurid-plane` wherever the plane carries no controls bar - so on a
-     * product of black planes the leash was the one grey object in the picture (the reader's
-     * screenshots, 2026-09-18). The same rules as `PlaneBridge`, minus the hover it has no
-     * pointer for.
-     */
-    const leashFill = stateConfiguration.elements.plane.opacity === 0
-        ? 'transparent'
-        : (stateConfiguration.global.transparentUI
-            ? 'var(--plurid-surface)'
-            : (stateConfiguration.elements.plane.controls.show
-                ? 'var(--plurid-surface-solid)'
-                : 'var(--plurid-plane)'));
-    // the bridge's own shape, the product's to set (`space.bridge.taper`)
-    const taper = stateConfiguration.space.bridge?.taper;
-    const taperRun = typeof taper?.run === 'number' && taper.run >= 0 ? taper.run : BRIDGE_BAND_RUN;
-    const taperTip = typeof taper?.tip === 'number' && taper.tip >= 0 ? taper.tip : BRIDGE_TIP_HEIGHT;
+    // the line's width and whether it rests quiet, the product's to set (`space.bridge`)
+    const configuredThickness = stateConfiguration.space.bridge?.thickness;
+    const leashThickness = typeof configuredThickness === 'number' && configuredThickness > 0
+        ? configuredThickness
+        : LEASH_THICKNESS;
+    const quiet = stateConfiguration.space.bridge?.quiet !== false;
     // THE LEASH: a child moved by hand keeps its link — its bridge band (a stub off its own edge)
     // would point nowhere, so the beams layer draws the segment from the link's point to the
     // child's edge instead (the Plane skips the band for a `manuallyPositioned` child).
@@ -146,9 +134,9 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         ...computeEdgeTransform(
             spaceEngine.location.linkWorldPoint(parent.location, child.linkCoordinates!),
             spaceEngine.location.childLeashPoint(child),
-            LEASH_THICKNESS,
+            leashThickness,
         ),
-    })), [leashes]);
+    })), [leashes, leashThickness]);
     // #endregion properties
 
 
@@ -162,10 +150,8 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
             <StyledPluridPlaneLeash
                 key={'leash:' + child.planeID}
                 theme={stateGeneralTheme}
-                thickness={LEASH_THICKNESS}
-                taperRun={taperRun}
-                taperTip={taperTip}
-                fill={leashFill}
+                thickness={leashThickness}
+                quiet={quiet}
                 // the length inline like the transform: both change per drag frame (no class per frame)
                 style={{
                     transform,
@@ -173,6 +159,11 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
                 }}
                 data-plurid-entity={PLURID_ENTITY_PLANE_LEASH}
                 data-plurid-leash-for={child.planeID}
+                // A LEASH COMES UP WITH THE PLANE IT HOLDS. The engine takes its active plane from
+                // the pointer, so this is the hover of the plane at the far end of the line. The
+                // layer re-renders on a hover change, which is not a frame: the memo below still
+                // bails every orbit frame, where the beams ride the camera transform with no JS.
+                data-plurid-leash-live={child.planeID === stateActivePlaneID ? 'true' : undefined}
             />
         );
     });
@@ -234,6 +225,7 @@ const mapStateToProperties = (
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
+    stateActivePlaneID: state.space.activePlaneID || '',
 });
 
 

@@ -16,8 +16,7 @@
     import {
         /** constants */
         PLURID_ENTITY_PLANE_BRIDGE,
-        BRIDGE_BAND_RUN,
-        BRIDGE_TIP_HEIGHT,
+        BRIDGE_THREAD,
 
         /** interfaces */
         PluridConfiguration,
@@ -86,22 +85,20 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     } = properties;
 
     const {
-        controls,
         opacity,
     } = stateConfiguration.elements.plane;
-
-    const {
-        transparentUI,
-    } = stateConfiguration.global;
 
     // The bridge is drawn at the length the plane was SPAWNED with (stored on the tree node), so a
     // later configuration change never detaches existing bridges from their link points.
     const bridgeLength = bridgeLengthProperty ?? stateConfiguration.space.bridge?.length ?? 100;
-    // The taper is the product's (`space.bridge.taper`), read live: it is a look, not the geometry
-    // the plane was placed by, so a change reaches every bridge already in the space.
-    const taper = stateConfiguration.space.bridge?.taper;
-    const taperRun = typeof taper?.run === 'number' && taper.run >= 0 ? taper.run : BRIDGE_BAND_RUN;
-    const taperTip = typeof taper?.tip === 'number' && taper.tip >= 0 ? taper.tip : BRIDGE_TIP_HEIGHT;
+    // The line's width and whether it rests quiet are the product's (`space.bridge`), read live:
+    // they are a look, not the geometry the plane was placed by, so a change reaches every bridge
+    // already in the space.
+    const configuredThickness = stateConfiguration.space.bridge?.thickness;
+    const thickness = typeof configuredThickness === 'number' && configuredThickness > 0
+        ? configuredThickness
+        : BRIDGE_THREAD;
+    const quiet = stateConfiguration.space.bridge?.quiet !== false;
     // #endregion properties
 
 
@@ -109,17 +106,17 @@ const PluridPlaneBridge: React.FC<PluridPlaneBridgeProperties> = (
     return (
         <StyledPluridPlaneBridge
             theme={stateGeneralTheme}
-            planeControls={controls.show}
             planeOpacity={opacity}
-            transparentUI={transparentUI}
             mouseOver={mouseOver}
             bridgeLength={bridgeLength}
             bridgeSide={bridgeSide}
             raise={raise}
-            taperRun={taperRun}
-            taperTip={taperTip}
+            thickness={thickness}
+            quiet={quiet}
             data-plurid-entity={PLURID_ENTITY_PLANE_BRIDGE}
             data-plurid-bridge-side={bridgeSide}
+            // the line is up while its plane is under the pointer: the leash carries the same mark
+            data-plurid-bridge-live={mouseOver ? 'true' : undefined}
         />
     );
     // #endregion render

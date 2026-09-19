@@ -19,14 +19,21 @@ export const PLANE_BAR_HEIGHT = 56;
 /** The height of the bridge strip between a link and its spawned plane, px (the leash is drawn as this band). */
 export const BRIDGE_STRIP_HEIGHT = 30;
 /**
- * How far a bridge keeps its full strip height off the plane's edge, px, before it tapers. A
- * bridge is a band where it leaves the plane and a thread where it arrives: at the resting length
- * the taper is barely there, and a long one (a scrolled link, a fan's later sibling) reads as a
- * line instead of a plate.
+ * A BRIDGE IS A LINE, px. It was a 30px band, then a band tapering to a thread, and both were
+ * objects: a plate across the space, then a wedge that read as an arrowhead pointing at the plane
+ * (the reader, 2026-09-19). A connector says one thing - this plane came from that point - and the
+ * quietest thing that says it is a hairline of one width, the crosslink beam's own.
  */
-export const BRIDGE_BAND_RUN = 60;
-/** The height a bridge tapers to at its far end, px. */
-export const BRIDGE_TIP_HEIGHT = 4;
+export const BRIDGE_THREAD = 3;
+/**
+ * What a bridge is worth while nothing is happening: present, not competing with the prose. The
+ * line is drawn in INK, which is near-white on a dark space, so these are far lower than the
+ * numbers the old dark BAND carried (0.55 resting, 0.75 moving): the same fractions of a light
+ * line read as a cable across the picture.
+ */
+export const BRIDGE_OPACITY_REST = 0.14;
+/** And while the camera moves or its plane is under the pointer, when it is the thing to follow. */
+export const BRIDGE_OPACITY_LIVE = 0.45;
 /** Up to this tilt a bridge points EXACTLY at its link, degrees. */
 export const BRIDGE_LEAN_KNEE = 12;
 /** The tilt a bridge leans toward and never reaches, however far the link scrolls, degrees. */

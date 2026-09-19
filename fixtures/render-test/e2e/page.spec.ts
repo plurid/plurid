@@ -60,6 +60,8 @@ import {
  * of the 30 failed that day. (2026-09-14)
  */
 const STRIP = 30;
+/** And what is DRAWN on the link's line: the bridge's own width (`BRIDGE_THREAD`), px. */
+const THREAD = 3;
 /** Up to this tilt a bridge points exactly at its link (`BRIDGE_LEAN_KNEE`), degrees. */
 const LEAN_KNEE = 12;
 /** The tilt it leans toward and never passes (`BRIDGE_LEAN_LIMIT`), degrees. */
@@ -237,18 +239,18 @@ test.describe('the page presentation', () => {
                 top: bridge.offsetTop,
                 transform: style.transform,
                 clip: style.clipPath,
-                mask: style.maskImage || (style as any).webkitMaskImage,
+                opacity: parseFloat(style.opacity),
+                live: bridge.getAttribute('data-plurid-bridge-live') === 'true',
             };
         }, contact.planeID);
 
-        // A BRIDGE IS A BAND WHERE IT LEAVES THE PLANE AND A THREAD WHERE IT ARRIVES: the wedge is
-        // a clip on the axis-aligned box, and the fade a mask along its length, at rest and
-        // scrolled alike. Without them a long bridge is the grey plate the reader photographed.
-        const shaped = (drawn: { clip: string; mask: string }) => {
-            expect(drawn.clip).toContain('polygon');
-            expect(drawn.mask).toContain('gradient');
+        // A BRIDGE IS A LINE. It was a 30px band, then a band tapering to a thread, and both were
+        // objects in the picture: a plate across the space, then a wedge that read as an arrowhead
+        // (2026-09-19). One width, no clip, no mask, at rest and scrolled alike.
+        const drawnAsALine = (drawn: { clip: string }) => {
+            expect(drawn.clip === 'none' || drawn.clip === '').toBe(true);
         };
-        shaped(await leash());
+        drawnAsALine(await leash());
 
         // scrolled past the header: the link is beyond the fold, the bridge reaches up to the top edge
         await scrollPlaneContent(page, root.planeID, 600);
@@ -269,18 +271,19 @@ test.describe('the page presentation', () => {
         expect(lean).toBeCloseTo(tilt, 1);
         expect(parseFloat(stretched.reach)).toBeCloseTo(Math.hypot(bridgeLength, anchor.y), 0);
         expect(parseFloat(stretched.reach)).toBeCloseTo(bridgeLength / Math.cos(lean * Math.PI / 180), 0);
-        // the leash is a band across an axis-aligned box, never a rotated element (a plane's layer
-        // must not cross its parent's plane): as long as the bridge, as tall as the lean's drop
-        // plus the band's cut at the box's vertical edges, pivoting about the resting strip's
-        // centre. The drop is now the LEAN's, so the box stays about a strip tall.
+        // the leash is a line drawn as a band across an axis-aligned box, never a rotated element
+        // (a plane's layer must not cross its parent's plane): as long as the bridge, as tall as
+        // the lean's drop plus the LINE's cut at the box's vertical edges, pivoting about the
+        // link's line, which is where the placement still puts it (half a strip below the plane's
+        // top, `TreePlane.bridgeOffset`).
         const drop = Math.abs(parseFloat(stretched.reach) * Math.sin(lean * Math.PI / 180));
-        const half = STRIP / 2 / Math.cos(lean * Math.PI / 180);
+        const half = THREAD / 2 / Math.cos(lean * Math.PI / 180);
         expect(stretched.transform).toBe('none');
         expect(stretched.width).toBe(bridgeLength);
         expect(stretched.height).toBeCloseTo(drop + 2 * half, 0);
-        expect(stretched.height).toBeLessThan(2 * STRIP + drop);
+        expect(stretched.height).toBeLessThan(2 * THREAD + drop);
         expect(stretched.top).toBeCloseTo(STRIP / 2 - BAR - drop - half, 0);
-        shaped(stretched);
+        drawnAsALine(stretched);
 
         // back at the top: the bridge rests
         await scrollPlaneContent(page, root.planeID, 0);
@@ -288,9 +291,28 @@ test.describe('the page presentation', () => {
         expect(parseFloat(rested.reach)).toBeCloseTo(bridgeLength, 6);
         expect(parseFloat(rested.angle)).toBe(0);
         expect(rested.width).toBe(bridgeLength);
-        // at rest the strip is flush with the plane's top — the top of its bar, above the sheet on a page
-        expect(rested.height).toBe(STRIP);
-        expect(rested.top).toBe(-BAR);
+        // at rest the line is the thread's own width, on the link's line: half a strip below the
+        // plane's top, which on a page is the top of its bar, above the sheet
+        expect(rested.height).toBe(THREAD);
+        // `offsetTop` is a rounded integer and the line's half is 1.5px
+        expect(Math.abs(rested.top - (STRIP / 2 - BAR - THREAD / 2))).toBeLessThanOrEqual(0.5);
+
+        // QUIET UNTIL IT MATTERS. A still space is still: the line rests barely there and comes up
+        // for the ACTIVE plane, which the engine takes from the pointer. A bridge at one steady
+        // tone was the reader's "too much is going on" (2026-09-19). The active plane is ONE
+        // value, so this drives it through the bus rather than through the pointer's geometry.
+        await settle(page);
+        const live = await leash();
+        expect(live.live).toBe(true);
+        await publish(page, 'space.navigateToPlane', { planeID: root.planeID });
+        await settle(page);
+        await expect.poll(async () => (await leash()).opacity).toBeLessThan(live.opacity);
+        const quiet = await leash();
+        expect(quiet.live).toBe(false);
+        // and comes back up when the reader returns to it
+        await publish(page, 'space.navigateToPlane', { planeID: contact.planeID });
+        await settle(page);
+        await expect.poll(async () => (await leash()).opacity).toBeGreaterThan(quiet.opacity);
 
         // a resize while scrolled never lifts the child off its sheet (the anchor clamps at the fold)
         await scrollPlaneContent(page, root.planeID, 600);
@@ -348,7 +370,7 @@ test.describe('the page presentation', () => {
         expect(leaned.reach).toBeCloseTo(bridgeLength / Math.cos(leaned.angle * Math.PI / 180), 0);
         expect(leaned.reach).toBeLessThan(Math.hypot(bridgeLength, anchor.y));
         // so the box the band is drawn across stays about a strip tall
-        expect(leaned.height).toBeLessThan(2 * STRIP + bridgeLength * Math.sin(6 * Math.PI / 180));
+        expect(leaned.height).toBeLessThan(2 * THREAD + bridgeLength * Math.sin(6 * Math.PI / 180));
 
         // AND A CONFIGURATION CHANGE WHILE SCROLLED MOVES NOTHING. The follower re-measures the
         // link and RE-ANCHORS the child when it runs, so carrying the lean in the effect's
@@ -367,7 +389,7 @@ test.describe('the page presentation', () => {
         const rested = await drawn();
         expect(rested.angle).toBe(0);
         expect(rested.reach).toBeCloseTo(bridgeLength, 6);
-        expect(rested.height).toBe(STRIP);
+        expect(rested.height).toBe(THREAD);
     });
 
     test('a docking swing never paints the chrome: the destination counts as docked for the whole tween (the default)', async ({ page }) => {
