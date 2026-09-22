@@ -69,7 +69,7 @@
         "esbuild": "^0.25.0"
     },
     "peerDependencies": {
-        "@plurid/plurid-react": ">=0.0.0-39",
+        "@plurid/plurid-react": ">=0.0.0-40",
         "@plurid/plurid-react-server": ">=0.0.0-19",
         "react": ">=19",
         "react-dom": ">=19",
