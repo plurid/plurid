@@ -1,3 +1,14 @@
 /* Applied only while a visual baseline is taken: scrollbars differ by platform and theme. */
 *::-webkit-scrollbar { display: none; }
 * { scrollbar-width: none; }
+
+/* A bridge's TONE follows the active plane, which a capture would otherwise inherit from wherever
+   the fixture's steps left the pointer: darwin and linux disagreed on it and moved different
+   baselines for one change (2026-09-19). Pictures gate the bridge's geometry and material; its tone
+   rule (quiet at rest, up for the active plane) is gated by page.spec.ts. 0.14 is
+   BRIDGE_OPACITY_REST. */
+[data-plurid-entity="PluridPlaneBridge"],
+[data-plurid-entity="PluridPlaneLeash"] {
+    opacity: 0.14 !important;
+    transition: none !important;
+}

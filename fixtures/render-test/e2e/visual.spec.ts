@@ -97,14 +97,10 @@ const guardOrigin = (
  * baselines are per platform. `darwin` is generated here; `linux` is generated — and compared on CI —
  * inside the PINNED Playwright container. The container has no `pnpm`, so its `webServer` command
  * (`pnpm dev`) exits 127: serve the harness from INSIDE the container, at the same `localhost:5273`
- * CI uses, and let Playwright adopt it (`reuseExistingServer`):
- *
- *     docker run --rm -v "$PWD/../..":/work -w /work/fixtures/render-test \
- *         mcr.microsoft.com/playwright:v1.62.1-noble \
- *         bash -lc 'npx vite --port 5273 --strictPort >/tmp/vite.log 2>&1 &
- *                   npx wait-on http://localhost:5273 &&
- *                   npx playwright test --config e2e/playwright.config.ts \
- *                       --project=visual --update-snapshots'
+ * CI uses. The recipes that work on a mac, and the ones that do not, are in `docs/CONTRIBUTING.md`
+ * (§ The visual baseline ritual): take the pictures from CI's `visual-diff` artifact, or install and build a
+ * copy of the repository INSIDE the pinned container exactly as the workflow does. A mounted
+ * repository fails there (its `node_modules` is a darwin install).
  *
  * On a platform with no baselines the run FAILS and says that (Playwright writes the missing file and
  * reports it), rather than passing quietly.

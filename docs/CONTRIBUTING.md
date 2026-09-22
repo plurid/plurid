@@ -333,7 +333,7 @@ npx playwright test --config e2e/playwright.config.ts --project=visual --update-
 **linux** is awkward on a mac and worth reading twice. The container has no `pnpm`, so its `webServer`
 command (`pnpm dev`) exits 127; and the repository's `node_modules` is a darwin install, so `vite` inside
 the container dies on rollup's missing native binding. Both of the obvious routes are therefore closed.
-The two that work:
+The three that work:
 
 1. **Take them from CI** — the simplest, and exact by construction. Let the `visual` job fail, then
    download its `visual-diff` artifact: every `*-actual.png` in it is the picture CI renders, so copying
@@ -351,6 +351,32 @@ docker run --rm --add-host=host.docker.internal:host-gateway \
               for i in $(seq 1 30); do curl -sf -o /dev/null http://localhost:5273 && break; sleep 1; done
               npx playwright test --config e2e/playwright.config.ts --project=visual'
 ```
+
+3. **Be CI, in the container** — the one that needs neither a red CI run nor the host's server, and
+   the one that also runs the `chromium` project on Linux (where a gate can pass on a mac and fail on
+   CI, as the quiet-bridge gate did on 2026-09-19). Copy the repository WITHOUT `node_modules` into
+   the container, install and build there exactly as the workflow does, and run the project:
+
+```bash
+# from the repository root; the linux set lands in /tmp/linux-baselines/linux
+mkdir -p /tmp/linux-baselines
+docker run --rm --user root -v "$PWD":/src:ro -v /tmp/linux-baselines:/out \
+    mcr.microsoft.com/playwright:v1.62.1-noble \
+    bash -lc 'set -e; mkdir -p /work
+              tar -C /src --exclude=node_modules --exclude=test-results -cf - . | tar -C /work -xf -
+              cd /work && corepack enable && corepack prepare pnpm@11.3.0 --activate
+              export CI=true && pnpm install --frozen-lockfile && pnpm build
+              cd fixtures/render-test
+              pnpm exec playwright test --config e2e/playwright.config.ts --project=visual --update-snapshots || true
+              cp -r e2e/__snapshots__/linux /out/'
+```
+
+   Run it once WITHOUT `--update-snapshots` first: every unchanged picture must pass against the
+   committed baselines, which is the proof that the container renders what CI renders (fonts,
+   rasterisation, origin). `--update-snapshots` rewrites only the pictures that failed, so compare
+   `/tmp/linux-baselines/linux` with `e2e/__snapshots__/linux` byte for byte and copy only what
+   differs. `bash -l` matters: without the login shell the script died before its first line,
+   silently.
 
 On CI none of this applies — the container IS the runner, installs pnpm and builds inside Linux, so
 `pnpm dev` works there.

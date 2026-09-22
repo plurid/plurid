@@ -301,9 +301,14 @@ test.describe('the page presentation', () => {
         // for the ACTIVE plane, which the engine takes from the pointer. A bridge at one steady
         // tone was the reader's "too much is going on" (2026-09-19). The active plane is ONE
         // value, so this drives it through the bus rather than through the pointer's geometry.
+        // THE PRECONDITION IS SET HERE, NOT INHERITED. This gate first read the child as already
+        // active, which it was locally only because of where earlier steps had left the pointer;
+        // on linux they left it over the root, and CI went red (2026-09-19). Navigating to the
+        // child makes it the active plane on every platform.
+        await publish(page, 'space.navigateToPlane', { planeID: contact.planeID });
         await settle(page);
+        await expect.poll(async () => (await leash()).live).toBe(true);
         const live = await leash();
-        expect(live.live).toBe(true);
         await publish(page, 'space.navigateToPlane', { planeID: root.planeID });
         await settle(page);
         await expect.poll(async () => (await leash()).opacity).toBeLessThan(live.opacity);
