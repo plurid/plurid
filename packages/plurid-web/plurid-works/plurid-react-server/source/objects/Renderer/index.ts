@@ -76,10 +76,17 @@ class PluridRenderer {
         // gradient matches the active theme; `resolveBackgroundStyle` falls back to a default if it can't parse.
         } = resolveBackgroundStyle(pluridMetastate || '');
 
+        // THE PAGE SIZES THE SPACE: the engine's view is `height: 100%` of its mount point and sizes
+        // nothing above it. With only `body` given a height, `html` and the root were auto, the view
+        // resolved to 0 px, and the server's page painted black until the script ran; the engine then
+        // measured an empty view and fell back to the window (2026-09-29).
         const defaultStyleBasic = `
+            html, body, [id="${root || DEFAULT_RENDERER_ROOT}"] {
+                height: 100%;
+            }
+
             body {
                 background: radial-gradient(ellipse at center, ${gradientBackground} 0%, ${gradientForeground} 100%);
-                height: 100%;
                 margin: 0;
             }
         `;

@@ -45,6 +45,18 @@ describe('PluridRenderer — SSR HTML assembly', () => {
         expect(html).toContain('\\u003c/script>');
     });
 
+    it('gives html, body and the root the full height the engine\'s view fills', async () => {
+        // the view is `height: 100%` of its mount point and sizes nothing above it: with no height on
+        // `html` and the root it resolved to 0 px, and the server's page painted black until the script
+        // ran (2026-09-29)
+        const html = await new PluridRenderer({
+            ...baseConfig(),
+            defaultStyle: undefined,
+        }).html();
+
+        expect(html).toMatch(/html,\s*body,\s*\[id="plurid-root"\]\s*\{\s*height:\s*100%;/);
+    });
+
     it('passes html attribute values through into the html tag', async () => {
         // `htmlAttributes` reaches the renderer already stringified via `recordToString` (escaping happens
         // there) — assert the renderer places a benign attribute on the <html> element.

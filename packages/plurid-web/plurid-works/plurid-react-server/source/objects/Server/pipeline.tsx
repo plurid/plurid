@@ -31,6 +31,7 @@
 
     import {
         NOT_FOUND_ROUTE,
+        DEFAULT_SERVER_OPTIONS_HOSTNAME,
     } from '~data/constants';
 
     import {
@@ -336,6 +337,22 @@ export const handleGetRequest = async (
 
 
 /**
+ * The host a request renders its planes on. A configured `hostname` is the site's own; without one
+ * the engine's default is the host serving the application (`location.host` in the browser), which
+ * on the server is the request's. Rendering the literal `origin` wrote a host no browser has into
+ * every route, and the page failed to hydrate (2026-09-29).
+ */
+export const renderHostname = (
+    configured: string,
+    request?: express.Request,
+) => (
+    configured === DEFAULT_SERVER_OPTIONS_HOSTNAME
+        ? request?.headers?.host || configured
+        : configured
+);
+
+
+/**
  * One request's render: the metastate, a per-request document registry (the route's head before
  * the render, the planes' heads and the in-render declarations during it), the React tree through
  * styled-components, the stray-hoistable guard, the document assembled with the preserve's layer
@@ -351,11 +368,12 @@ export const renderApplication = async (
 
     const requestURL = request?.originalUrl || request?.url || '';
     const search = requestURL.includes('?') ? requestURL.slice(requestURL.indexOf('?')) : '';
+    const hostname = renderHostname(server.options.hostname, request);
     const pluridMetastate = await serverComputeMetastate(
         isoMatch,
         server.routes,
         globals,
-        server.options.hostname,
+        hostname,
         {
             pathname: isoMatch.match.value,
             search,
@@ -380,7 +398,7 @@ export const renderApplication = async (
         documentRegistry,
         pathname: isoMatch.match.value,
         search,
-        hostname: server.options.hostname,
+        hostname,
         directPlane: isoMatch.kind === 'RoutePlane'
             ? isoMatch.match.value
             : undefined,

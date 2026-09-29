@@ -53,18 +53,20 @@ const launchChromium = () => {
     return chromium.launch(process.env.PLURID_CHROMIUM ? { executablePath: process.env.PLURID_CHROMIUM } : {});
 };
 
-/* global document -- the functions handed to `page.waitForFunction` below run in the page, not in Node */
+/* global document -- the functions handed to `page.waitForFunction` and `page.evaluate` below run in the page, not in Node */
 
 /**
  * Load `url` as a reader does, wait until React has hydrated the first plurid link, follow it, and
  * return what went wrong: every console error and page error (a hydration mismatch is one of them),
- * and a link that did not open its page. Waits on state, never on time.
+ * every warning of the engine's (`[plurid] …`: the generated application is a host that follows the
+ * engine's advice), a link that did not open its page, and a server page that is blank before its
+ * script runs. Waits on state, never on time.
  */
 const visit = async (browser, url) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
     const problems = [];
     page.on('console', (message) => {
-        if (message.type() === 'error') {
+        if (message.type() === 'error' || (message.type() === 'warning' && message.text().startsWith('[plurid]'))) {
             problems.push(message.text());
         }
     });
@@ -90,6 +92,44 @@ const visit = async (browser, url) => {
         problems.push(error.message.split('\n')[0]);
     } finally {
         await page.close();
+    }
+
+    // THE SERVER'S PAGE IS A PAGE before any script runs (2026-09-29: the template left `html` and the
+    // root without a height, so the view resolved to 0 px, and the space rendered at opacity 0 until the
+    // browser's first layout: the first paint was black until hydration, twice over)
+    const bare = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 800 } });
+    try {
+        const still = await bare.newPage();
+        await still.goto(url, { waitUntil: 'load' });
+        const paint = await still.evaluate(() => {
+            const view = document.querySelector('[data-plurid-entity="PluridView"]');
+            const content = document.querySelector('[data-plurid-entity="PluridPlaneContent"]');
+            // hit-test with every element in play: a cover takes no pointer events, and hides from it
+            const probe = document.createElement('style');
+            probe.textContent = '* { pointer-events: auto !important; }';
+            document.head.appendChild(probe);
+            const box = content ? content.getBoundingClientRect() : null;
+            const top = box ? document.elementFromPoint(box.left + Math.min(20, box.width / 2), box.top + Math.min(20, box.height / 2)) : null;
+            probe.remove();
+            return {
+                view: view ? view.getBoundingClientRect().height : 0,
+                content: !!content && content.checkVisibility({ opacityProperty: true, visibilityProperty: true }),
+                covered: !!content && !(top && content.contains(top)),
+            };
+        });
+        if (paint.view === 0) {
+            problems.push('before its script runs the server\'s page has a 0 px view: it paints blank');
+        }
+        if (!paint.content) {
+            problems.push('before its script runs the server\'s page hides its content: it paints blank');
+        }
+        if (paint.covered) {
+            problems.push('before its script runs something covers the server\'s page: it paints blank');
+        }
+    } catch (error) {
+        problems.push(error.message.split('\n')[0]);
+    } finally {
+        await bare.close();
     }
     return problems;
 };
@@ -267,10 +307,10 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
             const problems = await visit(browser, served.url);
             if (problems.length > 0) {
                 failures += 1;
-                console.log(`  FAIL  the generated application (${label}) does not hydrate cleanly in Chromium:\n      `
+                console.log(`  FAIL  the generated application (${label}) does not load cleanly in Chromium:\n      `
                     + problems.slice(0, 4).map((problem) => problem.replace(/\s+/g, ' ').slice(0, 400)).join('\n      '));
             } else {
-                console.log(`  ok    the generated application (${label}) hydrates in Chromium without an error and its first link opens its page`);
+                console.log(`  ok    the generated application (${label}) paints before its script runs, hydrates in Chromium without an error or an engine warning, and its first link opens its page`);
             }
         };
 

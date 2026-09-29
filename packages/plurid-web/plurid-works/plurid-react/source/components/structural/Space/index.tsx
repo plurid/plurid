@@ -36,6 +36,7 @@
     import {
         buildInspection,
     } from '~services/logic/inspector';
+    import PluridProviderContext from '~containers/Provider/context';
     // import actions from '~services/state/actions';
     // #endregion external
 
@@ -76,6 +77,8 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
 ) => {
     const reduxContext = React.useContext(StateContext as unknown as typeof ReactReduxContext);
     const pluridContext = useReactContext(Context);
+    /** Rendered by a server (its metastate; the kit's client hydrates under the same one). */
+    const serverRendered = useReactContext(PluridProviderContext) !== undefined;
     // #region properties
     const {
         // #region state
@@ -94,6 +97,13 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
         fadeInTime,
         perspective,
     } = space;
+
+    // The space shows once the browser has laid it out, so a client-only application never paints a
+    // frame placed for a view it has not measured. A server cannot measure, and its render was that
+    // hidden frame: every server-rendered page painted blank until its script ran (2026-09-29). A
+    // PAGE is shown from the first render, as the page presentation promises (the docked page, to a
+    // crawler and to the first paint); the space presentation keeps its fade-in.
+    const visible = stateResolvedLayout || (serverRendered && space.presentation === 'page');
     // #endregion properties
 
 
@@ -122,7 +132,7 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             perspective={perspective || 2000}
             data-plurid-entity={PLURID_ENTITY_SPACE}
             style={{
-                opacity: stateResolvedLayout ? 1 : 0
+                opacity: visible ? 1 : 0
             }}
         >
             <PluridRoots />

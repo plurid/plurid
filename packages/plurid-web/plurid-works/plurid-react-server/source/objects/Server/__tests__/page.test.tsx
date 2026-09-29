@@ -97,6 +97,9 @@ describe('the page presentation on the server', () => {
             expect(body).toMatch(/\[data-plurid-docked\][^{]*\{[^}]*visibility:\s*hidden/);
             // the first page is the one docked
             expect(body).toMatch(/data-plurid-docked="[^"]*\/p@/);
+            // AND IT PAINTS before any script runs (2026-09-29): no cover over it, the space shown
+            expect(body).not.toContain('data-plurid-cover');
+            expect(body).toMatch(/data-plurid-entity="PluridSpace"[^>]*style="opacity:1"/);
             // THE ADDRESS BAR IS THE PAGE on the server: a deep link (the query mode inside the router)
             // renders docked on ITS root — no frame of the first page
             const deep = await get(instance, '/site?page=%2Fp2');
@@ -104,10 +107,37 @@ describe('the page presentation on the server', () => {
             expect(deep.body).toMatch(/data-plurid-docked="[^"]*\/p2@/);
             expect(deep.body).toMatch(/data-plurid-plane="[^"]*\/p2@[^"]*"[^>]*data-plurid-page="docked"/);
             expect(deep.body).not.toMatch(/data-plurid-plane="[^"]*\/p@[^"]*"[^>]*data-plurid-page="docked"/);
-            // the space presentation: no such attribute
+            // the space presentation: no such attribute, and its fade-in kept (shown once laid out)
             const space = await get(instance, '/space');
             expect(space.status).toBe(200);
             expect(space.body).not.toMatch(/data-plurid-docked=/);
+            expect(space.body).toMatch(/data-plurid-entity="PluridSpace"[^>]*style="opacity:0"/);
+        } finally {
+            await close(instance);
+        }
+    });
+});
+
+
+/**
+ * A server with no `hostname` of its own renders on the host serving the application, as the engine
+ * defaults to in the browser (`location.host`): the literal `origin` it rendered instead was a host
+ * no browser has, so every route it wrote failed to hydrate (2026-09-29).
+ */
+describe('a server without a hostname', () => {
+    it('renders its planes on the host the request came to', async () => {
+        const base = configuration();
+        const server = new PluridServer({
+            ...base,
+            options: { ...base.options, hostname: undefined },
+        });
+        const instance = await listen(server);
+        try {
+            const { port } = instance.address() as AddressInfo;
+            const { status, body } = await get(instance, '/site');
+            expect(status).toBe(200);
+            expect(body).toContain(`data-plurid-plane="plurid://127.0.0.1:${port}/p@`);
+            expect(body).not.toContain('plurid://origin/');
         } finally {
             await close(instance);
         }
