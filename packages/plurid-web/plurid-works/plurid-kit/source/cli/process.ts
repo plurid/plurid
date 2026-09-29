@@ -53,16 +53,24 @@ export const createRestarter = <T extends Restartable>(
     let pending = false;
     let stopped = false;
 
+    // The hard kill is a FALLBACK: disarmed the moment the process exits, or every restart left a
+    // timer behind that signalled a process already gone (and held a test runner open for 2 s)
     const exited = (process: T) => new Promise<void>((resolve) => {
         let done = false;
+        let fallback: ReturnType<typeof setTimeout> | null = null;
         const finish = () => {
+            if (fallback) {
+                clearTimeout(fallback);
+                fallback = null;
+            }
             if (!done) {
                 done = true;
                 resolve();
             }
         };
         process.once('exit', finish);
-        setTimeout(() => {
+        fallback = setTimeout(() => {
+            fallback = null;
             try {
                 process.kill('SIGKILL');
             } catch (_) { /* gone already */ }

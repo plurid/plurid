@@ -72,8 +72,9 @@ class PluridRenderer {
         const {
             gradientBackground,
             gradientForeground,
-        // The metastate carries `themes.general` (see `serverComputeMetastate`), so the SSR'd background
-        // gradient matches the active theme; `resolveBackgroundStyle` falls back to a default if it can't parse.
+        // The page's ground: a `themes.general` at the top of the given state, else the default plurid
+        // gradient — which is what every page has painted (the server's metastate nested its themes
+        // under `states`, and is a marker now); a host's `template.defaultStyle` replaces the rule.
         } = resolveBackgroundStyle(pluridMetastate || '');
 
         // THE PAGE SIZES THE SPACE: the engine's view is `height: 100%` of its mount point and sizes

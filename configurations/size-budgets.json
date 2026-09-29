@@ -1,15 +1,19 @@
 {
     "@plurid/generate-plurid-app": 10,
     "@plurid/plurid-data": 25,
-    "@plurid/plurid-engine": 40,
+    "@plurid/plurid-engine": 30,
     "@plurid/plurid-functions": 10,
     "@plurid/plurid-functions-react": 5,
-    "@plurid/plurid-icons-react": 70,
+    "@plurid/plurid-icons-react": 65,
     "@plurid/plurid-kit": 5,
+    "@plurid/plurid-kit/server": 5,
+    "@plurid/plurid-kit/client": 5,
     "@plurid/plurid-pubsub": 5,
-    "@plurid/plurid-react": 150,
+    "@plurid/plurid-react": 105,
+    "@plurid/plurid-react/testing": 95,
     "@plurid/plurid-react-server": 15,
     "@plurid/plurid-themes": 15,
-    "@plurid/plurid-ui-components-react": 30,
+    "@plurid/plurid-themes/looks": 10,
+    "@plurid/plurid-ui-components-react": 25,
     "@plurid/plurid-ui-state-react": 5
 }

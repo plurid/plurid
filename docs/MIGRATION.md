@@ -64,6 +64,18 @@ to hydrate. A production site configures `hostname` (the kit requires it): a hos
 is only as trustworthy as its `Host` header, and a cache that does not key on it could keep a page
 rendered for another.
 
+**The server's metastate is a marker.** `window.__PRELOADED_PLURID_METASTATE__` is `{ "states": {} }`: its
+presence tells the space and the router that the page was server-rendered, and nothing ever read its
+contents (each application computes its own state, in the browser as on the server). The full engine
+state it carried was computed on every request and written into every page (8 KB of a two-page site's
+HTML, 13 %; 2 KB gzipped). A `document` hook still receives the computed state as `metastate`, computed
+only when there is a hook; `serverComputeMetastate` is still exported.
+
+**The kit.** A `plurid.config.ts` that cannot bundle is named with its cause and place
+(`plurid.config.ts:1:20: Could not resolve "./routes"`), where the warning said only
+`Build failed with 1 error:`. And `plurid dev` no longer leaves a timer behind each restart that
+signalled a process already gone.
+
 `pnpm smoke.pack` also loads the page with its script off, and fails when it paints blank (a 0 px view,
 hidden content, anything covering it), when its docked page is not the window's box (at 1280 × 800 and
 at a 390 × 844 phone), when the page moves while it loads and hydrates (every frame from the first paint

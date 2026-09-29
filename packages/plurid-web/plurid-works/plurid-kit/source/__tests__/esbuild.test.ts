@@ -189,8 +189,19 @@ describe('loadPluridConfig', () => {
                 export default { serverName: missing };`,
             );
 
-            const config = await loadPluridConfig(directory);
-            expect(config).toEqual({});
+            const written: string[] = [];
+            const spy = jest.spyOn(process.stderr, 'write').mockImplementation((chunk: any) => {
+                written.push(String(chunk));
+                return true;
+            });
+            try {
+                const config = await loadPluridConfig(directory);
+                expect(config).toEqual({});
+            } finally {
+                spy.mockRestore();
+            }
+            // the warning names the cause and its place, not esbuild's `Build failed with 1 error:`
+            expect(written.join('')).toMatch(/could not bundle plurid\.config\.ts; continuing without it: plurid\.config\.ts:1:\d+: Could not resolve "\.\/does-not-exist"/);
         } finally {
             fs.rmSync(directory, { recursive: true, force: true });
         }

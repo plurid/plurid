@@ -1,7 +1,9 @@
 module.exports = {
     rootDir: '../',
     transform: {
-        '.(ts|tsx)': 'ts-jest',
+        // anchored: unanchored, `.(ts|tsx)` matched any path with "ts" in it (a temp directory's random
+        // name), and ts-jest then transformed a bundled `.cjs` config it cannot read
+        '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     testEnvironment: 'node',
     testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',

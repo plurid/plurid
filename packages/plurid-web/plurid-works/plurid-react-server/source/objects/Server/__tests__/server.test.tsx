@@ -162,7 +162,8 @@ describe('PluridServer over HTTP', () => {
             expect(body).toContain('<link rel="icon" href="/favicon.ico">');
             expect(body).toContain('<html lang="en"');
             expect(body).toContain('plane a content');
-            expect(body).toContain('window.__PRELOADED_PLURID_METASTATE__ =');
+            // the metastate is a marker: its presence is the server-rendered signal, its contents unread
+            expect(body).toContain('window.__PRELOADED_PLURID_METASTATE__ = {"states":{}}');
             expect(body).toMatch(/<style data-styled[^>]*>[^<]*rgb\(1, 2, 3\)/);
             expect(body).toContain('<script defer src="/main.js">');
             // the head sits in <head>, never inside the root
@@ -192,7 +193,8 @@ describe('PluridServer over HTTP', () => {
         const seen: any[] = [];
         const server = new PluridServer(configuration({
             document: (context) => {
-                seen.push({ url: context.request.url, title: context.document.title, description: context.document.description });
+                // the hook still receives the computed metastate: each application's state
+                seen.push({ url: context.request.url, title: context.document.title, description: context.document.description, applications: Object.keys(context.metastate.states).length });
                 return { title: 'hook ' + context.request.url, meta: [{ name: 'robots', content: 'noindex' }] };
             },
         }));
@@ -203,7 +205,7 @@ describe('PluridServer over HTTP', () => {
             expect(count(body, /<title>/g)).toBe(1);
             expect(body).toContain('<meta name="robots" content="noindex">');
             expect(count(body, /name="robots"/g)).toBe(1);
-            expect(seen).toEqual([{ url: '/', title: 'in-render', description: undefined }]);
+            expect(seen).toEqual([{ url: '/', title: 'in-render', description: undefined, applications: 1 }]);
         } finally {
             await close(instance);
         }

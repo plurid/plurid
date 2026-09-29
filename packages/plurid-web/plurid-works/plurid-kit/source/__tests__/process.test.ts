@@ -18,9 +18,11 @@
 /** A fake child: `kill` schedules its `exit` listener asynchronously, like a real process. */
 class FakeChild {
     public killed = false;
+    public signals: (string | undefined)[] = [];
     private listeners: (() => void)[] = [];
     constructor(public id: number, private exitDelay = 5) {}
-    kill() {
+    kill(signal?: string) {
+        this.signals.push(signal);
         this.killed = true;
         setTimeout(() => {
             for (const listener of this.listeners) {
@@ -81,6 +83,29 @@ describe('createRestarter()', () => {
         expect(children[2].killed).toBe(false);
         await restarter.stop();
         expect(children[2].killed).toBe(true);
+    });
+
+    it('disarms the hard kill once the old process has exited: nothing is signalled after it is gone', async () => {
+        let spawned = 0;
+        const children: FakeChild[] = [];
+        const restarter = createRestarter({
+            spawnChild: () => {
+                const child = new FakeChild(++spawned, 5);
+                children.push(child);
+                return child;
+            },
+            debounceMs: 5,
+            exitTimeoutMs: 40,
+        });
+        restarter.start();
+        restarter.restart();
+        // past the exit (5 ms after the SIGTERM) AND past the fallback (40 ms)
+        await wait(100);
+        expect(spawned).toBe(2);
+        expect(children[0].signals).toEqual(['SIGTERM']);
+        await restarter.stop();
+        await wait(60);
+        expect(children[1].signals).toEqual(['SIGTERM']);
     });
 });
 

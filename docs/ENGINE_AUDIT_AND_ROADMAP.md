@@ -80,7 +80,7 @@ The render harness production chunk is already above the default Vite warning th
 
 **Done when:** bundle reports are generated in CI and changes over an agreed threshold require review.
 
-**Delivered (2026-09-13):** `pnpm size` measures every public package's published ESM, gzipped, against `configurations/size-budgets.json`, and fails CI over budget.
+**Delivered (2026-09-13):** `pnpm size` measures every public package's published ESM, gzipped, against `configurations/size-budgets.json`, and fails CI over budget. Since 2026-09-29 it measures each public ENTRY POINT as an application ships it (the entry and its static chunks, minified, gzipped: the React adapter is 97 KB of a 105 KB budget, where the sum of every unminified file read 147 KB), and a lazy chunk or another entry (`/testing`) no longer counts against the main one.
 
 ## P2: Deepen correctness boundaries
 

@@ -23,6 +23,23 @@ const CONFIG_FILES = [
     'plurid.config.js',
 ];
 
+/**
+ * Why a config did not bundle, in one line a developer can act on: esbuild's first error with its
+ * place (`plurid.config.ts:1:20: Could not resolve "./routes"`). Its message's first line alone
+ * is `Build failed with 1 error:`, which named nothing.
+ */
+const bundleFailure = (
+    error: unknown,
+): string => {
+    const first = (error as { errors?: esbuild.Message[] } | undefined)?.errors?.[0];
+    if (first) {
+        const location = first.location;
+        const place = location ? `${path.basename(location.file)}:${location.line}:${location.column}: ` : '';
+        return place + first.text;
+    }
+    return error instanceof Error ? error.message.split('\n').filter(Boolean).join(' ') : String(error);
+};
+
 
 /**
  * Load the app's `plurid.config.ts` for the CLI (the build-time subset:
@@ -97,7 +114,7 @@ export async function loadPluridConfig(
         process.stderr.write(
             `[plurid] could not bundle ${path.basename(configPath)}; `
             + `continuing without it: `
-            + `${error instanceof Error ? error.message.split('\n')[0] : String(error)}\n`,
+            + `${bundleFailure(error)}\n`,
         );
         return {};
     }

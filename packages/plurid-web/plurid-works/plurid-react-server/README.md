@@ -40,9 +40,10 @@ npm install @plurid/plurid-react-server
 
 ## Server-side rendering
 
-`PluridServer` is an Express server: it matches the request route, computes the plurid metastate via
-`@plurid/plurid-react`'s `serverComputeMetastate`, renders the React tree to HTML (styled-components), assembles
-the document head from the DOCUMENT MODEL, injects the metastate, and responds. Construct it with your routes /
+`PluridServer` is an Express server: it matches the request route, renders the React tree to HTML
+(styled-components), assembles the document head from the DOCUMENT MODEL, injects the metastate marker (the
+browser's sign that the page was server-rendered), and responds. A `document` hook also receives the computed
+engine state (`@plurid/plurid-react`'s `serverComputeMetastate`), computed only when there is a hook. Construct it with your routes /
 planes / services and `start(port)` — see the server fixtures for a complete setup.
 
 ``` ts

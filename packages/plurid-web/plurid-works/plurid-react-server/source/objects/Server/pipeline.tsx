@@ -9,6 +9,7 @@
 
     import {
         PluridPreserveResponse,
+        PluridMetastate,
         IsoMatcherRouteResult,
     } from '@plurid/plurid-data';
 
@@ -369,16 +370,15 @@ export const renderApplication = async (
     const requestURL = request?.originalUrl || request?.url || '';
     const search = requestURL.includes('?') ? requestURL.slice(requestURL.indexOf('?')) : '';
     const hostname = renderHostname(server.options.hostname, request);
-    const pluridMetastate = await serverComputeMetastate(
-        isoMatch,
-        server.routes,
-        globals,
-        hostname,
-        {
-            pathname: isoMatch.match.value,
-            search,
-        },
-    );
+    // THE METASTATE IS A MARKER (2026-09-29). Its presence tells the space and the router that the
+    // page was server-rendered (`PluridProvider metastate`); nothing reads its contents — each
+    // application computes its own state, in the browser as here — so the full state it carried,
+    // computed on every request and written into every page (8 KB for a two-page site, 13 % of the
+    // HTML), was cost with no reader. A document hook still receives the computed metastate: it is
+    // computed for the hook, and only when there is one.
+    const pluridMetastate: PluridMetastate = {
+        states: {},
+    };
 
     // The document head, as data: the route's head is known BEFORE the render, the in-render
     // declarations are collected DURING it (per request — nothing is shared across requests),
@@ -428,7 +428,16 @@ export const renderApplication = async (
         ? await server.documentHook({
             request,
             match: isoMatch,
-            metastate: pluridMetastate,
+            metastate: await serverComputeMetastate(
+                isoMatch,
+                server.routes,
+                globals,
+                hostname,
+                {
+                    pathname: isoMatch.match.value,
+                    search,
+                },
+            ),
             document: soFar,
             preserve: preserveResult,
         })
