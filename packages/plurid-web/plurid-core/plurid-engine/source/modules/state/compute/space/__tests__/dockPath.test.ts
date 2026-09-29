@@ -71,5 +71,18 @@ describe('the address bar is the page at store time', () => {
         expect(dockedBootCamera(booted.space.camera, booted.space.tree, booted.configuration, booted.space.viewSize, booted.space.cameraLimits, null)).toBeUndefined();
         expect(dockedBootCamera(booted.space.camera, booted.space.tree, booted.configuration, booted.space.viewSize, booted.space.cameraLimits, '/nowhere')).toBeUndefined();
     });
+
+    it('boots docked at the configured dock scale: a card under `natural` is read at its own size, and reads as docked', () => {
+        const cards = () => new Registrar<any>([
+            { route: '/card', component, width: 460, height: 300 },
+            { route: '/other', component },
+        ]);
+        const natural = { space: { presentation: 'page' as const, docking: { scale: 'natural' as const } } };
+        const state = compute(['/card', '/other'], natural, cards(), undefined, undefined, undefined, undefined, 'origin', { dockPath: () => '/card' });
+        const card = state.space.tree[0];
+        // the fill scale of a 460 × 300 card in the 771 × 764 boot view is 1.68; `natural` caps it at 1
+        expect(state.space.camera.scale).toBe(1);
+        expect(cameraEngine.findDockedPlane(state.space.camera, state.space.tree as any, state.space.viewSize, state.space.viewSize, undefined, state.space.cameraLimits, 'natural')).toBe(card.planeID);
+    });
 });
 // #endregion module

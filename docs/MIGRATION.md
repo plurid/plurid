@@ -40,11 +40,23 @@ over:
 - **A server-rendered page shows its space from the first render.** The space waited at opacity 0 for
   the browser's first layout (`resolvedLayout`), which a server never does. Under a server's metastate
   (`PluridProvider metastate`, which the kit's client hydrates under too) the page presentation shows at
-  once; the space presentation keeps its fade-in. The server lays a page out at its fallback view
-  (771 × 764) until the browser measures its own, so the page's box grows to the window at hydration.
+  once; the space presentation keeps its fade-in.
 - **The router puts no cover over a server-rendered page.** Its `fadeIn` cover (black, over everything,
   until 10 ms after mount) was the server's whole page until the script ran. A client-only application
   keeps it.
+
+And **the server's page is the window's**. A server has no view to measure, and laid its page out for
+the boot fallback (771 × 764): the first paint was a 771 × 764 box, its text cut off on a phone and a
+third of a wide screen, until the script ran and the page grew to the window. Docked before the view is
+measured, a page is now stated in the view's own terms: its configured size as fractions of the view,
+and the camera as a CSS transform about the view's centre. A view-sized page (the page presentation's
+default) and any fraction of the view paint exactly as the measured page, at any window size, and
+nothing moves at hydration; a page sized in px keeps the scale the fallback gave it until the view is
+measured. Every other plane waits unseen until then (under the default `docking.aside: 'lineage'` they
+are set aside anyway). A space booted docked by its address now docks at `docking.scale`: a `natural`
+space booted at the fill scale, a pose its own docked test did not recognise, so its page was not read
+as docked. New in the engine: `space.layout.configuredPlaneExtent(value)`, a configured plane
+dimension as `{ fraction }`, `{ px }` or `undefined` (left to the content).
 
 And **a server without a `hostname` renders on the request's host**, as the engine defaults to in the
 browser (`location.host`). It rendered the literal `origin`, a host no browser has, so its pages failed
@@ -53,7 +65,9 @@ is only as trustworthy as its `Host` header, and a cache that does not key on it
 rendered for another.
 
 `pnpm smoke.pack` also loads the page with its script off, and fails when it paints blank (a 0 px view,
-hidden content, anything covering it) or when the generated application logs any `[plurid]` warning.
+hidden content, anything covering it), when its docked page is not the window's box (at 1280 × 800 and
+at a 390 × 844 phone), when the page moves while it loads and hydrates (every frame from the first paint
+is recorded), or when the generated application logs any `[plurid]` warning.
 
 ---
 

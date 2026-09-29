@@ -20,6 +20,9 @@
     import {
         AppState,
     } from '~services/state/store';
+    import {
+        unmeasuredPage,
+    } from '~services/logic/docking/unmeasured';
     // #endregion external
 // #endregion imports
 
@@ -118,6 +121,19 @@ export const getDockedPlaneID = createSelector(
     },
 );
 export const getCulledView = (state: AppState) => state.space.culledView;
+
+const getConfiguration = (state: AppState) => state.configuration;
+
+/**
+ * THE UNMEASURED PAGE (`services/logic/docking/unmeasured`): the page docked before the browser has
+ * measured the view — the server's render and the hydrating client's first — with the transform
+ * that places it in the view's own terms; `undefined` once measured, and in the space presentation.
+ */
+export const getUnmeasuredPage = createSelector(
+    [getResolvedLayout, getConfiguration, getTree, getCamera, getDockedPlaneID],
+    unmeasuredPage,
+);
+export const getUnmeasuredPageID = (state: AppState): string => getUnmeasuredPage(state)?.planeID ?? '';
 
 export const getActivePlaneID = (state: AppState) => state.space.activePlaneID;
 export const getIsolatePlane = (state: AppState) => state.space.isolatePlane;

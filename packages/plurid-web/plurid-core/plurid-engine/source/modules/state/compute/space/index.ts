@@ -58,11 +58,14 @@ export const dockedBootCamera = (
         return undefined;
     }
     const configured = space.layout.configuredPlaneSize(configuration, viewSize);
+    // at the configured dock scale, as every other dock is: a `natural` space booted at the FILL
+    // scale, a pose the docked test (`findDockedPlane`, the configured mode) does not recognise
     return cameraEngine.dockPose(
         camera,
         cameraEngine.dockGeometry(root, configured),
         viewSize,
         limits,
+        configuration.space.docking?.scale,
     );
 };
 

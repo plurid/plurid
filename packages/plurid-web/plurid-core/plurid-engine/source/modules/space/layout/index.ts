@@ -7,7 +7,11 @@
     import computeZigZagLayout from './zigZag';
     import {
         configuredPlaneSize,
+        configuredPlaneExtent,
         fallbackPlaneSize,
+    } from './size';
+    import type {
+        PlaneExtent,
     } from './size';
     // #endregion internal
 // #endregion imports
@@ -22,6 +26,10 @@ export {
     computeSheavesLayout,
     computeZigZagLayout,
     configuredPlaneSize,
+    configuredPlaneExtent,
     fallbackPlaneSize,
+};
+export type {
+    PlaneExtent,
 };
 // #endregion exports

@@ -15,6 +15,8 @@
         carryRootRuntime,
     } from '../../tree/logic';
     import {
+        configuredPlaneSize,
+        configuredPlaneExtent,
         fallbackPlaneSize,
     } from '../size';
     import {
@@ -115,6 +117,28 @@ describe('THE SIZING CONTRACT: the roots are placed by their known sizes', () =>
         const fresh = compute(sheaves());
         const laid = compute(sheaves(), fresh.map((root) => ({ ...root, width: 400, height: 900 })));
         expect(laid.map((root) => root.location)).toEqual(fresh.map((root) => root.location));
+    });
+});
+
+
+describe('a configured dimension without a view', () => {
+    it('is a fraction of the view, a length in px, or the content\'s: the rule the view resolves', () => {
+        expect(configuredPlaneExtent(1)).toEqual({ fraction: 1 });
+        expect(configuredPlaneExtent(0.6)).toEqual({ fraction: 0.6 });
+        expect(configuredPlaneExtent(1.5)).toEqual({ fraction: 1.5 });
+        expect(configuredPlaneExtent(460)).toEqual({ px: 460 });
+        expect(configuredPlaneExtent(0)).toBeUndefined();
+        expect(configuredPlaneExtent(undefined)).toBeUndefined();
+
+        // one rule: what the extent states is what the size resolves to, at any view
+        for (const configured of [1, 0.6, 1.5, 460, 0, undefined]) {
+            const extent = configuredPlaneExtent(configured);
+            const resolved = configuredPlaneSize({
+                ...defaultConfiguration,
+                elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, width: configured as number } },
+            }, view).width;
+            expect(resolved).toBe(!extent ? 0 : 'px' in extent ? extent.px : extent.fraction * view.width);
+        }
     });
 });
 // #endregion module

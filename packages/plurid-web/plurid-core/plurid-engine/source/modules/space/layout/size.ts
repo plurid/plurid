@@ -37,18 +37,38 @@ export const configuredPlaneSize = (
     };
 };
 
-/** A configured dimension against the view's: unset or ≤ 0 → 0 (content-driven); an integer above 1 → px; else a fraction. */
+/** A configured dimension in the view's own terms: a fraction of the view's extent, or a length in px. */
+export type PlaneExtent =
+    | { fraction: number }
+    | { px: number };
+
+/**
+ * A configured dimension WITHOUT a view: unset or ≤ 0 → `undefined` (content-driven); an integer
+ * above 1 → px; else a fraction of the view. What a render that has no measured view yet (the
+ * server's, and the hydrating client's first) can state exactly, where a px size would be a guess.
+ */
+export const configuredPlaneExtent = (
+    configured: number | undefined,
+): PlaneExtent | undefined => {
+    if (configured === undefined || configured <= 0) {
+        return undefined;
+    }
+    if (mathematics.numbers.checkIntegerNonUnit(configured)) {
+        return { px: configured };
+    }
+    return { fraction: configured };
+};
+
+/** A configured dimension against the view's: 0 where it is left to the content. */
 const resolveDimension = (
     configured: number | undefined,
     viewExtent: number,
 ): number => {
-    if (configured === undefined || configured <= 0) {
+    const extent = configuredPlaneExtent(configured);
+    if (!extent) {
         return 0;
     }
-    if (mathematics.numbers.checkIntegerNonUnit(configured)) {
-        return configured;
-    }
-    return configured * viewExtent;
+    return 'px' in extent ? extent.px : extent.fraction * viewExtent;
 };
 
 /**

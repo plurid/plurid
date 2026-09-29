@@ -53,14 +53,15 @@ const launchChromium = () => {
     return chromium.launch(process.env.PLURID_CHROMIUM ? { executablePath: process.env.PLURID_CHROMIUM } : {});
 };
 
-/* global document -- the functions handed to `page.waitForFunction` and `page.evaluate` below run in the page, not in Node */
+/* global document, window -- the functions handed to `page.addInitScript`, `page.waitForFunction` and `page.evaluate` below run in the page, not in Node */
 
 /**
  * Load `url` as a reader does, wait until React has hydrated the first plurid link, follow it, and
  * return what went wrong: every console error and page error (a hydration mismatch is one of them),
  * every warning of the engine's (`[plurid] …`: the generated application is a host that follows the
- * engine's advice), a link that did not open its page, and a server page that is blank before its
- * script runs. Waits on state, never on time.
+ * engine's advice), a link that did not open its page, a server page that is blank before its
+ * script runs, and a docked page that is not the window's before its script runs or moves while it
+ * hydrates. Waits on state, never on time.
  */
 const visit = async (browser, url) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
@@ -71,6 +72,25 @@ const visit = async (browser, url) => {
         }
     });
     page.on('pageerror', (error) => problems.push(error.message));
+    // every frame from the document's start until read: the docked page's box, as painted
+    await page.addInitScript(() => {
+        const boxes = [];
+        window.__pluridDockedBoxes = boxes;
+        const tick = () => {
+            const docked = document.querySelector('[data-plurid-page="docked"]');
+            if (docked) {
+                const rect = docked.getBoundingClientRect();
+                const box = [rect.x, rect.y, rect.width, rect.height].map(Math.round).join(',');
+                if (boxes[boxes.length - 1] !== box) {
+                    boxes.push(box);
+                }
+            }
+            if (!window.__pluridDockedStop) {
+                window.requestAnimationFrame(tick);
+            }
+        };
+        window.requestAnimationFrame(tick);
+    });
     try {
         await page.goto(url, { waitUntil: 'load' });
         const link = 'a[data-plurid-entity="PluridLink"]';
@@ -79,6 +99,22 @@ const visit = async (browser, url) => {
             const anchor = document.querySelector(selector);
             return !!anchor && Object.keys(anchor).some((key) => key.startsWith('__reactProps'));
         }, link, { timeout: 30000 });
+        // THE PAGE DOES NOT MOVE AT HYDRATION (2026-09-29: the server laid the page out for its
+        // 771 x 764 fallback view, and the page grew to the window once the script measured it):
+        // every frame from the first paint to the hydrated page shows the docked page as the view
+        const frames = await page.evaluate(() => {
+            window.__pluridDockedStop = true;
+            const rect = document.querySelector('[data-plurid-entity="PluridView"]').getBoundingClientRect();
+            return {
+                view: [rect.x, rect.y, rect.width, rect.height].map(Math.round).join(','),
+                boxes: window.__pluridDockedBoxes,
+            };
+        });
+        if (frames.boxes.length === 0) {
+            problems.push('no page was docked while the page loaded and hydrated');
+        } else if (frames.boxes.some((box) => box !== frames.view)) {
+            problems.push(`the docked page moved while the page loaded and hydrated: ${frames.boxes.join(' -> ')} (x,y,width,height) in a ${frames.view} view`);
+        }
         await page.click(link);
         const opened = await page.waitForFunction(
             () => (document.querySelector('[data-plurid-docked]')?.getAttribute('data-plurid-docked') || '').includes('/about'),
@@ -96,40 +132,57 @@ const visit = async (browser, url) => {
 
     // THE SERVER'S PAGE IS A PAGE before any script runs (2026-09-29: the template left `html` and the
     // root without a height, so the view resolved to 0 px, and the space rendered at opacity 0 until the
-    // browser's first layout: the first paint was black until hydration, twice over)
-    const bare = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 800 } });
-    try {
-        const still = await bare.newPage();
-        await still.goto(url, { waitUntil: 'load' });
-        const paint = await still.evaluate(() => {
-            const view = document.querySelector('[data-plurid-entity="PluridView"]');
-            const content = document.querySelector('[data-plurid-entity="PluridPlaneContent"]');
-            // hit-test with every element in play: a cover takes no pointer events, and hides from it
-            const probe = document.createElement('style');
-            probe.textContent = '* { pointer-events: auto !important; }';
-            document.head.appendChild(probe);
-            const box = content ? content.getBoundingClientRect() : null;
-            const top = box ? document.elementFromPoint(box.left + Math.min(20, box.width / 2), box.top + Math.min(20, box.height / 2)) : null;
-            probe.remove();
-            return {
-                view: view ? view.getBoundingClientRect().height : 0,
-                content: !!content && content.checkVisibility({ opacityProperty: true, visibilityProperty: true }),
-                covered: !!content && !(top && content.contains(top)),
-            };
-        });
-        if (paint.view === 0) {
-            problems.push('before its script runs the server\'s page has a 0 px view: it paints blank');
+    // browser's first layout: the first paint was black until hydration, twice over), and it is the
+    // WINDOW'S page, on a desktop and on a phone (it was a 771 x 764 box in every window)
+    for (const viewport of [{ width: 1280, height: 800 }, { width: 390, height: 844 }]) {
+        const bare = await browser.newContext({ javaScriptEnabled: false, viewport });
+        const size = `${viewport.width}x${viewport.height}`;
+        try {
+            const still = await bare.newPage();
+            await still.goto(url, { waitUntil: 'load' });
+            const paint = await still.evaluate(() => {
+                const view = document.querySelector('[data-plurid-entity="PluridView"]');
+                const content = document.querySelector('[data-plurid-entity="PluridPlaneContent"]');
+                const docked = document.querySelector('[data-plurid-page="docked"]');
+                const boxOf = (element) => {
+                    if (!element) {
+                        return '';
+                    }
+                    const rect = element.getBoundingClientRect();
+                    return [rect.x, rect.y, rect.width, rect.height].map(Math.round).join(',');
+                };
+                // hit-test with every element in play: a cover takes no pointer events, and hides from it
+                const probe = document.createElement('style');
+                probe.textContent = '* { pointer-events: auto !important; }';
+                document.head.appendChild(probe);
+                const box = content ? content.getBoundingClientRect() : null;
+                const top = box ? document.elementFromPoint(box.left + Math.min(20, box.width / 2), box.top + Math.min(20, box.height / 2)) : null;
+                probe.remove();
+                return {
+                    view: view ? view.getBoundingClientRect().height : 0,
+                    content: !!content && content.checkVisibility({ opacityProperty: true, visibilityProperty: true }),
+                    covered: !!content && !(top && content.contains(top)),
+                    viewBox: boxOf(view),
+                    dockedBox: boxOf(docked),
+                };
+            });
+            if (paint.view === 0) {
+                problems.push(`(${size}) before its script runs the server's page has a 0 px view: it paints blank`);
+            }
+            if (!paint.content) {
+                problems.push(`(${size}) before its script runs the server's page hides its content: it paints blank`);
+            }
+            if (paint.covered) {
+                problems.push(`(${size}) before its script runs something covers the server's page: it paints blank`);
+            }
+            if (paint.dockedBox !== paint.viewBox) {
+                problems.push(`(${size}) before its script runs the server's page is not the window's: a ${paint.dockedBox || 'missing'} page in a ${paint.viewBox} view (x,y,width,height)`);
+            }
+        } catch (error) {
+            problems.push(`(${size}) ` + error.message.split('\n')[0]);
+        } finally {
+            await bare.close();
         }
-        if (!paint.content) {
-            problems.push('before its script runs the server\'s page hides its content: it paints blank');
-        }
-        if (paint.covered) {
-            problems.push('before its script runs something covers the server\'s page: it paints blank');
-        }
-    } catch (error) {
-        problems.push(error.message.split('\n')[0]);
-    } finally {
-        await bare.close();
     }
     return problems;
 };
@@ -310,7 +363,7 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
                 console.log(`  FAIL  the generated application (${label}) does not load cleanly in Chromium:\n      `
                     + problems.slice(0, 4).map((problem) => problem.replace(/\s+/g, ' ').slice(0, 400)).join('\n      '));
             } else {
-                console.log(`  ok    the generated application (${label}) paints before its script runs, hydrates in Chromium without an error or an engine warning, and its first link opens its page`);
+                console.log(`  ok    the generated application (${label}) paints the window's page before its script runs, on a desktop and on a phone, hydrates in Chromium without an error, an engine warning or a moved page, and its first link opens its page`);
             }
         };
 

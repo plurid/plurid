@@ -77,6 +77,9 @@
         warnOnce,
     } from '~services/logic/development/warn';
     import {
+        viewLength,
+    } from '~services/logic/docking/unmeasured';
+    import {
         planeAddressPath,
     } from '~services/engine';
 
@@ -180,6 +183,8 @@ export interface PluridPlaneStateProperties {
     stateSomePageDocked: boolean;
     /** Outside the docked page's lineage (the page presentation): faded out, not interactive. */
     stateAside: boolean;
+    /** The page docked before the view is measured (`''`: none, or measured): sized in the view's own terms. */
+    stateUnmeasuredPageID: string;
     stateIsolatePlane: string;
     /** ms of an animated relayout in flight (0 = none): the placement transition. */
     stateLayoutTransition: number;
@@ -236,6 +241,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateIsDocked,
         stateSomePageDocked,
         stateAside,
+        stateUnmeasuredPageID,
         stateLayoutTransition,
         stateCulled,
         stateIsolatePlane,
@@ -562,15 +568,34 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const declaredWidth = plane.width && plane.width > 0 ? plane.width : 0;
     const declaredHeight = plane.height && plane.height > 0 ? plane.height : 0;
     const configuredHeight = configuredSize.height;
-    const fixedHeightValue = declaredHeight || configuredHeight;
-    const renderWidth = (manualSize ? treePlane.width : (declaredWidth || width)) + 'px';
+    // THE UNMEASURED PAGE (`services/logic/docking/unmeasured`): docked before the view is measured,
+    // the page's configured size is stated as fractions of the view, not as px of the fallback view;
+    // every other plane waits unseen, placed by that fallback
+    const unmeasuredPage = stateUnmeasuredPageID === planeID;
+    const waitsForView = stateUnmeasuredPageID !== '' && !unmeasuredPage;
+    const configuredLength = (
+        configured: number | undefined,
+        value: number,
+    ) => (unmeasuredPage ? viewLength(configured) : undefined) ?? value + 'px';
+    const renderWidth = manualSize
+        ? treePlane.width + 'px'
+        : declaredWidth
+            ? declaredWidth + 'px'
+            : configuredLength(elements.plane.width, width);
     const renderHeight = manualSize && treePlane.height > 0
         ? treePlane.height + 'px'
-        : (fixedHeightValue ? fixedHeightValue + 'px' : undefined);
+        : declaredHeight
+            ? declaredHeight + 'px'
+            : configuredHeight
+                ? configuredLength(elements.plane.height, configuredHeight)
+                : undefined;
     // THE SIZING CONTRACT: a content-sized plane may be CAPPED (`maxHeight`, the plane's own over
     // the configured one) — taller content scrolls inside the cap and the measured height is the cap
     const declaredMaxHeight = plane.maxHeight && plane.maxHeight > 0 ? plane.maxHeight : 0;
     const cappedHeight = renderHeight ? 0 : (declaredMaxHeight || configuredSize.maxHeight);
+    const cappedLength = declaredMaxHeight
+        ? declaredMaxHeight + 'px'
+        : configuredLength(elements.plane.maxHeight, cappedHeight);
     // a detached shell keeps the box its content had (the tree's height, else the fallback)
     const shellHeight = detached && !renderHeight
         ? (treePlane.height > 0 ? treePlane.height : resolvePlaneFallbackSize(stateConfiguration, stateViewSize).height) + 'px'
@@ -632,7 +657,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             style={{
                 width: renderWidth,
                 height: shellHeight,
-                maxHeight: cappedHeight > 0 ? cappedHeight + 'px' : undefined,
+                maxHeight: cappedHeight > 0 ? cappedLength : undefined,
                 transform,
                 // Animated relayout (FLIP): planes glide to their new placements only while the
                 // View holds the transition window open — never during a spawn or a drag.
@@ -642,6 +667,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                     : undefined,
                 opacity: stateAside ? 0 : isolatePlaneOpacity,
                 pointerEvents: stateAside ? 'none' : isolatePointerEvents,
+                visibility: waitsForView ? 'hidden' : undefined,
             }}
             onPointerEnter={activatePlane}
             onPointerLeave={deactivatePlane}
@@ -801,6 +827,7 @@ const makeMapStateToProps = () => {
         stateIsDocked: selectors.space.getDockedPlaneID(state) === ownProps.planeID,
         stateSomePageDocked: selectors.space.getDockedPlaneID(state) !== '',
         stateAside: getIsAside(state, ownProps.planeID),
+        stateUnmeasuredPageID: selectors.space.getUnmeasuredPageID(state),
         stateLayoutTransition: state.space.layoutTransition || 0,
         stateCulled: getPlaneCulling(state, ownProps.planeID),
         stateIsolatePlane: selectors.space.getIsolatePlane(state),

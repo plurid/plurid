@@ -112,4 +112,69 @@ describe('the router\'s cover', () => {
         expect(renderToString(route())).toContain('data-plurid-cover');
     });
 });
+
+
+/**
+ * THE SERVER'S PAGE IS THE WINDOW'S. A server has no view to measure, and laid its page out for the
+ * boot fallback (771 × 764): the first paint was a 771 × 764 box — cut off on a phone, a third of a
+ * wide screen — until the script ran and the page grew to the window (2026-09-29). Docked before
+ * the view is measured, the page is stated in the view's own terms (`services/logic/docking/unmeasured`).
+ */
+describe('the server\'s docked page', () => {
+    const styleOf = (
+        html: string,
+        attribute: string,
+    ) => new RegExp(`<div[^>]*${attribute}[^>]*>`).exec(html)?.[0].match(/style="([^"]*)"/)?.[1] ?? '';
+
+    const served = () => renderToString(
+        <PluridProvider metastate={metastate}>
+            {application('page')}
+        </PluridProvider>,
+    );
+
+    it('is the view\'s box, not the fallback\'s: sized and placed as fractions of the view', () => {
+        const html = served();
+        const roots = styleOf(html, 'data-plurid-entity="PluridRoots"');
+        const docked = styleOf(html, 'data-plurid-page="docked"');
+
+        expect(roots).toContain('height:100%');
+        expect(roots).toMatch(/transform:translate\(50%, 50%\) .*translate\(-50%, -50%\)/);
+        expect(docked).toContain('width:100%');
+        expect(docked).toContain('height:100%');
+        expect(html).not.toMatch(/771px|764px/);
+    });
+
+    it('a page a fraction of the view wide is that fraction of the window, centered', () => {
+        // docked on the page the request names (under a router, the `page` parameter): a page
+        // narrower than the view is not the identity camera's
+        const html = renderToString(
+            <PluridProvider metastate={metastate}>
+                <PluridRouterStatic
+                    path="/?page=%2Fone"
+                    routes={[{
+                        value: '/',
+                        planes: [['/one', page], ['/two', page]],
+                        view: ['/one', '/two'],
+                        defaultConfiguration: { space: { presentation: 'page' }, elements: { plane: { width: 0.6 } } },
+                    }] as any}
+                    planes={[]}
+                    hostname="localhost"
+                />
+            </PluridProvider>,
+        );
+
+        expect(styleOf(html, 'data-plurid-page="docked"')).toContain('width:60%');
+        expect(styleOf(html, 'data-plurid-entity="PluridRoots"')).toMatch(/translate\(-30%, -50%\)/);
+    });
+
+    it('the space presentation, hidden until measured, keeps its placement', () => {
+        const html = renderToString(
+            <PluridProvider metastate={metastate}>
+                {application()}
+            </PluridProvider>,
+        );
+
+        expect(styleOf(html, 'data-plurid-entity="PluridRoots"')).not.toContain('translate(50%, 50%)');
+    });
+});
 // #endregion module

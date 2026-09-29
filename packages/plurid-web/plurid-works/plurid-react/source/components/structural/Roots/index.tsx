@@ -28,6 +28,9 @@
     import { AppState } from '~services/state/store';
     import StateContext from '~services/state/context';
     import selectors from '~services/state/selectors';
+    import type {
+        UnmeasuredPage,
+    } from '~services/logic/docking/unmeasured';
     // import actions from '~services/state/actions';
     // #endregion external
 
@@ -53,6 +56,8 @@ export interface PluridRootsStateProperties {
     stateViewHeight: number;
     /** `will-change: transform` only while the camera is in motion (a tween or a fling). */
     stateMotion: string;
+    /** The page docked before the view is measured, placed in the view's own terms. */
+    stateUnmeasuredPage: UnmeasuredPage | undefined;
 }
 
 export interface PluridRootsDispatchProperties {
@@ -76,6 +81,7 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
         stateResolvedLayout,
         stateViewHeight,
         stateMotion,
+        stateUnmeasuredPage,
         // #endregion state
     } = properties;
     // #endregion properties
@@ -94,10 +100,16 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
     // The default height is the MEASURED view height (the camera's pivot frame), not the raw
     // window — so an embedded space sizes to its container, and SSR never touches `window`.
-    const width = resolveDimension(dimensions?.width, '100%');
-    const height = stateResolvedLayout
-        ? resolveDimension(dimensions?.height, stateViewHeight + 'px')
-        : 0;
+    // Docked before the view is measured, the roots ARE the view's box (and so is each root, below):
+    // the page and the camera are stated as fractions of it (`services/logic/docking/unmeasured`).
+    const width = stateUnmeasuredPage
+        ? '100%'
+        : resolveDimension(dimensions?.width, '100%');
+    const height = stateUnmeasuredPage
+        ? '100%'
+        : stateResolvedLayout
+            ? resolveDimension(dimensions?.height, stateViewHeight + 'px')
+            : 0;
 
     // No CSS transition on the camera: programmatic moves tween through the motion controller (one
     // commit per frame, interruptible), and a transition would fight live input.
@@ -105,11 +117,12 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
 
     return (
         <StyledPluridRoots
+            unmeasured={!!stateUnmeasuredPage}
             style={{
                 width,
                 height,
                 transition,
-                transform: spaceTransformMatrix,
+                transform: stateUnmeasuredPage ? stateUnmeasuredPage.transform : spaceTransformMatrix,
                 willChange: stateMotion !== 'idle' ? 'transform' : undefined,
             }}
             data-plurid-entity={PLURID_ENTITY_ROOTS}
@@ -142,6 +155,7 @@ const mapStateToProperties = (
     stateResolvedLayout: selectors.space.getResolvedLayout(state),
     stateViewHeight: selectors.space.getViewSize(state).height,
     stateMotion: selectors.space.getMotion(state),
+    stateUnmeasuredPage: selectors.space.getUnmeasuredPage(state),
 });
 
 
