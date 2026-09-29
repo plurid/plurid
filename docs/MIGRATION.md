@@ -1,4 +1,42 @@
-# Migrating to the next release (unreleased, in progress since 2026-09-16)
+# Migrating to the next release (unreleased, since 2026-09-29)
+
+A server-rendered page now hydrates. Every kit application failed to: React threw the server's markup
+away and rendered again in the browser (`#418` in production; in development the attribute and text
+mismatches named below). Three causes, three changes a host can see.
+
+- **A kit application's planes are on `config.hostname` in the browser, as on the server.** The kit's
+  client handed the router no `hostname` (nor `planes`, nor `exterior`), so in the browser every
+  plane's route took `location.host` (`plurid://localhost:33721/…` under `plurid dev`) where the server had
+  rendered `plurid://<hostname>/…`. The client now hands `PluridRouterBrowser` what the server's
+  `PluridRouterStatic` renders it with (`routerProperties` spread last, as there). Routes, plane ids and
+  the plane bar read the configured host; an arrangement a product persisted with absolute routes under
+  the old `location.host` names a host its planes are no longer on (the arrangement fragment,
+  path-addressed, never did).
+- **A `PluridLink` is addressed on its application's host**, the one its planes are registered under.
+  It took no host, so the server wrote `plurid://origin/…` and the browser `plurid://<location.host>/…`,
+  and in an application whose `hostname` is not the document's host a click looked for a plane under a
+  host nothing was registered under and opened nothing. An application without a `hostname` is
+  unchanged.
+- **`@plurid/plurid-react`'s CommonJS build is split into the same chunks as its ESM build.**
+  styled-components numbers its component ids in creation order, and the unsplit build created the same
+  components in another order than the split one a browser bundles, so a server that `require`s the
+  package and a browser that `import`s it disagreed on every class from the first moved component on.
+  `require('@plurid/plurid-react')` now loads the `chunk-*.js` files beside `index.js` (they are in the
+  package), and shares them with `@plurid/plurid-react/testing`, which under CommonJS carried a second
+  copy of the engine (634 KB) and so a second set of contexts.
+
+`pnpm check.modules` renders `@plurid/plurid-react` through both builds and compares, and `pnpm
+smoke.pack` loads the generated application in Chromium (`plurid start` and `plurid dev`): a
+hydration error fails either.
+
+---
+
+# Migrating to the 2026-09-17 and 2026-09-22 releases
+
+`@plurid/plurid-react` 0.0.0-39 and 0.0.0-40, `@plurid/plurid-data` 0.0.0-25 and 0.0.0-26 (tags
+`release/2026-09-17` and `release/2026-09-22`). Everything below shipped by 0.0.0-40; four entries are
+0.0.0-40's alone: the shortcuts sheet's closing paragraph, `space.bridge.lean`, the bridge as a line and
+`space.navigation.framing`.
 
 The defaults below change how a space LOOKS the moment the pins move. Every one of them is a
 configuration value; a host that wants the old picture names the old value. The section for the

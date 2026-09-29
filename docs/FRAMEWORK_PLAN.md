@@ -1,8 +1,8 @@
 # Plurid Framework Plan: `@plurid/plurid-kit`
 
-Status: **published and partially adopted, verified 2026-07-13**.
+Status: **published and partially adopted**; the adoption counts are of 2026-07-13, the kit and its generator re-verified 2026-09-29.
 
-`@plurid/plurid-kit@0.0.0-3` is the supported batteries layer over `plurid-react-server`. It replaces copied client/server orchestration and build scripts with a typed `plurid.config.ts`, thin runtime entries, and the `plurid` CLI.
+`@plurid/plurid-kit` (0.0.0-6, published 2026-09-17) is the supported batteries layer over `plurid-react-server`. It replaces copied client/server orchestration and build scripts with a typed `plurid.config.ts`, thin runtime entries, and the `plurid` CLI.
 
 ## Current adoption
 
@@ -111,7 +111,13 @@ Engine repository:
 pnpm --filter @plurid/plurid-kit build
 pnpm --filter @plurid/plurid-kit test
 pnpm --filter @plurid/plurid-react-server test
+pnpm smoke.pack    # generate, install from the packed packages, build, start, and hydrate in Chromium
 ```
+
+The hydration is the contract that matters most and was unguarded until 2026-09-29: the kit's server
+and client must render one tree. `smoke.pack` loads the generated application under `plurid start` and
+`plurid dev` and fails on any error, a hydration mismatch included; the kit's `client.test.ts` holds the
+router's properties equal on both sides.
 
 Application repository, per migrated app:
 

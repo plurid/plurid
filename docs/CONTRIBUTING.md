@@ -71,10 +71,10 @@ Run from the root. **CI enforces every row of this table** (2026-09-13: the brow
 | `pnpm e2e` (`pnpm --filter plurid-render-test e2e`) | Playwright against the render-test harness (`e2e/*.spec.ts`) | Needs `npx playwright install chromium` once; starts the Vite server itself. After rebuilding a workspace package, clear `fixtures/render-test/node_modules/.vite`. THREE projects, run as three commands on CI (see [Tests](#tests)): `chromium` (the behavioural scenarios), `perf` (the benchmark and the virtualization budgets, alone on a machine — `BENCH_STRICT=1` adds the absolute frame-time budgets on top of the always-on relative ones) and `visual` (a screenshot per fixture × viewpoint against `e2e/__snapshots__/<platform>/`, compared unconditionally; `darwin` and `linux` baselines are committed). `retries: 0` — a flake is a failure. |
 | `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
-| `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map. |
+| `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package, and renders `@plurid/plurid-react` through both builds | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map, two builds that create their styled components in two orders (a server that `require`s and a browser that `import`s then never hydrate; 2026-09-29). |
 | `pnpm release` | preflight → bump the changed chain (+ its `>=` peer ranges) → `pnpm verify` → `pnpm -r publish` → tag | The whole release. `--dry-run` first, always. |
 | `pnpm size` | measures every public package's published ESM (entry + chunks) gzipped against `configurations/size-budgets.json` | Fails over budget. `pnpm size --update` rewrites the budgets from disk — do that only for a deliberate change, in the same commit, with the reason in the message. A budget is the measurement rounded up to the next 5 KB with at least 2 KB of room. |
-| `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways | The consumer's path end to end (needs the network; a minute). `--keep` leaves the project for inspection. |
+| `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways; generate an application, build it, and load it in Chromium under `plurid start` and `plurid dev` | The consumer's path end to end (needs the network; a minute). Fails on any console or page error in the generated application, a hydration mismatch included, and on a first link that does not open its page. The browser is the harness's Playwright Chromium (`pnpm --filter plurid-render-test exec playwright install chromium`); `PLURID_CHROMIUM=<path>` points at another, `SMOKE_SKIP_BROWSER=1` skips it. `--keep` leaves the project for inspection. |
 | `pnpm verify` | build → check → test → lint → check.modules → size → docs.tables.check → browser suite → smoke.pack | The full local gate; what to run before a publish. |
 
 Because **build ≠ type-check**, a change can build and ship a broken `.d.ts` or a type error that only `tsc`
@@ -403,7 +403,7 @@ package's coverage rises, raise its floor in the same commit that earns it.
 
 | Job | Steps |
 |---|---|
-| `gates` | `build` → `test` → `lint` → `check` → `check.modules` → `size` → `docs.tables.check` → `smoke.pack` |
+| `gates` | `build` → `test` → `lint` → `check` → `check.modules` → `size` → `docs.tables.check` → Chromium → `smoke.pack` |
 | `browser` | the `chromium` project (needs `gates`) |
 | `perf` | the `perf` project, alone on its runner (needs `gates`) |
 | `visual` | the `visual` project INSIDE `mcr.microsoft.com/playwright:v1.62.1-noble`; uploads the differing pictures on failure (needs `gates`) |
@@ -413,8 +413,9 @@ package's coverage rises, raise its floor in the same commit that earns it.
 ## CI, versioning & style
 
 - **CI** (`.github/workflows/ci.yml`) runs on **Node 24**, in four jobs: `gates`
-  (`install --frozen-lockfile` → `build` → `test` → `lint` → `check` → `check.modules` →
-  `docs.tables.check` → `smoke.pack`), then `browser`, `perf` and `visual` in parallel behind it. A PR
+  (`install --frozen-lockfile` → `build` → `test` → `lint` → `check` → `check.modules` → `size` →
+  `docs.tables.check` → `smoke.pack`, with Chromium installed for its hydration check), then
+  `browser`, `perf` and `visual` in parallel behind it. A PR
   must be green in all four, and nothing retries. If you change dependencies, commit the updated
   `pnpm-lock.yaml` (CI installs frozen).
 - **Versioning** is [αver](https://github.com/ly3xqhl8g9/alpha-versioning) (the `0.0.0-N` package versions).

@@ -1,6 +1,6 @@
 # Plurid Engine Documentation
 
-Current as of **2026-09-10**.
+Current as of **2026-09-29**.
 
 ## Authority order
 
@@ -40,4 +40,4 @@ pnpm test
 pnpm lint
 ```
 
-Every public package exposes a `check` script (the harness too). GitHub CI runs build, test, lint, `check`, `check.modules` and `docs.tables.check` on every change, plus the chromium browser suite in its own job; `pnpm verify` is the local superset (it adds the strict visual comparisons, whose baselines are macOS renders, and the packed-install smoke test). Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.
+Every public package exposes a `check` script (the harness too). GitHub CI runs build, test, lint, `check`, `check.modules`, `size`, `docs.tables.check` and `smoke.pack` (which hydrates a generated application in Chromium) on every change, and the browser suite in three jobs of its own: `browser` (the chromium scenarios), `perf` (the frame budgets, alone on their runner) and `visual` (the screenshot comparisons, in the pinned Playwright container against the committed `linux` baselines). `pnpm verify` runs the same chain locally; its visual comparisons use the baselines of the platform it runs on. Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.

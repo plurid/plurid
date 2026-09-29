@@ -1,6 +1,6 @@
 # Plurid Engine Audit and Roadmap
 
-Status: **active engineering ledger, re-verified 2026-09-17** (the P0 items below are delivered; the verification chain is `pnpm verify`).
+Status: **active engineering ledger, re-verified 2026-09-29** (P0 is delivered, P1 mostly, the P4 generator too; the verification chain is `pnpm verify`).
 
 This document records what remains after the June/July modernization. Historical implementation detail belongs in git history; live mechanics belong in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
 
@@ -19,7 +19,7 @@ The engine is governable and product-capable. It has a coherent workspace, a liv
 - state persistence hardening and spawned-plane reload recovery;
 - pointer-event navigation in place of HammerJS in the engine;
 - viewpoint, links, selection, movement, snapping, undo/redo, minimap, persistence, collaboration, and developer-control seams;
-- `@plurid/plurid-kit@0.0.0-3` published and consumed by applications.
+- `@plurid/plurid-kit` published (0.0.0-6, 2026-09-17) and consumed by applications.
 
 ## P0: Make the gates mean product quality
 
@@ -64,17 +64,23 @@ The design must decide:
 
 **Done when:** parameterized large-space scenarios show a measured improvement, focused/editor state remains correct, and browser regressions cover boundary behavior.
 
+**Delivered (2026-09-10):** the detach tier, `space.culling.detach` (`ENGINE_FEATURE_ROADMAP.md`, Next 1), measured by `e2e/virtualization.spec.ts` on 500 planes (the far corner's DOM with `unmount` at most 40 % of the plain run's, a pan swapping the mounted set, `retain` keeping a counter and a scroll), in the `perf` project on CI.
+
 ### Replace the fixed 40-plane stress toggle with a benchmark matrix
 
 Add configurable counts and representative content weights. Measure 40, 100, 500, and 1,000 lightweight planes plus smaller sets with editors/media. Capture frame time, long tasks, React commits, layout/style cost, memory, interaction latency, and recovery after camera movement.
 
 **Done when:** budgets and results are recorded and repeatable enough to reject a regression.
 
+**Partly delivered (2026-09):** `e2e/bench.spec.ts` in the `perf` project on CI, alone on its runner: the orbit on 40 / 100 / 500 planes, the relayout and the spawn on 40 / 100, each held to one commit per frame, no stall and sub-linear scaling (absolute budgets under `BENCH_STRICT=1`); `pnpm bench` prints the table. Not yet: 1,000 planes, editor and media weights, memory, long tasks.
+
 ### Control bundle growth
 
 The render harness production chunk is already above the default Vite warning threshold. Separate engine cost from harness/product dependencies, inspect aggregate exports, and define per-package or per-entry budgets before optimization.
 
 **Done when:** bundle reports are generated in CI and changes over an agreed threshold require review.
+
+**Delivered (2026-09-13):** `pnpm size` measures every public package's published ESM, gzipped, against `configurations/size-budgets.json`, and fails CI over budget.
 
 ## P2: Deepen correctness boundaries
 
@@ -130,6 +136,8 @@ Use engine primitives for conversation branches, context, artifacts, navigation,
 
 **Done when:** a generated app has `plurid.config.ts`, thin entries, no legacy `scripts/` tree, and passes type-check/build/browser smoke.
 
+**Delivered (2026-09-10; the browser smoke 2026-09-29):** the generator emits the kit shape (`FRAMEWORK_PLAN.md`), and `pnpm smoke.pack` generates an application from the packed packages, builds it, starts it, and loads it in Chromium under `plurid start` and `plurid dev`, failing on any error, a hydration mismatch included.
+
 ### Clarify package surfaces and compatibility
 
 Avoid source imports from distribution internals, reduce aggregate entry points that drag unnecessary code, document peer compatibility, and automate a release matrix for data/engine/react/server/kit.
@@ -150,7 +158,7 @@ Open questions include DOM overlay versus texture rendering, accessibility and t
 | --- | --- |
 | `plurid-data`, `plurid-engine`, `plurid-pubsub`, `plurid-react`, `plurid-react-server`, `plurid-kit` | Live supported graph |
 | themes/functions/icons/UI utilities | Live support packages; test depth should match public use |
-| `generate-plurid-app` | Live but outdated; P4 target |
+| `generate-plurid-app` | Live; emits the kit shape, built, served and hydrated by `pnpm smoke.pack` |
 | `fixtures/render-test` and examples | Live verification and learning surfaces |
 | `plurid-canvas`, `plurid-html`, `plurid-routes-server` | Source retained but excluded from the live workspace gates |
 | browser extension/native/specification prototypes | Experimental or historical unless explicitly promoted through a product/renderer decision |
@@ -165,4 +173,4 @@ pnpm verify
 #   && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack
 ```
 
-`docs.tables.check` refuses a stale generated table (`SHORTCUTS.md`, `CHANGES.md`, `HARNESS.md`, `LOOKS.md`: `node scripts/generate-tables.mjs` after a data build); `size` holds the bundle budgets; `smoke.pack` packs and installs the packages as a consumer would. The visual baselines are per platform: the linux ones are regenerated in the pinned Playwright container, never on a Mac.
+`docs.tables.check` refuses a stale generated table (`SHORTCUTS.md`, `CHANGES.md`, `HARNESS.md`, `LOOKS.md`: `node scripts/generate-tables.mjs` after a data build); `size` holds the bundle budgets; `check.modules` imports every entry point as ESM and as CommonJS and renders `@plurid/plurid-react` through both, which must agree; `smoke.pack` packs and installs the packages as a consumer would and hydrates the generated application in Chromium (a browser for it: CI installs one; `PLURID_CHROMIUM` points at another). The visual baselines are per platform: the linux ones are regenerated in the pinned Playwright container, never on a Mac.
