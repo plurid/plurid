@@ -47,6 +47,10 @@ export const StyledShortcutsBackdrop = styled.div`
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     animation: ${fadeIn} 140ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 `;
 
 export const StyledShortcutsPanel = styled.div<{ theme: Theme }>`
@@ -60,6 +64,10 @@ export const StyledShortcutsPanel = styled.div<{ theme: Theme }>`
     padding: 26px 30px 30px;
     font-family: var(--plurid-font);
     animation: ${riseIn} 180ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 `;
 
 export const StyledShortcutsHeader = styled.div`

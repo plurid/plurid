@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useEffect,
+        useId,
         useMemo,
         useRef,
     } from 'react';
@@ -96,6 +97,9 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
         setVisible,
     } = properties;
     // #endregion properties
+
+    // one per application: two sheets on a page had one id between them
+    const titleID = 'plurid-shortcuts-title-' + useId().replace(/[^A-Za-z0-9_-]/g, '');
 
 
     // #region references
@@ -203,13 +207,13 @@ const PluridShortcuts: React.FC<PluridShortcutsProperties> = (
                 theme={theme}
                 role="dialog"
                 aria-modal="true"
-                aria-labelledby="plurid-shortcuts-title"
+                aria-labelledby={titleID}
                 tabIndex={-1}
                 onClick={(event: React.MouseEvent) => event.stopPropagation()}
                 onKeyDown={onKeyDown}
             >
                 <StyledShortcutsHeader>
-                    <h2 id="plurid-shortcuts-title">Keyboard Shortcuts</h2>
+                    <h2 id={titleID}>Keyboard Shortcuts</h2>
                     <span>? or Esc to close</span>
                     <StyledShortcutsClose
                         type="button"

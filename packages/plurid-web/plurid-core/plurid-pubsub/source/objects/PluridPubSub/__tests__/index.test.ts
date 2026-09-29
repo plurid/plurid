@@ -82,7 +82,31 @@ describe('PluridPubSub', () => {
 
         expect(() => bus.publish({ topic: 'space.rotateYWith', data: { value: 3 } })).not.toThrow();
         expect(after).toEqual([3]);
+        // and it is not silent: in development the error is reported with its topic
+        expect(errors).toHaveBeenCalledTimes(1);
+        expect(String(errors.mock.calls[0][0])).toContain('space.rotateYWith');
+        expect(errors.mock.calls[0][1]).toBeInstanceOf(Error);
         errors.mockRestore();
+    });
+
+    it('in production a throwing callback is not reported (unless debug)', () => {
+        const previous = process.env.NODE_ENV;
+        process.env.NODE_ENV = 'production';
+        const errors = jest.spyOn(console, 'error').mockImplementation(() => {});
+        try {
+            const bus = new PluridPubSub();
+            bus.subscribe({ topic: 'space.rotateYWith', callback: () => { throw new Error('quiet'); } });
+            bus.publish({ topic: 'space.rotateYWith', data: { value: 1 } });
+            expect(errors).not.toHaveBeenCalled();
+
+            const debugging = new PluridPubSub({ debug: true });
+            debugging.subscribe({ topic: 'space.rotateYWith', callback: () => { throw new Error('loud'); } });
+            debugging.publish({ topic: 'space.rotateYWith', data: { value: 1 } });
+            expect(errors).toHaveBeenCalledTimes(1);
+        } finally {
+            process.env.NODE_ENV = previous;
+            errors.mockRestore();
+        }
     });
 });
 

@@ -109,6 +109,7 @@ const PluridToolbarScale: React.FC<PluridToolbarScaleProperties> = (
             {showTransformButtons && (
                 <PluridTransformArrow
                     direction="up"
+                    label="zoom in"
                     transform={() => scaleUp()}
                 />
             )}
@@ -141,6 +142,7 @@ const PluridToolbarScale: React.FC<PluridToolbarScaleProperties> = (
             {showTransformButtons && (
                 <PluridTransformArrow
                     direction="down"
+                    label="zoom out"
                     transform={() => scaleDown()}
                 />
             )}

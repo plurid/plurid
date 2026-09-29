@@ -11,6 +11,13 @@
         PluridIconReset,
     } from '@plurid/plurid-icons-react';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        StyledPlaneControlButton,
+    } from '../../styled';
+    // #endregion external
 // #region imports
 
 
@@ -50,18 +57,25 @@ const ControlRefresh: React.FC<ControlRefreshProperties> = (
 
 
     // #region render
+    // a real button (it was a `div` with a click: no role, no name, out of the Tab order)
     return (
-        <PluridIconReset
-            atClick={() => {
+        <StyledPlaneControlButton
+            type="button"
+            aria-label="refresh this plane"
+            title="refresh"
+            data-plurid-control="plane-refresh"
+            disabled={refreshing}
+            onClick={() => {
                 refreshPlane();
             }}
-            theme={theme}
-            title="refresh"
             style={{
-                opacity: refreshing ? '0' : '1',
-                pointerEvents: refreshing ? 'none' : undefined,
+                opacity: refreshing ? 0 : 1,
             }}
-        />
+        >
+            <PluridIconReset
+                theme={theme}
+            />
+        </StyledPlaneControlButton>
     );
     // #endregion render
 }

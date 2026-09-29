@@ -835,7 +835,9 @@ export const applyCameraDeltaCommand = (
     animate = false,
 ): CameraThunk => (animate
     ? cameraCommand({ kind: 'delta', delta }, { animate: true })
-    : (dispatch) => {
+    : (dispatch, _getState, extra) => {
+        // a jump: a running tween would write its next frame over it
+        extra?.motion?.cancel();
         dispatch(actions.space.applyCameraDelta(delta));
     });
 // #endregion wrappers

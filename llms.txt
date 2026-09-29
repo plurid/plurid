@@ -1,0 +1,25 @@
+# plurid'
+
+> A React engine for 3D spatial interfaces: planes (any React component) float in a CSS-3D space that the reader orbits, pans and zooms; a link opens the plane it names beside the one it is in. The page presentation makes the same application an ordinary site until the reader reveals the space. Planes are real DOM (no WebGL): selectable, accessible, styleable. Packages: `@plurid/plurid-react` (the adapter, with `/testing` and `/agent`), `@plurid/plurid-react-server` (server rendering), `@plurid/plurid-kit` (the framework CLI), `@plurid/plurid-engine` and `@plurid/plurid-data` (logic and types).
+
+Install `@plurid/plurid-react react react-dom styled-components`. Configure with `definePluridConfiguration({ ... })` (the flat keys: `look`, `chrome`, `layout`, `presentation`, …) or the nested shape (`global`, `elements`, `space`, `network`, `development`). Drive and observe a running application through its bus (`onReady(api)` → `api.pubsub`) or its handle (`ref`); let an AI agent operate it with `createPluridAgent(api)` from `@plurid/plurid-react/agent`.
+
+## Docs
+
+- [Getting started](https://github.com/plurid/plurid/blob/master/docs/GETTING_STARTED.md): a site first, a space, planes, links, configuration, persistence, the viewpoint
+- [Control surface](https://github.com/plurid/plurid/blob/master/docs/CONTROL_SURFACE.md): every configuration knob, the bus topics and `space.changed` kinds, the handle, the hooks, slots, the DOM contract
+- [Agent control](https://github.com/plurid/plurid/blob/master/docs/AGENT_CONTROL.md): `@plurid/plurid-react/agent`, the fourteen tools, the observation, error codes, guardrails, a Claude tool-use loop, WebMCP
+- [Architecture](https://github.com/plurid/plurid/blob/master/docs/ARCHITECTURE.md): the package graph, the render pipeline, state, server rendering, the kit
+
+## Reference
+
+- [Bus change kinds](https://github.com/plurid/plurid/blob/master/docs/CHANGES.md): every `space.changed` kind and its value (generated)
+- [Shortcuts](https://github.com/plurid/plurid/blob/master/docs/SHORTCUTS.md): every keyboard shortcut and pointer gesture (generated)
+- [Looks](https://github.com/plurid/plurid/blob/master/docs/LOOKS.md): the twelve looks and the chrome tokens (generated)
+- [Migration](https://github.com/plurid/plurid/blob/master/docs/MIGRATION.md): what changed for a host, release by release
+
+## Optional
+
+- [Contributing](https://github.com/plurid/plurid/blob/master/docs/CONTRIBUTING.md): the gates, the harness, the traps
+- [Agents working on the repository](https://github.com/plurid/plurid/blob/master/AGENTS.md): layout, commands, rules
+- [Examples](https://github.com/plurid/plurid/tree/master/examples): minimal, control surface, custom chrome

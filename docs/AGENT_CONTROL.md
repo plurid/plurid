@@ -139,11 +139,11 @@ Claude tools in strict mode.
 | --- | --- |
 | `unknown_tool` | No such tool, or not offered here (the message lists the offered ones). |
 | `invalid_input` | The input does not fit the schema, or the combination does not make sense (`columns` with a `ROWS` layout). |
-| `not_found` | No plane with that id, no link with that text, no bookmark with that name. |
+| `not_found` | No plane with that id, no link with that text, no bookmark with that name, no plane registered at a route (the bus refuses it at once). |
 | `ambiguous` | The link text matches links to different routes; name one by its route. |
 | `not_allowed` | `onCall` refused the call. |
 | `unavailable` | The plane is closed, or not rendered (culled). Bring it into view first. |
-| `no_effect` | Nothing to do: already closed, nothing to undo, a route no plane is registered at, a command that did not run. |
+| `no_effect` | Nothing to do: already closed, nothing to undo, a command that did not run. |
 | `failed` | The action threw. |
 
 ## Guardrails

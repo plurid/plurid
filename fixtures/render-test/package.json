@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite --port 5273",
     "build": "vite build",
-    "check": "tsc --noEmit -p tsconfig.json",
+    "check": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.examples.json",
     "e2e": "playwright test --config e2e/playwright.config.ts"
   },
   "dependencies": {

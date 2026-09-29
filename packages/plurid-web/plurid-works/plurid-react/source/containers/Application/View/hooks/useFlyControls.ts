@@ -22,6 +22,9 @@
 
     import {
         isEditableTarget,
+        isEngineControl,
+        overlayOf,
+        chromeOwnsKey,
     } from '~services/logic/input/guard';
 
     import {
@@ -184,7 +187,7 @@ export const useFlyControls = (
             if (event.metaKey || event.ctrlKey || event.altKey) {
                 return;
             }
-            if (isEditableTarget(event.target)) {
+            if (isEditableTarget(event.target) || chromeOwnsKey(event)) {
                 return;
             }
             const id = codeToID().get(event.code);
@@ -222,8 +225,14 @@ export const useFlyControls = (
             }
         };
 
+        // a lock asked for and not yet granted: the browser grants it later, perhaps after fly mode
+        // is off and its handlers are gone, which left the pointer captured with nothing to use it
+        let lockRequested = false;
+
         const onClick = (event: MouseEvent) => {
-            if (isEditableTarget(event.target)) {
+            // a click on the chrome (the toolbar, a menu, the fly toggle itself) is the chrome's: it
+            // used to capture the pointer, and the menu it opened sat under a hidden cursor
+            if (isEditableTarget(event.target) || isEngineControl(event.target) || overlayOf(event.target)) {
                 return;
             }
             // Guard cross-document/detached contexts (iframes throw `WrongDocumentError`)
@@ -235,6 +244,7 @@ export const useFlyControls = (
                 && element.isConnected
             ) {
                 try {
+                    lockRequested = true;
                     const lockResult = (element as any).requestPointerLock();
                     if (lockResult && typeof lockResult.catch === 'function') {
                         lockResult.catch(() => { /* pointer lock denied/unavailable */ });
@@ -263,6 +273,17 @@ export const useFlyControls = (
             element.removeEventListener('click', onClick);
             if (document.pointerLockElement === element && document.exitPointerLock) {
                 document.exitPointerLock();
+            } else if (lockRequested && typeof document.addEventListener === 'function') {
+                // granted after this cleanup: let it go the moment it arrives (bounded, in case the
+                // request is never answered)
+                const lateLock = () => {
+                    document.removeEventListener('pointerlockchange', lateLock);
+                    if (document.pointerLockElement === element && document.exitPointerLock) {
+                        document.exitPointerLock();
+                    }
+                };
+                document.addEventListener('pointerlockchange', lateLock);
+                setTimeout(() => document.removeEventListener('pointerlockchange', lateLock), 3000);
             }
         };
     }, [

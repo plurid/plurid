@@ -24,6 +24,7 @@
 
     import {
         isEditableTarget,
+        chromeOwnsKey,
     } from '~services/logic/input/guard';
 
     import {
@@ -94,6 +95,10 @@ export const useGrabMode = (
                 return;
             }
             if (isEditableTarget(event.target) || event.metaKey || event.ctrlKey || event.altKey) {
+                return;
+            }
+            // Space on a button presses it, and inside a dialog or a menu it is theirs
+            if (chromeOwnsKey(event)) {
                 return;
             }
             // Inside plane content Space is the page's while the camera is DOCKED on it (it scrolls

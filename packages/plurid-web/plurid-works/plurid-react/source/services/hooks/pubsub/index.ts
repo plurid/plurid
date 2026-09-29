@@ -12,6 +12,13 @@
     // #endregion libraries
 
 
+    // #region external
+    import {
+        warnOnce,
+    } from '~services/logic/development/warn';
+    // #endregion external
+
+
     // #region internal
     import {
         useEnginePubSub,
@@ -37,6 +44,11 @@ export const usePluridPubSub = <T extends PluridPubSubTopicName>(
 
     useEffect(() => {
         if (!pubsub) {
+            // outside an application there is no bus to hear: said, where it used to subscribe to nothing
+            warnOnce(
+                'pubsub-hook-outside:' + String(topic),
+                `usePluridPubSub('${String(topic)}') is outside a <PluridApplication>, so it hears nothing: call it from plane content or a render slot, or subscribe on the api's bus (onReady).`,
+            );
             return;
         }
         const selector = pubsub.subscribe({

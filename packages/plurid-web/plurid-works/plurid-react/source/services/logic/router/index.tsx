@@ -75,6 +75,17 @@ export interface GetComponentFromRouteData {
     staticRender?: boolean;
 }
 
+/**
+ * THE ID OF A ROUTE'S APPLICATION: its own, else `route:<value>`. Every route-driven application
+ * used to be `default`, so with `useLocalStorage` each route saved over the others and booted with
+ * their state (an isolated plane from one route left the next one's planes transparent), and they
+ * shared one look scope.
+ */
+export const routeApplicationID = (
+    route: { id?: string; value: string },
+): string => route.id ?? 'route:' + route.value;
+
+
 export const getComponentFromRoute = (
     data: GetComponentFromRouteData,
 ) => {
@@ -244,7 +255,7 @@ export const getComponentFromRoute = (
             const App = (
                 <PluridApplication
                     key={uuid.generate()}
-                    id={path.value}
+                    id={space.id ?? routeApplicationID(path) + '#' + space.value}
                     planes={planes}
                     view={view}
                     static={staticRender}
@@ -320,7 +331,7 @@ export const getComponentFromRoute = (
         const App = (
             <PluridApplication
                 key={uuid.generate()}
-                id={path.value}
+                id={routeApplicationID(path)}
                 planes={pluridPlanes}
                 planesProperties={planesProperties}
                 view={view}
@@ -1097,7 +1108,7 @@ export const renderMultispace = (
             const App = (
                 <PluridApplication
                     key={uuid.generate()}
-                    id={path.value}
+                    id={space.id ?? routeApplicationID(path) + '#' + space.value}
                     planes={planes}
                     view={view}
                     configuration={space.configuration}
@@ -1159,7 +1170,7 @@ export const renderMultispace = (
         const App = (
             <PluridApplication
                 key={uuid.generate()}
-                id={path.value}
+                id={routeApplicationID(path)}
                 planes={pluridPlanes}
                 view={view}
                 configuration={path.defaultConfiguration}
@@ -1344,6 +1355,7 @@ export const computePluridRoute = (
 
             const pluridApplication = (
                 <PluridApplication
+                    id={routeApplicationID(matchedRoute.data)}
                     view={view}
                     planesRegistrar={planesRegistrar}
                     configuration={defaultConfiguration}

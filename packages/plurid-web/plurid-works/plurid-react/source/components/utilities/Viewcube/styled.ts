@@ -87,6 +87,9 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     position: absolute;
     user-select: none;
     transition: all 300ms ease-in-out;
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
     z-index: ${Z_INDEX.VIEWCUBE};
     height: 175px;
     display: grid;

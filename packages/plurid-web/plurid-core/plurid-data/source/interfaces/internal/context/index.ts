@@ -67,9 +67,20 @@ export interface PluridContext<C> {
     /** The diagnostic registry (the planes count their renders into it while it is enabled). */
     inspector?: PluridInspectorRegistry;
 
+    /**
+     * Hydrating a server render with a saved state waiting: each plane says when its content has
+     * hydrated (it hydrates on its own, after the application mounted), and the saved state lands
+     * once they all have.
+     */
+    planeHydrated?: (planeID: string) => void;
+
+    /** The application's id, carried by what it reports on the bus (`space.changed` `application`). */
+    applicationID?: string;
+
     defaultPubSub: PluridPubSub,
+    /** Bridge another bus to the space (once per bus); the function returned takes it off again. */
     registerPubSub: (
         pubsub: PluridPubSub,
-    ) => void;
+    ) => (() => void) | void;
 }
 // #endregion module

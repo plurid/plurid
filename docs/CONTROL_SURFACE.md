@@ -115,12 +115,14 @@ commands: `close(options?)` (hide this plane; when it is the one in view the cam
 The instance **pubsub** bus (the same one `onReady` hands back) is the stable, decoupled control + observe surface.
 
 **TOTAL CONTROL (2026-09-13).** The bus reaches everything the engine's own chrome, keyboard and
-imperative handle reach — 78 topics, and **every one of them has a subscriber** (a test asserts it, so a
+imperative handle reach — 81 topics (79 commands and the 2 the engine emits), and **every command has a subscriber** (a test asserts it, so a
 typed-but-inert topic cannot ship; eleven of them were exactly that until this release). Three layers, by
 how much you want to say:
 
 ```tsx
-// 1. BY NAME — any entry of PLURID_SHORTCUTS, including every command the engine grows later
+// 1. BY NAME — any PRESSED command of PLURID_SHORTCUTS, including every command the engine grows later
+//    (the held keys, `grabHold` and the fly keys, answer `unknown`; `transformNudge` and `focusRootIndex`
+//    answer `needsKey`: the key they read is their argument)
 plurid.pubsub.publish({ topic: 'space.command', data: { id: 'fitToView' } });
 plurid.pubsub.publish({ topic: 'space.command', data: { id: 'palette' } });
 
@@ -150,8 +152,8 @@ back to the layout. `space.describe { token }` answers on `space.changed` kind `
 inspection `api.inspect()` gives, for a host that holds no api; `space.blur` takes the keyboard off
 the space and kind `focus` reports it; `space.command { id }` runs a shortcut by id, ignores
 `shortcuts.disabled` (a key taken from the reader, not from the host) and answers kind `command`
-`{ id, ran, reason }`. `view.setTree` makes the view agree with the tree's roots, and it and
-`view.setPlanes` validate what they are given: a malformed message leaves the view or the tree as it
+`{ id, ran, reason }`. `space.setTree` makes the view agree with the tree's roots, and it and
+`view.setPlanes` validate what they are given (a view entry is a route or `{ plane: route }`): a malformed message leaves the view or the tree as it
 was and warns, naming the first bad node, rather than throwing inside a render.
 `view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree.
 `space.isolatePlane { planeID: null }` (or `''`) clears the isolation; `space.translateXTo` / `YTo` /
@@ -232,7 +234,7 @@ plurid.pubsub.subscribe({
     callback: ({ kind, value }) => {
         // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved'
         //     | 'loading' | 'history' | 'motion' | 'bookmarks' | 'docked' | 'culling'
-        //     | 'plane' | 'describe' | 'command' | 'focus'
+        //     | 'plane' | 'refused' | 'planeError' | 'describe' | 'command' | 'focus'
         // every kind, with its value, in docs/CHANGES.md (generated from PLURID_CHANGE_KINDS)
         if (kind === 'selection') highlightInSidebar(value);
     },
@@ -242,11 +244,16 @@ plurid.pubsub.subscribe({
 <PluridApplication … onViewpointChange={(v) => saveShareLink(v)} />
 ```
 
+- **Every message says which application sent it**: `{ kind, value, application }`, the application's `id` (a route's `route:<value>`, a multispace route's `route:<value>#<space>`, else `default`). The applications of a route share the router's bus; tell them apart by it.
+- **Every token is answered (2026-09-29).** `view.addPlane` / `space.spawnPlane` with a `token` get kind `plane` once the plane exists — at once when the route was already open there (the spawn goes to it and changes no tree, so it used to go unanswered) — or kind `refused` `{ token, route, reason }` when no plane will come: `unregistered` (no plane at the route) or `noParent` (the parent is not in the space). The answer goes on the bus that asked.
+- **A plane that throws is contained** (`planeRenderError`, on by default): its error card shows with a retry, the rest of the space goes on, and kind `planeError` `{ planeID, route, message }` tells the host (a logger, an error reporter).
+- **Commands read the store, not the last render.** Two commands published in one tick act in order (two `view.addPlane`s both land; a `space.command` after a `space.setSelection` sees the selection). A camera command that is not a tween (`space.cameraDelta` without `animate`, the nudges, the legacy `…With` / `…To`, `space.transform`) stops a running tween first. A command without its payload does nothing and says so in development.
+
 ---
 
 ### Development warnings
 
-In development the engine warns ONCE per page about the mistakes it can see: a `planes` array rebuilt on every render (memoize it), a `view` route with no registered plane, a container with a width but no height, a `space.perspective` outside 500–5000. `{ extend: { development: { warnings: false } } }` mutes them; production never prints.
+In development the engine warns ONCE per page about the mistakes it can see: a `planes` array rebuilt on every render (memoize it), a `view` route with no registered plane, a container with a width but no height, a `space.perspective` outside 500–5000; since 2026-09-29 also a flat key in the nested `configuration` (`{ chrome: 'none' }` belongs in `definePluridConfiguration`), an unknown key, a look / chrome mode / presentation that is not one, a `view` that is not an array (read as one), `storageAdapter` / `onPersistContent` / `onRestoreContent` without `useLocalStorage`, a `PluridLink` to a route no plane is registered at, a command payload with a renamed field, two mounted applications with one `id`, and the deprecated `planeNotFound`. A hook of the engine called outside an application throws an error that says so (react-redux's own sent hosts looking for a `<Provider>`). The checks read `process.env.NODE_ENV` as a bundler replaces it, so a Vite or webpack build is development in `dev` and silent in production. A subscriber that throws is reported with its topic in development (`console.error`), and the other subscribers still run. `{ extend: { development: { warnings: false } } }` mutes them; production never prints.
 
 ### Diagnostics (`api.inspect()`, `development.inspector`, the debuggers)
 
@@ -592,7 +599,7 @@ definePluridConfiguration({ presentation: 'page', docking: { motion: 'instant' }
 definePluridConfiguration({ presentation: 'page', docking: { reveal: { scale: 0.6, pitch: -32, yaw: -8 }, fade: 400 } })   // steeper, a little turned
 ```
 
-- The rail: `elements.dockRail.show: false` (flat `dockRail: { show: false }`) removes it; `renderDockRail` replaces it — render your own `data-plurid-control="dock-toggle"` / `"dock-back"` that publish `space.reveal` / `space.dock` / `space.frame`. `renderViewcube` no longer touches it. Every plane-addressing message takes `planeID` (`id` / `plane` still work, deprecated); `space.setViewpoint` takes `animate` (alias of `animated`).
+- The rail: `elements.dockRail.show: false` (flat `dockRail: { show: false }`) removes it; `renderDockRail` replaces it — render your own `data-plurid-control="dock-toggle"` / `"dock-back"` that publish `space.reveal` / `space.dock` / `space.frame`. `renderViewcube` no longer touches it. Every plane-addressing message takes `planeID` (`id` / `plane` were removed after their release of aliases; a payload still carrying them does nothing and is named in a development warning); `space.setViewpoint` takes `animate` (`animated` likewise).
 - Several roots: with `pages` side by side (`layout` lays the roots out as ever) the camera boots docked on the first; `space.dock { planeID }` swings to another root and sets the others aside; `0` fits them all; the reveal shows the neighbours' edges.
 - Focus and accessibility: the chrome hidden while docked is `visibility: hidden` (out of the tab order and the accessibility tree); an aside page is `inert`; the rail's pills and the `?` trigger are one persistent pill (32 px, a light rim, a dark halo, a two-tone focus ring that reads on any page); the controls bar hangs above the sheet and is the page's top: it moves with the sheet, clipped with it when that top leaves the view.
 - Mobile: size the application's container yourself (`height: 100dvh`; safe-area padding on your own chrome — the engine's rail keeps a 16 px margin); the viewcube already collapses under 800 px; one finger scrolls, two pinch.
@@ -688,10 +695,13 @@ rules: [DESIGN.md](./DESIGN.md); the token table and the presets: [LOOKS.md](./L
 `look`, in three forms:
 
 ```tsx
-<PluridApplication look="paper" />                                                    // a preset: graphite (default) · noir · slate · ink · ember · moss · plum · paper · snow · sand · mint · cobalt
-<PluridApplication look={{ scheme: 'dark', space: '#000', surface: '#0b0b0d', ink: '#f2f2f2', accent: '#8ab4ff' }} />   // a base: a whole look derived from it
-<PluridApplication look={{ preset: 'graphite', tokens: { accent: '#ff5a5f', radius: '4px' } }} />   // a preset with tokens laid over it
+definePluridConfiguration({ look: 'paper' })                                                         // a preset: graphite (default) · noir · slate · ink · ember · moss · plum · paper · snow · sand · mint · cobalt
+definePluridConfiguration({ look: { scheme: 'dark', space: '#000', surface: '#0b0b0d', ink: '#f2f2f2', accent: '#8ab4ff' } })   // a base: a whole look derived from it
+definePluridConfiguration({ look: { preset: 'graphite', tokens: { accent: '#ff5a5f', radius: '4px' } } })   // a preset with tokens laid over it
+// nested, without the helper: configuration={{ global: { look: 'paper' } }}
 ```
+
+The look is configuration (there is no `look` prop): `<PluridApplication configuration={definePluridConfiguration({ look: 'paper' })} … />`, or on the bus, below. A name that is not a look falls back to graphite, with a development warning.
 
 - **CSS wins.** The tokens are emitted as `[data-plurid-application="<id>"] { --plurid-…: … }`
   (specificity 0,1,0), so a host rule with a more specific selector overrides any of them:
@@ -708,7 +718,8 @@ rules: [DESIGN.md](./DESIGN.md); the token table and the presets: [LOOKS.md](./L
   `dockRail` / `plane.controls` / `planeLinks` / `alignmentGuides`.
 - **Slots with context.** Every `render*` slot (`renderToolbar`, `renderViewcube`, `renderMinimap`,
   `renderDockRail`, `renderShortcuts`, `renderEmpty`, `renderOrigin`, `renderDebugger`) is called with the
-  CHROME CONTEXT — `{ look, tokens, camera, docked, presentation, selection, history, configuration, pubsub }` —
+  CHROME CONTEXT — `{ look, tokens, docked, presentation, selection, history, configuration, pubsub }` (no camera: it
+  changed every orbit frame and re-rendered every slot; a slot that needs it reads `useCamera()`) —
   and renders whatever the mode. The plane-level slots `renderPlaneControls(context)` and
   `renderPlaneBridge(context)` get the plane too (`planeID`, `route`, `treePlane`, `parentTreePlane`,
   `mouseOver`; not the live camera — a plane slot that needs it reads `useCamera`).
@@ -734,7 +745,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 `PluridMultispace`, `PluridApplicationConfigurator`, `PluridPlaneConfigurator`, `PluridPlaneDebugger`,
 `PluridSpaceDebugger`, `PluridMarquee`, `PluridEmpty`, `PluridLiveRegion` and the shortcuts dialog's historical
 `shortcuts-overlay` (all exported as `PLURID_ENTITY_*` from `@plurid/plurid-data`). Alongside:
-`data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links,
+`data-plurid-plane="<planeID>"` on every plane, `data-plurid-link` / `-link-route` / `-link-open` on links (`data-plurid-link` is also on a link-graph beam, where it carries the `PlaneLink` id: select links as `[data-plurid-entity="PluridLink"]`),
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-resize-*|
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,

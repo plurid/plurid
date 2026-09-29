@@ -29,6 +29,7 @@
 
     import {
         PluridApplication as PluridApplicationProperties,
+        TreePlane,
         PluridState,
         PluridApi,
         PluridPubSub as IPluridPubSub,
@@ -44,9 +45,12 @@
         PluridReactComponent,
     } from '~data/interfaces';
 
-    // import PluridProviderContext from '~containers/Provider/context';
+    import PluridProviderContext from '~containers/Provider/context';
 
     import store from '~services/state/store';
+    import {
+        RESTORE_STATE,
+    } from '~services/state/store/reducer';
     import actions from '~services/state/actions';
     import {
         PluridThunkExtra,
@@ -75,6 +79,10 @@
         openPlane,
     } from '~services/state/thunks/planes';
     import { warnOnce } from '~services/logic/development/warn';
+    import {
+        normalizeView,
+        validateApplicationInput,
+    } from '~services/logic/development/configuration';
 
     import {
         PluridApplicationHandle,
@@ -141,7 +149,65 @@ interface PluridApplicationShellExtras {
     routerHosted?: boolean;
     /** The router's location (the request's on the server): where the address bar reads a deep link without a window. */
     routerLocation?: { pathname: string; search: string };
+    /**
+     * Hydrating a server render (a `PluridProvider` with the server's metastate is above): the first
+     * render must be the server's, so the saved state (`useLocalStorage`) is applied after mount.
+     */
+    serverRendered?: boolean;
 }
+
+
+/**
+ * THE IDS OF THE APPLICATIONS MOUNTED ON THIS PAGE. Two applications with one id share one saved
+ * state (`useLocalStorage`: each saves over the other and boots with the other's arrangement) and
+ * one look scope (`[data-plurid-application="<id>"]`: the last look wins for both), so a second one
+ * is named in development.
+ */
+const mountedApplicationIDs = new Map<string, number>();
+
+const claimApplicationID = (
+    id: string,
+    warnings: boolean,
+) => {
+    const count = (mountedApplicationIDs.get(id) ?? 0) + 1;
+    mountedApplicationIDs.set(id, count);
+    if (count > 1) {
+        warnOnce(
+            'duplicate-application-id:' + id,
+            `two applications on the page have the id '${id}': they share one saved state (useLocalStorage) and one look scope. Give each its own \`id\` (a route's application takes \`route.id\`, else \`route:<value>\`).`,
+            warnings,
+        );
+    }
+};
+
+/** The planes a server render drew: every plane that is shown, roots and children. */
+const shownPlaneIDs = (
+    tree: TreePlane[],
+): Set<string> => {
+    const ids = new Set<string>();
+    const walk = (nodes: TreePlane[]) => {
+        for (const node of nodes || []) {
+            if (node.show === false) {
+                continue;
+            }
+            ids.add(node.planeID);
+            walk(node.children || []);
+        }
+    };
+    walk(tree);
+    return ids;
+};
+
+const releaseApplicationID = (
+    id: string,
+) => {
+    const count = (mountedApplicationIDs.get(id) ?? 0) - 1;
+    if (count > 0) {
+        mountedApplicationIDs.set(id, count);
+    } else {
+        mountedApplicationIDs.delete(id);
+    }
+};
 
 
 class PluridApplicationShell extends Component<
@@ -152,6 +218,16 @@ class PluridApplicationShell extends Component<
     // public context!: React.ContextType<typeof PluridProviderContext>;
 
     private store: Store<PluridState>;
+    /**
+     * THE SAVED STATE WAITS FOR THE HYDRATION. Loaded in the constructor, it made the hydrating
+     * render a different tree and camera from the server's HTML (the server has no localStorage):
+     * React 19 kept the server's attributes, or threw the server HTML away when spawned planes
+     * existed. Loaded after mount, it is one state change on a hydrated page.
+     */
+    private deferredLocalLoad = false;
+    /** The planes whose content has still to hydrate before the saved state lands. */
+    private hydrationWaiting: Set<string> | undefined;
+    private hydrationFallback: ReturnType<typeof setTimeout> | undefined;
     // Own the instance pubsub (use the host's if passed, else create one) so it's the SAME bus the
     // View subscribes its topics on AND the one handed to the host via `onReady(api)`.
     private pubsub: IPluridPubSub;
@@ -177,8 +253,7 @@ class PluridApplicationShell extends Component<
 
 
     constructor(
-        properties: PluridApplicationProperties<PluridReactComponent>,
-        // context: React.ContextType<typeof PluridProviderContext>,
+        properties: PluridApplicationProperties<PluridReactComponent> & PluridApplicationShellExtras,
     ) {
         super(properties);
 
@@ -188,6 +263,8 @@ class PluridApplicationShell extends Component<
         // or after it left, is dropped and reported there)
         this.pubsub = properties.pubsub || new PluridPubSub();
         // this.context = context;
+        this.deferredLocalLoad = !!properties.serverRendered && !!properties.useLocalStorage;
+        validateApplicationInput(properties, properties.configuration?.development?.warnings !== false);
 
         this.prepare();
 
@@ -201,6 +278,13 @@ class PluridApplicationShell extends Component<
             warnOnce(
                 'perspective-range',
                 `space.perspective is ${perspective}px — below 500 the space distorts, above 5000 it flattens; 1200–2500 reads as a camera.`,
+                resolvedSpace?.development?.warnings !== false,
+            );
+        }
+        if (properties.planeNotFound !== undefined) {
+            warnOnce(
+                'plane-not-found',
+                '`planeNotFound` has no effect and is deprecated: a view route with no registered plane is left out (with a warning), and a link to one opens nothing (with a warning). Remove the prop.',
                 resolvedSpace?.development?.warnings !== false,
             );
         }
@@ -223,6 +307,20 @@ class PluridApplicationShell extends Component<
 
 
     public componentDidMount() {
+        claimApplicationID(this.storeID, this.props.configuration?.development?.warnings !== false);
+
+        // hydrated from the server's state: now the saved one, computed as a boot computes it
+        // hydrated from the server's state: the saved one lands once every plane's content has
+        // hydrated too (each plane hydrates on its own, after this mount), or after a second
+        if (this.deferredLocalLoad && !this.hydrationWaiting) {
+            this.hydrationWaiting = shownPlaneIDs(this.store.getState().space.tree);
+            if (this.hydrationWaiting.size === 0) {
+                this.restoreSaved();
+            } else {
+                this.hydrationFallback = setTimeout(this.restoreSaved, 1000);
+            }
+        }
+
         // The store and viewpoint subscriptions and the pagehide / visibility listeners are MOUNT-owned
         // React's StrictMode replays mount → unmount → mount in development, and a
         // constructor-time subscription torn down by the replayed unmount never came back, so
@@ -281,6 +379,7 @@ class PluridApplicationShell extends Component<
         if (!changed) {
             return;
         }
+        validateApplicationInput(this.props, this.props.configuration?.development?.warnings !== false);
 
         // A `planes` array rebuilt on every host render (same routes, new identity) recomputes the
         // store on every render — a memoization the host should own.
@@ -296,6 +395,21 @@ class PluridApplicationShell extends Component<
                 'the `planes` prop is a new array with the same routes on every render — memoize it (useMemo / a module constant), or the store is recomputed on every host render.',
                 this.props.configuration?.development?.warnings !== false,
             );
+        }
+
+        // A NEW ID IS A NEW IDENTITY: what is pending is saved under the old key, and from here on
+        // the state is loaded and saved under the new one (it used to keep the constructor's key)
+        if (this.props.id !== previousProperties.id) {
+            if (this.persistTimeout) {
+                clearTimeout(this.persistTimeout);
+                this.persistTimeout = undefined;
+            }
+            if (this.persistDirty) {
+                this.persistState();
+            }
+            releaseApplicationID(this.storeID);
+            this.storeID = this.props.id || 'default';
+            claimApplicationID(this.storeID, this.props.configuration?.development?.warnings !== false);
         }
 
         const previousPerspective = this.store.getState().space.camera.perspective;
@@ -314,6 +428,11 @@ class PluridApplicationShell extends Component<
     }
 
     public componentWillUnmount() {
+        releaseApplicationID(this.storeID);
+        if (this.hydrationFallback) {
+            clearTimeout(this.hydrationFallback);
+            this.hydrationFallback = undefined;
+        }
         if (this.storeUnubscriber) {
             this.storeUnubscriber();
             this.storeUnubscriber = undefined;
@@ -366,6 +485,7 @@ class PluridApplicationShell extends Component<
                         />
                         <PluridView
                             {...this.props}
+                            onPlaneHydrated={this.deferredLocalLoad ? this.planeHydrated : undefined}
                             applicationID={this.storeID}
                             planesRegistrar={this.planesRegistrar}
                             pubsub={this.pubsub}
@@ -377,6 +497,45 @@ class PluridApplicationShell extends Component<
             </PluridDocumentScope>
         );
     }
+
+
+    /** A plane's content hydrated; the last one lets the saved state in. */
+    private planeHydrated = (
+        planeID: string,
+    ) => {
+        if (!this.hydrationWaiting) {
+            return;
+        }
+        this.hydrationWaiting.delete(planeID);
+        if (this.hydrationWaiting.size === 0) {
+            this.restoreSaved();
+        }
+    };
+
+    /**
+     * THE SAVED STATE, after the hydration: computed as a boot computes it (no live state, the saved
+     * one read) and put in place of what the reader has not touched yet.
+     */
+    private restoreSaved = () => {
+        if (!this.deferredLocalLoad) {
+            return;
+        }
+        this.deferredLocalLoad = false;
+        this.hydrationWaiting = undefined;
+        if (this.hydrationFallback) {
+            clearTimeout(this.hydrationFallback);
+            this.hydrationFallback = undefined;
+        }
+        const restored = this.computeStore({ boot: true });
+        this.store.dispatch({
+            type: RESTORE_STATE,
+            payload: restored,
+        });
+        // the saved camera, committed for the view this page measured
+        this.store.dispatch(actions.space.setCamera(restored.space.camera));
+        // the planes stop reporting
+        this.forceUpdate();
+    };
 
 
     /** The `onReady` api: the store, the bus, and synchronous reads. */
@@ -400,7 +559,16 @@ class PluridApplicationShell extends Component<
             camera: {
                 get: () => getState().space.camera,
                 motion: () => getState().space.motion,
-                moveBy: (delta, options = {}) => dispatch(applyCameraDeltaCommand(delta, options.animate ?? false)),
+                // the options every other camera command takes: `duration`, `easing` and `onSettle`
+                // were dropped here (a jump settles at once)
+                moveBy: (delta, options = {}) => {
+                    if (options.animate) {
+                        dispatch(cameraCommand({ kind: 'delta', delta }, { ...options, animate: true }));
+                        return;
+                    }
+                    dispatch(applyCameraDeltaCommand(delta, false));
+                    options.onSettle?.();
+                },
                 moveTo: (viewpoint, options = {}) => dispatch(cameraCommand({ kind: 'viewpoint', viewpoint }, { animate: true, ...options })),
                 frame: (target = {}, options = {}) => dispatch(cameraCommand({ kind: 'frame', planeID: target.planeID, selection: target.selection }, { animate: true, ...options })),
                 fit: (options = {}) => dispatch(cameraCommand({ kind: 'fit' }, { animate: true, ...options })),
@@ -447,19 +615,25 @@ class PluridApplicationShell extends Component<
                 get: () => getState().space.tree,
                 culling: () => cullingCounts(getState().space),
                 setView: (view) => dispatch(actions.space.spaceSetView(view)),
-                spawn: (route, parentPlaneID, linkCoordinates = { x: 0, y: 0 }) => {
+                // AS THE TOPIC DOES (`space.spawnPlane`): it toggled (a second call put the plane away)
+                // and hung the bridge off the parent's corner
+                spawn: (route, parentPlaneID, linkCoordinates) => {
                     const registrar = getPlanesRegistrar(this.planesRegistrar);
-                    if (!registrar) {
-                        return;
+                    const parent = spaceEngine.tree.logic.getTreePlaneByID(getState().space.tree, parentPlaneID);
+                    if (!registrar || !parent) {
+                        return undefined;
                     }
+                    const linkID = parentPlaneID + '#' + route + '#api';
                     dispatch(toggleLinkPlane({
                         parentPlaneID,
-                        linkID: parentPlaneID + '#' + route + '#api',
+                        linkID,
                         route,
-                        linkCoordinates,
+                        linkCoordinates: linkCoordinates ?? { x: 0, y: (parent.height || 0) / 2 },
                         planesRegistry: registrar.getAll(),
                         hostname: this.props.hostname,
+                        mode: 'open',
                     }));
+                    return spaceEngine.tree.fields.findPlaneByLinkID(getState().space.tree, parentPlaneID, linkID)?.planeID;
                 },
                 close: (planeID, options) => dispatch(closePlane(planeID, options)),
                 open: (planeID) => dispatch(openPlane(planeID)),
@@ -499,7 +673,12 @@ class PluridApplicationShell extends Component<
         );
     }
 
-    private computeStore() {
+    private computeStore(
+        options: {
+            /** compute as the constructor does: no live state, the saved one read */
+            boot?: boolean;
+        } = {},
+    ) {
         const {
             // id,
             view,
@@ -517,15 +696,17 @@ class PluridApplicationShell extends Component<
             hostname,
         );
 
-        const currentState = this.store
+        const currentState = this.store && !options.boot
             ? this.store.getState()
             : undefined;
 
-        const localState = state.local.load(
-            this.storeID,
-            useLocalStorage,
-            this.props.storageAdapter,
-        );
+        const localState = this.deferredLocalLoad
+            ? undefined
+            : state.local.load(
+                this.storeID,
+                useLocalStorage,
+                this.props.storageAdapter,
+            );
 
         const contextState = undefined;
         // const contextState = loadStateFromContext(
@@ -541,7 +722,7 @@ class PluridApplicationShell extends Component<
 
         // A changed `configuration` prop overrides the store's (the host's authority); an unchanged
         // one leaves runtime configuration changes (pubsub `configuration` topic) in place.
-        const configurationAuthoritative = !!this.store && configuration !== this.appliedConfiguration;
+        const configurationAuthoritative = !!this.store && !options.boot && configuration !== this.appliedConfiguration;
         this.appliedConfiguration = configuration;
 
         const store = state.compute(
@@ -670,7 +851,7 @@ class PluridApplicationShell extends Component<
      * camera) when asked or configured (`space.viewpointURLVersion`).
      */
     private encodeViewpoint(
-        version?: 1 | 2,
+        version?: 1 | 2 | 3,
     ): string {
         const state = this.store.getState();
         const resolvedVersion = version
@@ -737,6 +918,14 @@ const PluridApplication = forwardRef<
      * always wins and a provider is a default rather than an override.
      */
     const defaults = useContext(PluridApplicationDefaultsContext);
+    // under a `PluridProvider` carrying the server's metastate: this render hydrates server HTML
+    const serverRendered = useContext(PluridProviderContext) !== undefined;
+    // the view is an array whatever the host passed (a missing or a string view threw from deep
+    // inside the engine)
+    const view = useMemo(
+        () => normalizeView(properties.view, properties.configuration?.development?.warnings !== false),
+        [properties.view],
+    );
 
     return (
         <PluridApplicationShell
@@ -750,6 +939,8 @@ const PluridApplication = forwardRef<
             pubsub={properties.pubsub ?? routerContext?.pubsub}
             routerHosted={routerHosted}
             routerLocation={routerLocation}
+            serverRendered={serverRendered}
+            view={view}
         />
     );
 });

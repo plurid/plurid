@@ -77,6 +77,35 @@ const applyState = (
 };
 
 
+export const RESTORE_STATE = 'RESTORE_STATE';
+
+/**
+ * `RESTORE_STATE`: a SAVED state lands on a running application — after a hydration, which must
+ * render the server's state first. Unlike `SET_STATE` it takes what the reader made (the camera, the
+ * tree, the selection, the isolation, the bookmarks, the history), keeping only what this page has
+ * measured (the view size, the culling pass). The camera's matrix is re-derived by the caller for
+ * the measured view.
+ */
+const restoreState = (
+    state: AppState,
+    payload: Partial<AppState>,
+): AppState => ({
+    ...state,
+    ...(payload.configuration ? { configuration: payload.configuration } : {}),
+    ...(payload.themes ? { themes: payload.themes } : {}),
+    ...(payload.shortcuts ? { shortcuts: payload.shortcuts } : {}),
+    ...(payload.space
+        ? {
+            space: {
+                ...payload.space,
+                viewSize: state.space.viewSize,
+                culled: state.space.culled,
+            },
+        }
+        : {}),
+});
+
+
 // The preloaded state may be partial (the store factories accept `AppState | {}`); `combined`
 // fills the slices in on the first action, so `SET_STATE` only ever sees a full state.
 const reducer: Reducer<AppState, UnknownAction, Partial<AppState> | {}> = (
@@ -85,6 +114,9 @@ const reducer: Reducer<AppState, UnknownAction, Partial<AppState> | {}> = (
 ) => {
     if (action && action.type === SET_STATE && state && (action as unknown as SetStateAction).payload) {
         return applyState(state as AppState, (action as unknown as SetStateAction).payload);
+    }
+    if (action && action.type === RESTORE_STATE && state && (action as unknown as SetStateAction).payload) {
+        return restoreState(state as AppState, (action as unknown as SetStateAction).payload);
     }
     return combined(state as AppState | undefined, action);
 };

@@ -88,7 +88,10 @@ describe('the router reads its current props on a location change', () => {
         await act(async () => {
             root.render(<PluridRouterBrowser routes={routes as any} onReady={(api) => { later.push(api); }} pubsub={bus} />);
         });
+        // a navigation mounts the next route, whose exterior calls the context's `onReady` (a re-render
+        // on the same path no longer remounts anything, so it is a real location change that does)
         await act(async () => {
+            window.history.pushState(null, '', '/other');
             window.dispatchEvent(new PopStateEvent('popstate'));
         });
         expect(later.length).toBeGreaterThan(0);

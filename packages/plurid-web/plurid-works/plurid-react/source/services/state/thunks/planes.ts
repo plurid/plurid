@@ -19,6 +19,7 @@
 
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
+    import { warnOnce } from '~services/logic/development/warn';
     import {
         getDockedPlaneID,
     } from '~services/state/modules/space/selectors';
@@ -125,6 +126,13 @@ export const toggleLinkPlane = (
         );
 
         if (!updatedTreePlane) {
+            // a link to a route no plane is registered at, or under a parent that is gone: said
+            // once, where the click used to do nothing without a word
+            warnOnce(
+                'link-unregistered:' + route,
+                `a link to '${route}' opened nothing: no plane is registered at that route (or its parent plane is not in the space). Register it in \`planes\` (or the route's \`planes\`).`,
+                state.configuration.development?.warnings !== false,
+            );
             return;
         }
 

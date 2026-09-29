@@ -1,13 +1,15 @@
+// #region imports
+    // #region internal
+    import {
+        isProduction,
+    } from './environment';
+    // #endregion internal
+// #endregion imports
+
+
+
 // #region module
 const seen = new Set<string>();
-
-const isProduction = (): boolean => {
-    try {
-        return typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
-    } catch (_) {
-        return false;
-    }
-};
 
 
 /**

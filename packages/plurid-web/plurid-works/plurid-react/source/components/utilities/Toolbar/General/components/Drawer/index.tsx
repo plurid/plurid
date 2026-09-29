@@ -54,7 +54,7 @@ const {
 
 export interface PluridDrawerOwnProperties {
     heading: string;
-    items: JSX.Element;
+    items: React.ReactElement;
     toggled: boolean;
     toggle(): void;
 }

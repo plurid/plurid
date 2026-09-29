@@ -18,10 +18,6 @@
     } from '@plurid/plurid-functions';
 
     import {
-        useMounted,
-    } from '@plurid/plurid-functions-react';
-
-    import {
         /** constants */
         PLURID_ROUTER_LOCATION_CHANGED,
         PLURID_ROUTER_LOCATION_STORED,
@@ -76,6 +72,18 @@
 
 
 // #region module
+/**
+ * The shell when the host gives none. AT MODULE SCOPE: declared inside the render, it was a new
+ * component type on every render, so React unmounted and remounted everything under it — the
+ * routed application with its camera, spawned planes, selection and history — whenever the host
+ * re-rendered the router (a theme toggle, an auth change).
+ */
+const DefaultRouterShell: React.FC<any> = ({
+    children,
+}) => (<>{children}</>);
+DefaultRouterShell.displayName = 'PluridRouterShell';
+
+
 const PluridRouterBrowser = (
     properties: PluridRouterBrowserOwnProperties<PluridReactComponent>,
 ) => {
@@ -143,8 +151,6 @@ const PluridRouterBrowser = (
 
 
     // #region state
-    const mounted = useMounted();
-
     const [
         matchedPath,
         setMatchedPath,
@@ -153,16 +159,15 @@ const PluridRouterBrowser = (
             staticContext,
         ),
     );
-    // console.log('matchedPath', matchedPath);
 
+    // the route at boot is resolved as a navigation resolves one: an unmatched path is the
+    // not-found route (the host's `notFoundPath`), not nothing
     const [
         matchedRoute,
         setMatchedRoute,
     ] = useState<PluridRouteMatch | undefined>(
-        pluridIsoMatcher.current.match(
-            matchedPath,
-            'route',
-        ),
+        () => pluridIsoMatcher.current.match(matchedPath, 'route')
+            ?? pluridIsoMatcher.current.match(notFoundPath, 'route'),
     );
     // console.log('matchedRoute', matchedRoute);
 
@@ -270,10 +275,16 @@ const PluridRouterBrowser = (
     }, []);
 
 
+    // THE PATH THE ROUTE ON SCREEN WAS COMPUTED FOR. A route is computed again only when the path
+    // changes: every computation is a new component type, and the first re-render after mount used
+    // to recompute it for the same path (the effect was gated on a `useMounted` ref that flips
+    // after the first render), remounting the application a host had just been handed.
+    const routedPath = useRef(matchedPath);
     useEffect(() => {
-        if (!mounted) {
+        if (routedPath.current === matchedPath) {
             return;
         }
+        routedPath.current = matchedPath;
 
         if (!cleanNavigation) {
             // Compare the FULL current URL (pathname + search) against `matchedPath` — which
@@ -321,7 +332,6 @@ const PluridRouterBrowser = (
             ),
         );
     }, [
-        mounted,
         matchedPath,
     ]);
 
@@ -367,15 +377,9 @@ const PluridRouterBrowser = (
         }
     }
 
-    let PluridRouterShell: React.FC<any> = ({
-        children,
-    }) => (<>{children}</>);
-    if (isReactRenderable(shell)) {
-        PluridRouterShell = shell as any;
-        if (PluridRouterShell) {
-            PluridRouterShell.displayName = 'PluridRouterShell';
-        }
-    }
+    const PluridRouterShell: React.FC<any> = isReactRenderable(shell)
+        ? shell as any
+        : DefaultRouterShell;
 
     // the pathname is the router's: an application inside a route reads this (its address-bar binding
     // rides a query parameter instead) and takes the router's `onReady` and bus

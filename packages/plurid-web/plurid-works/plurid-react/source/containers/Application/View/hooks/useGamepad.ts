@@ -40,7 +40,26 @@ export interface UseGamepadParameters {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     stateRef: React.MutableRefObject<AppState>;
     motion: CameraMotionController;
+    /** The view: the pad drives the application that has the keyboard (else the page's first). */
+    viewElement?: React.RefObject<HTMLElement | null>;
 }
+
+/**
+ * Whether THIS application is the one the pad drives: the one the keyboard is in; with the
+ * keyboard in none, the first on the page. Every application with a pad enabled used to move at
+ * once from one stick.
+ */
+const drivesThePad = (
+    view: HTMLElement | null | undefined,
+): boolean => {
+    if (!view || typeof document === 'undefined') {
+        return true;
+    }
+    const active = document.activeElement;
+    const views = Array.from(document.querySelectorAll('[data-plurid-entity="PluridView"]'));
+    const focused = views.find((candidate) => !!active && candidate.contains(active));
+    return focused ? focused === view : views[0] === view;
+};
 
 const REFERENCE_FRAME_MS = 1000 / 60;
 
@@ -82,6 +101,7 @@ export const useGamepad = (
         dispatch,
         stateRef,
         motion,
+        viewElement,
     }: UseGamepadParameters,
 ) => {
     const enabled = !!stateRef.current?.configuration?.space?.gestures?.gamepad?.enabled;
@@ -116,7 +136,14 @@ export const useGamepad = (
             const pads = Array.from(navigator.getGamepads() || []);
             const pad = pads.find((candidate) => candidate && candidate.connected);
 
-            if (pad) {
+            // no pad: the polling stops (a frame callback every frame for nothing); a pad
+            // connecting starts it again
+            if (!pad) {
+                pressed.clear();
+                return;
+            }
+
+            if (drivesThePad(viewElement?.current)) {
                 const deadZone = settings.deadZone ?? 0.15;
                 const curve = settings.curve ?? 2;
                 const panSpeed = settings.panSpeed ?? 14;

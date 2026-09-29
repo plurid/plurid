@@ -23,10 +23,16 @@
 
 
 // #region module
-/** Development unless a bundler or Node says production (a bare browser has no `process`). */
+/**
+ * Development unless the host's bundler or Node says production. Written as exactly
+ * `process.env.NODE_ENV`, the chain a bundler's `define` replaces: `process.env?.NODE_ENV` matched
+ * no `define`, and behind a `typeof process` guard a browser build (which has no `process`) always
+ * read as development, so the drop warnings printed in production. With neither (an unbundled
+ * page), development.
+ */
 const development = (): boolean => {
     try {
-        return typeof process === 'undefined' || process.env?.NODE_ENV !== 'production';
+        return process.env.NODE_ENV !== 'production';
     } catch {
         return true;
     }
@@ -113,7 +119,12 @@ class PluridPubSub implements IPluridPubSub {
         }
     }
 
-    /** A throwing subscriber (or drop hook) never breaks the publish; `debug` logs it. */
+    /**
+     * A throwing subscriber (or drop hook) never breaks the publish, nor the subscribers after it.
+     * It is not silent either: in development (or with `debug`) the error is reported with its
+     * topic. A host's handler with a bug, or an engine handler given a payload it cannot read, used
+     * to fail without a trace.
+     */
     private guard(
         topic: PluridPubSubPublishMessage['topic'],
         call: () => void,
@@ -121,9 +132,9 @@ class PluridPubSub implements IPluridPubSub {
         try {
             call();
         } catch (error) {
-            if (this.options?.debug) {
-                console.log(
-                    `Plurid Publish/Subscribe Error on '${topic}'`,
+            if (this.options?.debug || development()) {
+                console.error(
+                    `[plurid] a subscriber of '${String(topic)}' threw; the other subscribers still ran.`,
                     error,
                 );
             }

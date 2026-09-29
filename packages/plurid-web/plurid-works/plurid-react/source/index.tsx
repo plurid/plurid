@@ -7,6 +7,9 @@
     import {
         // #region constants
         PLURID_PUBSUB_TOPIC,
+        PLURID_PUBSUB_EMITTED_TOPICS,
+        PLURID_SHORTCUTS,
+        PLURID_CHANGE_KINDS,
         // #endregion constants
 
 
@@ -426,6 +429,22 @@ export {
      */
     pluridSelectors,
     arrangementSignature,
+    /**
+     * THE PERSISTENCE FORMAT, by name as the docs import it: a piece of a space as text, addressed
+     * by path. They were on the default export alone, so `import { fragmentOf }` was `undefined`.
+     */
+    fragmentOf,
+    serializeFragment,
+    parseFragment,
+    materializeFragment,
+    FRAGMENT_MARKER,
+    FRAGMENT_VERSION,
+    /** A plane's DOM id (`plurid-<digest>`); `data-plurid-plane` carries the plane id itself. */
+    domID,
+    /** The bus's vocabulary: the emitted topics, every shortcut the engine knows, every `space.changed` kind. */
+    PLURID_PUBSUB_EMITTED_TOPICS,
+    PLURID_SHORTCUTS,
+    PLURID_CHANGE_KINDS,
 
     internals,
     // #endregion Utilities
@@ -479,6 +498,9 @@ export type {
     PluridApplicationDefaults,
     PluridApplicationProviderProperties,
 } from './containers/Application/provider';
+export type {
+    PluridPlaneErrorProperties,
+} from './components/utilities/ErrorBoundary';
 
 /**
  * A PLANE'S IDENTITY, WITHOUT THE DOM AND WITHOUT A REGEX.
@@ -506,6 +528,12 @@ export type {
     PluridChangeKind,
     PluridShortcutID,
     PluridState,
+    PluridApplicationView,
+    PluridPubSubPayloads,
+    PluridPlaneObservation,
+    PluridRefusedObservation,
+    PluridPlaneErrorObservation,
+    PluridShortcutDefinition,
 } from '@plurid/plurid-data';
 export type {
     ClosePlaneOptions,
@@ -625,6 +653,13 @@ export type {
     FlatPluridConfiguration,
     RecursivePartial,
 };
+
+/**
+ * THE PROPS OF `<PluridApplication>`, by name: a host wrapping the application types its own props
+ * with it. (The router's own inputs — `planesRegistrar`, `matchedRoute`, `precomputedState`,
+ * `planesProperties` — are in it and marked internal.)
+ */
+export type PluridApplicationProperties = import('@plurid/plurid-data').PluridApplication<PluridReactComponent>;
 
 
 export default Plurid;

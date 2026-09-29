@@ -36,6 +36,13 @@ export interface PluridRoute<C, G = any> {
      */
     value: string;
 
+    /**
+     * The id of the application the route mounts: the key its state is saved under
+     * (`useLocalStorage`) and the scope of its look. Default `route:<value>`, so two routes never
+     * share a saved arrangement (they all shared `default`, and one route booted with another's).
+     */
+    id?: string;
+
     parameters?: Record<string, PluridRouteParameter>;
 
     /**
@@ -112,6 +119,13 @@ export interface PluridRouteParameter {
 
 export interface PluridRouteSpace<C> {
     value: string;
+
+    /**
+     * The id of this space's application (see `PluridRoute.id`). Default
+     * `route:<route value>#<space value>`: every space of a multispace route used to share the
+     * route's id, one saved state and one look scope between them.
+     */
+    id?: string;
 
     /**
      * Accepts a component which will be rendered outside of the `space`.

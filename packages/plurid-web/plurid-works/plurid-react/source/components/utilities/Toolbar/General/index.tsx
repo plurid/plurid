@@ -4,6 +4,7 @@
         useRef,
         useState,
         useEffect,
+        useId,
     } from 'react';
 
     import {
@@ -148,6 +149,10 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
     // #region references
     const menuTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
+    const toolbarElement = useRef<HTMLDivElement>(null);
+    const moreButton = useRef<HTMLButtonElement>(null);
+    const focusMenuOnOpen = useRef(false);
+    const menuID = 'plurid-toolbar-menu-' + useId().replace(/[^A-Za-z0-9_-]/g, '');
     // #endregion references
 
 
@@ -178,13 +183,29 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
     const handleShowMenu = (
         menu: keyof typeof MENUS,
+        fromKeyboard = false,
     ) => {
         if (showMenu === menu) {
             setShowMenu(MENUS.NONE);
         } else {
             dispatchSetConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL);
             setShowMenu(menu);
+            // a keyboard reader goes into what they opened
+            focusMenuOnOpen.current = fromKeyboard;
         }
+    }
+
+    /** Escape closes the menu and hands the focus back to the button that opened it. */
+    const closeMenuOnEscape = (
+        event: React.KeyboardEvent,
+    ) => {
+        if (event.key !== 'Escape' || showMenu === MENUS.NONE) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        setShowMenu(MENUS.NONE);
+        moreButton.current?.focus();
     }
     // #endregion handlers
 
@@ -226,6 +247,15 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
         if (!mouseIn) {
             menuTimeout.current = setTimeout(() => {
+                // not while the keyboard is inside: the menu unmounted under a focused drawer and
+                // the focus fell to the body, where no key of the space works
+                if (
+                    typeof document !== 'undefined'
+                    && toolbarElement.current
+                    && toolbarElement.current.contains(document.activeElement)
+                ) {
+                    return;
+                }
                 setShowMenu(MENUS.NONE);
             }, 400);
         }
@@ -238,6 +268,18 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
     }, [
         mouseIn,
     ]);
+    // opened from the keyboard: the focus goes to the menu's first control
+    useEffect(() => {
+        if (showMenu === MENUS.NONE || !focusMenuOnOpen.current) {
+            return;
+        }
+        focusMenuOnOpen.current = false;
+        const menu = typeof document !== 'undefined' ? document.getElementById(menuID) : null;
+        const first = menu?.querySelector<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        first?.focus();
+    }, [
+        showMenu,
+    ]);
     // #endregion effects
 
 
@@ -248,6 +290,8 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
 
     return (
         <StyledToolbar
+            ref={toolbarElement}
+            onKeyDown={closeMenuOnEscape}
             onMouseEnter={() => setMouseIn(true)}
             onMouseLeave={() => setMouseIn(false)}
             mouseIn={mouseIn}
@@ -321,12 +365,16 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
                 )} */}
 
                 <StyledToolbarButton
+                    ref={moreButton}
                     theme={theme}
                     type="button"
                     aria-label="More"
                     title="More"
+                    aria-expanded={showMenu === MENUS.MORE}
+                    aria-controls={menuID}
                     data-plurid-control="toolbar-more"
-                    onClick={() => handleShowMenu(MENUS.MORE)}
+                    // `detail` is 0 for a click the keyboard made (Enter, Space)
+                    onClick={(event: React.MouseEvent) => handleShowMenu(MENUS.MORE, event.detail === 0)}
                     active={showMenu === MENUS.MORE}
                     button={true}
                     showIcons={showIcons}
@@ -343,7 +391,9 @@ const PluridToolbar: React.FC<PluridToolbarProperties> = (
             )}
 
             {showMenu === MENUS.MORE && (
-                <MenuMore />
+                <MenuMore
+                    menuID={menuID}
+                />
             )}
         </StyledToolbar>
     );

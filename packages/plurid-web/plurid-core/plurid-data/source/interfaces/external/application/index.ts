@@ -88,7 +88,7 @@ export interface PluridApi {
      * not a stable API — this is the deliberate power-user escape hatch.
      */
     store: PluridStore;
-    /** The instance pubsub bus — publish control topics, subscribe to the `space.*Changed` emit topics. */
+    /** The instance pubsub bus: publish the control topics, subscribe to `space.changed` (every change kind, `PLURID_CHANGE_KINDS`). */
     pubsub: PluridPubSub;
     /** Read the full current engine state synchronously. */
     getSnapshot(): PluridState;
@@ -97,7 +97,7 @@ export interface PluridApi {
      * v1 (the legacy six scalars) by default, or v2 (the full camera, preserving pivot and pan)
      * with `{ version: 2 }` / `space.viewpointURLVersion: 2`.
      */
-    getViewpoint(options?: { version?: 1 | 2 }): string;
+    getViewpoint(options?: { version?: 1 | 2 | 3 }): string;
     /**
      * THE DIAGNOSTIC SURFACE: one plain snapshot of what the engine is doing — the camera, the motion,
      * the gesture, the view, the counts, every shown plane and the links ({@link PluridInspection}).
@@ -151,6 +151,7 @@ export interface PluridInspection {
 export interface PluridApplication<C> {
     id?: string;
 
+    /** @internal the router's per-plane properties; not for hosts */
     planesProperties?: Map<string, any>;
 
     /**
@@ -199,17 +200,19 @@ export interface PluridApplication<C> {
     // allowedOrigins?: 'controlled' | 'all';
 
     /**
-     * Show or not the default Plane Not Found component, or pass a custom component.
-     *
-     * Default `true`.
+     * @deprecated It has no effect, and never had: a `view` route with no registered plane is left
+     * out of the space (a development warning names it), and a link to one opens nothing (with a
+     * warning; a `token` is answered `refused`). Kept so existing code compiles; it will be removed.
      */
     planeNotFound?: boolean | C;
 
     /**
-     * Use or not Plurid Plane Error Boundary and show the default Plurid Plane Render Error component,
-     * or pass a custom component.
+     * A plane that throws while rendering is CONTAINED: its error card shows (with a retry) and the
+     * rest of the space goes on; `space.changed` kind `planeError` reports it. Pass a component to
+     * render instead of the card (it gets `{ error, retry }`), or `false` to let the error through
+     * to the host's own boundary (one throwing plane then takes the application down with it).
      *
-     * Default `true`.
+     * Default `true`. Settable for route-driven applications through `PluridApplicationProvider`.
      */
     planeRenderError?: boolean | C;
 
@@ -230,8 +233,10 @@ export interface PluridApplication<C> {
      */
     static?: boolean;
 
+    /** @internal a server-computed state the router hands its application; not for hosts */
     precomputedState?: Partial<PluridState>;
 
+    /** @internal the router's registrar; an application builds its own from `planes` */
     planesRegistrar?: PluridPlanesRegistrar<C>;
 
     /**
@@ -301,7 +306,7 @@ export interface PluridApplication<C> {
     renderDockRail?: PluridRenderSlot<PluridChromeContext>;
     renderMinimap?: PluridRenderSlot<PluridChromeContext>;
     renderShortcuts?: PluridRenderSlot<PluridChromeContext>;
-    /** The command palette (⌘/Ctrl+K) — a host's own list over `api.runCommand` / the palette rows. */
+    /** The command palette (⌘/Ctrl+K): a host's own list over the palette rows (`internals.paletteRows`), run through `space.command`. */
     renderPalette?: PluridRenderSlot<PluridChromeContext>;
     /** Rendered in place of the space when it holds no planes (the layout resolved to nothing). */
     renderEmpty?: PluridRenderSlot<PluridChromeContext>;
@@ -314,6 +319,7 @@ export interface PluridApplication<C> {
     /** The space debugger (rendered when `development.spaceDebugger` is on). */
     renderDebugger?: PluridRenderSlot;
 
+    /** @internal the route the router matched; not for hosts */
     matchedRoute?: IsoMatcherRouteResult<C>;
 
     /**

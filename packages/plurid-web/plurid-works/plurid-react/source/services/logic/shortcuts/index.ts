@@ -16,6 +16,7 @@
 
         PluridPubSub as IPluridPubSub,
         PLURID_ATTRIBUTE_PLANE_ANCHOR,
+        PLURID_ATTRIBUTE_ENTITY,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -42,6 +43,7 @@
 
     import {
         isEditableTarget,
+        chromeOwnsKey,
     } from '~services/logic/input/guard';
 
     import {
@@ -99,6 +101,20 @@ const insidePlaneContent = (
         return false;
     }
     return !!target.closest('[data-plurid-plane]');
+};
+
+/**
+ * The key came from the view element itself (the space has the keyboard, nothing inside it does),
+ * or from no element at all (a key a host synthesizes for the space).
+ */
+const fromTheView = (
+    event: KeyboardEvent,
+): boolean => {
+    const target = event.target as HTMLElement | null;
+    if (!target || typeof target.getAttribute !== 'function') {
+        return true;
+    }
+    return target.getAttribute(PLURID_ATTRIBUTE_ENTITY) === 'PluridView';
 };
 
 /** The plane whose focus anchor the key came from, if it did. */
@@ -337,7 +353,10 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // Enter frames the plane under the keyboard's FOCUS (its anchor) when it comes from one,
         // else the active plane: a reader who tabbed to a plane and pressed Enter meant that one.
         id: 'frameActive', code: 'Enter',
-        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && (!!focusAnchorPlaneID(e) || !!ctx.state.space.activePlaneID),
+        // from a plane's focus anchor, or from the view itself: a key on anything else (a host's
+        // element in a slot, the chrome) is not "frame the plane the pointer last crossed"
+        match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e)
+            && (!!focusAnchorPlaneID(e) || (fromTheView(e) && !!ctx.state.space.activePlaneID)),
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
             const focused = focusAnchorPlaneID(event);
@@ -506,6 +525,10 @@ export const handleGlobalShortcuts = (
     if (inputOnPath) {
         // The engine never consumes keys typed into inputs / editors; `onUnhandledKey` is deliberately
         // NOT fired here either, so a host doesn't react to ordinary typing.
+        return;
+    }
+    if (chromeOwnsKey(event)) {
+        // an overlay's keys, a control's Enter and Space: theirs, and not the host's unhandled key
         return;
     }
 

@@ -3,6 +3,7 @@
     import React, {
         useRef,
         useState,
+        useEffect,
     } from 'react';
 
     import {
@@ -42,6 +43,8 @@
 // #region module
 export interface PluridTransformArrowOwnProperties {
     direction: string;
+    /** what the arrow does, for a screen reader (default `transform <direction>`) */
+    label?: string;
     transform: (
         event: {
             altKey: boolean;
@@ -70,6 +73,7 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
         // #region own
         direction,
         transform,
+        label,
         // #endregion own
 
         // #region state
@@ -122,18 +126,38 @@ const PluridTransformArrow: React.FC<PluridTransformArrowProperties> = (
             pressingInterval.current = null;
         }
     }
+
+    // a press that outlives its arrow (the toolbar closed under the pointer) stops with it: the
+    // interval used to keep turning the space every 40 ms with nothing left to release it
+    useEffect(() => () => {
+        if (pressingInterval.current) {
+            clearInterval(pressingInterval.current);
+            pressingInterval.current = null;
+        }
+    }, []);
     // #endregion handlers
 
 
     /** render */
     return (
         <StyledPluridTransformArrow
+            type="button"
+            aria-label={label || 'transform ' + direction}
+            data-plurid-control="transform-arrow"
+            data-plurid-direction={direction}
             theme={interactionTheme}
             pressed={pressed}
             onPointerDown={startPress}
             onPointerUp={endPress}
             onPointerLeave={endPress}
             onPointerCancel={endPress}
+            // the keyboard's press (Enter, Space): one step. A pointer's click follows its own
+            // pointerdown, which already stepped (`detail` counts the pointer's clicks, 0 for a key)
+            onClick={(event) => {
+                if (event.detail === 0) {
+                    transform({ altKey: event.altKey });
+                }
+            }}
         >
             {arrowSign}
         </StyledPluridTransformArrow>

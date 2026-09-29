@@ -10,6 +10,7 @@
     import {
         chromeRoot,
         chromeDocked,
+        chromeControl,
     } from '~services/styled/chrome';
 
     import {
@@ -22,6 +23,26 @@
 
 
 // #region module
+/** An icon control as a real button: focusable, labelled, keyboard-activatable. */
+export const StyledPlaneControlButton = styled.button`
+    ${chromeControl}
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    background: none;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
+        border-radius: 3px;
+    }
+`;
+
 export interface IStyledPluridPlaneControls {
     theme: Theme;
     transparentUI: boolean;

@@ -108,4 +108,20 @@ describe('the command palette', () => {
         expect(rendered.api.getSnapshot().ui.paletteVisible).toBe(true);
         rendered.unmount();
     });
+
+    it('names a plane by its declared title', async () => {
+        const rendered = await renderPlurid({
+            planes: [
+                { route: '/a', component: Page, head: { title: 'The Atlas' } },
+                { route: '/b', component: Page },
+            ],
+            view: ['/a', '/b'],
+            configuration: { space: { navigation: { motion: { duration: 0 } } } } as any,
+        } as any);
+        await open(rendered);
+        expect(rendered.container.textContent).toContain('Go to the plane The Atlas');
+        expect(rendered.container.textContent).toContain('Go to the plane /b');
+        await rendered.unmount();
+    });
 });
+

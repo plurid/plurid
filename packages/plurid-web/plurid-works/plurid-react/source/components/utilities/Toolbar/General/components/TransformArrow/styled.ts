@@ -16,7 +16,11 @@ export interface IStyledPluridTransformArrow {
     pressed: boolean;
 }
 
-export const StyledPluridTransformArrow = styled.div<IStyledPluridTransformArrow>`
+export const StyledPluridTransformArrow = styled.button<IStyledPluridTransformArrow>`
+    border: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
     user-select: none;
     cursor: pointer;
     border-radius: var(--plurid-radius);
@@ -45,6 +49,11 @@ export const StyledPluridTransformArrow = styled.div<IStyledPluridTransformArrow
                 theme,
             }: IStyledPluridTransformArrow) => 'var(--plurid-hover)'
         };
+    }
+
+    &:focus-visible {
+        outline: 2px solid currentColor;
+        outline-offset: 1px;
     }
 `;
 // #endregion module

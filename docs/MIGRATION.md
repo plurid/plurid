@@ -87,6 +87,119 @@ hidden content, anything covering it), when its docked page is not the window's 
 at a 390 × 844 phone), when the page moves while it loads and hydrates (every frame from the first paint
 is recorded), or when the generated application logs any `[plurid]` warning.
 
+## Production readiness (2026-09-29)
+
+Four audits (the engine, the React adapter and its accessibility, the server and the kit, the
+developer experience) and an inventory of the control surface; every finding was reproduced, fixed,
+and given a regression test. What a host can see:
+
+**Defaults that change**
+
+- **A plane that throws is contained.** `planeRenderError` was documented as on by default and was off:
+  one plane's render error unmounted the whole application. Now the plane shows its error card with a
+  retry, the rest of the space goes on, and `space.changed` kind `planeError` `{ planeID, route, message }`
+  reports it. A component passed as `planeRenderError` renders (it gets `{ error, retry }`; it never
+  rendered before). `planeRenderError: false` lets the error through to your own boundary. A
+  route-driven application sets it on `PluridApplicationProvider`.
+- **A route-driven application has an id of its own**: the route's `id`, else `route:<value>` (a space
+  of a multispace route: `route:<value>#<space>`). They were all `default`, so with `useLocalStorage`
+  every route saved over the others and booted with their state, and they shared one look scope.
+  State a route-driven application saved under `pluridState-default` is not read any more; a site with
+  one route that wants it back sets `id: 'default'` on the route.
+- **`planeAddressPath` leaves a route whole.** It cut a trailing `@…` from every address, so
+  `/package/react@18` read as `/package/react` in the address bar and at a deep link. It now takes
+  routes only; a plane ID's path is `planeIDPath(planeID)` (new, `@plurid/plurid-engine`'s `routing`).
+- **A configuration publish relays the roots only when where they go changes** (the layout, the
+  centring, the dimensions, the presentation, the plane sizes), compared by value. A look change
+  used to relay them and undo the reader's arrangement.
+
+**The bus**
+
+- **Commands read the store, not the last render**: two in one tick act in order (two `view.addPlane`
+  both land; a command after a selection sees it).
+- **A camera command that is not a tween stops a running tween** (`space.cameraDelta` without
+  `animate`, the nudges, the legacy `…With` / `…To`, `space.transform`); the tween used to write over it.
+- **Every token is answered**: kind `plane` at once for a route already open (it went unanswered), and
+  the new kind `refused` `{ token, route, reason: 'unregistered' | 'noParent' }` when no plane will come.
+- **Every `space.changed` carries `application`**, the sender's id.
+- **`view.setPlanes` takes the typed entries**, routes and `{ plane: route }`; `{ route }` (which passed
+  and then threw in the layout) is refused with a warning.
+- **A removed plane is forgotten** by the selection, the active plane and the isolation (a removed
+  isolated plane left every other plane transparent).
+- **`space.spawnPlane { link }` naming a `PluridLink` opens that link's plane**: the link shows it
+  open, and a click on it finds it rather than opening a second.
+- **`loading` turns `false`** once the first layout is resolved (it never did on the client).
+- A payload without its fields does nothing and warns in development (several topics threw inside
+  the bus, silently); a renamed field (`id`, `plane`, `animated`) is named in a warning.
+
+**The handle**
+
+- `tree.spawn(route, parentPlaneID, linkCoordinates?)` opens as `space.spawnPlane` does (it toggled, so
+  a second call put the plane away), hangs the bridge at the parent's middle (not its corner), and
+  returns the plane's id.
+- `camera.moveBy(delta, options)` takes `animate`, `duration`, `easing` and `onSettle` like every
+  other camera command.
+- `tree.remove(planeID)` clears the plane from the selection, the active plane and the isolation.
+
+**Keyboard, focus, accessibility**
+
+- **The chrome's keys are the chrome's.** Enter and Space on a button (the toolbar, the rail, a plane's
+  bar) press it; they framed the plane the pointer had last crossed, or armed the grab. Inside a dialog
+  or a menu every key is the dialog's (R no longer switched modes behind the shortcuts sheet). Enter
+  frames a plane from its focus anchor, or the active one from the view itself.
+- A plane's refresh and isolate controls are buttons (`data-plurid-control="plane-refresh"` /
+  `"plane-isolate"`, `aria-pressed` while isolated); the toolbar's transform arrows are buttons
+  (`data-plurid-control="transform-arrow"`, `data-plurid-direction`) that the keyboard steps.
+- The More menu is a disclosure (`aria-expanded`, `aria-controls`): Escape closes it and gives the
+  focus back to its button, and it no longer closes under a keyboard focused inside it.
+- The view shows a focus ring for the keyboard (`--plurid-focus`), and the viewcube's turn, the
+  dialogs' rise and the toolbar's slide respect `prefers-reduced-motion`.
+- In fly mode a click on the chrome no longer captures the pointer, and a lock granted after fly mode
+  ended is released.
+
+**Correctness**
+
+- A server-rendered application with `useLocalStorage` hydrates the server's markup, then applies the
+  saved state once every plane has hydrated. The saved state in the first render made React discard
+  the server's HTML.
+- `PluridRouterBrowser` no longer remounts the routed application when the host re-renders it (a theme
+  toggle cost the camera, the planes and the history, and fired `onReady` again); at boot an unmatched
+  path is the `notFoundPath` route at once.
+- Hovering a `PluridLink` with `preview` no longer throws (`#preview-plurid://…` is no selector); the
+  preview renders in the link's own plane.
+- A spawned child plane reads the host's current `planeContextValue` (it kept the one of its spawn).
+- A `PluridApplicationConfigurator`'s bus is bridged once and leaves with it (after a plane refresh,
+  every command on it ran twice).
+- Two applications on one page: the dialogs' ids are their own, the link leash stays in its own view,
+  and a gamepad drives the application with the keyboard (else the page's first), polling only while a
+  pad is connected.
+- The palette names a plane by its declared title.
+
+**Development**
+
+- Warnings for a flat key in the nested `configuration` (`{ chrome: 'none' }` was silently ignored), an
+  unknown key, a look, chrome mode or presentation that is not one, a `view` that is not an array (read
+  as one, where it threw), persistence callbacks without `useLocalStorage`, a link to an unregistered
+  route, two mounted applications with one `id`, and the deprecated `planeNotFound` (it never did
+  anything; it will be removed).
+- A hook of the engine outside an application throws an error that says so.
+- A bus subscriber that throws is reported (`console.error`, with its topic) in development; the other
+  subscribers still run.
+- Development is read from `process.env.NODE_ENV` as the host's bundler replaces it: a Vite
+  application saw no development warnings (the check needed a `process` global), and the drop
+  warnings printed in production.
+
+**New exports**
+
+- By name from `@plurid/plurid-react`: `fragmentOf`, `serializeFragment`, `parseFragment`,
+  `materializeFragment`, `FRAGMENT_MARKER`, `FRAGMENT_VERSION`, `domID` (they were on the default export
+  alone), `PLURID_SHORTCUTS`, `PLURID_PUBSUB_EMITTED_TOPICS`, `PLURID_CHANGE_KINDS`; the types
+  `PluridApplicationProperties`, `PluridApplicationView`, `PluridPubSubPayloads`, `PluridPlaneObservation`,
+  `PluridRefusedObservation`, `PluridPlaneErrorObservation`, `PluridPlaneErrorProperties`,
+  `PluridShortcutDefinition`.
+- `PluridRoute.id` and `PluridRouteSpace.id`; `api.getViewpoint({ version: 3 })` in the type (it
+  worked); the published types no longer need the global `JSX` namespace (React 19's types).
+
 ---
 
 # Migrating to the 2026-09-17 and 2026-09-22 releases

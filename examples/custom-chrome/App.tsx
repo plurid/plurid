@@ -21,6 +21,7 @@ import {
     useSelection,
     usePluridHistory,
     useLook,
+    definePluridConfiguration,
 } from '@plurid/plurid-react';
 
 
@@ -84,10 +85,12 @@ const App: React.FC = () => (
     <PluridApplication
         planes={planes}
         view={['/one', '/two', '/three']}
-        configuration={{
+        // the flat keys (`chrome`, `look`) go through `definePluridConfiguration`: a bare object in
+        // `configuration` is the nested shape, where they are not keys
+        configuration={definePluridConfiguration({
             chrome: 'none',
             look: { preset: 'ink', tokens: { radius: '999px' } },
-        }}
+        })}
         renderToolbar={() => <Bar />}
     />
 );

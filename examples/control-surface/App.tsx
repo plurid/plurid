@@ -64,8 +64,10 @@ const configuration = definePluridConfiguration({
         presets: { overview: '25,0,0,0,0,0.6', side: '0,90,0,0,0,1' },
     },
 
-    // Tier 3 — the app owns Cmd/Ctrl+K for its own palette; everything else stays default.
+    // Tier 3 — the app owns Cmd/Ctrl+K for its own palette; everything else stays default. The key is
+    // the engine's palette until that binding is disabled (`onUnhandledKey` hears only unconsumed keys).
     shortcuts: {
+        disabled: ['palette'],
         onUnhandledKey: (event) => {
             if ((event.metaKey || event.ctrlKey) && event.code === 'KeyK') {
                 event.preventDefault();

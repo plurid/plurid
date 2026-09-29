@@ -122,11 +122,13 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
                 <>
                     <PluridTransformArrow
                         direction="left"
+                        label="move the space left"
                         transform={() => translateLeft()}
                     />
 
                     <PluridTransformArrow
                         direction="up"
+                        label="move the space up (with Alt: out)"
                         transform={(event) => {
                             if (event.altKey) {
                                 translateOut();
@@ -167,6 +169,7 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
                 <>
                     <PluridTransformArrow
                         direction="down"
+                        label="move the space down (with Alt: in)"
                         transform={(event) => {
                             if (event.altKey) {
                                 translateIn();
@@ -178,6 +181,7 @@ const PluridToolbarTranslate: React.FC<PluridToolbarTranslateProperties> = (
 
                     <PluridTransformArrow
                         direction="right"
+                        label="move the space right"
                         transform={() => translateRight()}
                     />
                 </>

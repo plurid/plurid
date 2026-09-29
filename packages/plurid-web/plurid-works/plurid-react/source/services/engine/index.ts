@@ -33,6 +33,7 @@ const {
     computePlaneAddress,
     routeSuffix,
     planeAddressPath,
+    planeIDPath,
 } = routing;
 // #endregion module
 
@@ -63,5 +64,6 @@ export {
     computePlaneAddress,
     routeSuffix,
     planeAddressPath,
+    planeIDPath,
 };
 // #endregion exports

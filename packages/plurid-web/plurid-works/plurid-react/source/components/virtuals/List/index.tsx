@@ -49,7 +49,7 @@ const {
 } = universal;
 
 export interface PluridVirtualListOwnProperties {
-    items: JSX.Element[];
+    items: React.ReactElement[];
     generalHeight?: number;
 }
 

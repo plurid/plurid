@@ -32,7 +32,7 @@
 export interface MoreMenu {
     name: InternationalizationFieldType;
     drawer: keyof typeof TOOLBAR_DRAWERS,
-    component: JSX.Element,
+    component: React.ReactElement,
 }
 
 

@@ -35,6 +35,8 @@ export interface UseEngineEventsParameters {
     state: AppState;
     /** the plane requests a host is waiting on (see `services/logic/correlation`). */
     pendingPlanes?: MutableRefObject<PendingPlane[]>;
+    /** the application's id, on every message (`application`) */
+    applicationID?: string;
 }
 
 
@@ -51,6 +53,7 @@ export const useEngineEvents = (
         pubsub,
         state,
         pendingPlanes,
+        applicationID,
     }: UseEngineEventsParameters,
 ) => {
     const space = state.space;
@@ -59,7 +62,7 @@ export const useEngineEvents = (
         if (pubsub) {
             pubsub.publish({
                 topic: PLURID_PUBSUB_TOPIC.CHANGED,
-                data: { kind, value },
+                data: { kind, value, application: applicationID },
             });
         }
     };

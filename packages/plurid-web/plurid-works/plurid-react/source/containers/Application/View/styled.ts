@@ -80,6 +80,13 @@ export const StyledView: any = styled.div`
     outline: none;
     overflow: hidden;
 
+    /* the space is the first Tab stop of the application: a keyboard reader sees when it has the
+       keyboard (WCAG 2.4.7). Inside the view (it clips), over what it holds; never for a click. */
+    &:focus-visible {
+        outline: 2px solid var(--plurid-focus, currentColor);
+        outline-offset: -2px;
+    }
+
     /* The space is a navigation surface only when navigating: fly mode, grab mode (G), or
        an explicit rotate/scale/translate mode. Otherwise it behaves like a normal page —
        text is selectable and the default cursor shows. Cursor: grabbing while dragging,

@@ -11,6 +11,13 @@
         PluridIconRectangle,
     } from '@plurid/plurid-icons-react';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        StyledPlaneControlButton,
+    } from '../../styled';
+    // #endregion external
 // #region imports
 
 
@@ -53,15 +60,23 @@ const ControlIsolate: React.FC<ControlIsolateProperties> = (
     const title = isolated ? 'isolated' : 'isolate';
     const fill = isolated ? true : false;
 
+    // a real button, pressed while the plane is isolated
     return (
-        <PluridIconRectangle
-            atClick={() => {
+        <StyledPlaneControlButton
+            type="button"
+            aria-label={isolated ? 'show every plane again' : 'isolate this plane'}
+            aria-pressed={isolated}
+            title={title}
+            data-plurid-control="plane-isolate"
+            onClick={() => {
                 isolatePlane();
             }}
-            theme={theme}
-            title={title}
-            fill={fill}
-        />
+        >
+            <PluridIconRectangle
+                theme={theme}
+                fill={fill}
+            />
+        </StyledPlaneControlButton>
     );
     // #endregion render
 }

@@ -36,6 +36,7 @@ export interface PluridApplicationHandle extends PluridApi {
     camera: {
         get: () => CameraState;
         motion: () => CameraMotion;
+        /** Move by a delta: a jump by default; `animate` tweens (with `duration`, `easing`); `onSettle` either way. */
         moveBy: (delta: CameraDelta, options?: CameraMotionOptions) => void;
         moveTo: (viewpoint: string, options?: CameraMotionOptions) => void;
         frame: (target?: { planeID?: string; selection?: boolean }, options?: CameraMotionOptions) => void;
@@ -95,11 +96,17 @@ export interface PluridApplicationHandle extends PluridApi {
         culling: () => { hidden: number; frozen: number; detached: number };
         /** Replace the roots (relayout with the planes gliding). */
         setView: (view: PluridApplicationView) => void;
-        /** Spawn a registered route as a child of `parentPlaneID`, joined by a bridge at `linkCoordinates`. */
-        spawn: (route: string, parentPlaneID: string, linkCoordinates?: LinkCoordinates) => void;
+        /**
+         * Open a registered route as a child of `parentPlaneID`, as `space.spawnPlane` does: a route
+         * already open there is gone to, never put away; the bridge leaves at `linkCoordinates`, else
+         * the parent's middle height. Returns the plane's id, `undefined` when nothing could open
+         * (an unregistered route, a parent that is not there).
+         */
+        spawn: (route: string, parentPlaneID: string, linkCoordinates?: LinkCoordinates) => string | undefined;
         /** Hide a plane; the one in view hands the camera to its parent (`space.navigation.onClose`). */
         close: (planeID: string, options?: ClosePlaneOptions) => void;
         open: (planeID: string) => void;
+        /** Remove a plane and its subtree; the selection, the active plane and the isolation forget them. */
         remove: (planeID: string) => void;
     };
     /** Move keyboard focus to the space (so the shortcuts apply). */

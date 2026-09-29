@@ -127,7 +127,8 @@ Mount `<App />` as usual. You get a navigable space:
 
 - **Drag** to orbit the camera.
 - **Scroll / pinch** to zoom.
-- Hold **G** then drag to grab-pan; press **?** for the shortcuts overlay.
+- Press **G** and the next drag orbits from anywhere (hold **Space** to do it while held); drag with the
+  right button to pan; press **?** for the shortcuts overlay.
 
 Planes are real DOM — text stays selectable, content stays accessible and styleable.
 
@@ -151,7 +152,7 @@ Useful related props:
 | Prop | Purpose |
 |---|---|
 | `id` | Distinguishes multiple plurid apps on the same origin (also the persistence key). |
-| `planeNotFound` / `planeRenderError` | `true` (default) shows the built-in fallback, or pass your own component. |
+| `planeRenderError` | A plane that throws shows its error card (with a retry) and the rest of the space goes on (`true`, the default); pass your own component (it gets `{ error, retry }`), or `false` to let the error reach your own boundary. `space.changed` kind `planeError` reports each one. A route-driven application sets it on `PluridApplicationProvider`. |
 | `customPlane` | Replace the internal plane wrapper entirely. |
 
 
@@ -203,7 +204,10 @@ const configuration = definePluridConfiguration({
     gestures: { rotateSensitivity: 0.25, buttonMap: { left: 'orbit', wheel: 'disabled' } },
 
     // own a keybinding; leave the rest default
+    // ⌘/Ctrl+K is the engine's own palette: take the binding away, and the key reaches yours
+    // (`onUnhandledKey` hears only the keys no binding consumed)
     shortcuts: {
+        disabled: ['palette'],
         onUnhandledKey: (event) => {
             if ((event.metaKey || event.ctrlKey) && event.code === 'KeyK') {
                 event.preventDefault();
@@ -226,8 +230,8 @@ Configuration groups (all optional):
 | `undo` | Whether spatial undo/redo runs at all (`true` by default). |
 | `timings` | Debounces and animation durations (persist, viewpoint, resize, transform, fade-in, …). |
 | `gestures` | Per-gesture sensitivities, drag threshold, momentum, and a `buttonMap` (left/middle/wheel → orbit \| pan \| zoom \| disabled). |
-| `shortcuts` | `disabled` ids, a `keymap` to remap, and `onUnhandledKey`. |
-| `elements` | `planeLinks.show` / `alignmentGuides.show` toggles for engine overlays. |
+| `shortcuts` | `disabled` ids, a `keymap` to remap, and `onUnhandledKey` (the keys no binding consumed: disable a binding to have its key). |
+| `extend` | Anything the flat keys do not name, in the nested shape: `extend: { elements: { planeLinks: { show: false } } }`. |
 
 The full per-knob reference is **[`docs/CONTROL_SURFACE.md`](./CONTROL_SURFACE.md)**.
 
@@ -240,11 +244,11 @@ from one set of tokens, the LOOK. Twelve presets ship; the default is `graphite`
 three colours and get a whole look derived from them:
 
 ```tsx
-<PluridApplication look="paper" />
-<PluridApplication look={{ preset: 'ink', tokens: { accent: '#ff8a3d' } }} />
+<PluridApplication configuration={definePluridConfiguration({ look: 'paper' })} planes={planes} view={view} />
+<PluridApplication configuration={definePluridConfiguration({ look: { preset: 'ink', tokens: { accent: '#ff8a3d' } } })} planes={planes} view={view} />
 ```
 
-See them all on the harness: `http://localhost:5275/?gallery=looks`. Everything else about the chrome —
+See them all on the harness: `http://localhost:5273/?gallery=looks`. Everything else about the chrome —
 hiding it (`chrome: 'none'`), replacing a piece with your own (the `render*` slots), the exported
 primitives — is in the control surface's ["The look"](./CONTROL_SURFACE.md#the-look) and in
 [DESIGN.md](./DESIGN.md).
@@ -275,7 +279,9 @@ Two extension points:
   runs; the adapter only changes *where*.
 
 ``` tsx
-const sessionAdapter = {
+import type { PluridStorageAdapter } from '@plurid/plurid-react';
+
+const sessionAdapter: PluridStorageAdapter = {
     getItem: (k) => sessionStorage.getItem(k),
     setItem: (k, v) => sessionStorage.setItem(k, v),
     removeItem: (k) => sessionStorage.removeItem(k),
@@ -293,7 +299,7 @@ const sessionAdapter = {
 
 Plurid is transparent: the host drives and observes it. There are three layers, from most to least common.
 
-**Config knobs** (section 4) cover the steady 90%.
+**Config knobs** (section 5) cover the steady 90%.
 
 **The pub/sub bus** drives and observes the engine without prop-drilling. Get the instance bus from
 `onReady`, then:

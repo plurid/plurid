@@ -66,6 +66,7 @@ export type PluridApplicationDefaults = Pick<
     | 'onRestoreContent'
     | 'onViewpointChange'
     | 'onReady'
+    | 'planeRenderError'
 >;
 
 

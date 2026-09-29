@@ -317,8 +317,12 @@ describe('the agent\'s calls', () => {
         const nothingToUndo = await calling(agent, 'plurid_history', { action: 'undo' });
         expect(nothingToUndo.error?.code).toBe('no_effect');
 
-        const unknownRoute = await calling(createPluridAgent(api, { settleTimeout: 300 }), 'plurid_open_plane', { route: '/nowhere' });
-        expect(unknownRoute.error?.code).toBe('no_effect');
+        // the bus refuses at once: no waiting out the settle time for a route nothing is registered at
+        const started = Date.now();
+        const unknownRoute = await calling(agent, 'plurid_open_plane', { route: '/nowhere' });
+        expect(unknownRoute.error?.code).toBe('not_found');
+        expect(unknownRoute.error?.message).toContain('/nowhere');
+        expect(Date.now() - started).toBeLessThan(1000);
     });
 
     it('asks the host before every call, and a refusal reaches the model', async () => {

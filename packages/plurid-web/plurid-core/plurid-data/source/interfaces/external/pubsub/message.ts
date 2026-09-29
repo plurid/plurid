@@ -33,6 +33,7 @@ export interface PluridPubSubDataValueNumber {
     value: number;
 }
 
+/** @deprecated No topic takes it; it will be removed. */
 export interface PluridPubSubDataValueString {
     value: string;
 }
@@ -319,6 +320,7 @@ export interface PluridPubSubSubscribeMessageNavigateToRoot {
 }
 
 
+/** @deprecated No topic takes it (there is no set-plane-path topic); it will be removed. */
 export type PluridPubSubMessageSetPlanePath = {
     planeID?: string;
     value: string;
@@ -764,6 +766,13 @@ export type PluridChangeKind =
      * `token`, so it is the answer to a question rather than a firehose.
      */
     | 'plane'
+    /**
+     * THE ANSWER TO A TOKEN NO PLANE WILL ANSWER: `PluridRefusedObservation`. A request for a route
+     * nothing is registered at, or under a parent that is not there, used to expire in silence.
+     */
+    | 'refused'
+    /** a plane threw while rendering and its boundary caught it: `PluridPlaneErrorObservation` */
+    | 'planeError'
     /** the answer to `space.describe`: `PluridDescribeObservation` */
     | 'describe'
     /** what a `space.command` did: `PluridCommandObservation` */
@@ -806,8 +815,33 @@ export interface PluridPlaneObservation {
     parentPlaneID: string;
 }
 
+/** The answer to a token no plane will answer (`space.changed` kind `refused`). */
+export interface PluridRefusedObservation {
+    /** the token the host published with the command */
+    token: string;
+    /** the route asked for */
+    route: string;
+    /** `unregistered`: no plane is registered at the route; `noParent`: the parent plane is not in the space */
+    reason: 'unregistered' | 'noParent';
+}
+
+/** A plane that threw while rendering (`space.changed` kind `planeError`): its boundary shows the error card. */
+export interface PluridPlaneErrorObservation {
+    planeID: string;
+    /** the plane's route */
+    route: string;
+    /** the error's message */
+    message: string;
+}
+
 export interface PluridPubSubMessageChanged {
     kind: PluridChangeKind;
+    /**
+     * The id of the application that changed (`id`, a route's `route:<value>`, else `default`):
+     * the applications of a multispace route share the router's bus, and a listener tells them
+     * apart by it.
+     */
+    application?: string;
     value: any;
 }
 export interface PluridPubSubPublishMessageChanged {
@@ -828,7 +862,11 @@ export interface PluridPubSubSubscribeMessageChanged {
 
 /** Any entry of `PLURID_SHORTCUTS`, by name. `arguments` is passed through to the binding. */
 export interface PluridPubSubMessageCommand {
-    /** A `PluridShortcutID` — `'copy'`, `'fitToView'`, `'togglePalette'`, … */
+    /**
+     * A `PluridShortcutID` (`'copy'`, `'fitToView'`, `'palette'`, …). The pressed commands run; the
+     * held ones (`grabHold`, the fly keys, the rolls) report `unknown`, and `transformNudge` and
+     * `focusRootIndex` report `needsKey` (the key is their argument).
+     */
     id: string;
     /** Some bindings take one (reserved; ignored by the bindings that do not). */
     arguments?: Record<string, unknown>;

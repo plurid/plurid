@@ -50,6 +50,11 @@ export interface UseTreeUpdateParameters {
 export interface TreeUpdateOptions {
     /** Glide the planes to their new placements (a layout switch, a view add/remove). */
     transition?: boolean;
+    /**
+     * The tree to carry the runtime state from (default: the one last rendered). A command on the
+     * bus passes the store's, which is ahead of the render when two commands land in one tick.
+     */
+    tree?: TreePlane[];
 }
 
 
@@ -65,7 +70,7 @@ export const useTreeUpdate = (
     {
         view,
         configuration,
-        tree,
+        tree: renderedTree,
         viewSize,
         hostname,
         planesRegistrar,
@@ -83,6 +88,7 @@ export const useTreeUpdate = (
         layout?: boolean,
         options: TreeUpdateOptions = {},
     ) => {
+        const tree = options.tree ?? renderedTree;
         const previousViewSize = layoutViewSize.current;
         const viewResized = !!layout
             && !!previousViewSize
@@ -192,7 +198,7 @@ export const useTreeUpdate = (
         // Tree REFERENCE, not a per-render `JSON.stringify` of the whole tree — the reducer
         // swaps `state.tree` for a new array on every mutation, so the ref already changes at
         // the same cadence a content hash would, at O(1) instead of O(n).
-        tree,
+        renderedTree,
     ]);
 
     const resolveLayout = () => {

@@ -12,6 +12,7 @@
         useRef,
         useState,
         useEffect,
+        useCallback,
     } from 'react';
 
     import {
@@ -123,6 +124,17 @@ const ActivityComponent: React.ComponentType<{ mode: 'visible' | 'hidden'; child
     = (React as any).Activity ?? (React as any).unstable_Activity;
 
 /** The retained tier's wrapper, or a plain fragment when React has no Activity (the content mounts as usual). */
+/**
+ * Says once that the content around it has HYDRATED: an effect inside the plane's Activity boundary
+ * runs when that boundary hydrates, which is after the application mounted.
+ */
+const HydrationMark: React.FC<{ planeID: string; report: (planeID: string) => void }> = ({ planeID, report }) => {
+    useEffect(() => {
+        report(planeID);
+    }, []);
+    return null;
+};
+
 const ActivityOrFragment: React.FC<{ mode: 'visible' | 'hidden'; children?: React.ReactNode }> = ({ mode, children }) => (
     ActivityComponent
         ? <ActivityComponent mode={mode}>{children}</ActivityComponent>
@@ -217,7 +229,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     // Read through optional chaining so every hook below runs on every render; the context
     // guard sits at the render step.
     const context = useContext(Context);
-    const planeRenderError = context?.planeRenderError;
+    // CONTAINED BY DEFAULT, as documented: a plane that throws shows its error card and the rest of
+    // the space goes on. The raw prop was `undefined` unless a host passed it, so one plane's bug
+    // unmounted the whole application (and a route-driven one had no way to pass it); `false` opts out.
+    const planeRenderError = context?.planeRenderError ?? true;
     const defaultPubSub = context?.defaultPubSub;
     // #endregion context
 
@@ -483,6 +498,29 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateConfiguration.space.docking?.focus,
     ]);
 
+    /** A caught render error, told to the host on the bus (`space.changed` kind `planeError`). */
+    const reportRenderError = useCallback((
+        error: unknown,
+    ) => {
+        defaultPubSub?.publish({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            data: {
+                kind: 'planeError',
+                value: {
+                    planeID,
+                    route: treePlane.route,
+                    message: error instanceof Error ? error.message : String(error),
+                },
+                application: context?.applicationID,
+            },
+        } as any);
+    }, [
+        defaultPubSub,
+        planeID,
+        treePlane.route,
+        context?.applicationID,
+    ]);
+
     /** PubSub refresh plane */
     useEffect(() => {
         if (!defaultPubSub) {
@@ -492,11 +530,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         const refreshPlaneIndex = defaultPubSub.subscribe({
             topic: PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
             callback: (data) => {
-                const {
-                    planeID: refreshing,
-                } = data;
-
-                if (refreshing === planeID) {
+                if ((data as { planeID?: unknown } | undefined)?.planeID === planeID) {
                     refreshPlane();
                 }
             },
@@ -734,6 +768,12 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
                     {detached && !retain ? null : (
                         <ActivityOrFragment mode={detached ? 'hidden' : 'visible'}>
+                            {context?.planeHydrated && (
+                                <HydrationMark
+                                    planeID={planeID}
+                                    report={context.planeHydrated}
+                                />
+                            )}
                             {resizable && showsChrome(chromeMode, 'resizeHandles') && (
                                 <PlaneResizeHandles
                                     planeID={planeID}
@@ -775,6 +815,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                                     renderError={typeof planeRenderError !== 'boolean'
                                         ? planeRenderError : undefined
                                     }
+                                    onError={reportRenderError}
                                 >
                                     <PlaneContent
                                         {...planeContentProperties}

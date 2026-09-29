@@ -83,7 +83,7 @@ const Application: React.FC = () => (
 export default Application;
 ```
 
-Drag to orbit, scroll to zoom, hold **G** to grab-pan.
+Drag to orbit, scroll to zoom, drag with the right button to pan; **G** makes the next drag orbit from anywhere.
 
 
 

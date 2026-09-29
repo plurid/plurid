@@ -9,6 +9,7 @@
     // #region external
     import {
         planeAddressPath,
+        planeIDPath,
         routing,
     } from '~services/engine';
     // #endregion external
@@ -137,7 +138,8 @@ export const linkElementToPath = (
         if (!planeElement || !parentPlaneID) {
             return;
         }
-        const parentPath = planeAddressPath(parentPlaneID) || '/';
+        // a plane ID: its `@<suffix>` is cut (a route keeps an `@` of its own)
+        const parentPath = planeIDPath(parentPlaneID) || '/';
         const depth = path.startsWith(parentPath === '/' ? '/' : parentPath + '/') ? parentPath.length : -1;
         candidates.push({ parentPlaneID, route, linkElement, planeElement, depth });
     });

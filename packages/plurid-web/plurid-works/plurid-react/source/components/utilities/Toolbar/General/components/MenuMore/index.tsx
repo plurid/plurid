@@ -82,6 +82,8 @@ export const resolveMenus = (
 
 
 export interface PluridMoreMenuOwnProperties {
+    /** the menu's id, which the More button names (`aria-controls`) */
+    menuID?: string;
 }
 
 export interface PluridMoreMenuStateProperties {
@@ -189,7 +191,7 @@ const PluridMoreMenu: React.FC<PluridMoreMenuProperties> = (
         <StyledPluridMoreMenu
             theme={stateInteractionTheme}
             transparentUI={transparentUI}
-        
+            id={properties.menuID}
             data-plurid-overlay="toolbar-menu"
             data-plurid-control="toolbar-menu">
             <StyledPluridMoreMenuScroll

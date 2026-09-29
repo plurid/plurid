@@ -41,6 +41,7 @@
         planeIDsOf,
         planeOf,
         answersTo,
+        parametersOf,
     } from '~services/logic/correlation';
 
     import {
@@ -53,6 +54,14 @@
 
     import { AppState } from '~services/state/store';
     import actions from '~services/state/actions';
+    import selectors from '~services/state/selectors';
+    import type {
+        PluridThunkExtra,
+    } from '~services/state/extra';
+
+    import {
+        isDevelopment,
+    } from '~services/logic/development/environment';
     import {
         DispatchAction,
     } from '~data/interfaces';
@@ -154,11 +163,18 @@ export interface UsePluridPubSubParameters {
     viewElement?: React.RefObject<HTMLDivElement | null>;
     /** `space.describe` answers with the inspection `api.inspect()` gives. */
     inspector?: PluridInspectorRegistry;
+    /**
+     * The layout signature a `configuration` publish relaid the roots for, so the View's own
+     * layout effect does not lay them out a second time for the same change.
+     */
+    relaidLayout?: MutableRefObject<string>;
+    /** The application's id, on every `space.changed` this bridge publishes. */
+    applicationID?: string;
     treeUpdate: (
         view: PluridApplicationView,
         configuration?: PluridConfiguration,
         layout?: boolean,
-        options?: { transition?: boolean },
+        options?: { transition?: boolean; tree?: TreePlane[] },
     ) => void;
 
     dispatchers: UsePluridPubSubDispatchers;
@@ -170,13 +186,67 @@ const warn = (
     topic: string,
     reason: string,
 ) => {
-    if (typeof console !== 'undefined' && typeof process !== 'undefined' && process.env.NODE_ENV !== 'production') {
+    if (typeof console !== 'undefined' && isDevelopment()) {
         console.warn('[plurid] \'' + topic + '\' was ignored: ' + reason);
     }
 };
 
+/** The topics that address a plane by `planeID` (the field `id` and `plane` were renamed to, 2026-09-13). */
+const PLANE_ADDRESSED: ReadonlySet<string> = new Set([
+    PLURID_PUBSUB_TOPIC.CLOSE_PLANE,
+    PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE,
+    PLURID_PUBSUB_TOPIC.ISOLATE_PLANE,
+    PLURID_PUBSUB_TOPIC.TOGGLE_SELECTION,
+    PLURID_PUBSUB_TOPIC.SPACE_SET_PLANE_SHOW,
+    PLURID_PUBSUB_TOPIC.SPACE_PIN_PLANE,
+    PLURID_PUBSUB_TOPIC.SPACE_RESIZE_PLANE,
+    PLURID_PUBSUB_TOPIC.REFRESH_PLANE,
+    PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
+    PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE,
+    PLURID_PUBSUB_TOPIC.SPACE_DOCK,
+] as string[]);
+
+/**
+ * A FIELD FROM BEFORE THE RENAME, NAMED. `{ id }` for `{ planeID }` and `animated` for `animate` were
+ * removed after a release of aliases (MIGRATION, 2026-09-13); a payload still carrying them did
+ * nothing, and said nothing.
+ */
+const renamedFields = (
+    topic: string,
+    data: unknown,
+) => {
+    if (!data || typeof data !== 'object') {
+        return;
+    }
+    const record = data as Record<string, unknown>;
+    if (
+        PLANE_ADDRESSED.has(topic)
+        && record.planeID === undefined
+        && (record.id !== undefined || record.plane !== undefined)
+    ) {
+        warn(topic, 'the plane is `planeID` (`' + (record.id !== undefined ? 'id' : 'plane') + '` was renamed)');
+    }
+    if (record.animated !== undefined && record.animate === undefined) {
+        warn(topic, '`animated` was renamed `animate`');
+    }
+};
+
+/** A string for an attribute selector's double-quoted value. */
+const cssString = (
+    value: string,
+) => value.replace(/["\\]/g, '\\$&');
+
+/** A view entry's route: a string, or the typed `{ plane }` (`PluridView`). */
+export const viewEntryRoute = (
+    entry: unknown,
+): string | undefined => (typeof entry === 'string'
+    ? entry
+    : (entry && typeof entry === 'object' && typeof (entry as { plane?: unknown }).plane === 'string'
+        ? (entry as { plane: string }).plane
+        : undefined));
+
 /** the keys of a configuration that decide where the roots go */
-const layoutSignature = (
+export const layoutSignature = (
     configuration: PluridConfiguration,
 ): string => JSON.stringify([
     configuration.space?.layout,
@@ -197,16 +267,32 @@ const layoutSignature = (
 const measureLinkInPlane = (
     parentPlaneID: string,
     selector: unknown,
-): { x: number; y: number } | undefined => {
+    scope: ParentNode | null | undefined,
+): { coordinates: { x: number; y: number }; linkID?: string; linkRoute?: string } | undefined => {
     if (typeof selector !== 'string' || !selector || typeof document === 'undefined') {
         return undefined;
     }
-    const planeElement = document.querySelector(`[data-plurid-plane="${parentPlaneID}"]`) as HTMLElement | null;
-    const linkElement = planeElement?.querySelector(selector) as HTMLElement | null;
+    // this application's view, not the document: two applications can hold the same plane id
+    const planeElement = (scope ?? document).querySelector(`[data-plurid-plane="${cssString(parentPlaneID)}"]`) as HTMLElement | null;
+    let linkElement: HTMLElement | null = null;
+    try {
+        linkElement = planeElement?.querySelector(selector) as HTMLElement | null;
+    } catch (_) {
+        warn('space.spawnPlane', '`link` is not a valid CSS selector: ' + selector);
+        return undefined;
+    }
     if (!planeElement || !linkElement) {
         return undefined;
     }
-    return measureLinkCoordinates(linkElement, planeElement);
+    // a selector naming a `PluridLink` (or something inside one) opens THAT link's plane: the
+    // anchor's identity, so the link shows it open and a later click finds it rather than
+    // opening a second
+    const anchor = linkElement.closest('[data-plurid-entity="PluridLink"]') as HTMLElement | null;
+    return {
+        coordinates: measureLinkCoordinates(linkElement, planeElement),
+        linkID: anchor?.getAttribute('data-plurid-link') || undefined,
+        linkRoute: anchor?.getAttribute('data-plurid-link-route') || undefined,
+    };
 };
 
 
@@ -234,6 +320,8 @@ export const usePluridPubSub = (
         viewElement,
         pendingPlanes,
         inspector,
+        relaidLayout,
+        applicationID,
     }: UsePluridPubSubParameters,
 ) => {
     const [
@@ -261,16 +349,53 @@ export const usePluridPubSub = (
             return;
         }
 
+        const tree = current().space.tree;
         pendingPlanes.current = [
             ...pendingPlanes.current,
             {
                 token,
                 route,
-                known: planeIDsOf(latest.current.stateTree),
-                hidden: hiddenPlaneIDsOf(latest.current.stateTree),
+                known: planeIDsOf(tree),
+                hidden: hiddenPlaneIDsOf(tree),
                 remaining: PENDING_TREE_CHANGES,
             },
         ];
+    };
+
+    /**
+     * ANSWER A TOKEN NOW, on `space.changed` of the bus that asked: with the plane when it already
+     * exists (a spawn of a route that is open changes no tree, so the diff never answered it), or
+     * with `refused` when no plane will ever come (a route nothing is registered at, a parent that
+     * is not there). A host waiting on the answer used to wait for nothing.
+     */
+    const answer = (
+        bus: IPluridPubSub,
+        token: unknown,
+        kind: 'plane' | 'refused',
+        value: Record<string, unknown>,
+    ) => {
+        if (typeof token !== 'string' || !token) {
+            return;
+        }
+        bus.publish({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            data: { kind, value: { token, ...value }, application: applicationID },
+        } as any);
+    };
+
+    /** Whether a route resolves to a registered plane; `true` when there is no registrar to ask. */
+    const registered = (
+        route: string,
+    ): boolean => {
+        const registrar = latest.current.planesRegistrar;
+        if (!registrar) {
+            return true;
+        }
+        try {
+            return !!registrar.get(route);
+        } catch (_) {
+            return false;
+        }
     };
 
     // Handlers read the LATEST state through a ref, so every pubsub instance is subscribed ONCE
@@ -299,23 +424,76 @@ export const usePluridPubSub = (
         viewElement,
     };
 
+    /**
+     * THE STORE AS IT IS NOW. `latest` holds what was last RENDERED, and two commands published in
+     * one tick both read it: the second `view.addPlane` appended to a view the first had not yet
+     * rendered, and one plane was lost; a `space.command` after a selection saw the old selection.
+     * A thunk returns what it returns, so one that reads `getState` reads the store between two
+     * publishes. (The configuration, the view, the tree and the transform all come from here.)
+     */
+    const current = (): AppState => dispatch(
+        ((_: unknown, getState: () => AppState) => getState()) as any,
+    ) as unknown as AppState;
+
+    /**
+     * A CAMERA CHANGE THAT IS NOT A TWEEN STOPS THE TWEEN FIRST. The reducer was applied, then the
+     * running tween's next frame wrote its own camera over it: the nudges, `space.cameraDelta`
+     * without `animate`, the legacy `…With` / `…To` topics and `space.transform` all did nothing
+     * while a tween ran.
+     */
+    const jump = (
+        action: AnyAction,
+    ) => {
+        dispatch(((innerDispatch: (action: AnyAction) => unknown, _: unknown, extra?: PluridThunkExtra) => {
+            extra?.motion?.cancel();
+            innerDispatch(action);
+        }) as any);
+    };
+
+    /** A finite number, or nothing: a command without its number does nothing, and says so. */
+    const finite = (
+        topic: string,
+        data: unknown,
+    ): number | undefined => {
+        const value = (data as { value?: unknown } | undefined)?.value;
+        if (typeof value !== 'number' || !Number.isFinite(value)) {
+            warn(topic, '`value` must be a finite number');
+            return undefined;
+        }
+        return value;
+    };
+
     const {
         dispatchSetConfiguration,
         dispatchSetGeneralTheme,
         dispatchSetInteractionTheme,
-        dispatchSetSpaceLocation,
-        dispatchSetTransformTime,
-        dispatchRotateXWith,
-        dispatchRotateX,
-        dispatchRotateYWith,
-        dispatchRotateY,
-        dispatchTranslateXWith,
-        dispatchTranslateYWith,
-        dispatchTranslateZWith,
         dispatchSpaceSetView,
         dispatchSetSpaceField,
-        dispatchSetTree,
     } = dispatchers;
+
+    /**
+     * NOTHING KEEPS POINTING AT A PLANE THAT IS GONE: the selection, the active plane and the
+     * isolation forget it. A removed plane left isolated rendered every other plane transparent
+     * and inert, with nothing on screen to lift it.
+     */
+    const forgetPlanes = (
+        gone: Set<string>,
+    ) => {
+        if (gone.size === 0) {
+            return;
+        }
+        const now = current().space;
+        const selected: string[] = now.selectedPlaneIDs ?? [];
+        if (selected.some((id) => gone.has(id))) {
+            dispatch(actions.space.setSelection(selected.filter((id) => !gone.has(id))));
+        }
+        if (gone.has(now.activePlaneID ?? '')) {
+            dispatchSetSpaceField({ field: 'activePlaneID', value: '' });
+        }
+        if (gone.has(now.isolatePlane ?? '')) {
+            dispatchSetSpaceField({ field: 'isolatePlane', value: '' });
+        }
+    };
 
     // #region handlers pubsub
     const handlePubSubSubscribe = (
@@ -329,7 +507,7 @@ export const usePluridPubSub = (
                         return;
                     }
 
-                    const previousConfiguration = latest.current.stateConfiguration;
+                    const previousConfiguration = current().configuration;
                     const computedConfiguration = generalEngine.configuration.merge(
                         data,
                         previousConfiguration,
@@ -347,121 +525,135 @@ export const usePluridPubSub = (
                     // A LAYOUT KEY CHANGED THROUGH THE BUS: the roots are laid out again, as the
                     // configuration PROP does. A layout published on the bus used to land in the
                     // store and change nothing on screen until something else relaid it out.
-                    if (layoutSignature(previousConfiguration) !== layoutSignature(computedConfiguration)) {
-                        latest.current.treeUpdate(latest.current.stateSpaceView, computedConfiguration, true, { transition: true });
+                    const signature = layoutSignature(computedConfiguration);
+                    if (layoutSignature(previousConfiguration) !== signature) {
+                        if (relaidLayout) {
+                            relaidLayout.current = signature;
+                        }
+                        const now = current();
+                        latest.current.treeUpdate(now.space.view, computedConfiguration, true, { transition: true, tree: now.space.tree });
                     }
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSFORM,
                 callback: (data) => {
-                    const {
-                        value,
-                        internal,
-                    } = data;
-
-                    if (internal) {
+                    const value = (data as any)?.value;
+                    if ((data as any)?.internal) {
+                        return;
+                    }
+                    if (!value || typeof value !== 'object') {
+                        warn('space.transform', '`value` must be the transform ({ rotationX, rotationY, translationX, translationY, translationZ, scale })');
                         return;
                     }
 
-                    dispatchSetSpaceLocation(value);
+                    jump(actions.space.setSpaceLocation(value));
                 },
             },
 
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_WITH,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateXWith(value);
+                    const value = finite('space.rotateXWith', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.rotateXWith(value));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_X_TO,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateX(value);
+                    const value = finite('space.rotateXTo', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.rotateX(value));
                 },
             },
 
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_WITH,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateYWith(value);
+                    const value = finite('space.rotateYWith', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.rotateYWith(value));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_ROTATE_Y_TO,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchRotateY(value);
+                    const value = finite('space.rotateYTo', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.rotateY(value));
                 },
             },
 
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_WITH,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchTranslateXWith(value);
+                    const value = finite('space.translateXWith', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.translateXWith(value));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_X_TO,
                 callback: (data) => {
-                    const value = (data as any)?.value;
-                    if (typeof value !== 'number') {
+                    const value = finite('space.translateXTo', data);
+                    if (value === undefined) {
                         return;
                     }
-                    // TO, not WITH: the difference from where the space is
-                    dispatchTranslateXWith(value - latest.current.stateTransform.translationX);
+                    // TO, not WITH: the difference from where the space is NOW
+                    jump(actions.space.translateXWith(value - selectors.space.getTransform(current()).translationX));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_WITH,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchTranslateYWith(value);
+                    const value = finite('space.translateYWith', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.translateYWith(value));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Y_TO,
                 callback: (data) => {
-                    const value = (data as any)?.value;
-                    if (typeof value !== 'number') {
+                    const value = finite('space.translateYTo', data);
+                    if (value === undefined) {
                         return;
                     }
-                    dispatchTranslateYWith(value - latest.current.stateTransform.translationY);
+                    // TO, not WITH: the difference from where the space is NOW
+                    jump(actions.space.translateYWith(value - selectors.space.getTransform(current()).translationY));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_WITH,
                 callback: (data) => {
-                    const {
-                        value,
-                    } = data;
-                    dispatchTranslateZWith(value);
+                    const value = finite('space.translateZWith', data);
+                    if (value === undefined) {
+                        return;
+                    }
+                    jump(actions.space.translateZWith(value));
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_TRANSLATE_Z_TO,
                 callback: (data) => {
-                    const value = (data as any)?.value;
-                    if (typeof value !== 'number') {
+                    const value = finite('space.translateZTo', data);
+                    if (value === undefined) {
                         return;
                     }
-                    dispatchTranslateZWith(value - latest.current.stateTransform.translationZ);
+                    // TO, not WITH: the difference from where the space is NOW
+                    jump(actions.space.translateZWith(value - selectors.space.getTransform(current()).translationZ));
                 },
             },
 
@@ -470,35 +662,43 @@ export const usePluridPubSub = (
                 callback: (data) => {
                     const plane = data?.planeID;
                     if (typeof plane !== 'string') {
+                        warn('view.addPlane', '`planeID` must be the route to open');
                         return;
                     }
 
-                    notePending((data as any)?.token, plane);
+                    const token = (data as any)?.token;
+                    if (!registered(plane)) {
+                        // added all the same (a host may register the plane next), and said: the
+                        // tree leaves a route without a plane out, so no plane answers the token
+                        warn('view.addPlane', 'no plane is registered at \'' + plane + '\'');
+                        answer(pubsub, token, 'refused', { route: plane, reason: 'unregistered' });
+                    } else {
+                        notePending(token, plane);
+                    }
 
-                    // THROUGH `latest`, NOT THE CLOSURE. These handlers are subscribed ONCE per
-                    // pubsub instance (see `latest` above), so a captured `stateSpaceView` is
-                    // frozen at the value it had when the application mounted — for a host whose
-                    // route declares `view: []` that is the EMPTY ARRAY, forever. Every
-                    // `view.addPlane` then published `[] + plane`: the topic that exists to ADD a
-                    // root silently REPLACED the whole view with one. Its sibling
-                    // `VIEW_REMOVE_PLANE` reads `latest.current.stateSpaceView` and was right all
-                    // along.
+                    // THE STORE'S VIEW, NOT A CLOSURE'S OR THE LAST RENDER'S. A captured view is
+                    // frozen at mount (for a route declaring `view: []`, every `view.addPlane`
+                    // REPLACED the view with one plane), and the rendered one lags a publish in the
+                    // same tick (two `view.addPlane`s kept one).
+                    const now = current();
                     const updatedView = [
-                        ...latest.current.stateSpaceView,
+                        ...now.space.view,
                         plane,
                     ];
                     dispatchSpaceSetView(updatedView);
 
-                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true });
+                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true, tree: now.space.tree });
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.VIEW_SET_PLANES,
                 callback: (data) => {
                     const view = (data as any)?.view;
-                    // a malformed view leaves the view as it was: it used to throw in a render
-                    if (!Array.isArray(view) || !view.every((entry: unknown) => typeof entry === 'string' || (!!entry && typeof entry === 'object' && typeof (entry as any).route === 'string'))) {
-                        warn('view.setPlanes', 'the view must be an array of routes (strings, or { route })');
+                    // a malformed view leaves the view as it was: it used to throw in a render. The
+                    // entries are what `view` takes everywhere (`PluridApplicationView`): a route, or
+                    // `{ plane: route }`; `{ route }` used to pass here and then throw in the layout
+                    if (!Array.isArray(view) || !view.every((entry: unknown) => viewEntryRoute(entry) !== undefined)) {
+                        warn('view.setPlanes', 'the view must be an array of routes: strings, or { plane: route }');
                         return;
                     }
 
@@ -506,7 +706,7 @@ export const usePluridPubSub = (
                         ...view,
                     ]);
 
-                    latest.current.treeUpdate(view, undefined, true, { transition: true });
+                    latest.current.treeUpdate(view, undefined, true, { transition: true, tree: current().space.tree });
                 },
             },
             {
@@ -514,11 +714,12 @@ export const usePluridPubSub = (
                 callback: (data) => {
                     const plane = data?.planeID;
                     if (typeof plane !== 'string') {
+                        warn('view.removePlane', '`planeID` must be a plane id or a route');
                         return;
                     }
 
-                    const routeOf = (entry: unknown) => (typeof entry === 'string' ? entry : (entry as any)?.route);
-                    const inView = latest.current.stateSpaceView.some((entry) => routeOf(entry) === plane);
+                    const now = current();
+                    const inView = now.space.view.some((entry) => viewEntryRoute(entry) === plane);
 
                     // A SPAWNED PLANE IS NOT IN THE VIEW. The view holds the roots; a plane a link
                     // or `space.spawnPlane` made hangs in the tree only, and matching the view
@@ -526,7 +727,7 @@ export const usePluridPubSub = (
                     // forgotten what it rendered (dechat's obliterate, 2026-09-17). By its runtime
                     // id, or by its route (every plane at that path), the node and its subtree go.
                     if (!inView) {
-                        const tree = latest.current.stateTree;
+                        const tree = now.space.tree;
                         const targets: TreePlane[] = [];
                         const walk = (nodes: TreePlane[]) => {
                             for (const node of nodes || []) {
@@ -555,26 +756,28 @@ export const usePluridPubSub = (
                             updated = space.tree.logic.removePlaneFromTree(updated, target.planeID);
                         }
                         dispatch(actions.space.setTree(updated));
-                        // nothing may keep pointing at a plane that is gone
-                        const selected: string[] = latest.current.state?.space?.selectedPlaneIDs ?? [];
-                        if (selected.some((id) => gone.has(id))) {
-                            dispatch(actions.space.setSelection(selected.filter((id) => !gone.has(id))));
-                        }
-                        if (gone.has(latest.current.state?.space?.activePlaneID ?? '')) {
-                            dispatchSetSpaceField({ field: 'activePlaneID', value: '' });
-                        }
+                        forgetPlanes(gone);
                         return;
                     }
 
                     // REMOVE the matching root, keep everything else (`view === plane` once did
                     // the inverse: kept only the plane that was supposed to go)
-                    const updatedView = latest.current.stateSpaceView.filter((entry) => routeOf(entry) !== plane);
+                    const updatedView = now.space.view.filter((entry) => viewEntryRoute(entry) !== plane);
+                    const goneRoots = new Set<string>();
+                    const forgetRoot = (nodes: TreePlane[]) => {
+                        for (const node of nodes || []) {
+                            goneRoots.add(node.planeID);
+                            forgetRoot(node.children || []);
+                        }
+                    };
+                    forgetRoot(now.space.tree.filter((root) => answersTo(root, plane)));
 
                     dispatchSpaceSetView(updatedView);
 
                     // A relayout, like `VIEW_ADD_PLANE`: without `layout = true` the remaining
                     // planes collapsed to the origin.
-                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true });
+                    latest.current.treeUpdate(updatedView, undefined, true, { transition: true, tree: now.space.tree });
+                    forgetPlanes(goneRoots);
                 },
             },
 
@@ -583,10 +786,16 @@ export const usePluridPubSub = (
                 callback: (data) => {
                     const id = data?.planeID;
 
-                    const plane = space.tree.logic.getTreePlaneByID(
-                        latest.current.stateTree,
-                        id,
-                    );
+                    const plane = typeof id === 'string'
+                        ? space.tree.logic.getTreePlaneByID(
+                            current().space.tree,
+                            id,
+                        )
+                        : undefined;
+                    if (!plane) {
+                        warn('space.navigateToPlane', 'no plane has the id \'' + String(id) + '\'');
+                        return;
+                    }
 
                     // face-on unless the host asks for the pair: "go to this plane" names ONE plane
                     navigateToPluridPlane(
@@ -640,7 +849,7 @@ export const usePluridPubSub = (
                 callback: () => {
                     focusPreviousRoot(
                         dispatch,
-                        latest.current.state,
+                        current(),
                     );
                 },
             },
@@ -649,27 +858,32 @@ export const usePluridPubSub = (
                 callback: () => {
                     focusNextRoot(
                         dispatch,
-                        latest.current.state,
+                        current(),
                     );
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.NAVIGATE_TO_ROOT,
                 callback: (data) => {
-                    const index = (data as any).index;
-                    if (typeof index !== 'undefined') {
+                    const index = (data as any)?.index;
+                    if (typeof index === 'number') {
                         focusRootIndex(
                             dispatch,
-                            latest.current.state,
+                            current(),
                             index,
                         );
                         return;
                     }
 
-                    const id = (data as any).id;
+                    // a root's plane id, under `id` or under `planeID` like every other topic
+                    const id = (data as any)?.id ?? (data as any)?.planeID;
+                    if (typeof id !== 'string') {
+                        warn('space.navigateToRoot', 'give `index` (a number) or `id` (a root\'s plane id)');
+                        return;
+                    }
                     focusRootID(
                         dispatch,
-                        latest.current.state,
+                        current(),
                         id,
                     );
                 },
@@ -743,11 +957,12 @@ export const usePluridPubSub = (
                 // Programmatic camera control: decode the host-supplied viewpoint (v1 scalars or a v2
                 // camera) and move the camera there; `animate` routes it through the transform
                 // animation (otherwise it jumps). Invalid encodings are ignored, never corrupting the
-                // view. Reads the live latest.current.state inside the thunk (no stale closure).
+                // view. The thunk reads the store's state (no stale closure).
                 topic: PLURID_PUBSUB_TOPIC.SET_VIEWPOINT,
                 callback: (data) => {
                     const encoded = (data as any)?.viewpoint;
                     if (typeof encoded !== 'string') {
+                        warn('space.setViewpoint', 'give `{ viewpoint }`, the encoded string (`api.getViewpoint()`)');
                         return;
                     }
                     dispatch(setViewpoint(encoded, !!(data as any)?.animate) as any);
@@ -900,19 +1115,20 @@ export const usePluridPubSub = (
                     }
                     // a disabled shortcut is a KEY the host took from the reader; a command on the
                     // bus is the host's own act, and it is told what came of it
+                    const now = current();
                     const report = runShortcutReported(
                         id as never,
                         {
                             dispatch,
-                            state: latest.current.state,
+                            state: now,
                             pubsub,
                         } as never,
-                        latest.current.stateConfiguration.space.shortcuts,
+                        now.configuration.space.shortcuts,
                         { ignoreDisabled: true },
                     );
                     pubsub.publish({
                         topic: PLURID_PUBSUB_TOPIC.CHANGED,
-                        data: { kind: 'command', value: report },
+                        data: { kind: 'command', value: report, application: applicationID },
                     } as any);
                 },
             },
@@ -922,27 +1138,62 @@ export const usePluridPubSub = (
                 callback: (data) => {
                     const route = (data as any)?.route;
                     const parentPlaneID = (data as any)?.parentPlaneID;
+                    const token = (data as any)?.token;
                     const registrar = latest.current.planesRegistrar;
-                    if (typeof route !== 'string' || typeof parentPlaneID !== 'string' || !registrar) {
+                    if (typeof route !== 'string' || typeof parentPlaneID !== 'string') {
+                        warn('space.spawnPlane', 'give `route` and `parentPlaneID` (strings)');
                         return;
                     }
-                    const parent = space.tree.logic.getTreePlaneByID(latest.current.stateTree, parentPlaneID);
+                    if (!registrar) {
+                        return;
+                    }
+                    const tree = current().space.tree;
+                    const parent = space.tree.logic.getTreePlaneByID(tree, parentPlaneID);
                     if (!parent) {
+                        warn('space.spawnPlane', 'no plane has the id \'' + parentPlaneID + '\'');
+                        answer(pubsub, token, 'refused', { route, reason: 'noParent' });
                         return;
                     }
-                    notePending((data as any)?.token, route);
+                    if (!registered(route)) {
+                        warn('space.spawnPlane', 'no plane is registered at \'' + route + '\'');
+                        answer(pubsub, token, 'refused', { route, reason: 'unregistered' });
+                        return;
+                    }
 
                     // WHERE THE BRIDGE LEAVES: the coordinates given; else a link named by a
                     // selector inside the parent, measured as a PluridLink measures itself; else
                     // the parent's middle height (the anchor puts the x at the edge). `{0, 0}`
                     // used to be the default, which hung every branch off the parent's corner.
+                    const measured = measureLinkInPlane(parentPlaneID, (data as any)?.link, latest.current.viewElement?.current);
+                    // A NAMED `PluridLink` TO THIS ROUTE OPENS ITS OWN PLANE: the spawn takes the
+                    // anchor's identity, so the link shows it open and a click on it later finds it.
+                    // An `#api` identity of its own made a second plane beside the link's.
+                    const local = (value: string) => value.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, '') || '/';
+                    const linkID = measured?.linkID && measured.linkRoute && local(measured.linkRoute) === local(route)
+                        ? measured.linkID
+                        : parentPlaneID + '#' + route + '#api';
+
+                    // a route already open and shown: the spawn goes to it and changes no tree, so
+                    // the tree's diff would never answer the token; answer it here
+                    const existing = space.tree.fields.findPlaneByLinkID(tree, parentPlaneID, linkID);
+                    if (existing && existing.show !== false) {
+                        answer(pubsub, token, 'plane', {
+                            planeID: existing.planeID,
+                            route: existing.route,
+                            parameters: parametersOf(existing),
+                            parentPlaneID: existing.parentPlaneID ?? '',
+                        });
+                    } else {
+                        notePending(token, route);
+                    }
+
                     const framing = (data as any)?.framing;
                     dispatch(toggleLinkPlane({
                         parentPlaneID,
-                        linkID: parentPlaneID + '#' + route + '#api',
+                        linkID,
                         route,
                         linkCoordinates: (data as any)?.linkCoordinates
-                            ?? measureLinkInPlane(parentPlaneID, (data as any)?.link)
+                            ?? measured?.coordinates
                             ?? { x: 0, y: (parent.height || 0) / 2 },
                         planesRegistry: registrar.getAll(),
                         hostname: latest.current.hostname,
@@ -1117,8 +1368,9 @@ export const usePluridPubSub = (
                             kind: 'describe',
                             value: {
                                 token,
-                                inspection: buildInspection(latest.current.state, inspector),
+                                inspection: buildInspection(current(), inspector),
                             },
+                            application: applicationID,
                         },
                     } as any);
                 },
@@ -1144,22 +1396,22 @@ export const usePluridPubSub = (
                 topic: (PLURID_PUBSUB_TOPIC as any)[topic],
                 callback: (data: any) => {
                     const value = data?.value;
-                    if (typeof value === 'number') {
+                    if (typeof value === 'number' && Number.isFinite(value)) {
                         // an explicit amount goes through the `…With` action, in the topic's direction
-                        dispatch((actions.space as any)[withAction](sign * Math.abs(value)));
+                        jump((actions.space as any)[withAction](sign * Math.abs(value)));
                         return;
                     }
-                    dispatch((actions.space as any)[step]());
+                    jump((actions.space as any)[step]());
                 },
             })),
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_SCALE_WITH,
                 callback: (data) => {
-                    const value = (data as any)?.value;
-                    if (typeof value !== 'number') {
+                    const value = finite('space.scaleWith', data);
+                    if (value === undefined) {
                         return;
                     }
-                    dispatch(value >= 0
+                    jump(value >= 0
                         ? actions.space.scaleUpWith(value)
                         : actions.space.scaleDownWith(Math.abs(value)));
                 },
@@ -1211,7 +1463,7 @@ export const usePluridPubSub = (
                     // it used to throw inside a render, out of the host's reach
                     const validation = space.tree.fields.validateTree(tree);
                     if (!validation.ok) {
-                        warn('view.setTree', validation.reason || 'a malformed tree');
+                        warn('space.setTree', validation.reason || 'a malformed tree');
                         return;
                     }
                     dispatch(actions.space.setTree(tree));
@@ -1221,7 +1473,7 @@ export const usePluridPubSub = (
                     // empty view had it emptied at the first one
                     // the tree holds absolute routes (`plurid://<host>/a`); the view holds the host's own
                     const roots = (tree as TreePlane[]).map((root) => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, ''));
-                    const viewRoutes = (latest.current.stateSpaceView || []).map((item: any) => (typeof item === 'string' ? item : item?.route));
+                    const viewRoutes = (current().space.view || []).map(viewEntryRoute);
                     if (roots.length !== viewRoutes.length || roots.some((route, index) => route !== viewRoutes[index])) {
                         dispatchSpaceSetView(roots);
                     }
@@ -1232,7 +1484,15 @@ export const usePluridPubSub = (
         const indexes: string[] = [];
 
         for (const subscription of subscriptions) {
-            const index = pubsub.subscribe(subscription);
+            const callback = subscription.callback as (data: unknown) => void;
+            const topic = String(subscription.topic);
+            const index = pubsub.subscribe({
+                ...subscription,
+                callback: (data: unknown) => {
+                    renamedFields(topic, data);
+                    callback(data);
+                },
+            } as PluridPubSubSubscribeMessage);
             indexes.push(index);
         }
 
@@ -1281,13 +1541,25 @@ export const usePluridPubSub = (
     // part of the `pluridContext` value, and a fresh function each render would change the context
     // object and force every `useContext(Context)` consumer (every plane) to re-render regardless
     // of `React.memo`.
+    //
+    // ONCE PER BUS, AND TAKEN OFF AGAIN. A configurator registered its bus on every mount and never
+    // left, so after a plane refresh (or a close and reopen, a detach, StrictMode's double effect)
+    // every command on that bus ran twice, three times: an undo undid two steps.
     const registerPubSub = useCallback((
         pubsub: IPluridPubSub,
     ) => {
-        setPluridPubSub(previous => [
-            ...previous,
-            pubsub,
-        ]);
+        setPluridPubSub(previous => (previous.includes(pubsub)
+            ? previous
+            : [
+                ...previous,
+                pubsub,
+            ]));
+        return () => {
+            // the application's own bus (the first) is never taken off
+            setPluridPubSub(previous => (previous.indexOf(pubsub) > 0
+                ? previous.filter((bus) => bus !== pubsub)
+                : previous));
+        };
     }, []);
     // #endregion handlers pubsub
 
@@ -1314,8 +1586,9 @@ export const usePluridPubSub = (
             }
         }
     }, [
-        // Once per pubsub instance: the handlers read live state through `latest`.
-        pluridPubSub.length,
+        // Once per pubsub instance: the handlers read live state through `latest`. The array, not
+        // its length: one bus off and another on is the same length and a different set.
+        pluridPubSub,
     ]);
 
     /** PubSub Publish: the transform on its change */
@@ -1324,7 +1597,7 @@ export const usePluridPubSub = (
             publishTransform(pubsub);
         }
     }, [
-        pluridPubSub.length,
+        pluridPubSub,
         stateTransform,
     ]);
 
@@ -1334,7 +1607,7 @@ export const usePluridPubSub = (
             publishConfiguration(pubsub);
         }
     }, [
-        pluridPubSub.length,
+        pluridPubSub,
         // Reference equality: the configuration object only changes on `setConfiguration` /
         // `SET_STATE` (and `Application` now recomputes the store only when its inputs change),
         // so no per-frame `JSON.stringify`.
@@ -1351,7 +1624,7 @@ export const usePluridPubSub = (
             for (const pubsub of pluridPubSub) {
                 pubsub.publish({
                     topic: PLURID_PUBSUB_TOPIC.CHANGED,
-                    data: { kind: 'focus', value: inside },
+                    data: { kind: 'focus', value: inside, application: applicationID },
                 } as any);
             }
         };
@@ -1369,7 +1642,7 @@ export const usePluridPubSub = (
             view.removeEventListener('focusout', onFocusOut);
         };
     }, [
-        pluridPubSub.length,
+        pluridPubSub,
         viewElement,
     ]);
     // #endregion effects pubsub

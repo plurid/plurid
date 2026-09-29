@@ -97,6 +97,10 @@ export const StyledToolbar = styled.div<IStyledToolbar>`
     height: 75px;
     z-index: ${Z_INDEX.TOOLBAR};
     transition: bottom 300ms ease-in-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 `;
 
 

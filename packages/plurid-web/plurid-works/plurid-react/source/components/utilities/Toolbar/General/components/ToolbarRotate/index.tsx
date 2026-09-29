@@ -114,11 +114,13 @@ const PluridToolbarRotate: React.FC<PluridToolbarRotateProperties> = (
                 <>
                     <PluridTransformArrow
                         direction="left"
+                        label="turn the space left"
                         transform={() => rotateRight()}
                     />
 
                     <PluridTransformArrow
                         direction="up"
+                        label="turn the space up"
                         transform={() => rotateUp()}
                     />
                 </>
@@ -153,11 +155,13 @@ const PluridToolbarRotate: React.FC<PluridToolbarRotateProperties> = (
                 <>
                     <PluridTransformArrow
                         direction="down"
+                        label="turn the space down"
                         transform={() => rotateDown()}
                     />
 
                     <PluridTransformArrow
                         direction="right"
+                        label="turn the space right"
                         transform={() => rotateLeft()}
                     />
                 </>

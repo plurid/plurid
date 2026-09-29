@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useEffect,
+        useId,
         useMemo,
         useRef,
         useState,
@@ -16,6 +17,10 @@
     // #region external
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
+    import Context from '~services/context';
+    import {
+        getPlanesRegistrar,
+    } from '~services/engine';
 
     import {
         useEngineStore,
@@ -59,12 +64,15 @@ const ROW_ID = 'plurid-palette-row-';
  * the store WHEN IT OPENS (a still list to walk); the arrows move, Enter runs, Escape closes.
  */
 const PluridPalette: React.FC = () => {
+    // one per application: two palettes on a page had one id between them
+    const listID = 'plurid-palette-list-' + useId().replace(/[^A-Za-z0-9_-]/g, '');
     // #region properties
     const store = useEngineStore();
     const dispatch = useEngineDispatch();
     const pubsub = useEnginePubSub();
     const visible = useEngineSelector(selectors.ui.getPaletteVisible);
     const theme = useEngineSelector(selectors.themes.getGeneralTheme);
+    const context = React.useContext(Context);
     // #endregion properties
 
 
@@ -93,7 +101,15 @@ const PluridPalette: React.FC = () => {
         }
         setQuery('');
         setAt(0);
-        setRows(paletteRows(store.getState()));
+        // a plane goes by its declared title, as its bar and a screen reader name it (the rows used
+        // to show the path of every plane, titled or not)
+        const registrar = getPlanesRegistrar(context?.planesRegistrar);
+        setRows(paletteRows(store.getState(), {
+            titleOf: (route) => {
+                const head = registrar?.get(route)?.head as { title?: unknown } | undefined;
+                return head && typeof head === 'object' && typeof head.title === 'string' ? head.title : undefined;
+            },
+        }));
         if (typeof document !== 'undefined') {
             restoreFocus.current = document.activeElement as HTMLElement | null;
         }
@@ -194,7 +210,7 @@ const PluridPalette: React.FC = () => {
                     placeholder="Run a command, go to a plane…"
                     role="combobox"
                     aria-expanded={true}
-                    aria-controls="plurid-palette-list"
+                    aria-controls={listID}
                     aria-autocomplete="list"
                     aria-activedescendant={selected ? ROW_ID + selected.id : undefined}
                     data-plurid-control="palette-input"
@@ -206,7 +222,7 @@ const PluridPalette: React.FC = () => {
 
                 <StyledPaletteList
                     ref={list}
-                    id="plurid-palette-list"
+                    id={listID}
                     role="listbox"
                     aria-label="Commands"
                 >

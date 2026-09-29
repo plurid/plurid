@@ -24,5 +24,11 @@ export const StyledPluridViewcubeModelCube = styled.div`
     transform-style: preserve-3d;
     width: 50px;
     height: 50px;
+
+    /* the hover reveal eases in an inline transition; a reader who asked for no motion gets the
+       turn at once, as the camera's own moves already do */
+    @media (prefers-reduced-motion: reduce) {
+        transition: none !important;
+    }
 `;
 // #endregion module

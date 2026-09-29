@@ -2,7 +2,7 @@
 
 `App.tsx` is the smallest useful plurid' app: **three planes in a navigable 3D space, zero configuration**.
 
-- **Drag** to orbit · **scroll / pinch** to zoom · hold **G** to grab-pan · **?** for the shortcuts overlay.
+- **Drag** to orbit · **scroll / pinch** to zoom · **right-drag** to pan · **G** then drag to orbit from anywhere · **?** for the shortcuts overlay.
 
 A plane is a `route` + a `component`; the `view` is which routes to show first. That's the whole API surface
 used here — everything else is opt-in.

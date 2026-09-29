@@ -124,9 +124,16 @@ const PluridApplicationConfigurator: React.FC<React.PropsWithChildren<PluridAppl
      * Handle Publish/Subscribe.
      */
     useEffect(() => {
-        if (pubsub) {
-            registerPubSub(pubsub);
+        if (!pubsub) {
+            return;
         }
+        const unregister = registerPubSub(pubsub);
+        // the bridge leaves with the configurator
+        return () => {
+            if (typeof unregister === 'function') {
+                unregister();
+            }
+        };
     }, [
         pubsub,
     ]);

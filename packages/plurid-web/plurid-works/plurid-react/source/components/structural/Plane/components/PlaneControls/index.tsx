@@ -11,14 +11,6 @@
     } from '@reduxjs/toolkit';
     import { connect } from 'react-redux';
 
-    import styled from 'styled-components';
-
-
-    import {
-
-        chromeControl,
-
-    } from '~services/styled/chrome';
 
 
     import {
@@ -74,6 +66,7 @@
         StyledPluridPlaneControlsCenter,
         StyledPluridPlaneControlsPath,
         StyledPluridPlaneControlsRight,
+        StyledPlaneControlButton,
     } from './styled';
     // #endregion internal
 // #endregion imports
@@ -83,26 +76,6 @@
 // #region module
 /** Below this plane width (px) the controls bar drops the route. */
 const COMPACT_WIDTH = 340;
-
-/** An icon control as a real button: focusable, labelled, keyboard-activatable. */
-const StyledPlaneControlButton = styled.button`
-    ${chromeControl}
-    border: 0;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    color: inherit;
-    background: none;
-    display: grid;
-    place-content: center;
-    cursor: pointer;
-
-    &:focus-visible {
-        outline: 2px solid currentColor;
-        outline-offset: 1px;
-        border-radius: 3px;
-    }
-`;
 
 export interface PluridPlaneControlsOwnProperties {
     plane: RegisteredPluridPlane<PluridReactComponent>;

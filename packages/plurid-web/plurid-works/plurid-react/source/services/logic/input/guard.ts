@@ -3,6 +3,7 @@
     import {
         PLURID_ATTRIBUTE_ENTITY,
         PLURID_ATTRIBUTE_DRAG_HANDLE,
+        PLURID_ATTRIBUTE_PLANE_ANCHOR,
         PLURID_ENTITY_PLANE_CONTROLS,
     } from '@plurid/plurid-data';
     // #endregion libraries
@@ -95,6 +96,46 @@ export const isEngineControl = (
         return false;
     }
     return !!element.closest('[data-plurid-control], button, a[href], [role="button"]');
+};
+
+
+/** The engine overlay (a dialog, the palette, a menu, the minimap, the rail, a HUD) a target sits in. */
+export const overlayOf = (
+    target: EventTarget | null | undefined,
+): Element | null => {
+    const element = asElement(target);
+    return element ? element.closest('[data-plurid-overlay]') : null;
+};
+
+
+/**
+ * A KEY THE CHROME OWNS, not the space. Inside an overlay every key is the overlay's: the shortcuts
+ * dialog scrolls with the arrows, the palette and the menus keep their keys, and nothing behind a
+ * modal moves. On a control (a button, a link, anything `role="button"` or `data-plurid-control`)
+ * Enter and Space activate it. The view listens on its own element and runs BEFORE React's handlers,
+ * so a control's `stopPropagation` came too late: Enter on the toolbar framed a plane and Space
+ * armed the grab instead of pressing the button. A plane's focus anchor is the space's own tab stop,
+ * not chrome: its Enter frames and its Space selects.
+ */
+export const chromeOwnsKey = (
+    event: KeyboardEvent,
+): boolean => {
+    const element = asElement(event.target);
+    if (!element) {
+        return false;
+    }
+    if (overlayOf(element)) {
+        return true;
+    }
+    if (typeof element.hasAttribute === 'function' && element.hasAttribute(PLURID_ATTRIBUTE_PLANE_ANCHOR)) {
+        return false;
+    }
+    const activates = event.key === 'Enter'
+        || event.key === ' '
+        || event.code === 'Enter'
+        || event.code === 'NumpadEnter'
+        || event.code === 'Space';
+    return activates && isEngineControl(element);
 };
 
 

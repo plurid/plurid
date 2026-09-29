@@ -23,7 +23,8 @@ describe('the change kinds', () => {
         // the type, spelled out: adding a member here without a row above is the test's point
         const members: PluridChangeKind[] = [
             'selection', 'tree', 'links', 'activePlane', 'isolate', 'layoutResolved', 'loading',
-            'history', 'motion', 'bookmarks', 'docked', 'culling', 'plane', 'describe', 'command', 'focus',
+            'history', 'motion', 'bookmarks', 'docked', 'culling', 'plane', 'refused', 'planeError',
+            'describe', 'command', 'focus',
         ];
         expect([...listed].sort()).toEqual([...members].sort());
         expect(new Set(listed).size).toBe(listed.length);

@@ -60,8 +60,9 @@ const usePortal = (
     const rootElemRef = useRef<Element | null>(null);
 
     useEffect(() => {
-        // Look for existing target dom element to append to
-        const existingParent = document.querySelector(`#${id}`);
+        // Look for existing target dom element to append to: by id, not by a `#${id}` selector,
+        // which throws for an id that is not a CSS identifier (`plurid://host/p@0`, `1st`, `a.b`)
+        const existingParent = document.getElementById(id);
         // Parent is either a new root or the existing dom element
         const parentElem = existingParent || createRootElement(id);
 

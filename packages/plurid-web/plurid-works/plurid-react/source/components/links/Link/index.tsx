@@ -10,6 +10,10 @@
     } from 'react';
 
     import {
+        createPortal,
+    } from 'react-dom';
+
+    import {
         AnyAction,
         ThunkDispatch,
     } from '@reduxjs/toolkit';
@@ -47,7 +51,6 @@
         defaultLinkCoordinates,
     } from '~data/constants';
 
-    import PluridPortal from '~components/utilities/Portal';
 
     import Context from '~services/context';
 
@@ -276,6 +279,15 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
         disappearTime: previewDisappearTime,
     });
 
+    // THE PREVIEW HANGS IN THE LINK'S OWN PLANE, where its plane-local coordinates mean something.
+    // It was portalled by `#preview-<planeID>`: a plane id (`plurid://host/p@0`) is no CSS id, so the
+    // first hover threw an invalid-selector error and took the application down; and the plane's
+    // DOM id is its digest, so even escaped it would have found nothing. Read after the hover that
+    // shows it, when the anchor is in the document.
+    const previewHost = showPreview && linkElement.current
+        ? planeElementOf(linkElement.current)
+        : null;
+
 
     // #region handlers
     const measure = useCallback((): LinkCoordinates | undefined => {
@@ -423,7 +435,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
                 return null;
             }
             if (!childElement || !childElement.isConnected) {
-                childElement = document.querySelector<HTMLElement>(
+                // in THIS application's view: two applications with the same routes hold the same
+                // plane ids, and the leash wrote its variables onto the other one's child
+                const scope: ParentNode = element.closest('[data-plurid-entity="PluridView"]') ?? document;
+                childElement = scope.querySelector<HTMLElement>(
                     '[data-plurid-plane="' + pluridPlaneID.replace(/["\\]/g, '\\$&') + '"]',
                 );
             }
@@ -506,19 +521,16 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
 
             {showPreview
             && !showLink
-            && (
-                <PluridPortal
-                    elementID={`preview-${parentPlaneID}`}
-                    rootID={parentPlaneID}
-                >
-                    <PluridPlanePreview
-                        planeRoute={planeRouteResolved}
-                        linkCoordinates={linkCoordinates}
-                        previewComponent={previewComponent}
-                        previewOffsetX={previewOffsetX}
-                        previewOffsetY={previewOffsetY}
-                    />
-                </PluridPortal>
+            && previewHost
+            && createPortal(
+                <PluridPlanePreview
+                    planeRoute={planeRouteResolved}
+                    linkCoordinates={linkCoordinates}
+                    previewComponent={previewComponent}
+                    previewOffsetX={previewOffsetX}
+                    previewOffsetY={previewOffsetY}
+                />,
+                previewHost,
             )}
         </StyledPluridLink>
     );

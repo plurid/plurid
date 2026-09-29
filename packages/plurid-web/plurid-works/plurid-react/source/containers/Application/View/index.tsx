@@ -145,7 +145,9 @@
     import useViewResize from './hooks/useViewResize';
     import usePointerGestures from './hooks/usePointerGestures';
     import useTreeUpdate from './hooks/useTreeUpdate';
-    import usePluridPubSub from './hooks/usePluridPubSub';
+    import usePluridPubSub, {
+        layoutSignature,
+    } from './hooks/usePluridPubSub';
     import useCollaboration from './hooks/useCollaboration';
     import useEngineEvents from './hooks/useEngineEvents';
     import useViewpointURL from './hooks/useViewpointURL';
@@ -273,6 +275,8 @@ export interface PluridViewOwnProperties extends PluridApplicationProperties<Plu
     thunkExtra?: PluridThunkExtra;
     /** The application's id: the scope of its look (`data-plurid-application`). */
     applicationID?: string;
+    /** Hydrating with a saved state waiting: told when each plane's content has hydrated. */
+    onPlaneHydrated?: (planeID: string) => void;
 }
 
 export interface PluridViewStateProperties {
@@ -416,6 +420,7 @@ const PluridView: React.FC<PluridViewProperties> = (
      * cannot answer each other's questions.
      */
     const pendingPlanes = useRef<PendingPlane[]>([]);
+    const relaidLayout = useRef('');
     const scrollTimeout = useRef<ReturnType<typeof setTimeout>>();
     // Always-latest snapshot of the full app state for event handlers. Lets the keydown
     // callback read fresh state without being recreated on every transform tick — which
@@ -474,6 +479,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         dispatch,
         stateRef,
         motion,
+        viewElement,
     });
 
     // Culling + depth cues, throttled to one pass per 100 ms after a camera commit / tree change.
@@ -602,6 +608,9 @@ const PluridView: React.FC<PluridViewProperties> = (
         state,
         // a command carrying a `token` is recorded here; the tree effect answers it
         pendingPlanes,
+        // a `configuration` publish relays the roots itself; the layout effect below skips that change
+        relaidLayout,
+        applicationID: properties.applicationID,
         stateConfiguration,
         stateTransform,
         stateSpaceView,
@@ -659,6 +668,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         pubsub: pluridPubSub[0],
         state,
         pendingPlanes,
+        applicationID: properties.applicationID,
     });
 
     // Optionally bind the camera viewpoint with the URL's `?<param>=` — BOTH directions opt-in
@@ -931,23 +941,36 @@ const PluridView: React.FC<PluridViewProperties> = (
                     value: true,
                 });
             }
+            // THE SPACE HAS BOOTED once its first layout is resolved: `loading` (and the `loading`
+            // change kind) said `true` forever on the client, where only a server render cleared it
+            if (state.space.loading) {
+                dispatch(actions.space.setSpaceLoading(false));
+            }
         }, [
             stateResolvedLayout,
         ]);
-        // A layout change on a LIVE space (the host switched `space.layout`): relayout with the
-        // planes gliding to their new placements — no remount, children stay attached.
-        const layoutRef = useRef(stateConfiguration.space.layout);
+        // A layout change on a LIVE space (the host switched `space.layout`, the presentation, the
+        // centring, the dimensions or the plane sizes): relayout with the planes gliding to their new
+        // placements — no remount, children stay attached. BY VALUE: every configuration merge makes
+        // a new `space.layout` object, and a look-only change relaid the roots and took back every
+        // arrangement the reader had made. A change the bus already relaid for is not relaid twice.
+        const currentLayoutSignature = layoutSignature(stateConfiguration);
+        const layoutRef = useRef(currentLayoutSignature);
         useEffect(() => {
-            if (layoutRef.current === stateConfiguration.space.layout) {
+            if (layoutRef.current === currentLayoutSignature) {
                 return;
             }
-            layoutRef.current = stateConfiguration.space.layout;
+            layoutRef.current = currentLayoutSignature;
+            if (relaidLayout.current === currentLayoutSignature) {
+                relaidLayout.current = '';
+                return;
+            }
             if (!stateResolvedLayout) {
                 return;
             }
             treeUpdate(stateSpaceView, stateConfiguration, true, { transition: true });
         }, [
-            stateConfiguration.space.layout,
+            currentLayoutSignature,
         ]);
 
         // The `view` prop changed on a live space (through `SET_STATE`): relayout with the new
@@ -1207,6 +1230,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         defaultPubSub: pluridPubSub[0],
         registerPubSub,
         inspector: properties.inspector,
+        planeHydrated: properties.onPlaneHydrated,
+        applicationID: properties.applicationID,
 
         chrome: {
             mode: chromeMode,
@@ -1236,6 +1261,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         properties.renderPlaneControls,
         properties.renderPlaneBridge,
         properties.renderDebugger,
+        properties.onPlaneHydrated,
+        properties.applicationID,
     ]);
 
     return (

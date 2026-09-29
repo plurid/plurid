@@ -121,8 +121,22 @@ export const planeAddressPath = (
         value = slash === -1 ? '' : value.slice(slash);
     }
     value = extractPathname(value);
-    value = value.replace(/(?<=[^/])@[A-Za-z0-9_-]+$/, '');
     return cleanupPath(value) || '/';
+}
+
+
+/**
+ * A PLANE ID'S PATH: the id is its route plus `@<suffix>` (a root's `@<n>`, a spawned plane's
+ * `@<digest>`), and the suffix is cut here. `planeAddressPath` used to cut it from every address,
+ * so a route whose last segment carries an `@` (`/package/react@18`, `/u/me@x`) lost it: the
+ * address bar showed `/package/react`, a deep link to the real path docked nothing, and two
+ * versions of a package collided on one path. Routes go through `planeAddressPath`, ids through this.
+ */
+export const planeIDPath = (
+    planeID: string,
+): string | null => {
+    const at = planeID.lastIndexOf('@');
+    return planeAddressPath(at > 0 ? planeID.slice(0, at) : planeID);
 }
 
 

@@ -267,15 +267,23 @@ const TOOLS: PluridAgentTool[] = [
                 requirePlane(runtime.getState(), input.parentPlaneID);
             }
             const request = token();
-            const answer = runtime.listen((kind, value) => kind === 'plane' && value?.token === request, runtime.settleTimeout);
+            // the plane once it exists (at once when it is already open), or `refused` at once when
+            // none will come: the bus answers every token
+            const answer = runtime.listen((kind, value) => (kind === 'plane' || kind === 'refused') && value?.token === request, runtime.settleTimeout);
             if (input.parentPlaneID) {
                 runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_SPAWN_PLANE, { route: input.route, parentPlaneID: input.parentPlaneID, token: request });
             } else {
                 runtime.publish(PLURID_PUBSUB_TOPIC.VIEW_ADD_PLANE, { planeID: input.route, token: request });
             }
             const opened = await answer.answer;
+            if (opened?.reason === 'unregistered') {
+                throw new PluridAgentError('not_found', `no plane is registered at the route "${input.route}": open one of the routes the planes in plurid_observe link to`);
+            }
+            if (opened?.reason === 'noParent') {
+                throw new PluridAgentError('not_found', `no plane with the id "${input.parentPlaneID}" to open "${input.route}" under (plurid_observe lists the ids)`);
+            }
             if (!opened) {
-                throw new PluridAgentError('no_effect', `no plane opened for the route "${input.route}": the application registers no plane at that route, or it did not render in time`);
+                throw new PluridAgentError('no_effect', `no plane opened for the route "${input.route}" in time`);
             }
             const where = input.parentPlaneID ? `a child of ${input.parentPlaneID}` : 'a root';
             return opened.planeID

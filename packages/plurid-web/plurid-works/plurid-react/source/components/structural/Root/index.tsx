@@ -152,7 +152,7 @@ const PluridRoot: React.FC<PluridRootProperties> = (
             return [];
         }
 
-        const children: JSX.Element[] = [];
+        const children: React.ReactElement[] = [];
         const planesRegistry = getPlanesRegistrar(planesRegistrar);
         if (!planesRegistry || !defaultPubSub) {
             return children;
@@ -259,14 +259,23 @@ const PluridRoot: React.FC<PluridRootProperties> = (
 
 
     // #region effects
-    const childrenPlanes = useMemo<JSX.Element[]>(
+    const childrenPlanes = useMemo<React.ReactElement[]>(
         () => computeChildrenPlanes(plane),
         [
-            // Just `plane`: the tree is rebuilt immutably + structurally shared, so this root's
-            // node changes identity exactly when its OWN subtree changes — recomputing the
-            // child elements only then (and keeping their references stable otherwise, so the
-            // child planes can bail out of their own re-render).
+            // `plane`: the tree is rebuilt immutably + structurally shared, so this root's node
+            // changes identity exactly when its OWN subtree changes — recomputing the child
+            // elements only then (and keeping their references stable otherwise, so the child
+            // planes can bail out of their own re-render). AND what the elements are built from
+            // besides it: a spawned child kept the host's `planeContextValue` of the moment it was
+            // spawned (a logged-out user stayed logged in there), and so did its route match, its
+            // bus and a custom plane.
             plane,
+            PlaneContext,
+            planeContextValue,
+            matchedRoute,
+            defaultPubSub,
+            CustomPluridPlane,
+            planesRegistrar,
         ],
     );
     // #endregion effects

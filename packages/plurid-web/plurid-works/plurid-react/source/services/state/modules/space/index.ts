@@ -891,6 +891,27 @@ export const space = createSlice({
 
             state.tree = updatedTree;
             pruneStateLinks(state, updatedTree);
+
+            // nothing keeps pointing at a plane that is gone (the plane and its subtree): the
+            // selection, the active plane and the isolation forget it. A removed isolated plane
+            // left every other plane transparent and inert.
+            const remaining = new Set<string>();
+            const walk = (nodes: TreePlane[]) => {
+                for (const node of nodes || []) {
+                    remaining.add(node.planeID);
+                    walk(node.children || []);
+                }
+            };
+            walk(updatedTree);
+            if (state.selectedPlaneIDs.some((planeID) => !remaining.has(planeID))) {
+                state.selectedPlaneIDs = state.selectedPlaneIDs.filter((planeID) => remaining.has(planeID));
+            }
+            if (state.activePlaneID && !remaining.has(state.activePlaneID)) {
+                state.activePlaneID = '';
+            }
+            if (state.isolatePlane && !remaining.has(state.isolatePlane)) {
+                state.isolatePlane = '';
+            }
         },
 
         // #region link graph

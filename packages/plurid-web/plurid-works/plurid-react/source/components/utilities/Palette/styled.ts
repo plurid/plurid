@@ -44,6 +44,10 @@ export const StyledPaletteBackdrop = styled.div`
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     animation: ${fadeIn} 120ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 `;
 
 export const StyledPalettePanel = styled.div<{ theme: Theme }>`
@@ -58,6 +62,10 @@ export const StyledPalettePanel = styled.div<{ theme: Theme }>`
     padding: 10px;
     font-family: var(--plurid-font);
     animation: ${riseIn} 160ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
 `;
 
 export const StyledPaletteInput = styled.input`

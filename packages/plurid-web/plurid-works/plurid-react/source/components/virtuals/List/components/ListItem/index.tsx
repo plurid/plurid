@@ -13,7 +13,7 @@
 export interface VirtualListItemOwnProperties {
     top: number;
     index: number;
-    element: JSX.Element;
+    element: React.ReactElement;
     setHeight(value: number, index: number): void;
 }
 
