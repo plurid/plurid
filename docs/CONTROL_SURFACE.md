@@ -150,7 +150,16 @@ back to the layout. `space.describe { token }` answers on `space.changed` kind `
 inspection `api.inspect()` gives, for a host that holds no api; `space.blur` takes the keyboard off
 the space and kind `focus` reports it; `space.command { id }` runs a shortcut by id, ignores
 `shortcuts.disabled` (a key taken from the reader, not from the host) and answers kind `command`
-`{ id, ran, reason }`. `view.setTree` makes the view agree with the tree's roots. See `MIGRATION.md`.
+`{ id, ran, reason }`. `view.setTree` makes the view agree with the tree's roots, and it and
+`view.setPlanes` validate what they are given: a malformed message leaves the view or the tree as it
+was and warns, naming the first bad node, rather than throwing inside a render.
+`view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree.
+`space.isolatePlane { planeID: null }` (or `''`) clears the isolation; `space.translateXTo` / `YTo` /
+`ZTo` `{ value }` set the pan along one axis. `space.frame { planeIDs, yaw? }` frames a set of planes
+from a yaw (`'best'` by default: the yaw that reads every plane widest), `{ selection: true, yaw }` the
+selection; `space.navigateToPlane { planeID, framing: 'pair' }` frames a plane with its parent (an
+explicit frame of one plane faces it). A `token` is answered exactly: the same path (a query or a
+fragment aside), and by a plane put away and shown again too. See `MIGRATION.md`.
 
 #### Which plane did that become?
 
@@ -317,6 +326,9 @@ definePluridConfiguration({
         dollyLimitFraction: 0.6,    // the pivot stops this fraction of `perspective` from the eye
         orbitPivot: 'cursor',       // 'cursor' | 'selection' | 'view' — what an orbit rotates about
         onClose: 'parent',          // 'parent' | 'stay' — where the camera goes when the plane IN VIEW closes
+        childFraming: 'pair',       // 'pair' | 'plane' — what a spawn or a link frames (below)
+        framing: { fill: 0.85 },    // how close a framing comes: `fill` of the view, `maxScale` its zoom ceiling (below)
+        fitYaw: 'best',             // 'best' | 'front' — the yaw a fit turns to (below)
         motion: { duration: 380, easing: 'out-cubic', reducedMotion: 'respect' },
         home: 'v2|…',               // the Home viewpoint (default: the initial camera)
         presets: { overview: '0,0,0,0,0,0.5' },
@@ -328,6 +340,19 @@ api.getViewpoint();                 // v1 `rX,rY,tX,tY,tZ,s` (unless configured 
 api.getViewpoint({ version: 2 });   // `v2|yaw|pitch|scale|pivot…|offset…|perspective`
 api.getViewpoint({ version: 3 });   // `v3|yaw|pitch|roll|scale|…` — the same, with the horizon's tilt
 ```
+
+**FRAMING** (2026-09-16/18). A spawned child stands at 90.1° to its parent (the bridge geometry,
+below), so framed face-on it leaves its parent edge-on, and framed from the front it is itself a line.
+`childFraming: 'pair'` (the default) frames the child AND its parent from the yaw between them (−45.05°
+for a 90.1° child, each at 0.706 of its width) on every spawn and link landing; `'plane'` frames the
+child alone, face-on. An EXPLICIT frame of one plane (`space.navigateToPlane`, Alt+F, Alt+B, Enter on a
+plane's anchor) faces it either way. `framing.fill` is the fraction of the view the framed content takes;
+`framing.maxScale` caps the zoom. Unset, a plane, a pair and a set are never drawn larger than they are
+(`1`) and a fit may magnify a small space up to `zoomMax`: raise both where a small reading card should
+come closer on a wide screen (`{ fill: 0.94, maxScale: 2.4 }`). `fitYaw: 'best'` turns a fit
+(`space.fitToView`, the toolbar, `0`) to the yaw that maximises the narrowest plane's projected width and
+frames every plane by its real corners; a space of roots alone still fits from the front, and
+`'front'` always does.
 
 The camera itself is `api.getSnapshot().space.camera` (`CameraState`: `yaw`, `pitch`, `roll`, `scale`, `pivot`, `offset`, `perspective`); the legacy `rotationX/Y`, `translationX/Y/Z`, `scale` fields remain as read-only mirrors. `encodeCameraViewpoint` / `decodeCameraViewpoint` are exported next to the v1 `encodeViewpoint` / `decodeViewpoint`.
 
@@ -480,6 +505,41 @@ For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = th
 
 THE SIZING CONTRACT (2026-09-10, ARCHITECTURE §5.3.1): a plane's width is never the content's; its height is the content's unless declared, configured or hand-set; a content-sized height can be CAPPED — `planeMaxHeight` (`elements.plane.maxHeight`, ≤ 1 a fraction of the view height, > 1 px) for every content-sized plane, `planes[].maxHeight` (px) for one — and taller content scrolls inside the cap. The layouts place the roots by their CURRENT sizes (measured included), and a measured height change relays the roots once per frame, gliding, never mid-motion (`sheaves` and a configured height excepted); a dragged child stays where it was dropped, through relayouts and a host `setTree`.
 
+### Bridges (`space.bridge`) — where a child stands, and the line that joins it
+
+A link spawns its plane as a CHILD standing off the parent, joined to it by a bridge. The geometry and
+the line are one configuration (flat `bridge`), a named preset under any field given explicitly:
+
+```tsx
+definePluridConfiguration({
+    bridge: {
+        preset: 'reading',            // 'reading' (default) | 'objects' — a name for the next four fields
+        planeAngle: 90.1,             // the child's turn off its parent, degrees; never exactly 90 (a zero-width quad CSS 3D mishandles)
+        fan: 'alternate',             // 'alternate': a grandchild turns back to its grandparent's facing | 'fixed': the same turn every generation
+        anchor: 'edge',               // 'edge': the bridge leaves the parent's right edge at the link's height | 'link': the link's own point
+        keepBehind: false,            // mirror the generations that would hang on the side their parent faces
+        direction: 'backward',        // 'backward': a chain grows behind its parent | 'forward': toward the viewer
+        length: 100,                  // px; siblings from one parent take longer bridges, `length + i·(childWidth + 50)`
+        thickness: 3,                 // px — a bridge is a LINE, the crosslink beam's width; raise it for a connector with body
+        quiet: true,                  // rests at 0.14 and comes up to 0.45 while the camera moves or its plane is active; false holds one tone
+        lean: { knee: 12, limit: 22 }, // how far it follows a scrolled link: exactly up to `knee` degrees, easing toward `limit`
+    },
+});
+```
+
+- `reading` (2026-09-16) is `planeAngle: 90.1`, `fan: 'alternate'`, `anchor: 'edge'`,
+  `keepBehind: false`: a chain of any depth reads from one yaw as a receding staircase, nothing ever reaches 180° and
+  mirrors, and every generation stands clear of its parent's silhouette. `objects` is the geometry of
+  every release before it (`90`, `fixed`, from the link), for a space of things rather than of prose.
+- The later siblings from one parent (longer bridges) are drawn as leashes; so is a child moved by hand
+  (a straight line from the link's point to the child's edge, redrawn per commit). A spawn stores its
+  anchor and its kind on the node (`TreePlane.bridgeAnchor`, `TreePlane.bridgeKind: 'strip' | 'leash'`),
+  so a relayout never needs the configuration; `space.spawnPlane` takes `bridgeLength` and `bridgeKind`.
+- A scrolled link: the child stays where it is and the bridge LEANS toward the link, exactly up to the
+  `knee`, easing toward the `limit` after it and never reaching it, its far end always on the parent's
+  face. `lean: { limit }` at or under the knee pins it there.
+- `elements.planeBridge.show: false` hides every bridge; `renderPlaneBridge` replaces one.
+
 ### The page presentation (`presentation: 'page'`)
 
 **Reading a plane in the space presentation** (2026-09-06). Docking is not the page presentation's alone: the rail (fit · back · page/cube) renders in both presentations, and in the space presentation its page pill reads the SELECTED plane (else the plane under the pointer, else the nearest) as a page — the camera frames it face-on at its FILL scale (the box filling the view along its tighter dimension; 1 for a view-sized page), the chrome hides, the other planes are set aside and `inert`, the wheel and the keys are the plane's, `data-plurid-docked` is set. Escape or the cube pill reveals the space; `space.dock { planeID }` / `space.reveal`, `useCamera().dock()` / `.reveal()` work the same in both. The viewcube no longer carries its own fit button.
@@ -511,7 +571,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 - Only the page's LINEAGE is shown while docked: the page, its ancestors (the trail back to the root) and its own children stay; every other plane (a sibling opened from the same header, a cousin, another root) is set ASIDE — faded out over `docking.fade`, `inert`, `data-plurid-aside` on its element — and fades back when the space is revealed. Two links in one header spawn two parallel pages a few dozen pixels apart; without this the one opened last would cover the one you clicked. `docking.aside: 'none'` keeps everything.
 - A link is a link while the camera is ON a page: docked, a plurid link always takes you to its page, open or not — it never toggles the page closed (the page's close control, the back chevron and `space.closePlane` do that). With the space revealed the presentation is a space again: an open link closes its page, as in the space presentation, and a closed one opens it and docks.
 - The docked page is FOLLOWED: a resize, a re-measured link, a restore — whatever moves the page's geometry under the camera — re-docks it (a jump, or the running swing retargeted); a persisted space restores docked on the same page.
-- The bridge: one strip centred on the linked words, flush with the child page's top (the top of its bar). A scrolled link: the child page stays where it is; the bridge becomes a leash to the link's current point and rests at the fold once the link is beyond it.
+- The bridge: a line (`bridge.thickness`) leaving the parent page's right edge at the link's height (`bridge.anchor: 'edge'`), flush with the child page's top (the top of its bar). A scrolled link: the child page stays where it is and the bridge leans toward the link's current point (`bridge.lean`), resting at the fold once the link is beyond it. See Bridges, above.
 
 `docking` (`space.docking`, flat `docking`) — how a move LANDS on a page and what the page keeps:
 
@@ -524,6 +584,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 | `aside` | `'lineage'` | `'lineage'` sets every plane outside the docked page's lineage aside; `'none'` keeps them |
 | `focus` | `true` | the docked page's scroller takes the focus (the keys scroll it); `false` leaves the focus where it was |
 | `epsilon` | `0.5` | px: how far the page's center may sit from the view center and still count as docked |
+| `scale` | `'fill'` | the scale a page is read at when docked: its box filling the view along the tighter dimension, or `'natural'`, that scale capped at 1 (a 460 px card on an 800 px view is read at its own size, centred, not at 1.39). Not the default, deliberately: under `natural` a plane centred at scale 1 IS its dock pose, so a space that centres a root at 1 boots docked on it and hides its chrome |
 | `url` | `true` on a page, off in the space | THE ADDRESS BAR IS THE PAGE: `true`, `false`, or `{ write, restore, history: 'push' \| 'replace', param, base, orphan: 'root' \| 'keep' }` — see below |
 
 ```tsx
@@ -535,7 +596,7 @@ definePluridConfiguration({ presentation: 'page', docking: { reveal: { scale: 0.
 - Several roots: with `pages` side by side (`layout` lays the roots out as ever) the camera boots docked on the first; `space.dock { planeID }` swings to another root and sets the others aside; `0` fits them all; the reveal shows the neighbours' edges.
 - Focus and accessibility: the chrome hidden while docked is `visibility: hidden` (out of the tab order and the accessibility tree); an aside page is `inert`; the rail's pills and the `?` trigger are one persistent pill (32 px, a light rim, a dark halo, a two-tone focus ring that reads on any page); the controls bar hangs above the sheet and is the page's top: it moves with the sheet, clipped with it when that top leaves the view.
 - Mobile: size the application's container yourself (`height: 100dvh`; safe-area padding on your own chrome — the engine's rail keeps a 16 px margin); the viewcube already collapses under 800 px; one finger scrolls, two pinch.
-- SSR renders the identity camera, so the HTML is the docked page with the chrome hidden by the stylesheet it ships — a site to a crawler and to the first paint; the client hydrates into the same pose.
+- SSR renders the identity camera, so the HTML is the docked page with the chrome hidden by the stylesheet it ships — a site to a crawler and to the first paint; the client hydrates into the same pose. (Since 2026-09-29 the first paint shows it: under a server's metastate the space renders visible and the router draws no cover over it, and the server's default page gives `html`, `body` and the root their height; each had painted the page black until the script ran.) The server lays the page out at its fallback view (771 × 764) until the browser measures its own, so the page's box grows to the window at hydration.
 - **The address bar is the page** (`docking.url`, 2026-09-06; on by default in the page presentation, opt-in in the space): while docked, the page's path is the location's pathname — the query and the hash untouched, so your flags and a `?v=` survive; docking on another page pushes a history entry (`history: 'push'`; `'replace'` follows without entries); the reveal keeps the last page's path (the space is one move away); the entry the reader arrived on is rewritten to the page they are on (`replaceState`), so Back leaves the site rather than landing on a non-page path; Back / Forward dock the entry's page with the configured `motion`, or reveal when the entry names no page; a load at a page's path boots docked on it — a root at once, a registered sub-page SPAWNED behind its parent through the parent's `PluridLink` exactly as a click would (the bridge, the lineage, Escape to the parent), a deeper path one link per commit; a deep link wins over a persisted camera (the persisted tree stays). The entry's `history.state.plurid` records `{ docked, path }`. Inside a `PluridRouterBrowser` route the router owns the pathname: the page rides `?page=<path>` by `replaceState` (`url: { param }` picks the parameter for any host router). `docking: { url: false }` opts out. A deep link to a ROOT page is docked AT STORE TIME (the client store and the server's render alike, 2026-09-10): the roots are laid out and the camera seeded with that root's dock pose before the first frame, so no frame of the first page is ever painted; a sub-page is spawned through its parent's link after mount. `url: { base: '/docs' }` hosts the site under a prefix: the page path is written after it (`/docs/page-1`, the root page at the base itself) and read from under it, and a location outside the base leaves the binding passive. `url: { orphan }` decides a location naming no page at boot: `root` (default) keeps the boot page and writes its path over the address; `keep` keeps the boot page and leaves the address as typed until the next dock (a host's not-found can read it); `/` is never an orphan (the site's front door). Hosting: a page path must serve the application (an SPA fallback, or a parametric route on the server).
 
 Migrating a site-like consumer (hypod, `generate-plurid-app`'s `/planes` width hack): the configuration becomes `presentation: 'page'`; the `planeWidth: 1`, `controls.show: false` and fade-in overrides go, and the pages finally scroll.
@@ -678,7 +739,7 @@ surface: `PluridView`, `PluridSpace`, `PluridRoots`, `PluridRoot`, `PluridPlane`
 toolbar-button|toolbar-menu|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
 `data-plurid-overlay`, `data-plurid-culled`, a plane's `role="group"` + `aria-roledescription="plane"` + `aria-label` (the declared document title, else the route path; 2026-09-10), `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
-`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; a `PluridLink` renders an anchor WITH an `href` (the plane's address — a plain click is the engine's, a modifier-click is the browser's), every plane outside the docked page is `inert` while a page is docked (the reading scope), the settings drawers are native `button[aria-expanded][aria-controls]`s, the shortcuts dialog has a `shortcuts-close` control; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
+`data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`; a `PluridLink` renders an anchor WITH an `href` (the plane's address — a plain click is the engine's, a modifier-click is the browser's), every plane outside the docked page is `inert` while a page is docked (the reading scope), the settings drawers are native `button[aria-expanded][aria-controls]`s, the shortcuts dialog has a `shortcuts-close` control; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). Since 2026-09-16: `data-plurid-mode="rotate|translate|scale|grab|fly"` on the view while a mode is on (a badge at the top left names it, with `esc to leave`), `data-plurid-focus` on a plane while its focus anchor has the keyboard (`:focus-visible` only, so a mouse selection draws no ring), `data-plurid-plane-anchor="<planeID>"` on that anchor, `data-plurid-drag-handle` on anything a host marks as a selected plane's handle (`gestures.dragHandle: 'chrome'`), `data-plurid-pill` on a `PluridPill` (momentary chrome: a pointer click hands the focus back to the view), and, since 2026-09-29, `data-plurid-cover` on the router's first-frame cover (a client-only application's; a server-rendered page has none). A plane's element `id` is a digest, `plurid-<hash>` (`domID(planeID)`), its focus anchor's the same plus `-focus`: a plane id is no selector, so address a plane by `[data-plurid-plane="<id>"]`. The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`; `_MODE` / `_DRAG_HANDLE` / `_PLANE_ANCHOR` / `_FOCUS` from `@plurid/plurid-data`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
 host's global resets: every chrome root and every chrome button / input / select starts from the engine's own
@@ -729,10 +790,22 @@ import {
     arrangementSignature, // the structural hash undo + collaboration agree on
     encodeViewpoint,
     decodeViewpoint,
+    fragmentOf, serializeFragment, parseFragment, materializeFragment, // the arrangement fragment: clipboard AND persistence
+    planeParameters, // a plane id → its route's parsed parameters, from any tree observation
+    domID, // a plane id → its element's DOM id
+    type PluridChromeContext, type PluridPlaneChromeContext, // what every render* slot is handed
 } from '@plurid/plurid-react';
+
+// what the shortcuts sheet ends with, for a product rendering its own help
+import { PLURID_ABOUT, PLURID_SITE, PLURID_REPOSITORY } from '@plurid/plurid-data';
 
 // Lower-level geometry lives on the engine package:
 import { space, interaction } from '@plurid/plurid-engine'; // space.tree, space.location, …
+interaction.camera.bestYaw(planes);                             // the yaw that reads every plane widest (`fitYaw: 'best'`)
+interaction.camera.framePlanes(camera, planes, view, { yaw });  // a set framed from a yaw; `framePair(camera, parent, child, view)`, `worldPoints(planes)`
+space.layout.fallbackPlaneSize(configuration, view);            // the size an unmeasured plane is placed and framed at
+space.tree.logic.carryRootRuntime(previous, next, configured);  // the one rule for the size a node keeps through a relayout
+space.tree.fields.linkIndexOf(tree);                            // every spawned plane by parent and link id, once per tree
 ```
 
 ### Flat-preset completeness
@@ -816,7 +889,9 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Give a link a stable identity (same-route links, collaboration) | `<PluridLink linkID="…">`; the spawned plane records it as `spawnedByLinkID` |
 | Let a plurid link be dragged like a browser link | `extend.elements.link.draggable: true` (flat `linkDraggable`). Default `false`: an anchor with an `href` is natively draggable, so a drag from a link would tear a link ghost out of the plane; the engine turns that off (the anchor's `draggable` attribute and `-webkit-user-drag`). A press on a link stays the LINK's either way — the intent table returns `none` on a control, so a drag from one moves nothing. |
 | Pass a query or a fragment to the plane a link opens | THE QUERY TRAVELS: `<PluridLink route="/detail?mode=wire#:~:text=lod">` opens a plane whose `plurid.plane.query` / `.fragments` are the requested ones (the registered route's when the request carries none); two links with different queries open two planes (the query is part of the link's identity, `spawnedByLinkID`); the address bar and the tree's `route` keep the pathname |
-| The same 90° turn every generation (default), or alternate it; grow toward the viewer or behind the parent | `extend.space.bridge.fan: 'fixed' \| 'alternate'`, `extend.space.bridge.direction: 'backward' \| 'forward'`, `extend.space.bridge.keepBehind: true` (mirror the generations that would hang on the side their parent faces) (+ `bridgeLength` / `planeAngle`) |
+| Where a child stands: the reading geometry (default) or the old one; grow toward the viewer or behind the parent | `bridge.preset: 'reading' \| 'objects'` (90.1°, alternating, from the parent's edge / 90°, the same turn every generation, from the link), or the fields under it: `bridge.planeAngle`, `bridge.fan: 'alternate' \| 'fixed'`, `bridge.anchor: 'edge' \| 'link'`, `bridge.keepBehind`, `bridge.direction: 'backward' \| 'forward'` (+ `bridgeLength`) |
+| The line that joins them | `bridge.thickness` (3 px), `bridge.quiet` (rests faint, comes up in motion), `bridge.lean: { knee, limit }` (how far it follows a scrolled link) |
+| How close a framing comes, and what a spawn frames | `navigation.framing: { fill, maxScale }`, `navigation.childFraming: 'pair' \| 'plane'`, `navigation.fitYaw: 'best' \| 'front'`; a docked page at its own size: `docking.scale: 'natural'` |
 | A link scrolls inside its plane | Nothing to configure: the child stays where it is, the bridge follows the link (a leash) and rests at the fold once the link is beyond it; a re-measure (resize) anchors a hidden link at the edge, never off the sheet. `--plurid-bridge-reach` / `--plurid-bridge-angle` on the child plane element carry it |
 | A child was dragged by hand | Nothing to configure: the child stays where it was dropped (`manuallyPositioned`) and its bridge becomes a LEASH — a straight segment from the link's point on the parent to the child's edge, redrawn per commit; `elements.planeBridge.show` hides it with the bands; undo brings the band back. |
 | Find a link's plane in the DOM / the tree | `[data-plurid-link][data-plurid-link-route][data-plurid-link-open]`; `tree` nodes' `spawnedByLinkID` |

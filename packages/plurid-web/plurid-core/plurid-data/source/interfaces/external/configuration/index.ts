@@ -488,17 +488,17 @@ export interface PluridConfigurationSpace {
     /**
      * Geometry of the bridge that joins a plurid-link-spawned child plane to its parent.
      * `length` — the bridge depth (default 100); `planeAngle` — the child plane's angle
-     * off the parent in degrees (default 90).
+     * off the parent in degrees (default 90.1, the `reading` preset's).
      */
     bridge?: {
         length?: number;
         planeAngle?: number;
         /**
-         * How nested spawns turn: `fixed` (default) applies the SAME turn every generation — each
-         * child turns `planeAngle` to the right of its parent and hangs behind its parent's face,
-         * exactly like the first link off a root; `alternate` flips the angle's sign every
-         * generation so a grandchild faces the way its grandparent does (it then hangs on the side
-         * its parent faces, unless `keepBehind`).
+         * How nested spawns turn: `fixed` applies the SAME turn every generation — each child
+         * turns `planeAngle` to the right of its parent and hangs behind its parent's face, exactly
+         * like the first link off a root; `alternate` (the default, the `reading` preset's) flips
+         * the angle's sign every generation so a grandchild faces the way its grandparent does (it
+         * then hangs on the side its parent faces, unless `keepBehind`).
          */
         fan?: 'fixed' | 'alternate';
         /**
