@@ -29,6 +29,32 @@ mismatches named below). Three causes, three changes a host can see.
 smoke.pack` loads the generated application in Chromium (`plurid start` and `plurid dev`): a
 hydration error fails either.
 
+A server-rendered page now PAINTS before its script runs. It painted black until hydration, three times
+over:
+
+- **The server's default page sizes the space.** Its style gave only `body` a height, so `html` and the
+  root were auto and the view (`height: 100%` of its mount point) resolved to 0 px; in the browser the
+  engine then measured an empty view, warned (`the space's container has a width but no height`) and
+  fell back to the window. `html`, `body` and the root are full height now. A host that sets its own
+  `template.defaultStyle` keeps it, and should give them a height too.
+- **A server-rendered page shows its space from the first render.** The space waited at opacity 0 for
+  the browser's first layout (`resolvedLayout`), which a server never does. Under a server's metastate
+  (`PluridProvider metastate`, which the kit's client hydrates under too) the page presentation shows at
+  once; the space presentation keeps its fade-in. The server lays a page out at its fallback view
+  (771 × 764) until the browser measures its own, so the page's box grows to the window at hydration.
+- **The router puts no cover over a server-rendered page.** Its `fadeIn` cover (black, over everything,
+  until 10 ms after mount) was the server's whole page until the script ran. A client-only application
+  keeps it.
+
+And **a server without a `hostname` renders on the request's host**, as the engine defaults to in the
+browser (`location.host`). It rendered the literal `origin`, a host no browser has, so its pages failed
+to hydrate. A production site configures `hostname` (the kit requires it): a host taken from the request
+is only as trustworthy as its `Host` header, and a cache that does not key on it could keep a page
+rendered for another.
+
+`pnpm smoke.pack` also loads the page with its script off, and fails when it paints blank (a 0 px view,
+hidden content, anything covering it) or when the generated application logs any `[plurid]` warning.
+
 ---
 
 # Migrating to the 2026-09-17 and 2026-09-22 releases
