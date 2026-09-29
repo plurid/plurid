@@ -10,6 +10,7 @@ export default defineConfig({
     entry: {
         index: 'source/index.tsx',
         testing: 'source/testing/index.tsx',
+        agent: 'source/agent/index.ts',
     },
     format: ['esm', 'cjs'],
     // styled-components / react-helmet-async are CommonJS under native Node ESM: read them

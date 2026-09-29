@@ -815,6 +815,10 @@ space.tree.fields.linkIndexOf(tree);                            // every spawned
 
 ---
 
+## Agent control — `@plurid/plurid-react/agent`
+
+An AI agent operates the application through this same surface: `createPluridAgent(api)` (or `usePluridAgent(api, { webmcp, global })`) turns the bus and the store into fourteen tools. Each tool has a JSON Schema, validates its input, answers once the space is at rest, and carries the space as a model reads it: the planes with their text and links, the docked page, the selection, the history. Hand them to a model loop (`anthropicTools({ strict: true })`, `tools()` for MCP), register them with a WebMCP context (`exposeToWebMCP()`), or put them on `window` for a browser-automation agent (`exposeGlobal()`). `tools`, `readOnly` and `onCall` decide what a model may do. [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) has the catalog, the error codes, a Claude loop and the limits.
+
 ## Testing your integration — `@plurid/plurid-react/testing`
 
 Render an application in jsdom (vitest / jest + jsdom), drive it with synthetic input, step a deterministic frame clock, assert on the camera:

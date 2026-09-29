@@ -9,6 +9,7 @@ Current as of **2026-09-29**.
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Source-verified description of the live package graph, render pipeline, state, SSR, kit, and public APIs |
 | [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) | Canonical guide to configuration, callbacks, pubsub, storage, gestures, shortcuts, slots, and escape hatches |
 | [`GETTING_STARTED.md`](./GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
+| [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) | Let an AI agent operate an embedded application: the fourteen tools, the observation, the guardrails, Claude, WebMCP (`@plurid/plurid-react/agent`) |
 | [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
 | [`HARNESS.md`](./HARNESS.md) | GENERATED — every flag and fixture of the verification harness (`fixtures/render-test`) |
 | [`LOOKS.md`](./LOOKS.md) | GENERATED — the twelve looks and the 45 chrome tokens, from `@plurid/plurid-themes` (`pnpm docs.tables`) |

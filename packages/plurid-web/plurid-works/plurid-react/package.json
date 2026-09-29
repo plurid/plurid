@@ -102,6 +102,11 @@
             "types": "./distribution/testing.d.ts",
             "import": "./distribution/testing.mjs",
             "require": "./distribution/testing.js"
+        },
+        "./agent": {
+            "types": "./distribution/agent.d.ts",
+            "import": "./distribution/agent.mjs",
+            "require": "./distribution/agent.js"
         }
     },
     "peerDependenciesMeta": {

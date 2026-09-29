@@ -17,6 +17,12 @@ mismatches named below). Three causes, three changes a host can see.
   and in an application whose `hostname` is not the document's host a click looked for a plane under a
   host nothing was registered under and opened nothing. An application without a `hostname` is
   unchanged.
+- **New, additive: `@plurid/plurid-react/agent`**, a third entry point. It lets an AI agent operate an
+  application through fourteen tools: observe, follow a link, open, go to, close, remove, scroll, the
+  camera, the selection, arrange, history, bookmarks, commands and configure. Each tool has a JSON
+  Schema and validates its input; the tools can be registered with WebMCP or put on `window`.
+  Nothing changes for an application that does not import it (`docs/AGENT_CONTROL.md`). The harness
+  gains `?agent=1`.
 - **`@plurid/plurid-react`'s CommonJS build is split into the same chunks as its ESM build.**
   styled-components numbers its component ids in creation order, and the unsplit build created the same
   components in another order than the split one a browser bundles, so a server that `require`s the

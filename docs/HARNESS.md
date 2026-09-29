@@ -134,6 +134,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | Param | Default | Applies | Does | Exercises |
 | --- | --- | --- | --- | --- |
 | `?debug=1` | - | reload | the space and plane debuggers (the perf HUD) | `development.spaceDebugger` / `planeDebugger` |
+| `?agent=1` | - | reload | agent control: the tools on `window.__PLURID_AGENT__`, and registered with the page's WebMCP context when it has one (`window.__rtWebMCP`: what registered) | `@plurid/plurid-react/agent` (`createPluridAgent`, `exposeGlobal`, `exposeToWebMCP`) |
 
 ### shortcuts
 

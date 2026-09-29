@@ -138,6 +138,7 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'chrome', type: 'enum', values: ['minimal', 'none'], group: 'ui', apply: 'reload', description: 'how much engine chrome renders: minimal (the rail, the plane bars, the ?) or none (headless)', exercises: '`elements.chrome`' },
     { key: 'hideLinks', type: 'boolean', group: 'ui', apply: 'reload', description: 'hide the link beams and the alignment guides', exercises: '`elements.planeLinks.show`, `elements.alignmentGuides.show`' },
     { key: 'debug', type: 'boolean', group: 'debug', apply: 'reload', description: 'the space and plane debuggers (the perf HUD)', exercises: '`development.spaceDebugger` / `planeDebugger`' },
+    { key: 'agent', type: 'boolean', group: 'debug', apply: 'reload', description: 'agent control: the tools on `window.__PLURID_AGENT__`, and registered with the page\'s WebMCP context when it has one (`window.__rtWebMCP`: what registered)', exercises: '`@plurid/plurid-react/agent` (`createPluridAgent`, `exposeGlobal`, `exposeToWebMCP`)' },
     // shortcuts
     { key: 'scDisable', type: 'string', group: 'shortcuts', apply: 'reload', description: '`all` or a comma list of shortcut ids to disable', exercises: '`shortcuts.disabled`' },
     { key: 'scRemap', type: 'string', group: 'shortcuts', apply: 'reload', description: '`id:Code` pairs, comma separated', exercises: '`shortcuts.keymap`' },
@@ -219,6 +220,7 @@ export interface HarnessFlags {
     chrome?: 'minimal' | 'none';
     hideLinks: boolean;
     debug: boolean;
+    agent: boolean;
     scDisable?: string;
     scRemap?: string;
     persist: boolean;

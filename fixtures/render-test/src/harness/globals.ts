@@ -1,3 +1,5 @@
+import { createPluridAgent } from '@plurid/plurid-react/agent';
+
 import type { HarnessFlags } from './flags';
 import type { DeclaredSize } from './planes';
 
@@ -21,6 +23,14 @@ export const installHarnessGlobals = (
     w.__rtPlanes = () => Object.entries(declared).map(([route, size]) => ({ route, ...size }));
     // the diagnostic surface, as the api gives it
     w.__rtInspect = () => api.inspect();
+    // `?agent=1`: the agent control API, as a host embedding plurid for an AI agent turns it on
+    if (flags.agent) {
+        const agent = createPluridAgent(api);
+        agent.exposeGlobal();
+        void agent.exposeToWebMCP().then((registration) => {
+            w.__rtWebMCP = { available: registration.available, registered: registration.registered, refused: registration.refused };
+        });
+    }
     // the detach tier: the planes whose content is mounted (a shell without content is detached)
     w.__rtMounted = () => ({
         shells: document.querySelectorAll('[data-plurid-plane]').length,

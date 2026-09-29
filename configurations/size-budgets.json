@@ -11,6 +11,7 @@
     "@plurid/plurid-pubsub": 5,
     "@plurid/plurid-react": 105,
     "@plurid/plurid-react/testing": 95,
+    "@plurid/plurid-react/agent": 20,
     "@plurid/plurid-react-server": 15,
     "@plurid/plurid-themes": 15,
     "@plurid/plurid-themes/looks": 10,
