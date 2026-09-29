@@ -61,6 +61,9 @@ jobs:
       - name: Generated tables are current
         run: pnpm docs.tables.check
 
+      - name: Install Chromium
+        run: pnpm --filter plurid-render-test exec playwright install --with-deps chromium
+
       # the consumer's path: pack every public package, install the tarballs into a throwaway
       # project and import every entry point as ESM and as CommonJS. A workspace never sees a file
       # missing from `files`, a `workspace:` range left unrewritten or a peer the siblings fail
