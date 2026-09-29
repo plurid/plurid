@@ -11,6 +11,7 @@
  */
 import { execFileSync, execSync, spawn } from 'node:child_process';
 import { readFileSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { createServer } from 'node:net';
 import { resolve, dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -45,6 +46,53 @@ const freePort = () => new Promise((resolvePort, reject) => {
         probe.close(() => resolvePort(port));
     });
 });
+
+/** Chromium, through the harness's Playwright (CI installs its browser); `PLURID_CHROMIUM` points at another build. */
+const launchChromium = () => {
+    const { chromium } = createRequire(join(root, 'fixtures', 'render-test', 'package.json'))('@playwright/test');
+    return chromium.launch(process.env.PLURID_CHROMIUM ? { executablePath: process.env.PLURID_CHROMIUM } : {});
+};
+
+/* global document -- the functions handed to `page.waitForFunction` below run in the page, not in Node */
+
+/**
+ * Load `url` as a reader does, wait until React has hydrated the first plurid link, follow it, and
+ * return what went wrong: every console error and page error (a hydration mismatch is one of them),
+ * and a link that did not open its page. Waits on state, never on time.
+ */
+const visit = async (browser, url) => {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+    const problems = [];
+    page.on('console', (message) => {
+        if (message.type() === 'error') {
+            problems.push(message.text());
+        }
+    });
+    page.on('pageerror', (error) => problems.push(error.message));
+    try {
+        await page.goto(url, { waitUntil: 'load' });
+        const link = 'a[data-plurid-entity="PluridLink"]';
+        // hydrated: React keeps its props on every element it owns, and on no server-only markup
+        await page.waitForFunction((selector) => {
+            const anchor = document.querySelector(selector);
+            return !!anchor && Object.keys(anchor).some((key) => key.startsWith('__reactProps'));
+        }, link, { timeout: 30000 });
+        await page.click(link);
+        const opened = await page.waitForFunction(
+            () => (document.querySelector('[data-plurid-docked]')?.getAttribute('data-plurid-docked') || '').includes('/about'),
+            undefined,
+            { timeout: 15000 },
+        ).then(() => true, () => false);
+        if (!opened) {
+            problems.push('the first link did not open its page (/about)');
+        }
+    } catch (error) {
+        problems.push(error.message.split('\n')[0]);
+    } finally {
+        await page.close();
+    }
+    return problems;
+};
 
 const packages = listWorkspace();
 
@@ -156,18 +204,22 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
         console.log('[smoke.pack] plurid build');
         execFileSync('npx', ['plurid', 'build'], { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000, env: { ...process.env, NODE_ENV: 'production' } });
         if (!existsSync(join(app, 'build', 'index.js'))) throw new Error('[smoke.pack] plurid build wrote no build/index.js');
-        console.log('[smoke.pack] plurid start → GET /');
-        const port = await freePort();
-        const server = spawn(process.execPath, [join(app, 'build', 'index.js')], { cwd: app, env: { ...process.env, PORT: String(port), ENV_MODE: 'production' }, stdio: ['ignore', 'pipe', 'pipe'] });
-        let output = '';
-        server.stdout.on('data', (chunk) => { output += chunk.toString(); });
-        server.stderr.on('data', (chunk) => { output += chunk.toString(); });
-        let body = '';
-        try {
+        // `plurid start` / `plurid dev` on $PORT, in a process group of their own: the server they spawn
+        // goes with them
+        const serve = async (command) => {
+            const port = await freePort();
+            const child = spawn(join(app, 'node_modules', '.bin', 'plurid'), [command], {
+                cwd: app, env: { ...process.env, PORT: String(port) }, stdio: ['ignore', 'pipe', 'pipe'], detached: true,
+            });
+            let output = '';
+            child.stdout.on('data', (chunk) => { output += chunk.toString(); });
+            child.stderr.on('data', (chunk) => { output += chunk.toString(); });
+            const url = 'http://127.0.0.1:' + port + '/';
+            let body = '';
             const started = Date.now();
             while (Date.now() - started < 60000) {
                 try {
-                    const response = await fetch('http://127.0.0.1:' + port + '/');
+                    const response = await fetch(url);
                     body = await response.text();
                     if (response.status === 200) break;
                 } catch {
@@ -175,15 +227,85 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
                 }
                 await new Promise((resolve) => setTimeout(resolve, 500));
             }
+            return {
+                url,
+                body,
+                output: () => output.split('\n').filter((line) => line.trim()).slice(-12).join('\n      '),
+                stop: () => {
+                    try {
+                        process.kill(-child.pid, 'SIGTERM');
+                    } catch {
+                        // already gone
+                    }
+                },
+            };
+        };
+
+        // THE PAGE HYDRATES (2026-09-29): the browser's first render is the server's markup, in the
+        // production artifact and in the development loop (whose React reports every mismatch; the
+        // production one reports only those that throw the page away), and the first link opens its
+        // page. Every generated application failed this while every check above passed: the server
+        // rendered its styled components in one order and its planes on one host, the browser in
+        // another order and on another host. `SMOKE_SKIP_BROWSER=1` skips it.
+        let browser;
+        const browse = async (label, served) => {
+            if (process.env.SMOKE_SKIP_BROWSER || browser === null) {
+                return;
+            }
+            if (!browser) {
+                try {
+                    browser = await launchChromium();
+                } catch (error) {
+                    failures += 1;
+                    console.log('  FAIL  no Chromium to load the generated application in: `pnpm --filter plurid-render-test exec playwright install chromium`, or PLURID_CHROMIUM=<path> (SMOKE_SKIP_BROWSER=1 skips)'
+                        + '\n      ' + error.message.split('\n')[0]);
+                    // tried once: the next target is not a second failure for the same reason
+                    browser = null;
+                    return;
+                }
+            }
+            const problems = await visit(browser, served.url);
+            if (problems.length > 0) {
+                failures += 1;
+                console.log(`  FAIL  the generated application (${label}) does not hydrate cleanly in Chromium:\n      `
+                    + problems.slice(0, 4).map((problem) => problem.replace(/\s+/g, ' ').slice(0, 400)).join('\n      '));
+            } else {
+                console.log(`  ok    the generated application (${label}) hydrates in Chromium without an error and its first link opens its page`);
+            }
+        };
+
+        try {
+            console.log('[smoke.pack] plurid start → GET / → Chromium');
+            const production = await serve('start');
+            try {
+                if (!production.body.includes('data-plurid-entity="PluridView"')) {
+                    failures += 1;
+                    console.log('  FAIL  the generated application did not serve the space at / (got ' + production.body.length + ' bytes)');
+                    console.log('      ' + production.output());
+                } else {
+                    console.log('  ok    the generated application builds, starts and serves the space at /');
+                    await browse('plurid start', production);
+                }
+            } finally {
+                production.stop();
+            }
+
+            // the development loop rebuilds into the same build directory: only once the production server is down
+            console.log('[smoke.pack] plurid dev → Chromium');
+            const development = await serve('dev');
+            try {
+                if (!development.body.includes('data-plurid-entity="PluridView"')) {
+                    failures += 1;
+                    console.log('  FAIL  plurid dev did not serve the space at / (got ' + development.body.length + ' bytes)');
+                    console.log('      ' + development.output());
+                } else {
+                    await browse('plurid dev', development);
+                }
+            } finally {
+                development.stop();
+            }
         } finally {
-            server.kill('SIGTERM');
-        }
-        if (!body.includes('data-plurid-entity="PluridView"')) {
-            failures += 1;
-            console.log('  FAIL  the generated application did not serve the space at / (got ' + body.length + ' bytes)');
-            console.log('      ' + output.split('\n').filter((line) => line.trim()).slice(-12).join('\n      '));
-        } else {
-            console.log('  ok    the generated application builds, starts and serves the space at /');
+            await browser?.close();
         }
     }
 }
@@ -197,7 +319,7 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
 }
 
 if (failures > 0) {
-    console.error(`\n[smoke.pack] ${failures} entry point(s) failed as a packed install`);
+    console.error(`\n[smoke.pack] ${failures} check(s) failed as a packed install`);
     process.exit(1);
 }
 console.log(`\n[smoke.pack] every entry point of ${packages.length} packed packages installs and loads under ESM and CommonJS`);

@@ -188,7 +188,10 @@ const PluridLink: React.FC<React.PropsWithChildren<PluridLinkProperties>> = (
     const previewAppearTime = previewFadeIn || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_IN;
     const previewDisappearTime = previewFadeOut || PLURID_DEFAULT_CONFIGURATION_LINK_PREVIEW_FADE_OUT;
 
-    const planeRouteResolved = computePlaneAddress(planeRoute);
+    // addressed on the APPLICATION'S host, the one its planes are registered under: without it the
+    // address took each side's own default (`origin` on the server, `location.host` in the browser),
+    // so a server-rendered link never matched the hydrated one (2026-09-29)
+    const planeRouteResolved = computePlaneAddress(planeRoute, undefined, hostname);
 
     const absolutePlaneRoute = resolveRoute(
         planeRouteResolved,

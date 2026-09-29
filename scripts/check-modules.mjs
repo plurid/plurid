@@ -94,8 +94,72 @@ for (const { directory, data } of packages) {
     }
 }
 
+/**
+ * THE TWO FORMATS RENDER THE SAME PAGE. A server that `require`s a package and a browser bundle that
+ * `import`s it hydrate one markup only if both builds create their styled components in one order:
+ * styled-components numbers its component ids by creation. 2026-09-29: plurid-react's ESM build was
+ * code-split and its CJS build was not, so the same 237 components were created in two orders and
+ * every kit application failed to hydrate. Rendered here the way the kit's server renders a route.
+ */
+const RENDER_PARITY = ['@plurid/plurid-react'];
+
+const renderThrough = (directory, mode, file) => {
+    const script = `
+        import { createRequire } from 'node:module';
+        const require = createRequire(${JSON.stringify(join(directory, 'package.json'))});
+        const React = require('react');
+        const { renderToString } = require('react-dom/server');
+        const { ServerStyleSheet, StyleSheetManager } = require('styled-components');
+        const plurid = ${mode === 'esm' ? `await import(${JSON.stringify(file)})` : `require(${JSON.stringify(file)})`};
+        const h = React.createElement;
+        const routes = [{ value: '/', planes: [['/one', () => h('p', null, 'one')], ['/two', () => h('p', null, 'two')]], view: ['/one', '/two'] }];
+        const sheet = new ServerStyleSheet();
+        const html = renderToString(h(StyleSheetManager, { sheet: sheet.instance },
+            h(plurid.PluridProvider, { metastate: undefined },
+                h(plurid.PluridRouterStatic, { path: '/', routes, planes: [], hostname: 'localhost' }))));
+        const css = sheet.getStyleTags();
+        sheet.seal();
+        process.stdout.write(JSON.stringify({ html, css }));
+    `;
+    return JSON.parse(execFileSync(process.execPath, ['--input-type=module', '-e', script], {
+        cwd: directory,
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: { ...process.env, NODE_ENV: 'production' },
+        timeout: 60000,
+        maxBuffer: 64 * 1024 * 1024,
+    }).toString());
+};
+
+const classesOf = (html) => [...html.matchAll(/class="([^"]*)"/g)].map((match) => match[1]);
+
+for (const { directory, data } of packages) {
+    if (!RENDER_PARITY.includes(data.name)) {
+        continue;
+    }
+    const entry = entriesOf(data).find((candidate) => candidate.subpath === '.');
+    try {
+        const esm = renderThrough(directory, 'esm', resolve(directory, entry.esm));
+        const cjs = renderThrough(directory, 'cjs', resolve(directory, entry.cjs));
+        if (esm.html === cjs.html && esm.css === cjs.css) {
+            console.log(`  ok    ${data.name} renders the same markup and styles through ESM and CommonJS (${classesOf(esm.html).length} classes)`);
+            continue;
+        }
+        const esmClasses = classesOf(esm.html);
+        const cjsClasses = classesOf(cjs.html);
+        const at = esmClasses.findIndex((value, index) => value !== cjsClasses[index]);
+        console.log(`  FAIL  ${data.name} renders differently through ESM and CommonJS — a server (require) and a browser (import) will not hydrate`
+            + (at === -1 ? '' : `\n      first differing class, #${at}: esm "${esmClasses[at]}" · cjs "${cjsClasses[at]}"`));
+        failures += 1;
+    } catch (error) {
+        const stderr = (error.stderr ? error.stderr.toString() : error.message).split('\n')
+            .filter((line) => line.trim()).slice(0, 6).join('\n      ');
+        console.log(`  FAIL  ${data.name} could not render through both formats\n      ${stderr}`);
+        failures += 1;
+    }
+}
+
 if (failures > 0) {
-    console.error(`\n[check.modules] ${failures} entry point(s) failed to load`);
+    console.error(`\n[check.modules] ${failures} check(s) failed`);
     process.exit(1);
 }
-console.log(`\n[check.modules] every entry point of ${packages.length} packages loads under ESM and CommonJS`);
+console.log(`\n[check.modules] every entry point of ${packages.length} packages loads under ESM and CommonJS; ${RENDER_PARITY.join(', ')} renders the same through both`);

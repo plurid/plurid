@@ -27,6 +27,7 @@
         serviceProperties,
         applicationService,
         orderedServices,
+        routerProperties,
         PRELOADED_REDUX_STATE_KEY,
         PRELOADED_PLURID_METASTATE_KEY,
     } from '../shared';
@@ -88,16 +89,12 @@ export function createPluridClient(
     const root = config.root || 'root';
 
     const App = () => {
-        // innermost: PluridProvider > PluridRouterBrowser
+        // innermost: PluridProvider > PluridRouterBrowser, with the router's properties as the server rendered it
         const tree: ReactNode = createElement(
             PluridProvider,
             // metastate is untyped runtime data deserialized from the window global
             { metastate: pluridMetastate } as any,
-            createElement(PluridRouterBrowser, {
-                shell: config.shell,
-                routes: config.routes,
-                ...(config.routerProperties || {}),
-            } as any),
+            createElement(PluridRouterBrowser, routerProperties(config) as any),
         );
 
         return createElement(Fragment, null, composePluridProviders(services, tree));

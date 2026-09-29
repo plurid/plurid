@@ -23,6 +23,12 @@ export default defineConfig({
     sourcemap: true,
     clean: true,
     treeshake: true,
+    // BOTH formats split, into the same chunks (2026-09-29). esbuild's splitting reorders module
+    // evaluation (a shared chunk runs before its entry's own modules), and styled-components numbers
+    // its component ids in creation order: an ESM build split and a CJS build not split created the
+    // same 237 components in two orders, so the kit's server (CJS) and client (ESM) disagreed on
+    // every class from the 119th on and hydration failed. `check.modules` renders through both.
+    splitting: true,
     external: [
         /^@plurid\//,
         'react', 'react-dom', 'react/jsx-runtime',

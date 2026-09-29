@@ -9,6 +9,7 @@
     // #region internal
     import type {
         ServerOnly,
+        PluridConfig,
         PluridServiceConfig,
     } from '../index';
     // #endregion internal
@@ -44,6 +45,31 @@ export function applicationService(
         properties: application,
         order: -Infinity,
     } as PluridServiceConfig];
+}
+
+
+/**
+ * THE ROUTER, AS THE SERVER RENDERED IT.
+ *
+ * The server hands `PluridServer` the routes, planes, exterior, shell and
+ * hostname, and its `PluridRouterStatic` renders `PluridRouterBrowser` with
+ * them, `routerProperties` spread last. The client must hand the router the
+ * same, or it hydrates a different tree: 2026-09-29 it passed no hostname, so
+ * every plane's route read `plurid://<location.host>/…` where the server had
+ * written `plurid://<hostname>/…`, and React threw the server's page away.
+ */
+export function routerProperties(
+    config: PluridConfig,
+): Record<string, unknown> {
+    return {
+        routes: config.routes,
+        planes: config.planes || [],
+        exterior: config.exterior,
+        shell: config.shell,
+        // the server's: `options` is merged over the derived options, so its hostname wins there too
+        hostname: config.options?.hostname || config.hostname,
+        ...(config.routerProperties || {}),
+    };
 }
 
 
