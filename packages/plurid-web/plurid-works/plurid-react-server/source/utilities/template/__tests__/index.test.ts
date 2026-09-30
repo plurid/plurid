@@ -25,6 +25,13 @@ describe('safeStore', () => {
         const store = JSON.stringify({ a: 1, b: 'plain' });
         expect(safeStore(store)).toBe(store);
     });
+
+    it('escapes U+2028 / U+2029 (line terminators to engines before ES2019) inside the JSON strings', () => {
+        const store = JSON.stringify({ a: 'x\u2028y\u2029z' });
+        const safe = safeStore(store);
+        expect(safe).toBe('{"a":"x\\u2028y\\u2029z"}');
+        expect(JSON.parse(safe).a).toBe('x\u2028y\u2029z');
+    });
 });
 
 
@@ -75,6 +82,27 @@ describe('globalsInjector', () => {
 
     it('returns an empty string for no globals', () => {
         expect(globalsInjector({})).toBe('');
+    });
+
+    it('writes a `</script>` in a value as `\u003c/script>`: the inline script cannot be closed from the data (2026-09-29)', () => {
+        const out = globalsInjector({ __PRELOADED_REDUX_STATE__: JSON.stringify({ search: '</script><script>alert(1)</script>' }) });
+        expect(out).not.toContain('</script>');
+        expect(out).toContain('\\u003c/script>');
+        // the value reads back unchanged
+        const window: Record<string, any> = {};
+        new Function('window', out)(window);
+        expect(window.__PRELOADED_REDUX_STATE__.search).toBe('</script><script>alert(1)</script>');
+    });
+
+    it('refuses a key that is not a JavaScript identifier', () => {
+        expect(() => globalsInjector({ 'a = alert(1); window.b': '1' })).toThrow(/not a JavaScript identifier/);
+        expect(() => globalsInjector({ 'a-b': '1' })).toThrow(/not a JavaScript identifier/);
+        expect(globalsInjector({ $valid_Name1: '1' })).toBe('window.$valid_Name1 = 1;\n');
+    });
+
+    it('serializes a value that is not a string (a JavaScript host passing an object)', () => {
+        const out = globalsInjector({ STATE: { a: '<b>' } as any });
+        expect(out).toBe('window.STATE = {"a":"\\u003cb>"};\n');
     });
 });
 

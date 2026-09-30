@@ -25,10 +25,13 @@
         DEFAULT_DEV_PORT,
     } from './environment';
 
-    import {        createRestarter,
+    import {
+        createRestarter,
         isPortFree,
         claimPidfile,
         releasePidfile,
+        superviseServer,
+        FORWARDED_SIGNALS,
     } from './process';
     // #endregion internal
 // #endregion imports
@@ -102,21 +105,40 @@ export async function dev(
     }
     const release = () => releasePidfile(pidfile, process.pid);
     process.once('exit', release);
+    // `exit` does not run for a death by signal: until a handler of its own takes over (the
+    // supervisor's, the watch's shutdown), a signal releases the claim and ends this process as it
+    // would have. A Ctrl+C left `build/dev.pid` behind, and the next dev SIGTERMed whatever process
+    // had its pid by then (2026-09-29).
+    const releaseAndLeave = (signal: NodeJS.Signals) => {
+        release();
+        process.kill(process.pid, signal);
+    };
+    for (const signal of FORWARDED_SIGNALS) {
+        process.once(signal, releaseAndLeave);
+    }
+    const handOver = () => {
+        for (const signal of FORWARDED_SIGNALS) {
+            process.removeListener(signal, releaseAndLeave);
+        }
+    };
 
     if (!(await isPortFree(Number(port)))) {
         process.stderr.write(`[plurid dev] port ${port} is already in use — stop the other server or pass --port <n>\n`);
         process.exit(1);
     }
 
+    const serverEnvironment = {
+        ...process.env,
+        PORT: String(port),
+        ENV_MODE: environmentMode,
+        NODE_ENV: mode,
+    };
+
     const spawnChild = (): ChildProcess => {
-        const child = spawn('node', [paths.serverEntry], {
+        // this very Node, not whichever `node` is first on PATH
+        const child = spawn(process.execPath, [paths.serverEntry], {
             stdio: 'inherit',
-            env: {
-                ...process.env,
-                PORT: String(port),
-                ENV_MODE: environmentMode,
-                NODE_ENV: mode,
-            },
+            env: serverEnvironment,
         });
         return child;
     };
@@ -166,8 +188,10 @@ export async function dev(
             release();
             process.exit(0);
         };
-        process.once('SIGINT', shutdown);
-        process.once('SIGTERM', shutdown);
+        handOver();
+        for (const signal of FORWARDED_SIGNALS) {
+            process.once(signal, shutdown);
+        }
         child.on('exit', () => { /* restarts are expected; the restarter owns the lifecycle */ });
         return;
     } else {
@@ -178,10 +202,10 @@ export async function dev(
 
     process.stdout.write(`[plurid dev] starting server on ${link}\n`);
 
-    const child = spawnChild();
-    child.on('exit', (code) => {
-        process.exit(code || 0);
-    });
+    // supervised as `plurid start` runs it: the signals reach the server, the claim is released, and
+    // this process ends as the server did
+    handOver();
+    superviseServer(paths.serverEntry, serverEnvironment, { onExit: release });
 }
 
 

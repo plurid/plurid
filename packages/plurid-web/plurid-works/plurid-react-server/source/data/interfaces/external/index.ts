@@ -16,6 +16,11 @@
         PluridReactComponent,
     } from '@plurid/plurid-react';
     // #endregion libraries
+
+
+    // #region external
+    import type PluridServer from '~objects/Server';
+    // #endregion external
 // #endregion imports
 
 
@@ -112,8 +117,18 @@ export interface PluridServerOptions {
      * Install `SIGINT`/`SIGTERM` handlers that stop the server and call `process.exit`.
      * Defaults to `true` (convenient for the CLI). Set to `false` when EMBEDDING the server
      * in a host process you do not want it to terminate; then manage lifecycle via `stop()`.
+     *
+     * The stop is graceful: the requests in flight are answered, idle connections closed, and the
+     * process exits `0` once the server has closed (or `stopTimeout` has passed).
      */
     attachSignalHandlers: boolean;
+
+    /**
+     * How long `stop()` (and a `SIGINT` / `SIGTERM`) waits for the requests in flight before the
+     * connections still open are cut, in milliseconds. Default `5000`, inside the ten seconds a
+     * container runtime gives before it kills.
+     */
+    stopTimeout: number;
 }
 
 
@@ -150,6 +165,17 @@ export type PluridServerDocumentHook = (
 ) => PluridDocument | undefined | Promise<PluridDocument | undefined>;
 
 
+/**
+ * The host's own routes and middleware, registered BEFORE the page's catch-all `GET` — so a
+ * `GET /status` added here answers; one added through `instance()` after construction sits behind the
+ * catch-all and never does (use `handle().get(…)`, which registers ahead of it at any time). Called once,
+ * synchronously, during construction.
+ */
+export type PluridServerHandlers = (
+    server: PluridServer,
+) => void;
+
+
 export interface PluridServerConfiguration {
     routes: PluridRoute<PluridReactComponent>[];
     planes?: PluridRoutePlane<PluridReactComponent>[];
@@ -181,6 +207,9 @@ export interface PluridServerConfiguration {
     pttpHandler?: PTTPHandler;
 
     elementqlEndpoint?: string;
+
+    /** The host's own routes and middleware, ahead of the page (see `PluridServerHandlers`). */
+    handlers?: PluridServerHandlers;
 }
 
 
@@ -258,6 +287,12 @@ export interface PluridServerTemplateConfiguration {
      * Override the built-in 500 error page HTML (sent on a render failure).
      */
     errorHtml?: string;
+
+    /**
+     * Override the built-in 404 page HTML, sent when no route matches and the application has no
+     * not-found route (`/not-found`) nor a not-found still.
+     */
+    notFoundHtml?: string;
 }
 
 

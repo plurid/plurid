@@ -1,4 +1,14 @@
-jest.mock('ora', () => () => ({ start: () => ({ stopAndPersist: () => {} }) }));
+const spinners: { text: string; stopped: boolean; failed: boolean }[] = [];
+jest.mock('ora', () => (options: { text: string }) => ({
+    start: () => {
+        const spinner = { text: options.text, stopped: false, failed: false };
+        spinners.push(spinner);
+        return {
+            stopAndPersist: () => { spinner.stopped = true; },
+            fail: () => { spinner.failed = true; },
+        };
+    },
+}));
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -93,6 +103,35 @@ describe('the kit-shaped generation', () => {
         expect(fs.existsSync(path.join(directory, 'package.json'))).toBe(true);
         expect(fs.existsSync(path.join(directory, 'node_modules'))).toBe(false);
         fs.rmSync(base, { recursive: true, force: true });
+    });
+
+    it('a failed step stops its spinner (a running spinner kept the terminal process alive after the error, 2026-09-29)', async () => {
+        const base = temporary();
+        const directory = path.join(base, 'app');
+        fs.mkdirSync(directory);
+        const log = jest.spyOn(console, 'log').mockImplementation(() => {});
+        spinners.length = 0;
+        try {
+            await jest.isolateModulesAsync(async () => {
+                // the install fails as a missing or broken package manager does
+                jest.doMock('../utilities', () => ({
+                    ...jest.requireActual('../utilities'),
+                    executeCommand: async (file: string, args: string[]) => {
+                        throw new Error(`${[file, ...args].join(' ')} failed (1): the registry is down`);
+                    },
+                }));
+                const { default: generate } = require('../process/kit');
+                await expect(generate({ start: Date.now(), directory, name: 'app', manager: 'NPM', versioning: 'None', install: true }))
+                    .rejects.toThrow(/npm install --no-audit --no-fund failed \(1\): the registry is down/);
+            });
+        } finally {
+            log.mockRestore();
+            fs.rmSync(base, { recursive: true, force: true });
+        }
+        expect(spinners.map(({ text, stopped, failed }) => ({ install: /Installing/.test(text), stopped, failed }))).toEqual([
+            { install: false, stopped: true, failed: false },
+            { install: true, stopped: false, failed: true },
+        ]);
     });
 
     it('the managers spell their commands; the stamp fills only known keys', () => {

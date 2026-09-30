@@ -14,7 +14,8 @@
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
-        "url": "https://github.com/plurid/plurid"
+        "url": "https://github.com/plurid/plurid",
+        "directory": "packages/plurid-web/plurid-core/plurid-data"
     },
     "bugs": {
         "email": "source@plurid.com",
@@ -24,16 +25,14 @@
         "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-data",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-core/plurid-data",
     "files": [
         "distribution/"
     ],
     "main": "distribution/index.js",
     "module": "distribution/index.mjs",
-    "jsnext:main": "distribution/index.es.js",
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
@@ -56,10 +55,16 @@
     "types": "distribution/index.d.ts",
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "dependencies": {
         "@plurid/plurid-themes": "workspace:^"

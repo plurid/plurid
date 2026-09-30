@@ -9,7 +9,7 @@
  *   pnpm check.modules
  */
 import { execFileSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -28,16 +28,31 @@ const listWorkspace = () => {
 
 const packages = listWorkspace();
 
-/** The (subpath, import target, require target) triples of a package's `exports` map, or main/module. */
+/** A condition's file: a path, or a nested condition's `default` (`import: { types, default }`). */
+const fileOf = (value) => (typeof value === 'string'
+    ? value
+    : value && typeof value === 'object' ? fileOf(value.default) : undefined);
+
+/** A condition's declarations: a nested condition's `types` (the `import` one `.d.mts`, the `require` one `.d.ts`). */
+const typesOf = (value) => (value && typeof value === 'object' ? value.types : undefined);
+
+/** Whether a subpath is a module (`./package.json` is data, read with `require` or an import attribute). */
+const isModule = (file) => typeof file === 'string' && /\.(c|m)?js$/.test(file);
+
+/** The (subpath, import target, require target, and their declarations) of a package's `exports` map, or main/module. */
 const entriesOf = (data) => {
     const entries = [];
     const exportsMap = data.exports;
     if (exportsMap && typeof exportsMap === 'object') {
         for (const [subpath, target] of Object.entries(exportsMap)) {
             if (typeof target === 'string') {
-                entries.push({ subpath, esm: target, cjs: target });
+                if (isModule(target)) {
+                    entries.push({ subpath, esm: target, cjs: target });
+                }
             } else if (target && typeof target === 'object') {
-                entries.push({ subpath, esm: target.import ?? target.default, cjs: target.require ?? target.default });
+                const esm = target.import ?? target.default;
+                const cjs = target.require ?? target.default;
+                entries.push({ subpath, esm: fileOf(esm), cjs: fileOf(cjs), esmTypes: typesOf(esm), cjsTypes: typesOf(cjs), flatTypes: target.types });
             }
         }
     } else {
@@ -71,6 +86,32 @@ const run = (directory, mode, file) => {
 
 let failures = 0;
 for (const { directory, data } of packages) {
+    // THE TYPES MATCH THE FORMAT (2026-09-29): one `types` for both conditions handed an ESM consumer
+    // (`module: NodeNext`) the CommonJS declarations, and `new PluridServer(…)` did not compile (TS2351).
+    // Each condition carries its own: `.d.mts` under `import`, `.d.ts` under `require`, both on disk.
+    for (const entry of entriesOf(data)) {
+        const problems = [];
+        if (entry.flatTypes) {
+            problems.push(`a flat \`types\` (${entry.flatTypes}) serves both formats; nest it under \`import\` / \`require\``);
+        }
+        for (const [condition, types, extension] of [['import', entry.esmTypes, '.d.mts'], ['require', entry.cjsTypes, '.d.ts']]) {
+            if (!data.exports || !types) {
+                continue;
+            }
+            if (!types.endsWith(extension)) {
+                problems.push(`the \`${condition}\` declarations are ${types}, not a ${extension}`);
+            } else if (!existsSync(resolve(directory, types))) {
+                problems.push(`the \`${condition}\` declarations ${types} are missing — build first (pnpm build)`);
+            }
+        }
+        if (data.exports && entry.esm && !entry.esmTypes) {
+            problems.push('no declarations under `import`');
+        }
+        if (problems.length > 0) {
+            console.log(`  FAIL  ${data.name} ${entry.subpath} [types]\n      ${problems.join('\n      ')}`);
+            failures += 1;
+        }
+    }
     for (const entry of entriesOf(data)) {
         for (const mode of ['esm', 'cjs']) {
             const target = mode === 'esm' ? entry.esm : entry.cjs;
@@ -158,8 +199,31 @@ for (const { directory, data } of packages) {
     }
 }
 
+/**
+ * CLIENT BOUNDARIES (2026-09-29): every file the React adapter emits, entries and chunks of both formats,
+ * begins with `'use client'`, so a React Server Components bundler treats the package as client code
+ * instead of evaluating its hooks on the server. The directive is written after the build (tsup's
+ * tree-shaking drops an esbuild banner): checked here, so a build change cannot drop it unnoticed.
+ */
+const CLIENT_BOUNDARIES = ['@plurid/plurid-react'];
+
+for (const { directory, data } of packages) {
+    if (!CLIENT_BOUNDARIES.includes(data.name)) {
+        continue;
+    }
+    const distribution = join(directory, 'distribution');
+    const files = existsSync(distribution) ? readdirSync(distribution).filter((name) => /\.m?js$/.test(name)) : [];
+    const unmarked = files.filter((name) => !readFileSync(join(distribution, name), 'utf8').startsWith("'use client';"));
+    if (files.length === 0 || unmarked.length > 0) {
+        console.log(`  FAIL  ${data.name} emits files without a leading 'use client': ${unmarked.slice(0, 4).join(', ') || 'no files — build first (pnpm build)'}`);
+        failures += 1;
+    } else {
+        console.log(`  ok    ${data.name} begins every one of its ${files.length} emitted files with 'use client'`);
+    }
+}
+
 if (failures > 0) {
     console.error(`\n[check.modules] ${failures} check(s) failed`);
     process.exit(1);
 }
-console.log(`\n[check.modules] every entry point of ${packages.length} packages loads under ESM and CommonJS; ${RENDER_PARITY.join(', ')} renders the same through both`);
+console.log(`\n[check.modules] every entry point of ${packages.length} packages loads under ESM and CommonJS, with its own declarations per format; ${RENDER_PARITY.join(', ')} renders the same through both`);

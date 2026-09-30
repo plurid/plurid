@@ -31,19 +31,29 @@
     "types": "distribution/index.d.ts",
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
         },
         "./looks": {
-            "types": "./distribution/looks.d.ts",
-            "import": "./distribution/looks.mjs",
-            "require": "./distribution/looks.js"
-        }
+            "import": {
+                "types": "./distribution/looks.d.mts",
+                "default": "./distribution/looks.mjs"
+            },
+            "require": {
+                "types": "./distribution/looks.d.ts",
+                "default": "./distribution/looks.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "scripts": {
         "test": "jest -c ./configurations/jest.config.js source",

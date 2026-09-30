@@ -119,6 +119,38 @@ describe('a plane that throws', () => {
         });
     });
 
+    it('a component that is not a React component (an ElementQL name) shows the card, root or spawned', async () => {
+        await quietly(async () => {
+            const bus = new PluridPubSub({ onDrop: null });
+            const changed: { kind: string; value: any }[] = [];
+            bus.subscribe({ topic: PLURID_PUBSUB_TOPIC.CHANGED, callback: (data: any) => changed.push(data) } as any);
+
+            const rendered = await renderPlurid({
+                planes: [
+                    { route: '/good', component: Good },
+                    { route: '/named', component: 'Home' },
+                ],
+                view: ['/good', '/named'],
+                pubsub: bus,
+            } as any);
+
+            // a root rendered the name as an element (`<home>`), blank
+            expect(rendered.container.querySelector('home')).toBeNull();
+            expect(rendered.container.querySelector('[data-good]')).not.toBeNull();
+            expect(rendered.container.querySelectorAll('[data-plurid-entity="PluridPlaneError"]')).toHaveLength(1);
+            const messages = changed.filter((change) => change.kind === 'planeError').map((change) => change.value.message);
+            expect(messages[0]).toMatch(/not a React component \("Home"\)/);
+
+            // a spawned child rendered nothing at all
+            const good = rendered.api.getSnapshot().space.tree.find((plane: any) => plane.route.endsWith('/good'))!;
+            await act(async () => {
+                rendered.handle.tree.spawn('/named', good.planeID);
+            });
+            expect(rendered.container.querySelectorAll('[data-plurid-entity="PluridPlaneError"]')).toHaveLength(2);
+            await rendered.unmount();
+        });
+    });
+
     it('is contained in a route-driven application, and the provider sets its error component', async () => {
         installPointerEvents();
         installMatchMedia();

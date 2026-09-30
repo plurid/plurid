@@ -57,6 +57,7 @@
         resolveMatchingPath,
         resolvePreserve,
         resolvePreserveAfterServe,
+        PreserveResolution,
     } from './preserves';
     import {
         buildRequestTree,
@@ -73,8 +74,38 @@
 
 // #region module
 /**
+ * Post-response work (a preserve's `afterServe`), run on every path that answered: the page, the
+ * redirect, a still, each 404. Observed — logged with the request id, never a second response, never
+ * an unhandled rejection. Only the page's path caught it (C09); on the other five it was fire and
+ * forget, so while an `afterServe` dependency was down (an analytics call) the first request for a
+ * missing page ended the process (2026-09-29).
+ */
+const runAfterServe = (
+    server: PluridServerContext,
+    requestID: string,
+    preserveAfterServe: PreserveResolution['preserveAfterServe'],
+    request: express.Request,
+    response: express.Response,
+) => {
+    resolvePreserveAfterServe(server,
+        preserveAfterServe,
+        request,
+        response,
+    ).catch((error) => {
+        if (debugAllows(server.options, 'error')) {
+            console.error(
+                `[${time.stamp()} :: ${requestID}] afterServe failed for GET ${request.path}`,
+                error,
+            );
+        }
+    });
+};
+
+
+/**
  * THE REQUEST WALK: ignore list → preserve → redirect → still → route match (the 404 ladder) →
- * render → send. Any throw — a render failure included — is a 500 with the error page.
+ * render → send. Any throw — a render failure included — is a 500 with the error page, unless the
+ * response has already gone out, which no error can take back.
  */
 export const handleGetRequest = async (
     server: PluridServerContext,
@@ -121,8 +152,22 @@ export const handleGetRequest = async (
             response,
         );
 
+        // A preserve that answered itself but did not say so (`response.redirect('/login')` without
+        // `responded: true`) sent its response all the same: rendering on was work for nothing, and its
+        // `send` threw ERR_HTTP_HEADERS_SENT, as did the error page after it (2026-09-29).
+        if (
+            !preserveResponded
+            && response.headersSent
+            && debugAllows(server.options, 'warn')
+        ) {
+            console.warn(
+                `[${time.stamp()} :: ${requestID}] a preserve responded to GET ${request.path} without returning \`responded: true\`; the render is skipped`,
+            );
+        }
+
         if (
             preserveResponded
+            || response.headersSent
         ) {
             if (debugAllows(server.options, 'info')) {
                 const requestTime = computeRequestTime(request);
@@ -159,7 +204,7 @@ export const handleGetRequest = async (
                 .status(302)
                 .redirect(matchingPath);
 
-            resolvePreserveAfterServe(server, 
+            runAfterServe(server, requestID,
                 preserveAfterServe,
                 request,
                 response,
@@ -186,7 +231,7 @@ export const handleGetRequest = async (
 
             response.send(still);
 
-            resolvePreserveAfterServe(server, 
+            runAfterServe(server, requestID,
                 preserveAfterServe,
                 request,
                 response,
@@ -219,7 +264,7 @@ export const handleGetRequest = async (
                     .status(404)
                     .send(notFoundStill);
 
-                resolvePreserveAfterServe(server, 
+                runAfterServe(server, requestID,
                     preserveAfterServe,
                     request,
                     response,
@@ -243,9 +288,9 @@ export const handleGetRequest = async (
 
                 response
                     .status(404)
-                    .send(NOT_FOUND_TEMPLATE);
+                    .send(server.template?.notFoundHtml || NOT_FOUND_TEMPLATE);
 
-                resolvePreserveAfterServe(server, 
+                runAfterServe(server, requestID,
                     preserveAfterServe,
                     request,
                     response,
@@ -273,15 +318,11 @@ export const handleGetRequest = async (
                 .status(404)
                 .send(await renderer.html());
 
-            resolvePreserveAfterServe(server, 
+            runAfterServe(server, requestID,
                 preserveAfterServe,
                 request,
                 response,
             );
-
-            response
-                .status(404)
-                .end();
 
             return;
         }
@@ -304,18 +345,11 @@ export const handleGetRequest = async (
         response.send(await renderer.html());
 
         // Post-response work: observed, never a second response, never an unhandled rejection (C09).
-        resolvePreserveAfterServe(server, 
+        runAfterServe(server, requestID,
             preserveAfterServe,
             request,
             response,
-        ).catch((error) => {
-            if (debugAllows(server.options, 'error')) {
-                console.error(
-                    `[${time.stamp()} :: ${requestID}] afterServe failed for GET ${request.path}`,
-                    error,
-                );
-            }
-        });
+        );
 
         return;
     } catch (error) {
@@ -326,6 +360,15 @@ export const handleGetRequest = async (
                 `[${time.stamp()} :: ${requestID}] (500 Server Error) Could not handle GET ${request.path}${requestTime}`,
                 error,
             );
+        }
+
+        // the response went out before the failure: there is no error page to send, and trying threw
+        // again, from the catch, where nothing caught it (2026-09-29)
+        if (response.headersSent) {
+            if (!response.writableEnded) {
+                response.end();
+            }
+            return;
         }
 
         response

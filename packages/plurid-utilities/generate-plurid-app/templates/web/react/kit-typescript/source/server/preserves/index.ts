@@ -11,9 +11,10 @@ import type {
 
 
 const preserves: PluridPreserveReact[] = [
+    // A global's value is JavaScript source, written as `window.<name> = <value>;`: JSON-encode it.
     // {
     //     serve: '*',
-    //     onServe: async ({ request }) => ({ globals: { requestedAt: new Date().toISOString() } }),
+    //     onServe: async () => ({ globals: { requestedAt: JSON.stringify(new Date().toISOString()) } }),
     // },
 ];
 

@@ -115,8 +115,12 @@ const computeFaceToFaceLayout = (
     const planeAngle = 90 - angle / 2;
     // A row is the first plane, the `middle` ones and the last: at least one plane, a whole number.
     // `middle` ≤ −2, NaN or −1.5 made a row of 0, NaN or 0.5 planes, which split nothing off the
-    // roots and looped until the heap ran out.
-    const columns = layoutCount(2 + finiteNumber(middle, 0), 1);
+    // roots and looped until the heap ran out. A boolean is the count it always meant (`2 + true`
+    // was a row of three): `middle: true` is one plane in the middle, not a number to discard.
+    const middleCount = typeof middle === 'boolean'
+        ? Number(middle)
+        : finiteNumber(middle, 0);
+    const columns = layoutCount(2 + middleCount, 1);
     const rows = splitIntoGroups(roots, columns);
 
     // Use the SAME absolute-vs-unit test as column.ts/row.ts (`checkIntegerNonUnit`) instead of

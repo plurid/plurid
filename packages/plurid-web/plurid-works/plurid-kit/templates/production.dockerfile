@@ -63,4 +63,12 @@ EXPOSE 8080
 # `plurid start` -> node build/index.js (createPluridServer reads PORT + serves
 # build/client + build/public; the asset manifest points the template at the
 # real emitted client bundle).
-CMD ["pnpm", "exec", "plurid", "start"]
+#
+# Run by node directly, not through `pnpm exec`: one process between PID 1 and
+# the server. `plurid start` passes SIGTERM / SIGINT / SIGHUP on to the server,
+# which answers the requests in flight before it exits, and it exits as the
+# server did (128 + n when the server was killed), so `restart: on-failure`
+# restarts an OOM-killed server. It writes nothing: a read-only root filesystem
+# and a non-root `USER` both work. `docker run --init` (tini) reaps zombies if
+# the application spawns processes of its own.
+CMD ["node", "node_modules/@plurid/plurid-kit/distribution/cli/index.js", "start"]

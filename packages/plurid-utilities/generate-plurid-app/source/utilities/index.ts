@@ -69,6 +69,17 @@ export interface ExecutedCommand {
     stderr: string;
 }
 
+
+/**
+ * Whether `file` must be run through a shell on `platform`: on Windows the package managers are `.cmd`
+ * shims, which Node does not start without one (ENOENT, and EINVAL since the 2024 `.cmd` fix). Only
+ * these programs, whose arguments here are fixed words, never a path or an answer.
+ */
+export const needsShell = (
+    file: string,
+    platform: NodeJS.Platform = process.platform,
+): boolean => platform === 'win32' && /^(npm|pnpm|yarn|npx)$/.test(file);
+
 /**
  * Run a program with an ARGUMENT ARRAY — never a shell string — so a path with spaces or a
  * metacharacter is one argument. Rejects when the program exits with a failure or cannot be
@@ -89,6 +100,7 @@ export const executeCommand = (
                 {
                     cwd: options?.cwd || process.cwd(),
                     maxBuffer: 64 * 1024 * 1024,
+                    shell: needsShell(file),
                 },
                 (error, stdout, stderr) => {
                     if (error) {

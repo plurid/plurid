@@ -15,30 +15,36 @@ export const DEFAULT_DEV_PORT = '33721';
 
 
 /**
- * Load environment files for a mode, in increasing precedence (later wins):
- *   .env  ->  .env.local  ->  .env.<mode>  ->  .env.<mode>.local
- * plus an `environment/` variant of each (plurid apps keep `.env.*` under
- * `environment/`). Existing `process.env` values are never overwritten.
+ * Load the environment files for a mode. The MOST SPECIFIC file wins:
+ *   .env.<mode>.local  >  .env.<mode>  >  .env.local  >  .env
+ * each read from the application's root, then from `environment/` (plurid apps keep their `.env.*`
+ * there), and a variable already set in the environment (the shell, the container) wins over every
+ * file. dotenv never overwrites a key already set, so the files are read most specific first — they
+ * were read least specific first, and `.env` beat `.env.production` (2026-09-29).
  */
 export function loadEnvironment(
     mode: string,
-): void {
+    directory: string = process.cwd(),
+): string[] {
     const candidates = [
-        '.env',
-        '.env.local',
-        `.env.${mode}`,
         `.env.${mode}.local`,
+        `.env.${mode}`,
+        '.env.local',
+        '.env',
     ];
 
-    const directories = ['.', 'environment'];
+    const folders = ['.', 'environment'];
 
-    for (const directory of directories) {
-        for (const candidate of candidates) {
-            const file = path.resolve(process.cwd(), directory, candidate);
+    const loaded: string[] = [];
+    for (const candidate of candidates) {
+        for (const folder of folders) {
+            const file = path.resolve(directory, folder, candidate);
             if (fs.existsSync(file)) {
                 dotenv.config({ path: file });
+                loaded.push(file);
             }
         }
     }
+    return loaded;
 }
 // #endregion module

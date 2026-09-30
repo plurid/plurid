@@ -11,13 +11,14 @@
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
-        "url": "https://github.com/plurid/plurid"
+        "url": "https://github.com/plurid/plurid",
+        "directory": "packages/plurid-web/plurid-core/plurid-engine"
     },
     "bugs": {
         "email": "source@plurid.com",
         "url": "https://github.com/plurid/plurid/issues"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-engine",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-core/plurid-engine",
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",
         "access": "public"
@@ -30,14 +31,19 @@
     "types": "distribution/index.d.ts",
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "scripts": {
         "clean": "rimraf ./distribution",

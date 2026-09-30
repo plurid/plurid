@@ -1,6 +1,7 @@
 // #region imports
     // #region libraries
-    import { mkdtempSync, readFileSync, existsSync, rmSync } from 'fs';
+    import { spawn } from 'child_process';
+    import { mkdtempSync, readFileSync, existsSync, rmSync, writeFileSync } from 'fs';
     import { tmpdir } from 'os';
     import { join } from 'path';
     // #endregion libraries
@@ -37,6 +38,7 @@ describe('one plurid dev per root', () => {
         const killed: number[] = [];
         const claim = await claimPidfile(pidfile, 1002, {
             alive: (pid) => pid === 1001 && running,
+            identify: () => true,
             kill: (pid) => { killed.push(pid); setTimeout(() => { running = false; }, 20).unref(); },
             intervalMs: 5,
         });
@@ -51,8 +53,25 @@ describe('one plurid dev per root', () => {
         expect(stale).toEqual({ stale: 1002 });
         expect(killed).toEqual([]);
 
-        await expect(claimPidfile(pidfile, 1004, { alive: () => true, kill: () => {}, timeoutMs: 30, intervalMs: 5 }))
+        await expect(claimPidfile(pidfile, 1004, { alive: () => true, identify: () => true, kill: () => {}, timeoutMs: 30, intervalMs: 5 }))
             .rejects.toThrow(/did not stop/);
+    });
+
+    it('a live process that is not a plurid dev (the pid was reused after a hard kill) is never signalled (2026-09-29)', async () => {
+        const stranger = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
+        try {
+            await new Promise((resolve) => stranger.once('spawn', resolve));
+            writeFileSync(pidfile, String(stranger.pid) + '\n');
+
+            const claim = await claimPidfile(pidfile, 2001);
+
+            expect(claim).toEqual({ stale: stranger.pid });
+            expect(stranger.exitCode).toBeNull();
+            expect(stranger.signalCode).toBeNull();
+            expect(readFileSync(pidfile, 'utf8').trim()).toBe('2001');
+        } finally {
+            stranger.kill('SIGKILL');
+        }
     });
 });
 // #endregion module

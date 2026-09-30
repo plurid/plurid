@@ -209,18 +209,31 @@ describe('loadPluridConfig', () => {
 });
 
 
-describe('resolveServerOnly arity', () => {
-    it('invokes a zero-arg thunk', async () => {
+describe('server-only thunks, told apart without counting parameters (2026-09-29)', () => {
+    it('a value that is never a function (preserves, load): any function is its thunk, a module unwrapped', async () => {
         const { resolveServerOnly } = await import('../shared');
-        const resolved = await resolveServerOnly(() => 'produced');
-        expect(resolved).toBe('produced');
+        expect(await resolveServerOnly(() => 'produced')).toBe('produced');
+        expect(await resolveServerOnly(() => Promise.resolve({ default: ['a preserve'] }))).toEqual(['a preserve']);
+        expect(await resolveServerOnly(['as is'])).toEqual(['as is']);
     });
 
-    it('returns a parameterized function AS the value (handlers shape)', async () => {
-        const { resolveServerOnly } = await import('../shared');
+    it('a value that IS a function (document, handlers): a bare function is the value — even with no parameters', async () => {
+        const { resolveServerOnlyFunction } = await import('../shared');
         const handler = (server: unknown) => server;
-        const resolved = await resolveServerOnly(handler);
-        expect(resolved).toBe(handler);
+        expect(await resolveServerOnlyFunction(handler)).toBe(handler);
+        // a context-free document hook was called at startup as a thunk, and every request failed
+        const contextFree = jest.fn(() => ({ meta: [{ name: 'robots', content: 'noindex' }] }));
+        expect(await resolveServerOnlyFunction(contextFree)).toBe(contextFree);
+        expect(contextFree).not.toHaveBeenCalled();
+    });
+
+    it('a thunk marked with serverOnly is called once and what it produced is the value', async () => {
+        const { resolveServerOnlyFunction } = await import('../shared');
+        const { serverOnly } = await import('../index');
+        const hook = () => ({ title: 'hooked' });
+        const thunk = jest.fn(() => Promise.resolve({ default: hook }));
+        expect(await resolveServerOnlyFunction(serverOnly(thunk))).toBe(hook);
+        expect(thunk).toHaveBeenCalledTimes(1);
     });
 });
 // #endregion module

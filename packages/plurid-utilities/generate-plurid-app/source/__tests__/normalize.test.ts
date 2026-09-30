@@ -1,4 +1,4 @@
-jest.mock('ora', () => () => ({ start: () => ({ stopAndPersist: () => {} }) }));
+jest.mock('ora', () => () => ({ start: () => ({ stopAndPersist: () => {}, fail: () => {} }) }));
 
 import fs from 'node:fs';
 import os from 'node:os';
@@ -12,6 +12,7 @@ import {
     executeCommand,
     ensureOwnedDirectory,
     copyDirectory,
+    needsShell,
 } from '../utilities';
 
 
@@ -44,6 +45,15 @@ describe('the utilities (C12)', () => {
         await expect(executeCommand('definitely-not-a-program-xyz', ['--version'])).rejects.toThrow();
         const ran = await executeCommand(process.execPath, ['-e', 'console.log("a b")']);
         expect(ran.stdout.trim()).toBe('a b');
+    });
+
+    it('the package managers run through a shell on Windows only (their `.cmd` shims do not start without one)', () => {
+        expect(needsShell('npm', 'win32')).toBe(true);
+        expect(needsShell('pnpm', 'win32')).toBe(true);
+        expect(needsShell('yarn', 'win32')).toBe(true);
+        expect(needsShell('git', 'win32')).toBe(false);
+        expect(needsShell('npm', 'linux')).toBe(false);
+        expect(needsShell('npm', 'darwin')).toBe(false);
     });
 
     it('the destination must be ours: missing (created) or empty; a non-empty directory is refused', () => {

@@ -1,6 +1,8 @@
 // #region imports
     // #region libraries
+    import { execFileSync, spawn, type ChildProcess } from 'child_process';
     import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
+    import { constants } from 'os';
     import { dirname } from 'path';
     import net from 'net';
     // #endregion libraries
@@ -149,6 +151,125 @@ export const createRestarter = <T extends Restartable>(
 };
 
 
+/** The signals a supervisor (`plurid start`, `plurid dev`) passes on to the server it runs. */
+export const FORWARDED_SIGNALS: NodeJS.Signals[] = ['SIGINT', 'SIGTERM', 'SIGHUP'];
+
+
+/**
+ * Pass each of `signals` this process receives on to `child`. A supervisor that signals only the main
+ * process (`kill <pid>`, supervisord, a container runtime where `plurid start` is PID 1) stopped
+ * `plurid start` and left the server it had spawned running, orphaned, holding the port (2026-09-29).
+ * Listening also keeps the supervisor from dying of the signal itself: it waits for the child (see
+ * `superviseServer`). Returns the function that stops the forwarding.
+ */
+export const forwardSignals = (
+    child: Pick<ChildProcess, 'kill'>,
+    signals: NodeJS.Signals[] = FORWARDED_SIGNALS,
+    target: NodeJS.EventEmitter = process,
+): (() => void) => {
+    const forwarders = signals.map((signal) => {
+        const forward = () => {
+            try {
+                child.kill(signal);
+            } catch (_) { /* gone already */ }
+        };
+        target.on(signal, forward);
+        return () => {
+            target.removeListener(signal, forward);
+        };
+    });
+
+    return () => {
+        for (const stop of forwarders) {
+            stop();
+        }
+    };
+};
+
+
+/** A process's exit status as a shell reports it: the code, or `128 + n` for death by signal `n`. */
+export const exitStatusOf = (
+    code: number | null,
+    signal: NodeJS.Signals | null,
+): number => {
+    if (signal) {
+        return 128 + ((constants.signals as Record<string, number>)[signal] ?? 0);
+    }
+    return code ?? 1;
+};
+
+
+/**
+ * End this process as its child ended: with the child's code, or — killed by a signal (the OOM
+ * killer's SIGKILL, an operator's SIGTERM to the server alone) — by the same signal, re-raised on
+ * itself, so whatever runs `plurid start` sees what happened to the server; `128 + n` where the
+ * signal does not end it. `process.exit(code || 0)` reported a server killed by a signal as a success,
+ * and `restart: on-failure` never restarted it (2026-09-29). Call it with no listener of this
+ * process's own left on the signal.
+ */
+export const exitLikeChild = (
+    code: number | null,
+    signal: NodeJS.Signals | null,
+): void => {
+    const status = exitStatusOf(code, signal);
+    if (!signal) {
+        process.exit(status);
+    }
+
+    process.exitCode = status;
+    try {
+        process.kill(process.pid, signal);
+    } catch (_) { /* a signal this platform cannot raise: the status stands */ }
+    // still here (a signal that does not terminate, or not delivered yet): leave with the status
+    setTimeout(() => {
+        process.exit(status);
+    }, 500);
+};
+
+
+/**
+ * Run the built server as a supervised child: spawned with this very Node (`process.execPath`, not
+ * whichever `node` is first on PATH), the stdio shared, the signals forwarded (`forwardSignals`), and
+ * this process ending as the server did (`exitLikeChild`) once `onExit` (a pidfile's release) has run.
+ */
+export const superviseServer = (
+    serverEntry: string,
+    environment: NodeJS.ProcessEnv,
+    options: { onExit?: () => void } = {},
+): ChildProcess => {
+    const child = spawn(process.execPath, [serverEntry], {
+        stdio: 'inherit',
+        env: environment,
+    });
+    const stopForwarding = forwardSignals(child);
+
+    let ended = false;
+    const end = () => {
+        if (ended) {
+            return false;
+        }
+        ended = true;
+        stopForwarding();
+        options.onExit?.();
+        return true;
+    };
+
+    child.once('error', (error) => {
+        if (end()) {
+            process.stderr.write(`[plurid] could not run the server (${serverEntry}): ${error.message}\n`);
+            process.exit(1);
+        }
+    });
+    child.once('exit', (code, signal) => {
+        if (end()) {
+            exitLikeChild(code, signal);
+        }
+    });
+
+    return child;
+};
+
+
 /** Whether a TCP port can be bound on this host (a pre-flight check before spawning the server). */
 export const isPortFree = (
     port: number,
@@ -178,6 +299,8 @@ export interface PidfileClaim {
 export interface PidfileOptions {
     /** whether a process is running (default: `process.kill(pid, 0)`) */
     alive?: (pid: number) => boolean;
+    /** whether a running process is a `plurid dev` (default: its command line, through `ps`) */
+    identify?: (pid: number) => boolean;
     /** how an earlier dev is told to stop (default: `SIGTERM`) */
     kill?: (pid: number) => void;
     /** how long to wait for it to go, in ms (default 3000) */
@@ -195,6 +318,28 @@ const processAlive = (
     } catch (_error) {
         return false;
     }
+};
+
+/**
+ * Whether `pid` is a `plurid dev`: its command line runs plurid, with `dev` as an argument after it.
+ * A pidfile outlives a dev killed hard (SIGKILL, a crash), and by the next run its pid may belong to
+ * an unrelated process, which the claim then SIGTERMed (2026-09-29). Where `ps` cannot answer (Windows),
+ * the process is taken to be one, as before.
+ */
+const isPluridDev = (
+    pid: number,
+): boolean => {
+    let command: string;
+    try {
+        command = execFileSync('ps', ['-o', 'command=', '-p', String(pid)], {
+            stdio: ['ignore', 'pipe', 'ignore'],
+        }).toString();
+    } catch (_error) {
+        return true;
+    }
+    const words = command.trim().split(/\s+/);
+    const plurid = words.findIndex((word) => /plurid/.test(word));
+    return plurid !== -1 && words.slice(plurid + 1).includes('dev');
 };
 
 const readPid = (
@@ -219,6 +364,7 @@ export const claimPidfile = async (
     options: PidfileOptions = {},
 ): Promise<PidfileClaim> => {
     const alive = options.alive ?? processAlive;
+    const identify = options.identify ?? isPluridDev;
     const kill = options.kill ?? ((target: number) => { process.kill(target, 'SIGTERM'); });
     const timeoutMs = options.timeoutMs ?? 3000;
     const intervalMs = options.intervalMs ?? 50;
@@ -226,7 +372,7 @@ export const claimPidfile = async (
 
     const previous = readPid(path);
     if (previous !== undefined && previous !== pid) {
-        if (alive(previous)) {
+        if (alive(previous) && identify(previous)) {
             kill(previous);
             const deadline = Date.now() + timeoutMs;
             while (alive(previous) && Date.now() < deadline) {

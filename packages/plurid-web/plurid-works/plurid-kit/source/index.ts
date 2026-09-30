@@ -34,10 +34,47 @@
  * ```ts
  * preserves: () => import('./source/server/preserves'),
  * ```
+ *
+ * For `preserves` and `load` (values that are never functions) any function is
+ * the thunk. For `document` and `handlers`, whose values ARE functions, a bare
+ * function is the hook itself: mark a thunk with {@link serverOnly}.
  */
 export type ServerOnly<T> =
     | T
+    | ServerOnlyThunk<T>
     | (() => T | Promise<T> | Promise<{ default: T }>);
+
+
+/** The mark `serverOnly` puts on a thunk. */
+export const SERVER_ONLY = Symbol.for('@plurid/plurid-kit/server-only');
+
+/** A thunk marked as one (`serverOnly`). */
+export type ServerOnlyThunk<T> = (() => T | Promise<T> | Promise<{ default: T }>) & {
+    readonly [SERVER_ONLY]: true;
+};
+
+
+/**
+ * Mark `thunk` as a server-only thunk: the framework calls it once on the
+ * server (awaited, a `{ default }` module unwrapped) and uses what it produced.
+ * Needed where the value is itself a function — `document`, `handlers` — whose
+ * thunk was told apart from the value by its number of parameters, so a
+ * context-free hook (`document: () => ({ meta })`) was called at startup as a
+ * thunk and every request failed (2026-09-29).
+ *
+ * ```ts
+ * document: serverOnly(() => import('./source/server/document')),
+ * handlers: serverOnly(() => import('./source/server/handlers')),
+ * ```
+ */
+export function serverOnly<T>(
+    thunk: () => T | Promise<T> | Promise<{ default: T }>,
+): ServerOnlyThunk<T> {
+    Object.defineProperty(thunk, SERVER_ONLY, {
+        value: true,
+    });
+    return thunk as ServerOnlyThunk<T>;
+}
 
 
 /**
@@ -171,7 +208,8 @@ export interface PluridConfig {
     /**
      * A server-side document layer computed AFTER the render, above everything else — the seam
      * for a head library you still run inside `services` (read its context here and return a
-     * `PluridDocument`). Server only.
+     * `PluridDocument`). Server only. A function here IS the hook (called per request); a lazy
+     * import is `serverOnly(() => import('./document'))`.
      */
     document?: ServerOnly<PluridServerDocumentHook>;
     /**
@@ -192,13 +230,25 @@ export interface PluridConfig {
     favicon?: PluridFavicon;
     /** Web app manifest path, e.g. `/site.webmanifest`. */
     manifest?: string;
-    /** Extra global stylesheet hrefs. -> `styles`. */
+    /**
+     * Global stylesheet hrefs (`'/global.css'`), each a `<link rel="stylesheet">` in the head's
+     * lowest layer. A string that starts with `<` is markup (a `<style>` / `<link>` tag) and goes
+     * into the page as it is.
+     */
     styles?: string[];
 
     // --- error pages --------------------------------------------
-    /** Component (registered as the NOT_FOUND route) or a path under `public/`. */
+    /**
+     * The 404 page. A component: registered on both targets as the not-found route (`/not-found`,
+     * unless `routes` has one), rendered for every unknown URL. A path under `public/`
+     * (`'/404.html'`): that file, sent as it is.
+     */
     notFound?: PluridServerConfiguration['shell'] | string;
-    /** Component or a path under `public/` rendered on a 500. */
+    /**
+     * The 500 page. A path under `public/` (`'/500.html'`): that file. A component: rendered once,
+     * to static HTML, when the server starts (no request, no script: it is served when rendering
+     * has failed).
+     */
     errorPage?: PluridServerConfiguration['shell'] | string;
 
     // --- static + build -----------------------------------------
@@ -213,7 +263,12 @@ export interface PluridConfig {
 
     // --- express extension (SERVER-ONLY) ------------------------
     middleware?: PluridServerMiddleware[];
-    /** Imperative access to the underlying server for custom routes (deon/defile/decart/status). */
+    /**
+     * Imperative access to the underlying server for custom routes (deon/defile/decart/status):
+     * called during construction, BEFORE the page's catch-all `GET`, so `server.instance().get(…)`
+     * and `server.handle().get(…)` answer. Register synchronously. A lazy import is
+     * `serverOnly(() => import('./handlers'))`.
+     */
     handlers?: ServerOnly<(server: PluridServer) => void>;
 
     // --- raw escape hatches (passthrough to the runtime) --------

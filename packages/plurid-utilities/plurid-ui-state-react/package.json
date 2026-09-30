@@ -31,8 +31,7 @@
     "module": "distribution/index.mjs",
     "types": "distribution/index.d.ts",
     "engines": {
-        "node": ">=18",
-        "npm": ">=8"
+        "node": ">=22"
     },
     "scripts": {
         "test": "jest -c ./configurations/jest.config.js",
@@ -59,10 +58,16 @@
     },
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
-        }
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "dependencies": {
         "@plurid/plurid-themes": "workspace:^"

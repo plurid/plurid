@@ -43,6 +43,7 @@
     // #region external
     import {
         PluridReactComponent,
+        PluridReactApplicationProperties,
     } from '~data/interfaces';
 
     import PluridProviderContext from '~containers/Provider/context';
@@ -906,7 +907,7 @@ class PluridApplicationShell extends Component<
  */
 const PluridApplication = forwardRef<
     PluridApplicationHandle,
-    PluridApplicationProperties<PluridReactComponent>
+    PluridReactApplicationProperties
 >((properties, reference) => {
     const shell = useRef<PluridApplicationShell>(null);
     // inside a router route the router owns the pathname: the address bar rides the query there

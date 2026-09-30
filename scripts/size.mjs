@@ -56,7 +56,9 @@ const entriesOf = (directory, data) => {
     const entries = [];
     if (data.exports && typeof data.exports === 'object') {
         for (const [subpath, target] of Object.entries(data.exports)) {
-            const file = typeof target === 'string' ? target : (target.import ?? target.module ?? target.default);
+            const condition = typeof target === 'string' ? target : (target.import ?? target.module ?? target.default);
+            // a nested condition (`import: { types, default }`) names its file under `default`
+            const file = condition && typeof condition === 'object' ? condition.default : condition;
             if (typeof file === 'string' && file.endsWith('.mjs')) {
                 entries.push({ name: subpath === '.' ? data.name : data.name + subpath.slice(1), file: join(directory, file) });
             }

@@ -188,6 +188,14 @@ export const handlePTTPRequest = async (
             );
         }
 
+        // an answer already on its way cannot become an error page (the send would throw from here)
+        if (response.headersSent) {
+            if (!response.writableEnded) {
+                response.end();
+            }
+            return;
+        }
+
         response
             .status(500)
             .send(server.template?.errorHtml || SERVER_ERROR_TEMPLATE);

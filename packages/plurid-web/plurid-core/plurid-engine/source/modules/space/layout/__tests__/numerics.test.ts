@@ -69,6 +69,17 @@ describe('layout numbers', () => {
         expect(new Set(pair.map((root) => root.location.translateY)).size).toBe(2);
     });
 
+    it('face to face: `middle: true` is one plane in the middle, as it always was (a row of three)', () => {
+        const rows = (middle: unknown) => new Set(
+            computeFaceToFaceLayout(roots(6), 90, 0, middle as any, defaultConfiguration, view)
+                .map((root) => root.location.translateY),
+        ).size;
+        expect(rows(true)).toBe(2);
+        expect(rows(1)).toBe(2);
+        expect(rows(false)).toBe(3);
+        expect(rows(0)).toBe(3);
+    });
+
     it('splitIntoGroups is safe for any length: a whole number of at least 1', () => {
         const data = [1, 2, 3, 4, 5];
         for (const length of [0, -1, NaN, 0.5]) {

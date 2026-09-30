@@ -93,6 +93,36 @@ const pluridPropertyOf = (
     };
 };
 
+const describeComponent = (
+    component: unknown,
+): string => {
+    if (typeof component === 'string') {
+        return JSON.stringify(component);
+    }
+    if (component && typeof component === 'object') {
+        return '{ ' + Object.keys(component).join(', ') + ' }';
+    }
+    return String(component);
+};
+
+/**
+ * A plane whose component is not a React component (an ElementQL name, `{ name, url }`): it throws
+ * where the plane's boundary catches it, so the plane shows its error card and the host hears
+ * `planeError`. A root rendered a stray `<Home>` element and a spawned child rendered nothing, both
+ * without a word (2026-09-29).
+ */
+const UnrenderablePlane: React.FC<{
+    route: string;
+    component: unknown;
+}> = ({
+    route,
+    component,
+}) => {
+    throw new Error(
+        `the plane at '${route}' has a component that is not a React component (${describeComponent(component)}): pass a function component`,
+    );
+};
+
 export interface PluridRootOwnProperties {
     plane: TreePlane;
 }
@@ -207,36 +237,39 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                         )
                     }
 
-                    if (renderablePlane) {
-                        return (
-                            <PluridPlaneIDContext.Provider
-                                key={keyBase + child.planeID}
-                                value={child.planeID}
-                            >
-                                <PluridPlane
-                                    {...planeProperties}
-                                >
-                                    {!PlaneContext
-                                        ? (
-                                            <Plane
-                                                {...properties}
-                                            />
-                                        ) : (
-                                            <PlaneContext.Provider
-                                                value={planeContextValue}
-                                            >
-                                                <Plane
-                                                    {...properties}
-                                                />
-                                            </PlaneContext.Provider>
-                                        )
-                                    }
-                                </PluridPlane>
-                            </PluridPlaneIDContext.Provider>
+                    const content = renderablePlane
+                        ? (
+                            <Plane
+                                {...properties}
+                            />
+                        ) : (
+                            <UnrenderablePlane
+                                route={activePlane.route.absolute}
+                                component={Plane}
+                            />
                         );
-                    }
 
-                    return (<></>);
+                    return (
+                        <PluridPlaneIDContext.Provider
+                            key={keyBase + child.planeID}
+                            value={child.planeID}
+                        >
+                            <PluridPlane
+                                {...planeProperties}
+                            >
+                                {!PlaneContext
+                                    ? content
+                                    : (
+                                        <PlaneContext.Provider
+                                            value={planeContextValue}
+                                        >
+                                            {content}
+                                        </PlaneContext.Provider>
+                                    )
+                                }
+                            </PluridPlane>
+                        </PluridPlaneIDContext.Provider>
+                    );
                 }
 
                 // Named `renderedPlane` (not `plane`) so it doesn't shadow the `plane`
@@ -302,10 +335,6 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     }
 
     const Plane: any = pluridPlane.component;
-    // if (typeof Plane !== 'function') {
-    //     return (<></>);
-    // }
-    // console.log('Root Plane', Plane);
 
 
     const pluridProperty = pluridPropertyOf(pluridPlane, plane, matchedRoute, defaultPubSub);
@@ -339,6 +368,18 @@ const PluridRoot: React.FC<PluridRootProperties> = (
         );
     }
 
+    const content = isReactRenderable(Plane)
+        ? (
+            <Plane
+                {...planeProperties}
+            />
+        ) : (
+            <UnrenderablePlane
+                route={pluridPlane.route.absolute}
+                component={Plane}
+            />
+        );
+
     return (
         <StyledPluridRoot
             data-plurid-entity={PLURID_ENTITY_ROOT}
@@ -353,17 +394,12 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                     location={location}
                 >
                     {!PlaneContext
-                        ? (
-                            <Plane
-                                {...planeProperties}
-                            />
-                        ) : (
+                        ? content
+                        : (
                             <PlaneContext.Provider
                                 value={planeContextValue}
                             >
-                                <Plane
-                                    {...planeProperties}
-                                />
+                                {content}
                             </PlaneContext.Provider>
                         )
                     }

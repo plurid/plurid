@@ -7,6 +7,9 @@
 
 
     // #region internal
+    import {
+        SERVER_ONLY,
+    } from '../index';
     import type {
         ServerOnly,
         PluridConfig,
@@ -62,7 +65,7 @@ export function routerProperties(
     config: PluridConfig,
 ): Record<string, unknown> {
     return {
-        routes: config.routes,
+        routes: routesOf(config),
         planes: config.planes || [],
         exterior: config.exterior,
         shell: config.shell,
@@ -73,14 +76,75 @@ export function routerProperties(
 }
 
 
+/**
+ * The path of the not-found route: the server's default (`PLURID_SERVER_NOT_FOUND_ROUTE` renames it
+ * there, and only there) and the browser router's.
+ */
+export const NOT_FOUND_PATH = '/not-found';
+
+
+/**
+ * The routes both targets render: the config's, plus a `notFound` component as the not-found route
+ * (unless the routes have one). The server renders it for every unknown URL (with a 404) and the
+ * browser router falls back to it, so both must be handed it, or the page does not hydrate.
+ * `notFound` was never read (2026-09-29).
+ */
+export function routesOf(
+    config: PluridConfig,
+): PluridConfig['routes'] {
+    const routes = config.routes || [];
+    const notFound = config.notFound;
+    if (
+        !notFound
+        || typeof notFound === 'string'
+        || routes.some((route) => route.value === NOT_FOUND_PATH)
+    ) {
+        return routes;
+    }
+
+    return [
+        ...routes,
+        {
+            value: NOT_FOUND_PATH,
+            exterior: notFound,
+        },
+    ];
+}
+
+
 /** The window globals the server preserve / template emit and the client reads once. */
 export const PRELOADED_REDUX_STATE_KEY = '__PRELOADED_REDUX_STATE__';
 export const PRELOADED_PLURID_METASTATE_KEY = '__PRELOADED_PLURID_METASTATE__';
 
+/** Whether `value` is a thunk marked with `serverOnly`. */
+export const isServerOnlyThunk = (
+    value: unknown,
+): boolean => typeof value === 'function'
+    && (value as unknown as Record<symbol, unknown>)[SERVER_ONLY] === true;
+
+
+/** A `{ default }` ES-module namespace unwrapped (so `() => import('./preserves')` works). */
+const unwrapDefault = <T>(
+    produced: unknown,
+): T => (
+    produced
+    && typeof produced === 'object'
+    && 'default' in (produced as Record<string, unknown>)
+        ? (produced as { default: T }).default
+        : produced as T
+);
+
+
+const callThunk = async <T>(
+    thunk: unknown,
+): Promise<T> => unwrapDefault<T>(
+    await (thunk as () => T | Promise<T> | Promise<{ default: T }>)(),
+);
+
+
 /**
- * Resolve a {@link ServerOnly} value: call the thunk if given one, await the
- * result, and unwrap a `{ default }` ES-module namespace (so
- * `() => import('./preserves')` works). A non-thunk value is returned as-is.
+ * Resolve a {@link ServerOnly} value that is never itself a function (`preserves`, `load`): a
+ * function is its thunk — called, awaited, a `{ default }` module unwrapped. A value is returned as-is.
  */
 export async function resolveServerOnly<T>(
     value: ServerOnly<T> | undefined,
@@ -89,25 +153,45 @@ export async function resolveServerOnly<T>(
         return value;
     }
 
-    // A function DECLARING parameters cannot be a zero-arg thunk - it IS the
-    // value (e.g. `handlers: (server) => {...}` passed bare). Only invoke
-    // parameterless functions as thunks.
-    if ((value as (...args: unknown[]) => unknown).length > 0) {
-        return value as T;
-    }
-
-    const produced = await (value as () => T | Promise<T> | Promise<{ default: T }>)();
-
-    if (
-        produced
-        && typeof produced === 'object'
-        && 'default' in (produced as Record<string, unknown>)
-    ) {
-        return (produced as { default: T }).default;
-    }
-
-    return produced as T;
+    return callThunk<T>(value);
 }
+
+
+/**
+ * Resolve a {@link ServerOnly} value that IS a function (`document`, `handlers`): only a thunk marked
+ * with `serverOnly` is called; a bare function is the value. The two were told apart by their number of
+ * parameters, so a context-free hook (`document: () => ({ meta })`) was called at startup as a thunk,
+ * its object became the hook, and every request failed (2026-09-29).
+ */
+export async function resolveServerOnlyFunction<T extends (...args: any[]) => unknown>(
+    value: ServerOnly<T> | undefined,
+): Promise<T | undefined> {
+    if (!isServerOnlyThunk(value)) {
+        return value as T | undefined;
+    }
+
+    return callThunk<T>(value);
+}
+
+
+/**
+ * The function a lazy import produced — the value itself, or a module's `default` — else `undefined`.
+ * What an unmarked thunk of a function-valued field (`handlers: () => import('./handlers')`, written
+ * before `serverOnly`) hands back when it is called as the function.
+ */
+export const producedFunction = (
+    value: unknown,
+): ((...args: any[]) => unknown) | undefined => {
+    if (typeof value === 'function') {
+        return value as (...args: any[]) => unknown;
+    }
+    const inner = value && typeof value === 'object'
+        ? (value as { default?: unknown }).default
+        : undefined;
+    return typeof inner === 'function'
+        ? inner as (...args: any[]) => unknown
+        : undefined;
+};
 
 
 /**

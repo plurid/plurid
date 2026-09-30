@@ -1,6 +1,5 @@
 // #region imports
     // #region libraries
-    import { spawn } from 'child_process';
     import fs from 'fs';
     // #endregion libraries
 
@@ -15,6 +14,10 @@
     import {
         resolvePaths,
     } from './paths';
+    import {
+        isPortFree,
+        superviseServer,
+    } from './process';
     // #endregion internal
 // #endregion imports
 
@@ -22,9 +25,13 @@
 
 // #region module
 /**
- * `plurid start` - run the production server (`node build/index.js`) with
+ * `plurid start` - run the production server (`build/index.js`) with
  * `ENV_MODE=production`. The container `CMD`. Honours `$PORT` (createPluridServer
  * starts on it). Requires a prior `plurid build`.
+ *
+ * A supervisor: the signals it receives reach the server, and it ends as the
+ * server did (`superviseServer`). A present but broken `plurid.config.ts` is
+ * fatal, as in `plurid build`: it names the build directory to run.
  */
 export async function start(
     argv: string[],
@@ -32,7 +39,7 @@ export async function start(
     const mode = 'production';
     loadEnvironment(mode);
 
-    const paths = resolvePaths(await loadPluridConfig());
+    const paths = resolvePaths(await loadPluridConfig(process.cwd(), { strict: true }));
     if (!fs.existsSync(paths.serverEntry)) {
         process.stderr.write(
             `[plurid start] ${paths.serverEntry} not found - run \`plurid build\` first.\n`,
@@ -42,18 +49,17 @@ export async function start(
 
     const port = readPort(argv) || process.env.PORT || '8080';
 
-    const child = spawn('node', [paths.serverEntry], {
-        stdio: 'inherit',
-        env: {
-            ...process.env,
-            PORT: String(port),
-            ENV_MODE: mode,
-            NODE_ENV: mode,
-        },
-    });
+    // the same pre-flight as `plurid dev`: a busy port is a message, not a crashed child
+    if (!(await isPortFree(Number(port)))) {
+        process.stderr.write(`[plurid start] port ${port} is already in use — stop the other server or pass --port <n>\n`);
+        process.exit(1);
+    }
 
-    child.on('exit', (code) => {
-        process.exit(code || 0);
+    superviseServer(paths.serverEntry, {
+        ...process.env,
+        PORT: String(port),
+        ENV_MODE: mode,
+        NODE_ENV: mode,
     });
 }
 

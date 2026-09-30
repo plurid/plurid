@@ -1,16 +1,12 @@
-// #region imports
-    // #region external
-    import {
-        cleanTemplate,
-    } from '~utilities/template';
-    // #endregion external
-// #endregion imports
-
-
-
 // #region module
-export const NOT_FOUND_TEMPLATE = cleanTemplate(`
-<!DOCTYPE html>
+/**
+ * The built-in 404 and 500 pages: static strings. They were `cleanTemplate(…)` results, and
+ * html-minifier-terser's `minify` is async since v7, so both constants were Promises that
+ * `response.send` serialized as the JSON `{}` — every unknown URL of an application without a
+ * not-found route answered `404 application/json "{}"` (2026-09-29). A static page has nothing to
+ * minify at request time.
+ */
+export const NOT_FOUND_TEMPLATE = `<!DOCTYPE html>
 <html>
     <head>
         <title>[404] Not Found</title>
@@ -36,11 +32,10 @@ export const NOT_FOUND_TEMPLATE = cleanTemplate(`
         <div class="not-found">[404] Not Found</div>
     </body>
 </html>
-`);
+`;
 
 
-export const SERVER_ERROR_TEMPLATE = cleanTemplate(`
-<!DOCTYPE html>
+export const SERVER_ERROR_TEMPLATE = `<!DOCTYPE html>
 <html>
     <head>
         <title>[500] Server Error</title>
@@ -66,5 +61,5 @@ export const SERVER_ERROR_TEMPLATE = cleanTemplate(`
         <div class="error">[500] Server Error</div>
     </body>
 </html>
-`);
+`;
 // #endregion module

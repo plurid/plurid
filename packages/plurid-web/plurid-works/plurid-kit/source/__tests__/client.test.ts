@@ -162,6 +162,22 @@ describe('createPluridClient() hydrates the router the server rendered', () => {
         expect(router!.props.cleanNavigation).toBe(true);
     });
 
+    it('with the not-found route a `notFound` component adds, as the server has it (2026-09-29)', async () => {
+        const NotFound = () => null;
+        const config: any = {
+            serverName: 'kit',
+            hostname: 'example.com',
+            routes: [{ value: '/', planes: [['/one', Plane]], view: ['/one'] }],
+            notFound: NotFound,
+        };
+        const server: any = await createPluridServer(config);
+
+        const router = clientRouter(config);
+
+        expect(router!.props.routes).toEqual(server.configuration.routes);
+        expect(router!.props.routes[1]).toEqual({ value: '/not-found', exterior: NotFound });
+    });
+
     it('and the raw options\' hostname when a config sets one', async () => {
         const config: any = {
             serverName: 'kit',

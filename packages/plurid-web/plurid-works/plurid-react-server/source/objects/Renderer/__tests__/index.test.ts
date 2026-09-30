@@ -67,4 +67,14 @@ describe('PluridRenderer — SSR HTML assembly', () => {
 
         expect(html).toContain('<html lang="en" data-theme="dark">');
     });
+
+    it('escapes the language: a document `lang` cannot close the html tag (2026-09-29)', async () => {
+        const html = await new PluridRenderer({
+            ...baseConfig(),
+            htmlLanguage: 'en"><script>alert(1)</script><x a="',
+        }).html();
+
+        expect(html).not.toContain('<script>alert(1)</script>');
+        expect(html).toContain('<html lang="en&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;x a=&quot;"');
+    });
 });

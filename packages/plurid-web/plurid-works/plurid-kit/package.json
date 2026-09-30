@@ -13,7 +13,8 @@
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
-        "url": "https://github.com/plurid/plurid"
+        "url": "https://github.com/plurid/plurid",
+        "directory": "packages/plurid-web/plurid-works/plurid-kit"
     },
     "bugs": {
         "email": "source@plurid.com",
@@ -31,29 +32,45 @@
     "main": "distribution/index.js",
     "module": "distribution/index.mjs",
     "types": "distribution/index.d.ts",
+    "sideEffects": false,
     "bin": {
         "plurid": "./distribution/cli/index.js"
     },
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
         },
         "./server": {
-            "types": "./distribution/server.d.ts",
-            "import": "./distribution/server.mjs",
-            "require": "./distribution/server.js"
+            "import": {
+                "types": "./distribution/server.d.mts",
+                "default": "./distribution/server.mjs"
+            },
+            "require": {
+                "types": "./distribution/server.d.ts",
+                "default": "./distribution/server.js"
+            }
         },
         "./client": {
-            "types": "./distribution/client.d.ts",
-            "import": "./distribution/client.mjs",
-            "require": "./distribution/client.js"
-        }
+            "import": {
+                "types": "./distribution/client.d.mts",
+                "default": "./distribution/client.mjs"
+            },
+            "require": {
+                "types": "./distribution/client.d.ts",
+                "default": "./distribution/client.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "scripts": {
         "clean": "rm -rf ./distribution",

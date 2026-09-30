@@ -51,6 +51,8 @@ export interface StillerOptions {
     host: string;
     routes: string[];
     configuration: StillerConfiguration;
+    /** Puppeteer, already loaded (`loadPuppeteer`); loaded by `still()` when absent. */
+    puppeteer?: any;
 }
 
 export type StillerConfiguration = Pick<PluridStillerOptions, 'timeout' | 'waitUntil'>;

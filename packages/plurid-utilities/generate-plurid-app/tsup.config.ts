@@ -17,6 +17,10 @@ export default defineConfig({
     sourcemap: true,
     clean: true,
     treeshake: false,
+    // `__dirname` in the ESM build too (the binder runs that build): where the templates and
+    // `versions.json` are found. Without it the ESM build fell back to `process.argv[1]`, which is
+    // `node_modules/.bin/` when npm links the bin, and found no template.
+    shims: true,
     async onSuccess() {
         await cp('./templates', './distribution/templates', { recursive: true });
         // the versions the generated manifest asks for: the workspace's siblings (the kit, the engine, the server)

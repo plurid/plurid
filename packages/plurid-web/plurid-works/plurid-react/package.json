@@ -13,7 +13,8 @@
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
-        "url": "https://github.com/plurid/plurid"
+        "url": "https://github.com/plurid/plurid",
+        "directory": "packages/plurid-web/plurid-works/plurid-react"
     },
     "bugs": {
         "email": "source@plurid.com",
@@ -23,7 +24,7 @@
         "registry": "https://registry.npmjs.org/",
         "access": "public"
     },
-    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-react",
+    "homepage": "https://github.com/plurid/plurid/blob/master/packages/plurid-web/plurid-works/plurid-react",
     "files": [
         "distribution/"
     ],
@@ -31,8 +32,7 @@
     "module": "distribution/index.mjs",
     "types": "distribution/index.d.ts",
     "engines": {
-        "node": ">=18",
-        "npm": ">=6"
+        "node": ">=22"
     },
     "scripts": {
         "clean": "rm -rf ./distribution",
@@ -94,20 +94,36 @@
     },
     "exports": {
         ".": {
-            "types": "./distribution/index.d.ts",
-            "import": "./distribution/index.mjs",
-            "require": "./distribution/index.js"
+            "import": {
+                "types": "./distribution/index.d.mts",
+                "default": "./distribution/index.mjs"
+            },
+            "require": {
+                "types": "./distribution/index.d.ts",
+                "default": "./distribution/index.js"
+            }
         },
         "./testing": {
-            "types": "./distribution/testing.d.ts",
-            "import": "./distribution/testing.mjs",
-            "require": "./distribution/testing.js"
+            "import": {
+                "types": "./distribution/testing.d.mts",
+                "default": "./distribution/testing.mjs"
+            },
+            "require": {
+                "types": "./distribution/testing.d.ts",
+                "default": "./distribution/testing.js"
+            }
         },
         "./agent": {
-            "types": "./distribution/agent.d.ts",
-            "import": "./distribution/agent.mjs",
-            "require": "./distribution/agent.js"
-        }
+            "import": {
+                "types": "./distribution/agent.d.mts",
+                "default": "./distribution/agent.mjs"
+            },
+            "require": {
+                "types": "./distribution/agent.d.ts",
+                "default": "./distribution/agent.js"
+            }
+        },
+        "./package.json": "./package.json"
     },
     "peerDependenciesMeta": {
         "@plurid/elementql-client-react": {

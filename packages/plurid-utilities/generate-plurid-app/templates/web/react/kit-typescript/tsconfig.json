@@ -6,7 +6,6 @@
         "lib": ["ES2020", "DOM", "DOM.Iterable"],
         "jsx": "react",
 
-        "baseUrl": ".",
         "paths": {
             "~client/*": ["./source/client/*"],
             "~server/*": ["./source/server/*"],

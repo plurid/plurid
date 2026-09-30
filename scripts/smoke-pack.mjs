@@ -228,9 +228,20 @@ const entriesOf = (data) => {
     if (exportsMap && typeof exportsMap === 'object') {
         for (const [subpath, target] of Object.entries(exportsMap)) {
             if (typeof target === 'string') {
-                entries.push({ subpath, esm: true, cjs: true });
+                // `./package.json` is data (a `require`, or an import attribute), not a module entry
+                if (/\.(c|m)?js$/.test(target)) {
+                    entries.push({ subpath, esm: true, cjs: true });
+                }
             } else if (target && typeof target === 'object') {
-                entries.push({ subpath, esm: !!(target.import ?? target.default), cjs: !!(target.require ?? target.default) });
+                const esm = target.import ?? target.default;
+                const cjs = target.require ?? target.default;
+                entries.push({
+                    subpath,
+                    esm: !!esm,
+                    cjs: !!cjs,
+                    // declarations per condition (`import: { types, default }`): the entries a consumer type-checks
+                    typed: !!(esm && typeof esm === 'object' && esm.types && cjs && typeof cjs === 'object' && cjs.types),
+                });
             }
         }
     } else {
@@ -270,6 +281,54 @@ for (const { data } of packages) {
     }
 }
 
+// THE TYPES, AS A PACKED CONSUMER COMPILES THEM (2026-09-29): an ESM project (`"type": "module"`,
+// `module: NodeNext`) and a CommonJS file importing every typed entry point, and the README's
+// `new PluridServer(…)`. The `import` condition used to be handed the CommonJS declarations, and
+// that line did not compile (TS2351: not constructable); nothing checked the types a consumer resolves.
+{
+    const typedSpecifiers = packages.flatMap(({ data }) => entriesOf(data)
+        .filter((entry) => entry.typed)
+        .map((entry) => specifierOf(data.name, entry.subpath)));
+    writeFileSync(join(project, 'types-esm.mts'), [
+        ...typedSpecifiers.map((specifier, index) => `import * as entry${index} from ${JSON.stringify(specifier)};`),
+        "import PluridServer from '@plurid/plurid-react-server';",
+        "import { defineConfig } from '@plurid/plurid-kit';",
+        'const server = new PluridServer({ routes: [], preserves: [] });',
+        "const config = defineConfig({ serverName: 'smoke', hostname: 'localhost', routes: [] });",
+        `export const all = [server, config, ${typedSpecifiers.map((_, index) => `entry${index}`).join(', ')}];`,
+        '',
+    ].join('\n'));
+    writeFileSync(join(project, 'types-cjs.cts'), [
+        ...typedSpecifiers.map((specifier, index) => `import entry${index} = require(${JSON.stringify(specifier)});`),
+        "import server = require('@plurid/plurid-react-server');",
+        'const instance = new server.default({ routes: [], preserves: [] });',
+        `export const all = [instance, ${typedSpecifiers.map((_, index) => `entry${index}`).join(', ')}];`,
+        '',
+    ].join('\n'));
+    writeFileSync(join(project, 'tsconfig.json'), JSON.stringify({
+        compilerOptions: {
+            module: 'NodeNext',
+            moduleResolution: 'NodeNext',
+            target: 'ES2022',
+            strict: true,
+            skipLibCheck: true,
+            noEmit: true,
+            types: [],
+        },
+        files: ['types-esm.mts', 'types-cjs.cts'],
+    }, null, 2));
+    const tsc = createRequire(join(root, 'packages/plurid-web/plurid-works/plurid-react-server/package.json')).resolve('typescript/bin/tsc');
+    try {
+        execFileSync(process.execPath, [tsc, '-p', project], { cwd: project, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000 });
+        console.log(`  ok    ${typedSpecifiers.length} typed entry points compile for an ESM and a CommonJS consumer (module: NodeNext)`);
+    } catch (error) {
+        failures += 1;
+        const output = (error.stdout ? error.stdout.toString() : '') + (error.stderr ? error.stderr.toString() : error.message);
+        console.log('  FAIL  the packed declarations do not compile for a NodeNext consumer:\n      '
+            + output.split('\n').filter((line) => line.trim()).slice(0, 8).join('\n      '));
+    }
+}
+
 // THE GENERATED APPLICATION: the PACKED generator (installed into the throwaway with the rest, so
 // its `files` list and its binder are what runs) writes the kit's shape, the packed tarballs stand in
 // for the registry, `plurid build` bundles it, the server answers `/` with the space — the consumer's
@@ -281,8 +340,13 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
     } else {
         const app = join(work, 'generated');
         console.log('[smoke.pack] generating an application into ' + app + ' with the packed generator');
-        execFileSync(generator, ['-d', app, '-m', 'npm', '--no-install'], {
-            cwd: work, stdio: ['ignore', 'pipe', 'pipe'], timeout: 120000,
+        // the directory as the argument (it was dropped for ./plurid-app), and without require(esm), as
+        // Node 22.0 - 22.11 run it (the binder required a CommonJS build that required ESM-only packages)
+        execFileSync(generator, [app, '-m', 'npm', '--no-install'], {
+            cwd: work,
+            stdio: ['ignore', 'pipe', 'pipe'],
+            timeout: 120000,
+            env: { ...process.env, NODE_OPTIONS: [process.env.NODE_OPTIONS, '--no-experimental-require-module'].filter(Boolean).join(' ') },
         });
         const manifest = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8'));
         for (const script of ['dev', 'build', 'start', 'check']) {
@@ -294,6 +358,23 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
         execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, 'react@19', 'react-dom@19', 'styled-components@6', 'typescript@5', '@types/react@19', '@types/react-dom@19'], {
             cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000,
         });
+        // ITS `check` RUNS (2026-09-29: only its presence was asserted), with the TypeScript it pins and
+        // with the workspace's TypeScript 6 (a `baseUrl` in its tsconfig is an error there, TS5101)
+        const typescript6 = createRequire(join(root, 'packages/plurid-web/plurid-works/plurid-react-server/package.json')).resolve('typescript/bin/tsc');
+        for (const [label, command, args] of [
+            ['npm run check', 'npm', ['run', 'check', '--silent']],
+            ['tsc 6 --noEmit', process.execPath, [typescript6, '--noEmit', '-p', app]],
+        ]) {
+            try {
+                execFileSync(command, args, { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000 });
+                console.log(`  ok    the generated application type-checks (${label})`);
+            } catch (error) {
+                failures += 1;
+                const output = (error.stdout ? error.stdout.toString() : '') + (error.stderr ? error.stderr.toString() : error.message);
+                console.log(`  FAIL  the generated application does not type-check (${label}):\n      `
+                    + output.split('\n').filter((line) => line.trim()).slice(0, 8).join('\n      '));
+            }
+        }
         console.log('[smoke.pack] plurid build');
         execFileSync('npx', ['plurid', 'build'], { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000, env: { ...process.env, NODE_ENV: 'production' } });
         if (!existsSync(join(app, 'build', 'index.js'))) throw new Error('[smoke.pack] plurid build wrote no build/index.js');

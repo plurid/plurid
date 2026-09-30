@@ -5,6 +5,7 @@
     import { build } from './build';
     import { start } from './start';
     import { info } from './info';
+    import { PluridCliError } from './config';
     // #endregion internal
 // #endregion imports
 
@@ -81,7 +82,12 @@ async function main(
 
 
 main(process.argv.slice(2)).catch((error) => {
-    process.stderr.write(`[plurid] ${error?.stack || error}\n`);
+    // a CLI failure says everything in its message; anything else keeps its stack
+    process.stderr.write(
+        error instanceof PluridCliError
+            ? `[plurid] ${error.message}\n`
+            : `[plurid] ${error?.stack || error}\n`,
+    );
     process.exit(1);
 });
 // #endregion module

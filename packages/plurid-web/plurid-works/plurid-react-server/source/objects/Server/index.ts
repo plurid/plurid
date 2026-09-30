@@ -1,8 +1,11 @@
 // #region imports
     // #region libraries
-    import {
+    import http, {
         Server,
     } from 'http';
+    import type {
+        AddressInfo,
+    } from 'net';
 
     import express, {
         Express,
@@ -83,6 +86,7 @@
     } from './options';
     import {
         configureExpress,
+        handleErrors,
         openBrowser,
     } from './express';
     import {
@@ -127,7 +131,10 @@ class PluridServer implements PluridServerContext {
     public readonly elementqlEndpoint: string | undefined;
 
     private serverApplication: Express;
+    /** The host's routes (`handle()`), mounted ahead of the page's catch-all. */
+    private hostRouter: express.Router;
     private server: Server | undefined;
+    private listening: Promise<Server> | undefined;
     private port: number | string;
 
     public readonly stills: PluridStillsManager;
@@ -154,6 +161,7 @@ class PluridServer implements PluridServerContext {
             usePTTP,
             pttpHandler,
             elementqlEndpoint,
+            handlers,
         } = configuration;
 
         this.routes = routes;
@@ -175,6 +183,7 @@ class PluridServer implements PluridServerContext {
         this.elementqlEndpoint = elementqlEndpoint;
 
         this.serverApplication = express();
+        this.hostRouter = express.Router();
         this.port = DEFAULT_SERVER_PORT;
 
 
@@ -202,6 +211,14 @@ class PluridServer implements PluridServerContext {
 
 
         configureExpress(this.serverApplication, this.options, this.middleware);
+        // THE HOST'S ROUTES COME BEFORE THE PAGE (2026-09-29). The page is a catch-all `GET`: a route
+        // registered after it never answers, and `handle()` had no `get` — the kit's `handlers(server)`
+        // ran after construction, so its `GET /status` health probe answered 404. `handle()` registers
+        // on this router, ahead of the catch-all at any time; `handlers` runs here, before it.
+        this.serverApplication.use(this.hostRouter);
+        if (handlers) {
+            handlers(this);
+        }
         this.handleEndpoints();
 
         // Opt-out (default on for the CLI). A bound, stored handler is registered ONCE and
@@ -212,9 +229,25 @@ class PluridServer implements PluridServerContext {
         }
     }
 
+    private signalStopping = false;
+
+    /**
+     * SIGINT / SIGTERM: stop gracefully — the requests in flight are answered — and exit `0` once the
+     * server has closed. It exited at once, and every rolling deploy dropped the pages being rendered
+     * (2026-09-29). A second delivery while it drains (a terminal's Ctrl+C reaches both `plurid start`
+     * and the server, and `plurid start` forwards it too) is not a second, harder stop: the drain is
+     * bounded by `stopTimeout`.
+     */
     private handleProcessSignal = () => {
-        this.stop();
-        process.exit(0);
+        if (this.signalStopping) {
+            return;
+        }
+        this.signalStopping = true;
+
+        this.drain().finally(() => {
+            this.detachSignalHandlers();
+            process.exit(0);
+        });
     };
 
     private signalHandlersAttached = false;
@@ -244,53 +277,140 @@ class PluridServer implements PluridServerContext {
     }
 
 
+    /**
+     * Listen on `port`. Resolves with the listening `http.Server` once it is bound (the start is logged
+     * then, not before) and rejects on a listen error (`EADDRINUSE`): the port was busy, the log said
+     * "Started" all the same, and the process died on an unhandled `'error'` event (2026-09-29).
+     * Idempotent: a second call returns the same promise; after a failed start, it tries again.
+     */
     public start(
         port = this.port,
-    ) {
-        this.port = port;
-
-        const serverlink = `http://localhost:${port}`;
-
-        if (debugAllows(this.options, 'info')) {
-            console.info(
-                `\n\t[${time.stamp()}] ${this.options.serverName} Started on Port ${port}: ${serverlink}\n`,
-            );
+    ): Promise<Server> {
+        if (this.listening) {
+            return this.listening;
         }
 
-        this.server = this.serverApplication.listen(port);
+        this.port = port;
+        const server = http.createServer(this.serverApplication);
+        this.server = server;
 
-        openBrowser(this.options, serverlink);
+        const listening = new Promise<Server>((resolve, reject) => {
+            const onError = (error: Error) => {
+                server.removeListener('listening', onListening);
+                if (this.server === server) {
+                    this.server = undefined;
+                }
+                if (this.listening === listening) {
+                    this.listening = undefined;
+                }
 
-        return this.server;
+                if (debugAllows(this.options, 'error')) {
+                    console.error(
+                        `\n\t[${time.stamp()}] ${this.options.serverName} could not start on port ${port}: ${error.message}\n`,
+                    );
+                }
+
+                reject(error);
+            };
+            const onListening = () => {
+                server.removeListener('error', onError);
+
+                const address = server.address() as AddressInfo | null;
+                const boundPort = address?.port ?? port;
+                const serverlink = `http://localhost:${boundPort}`;
+                if (debugAllows(this.options, 'info')) {
+                    console.info(
+                        `\n\t[${time.stamp()}] ${this.options.serverName} Started on Port ${boundPort}: ${serverlink}\n`,
+                    );
+                }
+
+                openBrowser(this.options, serverlink);
+
+                resolve(server);
+            };
+
+            server.once('error', onError);
+            server.once('listening', onListening);
+            server.listen(port);
+        });
+        this.listening = listening;
+
+        return listening;
     }
 
-    public stop() {
+    /**
+     * Stop listening and close gracefully: the requests in flight are answered, idle keep-alive
+     * connections close now, and whatever is still open after `timeout` ms (default
+     * `options.stopTimeout`) is cut. Resolves once the server has closed; harmless when stopped.
+     * Removes the signal handlers.
+     */
+    public async stop(
+        timeout = this.options.stopTimeout,
+    ): Promise<void> {
         this.detachSignalHandlers();
 
-        if (this.server) {
-            if (debugAllows(this.options, 'info')) {
-                console.info(
-                    `\n\t[${time.stamp()}] ${this.options.serverName} Stopped on Port ${this.port}\n`,
-                );
-            }
+        await this.drain(timeout);
+    }
 
-            this.server.close();
-        } else {
+    private async drain(
+        timeout = this.options.stopTimeout,
+    ): Promise<void> {
+        const starting = this.listening;
+        if (starting) {
+            await starting.catch(() => undefined);
+        }
+
+        const server = this.server;
+        this.server = undefined;
+        this.listening = undefined;
+
+        if (!server) {
             if (debugAllows(this.options, 'info')) {
                 console.info(
                     `\n\t[${time.stamp()}] ${this.options.serverName} Could not be Stopped on Port ${this.port}\n`,
                 );
             }
+            return;
+        }
+
+        await new Promise<void>((resolve) => {
+            const cut = setTimeout(() => {
+                server.closeAllConnections();
+            }, timeout);
+
+            server.close(() => {
+                clearTimeout(cut);
+                resolve();
+            });
+            server.closeIdleConnections();
+        });
+
+        if (debugAllows(this.options, 'info')) {
+            console.info(
+                `\n\t[${time.stamp()}] ${this.options.serverName} Stopped on Port ${this.port}\n`,
+            );
         }
     }
 
+    /**
+     * Route registrars for the host's own endpoints, ahead of the page's catch-all `GET` whenever
+     * they are called (a `get` added through `instance()` after construction sits behind it).
+     */
     public handle() {
         return {
+            get: (
+                path: string,
+                ...handlers: express.RequestHandler[]
+            ) => {
+                this.hostRouter.get(path, ...handlers);
+
+                return this.serverApplication;
+            },
             post: (
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.post(path, ...handlers);
+                this.hostRouter.post(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -298,7 +418,7 @@ class PluridServer implements PluridServerContext {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.patch(path, ...handlers);
+                this.hostRouter.patch(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -306,7 +426,7 @@ class PluridServer implements PluridServerContext {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.put(path, ...handlers);
+                this.hostRouter.put(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -314,7 +434,7 @@ class PluridServer implements PluridServerContext {
                 path: string,
                 ...handlers: express.RequestHandler[]
             ) => {
-                this.serverApplication.delete(path, ...handlers);
+                this.hostRouter.delete(path, ...handlers);
 
                 return this.serverApplication;
             },
@@ -326,13 +446,18 @@ class PluridServer implements PluridServerContext {
     }
 
 
+    /**
+     * The page's catch-all `GET`, the PTTP `POST`, and the last handler. A rejection reaches
+     * Express's `next` (and so the last handler): it was a floating promise, and an unhandled
+     * rejection ends the process.
+     */
     private handleEndpoints() {
         this.serverApplication.get(
             CATCH_ALL_ROUTE_PATTERN,
-            async (request, response, next) => {
+            (request, response, next) => {
                 handleGetRequest(
                     this, request, response, next,
-                );
+                ).catch(next);
             },
         );
 
@@ -340,13 +465,17 @@ class PluridServer implements PluridServerContext {
             this.serverApplication.post(
                 PTTP_ROUTE,
                 express.json() as any, // body parsing is built into Express 5
-                async (request, response, next) => {
+                (request, response, next) => {
                     handlePTTPRequest(
                         this, request, response,
-                    );
+                    ).catch(next);
                 },
             );
         }
+
+        this.serverApplication.use(
+            handleErrors(this.options, this.template?.errorHtml),
+        );
     }
 
 

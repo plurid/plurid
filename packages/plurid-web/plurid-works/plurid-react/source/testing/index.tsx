@@ -11,7 +11,6 @@
     import {
         PluridApi,
         CameraState,
-        PluridApplication as PluridApplicationProperties,
         PLURID_ATTRIBUTE_ENTITY,
         PLURID_ENTITY_VIEW,
     } from '@plurid/plurid-data';
@@ -24,7 +23,7 @@
         PluridApplicationHandle,
     } from '../containers/Application/handle';
     import {
-        PluridReactComponent,
+        PluridReactApplicationProperties,
     } from '../data/interfaces';
     // #endregion external
 // #endregion imports
@@ -38,7 +37,7 @@
  * host's own test suites (vitest / jest with a DOM), not for the browser.
  */
 
-export type RenderPluridProperties = Partial<PluridApplicationProperties<PluridReactComponent>>;
+export type RenderPluridProperties = Partial<PluridReactApplicationProperties>;
 
 export interface RenderedPlurid {
     container: HTMLElement;

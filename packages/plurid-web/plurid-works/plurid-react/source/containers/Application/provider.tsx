@@ -6,15 +6,12 @@
         useMemo,
     } from 'react';
 
-    import {
-        PluridApplication as PluridApplicationProperties,
-    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
     // #region external
     import {
-        PluridReactComponent,
+        PluridReactApplicationProperties,
     } from '~data/interfaces';
     // #endregion external
 // #endregion imports
@@ -48,7 +45,7 @@
  * own, exactly as it would outside one.
  */
 export type PluridApplicationDefaults = Pick<
-    PluridApplicationProperties<PluridReactComponent>,
+    PluridReactApplicationProperties,
     | 'renderToolbar'
     | 'renderViewcube'
     | 'renderDockRail'

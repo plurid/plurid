@@ -1,3 +1,8 @@
 #!/usr/bin/env node
 
-require('../distribution/index.js');
+// The ESM build: it imports inquirer and ora (ESM-only packages) natively. Requiring the CommonJS
+// build needed Node's require(esm), which Node 22.0 - 22.11 do not have (ERR_REQUIRE_ESM, 2026-09-29).
+import('../distribution/index.mjs').catch((error) => {
+    console.error(error);
+    process.exit(1);
+});

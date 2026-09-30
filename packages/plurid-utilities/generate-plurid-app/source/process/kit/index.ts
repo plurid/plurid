@@ -126,6 +126,27 @@ export const listGenerated = (
 };
 
 /**
+ * One step under a spinner, the spinner stopped however the step ends: marked failed when it throws.
+ * It was stopped on success only — after a failed install the error was printed, the spinner kept
+ * redrawing over it, and its interval (and its hold on stdin) kept the process alive until Ctrl+C
+ * (2026-09-29).
+ */
+const step = async <T>(
+    text: string,
+    work: () => Promise<T>,
+): Promise<T> => {
+    const spinner = loadingSpinner(text).start();
+    try {
+        const result = await work();
+        spinner.stopAndPersist();
+        return result;
+    } catch (error) {
+        spinner.fail();
+        throw error;
+    }
+};
+
+/**
  * THE GENERATION: the kit-shaped TypeScript application — `plurid.config.ts`, the client and the
  * server entries, the routes / shell / planes, a preserves stub, the public files, `package.json`
  * with `dev` / `build` / `start` / `check` / `test`, `tsconfig.json` — then git, then the install.
@@ -138,9 +159,7 @@ const generateKitApplication = async (
     const versions = resolveVersions();
     const templateDirectory = resolveTemplateDirectory(TEMPLATE);
 
-    const filesSpinner = loadingSpinner('\tWriting the application files...').start();
-    await renderTemplate(app, versions, templateDirectory);
-    filesSpinner.stopAndPersist();
+    await step('\tWriting the application files...', () => renderTemplate(app, versions, templateDirectory));
     console.log(`\t${listGenerated(app.directory).length} files written.`);
 
     if (app.versioning === versioningTypes.git) {
@@ -150,9 +169,7 @@ const generateKitApplication = async (
 
     if (app.install) {
         const commands = managerCommands(app);
-        const installSpinner = loadingSpinner('\tInstalling the dependencies (a minute)...').start();
-        await executeCommand(...commands.install, { cwd: app.directory });
-        installSpinner.stopAndPersist();
+        await step('\tInstalling the dependencies (a minute)...', () => executeCommand(...commands.install, { cwd: app.directory }));
         console.log('\tDependencies installed.');
     }
 

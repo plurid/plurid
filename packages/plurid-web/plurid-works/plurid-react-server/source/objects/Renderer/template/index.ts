@@ -2,6 +2,7 @@
     // #region external
     import {
         cleanTemplate,
+        escapeAttribute,
         globalsInjector,
         safeStore,
     } from '~utilities/template';
@@ -45,9 +46,12 @@ const template = async (
 
     const injectedGlobals = globalsInjector(globals);
 
+    // `lang` is a document field like any other (`head: ({ query }) => ({ lang: query.lang })`, an
+    // in-render `<PluridDocument lang>`), and it was the one written unescaped: `?lang=en"><script>…`
+    // closed the tag (2026-09-29)
     const templateString = `
 <!DOCTYPE html>
-<html lang="${htmlLanguage}" ${htmlAttributes}>
+<html lang="${escapeAttribute(htmlLanguage)}" ${htmlAttributes}>
     <head>
         ${head}
         ${/name=["']viewport["']/.test(head) ? '' : DEFAULT_VIEWPORT_META}

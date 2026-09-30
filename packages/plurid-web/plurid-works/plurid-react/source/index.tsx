@@ -1,5 +1,11 @@
 // #region imports
     // #region libraries
+    import type {
+        ComponentProps,
+        FunctionComponent,
+        JSXElementConstructor,
+    } from 'react';
+
     import {
         Theme,
     } from '@plurid/plurid-themes';
@@ -84,6 +90,9 @@
         PluridReactRoute,
         PluridReactRoutePlane,
         PluridRouteMatch,
+        PluridReactRenderSlot,
+        PluridReactSlots,
+        PluridReactApplicationProperties,
     } from './data/interfaces';
 
     import PluridApplication, {
@@ -106,11 +115,11 @@
 
     import PluridLink from './components/links/Link';
     import PluridRouterLink from './components/links/RouterLink';
-    import PluridApplicationConfigurator from './components/utilities/ApplicationConfigurator';
-    import PluridPlaneConfigurator from './components/utilities/PlaneConfigurator';
-    import PluridExternalPlane from './components/planes/ExternalPlane';
-    import PluridIframePlane from './components/planes/IframePlane';
-    import PluridVirtualList from './components/virtuals/List';
+    import ConnectedApplicationConfigurator from './components/utilities/ApplicationConfigurator';
+    import ConnectedPlaneConfigurator from './components/utilities/PlaneConfigurator';
+    import ConnectedExternalPlane from './components/planes/ExternalPlane';
+    import ConnectedIframePlane from './components/planes/IframePlane';
+    import ConnectedVirtualList from './components/virtuals/List';
 
     import PluridPlaneBridge from './components/structural/Plane/components/PlaneBridge';
     import PluridPlaneContent from './components/structural/Plane/components/PlaneContent';
@@ -261,6 +270,22 @@ const internals = {
     namedViewpoints,
     goViewpoint,
 };
+
+/**
+ * A connected component as a host uses it. react-redux's own `store` and `context` props are the
+ * engine's plumbing (the application's store reaches the component through its own context), and
+ * they showed in the published props as if a host should pass them (2026-09-29).
+ */
+type PluridConnectedComponent<Component extends JSXElementConstructor<any>> = FunctionComponent<
+    Omit<ComponentProps<Component>, 'store' | 'context'>
+>;
+
+const PluridApplicationConfigurator = ConnectedApplicationConfigurator as PluridConnectedComponent<typeof ConnectedApplicationConfigurator>;
+const PluridPlaneConfigurator = ConnectedPlaneConfigurator as PluridConnectedComponent<typeof ConnectedPlaneConfigurator>;
+const PluridExternalPlane = ConnectedExternalPlane as PluridConnectedComponent<typeof ConnectedExternalPlane>;
+const PluridIframePlane = ConnectedIframePlane as PluridConnectedComponent<typeof ConnectedIframePlane>;
+const PluridVirtualList = ConnectedVirtualList as PluridConnectedComponent<typeof ConnectedVirtualList>;
+
 
 /**
  * Components and utilities.
@@ -627,6 +652,8 @@ export type {
     PluridReactRoute,
     PluridReactRoutePlane,
     PluridRouteMatch,
+    PluridReactRenderSlot,
+    PluridReactSlots,
 
     PluridPreserve,
     PluridPreserveTransmission,
@@ -657,9 +684,10 @@ export type {
 /**
  * THE PROPS OF `<PluridApplication>`, by name: a host wrapping the application types its own props
  * with it. (The router's own inputs — `planesRegistrar`, `matchedRoute`, `precomputedState`,
- * `planesProperties` — are in it and marked internal.)
+ * `planesProperties` — are in it and marked internal.) Its `render*` slots return a React node
+ * (`PluridReactRenderSlot`).
  */
-export type PluridApplicationProperties = import('@plurid/plurid-data').PluridApplication<PluridReactComponent>;
+export type PluridApplicationProperties = PluridReactApplicationProperties;
 
 
 export default Plurid;

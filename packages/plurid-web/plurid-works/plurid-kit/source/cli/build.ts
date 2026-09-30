@@ -48,7 +48,8 @@ export async function build(
     loadEnvironment(mode);
 
     // `plurid.config.ts` build-time knobs (`bundle.*`) and the directories; absent config -> defaults.
-    const config = await loadPluridConfig();
+    // Present but broken is FATAL here: the artifact would ignore its `buildDir`, `define`, `environment`.
+    const config = await loadPluridConfig(process.cwd(), { strict: true });
     const bundle = config.bundle ?? {};
     const paths = resolvePaths(config);
 
@@ -84,7 +85,7 @@ export async function build(
     copyDirectory(paths.publicDir, paths.builtPublicDir);
 
     // derive the real client entry path from the metafile -> asset manifest
-    const mainScriptSource = mainEntryFromMetafile(clientResult.metafile);
+    const mainScriptSource = mainEntryFromMetafile(clientResult.metafile, paths.clientDir);
     if (mainScriptSource) {
         fs.writeFileSync(
             paths.assetManifest,
@@ -101,15 +102,23 @@ export async function build(
 
 
 /**
- * Find the client entry's output path in the esbuild metafile and turn it into
- * a root-relative URL (`build/client/index.js` -> `/index.js`).
+ * Find the client entry's output path in the esbuild metafile and turn it into the URL the server
+ * serves it at: its path under the client directory, which is mounted at `/`
+ * (`<buildDir>/client/index.js` -> `/index.js`). The metafile's paths are relative to the working
+ * directory esbuild ran in. A literal `build/` prefix was stripped instead, so any other `buildDir`
+ * wrote `/dist/client/index.js` into the manifest, a URL that 404s: the production page never
+ * hydrated (2026-09-29).
  */
-function mainEntryFromMetafile(
+export function mainEntryFromMetafile(
     metafile: esbuild.Metafile | undefined,
+    clientDir: string,
+    workingDirectory: string = process.cwd(),
 ): string | undefined {
     if (!metafile) {
         return undefined;
     }
+
+    const clientRoot = path.resolve(workingDirectory, clientDir);
 
     for (const [outputPath, output] of Object.entries(metafile.outputs)) {
         if (!output.entryPoint) {
@@ -118,11 +127,12 @@ function mainEntryFromMetafile(
         if (!outputPath.endsWith('.js')) {
             continue;
         }
-        // strip the `build/client` prefix -> served at `/...`
-        const relative = outputPath
-            .replace(/^build\/client\//, '')
-            .replace(/^build\//, '');
-        return '/' + relative;
+        const relative = path.relative(clientRoot, path.resolve(workingDirectory, outputPath));
+        if (relative.startsWith('..') || path.isAbsolute(relative)) {
+            // not a client output (a server entry in the same metafile)
+            continue;
+        }
+        return '/' + relative.split(path.sep).join('/');
     }
 
     return undefined;

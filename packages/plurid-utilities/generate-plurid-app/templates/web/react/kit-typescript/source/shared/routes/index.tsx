@@ -1,5 +1,5 @@
 import type {
-    PluridRoute,
+    PluridReactRoute,
 } from '@plurid/plurid-react';
 
 import {
@@ -13,7 +13,7 @@ import {
  * One route: the site. Its planes are pages (`presentation: 'page'`): the camera is docked on
  * the first one, a link swings to the next, and the address bar is the page.
  */
-const routes: PluridRoute<any>[] = [
+const routes: PluridReactRoute[] = [
     {
         value: '/',
         planes: [

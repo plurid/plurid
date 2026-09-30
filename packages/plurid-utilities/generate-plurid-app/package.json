@@ -14,7 +14,8 @@
     "license": "SEE LICENSE IN LICENSE",
     "repository": {
         "type": "git",
-        "url": "https://github.com/plurid/plurid"
+        "url": "https://github.com/plurid/plurid",
+        "directory": "packages/plurid-utilities/generate-plurid-app"
     },
     "bugs": {
         "email": "source@plurid.com",
@@ -65,6 +66,5 @@
         "tslib": "^2.6.1",
         "typescript": "^6.0.3",
         "tsup": "^8.5.1"
-    },
-    "types": "distribution/index.d.ts"
+    }
 }

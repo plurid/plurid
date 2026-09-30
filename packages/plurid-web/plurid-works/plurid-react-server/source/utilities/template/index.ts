@@ -99,24 +99,50 @@ export const assetsPathRewrite = (
 }
 
 
+/**
+ * JavaScript source for an inline `<script>`: `<` becomes `\u003c`, so `</script>` or `<!--` in the
+ * data can never end or bend the script, and U+2028 / U+2029 their escapes. In the JSON these values
+ * are (`JSON.stringify(state)`) each can only occur inside a string literal, where the escape reads
+ * back as the same character — the value is unchanged, only its spelling.
+ */
 export const safeStore = (
     store: string,
 ) => {
-    return store.replace(
-        /</g,
-        '\\u003c',
-    );
+    return store
+        .replace(/</g, '\\u003c')
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029');
 }
 
 
+/** A name `window.<name> = …` can carry: a JavaScript identifier, nothing that reads as more code. */
+const GLOBAL_NAME = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+
+
+/**
+ * The preserve's `globals` as `window.<key> = <value>;` lines. The value is JavaScript source (by
+ * convention `JSON.stringify(store.getState())`) and went in raw: a user's search term in the store
+ * state carrying `</script><script>…` closed the inline script and ran its own (2026-09-29). Every value
+ * is written through `safeStore` now, as the metastate always was; a key that is not an identifier is
+ * refused (the request fails with the error page) instead of being written into the script.
+ */
 export const globalsInjector = (
     globals: Record<string, string>,
 ) => {
     let globalsScript = '';
 
     for (const [key, value] of Object.entries(globals)) {
-        const globalScript = `window.${key} = ${value};\n`;
-        globalsScript += globalScript;
+        if (!GLOBAL_NAME.test(key)) {
+            throw new Error(
+                `[plurid-server] the preserve global ${JSON.stringify(key)} is not a JavaScript identifier; name it like a variable (window.<name>)`,
+            );
+        }
+
+        // a string is the value's source; anything else (a JavaScript host passing an object) is serialized
+        const source = typeof value === 'string'
+            ? value
+            : JSON.stringify(value) ?? 'undefined';
+        globalsScript += `window.${key} = ${safeStore(source)};\n`;
     }
 
     return globalsScript;

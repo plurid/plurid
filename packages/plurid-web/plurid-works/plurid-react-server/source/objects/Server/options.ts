@@ -43,6 +43,7 @@ export const resolveServerOptions = (
         stillsDirectory: partialOptions?.stillsDirectory || DEFAULT_SERVER_OPTIONS.STILLS_DIRECTORY,
         stiller: partialOptions?.stiller || defaultStillerOptions,
         attachSignalHandlers: partialOptions?.attachSignalHandlers ?? true,
+        stopTimeout: partialOptions?.stopTimeout ?? DEFAULT_SERVER_OPTIONS.STOP_TIMEOUT,
     };
     return options;
 };
