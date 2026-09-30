@@ -36,4 +36,10 @@ describe('a route keeps its @; a plane id loses its suffix', () => {
         expect(planeIDPath('plurid://host.com/search?q=a@1')).toBe('/search');
         expect(planeIDPath('/plain')).toBe('/plain');
     });
+
+    it('a value that is not a string names no path (it threw)', () => {
+        for (const value of [undefined, null, 42, {}, ['/a']]) {
+            expect(planeAddressPath(value as any)).toBeNull();
+        }
+    });
 });

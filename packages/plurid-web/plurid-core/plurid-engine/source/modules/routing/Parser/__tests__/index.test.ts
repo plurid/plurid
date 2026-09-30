@@ -71,11 +71,10 @@ describe('Parser', () => {
     it('a text fragment is read; a malformed one is dropped rather than thrown', () => {
         const parsed = new Parser('/four#:~:text=A%20door,is%20opened.,[0]', route('/four')).extract();
         expect(parsed.fragments.texts.length).toBe(1);
-        // AS WRITTEN, percent-escapes and all: nothing in the engine decodes a text fragment today,
-        // so a consumer that matches it against the document must decode it itself. Pinned here so
-        // the day that changes is a deliberate one.
-        expect(parsed.fragments.texts[0].start).toBe('A%20door');
-        expect(parsed.fragments.texts[0].end).toBe('is%20opened.');
+        // DECODED (2026-09-29, deliberately): the text a document is matched against, however the
+        // location encoded it — a link and the address bar used to hand the plane two texts
+        expect(parsed.fragments.texts[0].start).toBe('A door');
+        expect(parsed.fragments.texts[0].end).toBe('is opened.');
         expect(parsed.fragments.texts[0].occurence).toBe(0);
         // the hash is not part of the pathname or the route
         expect(parsed.pathname).toBe('/four');

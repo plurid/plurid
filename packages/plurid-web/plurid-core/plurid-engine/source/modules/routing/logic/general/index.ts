@@ -12,6 +12,7 @@
     // #region external
     import {
         extractPathname,
+        decodeLocationPart,
     } from '~modules/routing/Parser/logic';
     // #endregion external
 // #endregion imports
@@ -66,11 +67,44 @@ export const cleanupPath = (
 }
 
 
+/**
+ * A path segment in the ONE form a plane address holds: decoded (`caf%C3%A9` and `café` are one
+ * page), with only the characters that would change what the path IS escaped again — `%`, `/`,
+ * `?` and `#` — so the form is stable however often it is taken (`%2541` stays `%2541`).
+ */
+const canonicalSegment = (
+    segment: string,
+): string => (segment.indexOf('%') === -1
+    ? segment
+    : decodeLocationPart(segment).replace(
+        /[%/?#]/g,
+        (character) => '%' + character.charCodeAt(0).toString(16).toUpperCase(),
+    ));
+
+const canonicalPath = (
+    path: string,
+): string => (path.indexOf('%') === -1
+    ? path
+    : path.split(PATH_SEPARATOR).map(canonicalSegment).join(PATH_SEPARATOR));
+
+
+/**
+ * The address of a plane: `plurid://<origin><path>`, the path in its one canonical form (see
+ * `canonicalSegment`), so the address bar's `/p/Jos%C3%A9` and a link's `/p/José` are one plane with
+ * one id. Anything but a string has no address (`''`): a malformed view item used to throw here.
+ */
 export const computePlaneAddress = (
     plane: string,
     route?: string,
     origin: string = 'origin',
 ) => {
+    if (typeof plane !== 'string') {
+        return '';
+    }
+
+    if (typeof origin !== 'string') {
+        origin = 'origin';
+    }
     if (origin === 'origin' && typeof location !== 'undefined' && location.host) {
         origin = location.host;
     }
@@ -82,21 +116,23 @@ export const computePlaneAddress = (
     switch(planeAddressType) {
         case 'http':
         case 'https':
-        case 'pttp':
             return cleanPlane;
+        case 'pttp':
+            return cleanPlane.slice(0, protocols.plurid.length)
+                + canonicalPath(cleanPlane.slice(protocols.plurid.length));
     }
 
     origin = stringRemoveTrailing(origin, '/');
 
     const absolutePlane = isAbsolutePlane(plane)
 
-    const path = route && route !== '/'
+    const path = typeof route === 'string' && route && route !== '/'
         ? absolutePlane
             ? cleanupPath(cleanPlane)
             : cleanupPath(route) + cleanupPath(cleanPlane)
         : cleanupPath(cleanPlane);
 
-    const planeAddress = protocols.plurid + origin + path;
+    const planeAddress = protocols.plurid + origin + canonicalPath(path);
 
     return planeAddress;
 }
@@ -110,6 +146,10 @@ export const computePlaneAddress = (
 export const planeAddressPath = (
     address: string,
 ): string | null => {
+    // an untyped caller (a persisted id, a bus payload) can pass anything; it names no path
+    if (typeof address !== 'string') {
+        return null;
+    }
     const type = checkPlaneAddressType(address);
     if (type === HTTP_PROTOCOL || type === HTTPS_PROTOCOL) {
         return null;
@@ -187,13 +227,17 @@ export const dockingURLTarget = (
 export const isAbsolutePlane = (
     value: string,
 ) => {
-    return value[0] === '/';
+    return typeof value === 'string' && value[0] === '/';
 }
 
 
 export const checkPlaneAddressType = (
     value: string,
 ) => {
+    if (typeof value !== 'string') {
+        return 'relative';
+    }
+
     value = value
         .toLowerCase()
         .trim();
@@ -225,18 +269,26 @@ export const removeTrailingSlash = (
 }
 
 
+/**
+ * A route's value as it is matched: no query, no hash, no trailing slash. The hash stayed on it, so
+ * `/docs#api` was looked up as a route of that name and matched nothing.
+ */
 export const cleanPathValue = (
     value: string,
 ) => {
-    const queryStart = value.indexOf('?');
-    if (queryStart < 0) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+
+    const suffixStart = value.search(/[?#]/);
+    if (suffixStart < 0) {
         return removeTrailingSlash(
             value,
         );
     }
 
     return removeTrailingSlash(
-        value.substring(0, queryStart),
+        value.substring(0, suffixStart),
     );
 }
 // #endregion module

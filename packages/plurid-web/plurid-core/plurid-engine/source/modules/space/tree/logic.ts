@@ -17,6 +17,12 @@
         LinkCoordinates,
         PluridPlane,
         ViewSize,
+        PluridLayout,
+        LayoutColumns,
+        LayoutRows,
+        LayoutZigZag,
+        LayoutFaceToFace,
+        LayoutSheaves,
     } from '@plurid/plurid-data';
 
     import {
@@ -35,6 +41,10 @@
         computeFaceToFaceLayout,
         computeSheavesLayout,
         computeZigZagLayout,
+        resolveLayoutType,
+    } from '../layout';
+    import type {
+        ImplementedLayoutType,
     } from '../layout';
 
     import {
@@ -55,6 +65,7 @@
     } from '../utilities';
 
     import {
+        carryRootPlaneIDs,
         isHandSized,
         pairRootsByIdentity,
         rootIdentity,
@@ -67,12 +78,74 @@
     import {
         computePlaneAddress,
     } from '~modules/routing/logic';
+
+    import {
+        warnDevelopment,
+    } from '~modules/utilities';
     // #endregion external
 // #endregion imports
 
 
 
 // #region module
+/**
+ * The route a view item names: a string, or the typed `{ plane }` (`PluridView`). Anything else — a
+ * `{ route }` object, `null`, a number — names nothing, and is skipped: it used to throw inside the
+ * tree compute, which a relayout effect turned into an unmounted application.
+ */
+export const viewItemRoute = (
+    item: unknown,
+): string | undefined => {
+    if (typeof item === 'string') {
+        return item;
+    }
+    if (item && typeof item === 'object' && typeof (item as PluridView).plane === 'string') {
+        return (item as PluridView).plane;
+    }
+    return undefined;
+};
+
+
+/**
+ * The registered planes as a view item is resolved against them: the matcher over their routes,
+ * and each entry by its absolute route (to carry a declared size onto the tree node).
+ */
+export interface RegisteredPlanesIndex<C> {
+    isoMatcher: IsoMatcher<C>;
+    registeredByRoute: Map<string, RegisteredPluridPlane<C>>;
+}
+
+/**
+ * ONE INDEX PER COMPUTE. The matcher was rebuilt over every registered plane for every view item, so
+ * a tree compute cost views × planes (1000 roots over 1000 planes: ~0.3 s per relayout). A compute
+ * builds it once and resolves every item against it.
+ */
+export const indexRegisteredPlanes = <C>(
+    planes: Map<string, RegisteredPluridPlane<C>>,
+    origin = 'origin',
+): RegisteredPlanesIndex<C> => {
+    const pluridPlanes: PluridPlane<C>[] = [];
+    const registeredByRoute = new Map<string, RegisteredPluridPlane<C>>();
+    for (const registered of planes.values()) {
+        pluridPlanes.push({
+            route: registered.route.absolute,
+            component: registered.component,
+        });
+        registeredByRoute.set(registered.route.absolute, registered);
+    }
+
+    return {
+        isoMatcher: new IsoMatcher(
+            {
+                planes: pluridPlanes,
+            },
+            origin,
+        ),
+        registeredByRoute,
+    };
+};
+
+
 /**
  * Given a view resolve it to an absolute view
  * and compute a TreePlane if there is a RegisteredPluridPlane
@@ -87,53 +160,46 @@ export const resolveViewItem = <C>(
     origin = 'origin',
     getCount?: () => number | string,
 ): TreePlane | undefined => {
-    // console.log('resolveViewItem', planes);
+    if (viewItemRoute(view) === undefined) {
+        return;
+    }
 
-    const {
-        protocol,
-        host,
-    } = configuration.network;
+    return resolveIndexedViewItem(
+        indexRegisteredPlanes(planes, origin),
+        view,
+        configuration,
+        origin,
+        getCount,
+    );
+}
 
-    const viewData = typeof view === 'string'
-        ? view
-        : view.plane;
-    // console.log('viewData', viewData);
+
+/** `resolveViewItem` against an index already built (a compute resolves every item against one). */
+export const resolveIndexedViewItem = <C>(
+    index: RegisteredPlanesIndex<C>,
+    view: string | PluridView,
+    configuration: PluridConfiguration,
+    origin = 'origin',
+    getCount?: () => number | string,
+): TreePlane | undefined => {
+    const viewData = viewItemRoute(view);
+    if (viewData === undefined) {
+        return;
+    }
+
+    const host = configuration.network?.host ?? '';
 
     const viewAddress = computePlaneAddress(
         viewData,
         undefined,
         origin,
     );
-    // console.log('viewAddress', viewAddress);
 
-    // const resolvedView = resolveRoute(
-    //     viewData,
-    //     protocol,
-    //     host,
-    // );
-    // console.log('resolvedView', resolvedView);
+    const {
+        isoMatcher,
+        registeredByRoute,
+    } = index;
 
-    const iPlanes = planes.values();
-    const pluridPlanes: PluridPlane<C>[] = [];
-    // The registered entry by absolute route, to carry its declared size onto the tree node.
-    const registeredByRoute = new Map<string, RegisteredPluridPlane<C>>();
-    for (const iPlane of iPlanes) {
-        const plane: PluridPlane<C> = {
-            route: iPlane.route.absolute,
-            component: iPlane.component,
-        };
-        pluridPlanes.push(plane);
-        registeredByRoute.set(iPlane.route.absolute, iPlane);
-    }
-
-    const isoMatcher = new IsoMatcher(
-        {
-            planes: pluridPlanes,
-        },
-        origin,
-    );
-
-    // const match = isoMatcher.match(resolvedView.route);
     const match = isoMatcher.match(viewData);
     const registered = match && match.kind === 'Plane'
         ? registeredByRoute.get(match.data.route)
@@ -289,17 +355,12 @@ export const computeSpaceTree = <C>(
     viewSize?: ViewSize,
     previousTree?: TreePlane[],
 ): TreePlane[] => {
-    // console.log('computeSpaceTree');
-    // console.log('planes', planes);
-    // console.log('configuration', configuration);
-    // console.log('computeSpaceTree view', view);
-    // console.log('computeSpaceTree origin', origin);
-
+    const index = indexRegisteredPlanes(planes, origin);
     const freshPlanes: TreePlane[] = [];
 
-    for (const viewItem of view) {
-        const treePlane = resolveViewItem(
-            planes,
+    for (const viewItem of Array.isArray(view) ? view : []) {
+        const treePlane = resolveIndexedViewItem(
+            index,
             viewItem,
             configuration,
             origin,
@@ -311,12 +372,12 @@ export const computeSpaceTree = <C>(
         }
     }
 
-    // the roots are placed by what is known of their sizes (the sizing contract)
-    const configuredView = viewSize ?? {
-        width: typeof window === 'undefined' ? 1440 : window.innerWidth,
-        height: typeof window === 'undefined' ? 840 : window.innerHeight,
-    };
-    const treePlanes = applyKnownSizes(freshPlanes, previousTree);
+    // the roots keep the ids they had, and no fresh id is one the previous tree holds (the root ids
+    // are positional); then they are placed by what is known of their sizes (the sizing contract)
+    const treePlanes = applyKnownSizes(
+        carryRootPlaneIDs(freshPlanes, previousTree),
+        previousTree,
+    );
 
     if (!layout) {
         const layoutlessTreePlanes = treePlanes.map(plane => {
@@ -412,20 +473,64 @@ export const computeSpaceTree = <C>(
 };
 
 
-/** The layout itself: the roots it is given, placed by the configured kind. */
+/**
+ * The layout itself: the roots it is given, placed by the configured kind — and EVERY root it is
+ * given. A type the engine does not lay out (META, `'columns'`, a typo) returned no roots and the
+ * space went empty; it is laid out by `resolveLayoutType`'s reading of it instead (COLUMNS unless a
+ * member reads unambiguously), with a development warning. A layout that hands back fewer roots
+ * than it was given, or throws, is replaced by a plain column of them: a relayout never empties the
+ * space and never takes the application down.
+ */
 const computeSpaceTreeLayout = (
     treePlanes: TreePlane[],
     configuration: PluridConfiguration,
     viewSize?: ViewSize,
 ): TreePlane[] => {
-    switch(configuration.space.layout.type) {
+    const layout = configuration.space?.layout;
+    const warnings = configuration.development?.warnings !== false;
+    const resolved = resolveLayoutType(layout?.type);
+    if (resolved.reason) {
+        warnDevelopment('layout-type:' + String(layout?.type), resolved.reason, warnings);
+    }
+
+    let placed: TreePlane[] | undefined;
+    try {
+        placed = computeLayoutOfType(resolved.type, treePlanes, layout, configuration, viewSize);
+    } catch (error) {
+        warnDevelopment(
+            'layout-threw:' + resolved.type,
+            'the ' + resolved.type + ' layout failed (' + String(error) + '): the roots are laid out in one column',
+            warnings,
+        );
+    }
+
+    if (!placed || placed.length !== treePlanes.length) {
+        return computeColumnLayout(treePlanes, 1, undefined, undefined, configuration, viewSize);
+    }
+    return placed;
+};
+
+
+/** The layout fields a layout of any type reads (the configured object may be of another type, or none). */
+type AnyLayoutFields = Partial<Omit<LayoutColumns, 'type'> & Omit<LayoutRows, 'type'> & Omit<LayoutZigZag, 'type'> & Omit<LayoutFaceToFace, 'type'> & Omit<LayoutSheaves, 'type'>>;
+
+const computeLayoutOfType = (
+    type: ImplementedLayoutType,
+    treePlanes: TreePlane[],
+    configuredLayout: PluridLayout | undefined,
+    configuration: PluridConfiguration,
+    viewSize?: ViewSize,
+): TreePlane[] => {
+    const layout = (configuredLayout && typeof configuredLayout === 'object' ? configuredLayout : {}) as AnyLayoutFields;
+
+    switch(type) {
         case LAYOUT_TYPES.COLUMNS:
             {
                 const {
                     columns,
                     columnLength,
                     gap,
-                } = configuration.space.layout;
+                } = layout;
                 const columnLayoutTree = computeColumnLayout(
                     treePlanes,
                     columns,
@@ -442,7 +547,7 @@ const computeSpaceTreeLayout = (
                     rows,
                     rowLength,
                     gap,
-                } = configuration.space.layout;
+                } = layout;
                 const rowLayoutTree = computeRowLayout(
                     treePlanes,
                     rows,
@@ -457,7 +562,7 @@ const computeSpaceTreeLayout = (
             {
                 const {
                     angle,
-                } = configuration.space.layout;
+                } = layout;
                 const zigzagLayoutTree = computeZigZagLayout(
                     treePlanes,
                     angle,
@@ -472,7 +577,7 @@ const computeSpaceTreeLayout = (
                     angle,
                     gap,
                     middle,
-                } = configuration.space.layout;
+                } = layout;
                 const faceToFaceLayoutTree = computeFaceToFaceLayout(
                     treePlanes,
                     angle,
@@ -489,7 +594,7 @@ const computeSpaceTreeLayout = (
                     depth,
                     offsetX,
                     offsetY,
-                } = configuration.space.layout;
+                } = layout;
                 const sheavesLayoutTree = computeSheavesLayout(
                     treePlanes,
                     depth,
@@ -500,12 +605,6 @@ const computeSpaceTreeLayout = (
                 );
                 return sheavesLayoutTree;
             }
-        case LAYOUT_TYPES.META:
-            {
-                return [];
-            }
-        default:
-            return [];
     }
 }
 
@@ -969,35 +1068,67 @@ const sameLocation = (
     && a.rotateX === b.rotateX
     && a.rotateY === b.rotateY;
 
-const sameLinkCoordinates = (
-    a: TreePlane['linkCoordinates'],
-    b: TreePlane['linkCoordinates'],
-): boolean => (a === b) || (!!a && !!b && a.x === b.x && a.y === b.y);
+/** Plain data by value: a fresh object with the same leaves is the same (`routeDivisions`, `linkCoordinates`). */
+const samePlain = (
+    a: unknown,
+    b: unknown,
+): boolean => {
+    if (a === b) {
+        return true;
+    }
+    if (!a || !b || typeof a !== 'object' || typeof b !== 'object' || Array.isArray(a) !== Array.isArray(b)) {
+        return false;
+    }
+    const aKeys = Object.keys(a);
+    if (aKeys.length !== Object.keys(b).length) {
+        return false;
+    }
+    for (const key of aKeys) {
+        if (
+            !Object.prototype.hasOwnProperty.call(b, key)
+            || !samePlain((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key])
+        ) {
+            return false;
+        }
+    }
+    return true;
+};
 
 /**
- * Every field the renderer/engine reads off a node EXCEPT `children` (reconciled recursively),
- * `location` (compared by the caller) and `width` / `height` / `manuallyPositioned` (carried
- * forward by the caller). `routeDivisions` derive from `route`, so an equal `route` implies they
- * match; the spawn geometry does NOT — `linkCoordinates` are the link's MEASURED position in the
- * parent, `bridgeSide` / `bridgeOffset` / `spawnedByLinkID` are stored at the spawn — so each is
- * compared, and so is `sizeMode` (a hand resize is a change).
+ * The fields `reconcileNode` settles itself: `children` (reconciled recursively), `location`
+ * (compared by the caller, kept when pinned) and `width` / `height` / `manuallyPositioned` (carried
+ * forward by the caller).
+ */
+const CARRIED_FIELDS = new Set<string>([
+    'children',
+    'location',
+    'width',
+    'height',
+    'manuallyPositioned',
+]);
+
+/**
+ * EVERY OWN FIELD of the two nodes but the carried ones, by value. A hand-picked list missed the
+ * ones that change on their own: `routeDivisions` (a new query, parameters or fragment — the route,
+ * which is the pathname's, stays), and `bridgeKind` / `bridgeAnchor` (a strip turned leash); a node
+ * whose only change was one of those came back as the STALE previous node, and the plane kept
+ * reading the old query. Comparing all of them also covers a field added later.
  */
 const sameNodeOwnFieldsExceptLocation = (
     a: TreePlane,
     b: TreePlane,
-): boolean =>
-    a.sourceID === b.sourceID
-    && a.planeID === b.planeID
-    && a.parentPlaneID === b.parentPlaneID
-    && a.route === b.route
-    && a.show === b.show
-    && a.bridgeLength === b.bridgeLength
-    && a.planeAngle === b.planeAngle
-    && a.bridgeSide === b.bridgeSide
-    && a.bridgeOffset === b.bridgeOffset
-    && a.spawnedByLinkID === b.spawnedByLinkID
-    && sameLinkCoordinates(a.linkCoordinates, b.linkCoordinates)
-    && a.sizeMode === b.sizeMode;
+): boolean => {
+    const fields = new Set([...Object.keys(a), ...Object.keys(b)]);
+    for (const field of fields) {
+        if (CARRIED_FIELDS.has(field)) {
+            continue;
+        }
+        if (!samePlain((a as unknown as Record<string, unknown>)[field], (b as unknown as Record<string, unknown>)[field])) {
+            return false;
+        }
+    }
+    return true;
+};
 
 const sameNodeOwnFields = (
     a: TreePlane,

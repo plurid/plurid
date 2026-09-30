@@ -138,6 +138,10 @@ describe('the live configuration', () => {
         const rows = after(actions.setConfigurationSpaceLayout('ROWS' as never));
         expect(rows.space.layout).toEqual({ type: LAYOUT_TYPES.ROWS });
 
+        // a type the engine does not lay out is stored as the one it lays out (META emptied the space)
+        expect(after(actions.setConfigurationSpaceLayout('META' as never)).space.layout).toEqual({ type: LAYOUT_TYPES.COLUMNS });
+        expect(after(actions.setConfigurationSpaceLayout('face to face' as never)).space.layout).toEqual({ type: LAYOUT_TYPES.FACE_TO_FACE });
+
         const culled = after(actions.setConfigurationSpaceCullingDistance(4200));
         expect(culled.space.culling?.distance).toBe(4200);
         for (const [key, value] of Object.entries(defaultConfiguration.space.culling ?? {})) {

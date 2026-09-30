@@ -118,6 +118,11 @@ const deepClone = (
 ): any => {
     if (Object(obj) !== obj) return obj; // primitives
 
+    // A function is behaviour, not data: it is shared, never rebuilt. `new obj.constructor()` made
+    // an EMPTY function of it, so a configuration merged over a clone of itself (a partial update)
+    // silently replaced every host callback (`shortcuts.onUnhandledKey`) with a no-op.
+    if (typeof obj === 'function') return obj;
+
     if (hash.has(obj)) return hash.get(obj); // cyclic reference
 
     const result = obj instanceof Set ? new Set(obj) // See note about this!
@@ -145,7 +150,8 @@ const deepClone = (
  * Creates a deep clone of the `data`.
  *
  * The default `type` is `json`, meant for deep cloning of json-like objects.
- * The `any` `type` will handle a deep clone of `Function`, `Date`, and more.
+ * The `any` `type` will handle a deep clone of `Date`, `Map`, `Set`, `RegExp` and more; a
+ * `Function` is kept by reference (behaviour is shared, never rebuilt).
  *
  * @param data
  * @param type
@@ -275,6 +281,10 @@ export const flip = <
 /**
  * Merges `target` into `object`.
  *
+ * Plain objects merge key by key; any other value `target` defines (`undefined` is no value) wins,
+ * whatever `object` holds there — a scalar, `null` or an array replaces a plain object too. At the
+ * root, a `target` that is not a plain object leaves `object` as it is.
+ *
  * The `resolvers` can be used to resolve any field within the `object`
  * using dot-access syntax, e.g. `{ 'key1.key1.key3': () => value }`.
  *
@@ -336,7 +346,15 @@ export const merge = <O extends object = any, R = O>(
             const objectField = isObject(objectNode) ? objectNode[key] : undefined;
             const targetField = isObject(targetNode) ? targetNode[key] : undefined;
 
-            if (isMergeable(objectField) || isMergeable(targetField)) {
+            // Recurse while `target` has an object here, or has nothing here (the object is copied
+            // through, its resolvers still run). A DEFINED non-object in `target` — a scalar,
+            // `null`, an array, a Date — REPLACES whatever `object` holds, a plain object included:
+            // it used to be dropped there, so `{ url: false }` could never switch off a
+            // `{ url: { … } }`, while the same scalar replaced a scalar.
+            if (
+                isMergeable(targetField)
+                || (isMergeable(objectField) && typeof targetField === 'undefined')
+            ) {
                 result[key] = mergeNode(objectField, targetField, keyPath);
                 continue;
             }

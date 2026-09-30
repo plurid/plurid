@@ -70,16 +70,20 @@ export const findPage = (
 }
 
 
+/**
+ * `data` in consecutive groups of `length`. Any length is safe: it is a whole number of at least 1
+ * (`splice(0, 0 | −1 | NaN | 0.5)` took nothing, and the loop that relied on it never ended), and
+ * a length past the data is one group.
+ */
 export const splitIntoGroups = <T>(
     data: T[],
     length: number,
 ): T[][] => {
-    const initialArray = [...data];
-    const groups: any[] = [];
+    const size = length >= 1 ? Math.floor(length) : 1;
+    const groups: T[][] = [];
 
-    while (initialArray.length) {
-        const group = initialArray.splice(0, length);
-        groups.push(group);
+    for (let start = 0; start < data.length; start += size) {
+        groups.push(data.slice(start, start + size));
     }
 
     return groups;

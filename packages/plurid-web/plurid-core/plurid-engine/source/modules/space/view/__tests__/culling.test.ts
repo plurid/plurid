@@ -89,6 +89,20 @@ describe('cullPlanes()', () => {
         expect(sameCulling({ hidden: ['a'], frozen: [], detached: [], depths: {} }, { hidden: ['a'], frozen: [], detached: ['a'], depths: {} })).toBe(false);
         expect(sameCulling({ hidden: ['a'], frozen: ['b'], detached: [], depths: {} }, { hidden: ['a'], frozen: [], detached: [], depths: {} })).toBe(false);
     });
+
+    it('builds its settings field by field: a null, NaN or missing threshold is the default (audit 2026-09-29 #9)', () => {
+        const camera = identityCamera(view);
+        // at the pivot depth plus 2000: far inside the default distance
+        const planes = [plane('far', 400, 200, -2000)];
+        // `{ ...DEFAULT, ...{ distance: null } }` read as 0: every plane was hidden
+        expect(cullPlanes(planes, camera, view, { distance: null } as any).hidden).toEqual([]);
+        expect(cullPlanes(planes, camera, view, { distance: NaN, hysteresis: null, frustumMargin: Infinity, freezeDistance: undefined } as any).hidden).toEqual([]);
+        expect(cullPlanes(planes, camera, view, null as any).hidden).toEqual([]);
+        // a negative distance is 0: everything is beyond it
+        expect(cullPlanes(planes, camera, view, { distance: -5 }).hidden).toEqual(['far']);
+        expect(resolveDetachOptions({ enabled: true, detach: { mode: 'retain', delay: null, distance: NaN, max: null } as any }))
+            .toEqual({ mode: 'retain', delay: 1000, distance: 0, max: Infinity });
+    });
 });
 
 

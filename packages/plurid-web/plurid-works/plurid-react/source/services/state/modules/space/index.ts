@@ -134,7 +134,8 @@ const commitCamera = (
     state: PluridStateSpace,
     next: CameraState,
 ) => {
-    const camera = cameraEngine.clampCamera(next, state.cameraLimits);
+    // a field that is not finite takes the camera before the change, never the identity's
+    const camera = cameraEngine.clampCamera(next, state.cameraLimits, state.camera);
 
     state.camera = camera;
     state.transform = cameraEngine.cameraMatrix3d(camera, state.viewSize);

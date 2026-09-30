@@ -54,12 +54,35 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
     }
 
 
+    /** Add `planes` to what is registered (a route registered again is replaced). */
     public register(
         planes: PluridPlane<C>[],
     ) {
         this.isoMatcher.index({
             planes,
         });
+    }
+
+    /**
+     * REGISTER EXACTLY `planes`: the index is rebuilt from them, so a route the host no longer lists
+     * stops resolving. `register` only ever added — a plane dropped from the application's `planes`
+     * (an admin plane after a logout) stayed routable by link, view item or deep link, and the index
+     * grew for the application's lifetime. The fallback registry is untouched.
+     */
+    public replace(
+        planes: PluridPlane<C>[],
+    ) {
+        this.isoMatcher.clear();
+        this.isoMatcher.index({
+            planes: Array.isArray(planes) ? planes : [],
+        });
+    }
+
+    /** Forget the plane registered at `route` (as registered: `/items/:id`); `false` when none was. */
+    public unregister(
+        route: string,
+    ): boolean {
+        return this.isoMatcher.remove(route);
     }
 
     public identify(): string[] {

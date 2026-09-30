@@ -78,7 +78,15 @@ export const boxOfPlane = (
 };
 
 
-/** The selection's and the other shown planes' boxes, from the tree (children included). */
+/**
+ * The selection's and the other shown planes' boxes, from the tree (children included).
+ *
+ * A plane that MOVES WITH THE SELECTION is no target: a spawned child hanging from its link
+ * follows its parent (`recomputeSubtree`), so the selection's own descendants — unless placed by
+ * hand, which stay where they were dropped — travel with it. As targets they pulled the selection
+ * toward itself: every release shifted a parent toward its child (10 px per release under the
+ * `objects` bridge preset), and the child followed.
+ */
 export const collectSnapBoxes = (
     tree: TreePlane[],
     selected: Set<string>,
@@ -87,17 +95,23 @@ export const collectSnapBoxes = (
     const selection: SnapBox[] = [];
     const others: SnapBox[] = [];
 
-    const walk = (nodes: TreePlane[]) => {
+    const walk = (nodes: TreePlane[], parentMoves: boolean) => {
         for (const node of nodes) {
+            const isSelected = selected.has(node.planeID);
+            const follows = parentMoves && !!node.linkCoordinates && !node.manuallyPositioned;
             if (node.show !== false) {
-                (selected.has(node.planeID) ? selection : others).push(boxOfPlane(node, fallback));
+                if (isSelected) {
+                    selection.push(boxOfPlane(node, fallback));
+                } else if (!follows) {
+                    others.push(boxOfPlane(node, fallback));
+                }
             }
             if (node.children) {
-                walk(node.children);
+                walk(node.children, isSelected || follows);
             }
         }
     };
-    walk(tree);
+    walk(tree, false);
 
     return {
         selection,

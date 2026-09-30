@@ -293,12 +293,26 @@ export const pagePresentationDefaults: PluridPartialConfiguration = {
 };
 
 
-export const layoutNames = {
+/**
+ * THE LAYOUTS A USER CAN PICK (the toolbar lists `Object.values(layoutNames)`). `META` is not
+ * implemented: the engine lays a META layout out as COLUMNS, so it is not offered — picking it
+ * emptied the space. The type still reads for every `LAYOUT_TYPES` key (a META configuration
+ * type-checks), and a key with no name here reads as `undefined` at runtime: show one with
+ * `layoutName(type)`.
+ */
+export const layoutNames: Readonly<Record<Exclude<keyof typeof LAYOUT_TYPES, 'META'>, string>>
+    & { readonly [type: string]: string } = {
     COLUMNS: 'columns',
     ROWS: 'rows',
     FACE_TO_FACE: 'face to face',
     ZIG_ZAG: 'zig zag',
     SHEAVES: 'sheaves',
-    META: 'meta',
 };
+
+/** The name to show for a layout type: one without a name of its own (META, an unknown type) is laid out as columns. */
+export const layoutName = (
+    type: unknown,
+): string => (typeof type === 'string' && Object.prototype.hasOwnProperty.call(layoutNames, type)
+    ? layoutNames[type]
+    : layoutNames.COLUMNS);
 // #endregion module

@@ -59,7 +59,9 @@ export const interpolateCamera = (
     t: number,
     _view?: ViewSize,
 ): CameraState => {
-    if (t <= 0) {
+    // `!(t > 0)`, not `t <= 0`: a NaN `t` (a zero-length tween's 0 / 0) is the start, never a
+    // camera of NaN
+    if (!(t > 0)) {
         return from;
     }
     if (t >= 1) {

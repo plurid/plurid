@@ -13,6 +13,13 @@
     import type {
         PlaneExtent,
     } from './size';
+    import {
+        resolveLayoutType,
+    } from './type';
+    import type {
+        ImplementedLayoutType,
+        ResolvedLayoutType,
+    } from './type';
     // #endregion internal
 // #endregion imports
 
@@ -28,8 +35,11 @@ export {
     configuredPlaneSize,
     configuredPlaneExtent,
     fallbackPlaneSize,
+    resolveLayoutType,
 };
 export type {
     PlaneExtent,
+    ImplementedLayoutType,
+    ResolvedLayoutType,
 };
 // #endregion exports

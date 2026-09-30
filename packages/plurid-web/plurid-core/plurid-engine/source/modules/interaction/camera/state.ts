@@ -27,16 +27,42 @@ export const DEFAULT_CAMERA_LIMITS: CameraLimits = {
 };
 
 
-/** Camera limits from a partial (e.g. `configuration.space.navigation`), each field defaulted independently. */
+/** A finite number, or `undefined` (NaN, ±Infinity, a string, `null`). */
+const finiteOrUndefined = (
+    value: unknown,
+): number | undefined => (typeof value === 'number' && Number.isFinite(value) ? value : undefined);
+
+
+/**
+ * Camera limits from a partial (e.g. `configuration.space.navigation`), each field defaulted
+ * independently — and VALID: every limit a finite number (a `pitchLimit: 'x'` made every clamp
+ * NaN, and the whole matrix with it), `pitchLimit` / `dollyLimitFraction` / `rollLimit` not
+ * negative, `zoomMin` above 0 and `zoomMax` not below it (an inverted range is held at `zoomMin`).
+ * An invalid field takes its default; an invalid `rollLimit` is dropped (the roll is free).
+ */
 export const resolveCameraLimits = (
     partial?: Partial<CameraLimits> | null,
-): CameraLimits => ({
-    pitchLimit: partial?.pitchLimit ?? DEFAULT_CAMERA_LIMITS.pitchLimit,
-    zoomMin: partial?.zoomMin ?? DEFAULT_CAMERA_LIMITS.zoomMin,
-    zoomMax: partial?.zoomMax ?? DEFAULT_CAMERA_LIMITS.zoomMax,
-    dollyLimitFraction: partial?.dollyLimitFraction ?? DEFAULT_CAMERA_LIMITS.dollyLimitFraction,
-    ...(partial?.rollLimit !== undefined ? { rollLimit: partial.rollLimit } : {}),
-});
+): CameraLimits => {
+    const at = <K extends keyof CameraLimits>(
+        key: K,
+        valid: (value: number) => boolean,
+    ): number | undefined => {
+        const value = finiteOrUndefined(partial?.[key]);
+        return value !== undefined && valid(value) ? value : undefined;
+    };
+
+    const zoomMin = at('zoomMin', (value) => value > 0) ?? DEFAULT_CAMERA_LIMITS.zoomMin;
+    const zoomMax = at('zoomMax', (value) => value > 0) ?? DEFAULT_CAMERA_LIMITS.zoomMax;
+    const rollLimit = at('rollLimit', (value) => value >= 0);
+
+    return {
+        pitchLimit: at('pitchLimit', (value) => value >= 0) ?? DEFAULT_CAMERA_LIMITS.pitchLimit,
+        zoomMin,
+        zoomMax: Math.max(zoomMin, zoomMax),
+        dollyLimitFraction: at('dollyLimitFraction', (value) => value >= 0) ?? DEFAULT_CAMERA_LIMITS.dollyLimitFraction,
+        ...(rollLimit !== undefined ? { rollLimit } : {}),
+    };
+};
 
 
 export const vec3 = (
@@ -104,32 +130,82 @@ export const clampNumber = (
 ): number => Math.min(Math.max(value, min), max);
 
 
+/** `value` when it is a finite number, else `previous` when that is, else `identity`. */
+const finiteField = (
+    value: unknown,
+    previous: unknown,
+    identity: number,
+): number => finiteOrUndefined(value) ?? finiteOrUndefined(previous) ?? identity;
+
+/** A vector of finite parts, each part falling back like `finiteField`; the same reference when whole. */
+const finiteVector = (
+    value: Vec3 | undefined,
+    previous: Vec3 | undefined,
+): Vec3 => {
+    const x = finiteField(value?.x, previous?.x, 0);
+    const y = finiteField(value?.y, previous?.y, 0);
+    const z = finiteField(value?.z, previous?.z, 0);
+    return value && x === value.x && y === value.y && z === value.z
+        ? value
+        : {
+            x,
+            y,
+            z,
+        };
+};
+
+/** A perspective is a distance: a finite number above 0. */
+const validPerspective = (
+    value: unknown,
+): number | undefined => {
+    const perspective = finiteOrUndefined(value);
+    return perspective !== undefined && perspective > 0 ? perspective : undefined;
+};
+
+
 /**
  * Enforce the camera limits: pitch clamped, yaw wrapped, scale within the zoom range, the dolly
  * kept in front of the eye. Returns the SAME reference when nothing had to change, so callers can
  * cheaply detect a no-op.
+ *
+ * THE COMMIT GATE LETS NO NaN THROUGH. A field that is not a finite number — a partial delta, a
+ * string perspective, an interpolation at NaN — takes `fallback`'s (the camera before the change),
+ * else the identity's (no turn, scale 1, the origin, `DEFAULT_PERSPECTIVE`), and the perspective
+ * must be above 0. One NaN used to blank the space (`matrix3d(NaN…)`, which the browser drops) while
+ * culling, docking and hit-tests computed with it, and every later delta kept it NaN.
  */
 export const clampCamera = (
     camera: CameraState,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
+    fallback?: CameraState,
 ): CameraState => {
-    const pitch = clampNumber(camera.pitch, -limits.pitchLimit, limits.pitchLimit);
-    const yaw = normalizeYaw(camera.yaw);
+    const safeLimits = limits === DEFAULT_CAMERA_LIMITS ? limits : resolveCameraLimits(limits);
+    const perspective = validPerspective(camera.perspective)
+        ?? validPerspective(fallback?.perspective)
+        ?? DEFAULT_PERSPECTIVE;
+    const pivot = finiteVector(camera.pivot, fallback?.pivot);
+    const offset = finiteVector(camera.offset, fallback?.offset);
+
+    const pitch = clampNumber(finiteField(camera.pitch, fallback?.pitch, 0), -safeLimits.pitchLimit, safeLimits.pitchLimit);
+    const yaw = normalizeYaw(finiteField(camera.yaw, fallback?.yaw, 0));
     // the horizon wraps like the yaw; a `rollLimit` holds it near level (0 forbids the tilt)
-    const wrappedRoll = normalizeYaw(camera.roll);
-    const roll = limits.rollLimit === undefined
+    const wrappedRoll = normalizeYaw(finiteField(camera.roll, fallback?.roll, 0));
+    const roll = safeLimits.rollLimit === undefined
         ? wrappedRoll
-        : clampNumber(wrappedRoll, -limits.rollLimit, limits.rollLimit);
-    const scale = clampNumber(camera.scale, limits.zoomMin, limits.zoomMax);
-    const dollyMax = camera.perspective * limits.dollyLimitFraction;
-    const dollyMin = -camera.perspective * 8;
-    const offsetZ = clampNumber(camera.offset.z, dollyMin, dollyMax);
+        : clampNumber(wrappedRoll, -safeLimits.rollLimit, safeLimits.rollLimit);
+    const scale = clampNumber(finiteField(camera.scale, fallback?.scale, 1), safeLimits.zoomMin, safeLimits.zoomMax);
+    const dollyMax = perspective * safeLimits.dollyLimitFraction;
+    const dollyMin = -perspective * 8;
+    const offsetZ = clampNumber(offset.z, dollyMin, dollyMax);
 
     if (
         pitch === camera.pitch
         && yaw === camera.yaw
         && roll === camera.roll
         && scale === camera.scale
+        && perspective === camera.perspective
+        && pivot === camera.pivot
+        && offset === camera.offset
         && offsetZ === camera.offset.z
     ) {
         return camera;
@@ -141,10 +217,12 @@ export const clampCamera = (
         yaw,
         roll,
         scale,
-        offset: offsetZ === camera.offset.z
-            ? camera.offset
+        perspective,
+        pivot,
+        offset: offsetZ === offset.z
+            ? offset
             : {
-                ...camera.offset,
+                ...offset,
                 z: offsetZ,
             },
     };

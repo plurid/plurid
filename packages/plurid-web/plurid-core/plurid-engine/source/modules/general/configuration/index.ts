@@ -19,6 +19,17 @@
         objects,
     } from '@plurid/plurid-functions';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        resolveLayoutType,
+    } from '~modules/space/layout/type';
+
+    import {
+        warnDevelopment,
+    } from '~modules/utilities';
+    // #endregion external
 // #endregion imports
 
 
@@ -137,7 +148,11 @@ export const merge = (
     const base: PluridConfiguration = page
         ? objects.merge(objects.clone(defaultConfiguration), objects.clone(pagePresentationDefaults)) as PluridConfiguration
         : objects.clone(defaultConfiguration);
-    const targetConfiguration = objects.merge(base, objects.clone(target || {})) as PluridConfiguration;
+    const targetConfiguration = normalizeConfiguration(
+        objects.merge(base, objects.clone(target || {})) as PluridConfiguration,
+        base,
+        base,
+    );
     if (page) {
         // A full target (a live reconfiguration carries the whole current configuration) holds the
         // SPACE defaults for the three page fields; a value still at that default is not a choice.
@@ -157,16 +172,35 @@ export const merge = (
             'global.look': () => (configuration.global?.look !== undefined
                 ? configuration.global.look
                 : (target?.global?.look ?? defaultConfiguration.global.look)),
+            // A PARTIAL THAT NAMES NO THEME KEEPS THE ONE IN FORCE, as the look does: this read the
+            // partial alone, so `configuration { space: { perspective } }` reset a host's theme to
+            // plurid. A name is both parts; an object names the parts it has; `null` is the default.
             'global.theme': () => {
+                const given = configuration.global?.theme;
+                const current = given === null
+                    ? defaultConfiguration.global.theme
+                    : targetConfiguration.global?.theme;
+                const part = (type: 'general' | 'interaction') => {
+                    const named = typeof given === 'string'
+                        ? given
+                        : (given && typeof given === 'object' ? given[type] : undefined);
+                    return named
+                        ? resolveTheme(given, type)
+                        : resolveTheme(current, type);
+                };
                 return {
-                    general: resolveTheme(configuration.global?.theme, 'general') as any,
-                    interaction: resolveTheme(configuration.global?.theme, 'interaction') as any,
+                    general: part('general') as any,
+                    interaction: part('interaction') as any,
                 };
             },
         },
     );
 
-    return resolveBridgePreset(mergedConfiguration, configuration, target);
+    return normalizeConfiguration(
+        resolveBridgePreset(mergedConfiguration, configuration),
+        targetConfiguration,
+        base,
+    );
 }
 
 
@@ -174,17 +208,26 @@ export const merge = (
  * A NAMED BRIDGE PRESET applies UNDER the fields given explicitly: `{ preset: 'objects' }` is the
  * old geometry whole, `{ preset: 'objects', planeAngle: 60 }` the old geometry at 60°. The
  * defaults equal the `reading` preset, so a configuration that names none is unchanged.
+ *
+ * Only a partial that NAMES a preset applies one. The target's preset used to be re-applied on
+ * every merge, over the target's own explicit fields: an unrelated update turned a host's
+ * `{ preset: 'objects', planeAngle: 60, anchor: 'edge' }` back into 90° from the link. The merged
+ * bridge already holds the target's fields; a preset named on the target stays its label.
  */
 const resolveBridgePreset = (
     merged: PluridConfiguration,
     configuration?: PluridPartialConfiguration,
-    target?: PluridConfiguration,
 ): PluridConfiguration => {
     const explicit = configuration?.space?.bridge;
-    const preset = explicit?.preset ?? target?.space?.bridge?.preset;
+    const preset = explicit?.preset;
     if (!preset || !bridgePresets[preset]) {
         return merged;
     }
+
+    // the fields the partial GIVES: a `null` or `undefined` one is not given (the preset's stands)
+    const given = Object.fromEntries(
+        Object.entries(explicit).filter(([, value]) => value !== null && value !== undefined),
+    );
 
     return {
         ...merged,
@@ -193,11 +236,184 @@ const resolveBridgePreset = (
             bridge: {
                 ...merged.space.bridge,
                 ...bridgePresets[preset],
-                ...(explicit ?? {}),
+                ...given,
                 preset,
             },
         },
     };
+};
+
+
+const isPlainObject = (
+    value: unknown,
+): value is Record<string, unknown> => !!value
+    && typeof value === 'object'
+    && !Array.isArray(value)
+    && (Object.getPrototypeOf(value) === Object.prototype || Object.getPrototypeOf(value) === null);
+
+/** A value a finite number reads as: a number, or a numeric string (`'0.5'`); `undefined` otherwise (`'2000px'`, NaN, ±Infinity). */
+const finiteReading = (
+    value: unknown,
+): number | undefined => {
+    const number = typeof value === 'string' && value.trim() !== ''
+        ? Number(value)
+        : value;
+    return typeof number === 'number' && Number.isFinite(number) ? number : undefined;
+};
+
+/** The knobs whose default is an object but which a name may hold (`global.theme: 'night'`). */
+const NAMED_OBJECT_KNOBS = new Set<string>([
+    'global.theme',
+]);
+
+/**
+ * ONE READING OF A MERGED CONFIGURATION, so every consumer reads the same value. `null` (JSON's
+ * "unset") used to override a default and then be read as 0 by arithmetic (`culling.distance:
+ * null` hid every plane), as unset by `??` and `||`, as NaN elsewhere. Now, walking `node` beside
+ * the `previous` configuration (the one in force) and the `defaults`:
+ * - `null` is the default (a knob with no default is dropped);
+ * - a knob whose default is a number holds a finite number: a numeric string is read as one, any
+ *   other value (`'2000px'`, NaN, ±Infinity) keeps the previous value, else the default;
+ * - any other non-finite number keeps the previous finite value, else is dropped (its consumer's
+ *   own default applies);
+ * - a knob whose default is an object or an array holds one (`space: 'x'` keeps the previous);
+ * - `space.layout.type` is a layout the engine lays out (`resolveLayoutType`: `'columns'` is
+ *   COLUMNS; META, never implemented, and an unknown type are COLUMNS).
+ * Whatever was not taken as written gets a development warning. The same objects come back where
+ * nothing changed.
+ */
+export const normalizeConfiguration = (
+    configuration: PluridConfiguration,
+    previous: PluridConfiguration | undefined,
+    defaults: PluridConfiguration = defaultConfiguration,
+): PluridConfiguration => {
+    const warnings = configuration?.development?.warnings !== false;
+    const report = (path: string, value: unknown, taken: string) => warnDevelopment(
+        'configuration:' + path,
+        'the configuration\'s `' + path + '` is ' + describeValue(value) + ': ' + taken,
+        warnings,
+    );
+
+    const walk = (
+        node: Record<string, unknown>,
+        previousNode: unknown,
+        defaultNode: unknown,
+        path: string,
+    ): Record<string, unknown> => {
+        let result = node;
+        const set = (key: string, value: unknown) => {
+            if (result === node) {
+                result = { ...node };
+            }
+            if (value === undefined) {
+                delete result[key];
+            } else {
+                result[key] = value;
+            }
+        };
+
+        for (const key of Object.keys(node)) {
+            const keyPath = path ? path + '.' + key : key;
+            const value = node[key];
+            const previousValue = isPlainObject(previousNode) ? previousNode[key] : undefined;
+            const defaultValue = isPlainObject(defaultNode) ? defaultNode[key] : undefined;
+
+            if (value === null) {
+                set(key, isPlainObject(defaultValue) || Array.isArray(defaultValue) ? objects.clone(defaultValue) : defaultValue);
+                continue;
+            }
+
+            if (typeof defaultValue === 'number') {
+                if (typeof value === 'number' && Number.isFinite(value)) {
+                    continue;
+                }
+                const reading = finiteReading(value);
+                if (reading !== undefined) {
+                    set(key, reading);
+                    continue;
+                }
+                const kept = finiteReading(previousValue) ?? defaultValue;
+                report(keyPath, value, 'not a finite number, ' + kept + ' is used');
+                set(key, kept);
+                continue;
+            }
+
+            if (typeof value === 'number' && !Number.isFinite(value)) {
+                const kept = typeof previousValue === 'number' && Number.isFinite(previousValue) ? previousValue : undefined;
+                report(keyPath, value, kept === undefined ? 'not a finite number, it is ignored' : 'not a finite number, ' + kept + ' is kept');
+                set(key, kept);
+                continue;
+            }
+
+            if (
+                (isPlainObject(defaultValue) && !isPlainObject(value) && !NAMED_OBJECT_KNOBS.has(keyPath))
+                || (Array.isArray(defaultValue) && !Array.isArray(value))
+            ) {
+                const kept = objects.clone(
+                    (isPlainObject(defaultValue) ? isPlainObject(previousValue) : Array.isArray(previousValue))
+                        ? previousValue
+                        : defaultValue,
+                );
+                report(keyPath, value, 'not ' + (isPlainObject(defaultValue) ? 'an object' : 'an array') + ', it is ignored');
+                set(key, kept);
+                continue;
+            }
+
+            if (isPlainObject(value)) {
+                const walked = walk(value, previousValue, defaultValue, keyPath);
+                if (walked !== value) {
+                    set(key, walked);
+                }
+            }
+        }
+
+        return result;
+    };
+
+    if (!isPlainObject(configuration)) {
+        return configuration;
+    }
+
+    let normalized = walk(configuration as unknown as Record<string, unknown>, previous, defaults, '') as unknown as PluridConfiguration;
+
+    // THE LAYOUT IS ONE THE ENGINE LAYS OUT: the configuration says what the space shows (the
+    // toolbar names it; META is not offered there any more)
+    const layout = normalized.space?.layout;
+    if (isPlainObject(layout)) {
+        const resolved = resolveLayoutType(layout.type);
+        if (resolved.reason) {
+            warnDevelopment('layout-type:' + String(layout.type), resolved.reason, warnings);
+        }
+        if (resolved.type !== layout.type) {
+            normalized = {
+                ...normalized,
+                space: {
+                    ...normalized.space,
+                    layout: {
+                        ...layout,
+                        type: resolved.type,
+                    } as PluridConfiguration['space']['layout'],
+                },
+            };
+        }
+    }
+
+    return normalized;
+};
+
+
+/** A value as a warning quotes it (never throws: a BigInt, a cycle). */
+const describeValue = (
+    value: unknown,
+): string => {
+    if (typeof value === 'number') {
+        return String(value);
+    }
+    try {
+        return JSON.stringify(value) ?? String(value);
+    } catch {
+        return typeof value;
+    }
 };
 
 

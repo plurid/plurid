@@ -24,7 +24,9 @@
         fallbackPlaneSize,
     } from './size';
     import {
+        finiteNumber,
         groupSizes,
+        layoutCount,
         placedWidth,
         placedHeight,
         prefixOffsets,
@@ -58,11 +60,15 @@ const computeRowLayout = (
         : gap * width;
 
     // Guard against `rows === 0` (→ `Math.ceil(n/0) === Infinity`, collapsing every plane into
-    // one row) and honor `rowLength` only as a positive count (see column.ts).
-    const safeRows = rows > 0 ? rows : 1;
-    const length = rowLength && rowLength > 0
-        ? rowLength
-        : Math.ceil(roots.length / safeRows);
+    // one row) and a non-finite one; `rowLength` is a whole count of at least 1, at most the roots
+    // (a fractional or huge one sized an array and threw — see column.ts).
+    const rowsValue = finiteNumber(rows, 1);
+    const safeRows = rowsValue > 0 ? rowsValue : 1;
+    const length = layoutCount(
+        rowLength,
+        Math.ceil(roots.length / safeRows),
+        roots.length,
+    );
     const rowOf = (index: number) => Math.floor(index / length);
     const columnOf = (index: number) => index % length;
 

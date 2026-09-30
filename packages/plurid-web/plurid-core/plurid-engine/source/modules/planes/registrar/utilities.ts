@@ -3,6 +3,7 @@
     import {
         PluridPlane,
         PluridPlanesRegistrar as IPluridPlanesRegistrar,
+        RegisteredPluridPlane,
 
         PluridalWindow,
     } from '@plurid/plurid-data';
@@ -67,7 +68,7 @@ const getPlanesRegistrar = <C>(
 
 const getRegisteredPlanes = <C>(
     planesRegistrar: IPluridPlanesRegistrar<C> | undefined,
-) => {
+): Map<string, RegisteredPluridPlane<C>> => {
     if (planesRegistrar) {
         return planesRegistrar.getAll();
     }
@@ -78,7 +79,8 @@ const getRegisteredPlanes = <C>(
         }
     }
 
-    return new Map();
+    // typed: an untyped `new Map()` widened the whole return to `Map<any, any>`
+    return new Map<string, RegisteredPluridPlane<C>>();
 }
 
 

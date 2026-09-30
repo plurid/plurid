@@ -236,14 +236,10 @@ const cssString = (
     value: string,
 ) => value.replace(/["\\]/g, '\\$&');
 
-/** A view entry's route: a string, or the typed `{ plane }` (`PluridView`). */
+/** A view entry's route: a string, or the typed `{ plane }` (`PluridView`); the engine's reading, which skips anything else. */
 export const viewEntryRoute = (
     entry: unknown,
-): string | undefined => (typeof entry === 'string'
-    ? entry
-    : (entry && typeof entry === 'object' && typeof (entry as { plane?: unknown }).plane === 'string'
-        ? (entry as { plane: string }).plane
-        : undefined));
+): string | undefined => space.tree.logic.viewItemRoute(entry);
 
 /** the keys of a configuration that decide where the roots go */
 export const layoutSignature = (

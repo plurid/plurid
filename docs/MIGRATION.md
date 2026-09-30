@@ -175,6 +175,50 @@ and given a regression test. What a host can see:
   pad is connected.
 - The palette names a plane by its declared title.
 
+**The engine**
+
+- **A layout type the engine does not lay out no longer empties the space.** `META` (typed, never
+  implemented) and an unknown type are laid out as `COLUMNS`, with a development warning, and the
+  merged configuration reports the type in force; a name that reads as a member by its letters
+  (`'columns'`, `'face to face'`, `'zigzag'`) is that member. `layoutNames` no longer lists `META`; name
+  a type with `layoutName(type)` (`@plurid/plurid-data`).
+- **Layout numbers are safe.** A face-to-face `middle` of −2 or less, or NaN, hung the tab; it is one
+  plane per row. `columnLength` / `rowLength` are whole numbers from 1 to the number of roots (1.5 threw
+  a `RangeError`), and a `columns` / `rows` that is not finite is 1.
+- **No NaN reaches the camera.** A `space.cameraDelta` part that is missing or not finite moves nothing
+  (a missing zoom `anchor` part is the view centre's), and an `absolute` field is written only when
+  finite (`perspective` only above 0). A field that is still not finite keeps the camera's previous
+  value. Camera limits are validated: `zoomMin` above 0, an inverted range held at `zoomMin`, a negative
+  `pitchLimit` / `dollyLimitFraction` the default, a negative `rollLimit` dropped. A string or negative
+  `space.perspective` is 2000.
+- **Root plane ids stay unique.** A root keeps its id across relayouts and a new root never takes one in
+  use (`route@n-2`); `view.setTree` refuses a tree with a duplicate `planeID`. A malformed view item
+  (`{ route }`, `null`, a number) is skipped (it threw).
+- **A partial `configuration` is partial.** It keeps the theme in force when it names none (`theme:
+  null` resets it); a bridge preset applies only when the partial names one; a scalar replaces an
+  object, so `docking.url: false` and `culling.detach: 'unmount'` switch off at runtime; and host
+  callbacks (`shortcuts.onUnhandledKey`, `pathbar.onChange`) survive the merge (they became no-ops).
+- **The merged configuration is normalised.** `null` is the default; a setting with a numeric default
+  holds a finite number (`'0.5'` is read; `'2000px'`, NaN and ±Infinity keep the value in force, else
+  the default, so **`culling.distance: Infinity` becomes 6000: write a large finite number**); a scalar
+  where an object is expected is ignored. Each correction is a development warning
+  (`development.warnings: false` silences them). A `null` or NaN culling threshold is the default
+  (`culling.distance: null` hid every plane).
+- **A plane dropped from `planes` stops resolving.** The application's own registrar holds exactly its
+  `planes` prop (it only ever added: an admin plane stayed routable after a logout); a host's
+  `planesRegistrar` is only added to. Registrars have `replace(planes)` and `unregister(route)`.
+- **Routing.** A query starts at the first `?` (`?q=why?`), and a `#hash` is no part of a route.
+  Parameters and fragment text are decoded (`john%20doe` is `john doe`), and plane addresses are
+  canonical, so `/p/Jos%C3%A9` and `/p/José` are one plane with one id. **A saved tree whose root routes
+  were percent-encoded re-pairs once: those roots lose their carried state on the first load.**
+  `RouteParser.extract().route` re-encodes its query (a space is `+`).
+- **A plane whose query, fragment, parameters, bridge kind or anchor changed re-renders**: the reconcile
+  compares every field of a node (it kept the stale one).
+- **Snapping ignores what moves with the selection**: a parent crept toward its own spawned child on
+  every release.
+- **Big spaces compute in milliseconds.** The registered planes are indexed once per compute: 1000
+  roots take about 5 ms (317 ms before; 22 ms for parametric routes, from 872 ms).
+
 **Development**
 
 - Warnings for a flat key in the nested `configuration` (`{ chrome: 'none' }` was silently ignored), an
@@ -199,6 +243,13 @@ and given a regression test. What a host can see:
   `PluridShortcutDefinition`.
 - `PluridRoute.id` and `PluridRouteSpace.id`; `api.getViewpoint({ version: 3 })` in the type (it
   worked); the published types no longer need the global `JSX` namespace (React 19's types).
+- `space.changed` is typed by kind: `PluridChange<K>`, `PluridChangeValues` and `PluridCullingCounts`
+  (`@plurid/plurid-data`) narrow `value` on `kind` (`change.kind === 'tree'` makes it a `TreePlane[]`).
+  `PluridPubSubMessageChanged` is now a type alias (a union discriminated by `kind`, permissive by
+  default), so an interface that `extends` it no longer compiles: use `PluridChange`.
+  `getRegisteredPlanes` returns `Map<string, RegisteredPluridPlane<C>>`.
+- `@plurid/plurid-functions`: `objects.merge` lets a defined non-object replace an object, and
+  `objects.clone` keeps functions by reference (it turned every function into an empty one).
 
 ---
 

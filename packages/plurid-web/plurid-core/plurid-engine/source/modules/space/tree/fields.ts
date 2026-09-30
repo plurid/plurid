@@ -39,6 +39,117 @@ export const pairRootsByIdentity = (
     };
 };
 
+/** `base`, or `base-2`, `base-3`, … — the first id `taken` does not hold. */
+export const uniquePlaneID = (
+    base: string,
+    taken: (planeID: string) => boolean,
+): string => {
+    if (!taken(base)) {
+        return base;
+    }
+    let counter = 2;
+    while (taken(base + '-' + counter)) {
+        counter += 1;
+    }
+    return base + '-' + counter;
+};
+
+/** A root under another id, its children re-parented to it (they name their parent by id). */
+const renamedRoot = (
+    root: TreePlane,
+    planeID: string,
+): TreePlane => ({
+    ...root,
+    planeID,
+    ...(root.children
+        ? {
+            children: root.children.map((child) => (child.parentPlaneID === root.planeID
+                ? { ...child, parentPlaneID: planeID }
+                : child)),
+        }
+        : {}),
+});
+
+/**
+ * NO TWO ROOTS ARE ONE PLANE. Every root keeps its id unless an earlier root, a plane below any
+ * root, or `inUse` already holds it; then it takes `base-2`, `base-3`, … (its children follow it).
+ * The first holder keeps the id (the rest of the space may point at it: a selection, the active
+ * plane). The same array comes back when nothing changes. For a tree assembled from pieces (a
+ * relayout's roots and the previous tree's extras), before it is stored.
+ */
+export const uniqueRootPlaneIDs = (
+    roots: TreePlane[],
+    inUse: Iterable<string> = [],
+): TreePlane[] => {
+    const taken = new Set<string>(inUse);
+    for (const root of roots) {
+        if (root.children && root.children.length > 0) {
+            collectPlaneIDs(root.children, taken);
+        }
+    }
+
+    let changed = false;
+    const unique = roots.map((root) => {
+        const planeID = uniquePlaneID(root.planeID, (candidate) => taken.has(candidate));
+        taken.add(planeID);
+        if (planeID === root.planeID) {
+            return root;
+        }
+        changed = true;
+        return renamedRoot(root, planeID);
+    });
+
+    return changed ? unique : roots;
+};
+
+/**
+ * THE ROOTS KEEP WHO THEY WERE, AND NO FRESH ROOT IS AN OLD ONE. A recomputed root's id is
+ * positional (`route@index`, the index restarting with every compute), so after an add, a remove
+ * and an add a fresh id could be one the previous tree still carried — two roots with one id, and
+ * every action by id reaching only the first. A root paired with a previous one by identity
+ * (`pairRootsByIdentity`, in order) takes that root's id; every other root keeps its fresh id unless
+ * any plane of the previous tree (children included) or an earlier root holds it, and then takes
+ * `base-2`, `base-3`, … Same array back when nothing changes.
+ */
+export const carryRootPlaneIDs = (
+    roots: TreePlane[],
+    previousTree: TreePlane[] | undefined,
+): TreePlane[] => {
+    if (!previousTree || previousTree.length === 0) {
+        return uniqueRootPlaneIDs(roots);
+    }
+
+    const pairing = pairRootsByIdentity(previousTree);
+    const inUse = collectPlaneIDs(previousTree);
+    const claimed = new Set<string>();
+
+    // a paired root claims its previous id first, so a fresh id is never one a later root carries
+    const carried = roots.map((root) => {
+        const previous = pairing.take(root);
+        if (!previous || !previous.planeID || claimed.has(previous.planeID)) {
+            return undefined;
+        }
+        claimed.add(previous.planeID);
+        return previous.planeID;
+    });
+
+    let changed = false;
+    const identified = roots.map((root, index) => {
+        let planeID = carried[index];
+        if (planeID === undefined) {
+            planeID = uniquePlaneID(root.planeID, (candidate) => inUse.has(candidate) || claimed.has(candidate));
+            claimed.add(planeID);
+        }
+        if (planeID === root.planeID) {
+            return root;
+        }
+        changed = true;
+        return renamedRoot(root, planeID);
+    });
+
+    return changed ? identified : roots;
+};
+
 /** A plane sized by hand (a resize handle): its size is its own and wins over every other source. */
 export const isHandSized = (
     plane: TreePlane,
@@ -262,8 +373,9 @@ export const collectPlaneIDs = (
 /**
  * IS THIS A TREE THE SPACE CAN HOLD. `view.setTree` used to hand whatever it was given to the
  * store, and a malformed node threw inside a render, out of reach of the host that sent it.
- * Every node needs an id, a route, a location of five finite numbers, and children that are an
- * array of the same; sizes, when given, are finite numbers.
+ * Every node needs an id no other node has, a route, a location of five finite numbers, and
+ * children that are an array of the same; sizes, when given, are finite numbers. (Two planes of
+ * one id collide as React keys, and every action by id reaches only the first.)
  */
 export interface TreeValidation {
     ok: boolean;
@@ -279,6 +391,7 @@ export const validateTree = (
     }
 
     const finite = (value: unknown) => typeof value === 'number' && Number.isFinite(value);
+    const seen = new Set<string>();
 
     const check = (nodes: unknown[], path: string): string | undefined => {
         for (let index = 0; index < nodes.length; index += 1) {
@@ -290,6 +403,10 @@ export const validateTree = (
             if (typeof node.planeID !== 'string' || !node.planeID) {
                 return where + ' has no planeID';
             }
+            if (seen.has(node.planeID)) {
+                return where + ' (' + node.planeID + ') has the planeID of another plane';
+            }
+            seen.add(node.planeID);
             if (typeof node.route !== 'string' || !node.route) {
                 return where + ' (' + node.planeID + ') has no route';
             }

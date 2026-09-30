@@ -51,5 +51,15 @@ describe('clone', () => {
         expect(cloned.when.getTime()).toBe(d.getTime());
         expect(cloned.when).not.toBe(d);
     });
+
+    // 2026-09-29: a function became an EMPTY function (`new Function()`), so a configuration merged
+    // over a clone of itself lost every host callback.
+    it('keeps a function by reference, working', () => {
+        const handler = () => 42;
+        const cloned = clone({ nested: { handler } });
+        expect(cloned.nested.handler).toBe(handler);
+        expect(cloned.nested.handler()).toBe(42);
+        expect(clone(handler)).toBe(handler);
+    });
 });
 // #endregion module

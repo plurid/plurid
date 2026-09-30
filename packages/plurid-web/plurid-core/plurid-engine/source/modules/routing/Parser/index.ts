@@ -106,11 +106,9 @@ export default class Parser<C> {
             elements,
         } = this.extractParametersAndMatch();
         const query = this.extractQuery();
-        const queryData = Object
-            .entries(query)
-            .map(([key, value]) => {
-                return key + '=' + value;
-            }).join('&');
+        // re-encoded: the query was read DECODED (`q=a%26b` is `{ q: 'a&b' }`), and joined back raw
+        // it re-read as another query (`?q=a&b`: `{ q: 'a', b: '' }`)
+        const queryData = new URLSearchParams(query).toString();
         const queryString = queryData
             ? '?' + queryData
             : '';

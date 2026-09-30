@@ -1,8 +1,19 @@
 // #region imports
+    // #region libraries
+    import {
+        Look,
+    } from '@plurid/plurid-themes';
+    // #endregion libraries
+
     // #region external
     import {
         PluridInspection,
+        PluridRenderSlot,
     } from '../../external/application';
+
+    import {
+        PluridPlaneChromeContext,
+    } from '../../external/chrome';
     // #endregion external
 
     // #region external
@@ -54,12 +65,18 @@ export interface PluridContext<C> {
      */
     chrome?: {
         mode: 'full' | 'minimal' | 'none';
-        look: any;
+        /** The look in force (its name, base and tokens), what the chrome contexts hand the slots. */
+        look: Look;
         docked: string;
         presentation: 'space' | 'page';
         pubsub: PluridPubSub;
-        renderPlaneControls?: (context: any) => unknown;
-        renderPlaneBridge?: (context: any) => unknown;
+        /**
+         * The host's plane-level slots (`PluridRenderSlot<PluridPlaneChromeContext>`), called with the
+         * plane's chrome context. Typed as the Plane calls them: it builds the context only while a
+         * slot is set, and holds it as possibly `undefined`.
+         */
+        renderPlaneControls?: PluridRenderSlot<PluridPlaneChromeContext | undefined>;
+        renderPlaneBridge?: PluridRenderSlot<PluridPlaneChromeContext | undefined>;
         /** The space debugger's slot, called with the inspection (`api.inspect()`'s shape) when the space renders. */
         renderDebugger?: (inspection: PluridInspection | undefined) => unknown;
     };

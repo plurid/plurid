@@ -19,9 +19,31 @@
 
 
 // #region module
+/**
+ * A percent-encoded piece of a location as text: `caf%C3%A9` is `café`, `john%20doe` is `john doe`.
+ * A malformed escape (a bare `%`) is kept as written: `decodeURIComponent` throws on it.
+ */
+export const decodeLocationPart = (
+    value: string,
+): string => {
+    if (value.indexOf('%') === -1) {
+        return value;
+    }
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+};
+
+
 export const extractPathname = (
     location: string,
 ) => {
+    if (typeof location !== 'string') {
+        return '';
+    }
+
     const queryIndex = location.indexOf('?');
     const noQueryPath = queryIndex === -1
         ? location
@@ -71,15 +93,15 @@ export const extractParametersAndMatch = (
 
     const {
         locationElements,
-        comparingPath,
     } = computeComparingPath(location, parameters);
-    // `computeComparingPath` joins the path's elements, so it never carries a leading separator: the
-    // route it is compared against must not either. The IsoMatcher slices its own inputs before
-    // calling (`routePath.slice(1)`); the Parser hands its route in whole, and that mismatch made
-    // EVERY `Parser.extract()` report `match: false` — found 2026-09-13 by writing the first live
-    // test of the class. Normalising here makes the helper total, and leaves the sliced callers alone.
-    const comparingRoute = route.startsWith('/') ? route.slice(1) : route;
-    if (comparingPath !== comparingRoute) {
+    // Element by element, so neither side's leading separator matters: the IsoMatcher slices its
+    // own inputs before calling (`routePath.slice(1)`), the Parser hands its route in whole — that
+    // mismatch once made EVERY `Parser.extract()` report `match: false` (found 2026-09-13).
+    // THE SAME PATH HOWEVER IT IS ENCODED: a literal element matches the route's by what both read
+    // as (`caf%C3%A9` is `café`), and compared whole a decoded `a%2Fb` would have read as two.
+    const match = locationElements.length === routeElements.length
+        && routeElements.every((element, index) => !!parameters[index] || decodeLocationPart(element) === locationElements[index]);
+    if (!match) {
         return {
             match: false,
             parameters: {},
@@ -143,7 +165,9 @@ export const computeComparingPath = (
     parameters: string[],
 ) => {
     const pathname = extractPathname(path);
-    const locationElements = splitPath(pathname);
+    // the elements as text, however the location encoded them: a parameter is handed over and
+    // validated as what it reads as (`john%20doe` is `john doe`, 8 characters, not 10)
+    const locationElements = splitPath(pathname).map(decodeLocationPart);
     const comparingPathElements = [...locationElements];
 
     for (const index of locationElements.keys()) {
@@ -190,36 +214,41 @@ export const splitPath = (
 export const extractQuery = (
     path: string,
 ): Indexed<string> => {
+    if (typeof path !== 'string') {
+        return {};
+    }
+
     // the query ends at any hash: `/a?x=1#details` is `{ x: '1' }`, not `{ x: '1#details' }` (C06)
     const fragmentIndex = path.indexOf('#');
     const noFragmentPath = fragmentIndex === -1
         ? path
         : path.substring(0, fragmentIndex);
-    const querySplit = noFragmentPath.split('?');
-
-    if (querySplit.length === 2) {
-        const queryValues: Indexed<string> = {};
-        const query = querySplit[1];
-
-        // `URLSearchParams` decodes safely: it does NOT throw on a bare `%` (the old
-        // `decodeURIComponent` did) and a valueless flag (`?debug`) yields `''` rather than
-        // the literal string `"undefined"`.
-        const params = new URLSearchParams(query);
-        for (const [id, value] of params) {
-            queryValues[id] = value;
-        }
-
-        return queryValues;
-    } else {
+    // and starts at the FIRST `?`: a value may hold another one (`?next=/b?c=1`, `?q=why?`), which
+    // a split at every `?` read as no query at all
+    const queryIndex = noFragmentPath.indexOf('?');
+    if (queryIndex === -1) {
         return {};
     }
+
+    const queryValues: Indexed<string> = {};
+    const query = noFragmentPath.slice(queryIndex + 1);
+
+    // `URLSearchParams` decodes safely: it does NOT throw on a bare `%` (the old
+    // `decodeURIComponent` did) and a valueless flag (`?debug`) yields `''` rather than
+    // the literal string `"undefined"`.
+    const params = new URLSearchParams(query);
+    for (const [id, value] of params) {
+        queryValues[id] = value;
+    }
+
+    return queryValues;
 }
 
 
 export const extractFragments = (
     location?: string,
 ): PluridRouteFragments => {
-    if (!location) {
+    if (!location || typeof location !== 'string') {
         return {
             texts: [],
             elements: [],
@@ -265,20 +294,23 @@ export const extractFragments = (
 export const parseFragment = (
     fragment: string,
 ): PluridRouteFragmentText | PluridRouteFragmentElement | undefined => {
-    const fragmentData = fragment.split('=');
-    const fragmentType = fragmentData[0] || '';
-    const fragmentValues = fragmentData[1];
+    const separator = fragment.indexOf('=');
+    const fragmentType = separator === -1 ? fragment : fragment.slice(0, separator);
+    const fragmentValues = separator === -1 ? '' : fragment.slice(separator + 1);
     // a malformed directive (`#:~:text`, `#:~:element=`) is dropped, never thrown (C06)
     if (!fragmentValues) {
         return undefined;
     }
 
+    // The values are split on their delimiters FIRST and decoded after: a text directive encodes a
+    // `,` or `&` of its own text, and a location carries the rest encoded too (`hello%20world` is
+    // the text `hello world`).
     switch (fragmentType.toLowerCase()) {
         case 'text':
             {
                 const textValues = fragmentValues.split(',');
-                const textStart = textValues[0];
-                const textEnd = textValues[1];
+                const textStart = decodeLocationPart(textValues[0]);
+                const textEnd = decodeLocationPart(textValues[1] || '');
                 const textOccurence = extractOccurence(textValues[2]);
 
                 if (!textStart) {
@@ -288,14 +320,14 @@ export const parseFragment = (
                 return {
                     type: 'text',
                     start: textStart,
-                    end: textEnd || '',
+                    end: textEnd,
                     occurence: textOccurence,
                 };
             }
         case 'element':
             {
                 const elementValues = fragmentValues.split(',');
-                const elementID = elementValues[0];
+                const elementID = decodeLocationPart(elementValues[0]);
                 const elementOccurence = extractOccurence(elementValues[1]);
 
                 if (!elementID) {

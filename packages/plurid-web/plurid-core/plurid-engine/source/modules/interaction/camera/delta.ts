@@ -269,9 +269,36 @@ export const dollyBy = (
 };
 
 
+/** A delta's number: finite, else 0 (a missing part, NaN, ±Infinity or a string moves nothing). */
+const amount = (
+    value: unknown,
+): number => (typeof value === 'number' && Number.isFinite(value) ? value : 0);
+
+/** The finite parts of a partial vector written over `base` (a missing or non-finite part keeps `base`'s). */
+const overVector = <V extends Vec2 | Vec3>(
+    base: V,
+    value: Partial<V> | undefined,
+): V => {
+    const next = { ...base };
+    for (const key of Object.keys(base) as (keyof V)[]) {
+        const part = value?.[key];
+        if (typeof part === 'number' && Number.isFinite(part)) {
+            next[key] = part as V[keyof V];
+        }
+    }
+    return next;
+};
+
+
 /**
  * Apply one camera delta. Field order: pivot → look → orbit → roll → pan → dolly → fly → zoom →
  * absolute, then the limits. Returns the same reference when the delta changes nothing.
+ *
+ * A DELTA NEVER PUTS A NaN IN THE CAMERA: a vector's missing or non-finite part is 0 (a `pan` of
+ * `{ y: 120 }` pans only vertically; a `pivot` of `{ x, y }` sits on z = 0) — a zoom `anchor`'s is
+ * the view center's, where the whole anchor defaults — every amount is finite or nothing, an
+ * `absolute` field is written only when finite (a vector part by part; `perspective` only above
+ * 0), and the result is gated against the camera it started from.
  */
 export const applyCameraDelta = (
     camera: CameraState,
@@ -279,40 +306,44 @@ export const applyCameraDelta = (
     view: ViewSize,
     limits: CameraLimits = DEFAULT_CAMERA_LIMITS,
 ): CameraState => {
+    if (!delta || typeof delta !== 'object') {
+        return camera;
+    }
+
     let next = camera;
 
     if (delta.pivot) {
-        next = setPivot(next, delta.pivot);
+        next = setPivot(next, overVector({ x: 0, y: 0, z: 0 }, delta.pivot));
     }
 
     if (delta.look) {
-        next = lookBy(next, delta.look.yaw || 0, delta.look.pitch || 0, view, delta.look.roll || 0);
+        next = lookBy(next, amount(delta.look.yaw), amount(delta.look.pitch), view, amount(delta.look.roll));
     }
 
-    if (delta.yaw || delta.pitch) {
-        next = orbitBy(next, delta.yaw || 0, delta.pitch || 0);
+    if (amount(delta.yaw) || amount(delta.pitch)) {
+        next = orbitBy(next, amount(delta.yaw), amount(delta.pitch));
     }
 
-    if (delta.roll) {
-        next = rollBy(next, delta.roll);
+    if (amount(delta.roll)) {
+        next = rollBy(next, amount(delta.roll));
     }
 
     if (delta.pan) {
-        next = panBy(next, delta.pan);
+        next = panBy(next, { x: amount(delta.pan.x), y: amount(delta.pan.y) });
     }
 
-    if (delta.dolly) {
-        next = dollyBy(next, delta.dolly);
+    if (amount(delta.dolly)) {
+        next = dollyBy(next, amount(delta.dolly));
     }
 
     if (delta.fly) {
-        next = flyBy(next, delta.fly.forward || 0, delta.fly.strafe || 0, delta.fly.vertical || 0);
+        next = flyBy(next, amount(delta.fly.forward), amount(delta.fly.strafe), amount(delta.fly.vertical));
     }
 
     if (delta.zoom) {
         next = zoomAt(
             next,
-            delta.zoom.anchor || viewCenter(view),
+            overVector(viewCenter(view), delta.zoom.anchor),
             delta.zoom.factor,
             view,
             limits,
@@ -321,18 +352,19 @@ export const applyCameraDelta = (
 
     if (delta.absolute) {
         const absolute = delta.absolute;
+        const finite = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
         next = {
             ...next,
-            ...(absolute.yaw !== undefined ? { yaw: absolute.yaw } : {}),
-            ...(absolute.pitch !== undefined ? { pitch: absolute.pitch } : {}),
-            ...(absolute.roll !== undefined ? { roll: absolute.roll } : {}),
-            ...(absolute.scale !== undefined ? { scale: absolute.scale } : {}),
-            ...(absolute.perspective !== undefined ? { perspective: absolute.perspective } : {}),
-            ...(absolute.pivot ? { pivot: { ...absolute.pivot } } : {}),
-            ...(absolute.offset ? { offset: { ...absolute.offset } } : {}),
+            ...(finite(absolute.yaw) ? { yaw: absolute.yaw } : {}),
+            ...(finite(absolute.pitch) ? { pitch: absolute.pitch } : {}),
+            ...(finite(absolute.roll) ? { roll: absolute.roll } : {}),
+            ...(finite(absolute.scale) ? { scale: absolute.scale } : {}),
+            ...(finite(absolute.perspective) && absolute.perspective > 0 ? { perspective: absolute.perspective } : {}),
+            ...(absolute.pivot ? { pivot: overVector(next.pivot, absolute.pivot) } : {}),
+            ...(absolute.offset ? { offset: overVector(next.offset, absolute.offset) } : {}),
         };
     }
 
-    return clampCamera(next, limits);
+    return clampCamera(next, limits, camera);
 };
 // #endregion module

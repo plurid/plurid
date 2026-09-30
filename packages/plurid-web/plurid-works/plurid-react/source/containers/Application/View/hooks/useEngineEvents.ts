@@ -10,6 +10,7 @@
 
         PluridPubSub as IPluridPubSub,
         PluridChangeKind,
+        PluridChangeValues,
     } from '@plurid/plurid-data';
 
     import { AppState } from '~services/state/store';
@@ -58,7 +59,8 @@ export const useEngineEvents = (
 ) => {
     const space = state.space;
 
-    const emit = (kind: PluridChangeKind, value: unknown) => {
+    // typed by kind, so an emitted value and what `PluridChangeValues` promises cannot drift apart
+    const emit = <K extends PluridChangeKind>(kind: K, value: PluridChangeValues[K]) => {
         if (pubsub) {
             pubsub.publish({
                 topic: PLURID_PUBSUB_TOPIC.CHANGED,

@@ -75,6 +75,13 @@ export const EMPTY_CULLING: CullingResult = {
 };
 
 
+/** A threshold as given, clamped to 0, when it is a finite number; else (`null`, NaN, ±Infinity, none) `fallback`. */
+const threshold = (
+    value: unknown,
+    fallback: number,
+): number => (typeof value === 'number' && Number.isFinite(value) ? Math.max(0, value) : fallback);
+
+
 // #region detach
 export interface DetachOptions {
     mode: 'off' | 'retain' | 'unmount';
@@ -97,11 +104,13 @@ export const resolveDetachOptions = (
     if (options.mode !== 'retain' && options.mode !== 'unmount') {
         return off;
     }
+    // field by field: a `null` (JSON's "unset") read as 0 in `Math.max(0, null)` and detached at
+    // once; a NaN delay never matured. `max` may be `Infinity` (unbounded, the default).
     return {
         mode: options.mode,
-        delay: Math.max(0, options.delay ?? DEFAULT_DETACH_DELAY),
-        distance: Math.max(0, options.distance ?? 0),
-        max: Math.max(0, options.max ?? Infinity),
+        delay: threshold(options.delay, DEFAULT_DETACH_DELAY),
+        distance: threshold(options.distance, 0),
+        max: typeof options.max === 'number' && !Number.isNaN(options.max) ? Math.max(0, options.max) : Infinity,
     };
 };
 
@@ -225,9 +234,14 @@ export const cullPlanes = (
     previous: CullPassResult = EMPTY_CULLING,
     exceptions: Set<string> = new Set(),
 ): CullPassResult => {
-    const settings = {
-        ...DEFAULT_CULLING,
-        ...options,
+    // FIELD BY FIELD, never a spread: a spread let `{ distance: null }` (JSON's "no limit") over the
+    // default, and `null * 1.15` is 0 — every plane but the exceptions stopped painting. A missing,
+    // `null` or non-finite threshold is the default's; a negative one is 0.
+    const settings: Required<CullingOptions> = {
+        distance: threshold(options?.distance, DEFAULT_CULLING.distance),
+        hysteresis: threshold(options?.hysteresis, DEFAULT_CULLING.hysteresis),
+        frustumMargin: threshold(options?.frustumMargin, DEFAULT_CULLING.frustumMargin),
+        freezeDistance: threshold(options?.freezeDistance, DEFAULT_CULLING.freezeDistance),
     };
     const matrix = cameraMatrix(camera, view);
     const previouslyHidden = new Set(previous.hidden);

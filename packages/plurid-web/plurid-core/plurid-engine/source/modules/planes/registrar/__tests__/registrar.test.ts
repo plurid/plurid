@@ -123,5 +123,39 @@ describe('the planes registrar', () => {
         expect(empty.identify()).toEqual([]);
         expect(empty.getAll().size).toBe(0);
     });
+
+    /**
+     * A PLANE DROPPED FROM `planes` STOPS RESOLVING (audit 2026-09-29 #10). `register` only ever
+     * added: after `planes={isAdmin ? [...common, admin] : common}` went back to `common`, a link, a
+     * view item or a deep link to `/admin` still rendered the admin plane.
+     */
+    it('replace registers exactly the planes it is given; unregister forgets one', () => {
+        const planes = registrar(['/a', '/admin', '/items/:id']);
+        planes.register([{ route: '/a', component }]);
+        expect(planes.get('/admin')).toBeTruthy();
+
+        planes.replace([{ route: '/a', component }, { route: '/items/:id', component }]);
+        expect(planes.get('/admin')).toBeUndefined();
+        expect(planes.get('/items/7')?.route.parameters).toEqual({ id: '7' });
+        expect(planes.getAll().size).toBe(2);
+
+        expect(planes.unregister('/items/7')).toBe(false);
+        expect(planes.unregister('/items/:id')).toBe(true);
+        expect(planes.get('/items/7')).toBeUndefined();
+        expect(planes.unregister('/items/:id')).toBe(false);
+        expect(planes.unregister(undefined as never)).toBe(false);
+        expect(planes.identify().map((route) => route.replace(/^plurid:\/\/[^/]+/, ''))).toEqual(['/a']);
+
+        planes.replace(undefined as never);
+        expect(planes.getAll().size).toBe(0);
+    });
+
+    it('replace leaves the fallback registry alone', () => {
+        const global = registrar(['/global']);
+        const own = registrar(['/own'], 'origin', global);
+        own.replace([]);
+        expect(own.get('/own')).toBeUndefined();
+        expect(own.get('/global')).toBeTruthy();
+    });
 });
 // #endregion module

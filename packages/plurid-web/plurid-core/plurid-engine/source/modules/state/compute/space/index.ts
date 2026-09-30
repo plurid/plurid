@@ -115,7 +115,14 @@ const resolveSpace = <C>(
     // console.log('resolveSpace > computedTree', computedTree);
 
 
-    const perspective = configuration.space.perspective || cameraEngine.DEFAULT_PERSPECTIVE;
+    // a perspective is a distance: a finite number above 0 (a `'2000px'` passed `||` and the boot
+    // matrix came out NaN; a negative one turned the space inside out)
+    const configuredPerspective = configuration.space.perspective;
+    const perspective = typeof configuredPerspective === 'number'
+        && Number.isFinite(configuredPerspective)
+        && configuredPerspective > 0
+        ? configuredPerspective
+        : cameraEngine.DEFAULT_PERSPECTIVE;
     const cameraLimits = cameraEngine.resolveCameraLimits(configuration.space.navigation);
 
     const stateSpace: PluridStateSpace = {

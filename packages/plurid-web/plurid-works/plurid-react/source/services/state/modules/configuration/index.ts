@@ -12,7 +12,6 @@
         SIZES,
         TRANSFORM_MODES,
         TOOLBAR_DRAWERS,
-        LAYOUT_TYPES,
 
         defaultConfiguration,
     } from '@plurid/plurid-data';
@@ -20,6 +19,10 @@
 
 
     // #region internal
+    import {
+        space,
+    } from '~services/engine';
+
     import type {
         AppState,
     } from '~services/state/store';
@@ -253,7 +256,7 @@ export const configuration = createSlice({
             action: PayloadAction<any>,
         ) => {
             const layout: any = {
-                type: (LAYOUT_TYPES as any)[action.payload],
+                type: space.layout.resolveLayoutType(action.payload).type,
             };
 
             state.space.layout = {

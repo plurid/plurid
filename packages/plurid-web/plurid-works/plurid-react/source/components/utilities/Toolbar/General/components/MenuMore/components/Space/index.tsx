@@ -16,6 +16,7 @@
     import {
         internationalization,
         layoutNames,
+        layoutName,
 
         SIZES,
         LAYOUT_TYPES,
@@ -116,7 +117,9 @@ const PluridMenuMoreSpace: React.FC<PluridMenuMoreSpaceProperties> = (
         transformOrigin,
     } = space;
 
-    const layoutType = layoutNames[layout.type];
+    // a type the engine does not lay out (META, set by a path other than the merge) reads as the
+    // COLUMNS it is laid out as, never `undefined` (which crashed the drawer's selector)
+    const layoutType = layoutName(layout.type);
 
     const {
         show: showTransformOrigin,

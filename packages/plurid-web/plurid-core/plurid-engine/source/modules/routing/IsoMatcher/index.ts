@@ -36,9 +36,11 @@
     } from '../logic';
 
     import {
+        decodeLocationPart,
         extractParametersAndMatch,
         extractQuery,
         extractFragments,
+        splitPath,
         // extractPathname,
     } from '../Parser/logic';
     // #endregion external
@@ -47,6 +49,50 @@
 
 
 // #region module
+/** A plane key as the parametric match reads it, computed once per index. */
+interface PlaneKeyShape {
+    key: string;
+    /** The key without its protocol: `host/items/:id`. */
+    normalized: string;
+    origin: string;
+    /** The count of `/`-separated parts, empty ones included (the match compares it first). */
+    length: number;
+    /** The non-empty elements, a literal one as the text it reads as, a `:parameter` as it is. */
+    elements: string[];
+}
+
+const shapeOfPlaneKey = (
+    key: string,
+): PlaneKeyShape => {
+    const normalized = key.replace(protocols.plurid, '');
+    const split = normalized.split('/');
+    return {
+        key,
+        normalized,
+        origin: split[0],
+        length: split.length,
+        elements: splitPath(normalized).map((element) => (element[0] === ':' ? element : decodeLocationPart(element))),
+    };
+};
+
+/** Whether `elements` (a location's, decoded) could be a parametrization of a key's: the one test `extractParametersAndMatch` makes. */
+const parametrizes = (
+    keyElements: string[],
+    elements: string[],
+): boolean => {
+    if (keyElements.length !== elements.length) {
+        return false;
+    }
+    for (let index = 0; index < keyElements.length; index += 1) {
+        const element = keyElements[index];
+        if (element[0] !== ':' && element !== elements[index]) {
+            return false;
+        }
+    }
+    return true;
+};
+
+
 /**
  * The `IsoMatcher` gathers all the known information about `routes` and `planes`
  * and matches client-side or server-side, in-browser or in-plurid.
@@ -59,6 +105,8 @@ class IsoMatcher<C> {
 
     private routesKeys: string[] = [];
     private planesKeys: string[] = [];
+    /** `planesKeys` as the parametric match reads them, in the same order. */
+    private planesShapes: PlaneKeyShape[] = [];
 
 
     constructor(
@@ -95,6 +143,11 @@ class IsoMatcher<C> {
         path: string,
         context: IsoMatcherContext = 'plane',
     ): IsoMatcherResult<C> | undefined {
+        // anything but a string matches nothing (it used to throw inside the tree compute)
+        if (typeof path !== 'string') {
+            return;
+        }
+
         switch (context) {
             case 'plane':
                 return this.matchPlane(path);
@@ -129,6 +182,27 @@ class IsoMatcher<C> {
         this.planesIndex = new Map();
         this.routesKeys = [];
         this.planesKeys = [];
+        this.planesShapes = [];
+    }
+
+    /**
+     * Drop the plane indexed at `route` — the route as it was indexed (`/items/:id`, not a path it
+     * answers to). `false` when no plane was indexed there.
+     */
+    public remove(
+        route: string,
+        parent?: string,
+    ): boolean {
+        if (typeof route !== 'string') {
+            return false;
+        }
+        const removed = this.planesIndex.delete(
+            computePlaneAddress(route, parent, this.origin),
+        );
+        if (removed) {
+            this.updatePlanesKeys();
+        }
+        return removed;
     }
 
     public getPlanesIndex() {
@@ -175,7 +249,12 @@ class IsoMatcher<C> {
         }
 
         this.routesKeys = Array.from(this.routesIndex.keys());
+        this.updatePlanesKeys();
+    }
+
+    private updatePlanesKeys() {
         this.planesKeys = Array.from(this.planesIndex.keys());
+        this.planesShapes = this.planesKeys.map(shapeOfPlaneKey);
     }
 
     private indexPlanes(
@@ -184,14 +263,24 @@ class IsoMatcher<C> {
         parent?: string,
     ) {
         for (const plane of planes) {
+            if (!plane) {
+                continue;
+            }
+
             const planeData = kind === 'Plane'
                 ? resolvePluridPlaneData(plane as PluridPlane<C>)
                 : resolvePluridRoutePlaneData(plane as PluridRoutePlane<C>);
 
+            const planeRoute: unknown = kind === 'Plane'
+                ? (planeData as any).route
+                : (planeData as any).value;
+            // a plane without a route has no address: it is not indexed (it threw here)
+            if (typeof planeRoute !== 'string') {
+                continue;
+            }
+
             const address = computePlaneAddress(
-                kind === 'Plane'
-                    ? (planeData as any).route
-                    : (planeData as any).value,
+                planeRoute,
                 parent,
                 this.origin,
             );
@@ -274,20 +363,30 @@ class IsoMatcher<C> {
         }
 
 
-        for (const planePath of this.planesKeys) {
-            const normalizedPlanePath = planePath.replace(protocols.plurid, '');
-            const normalizedPlaneAddress = planeAddress.replace(protocols.plurid, '');
+        // The address is read ONCE, and every key by the shape it was indexed with: the loop used to
+        // re-split both sides for every key, so a match against many parametric planes cost a
+        // split, a replace and a full parameter extraction per key (1000 view items over 1000
+        // parametric planes: 0.9 s). A key whose literal elements differ is skipped at once.
+        const normalizedPlaneAddress = planeAddress.replace(protocols.plurid, '');
+        const planeAddressSplit = normalizedPlaneAddress.split('/');
+        const planeAddressElements = splitPath(normalizedPlaneAddress).map(decodeLocationPart);
 
-            const planePathSplit = normalizedPlanePath.split('/');
-            const planeAddressSplit = normalizedPlaneAddress.split('/');
+        for (const shape of this.planesShapes) {
+            const planePath = shape.key;
+            const normalizedPlanePath = shape.normalized;
 
             // Not the same origin.
-            if (planePathSplit[0] !== planeAddressSplit[0]) {
+            if (shape.origin !== planeAddressSplit[0]) {
                 continue;
             }
 
             // Length mismatch.
-            if (planePathSplit.length !== planeAddressSplit.length) {
+            if (shape.length !== planeAddressSplit.length) {
+                continue;
+            }
+
+            // Not a parametrization of the key: a literal element reads as another text.
+            if (!parametrizes(shape.elements, planeAddressElements)) {
                 continue;
             }
 

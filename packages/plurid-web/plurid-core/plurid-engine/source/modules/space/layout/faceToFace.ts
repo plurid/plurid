@@ -27,6 +27,8 @@
         fallbackPlaneSize,
     } from './size';
     import {
+        finiteNumber,
+        layoutCount,
         placedHeight,
     } from './pitch';
     // #endregion external
@@ -111,7 +113,10 @@ const computeFaceToFaceLayout = (
         || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))
         || fallbackPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
     const planeAngle = 90 - angle / 2;
-    const columns = 2 + middle;
+    // A row is the first plane, the `middle` ones and the last: at least one plane, a whole number.
+    // `middle` ≤ −2, NaN or −1.5 made a row of 0, NaN or 0.5 planes, which split nothing off the
+    // roots and looped until the heap ran out.
+    const columns = layoutCount(2 + finiteNumber(middle, 0), 1);
     const rows = splitIntoGroups(roots, columns);
 
     // Use the SAME absolute-vs-unit test as column.ts/row.ts (`checkIntegerNonUnit`) instead of

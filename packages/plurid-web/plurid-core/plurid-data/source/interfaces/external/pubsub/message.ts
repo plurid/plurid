@@ -16,7 +16,12 @@
     import {
         CameraDelta,
         CameraState,
+        CameraMotion,
     } from '~interfaces/internal/camera';
+
+    import type {
+        PluridStateHistory,
+    } from '~interfaces/internal/state';
     // #endregion external
 // #endregion imports
 
@@ -834,16 +839,77 @@ export interface PluridPlaneErrorObservation {
     message: string;
 }
 
-export interface PluridPubSubMessageChanged {
-    kind: PluridChangeKind;
-    /**
-     * The id of the application that changed (`id`, a route's `route:<value>`, else `default`):
-     * the applications of a multispace route share the router's bus, and a listener tells them
-     * apart by it.
-     */
-    application?: string;
-    value: any;
+/** What a `space.changed` of kind `culling` carries: how many planes each tier holds. */
+export interface PluridCullingCounts {
+    hidden: number;
+    frozen: number;
+    detached: number;
 }
+
+/**
+ * WHAT EACH KIND OF `space.changed` CARRIES as its `value`: the type of what `PLURID_CHANGE_KINDS`
+ * says in prose. Every `PluridChangeKind` must have a row (`PluridChange` indexes this by kind).
+ */
+export interface PluridChangeValues {
+    selection: string[];
+    tree: TreePlane[];
+    links: PlaneLink[];
+    activePlane: string;
+    isolate: string;
+    layoutResolved: boolean;
+    loading: boolean;
+    history: PluridStateHistory;
+    motion: CameraMotion;
+    bookmarks: Record<string, string>;
+    docked: string;
+    culling: PluridCullingCounts;
+    plane: PluridPlaneObservation;
+    describe: PluridDescribeObservation;
+    command: PluridCommandObservation;
+    focus: boolean;
+    refused: PluridRefusedObservation;
+    planeError: PluridPlaneErrorObservation;
+}
+
+/**
+ * One `space.changed`, its `value` typed by its `kind` — a union discriminated by `kind`, so
+ * narrowing on it types the value (`change.kind === 'tree'` makes `change.value` a `TreePlane[]`).
+ * `PluridChange<'tree'>` is that one member. A subscriber types its callback with it:
+ * `callback: (change: PluridChange) => …`.
+ */
+export type PluridChange<K extends PluridChangeKind = PluridChangeKind> = {
+    [Kind in K]: {
+        kind: Kind;
+        /**
+         * The id of the application that changed (`id`, a route's `route:<value>`, else `default`):
+         * the applications of a multispace route share the router's bus, and a listener tells them
+         * apart by it.
+         */
+        application?: string;
+        value: PluridChangeValues[Kind];
+    };
+}[K];
+
+/**
+ * The `space.changed` payload: a union discriminated by `kind`, whose values are typed by
+ * `Values`. The DEFAULT stays permissive (every value `any`), as the payload always was, so a
+ * publisher holding an `unknown` value and a subscriber reading `value` unnarrowed keep compiling;
+ * `PluridPubSubMessageChanged<PluridChangeValues>` is the strict union (`PluridChange`).
+ */
+export type PluridPubSubMessageChanged<
+    Values extends Record<PluridChangeKind, unknown> = Record<PluridChangeKind, any>,
+> = {
+    [Kind in PluridChangeKind]: {
+        kind: Kind;
+        /**
+         * The id of the application that changed (`id`, a route's `route:<value>`, else `default`):
+         * the applications of a multispace route share the router's bus, and a listener tells them
+         * apart by it.
+         */
+        application?: string;
+        value: Values[Kind];
+    };
+}[PluridChangeKind];
 export interface PluridPubSubPublishMessageChanged {
     topic: typeof PLURID_PUBSUB_TOPIC.CHANGED;
     data: PluridPubSubMessageChanged;

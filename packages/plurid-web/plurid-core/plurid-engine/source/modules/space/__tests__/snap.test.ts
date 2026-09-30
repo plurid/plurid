@@ -6,6 +6,21 @@
         boxesBounds,
         SnapBox,
     } from '../snap';
+    import {
+        Tree,
+    } from '../tree';
+    import {
+        updateTreeWithNewPlane,
+    } from '../tree/logic';
+    import {
+        recomputeTree,
+    } from '../location';
+    import {
+        Registrar,
+    } from '../../planes/registrar';
+    import {
+        merge,
+    } from '../../general/configuration';
     // #endregion external
 // #endregion imports
 
@@ -69,6 +84,37 @@ describe('computeSnap()', () => {
         expect(selection).toEqual([{ id: 'b', left: 500, top: 0, right: 540, bottom: 30 }]);
         expect(others.map((entry) => entry.id)).toEqual(['a']);
         expect(boxesBounds([...selection, ...others])).toEqual({ id: '', left: 0, top: 0, right: 540, bottom: 80 });
+    });
+
+    /**
+     * THE SELECTION DOES NOT SNAP TO ITSELF: a spawned child follows its parent, so as a target it
+     * pulled the parent toward it on every release (10 px per release under the `objects` preset,
+     * 0.17 px under `reading`) and then followed — the pair crept across the space.
+     */
+    it('the selection\'s own spawned descendants are no targets; a child placed by hand is', () => {
+        const configuration = merge({ space: { bridge: { preset: 'objects' } }, elements: { plane: { width: 400 } } });
+        const planes = new Registrar<any>([{ route: '/parent', component: null }, { route: '/child', component: null }], 'host').getAll();
+        const [root] = new Tree<any>({ planes, view: ['/parent'], configuration, layout: true, viewSize: { width: 1440, height: 840 } }, 'host').compute();
+        const parent = { ...root, width: 400, height: 300 };
+        const { updatedTree } = updateTreeWithNewPlane('/child', parent.planeID, { x: 10, y: 0 }, [parent], planes, configuration, 'host', { linkID: 'l', fallbackWidth: 400 });
+        const fallback = { width: 400, height: 300 };
+
+        let tree = updatedTree;
+        for (let release = 0; release < 3; release += 1) {
+            const { selection, others } = collectSnapBoxes(tree, new Set([parent.planeID]), fallback);
+            expect(others).toEqual([]);
+            const { dx, dy } = computeSnap(selection, others, { threshold: 12 });
+            expect([dx, dy]).toEqual([0, 0]);
+            tree = recomputeTree(tree.map((node) => ({ ...node, location: { ...node.location, translateX: node.location.translateX + dx } })));
+        }
+
+        // a grandchild follows the child that follows the selection; a child moved by hand stays put
+        const child = tree[0].children![0];
+        const grandchild = { ...child, planeID: 'grandchild', parentPlaneID: child.planeID, children: [] };
+        const nested = [{ ...tree[0], children: [{ ...child, children: [grandchild] }] }];
+        expect(collectSnapBoxes(nested, new Set([parent.planeID]), fallback).others).toEqual([]);
+        const pinned = [{ ...tree[0], children: [{ ...child, manuallyPositioned: true, children: [grandchild] }] }];
+        expect(collectSnapBoxes(pinned, new Set([parent.planeID]), fallback).others.map((entry) => entry.id)).toEqual([child.planeID, 'grandchild']);
     });
 });
 // #endregion module

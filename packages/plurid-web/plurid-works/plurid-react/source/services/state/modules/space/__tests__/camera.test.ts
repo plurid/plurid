@@ -140,6 +140,15 @@ describe('space slice camera commit path', () => {
         expect(legacy(state).rotationY).toBeCloseTo(40, 9);
     });
 
+    it('a camera field that is not finite keeps the camera before the change, not the identity\'s', () => {
+        const turned = reducer(reducer(initial(), actions.rotateYWith(40)), actions.rotateXWith(20));
+        const broken = reducer(turned, actions.setCamera({ yaw: Number.NaN, pitch: Infinity, scale: 'x' as never }));
+        expect(broken.camera.yaw).toBeCloseTo(turned.camera.yaw, 9);
+        expect(broken.camera.pitch).toBeCloseTo(turned.camera.pitch, 9);
+        expect(broken.camera.scale).toBe(turned.camera.scale);
+        expect(broken.transform).not.toContain('NaN');
+    });
+
     it('spaceResetTransform() returns to the identity', () => {
         const moved = reducer(reducer(initial(), actions.rotateYWith(40)), actions.translateXWith(200));
         const reset = reducer(moved, actions.spaceResetTransform());

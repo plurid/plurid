@@ -181,7 +181,9 @@ export const useTreeUpdate = (
             dispatchSetLayoutTransition(layoutTransitionDuration);
         }
 
-        dispatchSetTree(nextTree);
+        // The tree is assembled from the recomputed roots and the previous tree's extras (the
+        // duplicates), and the two can share an id: every action by id then reached only the first.
+        dispatchSetTree(space.tree.fields.uniqueRootPlaneIDs(nextTree));
     }
 
     const treeUpdateCallback = useCallback(() => {

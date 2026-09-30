@@ -690,11 +690,18 @@ class PluridApplicationShell extends Component<
             space,
         } = this.props;
 
-        registerPlanes(
-            planes,
-            this.planesRegistrar,
-            hostname,
-        );
+        // The application's own registrar holds exactly the `planes` prop: a plane dropped from it
+        // (an admin plane after a logout) stops resolving by link, view item or deep link. A host's
+        // registrar is the host's, and is only added to.
+        if (!this.props.planesRegistrar && this.planesRegistrar?.replace) {
+            this.planesRegistrar.replace(planes ?? []);
+        } else {
+            registerPlanes(
+                planes,
+                this.planesRegistrar,
+                hostname,
+            );
+        }
 
         const currentState = this.store && !options.boot
             ? this.store.getState()

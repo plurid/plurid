@@ -3,6 +3,7 @@
     import {
         /** constants */
         defaultTreePlane,
+        defaultConfiguration,
 
         /** interfaces */
         TreePlane,
@@ -13,7 +14,11 @@
     // #region external
     import {
         logic,
+        Tree,
     } from '../tree';
+    import {
+        Registrar,
+    } from '../../planes/registrar';
     // #endregion external
 // #endregion imports
 
@@ -114,6 +119,39 @@ describe('reconcileTree (structural sharing)', () => {
         // equal geometry keeps the reference
         const same = logic.reconcileTree(previous, [makePlane('p', 0, [spawned(20, 'start', -15, 'l1')])]);
         expect(same[0].children![0]).toBe(previous[0].children![0]);
+    });
+
+    /**
+     * THE QUERY IS A CHANGE (audit 2026-09-29 #7): a plane's route is its pathname's, so a new query
+     * (or parameters, or fragment) changes only `routeDivisions` — and a node whose only change was
+     * there, or in `bridgeKind` / `bridgeAnchor`, came back as the STALE previous node: the plane
+     * kept receiving the old query.
+     */
+    it('compares every own field by value: the query, the fragment, the bridge kind and anchor', () => {
+        const component = () => null;
+        const planes = new Registrar<any>([{ route: '/search', component }], 'host').getAll();
+        const treeOf = (route: string) => new Tree<any>({ planes, view: [route], configuration: defaultConfiguration }, 'host').compute();
+
+        const a = treeOf('/search?q=a');
+        const b = treeOf('/search?q=b');
+        expect(b[0].planeID).toBe(a[0].planeID);
+        const reconciled = logic.reconcileTree(a, b);
+        expect(reconciled).not.toBe(a);
+        expect(reconciled[0].routeDivisions.plane.query).toEqual({ q: 'b' });
+
+        // a fresh node with the same leaves is the same: structural sharing holds
+        expect(logic.reconcileTree(a, treeOf('/search?q=a'))).toBe(a);
+
+        const withFragment = logic.reconcileTree(a, treeOf('/search?q=a#:~:text=found'));
+        expect(withFragment[0].routeDivisions.plane.fragments.texts[0].start).toBe('found');
+
+        const child = (kind: 'strip' | 'leash', anchor: 'link' | 'edge'): TreePlane => ({ ...makePlane('c', 500), parentPlaneID: 'p', linkCoordinates: { x: 1, y: 1 }, bridgeKind: kind, bridgeAnchor: anchor });
+        const previous: TreePlane[] = [makePlane('p', 0, [child('strip', 'link')])];
+        const next = logic.reconcileTree(previous, [makePlane('p', 0, [child('leash', 'edge')])]);
+        expect(next[0].children![0]).toMatchObject({ bridgeKind: 'leash', bridgeAnchor: 'edge' });
+        // a field the list never named is compared too
+        const extra = logic.reconcileTree(previous, [makePlane('p', 0, [{ ...child('strip', 'link'), host: 'field' } as TreePlane])]);
+        expect(extra[0].children![0]).not.toBe(previous[0].children![0]);
     });
 });
 // #endregion module

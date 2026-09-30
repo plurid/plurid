@@ -122,6 +122,11 @@ export type PluridPlane<C> =
     | PluridPlaneTuple<C>;
 
 
+/**
+ * The framework's context object handed to every plane (in React a `React.Context<T>`, rendered as
+ * `<PlaneContext.Provider>`): the framework-agnostic data layer cannot name that type, so it stays
+ * open here and each framework types it at its own boundary.
+ */
 export type PluridPlaneContext<T> = any;
 
 
