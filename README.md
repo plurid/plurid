@@ -158,7 +158,7 @@ plurid-pubsub ──────────────────────
 | [`@plurid/plurid-pubsub`](./packages/plurid-web/plurid-core/plurid-pubsub) | The publish/subscribe bus. |
 | [`@plurid/plurid-react`](./packages/plurid-web/plurid-works/plurid-react) | The React adapter: the application, the planes, the links, the chrome, the hooks, and a `testing` entry for the host's own suites. |
 | [`@plurid/plurid-react-server`](./packages/plurid-web/plurid-works/plurid-react-server) | Server rendering and static "stills" for the React adapter. |
-| [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) | The framework layer: `plurid.config.ts`, the `plurid` CLI, client and server bootstraps. In build-out, unpublished ([`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)). |
+| [`@plurid/plurid-kit`](./packages/plurid-web/plurid-works/plurid-kit) | The framework layer: `plurid.config.ts`, the `plurid` CLI, client and server bootstraps. Published as a pre-release; `npx @plurid/generate-plurid-app` starts an application on it ([`docs/FRAMEWORK_PLAN.md`](./docs/FRAMEWORK_PLAN.md)). |
 | `@plurid/plurid-{themes,icons-react,ui-components-react,ui-state-react,functions,functions-react}` | Supporting utilities. |
 | [`@plurid/generate-plurid-app`](./packages/plurid-utilities/generate-plurid-app) | The scaffolding CLI: a plurid-kit application in one command. |
 

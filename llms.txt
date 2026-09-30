@@ -17,6 +17,7 @@ Install `@plurid/plurid-react react react-dom styled-components`. Configure with
 - [Shortcuts](https://github.com/plurid/plurid/blob/master/docs/SHORTCUTS.md): every keyboard shortcut and pointer gesture (generated)
 - [Looks](https://github.com/plurid/plurid/blob/master/docs/LOOKS.md): the twelve looks and the chrome tokens (generated)
 - [Migration](https://github.com/plurid/plurid/blob/master/docs/MIGRATION.md): what changed for a host, release by release
+- [Production readiness](https://github.com/plurid/plurid/blob/master/docs/PRODUCTION_READINESS.md): what was audited and fixed, the evidence, the known limitations, the release order
 
 ## Optional
 

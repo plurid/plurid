@@ -8,6 +8,8 @@ This document records what remains after the June/July modernization. Historical
 
 The engine is governable and product-capable. It has a coherent workspace, a live package graph, modern builds, tests, lint, a browser harness, immutable tree work, scoped React rendering, persistence, spatial authoring primitives, a control surface, SSR, and the published kit. The next risk is not basic revival. It is mistaking a green library suite and a 40-plane demo for proof of product-scale correctness, performance, and operability.
 
+The 2026-09-29 production-readiness sweep (four audits and an inventory, every finding reproduced, fixed and tested) is recorded in [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md), with the known limitations that remain.
+
 ## Completed foundations
 
 - pnpm workspace orchestration and local package linking;
@@ -37,7 +39,7 @@ The render harness is interactive but not a standing browser suite. Automate the
 
 **Done when:** the suite runs headlessly in CI across at least desktop and mobile-sized viewports, detects blank rendering and geometry regressions, and retains diagnostic screenshots/traces on failure.
 
-**Delivered (2026-09):** `fixtures/render-test/e2e` (Playwright, chromium / firefox / webkit, 166 scenarios on chromium as of 2026-09-17: input, camera, links, selection, history, page presentation, palette, a11y, visual baselines per platform, the route-driven `bus-*` fixtures with `visible` and `changed` expectations); screenshots and traces kept on failure; `docs/HARNESS.md` generated from the flags and fixtures.
+**Delivered (2026-09):** `fixtures/render-test/e2e` (Playwright, chromium / firefox / webkit, 174 scenarios on chromium as of 2026-09-29: input, camera, links, selection, history, page presentation, palette, a11y, visual baselines per platform, the route-driven `bus-*` fixtures with `visible` and `changed` expectations); screenshots and traces kept on failure; `docs/HARNESS.md` generated from the flags and fixtures.
 
 ### Raise weak package tests
 
@@ -80,7 +82,7 @@ The render harness production chunk is already above the default Vite warning th
 
 **Done when:** bundle reports are generated in CI and changes over an agreed threshold require review.
 
-**Delivered (2026-09-13):** `pnpm size` measures every public package's published ESM, gzipped, against `configurations/size-budgets.json`, and fails CI over budget. Since 2026-09-29 it measures each public ENTRY POINT as an application ships it (the entry and its static chunks, minified, gzipped: the React adapter is 97 KB of a 105 KB budget, where the sum of every unminified file read 147 KB), and a lazy chunk or another entry (`/testing`) no longer counts against the main one.
+**Delivered (2026-09-13):** `pnpm size` measures every public package's published ESM, gzipped, against `configurations/size-budgets.json`, and fails CI over budget. Since 2026-09-29 it measures each public ENTRY POINT as an application ships it (the entry and its static chunks, minified, gzipped: the React adapter is 102 KB of a 105 KB budget after the 2026-09-29 sweep, where the sum of every unminified file read 147 KB), and a lazy chunk or another entry (`/testing`) no longer counts against the main one.
 
 ## P2: Deepen correctness boundaries
 
@@ -90,11 +92,15 @@ Route parsing/matching behavior is spread across modules and parametric route co
 
 **Done when:** literal, parameterized, nested, invalid, and round-trip cases share one conformance suite with no unexplained skip.
 
+**Progress (2026-09-29):** a query starts at the first `?` and a `#hash` is no part of a route; parameters and fragments are matched decoded; plane addresses are canonical (an encoded and a decoded route are one plane); the matcher, the parser and the path helpers no longer throw on malformed input (`IsoMatcher/__tests__/encoding.test.ts`). The single conformance suite is still to write.
+
 ### Plane tree
 
 The plane tree is the engine's core domain structure. Continue moving tree transactions, reconciliation, identity, and layout inputs behind explicit interfaces instead of adding behavior to large reducers and link components.
 
 **Done when:** callers express domain operations rather than cloning/mutating internal nodes, invariants are tested centrally, and unrelated branches retain identity.
+
+**Progress (2026-09-29):** root ids stay unique across relayouts (`carryRootPlaneIDs`, `uniqueRootPlaneIDs`), `validateTree` rejects duplicate ids, `reconcileTree` compares every field by value, a malformed view item is skipped, and a removed plane is dropped from the selection, the active plane and the isolation in the reducer itself.
 
 ### Lifecycle and readiness
 
@@ -107,6 +113,8 @@ RESOLVED 2026-09-10: the readiness contract — the bus is bridged before `onRea
 Keep signal handlers, start/stop behavior, and still-generation browser lifecycle explicit and embeddable. Optional Puppeteer behavior should fail early with a clear capability error.
 
 **Done when:** multiple server instances can be tested without process-global leakage and still generation has a deterministic dependency check and cleanup path.
+
+**Delivered (2026-09-29):** `start()` resolves once bound and rejects on a bind error, `stop()` drains the requests in flight and resolves when closed (`stopTimeout`), the signal handlers await it, a request can no longer take the process down, and `plurid start` supervises the server (signals passed on, its exit mirrored). Stills check for puppeteer before forking, fork with the parent's environment, and skip a page answered with an error status. `objects/Server/__tests__/hardening.test.tsx` starts and stops real servers in one process.
 
 ## P3: Consume the engine in products
 
@@ -143,6 +151,8 @@ Use engine primitives for conversation branches, context, artifacts, navigation,
 Avoid source imports from distribution internals, reduce aggregate entry points that drag unnecessary code, document peer compatibility, and automate a release matrix for data/engine/react/server/kit.
 
 **Done when:** public entry points are sufficient for Denote, Depict, and Dechat and an incompatible publish is caught before release.
+
+**Progress (2026-09-29):** every `exports` condition carries its own declarations (`.d.mts` under `import`), `pnpm smoke.pack` compiles every typed entry point of the packed tarballs as a `module: NodeNext` ESM and CommonJS consumer, `pnpm check.modules` checks the declarations per format and the adapter's `'use client'`, and `engines` is `node >=22` across the packages. A release matrix across versions is still to automate.
 
 ## P5: Renderer evolution and WebXR
 

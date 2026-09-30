@@ -25,7 +25,7 @@ client/server bootstraps over
 boilerplate (~145 lines), the provider-nesting `Client.tsx` (~85 lines), and the
 webpack/rollup `scripts/workings/` build machinery.
 
-Status: implemented (config contract, CLI, bootstraps) and published as a pre-release (`0.0.0-4` on the registry; the workspace manifest is `0.0.0-5`, the next pre-release); adoption is in progress. Plan of record:
+Status: implemented (config contract, CLI, bootstraps) and published as a pre-release (`0.0.0-6`, the workspace's version); adoption is in progress. Plan of record:
 [`docs/FRAMEWORK_PLAN.md`](https://github.com/plurid/plurid/blob/master/docs/FRAMEWORK_PLAN.md).
 
 
@@ -43,7 +43,7 @@ source/
 
 ``` typescript
 // plurid.config.ts
-import { defineConfig } from '@plurid/plurid-kit';
+import { defineConfig, serverOnly } from '@plurid/plurid-kit';
 
 import routes from './source/shared/routes';
 import shell from './source/shared/shell';
@@ -63,13 +63,26 @@ export default defineConfig({
     // SERVER-ONLY fields may be thunks so their modules never
     // enter the client bundle:
     // preserves: () => import('./source/server/preserves'),
+    // `document` and `handlers` are functions themselves: a bare function IS the
+    // hook, a lazy import is marked
+    // document: serverOnly(() => import('./source/server/document')),
+    // handlers: serverOnly(() => import('./source/server/handlers')),
 
     head: {                         // the document head's lowest layer (PluridDocument)
         title: 'denote',
     },
     favicon: '/favicon.ico',
+    styles: ['/global.css'],        // <link rel="stylesheet"> in the head
+    notFound: NotFound,             // a component (the /not-found route) or '/404.html' under public/
+    errorPage: '/500.html',         // a file under public/, or a component rendered once at startup
 });
 ```
+
+`createPluridServer` checks the config before a server exists (`routes` must be
+an array of routes, `services` need a `name` and a `Provider`, …) and lists
+every problem with the shape it expected. `handlers(server)` runs during the
+server's construction, before the page's catch-all `GET`, so
+`server.instance().get('/status', …)` and `server.handle().get(…)` answer.
 
 ``` typescript
 // source/server/index.ts
@@ -109,16 +122,26 @@ plurid start                         node build/index.js (ENV_MODE=production; c
 plurid info                          print the app's kit-shape diagnosis
 ```
 
-- `dev` loads `.env.development`, `build`/`start` load `.env.production`;
-  `--watch` keeps the client + server bundles rebuilding (refresh the browser
-  for client changes; the server process restarts by itself after a successful
-  server rebuild).
+- `dev` loads the `development` environment files, `build`/`start` the
+  `production` ones, the most specific first: `.env.<mode>.local` >
+  `.env.<mode>` > `.env.local` > `.env` (each in the root, then in
+  `environment/`); a variable already set in the environment wins over every
+  file. `--watch` keeps the client + server bundles rebuilding (refresh the
+  browser for client changes; the server process restarts by itself after a
+  successful server rebuild).
+- `start` (and `dev`) supervise the server: SIGINT / SIGTERM / SIGHUP are passed
+  on to it, it answers the requests in flight before it exits, and the CLI exits
+  as the server did (`128 + n` when the server was killed by signal `n`). `start`
+  writes nothing to disk (a read-only image runs it).
 - `build` copies `source/public/** -> build/public/`, derives the real client
   entry from the esbuild metafile, and writes `build/asset-manifest.json` so
   the server template points at the actually-emitted script (no `/vendor.js`
   404 - the kit sets `vendorScriptSource: ''`).
-- The CLI reads `plurid.config.ts` for the build-time knobs (`bundle.*`);
-  an app without a config file builds on convention alone.
+- The CLI reads `plurid.config.ts` for the build-time knobs (`bundle.*`) and
+  the directories (`buildDir`, `publicDir`); an app without a config file
+  builds on convention alone. A config that is present but cannot be bundled or
+  evaluated fails `build` and `start` (exit 1); `dev` and `info` warn and go on
+  with the conventions.
 
 
 ## styled-components v6 workarounds: built in

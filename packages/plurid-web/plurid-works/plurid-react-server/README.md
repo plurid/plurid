@@ -44,14 +44,28 @@ npm install @plurid/plurid-react-server
 (styled-components), assembles the document head from the DOCUMENT MODEL, injects the metastate marker (the
 browser's sign that the page was server-rendered), and responds. A `document` hook also receives the computed
 engine state (`@plurid/plurid-react`'s `serverComputeMetastate`), computed only when there is a hook. Construct it with your routes /
-planes / services and `start(port)` — see the server fixtures for a complete setup.
+planes / services and `start(port)` — the application `@plurid/generate-plurid-app` writes (through `@plurid/plurid-kit`) is the
+complete setup.
 
 ``` ts
 import PluridServer from '@plurid/plurid-react-server';
 
 const server = new PluridServer({ routes, planes, preserves, /* … */ });
-server.start(3000);
+await server.start(3000);   // resolves once listening; rejects on EADDRINUSE; a second call is the same start
+// …
+await server.stop();        // answers the requests in flight, then closes (cut after `options.stopTimeout`, 5 s)
 ```
+
+With `options.attachSignalHandlers` (the default) SIGINT / SIGTERM stop the server the same way and exit `0` once
+it has closed. The host's own routes go through `handle().get / post / put / patch / delete(path, …handlers)` or
+the `handlers: (server) => …` configuration hook, both ahead of the page's catch-all `GET` (a `GET` added through
+`instance()` after construction is behind it and never answers). An error that reaches Express — a malformed JSON
+body, a throwing middleware — answers with its status and a generic body, never a stack. `template.errorHtml` and
+`template.notFoundHtml` replace the built-in 500 and 404 pages.
+
+`globals` from a preserve are written into an inline script as `window.<name> = <value>;`: the value is JavaScript
+source (by convention `JSON.stringify(state)`), written with `<` escaped, so a `</script>` in the data cannot close
+the script; a name that is not a JavaScript identifier fails the request.
 
 ### The document head
 
@@ -96,10 +110,13 @@ import { PluridStillsGenerator } from '@plurid/plurid-react-server';
 await new PluridStillsGenerator({ server: './build/server.js', build: './build/' }).initialize();
 ```
 
-The order matters: **build the server first**, then run the generator (it `require()`s the built bundle and
-fails with a clear message if it's missing). Parameterized routes (`/x/:id`) and `stiller.ignore` routes are
-skipped. One headless browser is reused across all routes; a navigation failure aborts the run with the
-underlying reason rather than writing partial output.
+The order matters: **build the server first**, then run the generator (it loads the built bundle — from this
+package's ESM build as from its CommonJS one — and fails with a clear message if it is missing, or does not export
+its `PluridServer`). Puppeteer is checked before the server is forked; "not installed" and "installed but could not
+be loaded" are reported apart. The forked server keeps the generator's environment (`PATH`, `NODE_ENV`, secrets) and
+is waited for until it answers. Parameterized routes (`/x/:id`) and `stiller.ignore` routes are skipped. One headless
+browser is reused across all routes; a navigation failure — or a page the server answered with an error status, which
+would otherwise be served as a 200 still — aborts the run with the underlying reason rather than writing partial output.
 
 **Serving** stills — automatic: on startup `PluridServer` loads `build/stills/metadata.json` (the
 `stillsDirectory` under `buildDirectory`) and serves a matching still before falling back to live SSR. Tune

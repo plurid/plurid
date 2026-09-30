@@ -3,10 +3,12 @@
 Generate a plurid application in one command — the shape `@plurid/plurid-kit` runs.
 
 ```
-npx @plurid/generate-plurid-app                      the prompts
-npx @plurid/generate-plurid-app -d my-site           straight to it
-npx @plurid/generate-plurid-app -d my-site -m pnpm -v git --no-install
+npx @plurid/generate-plurid-app                      the prompts (no arguments)
+npx @plurid/generate-plurid-app my-site              straight to it (or -d my-site)
+npx @plurid/generate-plurid-app my-site -m pnpm -v git --no-install
 ```
+
+Node 22 or later (any 22.x: the CLI runs as ESM and needs no `require(esm)`).
 
 ## What you get
 
@@ -30,7 +32,7 @@ my-site/
 
 | flag | values | default |
 | --- | --- | --- |
-| `-d, --directory <path>` | where to write (must be empty or new) | `plurid-app` |
+| `[directory]`, `-d, --directory <path>` | where to write (must be empty or new); one or the other | `plurid-app` |
 | `-m, --manager <name>` | `npm`, `pnpm`, `yarn` | `npm` |
 | `-v, --versioning <name>` | `git`, `none` | `none` |
 | `--no-install` | write the files, skip the install | installs |
@@ -43,4 +45,4 @@ The generated `package.json` asks for the engine, the server and the kit at the 
 
 ## Verification
 
-`pnpm test` (the answers, the deterministic file list, an end-to-end generation) and the repository's `pnpm smoke.pack`, which generates an application, installs it from the packed tarballs, runs `plurid build`, starts it and asserts the space at `/`.
+`pnpm test` (the command line, the answers, the deterministic file list, an end-to-end generation, a failed step) and the repository's `pnpm smoke.pack`, which generates an application with the packed generator (without `require(esm)`), installs it from the packed tarballs, runs its `check` (with the TypeScript it pins and with TypeScript 6), runs `plurid build`, starts it and asserts the space at `/`.

@@ -174,6 +174,9 @@ and given a regression test. What a host can see:
   and a gamepad drives the application with the keyboard (else the page's first), polling only while a
   pad is connected.
 - The palette names a plane by its declared title.
+- A plane whose component is not a React component (an ElementQL name, `{ name, url }`) shows its
+  error card and reports `planeError`; a root rendered the name as a stray element (`<home>`), and a
+  spawned plane rendered nothing.
 
 **The engine**
 
@@ -183,7 +186,7 @@ and given a regression test. What a host can see:
   (`'columns'`, `'face to face'`, `'zigzag'`) is that member. `layoutNames` no longer lists `META`; name
   a type with `layoutName(type)` (`@plurid/plurid-data`).
 - **Layout numbers are safe.** A face-to-face `middle` of −2 or less, or NaN, hung the tab; it is one
-  plane per row. `columnLength` / `rowLength` are whole numbers from 1 to the number of roots (1.5 threw
+  plane per row (a boolean keeps the count it always meant: `middle: true` is one middle plane). `columnLength` / `rowLength` are whole numbers from 1 to the number of roots (1.5 threw
   a `RangeError`), and a `columns` / `rows` that is not finite is 1.
 - **No NaN reaches the camera.** A `space.cameraDelta` part that is missing or not finite moves nothing
   (a missing zoom `anchor` part is the view centre's), and an `absolute` field is written only when
@@ -219,6 +222,88 @@ and given a regression test. What a host can see:
 - **Big spaces compute in milliseconds.** The registered planes are indexed once per compute: 1000
   roots take about 5 ms (317 ms before; 22 ms for parametric routes, from 872 ms).
 
+**The server (`@plurid/plurid-react-server`)**
+
+- **A preserve's `globals` cannot close the page's script.** Each value is JavaScript source written
+  as `window.<name> = <value>;`, and a user's string in it (`JSON.stringify(state)` with a search term
+  carrying `</script><script>…`) ran as script. Values are now escaped as the metastate always was
+  (`<` as `\u003c`, which reads back the same inside a string literal), so a value must be JSON or
+  otherwise keep `<` inside strings: an expression like `a < b` no longer parses. A name that is not a
+  JavaScript identifier fails the request with the error page.
+- **`<html lang>` is escaped** like every other document field (`?lang=en"><script>…` closed the tag).
+- **The built-in 404 and 500 pages are HTML.** They were Promises that Express sent as the JSON `{}`,
+  so every unknown URL of an application without a not-found route answered `404 application/json {}`.
+  `template.notFoundHtml` replaces the 404 page.
+- **A request never takes the process down.** A failing `afterServe` on the 404, redirect and still
+  paths was an unhandled rejection that exited the server; a preserve that responds without
+  `responded: true` keeps its response instead of crashing on a second send. An error reaching
+  Express is answered with its status and a generic body, never a stack or a path, whatever
+  `NODE_ENV` says.
+- **The host's routes answer.** `handlers(server)` (a new option) runs during construction, before
+  the page's catch-all `GET`, and `handle().get(path, …)` registers ahead of it at any time; a
+  `GET /status` added through `instance()` after construction sat behind the catch-all and answered 404.
+- **`start()` and `stop()` are Promises.** `start()` resolves once the port is bound (it logged
+  "Started" first), is idempotent, and rejects on a busy port instead of an unhandled `'error'`. `stop()`
+  lets the requests in flight finish and resolves when the server has closed, cutting what is still
+  open after `stopTimeout` (new, default 5000 ms); `SIGINT` / `SIGTERM` do the same before exiting 0,
+  so a rolling deploy no longer resets the requests being served. Code that called `start()` and went
+  on should `await` it.
+- **Stills.** `PluridStillsGenerator` works from ESM, forks the server with the parent's environment
+  (it passed only `PORT`, dropping `PATH`, `NODE_ENV` and secrets), says so when the built file exports
+  no server (a self-starting kit entry), and checks for puppeteer before forking. The Stiller skips a
+  page the server answered with an error status (it was stilled and then served with 200), and tells an
+  installed puppeteer that fails to load from a missing one.
+
+**The kit (`@plurid/plurid-kit`)**
+
+- **Production pages hydrate under any `buildDir`.** The client script's URL is `/index.js` for any
+  build directory; with `buildDir: 'dist'` the manifest said `/dist/client/index.js`, which 404s.
+- **`.env` precedence is the documented one:** `.env.<mode>.local` > `.env.<mode>` > `.env.local` >
+  `.env`, and a variable already in the environment wins over every file. `.env` used to beat
+  `.env.production` (a localhost URL could be inlined into a production client).
+- **`plurid build` and `plurid start` fail on a `plurid.config.ts` that does not load** (exit 1, named
+  with its cause); `plurid dev` and `plurid info` keep the loud warning and go on by convention. The
+  config is bundled in memory: `plurid start` writes nothing (it created `node_modules/.plurid-kit` on
+  every start, which failed on a read-only root filesystem or under a non-root `USER`).
+- **`plurid start` supervises the server.** It passes `SIGTERM`, `SIGINT` and `SIGHUP` on, waits for
+  the server, and exits as it did: `128 + n` when the server was killed by a signal, so
+  `restart: on-failure` restarts an OOM-killed server (it exited 0). `plurid dev` releases its pidfile
+  on every exit path, and never signals a live process that is not a `plurid dev` (a reused pid).
+- **The config is validated** when the server is created: no `routes`, or `routes` that are not an
+  array, and the other shape errors are listed at once with what was expected.
+- **A function-valued setting is a value; a thunk is marked.** `document` and `handlers` take
+  functions, and a thunk was told from the hook by its number of parameters, so a context-free hook
+  (`document: () => ({ meta })`) was called at startup and every request failed. A lazy import is now
+  `serverOnly(() => import('./document'))` (new export). An unmarked lazy import still works, with a
+  one-time suggestion to mark it.
+- **`notFound`, `errorPage` and `styles` do what they say.** `notFound` (a component) is the not-found
+  route on both targets, or a file under `public/` sent as it is; `errorPage` is a file, or a component
+  rendered once to static HTML at startup; each `styles` href is a `<link rel="stylesheet">` (it was
+  written into the page as text). All three were ignored.
+- **The Dockerfile template runs `node …/plurid-kit/distribution/cli/index.js start`**, one process
+  between PID 1 and the server, instead of `pnpm exec plurid start` (two). Regenerate or copy it.
+
+**The generator (`@plurid/generate-plurid-app`)**
+
+- `generate-plurid-app my-site` writes `./my-site` (the directory argument was dropped for
+  `./plurid-app`); two different directories, or an argument more, are refused.
+- It runs without Node's `require(esm)` (Node 22.0 – 22.11 failed with `ERR_REQUIRE_ESM`), a failed
+  step stops its spinner (the terminal hung after the error), and the package managers start on
+  Windows (their `.cmd` shims need a shell).
+- The generated application type-checks under TypeScript 6 (no `baseUrl`), types its routes as
+  `PluridReactRoute[]`, and its preserves example JSON-encodes its global.
+
+**Packaging**
+
+- **Each `exports` condition carries its own declarations**: `import` → `.d.mts`, `require` → `.d.ts`.
+  One `types` for both handed an ESM project (`module: NodeNext`) the CommonJS declarations, and the
+  README's `new PluridServer(…)` did not compile (TS2351). Every map also exposes `./package.json`.
+- **`@plurid/plurid-react` is a client boundary**: every file it emits begins with `'use client'`, so
+  Next's App Router imports it from a server component without a wrapper of your own.
+- `engines` is `node >=22` everywhere (the READMEs already said so; Node 20 is out of support), the
+  homepages point at the packages' real directories, `repository.directory` is set, and plurid-data's
+  `jsnext:main` (a file that did not exist) is gone.
+
 **Development**
 
 - Warnings for a flat key in the nested `configuration` (`{ chrome: 'none' }` was silently ignored), an
@@ -250,6 +335,13 @@ and given a regression test. What a host can see:
   `getRegisteredPlanes` returns `Map<string, RegisteredPluridPlane<C>>`.
 - `@plurid/plurid-functions`: `objects.merge` lets a defined non-object replace an object, and
   `objects.clone` keeps functions by reference (it turned every function into an empty one).
+- **Render slots return a React node** in `@plurid/plurid-react`'s props (`PluridApplicationProperties`,
+  `PluridApplicationProvider`'s, `renderPlurid`'s): `PluridReactRenderSlot<Context>`, the context kept.
+  A slot returning an object compiled and then crashed the whole application. A slot annotated with
+  the data package's `PluridRenderSlot` (whose result is `unknown`) no longer type-checks against them:
+  annotate it `PluridReactRenderSlot`, or let the prop infer it.
+- The published props of `PluridVirtualList`, `PluridExternalPlane`, `PluridIframePlane` and both
+  configurators no longer list react-redux's `store` and `context`.
 
 ---
 

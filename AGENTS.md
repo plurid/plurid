@@ -76,3 +76,5 @@ Run a single jest file from a package directory:
   ([`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)).
 - **Start an application:** [`docs/GETTING_STARTED.md`](./docs/GETTING_STARTED.md), or
   `npx @plurid/generate-plurid-app`.
+- **Know what is not done:** the known limitations are in
+  [`docs/PRODUCTION_READINESS.md`](./docs/PRODUCTION_READINESS.md).

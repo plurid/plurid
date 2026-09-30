@@ -20,7 +20,9 @@ engine; if you want to *work on* the engine itself, read [`CONTRIBUTING.md`](./C
 ## Prerequisites
 
 - **React 19** and **react-dom 19** (the engine renders with the React 19 runtime).
-- A bundler that handles ESM + TypeScript (Vite, Next, etc.). `@plurid/plurid-react` ships ESM + CJS + `.d.ts`.
+- A bundler that handles ESM + TypeScript (Vite, Next, etc.). `@plurid/plurid-react` ships ESM and CommonJS, each
+  with its own declarations (`.d.mts` / `.d.ts`, so `module: NodeNext` resolves the right ones), and every file begins
+  with `'use client'`: a Next App Router server component imports it without a wrapper of its own.
 
 
 
