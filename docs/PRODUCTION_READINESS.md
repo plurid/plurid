@@ -18,7 +18,7 @@ repository.
 
 ## How it was checked
 
-Four audits and an inventory, read-only, at `8cd1ec7`. Every finding was reproduced against the
+Four audits and an inventory, read-only, at `3b9cd54`. Every finding was reproduced against the
 built packages before anything changed (Node scripts on `distribution/`, jsdom through
 `@plurid/plurid-react/testing`, real servers on ephemeral ports, Chromium), then fixed with a
 regression test beside the code.
@@ -81,7 +81,7 @@ The gates on the final tree (`pnpm verify` runs them in this order):
 | `pnpm check.modules` | every entry point loads under ESM and CommonJS with its own declarations per format; the React adapter renders identically through both, and all 24 of its files begin with `'use client'` |
 | `pnpm size` | 18 entry points within budget; the React adapter ships 102 KB of its 105 KB (minified, gzipped) |
 | `pnpm docs.tables.check` | the four generated documents match the data tables |
-| `pnpm e2e` | chromium: 174 scenarios passed, twice (the second after the last engine change); perf: 13 passed. Visual: the 50 screenshots are pixel-identical to `8cd1ec7`'s rendered on the same machine (the CI baselines, taken in the pinned container, differ from this machine's fonts, not from the code) |
+| `pnpm e2e` | chromium: 174 scenarios passed, twice (the second after the last engine change); perf: 13 passed. Visual: the 50 screenshots are pixel-identical to `3b9cd54`'s rendered on the same machine (the CI baselines, taken in the pinned container, differ from this machine's fonts, not from the code) |
 | `pnpm smoke.pack` | 13 packed packages install and load under ESM and CommonJS; 17 typed entry points compile for a NodeNext ESM and CommonJS consumer; the generated application type-checks under TypeScript 5 and 6, builds, and under `plurid start` and `plurid dev` paints before its script on a desktop and a phone, hydrates with no error, warning or moved page, and follows its first link |
 
 Each fix's regression test fails without the fix; for the fixes made last, that was confirmed by
