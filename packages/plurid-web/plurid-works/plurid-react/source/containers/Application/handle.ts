@@ -87,6 +87,11 @@ export interface PluridApplicationHandle extends PluridApi {
         get: () => PluridStateHistory;
         undo: () => void;
         redo: () => void;
+        /**
+         * Run `work` as ONE undo step: every arrangement change it makes (spawns, closes, a whole
+         * `tree.set`) undoes and redoes together. Nested transactions join the outer one.
+         */
+        transaction: (work: () => void) => void;
         /** Jump `index` steps as one restore: negative undoes, positive redoes (`history.get().past / .future` list them). */
         goTo: (index: number) => void;
     };
@@ -96,6 +101,11 @@ export interface PluridApplicationHandle extends PluridApi {
         culling: () => { hidden: number; frozen: number; detached: number };
         /** Replace the roots (relayout with the planes gliding). */
         setView: (view: PluridApplicationView) => void;
+        /**
+         * Replace the whole tree, children and placements included, as the `space.setTree` topic
+         * does: a product that arranges its own space restores a saved arrangement with it.
+         */
+        set: (tree: TreePlane[]) => void;
         /**
          * Open a registered route as a child of `parentPlaneID`, as `space.spawnPlane` does: a route
          * already open there is gone to, never put away; the bridge leaves at `linkCoordinates`, else
@@ -108,6 +118,15 @@ export interface PluridApplicationHandle extends PluridApi {
         open: (planeID: string) => void;
         /** Remove a plane and its subtree; the selection, the active plane and the isolation forget them. */
         remove: (planeID: string) => void;
+    };
+    /** The persisted state (`useLocalStorage`, a `storageAdapter`). */
+    persist: {
+        /**
+         * Write a pending save now, synchronously, as hiding the page does. A host that saves its
+         * own document alongside the space calls it first, instead of dispatching `pagehide`.
+         * With nothing pending, nothing is written.
+         */
+        flush: () => void;
     };
     /** Move keyboard focus to the space (so the shortcuts apply). */
     focus: () => void;

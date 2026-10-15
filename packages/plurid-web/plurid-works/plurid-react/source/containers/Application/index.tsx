@@ -611,11 +611,22 @@ class PluridApplicationShell extends Component<
                 undo: () => dispatch(actions.space.undo()),
                 redo: () => dispatch(actions.space.redo()),
                 goTo: (index) => dispatch(actions.space.historyGoTo({ index })),
+                // The history middleware groups everything between the markers into one step;
+                // `finally` closes the group even when `work` throws (2026-10-15).
+                transaction: (work) => {
+                    dispatch(actions.space.historyBegin());
+                    try {
+                        work();
+                    } finally {
+                        dispatch(actions.space.historyEnd());
+                    }
+                },
             },
             tree: {
                 get: () => getState().space.tree,
                 culling: () => cullingCounts(getState().space),
                 setView: (view) => dispatch(actions.space.spaceSetView(view)),
+                set: (tree) => dispatch(actions.space.setTree(tree)),
                 // AS THE TOPIC DOES (`space.spawnPlane`): it toggled (a second call put the plane away)
                 // and hung the bridge off the parent's corner
                 spawn: (route, parentPlaneID, linkCoordinates) => {
@@ -639,6 +650,11 @@ class PluridApplicationShell extends Component<
                 close: (planeID, options) => dispatch(closePlane(planeID, options)),
                 open: (planeID) => dispatch(openPlane(planeID)),
                 remove: (planeID) => dispatch(actions.space.removePlane(planeID)),
+            },
+            // Hosts dispatched a synthetic `pagehide` to reach this flush, which also ran every
+            // other `pagehide` listener on the page (2026-10-15).
+            persist: {
+                flush: () => this.flushPersistImmediate?.(),
             },
             focus: () => {
                 const view = this.thunkExtra.view;

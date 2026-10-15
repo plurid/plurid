@@ -140,6 +140,10 @@ and given a regression test. What a host can see:
 - `camera.moveBy(delta, options)` takes `animate`, `duration`, `easing` and `onSettle` like every
   other camera command.
 - `tree.remove(planeID)` clears the plane from the selection, the active plane and the isolation.
+- New: `persist.flush()` writes a pending save synchronously, so a host saving its own document no
+  longer dispatches a synthetic `pagehide`. `tree.set(tree)` replaces the whole tree as the
+  `space.setTree` topic does, and `history.transaction(work)` makes one undo step of several changes,
+  instead of dispatching `setTree`, `historyBegin` and `historyEnd` on the store.
 
 **Keyboard, focus, accessibility**
 

@@ -80,9 +80,12 @@ plurid.current?.camera.moveBy({ yaw: 15 });              // one delta
 plurid.current?.camera.bookmark('desk', 'save');         // 'go' | 'save' | 'remove'
 plurid.current?.selection.set([a, b]); .align('left'); .distribute('x'); .duplicate();
 plurid.current?.history.undo(); .get().canRedo;
+plurid.current?.history.transaction(() => { … });        // several changes, one undo step
 plurid.current?.tree.spawn('/detail', parentPlaneID);    // a child plane with a bridge
 plurid.current?.tree.setView(['/a', '/b']);              // relayout (animated), children kept
+plurid.current?.tree.set(savedTree);                     // replace the whole tree (one undo step)
 plurid.current?.tree.close(planeID); .open(planeID); .remove(planeID);
+plurid.current?.persist.flush();                         // write a pending save now, as pagehide does
 plurid.current?.focus();                                 // keyboard shortcuts apply
 ```
 

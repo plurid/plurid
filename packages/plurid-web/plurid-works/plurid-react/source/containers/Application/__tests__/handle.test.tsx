@@ -99,4 +99,106 @@ describe('the imperative handle', () => {
             clock.restore();
         }
     });
+
+    /*
+     * HOSTS REACHED THE ENGINE AROUND THE HANDLE (2026-10-15). Viewer dispatched a synthetic
+     * `pagehide` to flush the persisted space (running every other listener on the page), and
+     * dispatched `setTree`, `historyBegin` and `historyEnd` on the store directly.
+     */
+    it('persist.flush writes a pending save at once, without a pagehide', async () => {
+        const writes: string[] = [];
+        const storageAdapter = {
+            getItem: () => null,
+            setItem: (key: string) => {
+                writes.push(key);
+            },
+            removeItem: () => {},
+        };
+        const pagehide = jest.fn();
+        window.addEventListener('pagehide', pagehide);
+        try {
+            const rendered = await renderPlurid({
+                planes: [{ route: '/a', component: Page }],
+                view: ['/a'],
+                useLocalStorage: true,
+                storageAdapter,
+                configuration: { space: { navigation: { motion: { duration: 0 } } } },
+            } as any);
+            rendered.handle.persist.flush();
+            writes.length = 0;
+            await act(async () => {
+                rendered.handle.camera.moveBy({ yaw: 5 });
+            });
+            // The save is debounced: nothing is written until the flush.
+            expect(writes).toEqual([]);
+            rendered.handle.persist.flush();
+            expect(writes.length).toBeGreaterThan(0);
+            const written = writes.length;
+            rendered.handle.persist.flush();
+            expect(writes.length).toBe(written);
+            expect(pagehide).not.toHaveBeenCalled();
+            await rendered.unmount();
+        } finally {
+            window.removeEventListener('pagehide', pagehide);
+        }
+    });
+
+    it('history.transaction undoes several changes as one step, even when its work throws', async () => {
+        const rendered = await renderPlurid({
+            planes: [
+                { route: '/a', component: Page },
+                { route: '/b', component: Page },
+                { route: '/c', component: Page },
+            ],
+            view: ['/a'],
+            configuration: { space: { navigation: { motion: { duration: 0 } } } },
+        } as any);
+        const [parent] = rendered.api.getSnapshot().space.tree;
+        const shown = () => (rendered.api.getSnapshot().space.tree[0].children ?? [])
+            .filter((node: any) => node.show !== false).length;
+        await act(async () => {
+            rendered.handle.history.transaction(() => {
+                rendered.handle.tree.spawn('/b', parent.planeID);
+                rendered.handle.tree.spawn('/c', parent.planeID);
+            });
+        });
+        expect(shown()).toBe(2);
+        await act(async () => {
+            rendered.handle.history.undo();
+        });
+        expect(shown()).toBe(0);
+
+        await act(async () => {
+            expect(() => rendered.handle.history.transaction(() => {
+                throw new Error('work failed');
+            })).toThrow('work failed');
+        });
+        await act(async () => {
+            rendered.handle.tree.spawn('/b', parent.planeID);
+        });
+        expect(shown()).toBe(1);
+        await act(async () => {
+            rendered.handle.history.undo();
+        });
+        expect(shown()).toBe(0);
+        await rendered.unmount();
+    });
+
+    it('tree.set replaces the whole tree and is one undoable step', async () => {
+        const rendered = await render();
+        const before = rendered.api.getSnapshot().space.tree;
+        await act(async () => {
+            rendered.handle.tree.spawn('/b', before[0].planeID);
+        });
+        expect(rendered.api.getSnapshot().space.tree[0].children?.length).toBe(1);
+        await act(async () => {
+            rendered.handle.tree.set(before);
+        });
+        expect(rendered.api.getSnapshot().space.tree[0].children ?? []).toHaveLength(0);
+        await act(async () => {
+            rendered.handle.history.undo();
+        });
+        expect(rendered.api.getSnapshot().space.tree[0].children?.length).toBe(1);
+        await rendered.unmount();
+    });
 });
