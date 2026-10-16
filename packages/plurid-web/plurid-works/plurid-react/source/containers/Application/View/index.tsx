@@ -1119,12 +1119,21 @@ const PluridView: React.FC<PluridViewProperties> = (
 
         // Development warning: a view item that matched no registered plane (a typo in a route,
         // a plane missing from `planes`) silently renders nothing.
+        // It reads the store, not the render (2026-10-16): when the view gains a root, the effect
+        // above already set the new tree in this same commit, and the render's tree is one step
+        // behind, so every root a host added warned once although its plane was there.
         useEffect(() => {
-            if (!stateResolvedLayout || stateTree.length >= stateSpaceView.length) {
+            if (!stateResolvedLayout) {
                 return;
             }
-            const missing = stateSpaceView.filter((item) => typeof item === 'string'
-                && !stateTree.some((root) => root.route === item || root.sourceID === item || root.route.endsWith(item)));
+            const current = engineStore.getState() as AppState;
+            const tree = selectors.space.getTree(current);
+            const view = selectors.space.getView(current);
+            if (tree.length >= view.length) {
+                return;
+            }
+            const missing = view.filter((item) => typeof item === 'string'
+                && !tree.some((root) => root.route === item || root.sourceID === item || root.route.endsWith(item)));
             if (missing.length > 0) {
                 warnOnce(
                     'view-unregistered:' + missing.join(','),
