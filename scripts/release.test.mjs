@@ -2,10 +2,12 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { gzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import { affectsPackage, nextVersion, packedJSON, planRelease, releaseOrder, REQUIRED_GATES, verifyArtifacts, parseReleaseArguments, createArtifactDirectory, rememberedArtifacts, rememberArtifacts } from './release-plan.mjs';
 
 const project = (name, dependencies = {}, extra = {}) => ({
@@ -242,4 +244,27 @@ test('bare --publish reuses remembered verified tarballs and never rebuilds on r
     assert.equal(fixture.calls().filter(({ args }) => args[0] === 'whoami').length, 1);
     assert.equal(fixture.calls().some(({ args }) => args[0] === 'publish'), false);
     assert.equal(rememberedArtifacts(fixture.root, fixture.commit), directory);
+});
+
+
+test('themes test discovery stays inside library source in an isolated release', () => {
+    const directory = realpathSync(mkdtempSync(join(tmpdir(), 'plurid-release-discovery-')));
+    // The release workspace's parent is named source, which also matches Jest's CLI path filter.
+    const root = join(directory, 'source', 'themes');
+    const library = join(root, 'source', 'library.test.ts');
+    const demo = join(root, 'fixtures', 'themes-react', 'src', 'App.test.tsx');
+    mkdirSync(join(root, 'source'), { recursive: true });
+    mkdirSync(join(root, 'fixtures', 'themes-react', 'src'), { recursive: true });
+    writeFileSync(library, '');
+    writeFileSync(demo, '');
+    const project = fileURLToPath(new URL('../packages/plurid-utilities/plurid-themes/', import.meta.url));
+    const require = createRequire(join(project, 'package.json'));
+    const result = spawnSync(process.execPath, [require.resolve('jest/bin/jest'),
+        '--config', join(project, 'configurations', 'jest.config.js'), '--rootDir', root,
+        'source', '--listTests', '--json', '--runInBand', '--no-cache', '--watchman=false',
+        // Discovery needs no TypeScript transform or dependencies in the retained fixture.
+        '--transform', '{}',
+    ], { cwd: project, encoding: 'utf8', timeout: 10000 });
+    assert.equal(result.status, 0, result.stderr);
+    assert.deepEqual(JSON.parse(result.stdout), [library]);
 });

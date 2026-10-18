@@ -80,14 +80,19 @@ const listen = (server: PluridServer) => new Promise<http.Server>((resolve) => {
     const instance = server.instance().listen(0, () => resolve(instance));
 });
 
-const portOf = (instance: http.Server) => (instance.address() as AddressInfo).port;
+// On macOS an IPv6 listener can share a port with an unrelated IPv4 service.
+// Connect through the address family this server actually bound.
+const addressOf = (instance: http.Server) => {
+    const { port, family } = instance.address() as AddressInfo;
+    return { host: family === 'IPv6' ? '::1' : '127.0.0.1', port };
+};
 
 const request = (
-    port: number,
+    instance: http.Server,
     path: string,
     options: { method?: string; headers?: Record<string, string>; body?: string } = {},
 ) => new Promise<Answer>((resolve, reject) => {
-    const outgoing = http.request({ host: '127.0.0.1', port, path, method: options.method || 'GET', headers: options.headers }, (response) => {
+    const outgoing = http.request({ ...addressOf(instance), path, method: options.method || 'GET', headers: options.headers }, (response) => {
         let body = '';
         response.on('data', (chunk) => { body += chunk; });
         response.on('end', () => resolve({ status: response.statusCode || 0, headers: response.headers, body }));
@@ -120,12 +125,12 @@ describe('the built-in error pages', () => {
         const server = new PluridServer(configuration());
         const instance = await listen(server);
         try {
-            const missing = await request(portOf(instance), '/nope');
+            const missing = await request(instance, '/nope');
             expect(missing.status).toBe(404);
             expect(missing.headers['content-type']).toMatch(/^text\/html/);
             expect(missing.body).toContain('[404] Not Found');
 
-            const failed = await request(portOf(instance), '/boom');
+            const failed = await request(instance, '/boom');
             expect(failed.status).toBe(500);
             expect(failed.headers['content-type']).toMatch(/^text\/html/);
             expect(failed.body).toContain('[500] Server Error');
@@ -144,7 +149,7 @@ describe('the built-in error pages', () => {
         }));
         const instance = await listen(server);
         try {
-            const missing = await request(portOf(instance), '/nope');
+            const missing = await request(instance, '/nope');
             expect(missing.status).toBe(404);
             expect(missing.body).toBe('<html><body>our own 404</body></html>');
         } finally {
@@ -169,7 +174,7 @@ describe('what a request can put in the page', () => {
         }));
         const instance = await listen(server);
         try {
-            const { status, body } = await request(portOf(instance), '/?q=' + encodeURIComponent(payload));
+            const { status, body } = await request(instance, '/?q=' + encodeURIComponent(payload));
             expect(status).toBe(200);
             expect(body).not.toContain('<script>alert(document.domain)');
             // the inline script is ONE script: it closes where the template closes it
@@ -195,7 +200,7 @@ describe('what a request can put in the page', () => {
         }));
         const instance = await listen(server);
         try {
-            const { status, body } = await request(portOf(instance), '/');
+            const { status, body } = await request(instance, '/');
             expect(status).toBe(500);
             expect(body).not.toContain('alert(1)');
         } finally {
@@ -208,7 +213,7 @@ describe('what a request can put in the page', () => {
         const instance = await listen(server);
         try {
             const attack = 'en"><script>alert(1)</script><x a="';
-            const { status, body } = await request(portOf(instance), '/?lang=' + encodeURIComponent(attack));
+            const { status, body } = await request(instance, '/?lang=' + encodeURIComponent(attack));
             expect(status).toBe(200);
             expect(body).not.toContain('<script>alert(1)</script>');
             expect(body).toContain('<html lang="en&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;x a=&quot;"');
@@ -230,15 +235,15 @@ describe('a request never takes the process down', () => {
         const instance = await listen(server);
         try {
             const unhandled = await observeUnhandled(async () => {
-                const missing = await request(portOf(instance), '/does-not-exist');
+                const missing = await request(instance, '/does-not-exist');
                 expect(missing.status).toBe(404);
-                const away = await request(portOf(instance), '/away');
+                const away = await request(instance, '/away');
                 expect(away.status).toBe(302);
                 expect(away.headers.location).toBe('https://example.com/');
             });
             expect(unhandled).toEqual([]);
             // and the server still answers
-            expect((await request(portOf(instance), '/')).status).toBe(200);
+            expect((await request(instance, '/')).status).toBe(200);
         } finally {
             await close(instance);
         }
@@ -259,12 +264,12 @@ describe('a request never takes the process down', () => {
         const instance = await listen(server);
         try {
             const unhandled = await observeUnhandled(async () => {
-                const redirected = await request(portOf(instance), '/');
+                const redirected = await request(instance, '/');
                 expect(redirected.status).toBe(302);
                 expect(redirected.headers.location).toBe('/login');
             });
             expect(unhandled).toEqual([]);
-            const rendered = await request(portOf(instance), '/', { headers: { cookie: 'session=1' } });
+            const rendered = await request(instance, '/', { headers: { cookie: 'session=1' } });
             expect(rendered.status).toBe(200);
             expect(rendered.body).toContain('page content');
         } finally {
@@ -286,7 +291,7 @@ describe('a request never takes the process down', () => {
         }));
         const instance = await listen(server);
         try {
-            const malformed = await request(portOf(instance), '/pttp', {
+            const malformed = await request(instance, '/pttp', {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
                 body: '{bad json',
@@ -294,7 +299,7 @@ describe('a request never takes the process down', () => {
             expect(malformed.status).toBe(400);
             expect(malformed.body).not.toMatch(/SyntaxError|node_modules|\n\s+at /);
 
-            const thrown = await request(portOf(instance), '/throws');
+            const thrown = await request(instance, '/throws');
             expect(thrown.status).toBe(500);
             expect(thrown.body).toContain('[500] Server Error');
             expect(thrown.body).not.toMatch(/exploded|secret|\n\s+at /);
@@ -315,13 +320,40 @@ describe('the host\'s own routes', () => {
         server.handle().get('/health', (_request, response) => { response.send('healthy'); });
         const instance = await listen(server);
         try {
-            expect(await request(portOf(instance), '/status')).toMatchObject({ status: 200, body: 'ok' });
-            expect(await request(portOf(instance), '/health')).toMatchObject({ status: 200, body: 'healthy' });
-            const page = await request(portOf(instance), '/');
+            expect(await request(instance, '/status')).toMatchObject({ status: 200, body: 'ok' });
+            expect(await request(instance, '/health')).toMatchObject({ status: 200, body: 'healthy' });
+            const page = await request(instance, '/');
             expect(page.status).toBe(200);
             expect(page.body).toContain('page content');
         } finally {
             await close(instance);
+        }
+    });
+});
+
+
+describe('HTTP test connections', () => {
+    it('requests its own listener when IPv4 and IPv6 services share a port', async () => {
+        const decoy = http.createServer((_, response) => response.writeHead(401).end('another service'));
+        await new Promise<void>((resolve, reject) => {
+            decoy.once('error', reject);
+            decoy.listen(0, '127.0.0.1', resolve);
+        });
+        let instance: http.Server | undefined;
+        try {
+            const server = new PluridServer(configuration());
+            instance = await new Promise<http.Server>((resolve, reject) => {
+                const current = server.instance().listen({
+                    port: addressOf(decoy).port, host: '::1', ipv6Only: true,
+                }, () => resolve(current));
+                current.once('error', reject);
+            });
+            const answer = await request(instance, '/');
+            expect(answer.status).toBe(200);
+            expect(answer.body).toContain('page content');
+        } finally {
+            if (instance) await close(instance);
+            await close(decoy);
         }
     });
 });
@@ -336,7 +368,7 @@ describe('start and stop', () => {
         const listening = await first;
         const port = (listening.address() as AddressInfo).port;
         expect(port).toBeGreaterThan(0);
-        expect((await request(port, '/')).status).toBe(200);
+        expect((await request(listening, '/')).status).toBe(200);
 
         const busy = new PluridServer(configuration());
         await expect(busy.start(port)).rejects.toMatchObject({ code: 'EADDRINUSE' });
@@ -364,7 +396,7 @@ describe('start and stop', () => {
         const listening = await server.start(0);
         const port = (listening.address() as AddressInfo).port;
 
-        const inFlight = request(port, '/');
+        const inFlight = request(listening, '/');
         while (!release) {
             await wait(5);
         }
@@ -381,7 +413,7 @@ describe('start and stop', () => {
 
         // the port is free again, and the server starts again
         const restarted = await server.start(port);
-        expect((await request((restarted.address() as AddressInfo).port, '/')).status).toBe(200);
+        expect((await request(restarted, '/')).status).toBe(200);
         await server.stop(20);
     });
 
@@ -390,8 +422,7 @@ describe('start and stop', () => {
             preserves: [{ serve: '/', onServe: () => new Promise<undefined>(() => { /* never */ }) }],
         }));
         const listening = await server.start(0);
-        const port = (listening.address() as AddressInfo).port;
-        const socket = net.connect(port, '127.0.0.1');
+        const socket = net.connect(addressOf(listening));
         socket.on('error', () => { /* cut: expected */ });
         await new Promise((resolve) => socket.once('connect', resolve));
         socket.write('GET / HTTP/1.1\r\nHost: localhost\r\n\r\n');
@@ -420,11 +451,10 @@ describe('start and stop', () => {
         }));
         try {
             const listening = await server.start(0);
-            const port = (listening.address() as AddressInfo).port;
             const handler = process.listeners('SIGTERM').find((listener) => listener === (server as any).handleProcessSignal);
             expect(handler).toBeDefined();
 
-            const inFlight = request(port, '/');
+            const inFlight = request(listening, '/');
             while (!release) {
                 await wait(5);
             }

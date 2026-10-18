@@ -68,8 +68,9 @@ const listen = (server: PluridServer) => new Promise<http.Server>((resolve) => {
 });
 
 const get = (instance: http.Server, path: string) => new Promise<{ status: number; body: string }>((resolve, reject) => {
-    const { port } = instance.address() as AddressInfo;
-    http.get({ host: '127.0.0.1', port, path }, (response) => {
+    const { port, family } = instance.address() as AddressInfo;
+    const host = family === 'IPv6' ? '::1' : '127.0.0.1';
+    http.get({ host, port, path }, (response) => {
         let body = '';
         response.on('data', (chunk) => { body += chunk; });
         response.on('end', () => resolve({ status: response.statusCode || 0, body }));
@@ -133,10 +134,11 @@ describe('a server without a hostname', () => {
         });
         const instance = await listen(server);
         try {
-            const { port } = instance.address() as AddressInfo;
+            const { port, family } = instance.address() as AddressInfo;
+            const hostname = family === 'IPv6' ? '[::1]' : '127.0.0.1';
             const { status, body } = await get(instance, '/site');
             expect(status).toBe(200);
-            expect(body).toContain(`data-plurid-plane="plurid://127.0.0.1:${port}/p@`);
+            expect(body).toContain(`data-plurid-plane="plurid://${hostname}:${port}/p@`);
             expect(body).not.toContain('plurid://origin/');
         } finally {
             await close(instance);

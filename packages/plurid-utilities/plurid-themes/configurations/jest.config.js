@@ -1,5 +1,8 @@
 module.exports = {
     rootDir: '../',
+    // A release workspace also lives under source/. The CLI path filter matches
+    // absolute paths, so only explicit roots keep the archived demo out of library tests.
+    roots: ['<rootDir>/source'],
     transform: {
         '.(ts|tsx)': 'ts-jest'
     },
