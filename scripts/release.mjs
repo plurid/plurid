@@ -6,9 +6,10 @@ import { closeSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'nod
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-    changedFiles, createArtifactDirectory, listWorkspace, nextVersion, packedJSON, parseReleaseArguments,
-    planRelease, registryPackage, releaseOrder, rememberedArtifacts, rememberArtifacts, verifyArtifacts,
+    changedFiles, createArtifactDirectory, listWorkspace, packedJSON, parseReleaseArguments,
+    planRelease, registryPackage, releaseOrder, resumableArtifacts, rememberArtifacts, verifyArtifacts, verifyArtifactSource,
 } from './release-plan.mjs';
+import { publishArtifacts, verifyPublication } from './release-publish.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -30,17 +31,19 @@ const usage = `Usage:
   pnpm release --pack [new-dir]    Build and verify; automatically choose and remember artifacts
   pnpm release --publish [dir]     Reuse verified artifacts or build them, then publish to latest
   pnpm release --verify-registry [dir]  Confirm exact versions, integrity and latest tags
+  --wait <seconds>                 Shared npm availability timeout (default 1200; 0 checks once)
 
 Commit and push preparation before the final CI run. --publish requires green CI on that commit.
-Artifact locations are remembered under .out/releases; explicit paths remain supported. Builds and failed work are kept;
---publish resumes the verified artifacts for this commit without rebuilding them. No phase bumps
+Artifact locations are remembered under .out/releases; explicit paths remain supported.
+Publisher-only fixes can resume the same tested tarballs from an ancestor commit. Builds and failed work are kept;
+--publish resumes compatible verified artifacts without rebuilding them. No phase bumps
 versions except --prepare, and no phase commits, pushes or cleans files.`;
 
 if (args.includes('--help')) {
     console.log(usage);
     process.exit(0);
 }
-const { mode, directory: directoryArg, all, noBump } = parseReleaseArguments(args);
+const { mode, directory: directoryArg, all, noBump, waitSeconds } = parseReleaseArguments(args);
 
 const projects = listWorkspace(root);
 
@@ -125,25 +128,16 @@ const pack = () => {
     writeJSON(join(directory, 'release.json'), { schema: 1, sourceCommit, createdAt: new Date().toISOString(),
         node: process.version, gates, packages });
     rememberArtifacts(root, sourceCommit, directory);
-    say(`Verified tarballs: ${directory}. Run pnpm release --publish to publish these exact artifacts.`);
+    say(`Verified tarballs: ${directory}.` + (mode === '--pack' ? ' Run pnpm release --publish to publish these exact artifacts.' : ''));
     return directory;
 };
 
 const artifacts = (directory) => {
     const manifest = JSON.parse(readFileSync(join(directory, 'release.json'), 'utf8'));
-    const entries = verifyArtifacts(manifest, projects, head(), (file) => readFileSync(join(directory, file)))
+    verifyArtifactSource(root, manifest.sourceCommit, head());
+    const entries = verifyArtifacts(manifest, projects, manifest.sourceCommit, (file) => readFileSync(join(directory, file)))
         .map((entry) => ({ ...entry, file: join(directory, entry.file) }));
     return { manifest, entries };
-};
-
-const confirm = async (entry, required = true) => {
-    const published = await registryPackage(entry.name, entry.version);
-    if (!published && !required) return false;
-    if (!published || published.dist?.integrity !== entry.integrity) {
-        throw new Error(`${entry.name}@${entry.version}: missing or different registry tarball; do not overwrite or rebuild it.`);
-    }
-    if ((await registryPackage(entry.name))?.version !== entry.version) throw new Error(`${entry.name}@${entry.version} is not tagged latest.`);
-    return true;
 };
 
 const publish = async () => {
@@ -156,44 +150,28 @@ const publish = async () => {
             throw new Error('Green CI on the prepared source commit is required before publishing.');
         }
     }
-    let directory = directoryArg ? resolve(root, directoryArg) : rememberedArtifacts(root, sourceCommit);
+    let directory = directoryArg ? resolve(root, directoryArg) : resumableArtifacts(root, sourceCommit);
     if (!directory) {
         if (mode === '--verify-registry') throw new Error('No verified artifacts for this commit. Run --pack first or provide their directory.');
         say('No verified artifacts for this commit; building and verifying before publication.');
         directory = pack();
     }
     const { manifest, entries } = artifacts(directory);
-    if (manifest.sourceCommit !== sourceCommit) throw new Error('Source changed during release verification. Re-run against the intended commit.');
+    say('Using verified tarballs: ' + directory);
+    if (head() !== sourceCommit) throw new Error('Source changed during release verification. Re-run against the intended commit.');
+    const options = { directory, manifest, entries, lookup: registryPackage, log: say, timeoutMs: waitSeconds * 1000 };
     if (mode === '--verify-registry') {
-        for (const entry of entries) await confirm(entry);
+        await verifyPublication(options);
         say(`All ${entries.length} exact registry versions, integrity hashes and latest tags match.`);
         return;
     }
     clean();
-    rememberArtifacts(root, sourceCommit, directory);
-    // Authenticate only at the explicit publishing boundary. Never log account configuration or secrets.
-    run('pnpm', ['whoami'], root, { stdio: 'ignore' });
-    // Check every existing artifact before the first upload: a conflicting partial round stops early.
-    const missing = [];
-    for (const entry of entries) {
-        if (await confirm(entry, false)) continue;
-        const latest = await registryPackage(entry.name);
-        if (latest && nextVersion(latest.version) !== entry.version) {
-            throw new Error(`Registry advanced to ${entry.name}@${latest.version}; prepare a new coordinated release.`);
-        }
-        missing.push(entry);
-    }
-    for (const entry of missing) {
-        say(`Publishing ${entry.name}@${entry.version} to latest`);
-        run('pnpm', ['publish', entry.file, '--access', 'public', '--tag', 'latest', '--ignore-scripts', '--no-git-checks']);
-        let visible = false;
-        for (const delay of [0, 2000, 5000, 10000, 20000, 30000]) {
-            if (delay) await new Promise((resolveWait) => setTimeout(resolveWait, delay));
-            if (await confirm(entry, false)) { visible = true; break; }
-        }
-        if (!visible) throw new Error(`Registry confirmation pending for ${entry.name}; resume with the same artifacts.`);
-    }
-    for (const entry of entries) await confirm(entry);
+    rememberArtifacts(root, manifest.sourceCommit, directory);
+    await publishArtifacts({ ...options,
+        // Authenticate only when there are new uploads, never while resuming npm's scan.
+        authenticate: () => run('pnpm', ['whoami'], root, { stdio: 'ignore' }),
+        upload: (entry) => run('pnpm', ['publish', entry.file, '--access', 'public', '--tag', 'latest', '--ignore-scripts', '--no-git-checks']),
+    });
     const tag = 'release/' + new Date().toISOString().slice(0, 10);
     const existing = read('git', ['tag', '-l', tag]);
     if (existing && read('git', ['rev-list', '-n', '1', tag]) !== manifest.sourceCommit) {

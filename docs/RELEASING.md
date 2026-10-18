@@ -93,20 +93,49 @@ pnpm release --verify-registry
 ```
 
 Publishing requires a clean checkout and green CI for it before building or uploading. It reuses
-verified artifacts remembered for that exact commit, or builds and verifies them automatically if none
+verified artifacts remembered for that commit, or builds and verifies them automatically if none
 exist. Running `--pack` first is optional when you want to review the artifacts before publication.
-`--verify-registry` uses the same remembered artifacts and never builds. Each command also accepts an
-explicit artifact directory. Publication validates the complete graph and every artifact digest before uploading. It publishes in dependency order to
-`latest`, with `--ignore-scripts` so `prepublishOnly` cannot rebuild the tested artifact. Every exact
-version must appear with the recorded registry integrity and `latest` tag. A newer registry release
-prevents accidentally moving `latest` backward.
+`--verify-registry` uses the same remembered artifacts and never builds or authenticates. Each command
+also accepts an explicit artifact directory.
 
-If upload or authentication fails halfway, keep the source and tarballs and rerun `--publish` against
-the **same commit**. It resumes the remembered tarballs without rebuilding. If supplying an explicit
-directory, keep using that directory. Matching published artifacts are skipped; an existing version
-with different integrity blocks the round. The script confirms the complete round before creating a local
-`release/YYYY-MM-DD` tag. A tag collision with another commit requires a distinct maintainer-chosen
-tag; nothing is rewritten or pushed automatically.
+The publisher also resumes verified artifacts from an ancestor when the only changed files are the
+allowlisted publisher scripts, their tests, and this guide (`PUBLISHER_FILES` in
+`scripts/release-plan.mjs`). Any change to build inputs, runtime source, manifests, lockfiles or other
+tests requires fresh verification. Artifact hashes and versions are always checked against the
+complete current package graph. The release tag still identifies the original tested source commit.
+This lets a publisher fix resume a partial release without repacking versions already uploaded.
+
+All tarballs are uploaded consecutively in dependency order to `latest`, with `--ignore-scripts` so
+`prepublishOnly` cannot rebuild them. There is **no availability wait between uploads**. On the first
+npm browser approval, select **Remember me for 5 minutes** when offered. npm can then reuse that
+approval for subsequent uploads from the same IP and token during that window. The script does not
+change account or package security settings. See npm's
+[authentication announcement](https://github.blog/changelog/2022-07-26-general-availability-of-improved-2fa-experience-in-npm/).
+For unattended publishing, configure a package-scoped granular token with direct publish permission
+and Bypass 2FA enabled through your existing pnpm authentication settings, or use trusted publishing
+in CI. A plain login does not disable npm's publish authorization.
+
+npm scans accepted uploads before making them installable. Scanning is typically around five minutes
+and can take 15 minutes or more; see the
+[npm scanning announcement](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/).
+After all uploads, the publisher polls the whole release together, with one **20-minute** timeout.
+`--wait <seconds>` changes this shared timeout; `--wait 0` checks once and exits nonzero if versions are
+still pending. Every exact version must become visible with the recorded integrity and `latest` tag.
+A newer registry release or different integrity blocks the round.
+
+Per-package append-only upload receipts are retained under `publication/` beside `release.json`.
+They are bound to the artifact manifest and record submission before invoking pnpm, acceptance after
+pnpm succeeds, registry-observed versions, and final verification. A retry skips recorded submissions even while npm still returns
+404, preventing duplicate uploads and repeated authorization during scanning. An interrupted
+submission has an unknown outcome and is checked for availability rather than submitted again.
+
+If an upload, authentication, or availability check fails, keep the checkout and tarballs and rerun
+`--publish`. Existing matching versions are skipped; recorded uploads are only checked; new uploads
+continue. A retry that only checks pending uploads does not authenticate. Use `--verify-registry` to
+wait and confirm without any upload. If supplying an explicit directory, keep using that directory.
+The script confirms the complete round before creating a local `release/YYYY-MM-DD` tag. A tag
+collision with another commit requires a distinct maintainer-chosen tag; nothing is rewritten or
+pushed automatically.
 
 Finally, install the exact registry versions in a fresh consumer and store, verify its graph and
 runtime, then push the tag. Viewer provides `pnpm plurid:update` to create real pins/lockfile after

@@ -1,3 +1,4 @@
+import './release-publish.test.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { gzipSync } from 'node:zlib';
@@ -107,7 +108,7 @@ test('publication refuses tampered artifacts, incomplete graphs, failed gates an
 
 
 test('release commands manage paths by default while preserving explicit directory support', () => {
-    assert.deepEqual(parseReleaseArguments([]), { mode: '--dry-run', directory: undefined, all: false, noBump: false });
+    assert.deepEqual(parseReleaseArguments([]), { mode: '--dry-run', directory: undefined, all: false, noBump: false, waitSeconds: 1200 });
     for (const mode of ['--pack', '--publish', '--verify-registry']) {
         assert.equal(parseReleaseArguments([mode]).directory, undefined);
         assert.equal(parseReleaseArguments([mode, '/tmp/release with spaces']).directory, '/tmp/release with spaces');
@@ -162,8 +163,8 @@ const releaseCLIFixture = (ci = 'success') => {
     mkdirSync(join(root, 'project'));
     writeFileSync(join(root, 'package.json'), JSON.stringify({ private: true, type: 'commonjs' }));
     writeFileSync(join(root, 'project', 'package.json'), JSON.stringify({ name: 'a', version: '0.0.0-4' }));
-    for (const file of ['release.mjs', 'release-plan.mjs']) {
-        cpSync(new URL(file, import.meta.url), join(root, 'scripts', file));
+    for (const file of ['release.mjs', 'release-plan.mjs', 'release-publish.mjs']) {
+        if (existsSync(new URL(file, import.meta.url))) cpSync(new URL(file, import.meta.url), join(root, 'scripts', file));
     }
     const shim = `#!${process.execPath}
 const fs = require('node:fs');
@@ -241,7 +242,8 @@ test('bare --publish reuses remembered verified tarballs and never rebuilds on r
     const result = fixture.run();
     assert.equal(result.status, 1, result.stderr);
     assert.equal(fixture.calls().some(({ args }) => args[0] === 'archive'), false);
-    assert.equal(fixture.calls().filter(({ args }) => args[0] === 'whoami').length, 1);
+    assert.match(result.stderr, /Network disabled/);
+    assert.equal(fixture.calls().filter(({ args }) => args[0] === 'whoami').length, 0);
     assert.equal(fixture.calls().some(({ args }) => args[0] === 'publish'), false);
     assert.equal(rememberedArtifacts(fixture.root, fixture.commit), directory);
 });
@@ -267,4 +269,15 @@ test('themes test discovery stays inside library source in an isolated release',
     ], { cwd: project, encoding: 'utf8', timeout: 10000 });
     assert.equal(result.status, 0, result.stderr);
     assert.deepEqual(JSON.parse(result.stdout), [library]);
+});
+
+
+test('npm availability has one bounded release-wide timeout and no timeout on preparation', () => {
+    assert.equal(parseReleaseArguments(['--publish']).waitSeconds, 1200);
+    assert.equal(parseReleaseArguments(['--publish', '--wait', '0']).waitSeconds, 0);
+    assert.equal(parseReleaseArguments(['--verify-registry', '--wait', '60']).waitSeconds, 60);
+    for (const value of ['', '-1', '1.5', 'Infinity', '86401']) {
+        assert.throws(() => parseReleaseArguments(['--publish', '--wait', value]), /whole number/);
+    }
+    assert.throws(() => parseReleaseArguments(['--prepare', '--wait', '1']), /only to publication/);
 });

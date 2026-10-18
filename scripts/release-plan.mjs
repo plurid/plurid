@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { gunzipSync } from 'node:zlib';
@@ -168,6 +168,8 @@ export const parseReleaseArguments = (args) => {
     let directory;
     let all = false;
     let noBump = false;
+    let waitSeconds = 1200;
+    let hasWait = false;
     for (let index = 0; index < args.length; index += 1) {
         const arg = args[index];
         if (RELEASE_MODES.includes(arg)) {
@@ -176,6 +178,13 @@ export const parseReleaseArguments = (args) => {
             if (ARTIFACT_MODES.includes(mode) && args[index + 1] && !args[index + 1].startsWith('--')) {
                 directory = args[++index];
             }
+        } else if (arg === '--wait') {
+            hasWait = true;
+            const value = args[++index];
+            if (!value || !/^\d+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) > 86400) {
+                throw new Error('--wait requires a whole number of seconds from 0 to 86400.');
+            }
+            waitSeconds = Number(value);
         } else if (arg === '--all') all = true;
         else if (arg === '--no-bump') noBump = true;
         else throw new Error(`Unknown argument ${arg}`);
@@ -184,7 +193,8 @@ export const parseReleaseArguments = (args) => {
     if (ARTIFACT_MODES.includes(mode) && (all || noBump)) {
         throw new Error('--all/--no-bump apply only to planning or preparation.');
     }
-    return { mode, directory, all, noBump };
+    if (hasWait && !['--publish', '--verify-registry'].includes(mode)) throw new Error('--wait applies only to publication or registry verification.');
+    return { mode, directory, all, noBump, waitSeconds };
 };
 
 const releaseState = (root) => join(root, '.out', 'releases');
@@ -228,4 +238,43 @@ export const rememberedArtifacts = (root, commit) => {
         throw new Error(`Recorded release artifacts are missing: ${record.directory}. Restore them or provide an explicit directory.`);
     }
     return record.directory;
+};
+
+
+/** Publisher-only fixes may reuse immutable artifacts; every build/runtime input still requires fresh verification. */
+export const PUBLISHER_FILES = new Set([
+    'scripts/release.mjs', 'scripts/release-plan.mjs', 'scripts/release-publish.mjs',
+    'scripts/release.test.mjs', 'scripts/release-publish.test.mjs', 'docs/RELEASING.md',
+]);
+
+export const verifyArtifactSource = (root, sourceCommit, currentCommit) => {
+    releasePointer(root, sourceCommit);
+    releasePointer(root, currentCommit);
+    if (sourceCommit === currentCommit) return;
+    try {
+        execFileSync('git', ['merge-base', '--is-ancestor', sourceCommit, currentCommit], { cwd: root, stdio: 'ignore' });
+    } catch {
+        throw new Error('Artifact source is not an ancestor of this release; use the original checkout.');
+    }
+    const files = execFileSync('git', ['diff', '--name-only', '-z', sourceCommit, currentCommit, '--'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean);
+    if (!files.every((file) => PUBLISHER_FILES.has(file))) {
+        throw new Error('Artifact source differs in build or runtime inputs; use the original checkout or verify new artifacts.');
+    }
+};
+
+/** Keep a partial release resumable after fixing its publisher, without rebuilding uploaded versions. */
+export const resumableArtifacts = (root, commit) => {
+    const exact = rememberedArtifacts(root, commit);
+    if (exact) return exact;
+    const parent = releaseState(root);
+    if (!existsSync(parent)) return null;
+    const records = readdirSync(parent).filter((file) => /^[a-f0-9]{40}(?:[a-f0-9]{24})?\.json$/.test(file))
+        .sort((a, b) => statSync(join(parent, b)).mtimeMs - statSync(join(parent, a)).mtimeMs);
+    for (const record of records) {
+        const sourceCommit = record.slice(0, -5);
+        try { verifyArtifactSource(root, sourceCommit, commit); }
+        catch { continue; }
+        return rememberedArtifacts(root, sourceCommit);
+    }
+    return null;
 };
