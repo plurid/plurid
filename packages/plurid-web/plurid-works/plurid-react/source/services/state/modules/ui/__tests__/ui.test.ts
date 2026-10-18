@@ -39,6 +39,7 @@ describe('the chrome\'s state', () => {
 
         expect(state).toEqual({
             toolbarScrollPosition: 0,
+            scrollPlaneID: '',
             grabMode: false,
             grabHold: false,
             shortcutsOverlayVisible: false,

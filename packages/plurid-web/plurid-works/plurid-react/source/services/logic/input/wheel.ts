@@ -118,6 +118,7 @@ export type WheelPolicy =
     | 'zoom'
     | 'scroll-first'
     | 'plane'
+    | 'click-to-scroll'
     | 'disabled';
 
 export type TrackpadScrollPolicy =

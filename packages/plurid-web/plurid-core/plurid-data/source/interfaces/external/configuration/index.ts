@@ -906,10 +906,14 @@ export interface PluridConfigurationSpaceGestures {
      * content under it can scroll along the wheel axis (then the content scrolls); `plane` gives a
      * plane its wheel whatever it can do (it scrolls if it can, else nothing: a reading surface never
      * zooms away under a wheel) and zooms only on empty space; `zoom` always zooms; `disabled` leaves
-     * the wheel to the page. A trackpad pinch always zooms; Cmd + wheel and Ctrl + a mouse notch are
+     * the wheel to the page. `click-to-scroll` navigates over hovered planes until a primary click
+     * gives one plane its wheel (including custom preview handlers). Background click or Escape
+     * releases it; docking activates a page immediately. A gesture keeps its owner until 300 ms
+     * idle. Pinch, modifiers and explicit navigation modes still navigate the space.
+     * A trackpad pinch always zooms; Cmd + wheel and Ctrl + a mouse notch are
      * the browser's (its page zoom), never the space's.
      */
-    wheel?: 'zoom' | 'scroll-first' | 'plane' | 'disabled';
+    wheel?: 'zoom' | 'scroll-first' | 'plane' | 'click-to-scroll' | 'disabled';
     /** Zoom factor per mouse-wheel notch. Default `1.1`. */
     wheelZoomStep?: number;
     /**

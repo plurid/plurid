@@ -59,5 +59,7 @@ export interface PluridPlaneChromeContext extends Omit<PluridChromeContext, 'sel
     parentTreePlane?: unknown;
     /** The pointer is over the plane. */
     mouseOver: boolean;
+    /** Ordinary wheel input belongs to this plane under `click-to-scroll`, independent of spatial selection. */
+    scrollSelected: boolean;
 }
 // #endregion module

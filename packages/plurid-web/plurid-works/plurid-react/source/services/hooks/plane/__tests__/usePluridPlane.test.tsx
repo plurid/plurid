@@ -76,6 +76,7 @@ describe('usePluridPlane', () => {
         expect(result.current.planeID).toBeUndefined();
         expect(result.current.active).toBe(false);
         expect(result.current.selected).toBe(false);
+        expect(result.current.scrollSelected).toBe(false);
         expect(result.current.isolation).toBe('none');
         expect(result.current.shown).toBe(true);
         expect(result.current.location).toBeUndefined();

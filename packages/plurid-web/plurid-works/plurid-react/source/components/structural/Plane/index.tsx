@@ -205,6 +205,7 @@ export interface PluridPlaneStateProperties {
     // A per-instance DERIVED boolean (this plane is in `selectedPlaneIDs`), same memoization
     // rationale as `stateIsActivePlane` — only flips for the plane whose selection actually changes.
     stateIsSelected: boolean;
+    stateScrollSelected: boolean;
     stateGeneralTheme: Theme;
     stateConfiguration: PluridConfiguration;
 }
@@ -261,6 +262,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateCulled,
         stateIsolatePlane,
         stateIsSelected,
+        stateScrollSelected,
         stateGeneralTheme,
         stateConfiguration,
         // #endregion state
@@ -656,6 +658,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             treePlane,
             parentTreePlane,
             mouseOver,
+            scrollSelected: stateScrollSelected,
         }
         : undefined;
     const resizable = !!stateConfiguration.elements.plane.resizable && stateIsSelected && treePlane.show;
@@ -715,6 +718,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             aria-roledescription="plane"
             aria-label={planeAccessibleName}
             data-plurid-plane={planeID}
+            data-plurid-scroll-selected={stateScrollSelected ? 'true' : undefined}
             data-plurid-entity={PLURID_ENTITY_PLANE}
             data-plurid-culled={stateCulled !== 'visible' ? stateCulled : undefined}
             data-plurid-aside={stateAside ? 'true' : undefined}
@@ -873,6 +877,9 @@ const makeMapStateToProps = () => {
         stateCulled: getPlaneCulling(state, ownProps.planeID),
         stateIsolatePlane: selectors.space.getIsolatePlane(state),
         stateIsSelected: getIsSelected(state, ownProps.planeID),
+        stateScrollSelected: state.configuration.space.gestures?.wheel === 'click-to-scroll'
+            && state.configuration.space.gestures?.buttonMap?.wheel !== 'disabled'
+            && (selectors.space.getDockedPlaneID(state) || state.ui.scrollPlaneID) === ownProps.planeID,
         stateGeneralTheme: selectors.themes.getGeneralTheme(state),
         stateConfiguration: selectors.configuration.getConfiguration(state),
     });

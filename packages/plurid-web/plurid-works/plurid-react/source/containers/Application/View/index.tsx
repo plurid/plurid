@@ -144,6 +144,7 @@
     import useFlyControls from './hooks/useFlyControls';
     import useViewResize from './hooks/useViewResize';
     import usePointerGestures from './hooks/usePointerGestures';
+    import { useClickToScroll } from './hooks/useClickToScroll';
     import useTreeUpdate from './hooks/useTreeUpdate';
     import usePluridPubSub, {
         layoutSignature,
@@ -542,6 +543,15 @@ const PluridView: React.FC<PluridViewProperties> = (
     ]);
     // The device of the current wheel stream (a fast trackpad flick must not read as a mouse notch).
     const wheelHistory = useRef(createWheelHistory());
+    useClickToScroll({
+        viewElement,
+        onReset: () => wheelBatcher.cancel(),
+        onActivate: () => motion.cancel(),
+        onCameraDelta: (delta) => {
+            motion.cancel();
+            wheelBatcher.add(delta);
+        },
+    });
     // A page docks: whatever the wheel still had pending is dropped (the dock pose is exact).
     const docked = !!stateDockedPlaneID;
     useEffect(() => {
@@ -743,6 +753,10 @@ const PluridView: React.FC<PluridViewProperties> = (
     ]);
 
     const wheelCallback = useCallback((event: WheelEvent) => {
+        const policy = stateRef.current.configuration.space.gestures;
+        if (policy?.wheel === 'click-to-scroll' && policy.buttonMap?.wheel !== 'disabled') {
+            return;
+        }
         handlePreventOverscroll(event);
 
         // A typing target keeps its own scrolling WHILE IT HAS THE KEYBOARD; hovered, a field is

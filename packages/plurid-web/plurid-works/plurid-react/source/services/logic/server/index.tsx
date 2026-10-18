@@ -108,6 +108,7 @@ export const serverComputeMetastate = async (
             },
             ui: {
                 toolbarScrollPosition: 50,
+                scrollPlaneID: '',
                 grabMode: false,
                 grabHold: false,
                 shortcutsOverlayVisible: false,

@@ -107,7 +107,7 @@ const plane = usePluridPlane();      // inside plane content — see below
 `usePluridPlane()` is the primary plane API (the `plurid` prop stays as the registrar-level contract). Its lens
 holds the plane's identity — `planeID`, `route` (the REGISTERED pattern, `/imagene/:id`), `parameters`
 (`{ id: '42' }`), `query`, `fragments`, `parentPlaneID` — the application's `pubsub`, the live state
-(`active`, `selected`, `isolation`, `shown`, `culled`, `frozen`, `scale`, `viewSize`, `location`) and three
+(`active`, `selected`, `scrollSelected`, `isolation`, `shown`, `culled`, `frozen`, `scale`, `viewSize`, `location`) and three
 commands: `close(options?)` (hide this plane; when it is the one in view the camera returns to its parent),
 `navigateToParent()`, `frame()`. A plane closes itself with `plane.close()` — no publish pair needed.
 
@@ -401,7 +401,7 @@ definePluridConfiguration({
         momentumDecay: 0.92, // per 60 Hz frame; applied per real frame duration
         momentum: { orbit: true, pan: true, zoom: false },
         disableMomentum: false, // true = release stops dead
-        wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'plane' | 'disabled'
+        wheel: 'scroll-first', // 'zoom' | 'scroll-first' | 'plane' | 'click-to-scroll' | 'disabled'
         dragHandle: 'chrome',  // 'chrome' (the controls bar, or [data-plurid-drag-handle]) | 'plane'
         wheelZoomStep: 1.1, // zoom factor per mouse notch
         trackpadPinchSensitivity: 0.006, // zoom exponent per px of a trackpad pinch (≈ ×3 over a whole pinch)
@@ -431,6 +431,34 @@ definePluridConfiguration({
     },
 });
 ```
+
+### Click to scroll a plane
+
+```tsx
+const configuration = {
+    space: { gestures: { wheel: 'click-to-scroll' } },
+};
+```
+
+This opt-in policy keeps ordinary wheel and trackpad navigation moving over hovered planes.
+A primary click on content or its header gives one plane its wheel; the same click still activates
+its file, link or control. Enter on the plane's keyboard focus anchor also activates it. A background
+click or Escape releases it. Docked pages receive their wheel immediately. Pinch, Shift/Alt modifiers,
+grab and explicit Rotate/Translate/Scale modes still navigate the space.
+
+Routing happens in capture before native preview/canvas/terminal handlers. An active plane's wheel
+reaches those handlers and native scrollers, and stays out of the camera at scroll boundaries or
+when nothing scrolls. A gesture keeps its starting owner through its momentum tail (300 ms idle
+ends the gesture): camera input keeps navigating across planes; a content gesture leaving its plane
+is consumed for the remainder. A click, navigation override, policy change or plane removal resets
+that ownership.
+
+`usePluridPlane().scrollSelected`, the plane chrome context's `scrollSelected`, and
+`[data-plurid-scroll-selected="true"]` expose the active scroll surface for custom chrome. This is
+ephemeral UI state, separate from hover and spatial multi-selection; it does not enter saved
+arrangements or undo history. Overlays and previews rendered outside the application View retain
+their own input. Set `wheel: 'plane'` to return to hover-owned scrolling; the default remains
+`scroll-first` for other applications.
 
 ### Shortcuts (`space.shortcuts`) — disable / remap / extend
 

@@ -117,6 +117,7 @@ const compute = <C>(
         },
         ui: {
             toolbarScrollPosition: 0,
+            scrollPlaneID: '',
             grabMode: false,
             grabHold: false,
             shortcutsOverlayVisible: false,

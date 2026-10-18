@@ -161,6 +161,8 @@ export interface PluridStateThemes {
 
 export interface PluridStateUI {
     toolbarScrollPosition: number;
+    /** Ephemeral content-wheel owner under `gestures.wheel: 'click-to-scroll'`; never persisted. */
+    scrollPlaneID: string;
     /** Grab / navigate mode toggled with G. */
     grabMode: boolean;
     /** Grab mode held down with Space. */

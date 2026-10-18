@@ -26,6 +26,8 @@ export interface MarqueeRect {
 
 export interface UIState {
     toolbarScrollPosition: number;
+    /** Ephemeral content-wheel owner under `gestures.wheel: 'click-to-scroll'`; never persisted. */
+    scrollPlaneID: string;
     /** Grab / navigate mode toggled with G: a left drag orbits everywhere, the wheel zooms. */
     grabMode: boolean;
     /** Grab mode while Space is held. */
@@ -41,6 +43,7 @@ export interface UIState {
 
 const initialState: UIState = {
     toolbarScrollPosition: 0,
+    scrollPlaneID: '',
     grabMode: false,
     grabHold: false,
     shortcutsOverlayVisible: false,
@@ -53,6 +56,9 @@ export const ui = createSlice({
     name: 'ui',
     initialState,
     reducers: {
+        setScrollPlaneID: (state, action: PayloadAction<string>) => {
+            state.scrollPlaneID = action.payload;
+        },
         setMarquee: (
             state,
             action: PayloadAction<MarqueeRect | null>,

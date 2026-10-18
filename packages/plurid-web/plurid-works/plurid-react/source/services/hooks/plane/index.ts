@@ -79,6 +79,8 @@ export interface PluridPlaneLens {
      * This plane is in the multi-selection working set.
      */
     selected: boolean;
+    /** This plane owns ordinary wheel input under `click-to-scroll` (clicked or docked). */
+    scrollSelected: boolean;
     /**
      * `'self'` when this plane is the isolated one, `'other'` when another
      * plane is isolated (this content is faded out / inert), `'none'` when
@@ -209,6 +211,12 @@ export const usePluridPlane = (): PluridPlaneLens => {
         (state: AppState) => planeID !== undefined
             && selectors.space.getSelectedPlaneIDs(state).includes(planeID),
     );
+    const scrollSelected = useEngineSelector(
+        (state: AppState) => !!planeID
+            && state.configuration?.space?.gestures?.wheel === 'click-to-scroll'
+            && state.configuration.space.gestures?.buttonMap?.wheel !== 'disabled'
+            && (getDockedPlaneID(state) || state.ui.scrollPlaneID) === planeID,
+    );
     const isolation = useEngineSelector(
         (state: AppState): PluridPlaneIsolation => {
             const isolatePlane = selectors.space.getIsolatePlane(state);
@@ -293,6 +301,7 @@ export const usePluridPlane = (): PluridPlaneLens => {
         aside,
         active,
         selected,
+        scrollSelected,
         isolation,
         shown,
         scale,
