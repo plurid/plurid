@@ -1,8 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { join, relative } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { gunzipSync } from 'node:zlib';
+import { tmpdir } from 'node:os';
 
 export const GENERATOR = '@plurid/generate-plurid-app';
 export const GENERATOR_INPUTS = [
@@ -155,4 +156,76 @@ export const verifyArtifacts = (manifest, projects, sourceCommit, readArtifact) 
         }
         return { ...entry, data };
     }));
+};
+
+
+const RELEASE_MODES = ['--dry-run', '--prepare', '--pack', '--publish', '--verify-registry'];
+const ARTIFACT_MODES = ['--pack', '--publish', '--verify-registry'];
+
+/** Artifact paths are optional; preparation flags must never be mistaken for a directory. */
+export const parseReleaseArguments = (args) => {
+    let mode;
+    let directory;
+    let all = false;
+    let noBump = false;
+    for (let index = 0; index < args.length; index += 1) {
+        const arg = args[index];
+        if (RELEASE_MODES.includes(arg)) {
+            if (mode) throw new Error('Choose one release phase.');
+            mode = arg;
+            if (ARTIFACT_MODES.includes(mode) && args[index + 1] && !args[index + 1].startsWith('--')) {
+                directory = args[++index];
+            }
+        } else if (arg === '--all') all = true;
+        else if (arg === '--no-bump') noBump = true;
+        else throw new Error(`Unknown argument ${arg}`);
+    }
+    mode ??= '--dry-run';
+    if (ARTIFACT_MODES.includes(mode) && (all || noBump)) {
+        throw new Error('--all/--no-bump apply only to planning or preparation.');
+    }
+    return { mode, directory, all, noBump };
+};
+
+const releaseState = (root) => join(root, '.out', 'releases');
+const releasePointer = (root, commit) => {
+    if (!/^[a-f0-9]{40}$|^[a-f0-9]{64}$/.test(commit)) throw new Error('Invalid release commit.');
+    return join(releaseState(root), commit + '.json');
+};
+
+export const createArtifactDirectory = (root, commit, requested) => {
+    releasePointer(root, commit);
+    if (requested) {
+        const directory = resolve(root, requested);
+        if (existsSync(directory)) throw new Error(`Choose a new artifact directory; preserving ${directory}`);
+        mkdirSync(directory, { recursive: true });
+        return directory;
+    }
+    const parent = releaseState(root);
+    mkdirSync(parent, { recursive: true });
+    // Keep the fresh source outside this checkout so Node cannot fall back to its node_modules.
+    return mkdtempSync(join(tmpdir(), 'plurid-release-' + commit.slice(0, 12) + '-'));
+};
+
+/** Remember only completed verification. Failed builds never displace a resumable release. */
+export const rememberArtifacts = (root, commit, directory) => {
+    const manifest = JSON.parse(readFileSync(join(directory, 'release.json'), 'utf8'));
+    if (manifest.sourceCommit !== commit) throw new Error('Cannot remember artifacts for another commit.');
+    const pointer = releasePointer(root, commit);
+    mkdirSync(releaseState(root), { recursive: true });
+    writeFileSync(pointer, JSON.stringify({ sourceCommit: commit, directory: resolve(directory) }, null, 4) + '\n');
+};
+
+export const rememberedArtifacts = (root, commit) => {
+    const pointer = releasePointer(root, commit);
+    if (!existsSync(pointer)) return null;
+    const record = JSON.parse(readFileSync(pointer, 'utf8'));
+    if (record.sourceCommit !== commit || typeof record.directory !== 'string' || !isAbsolute(record.directory)) {
+        throw new Error(`Invalid release artifact record: ${pointer}`);
+    }
+    // Do not replace a recorded partial round if its files have been moved or modified.
+    if (!existsSync(join(record.directory, 'release.json'))) {
+        throw new Error(`Recorded release artifacts are missing: ${record.directory}. Restore them or provide an explicit directory.`);
+    }
+    return record.directory;
 };

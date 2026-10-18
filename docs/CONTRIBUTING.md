@@ -72,7 +72,7 @@ Run from the root. **CI enforces every row of this table** (2026-09-13: the brow
 | `pnpm docs.tables.check` | `docs/SHORTCUTS.md` and `docs/HARNESS.md` are current (generated from the shortcut tables and the harness's flag registry + fixture catalog) | Regenerate with `pnpm docs.tables`. |
 | `pnpm check` | `tsc --noEmit` in EVERY package (`pnpm -r check`) | Every public package has a `check` script now; `pnpm build` alone would ship a type error (it transpiles per file). |
 | `pnpm check.modules` | imports every published entry point under native Node ESM and CommonJS, from inside each package, and renders `@plurid/plurid-react` through both builds | Catches what bundled and jest gates cannot: a CommonJS peer read through a default import, a broken `exports` map, two builds that create their styled components in two orders (a server that `require`s and a browser that `import`s then never hydrate; 2026-09-29). |
-| `pnpm release` | read-only plan; explicit `--prepare`, `--pack`, `--publish` phases | See [release process](./RELEASING.md). Publishing never rebuilds or changes versions. |
+| `pnpm release` | read-only plan; explicit `--prepare`, `--pack`, `--publish` phases | See [release process](./RELEASING.md). Verified tarballs are reused; `--publish` builds when needed and keeps prepared versions. |
 | `pnpm size` | measures every public entry point (each `exports` subpath) as an application ships it — the entry and the chunks it imports statically, minified, gzipped — against `configurations/size-budgets.json` | Fails over budget. `pnpm size --update` rewrites the budgets from disk — do that only for a deliberate change, in the same commit, with the reason in the message. A budget is the measurement rounded up to the next 5 KB with at least 2 KB (or 5 %) of room. |
 | `pnpm smoke.pack` | `pnpm pack` every public package, `npm install` the tarballs + peers into a throwaway ESM project, import every entry point both ways; generate an application, build it, and load it in Chromium under `plurid start` and `plurid dev` | The consumer's path end to end (needs the network; a minute). Fails on any console or page error in the generated application (a hydration mismatch included) and any `[plurid]` warning, on a first link that does not open its page, and on a server page that paints blank before its script runs (a 0 px view, hidden content, a cover). The browser is the harness's Playwright Chromium (`pnpm --filter plurid-render-test exec playwright install chromium`); `PLURID_CHROMIUM=<path>` points at another, `SMOKE_SKIP_BROWSER=1` skips it. `--keep` leaves the project for inspection. |
 | `pnpm verify` | build → check → test → lint → check.modules → size → docs.tables.check → browser suite → smoke.pack | The full local gate; what to run before a publish. |
@@ -238,17 +238,17 @@ read-only plan. See [the release process](./RELEASING.md) for the complete seque
 pnpm release --dry-run --all       # no login, git fetch, lifecycle hooks or writes
 pnpm release --prepare --all       # manifests, peer minimums and lockfile only
 # review, commit, push, and wait for green CI on this prepared commit
-pnpm release --pack /new/artifact/directory
-pnpm release --publish /new/artifact/directory
-pnpm release --verify-registry /new/artifact/directory
+pnpm release --publish            # manages output, builds/verifies if needed, then publishes
+pnpm release --verify-registry
 ```
 
 Shipped source, manifests, templates, binders and build inputs count as changes; test-only changes do
 not. Runtime/peer dependents follow released siblings, and the generator follows its baked pins.
-`--pack` builds a fresh snapshot with a fresh store, retains all intermediates, runs the full local
-gates and tests the exact tarballs. `--publish` requires green CI on that source commit, verifies
-hashes, and publishes those tarballs to `latest` with lifecycle scripts disabled. Partial rounds
-resume from the same artifacts and reject conflicting registry integrity. Nothing is auto-committed.
+`--pack` optionally builds and verifies without publishing, choosing a temporary workspace outside
+the checkout and remembering it under `.out/releases/`. `--publish` requires green CI on that source commit, reuses verified artifacts or
+builds them when absent, and publishes those exact tarballs to `latest` with lifecycle scripts
+disabled. Output paths are remembered by commit; explicit paths remain supported. Partial rounds
+resume the same artifacts and reject conflicting registry integrity. Nothing is auto-committed.
 
 `pnpm build:preserving` and `pnpm test:preserving` retain local outputs and fixtures. The release
 pipeline uses these paths; ordinary clean builds retain their existing behavior.

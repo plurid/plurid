@@ -2,11 +2,12 @@
 /** Prepare, verify immutable tarballs, then publish explicitly. No phase removes files. */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { closeSync, existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs';
+import { closeSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-    changedFiles, listWorkspace, nextVersion, packedJSON, planRelease, registryPackage, releaseOrder, verifyArtifacts,
+    changedFiles, createArtifactDirectory, listWorkspace, nextVersion, packedJSON, parseReleaseArguments,
+    planRelease, registryPackage, releaseOrder, rememberedArtifacts, rememberArtifacts, verifyArtifacts,
 } from './release-plan.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -26,29 +27,20 @@ const clean = () => {
 const usage = `Usage:
   pnpm release --dry-run [--all]    Read-only plan; no login, fetch, build or packing
   pnpm release --prepare [--all]    Update manifests, peer minimums and workspace lockfile
-  pnpm release --pack <new-dir>     Build fresh source, run gates, test and hash tarballs
-  pnpm release --publish <dir>      Publish verified tarballs to latest; requires green CI
-  pnpm release --verify-registry <dir>  Confirm exact versions, integrity and latest tags
+  pnpm release --pack [new-dir]    Build and verify; automatically choose and remember artifacts
+  pnpm release --publish [dir]     Reuse verified artifacts or build them, then publish to latest
+  pnpm release --verify-registry [dir]  Confirm exact versions, integrity and latest tags
 
-Commit and push preparation before the final CI run. Publishing never bumps, builds, commits or
-cleans. Failed and successful work directories are kept. Re-run --publish to resume a partial round.`;
+Commit and push preparation before the final CI run. --publish requires green CI on that commit.
+Artifact locations are remembered under .out/releases; explicit paths remain supported. Builds and failed work are kept;
+--publish resumes the verified artifacts for this commit without rebuilding them. No phase bumps
+versions except --prepare, and no phase commits, pushes or cleans files.`;
 
-const modes = ['--dry-run', '--prepare', '--pack', '--publish', '--verify-registry'];
-const selected = modes.filter((mode) => args.includes(mode));
 if (args.includes('--help')) {
     console.log(usage);
     process.exit(0);
 }
-if (selected.length > 1) throw new Error('Choose one release phase.');
-const mode = selected[0] ?? '--dry-run';
-const needsDirectory = ['--pack', '--publish', '--verify-registry'].includes(mode);
-const directoryArg = needsDirectory ? args[args.indexOf(mode) + 1] : undefined;
-if (needsDirectory && (!directoryArg || directoryArg.startsWith('--'))) throw new Error(usage);
-const flags = args.filter((arg) => arg !== directoryArg);
-for (const arg of flags) {
-    if (![...modes, '--all', '--no-bump'].includes(arg)) throw new Error(`Unknown argument ${arg}\n${usage}`);
-}
-if (needsDirectory && (args.includes('--all') || args.includes('--no-bump'))) throw new Error('--all/--no-bump apply only to planning or preparation.');
+const { mode, directory: directoryArg, all, noBump } = parseReleaseArguments(args);
 
 const projects = listWorkspace(root);
 
@@ -58,7 +50,7 @@ const prepare = async () => {
         data.name, (await registryPackage(data.name))?.version ?? null,
     ])));
     const plan = planRelease({ projects, published, files: tag ? changedFiles(root, tag) : [],
-        root, all: args.includes('--all'), noBump: args.includes('--no-bump') });
+        root, all, noBump });
     say(`baseline: ${tag || 'none'}; all changes in the working tree are included`);
     for (const entry of plan) {
         say(`${entry.name}: ${entry.published ?? 'unpublished'} → ${entry.target} (${entry.why})`);
@@ -78,15 +70,14 @@ const prepare = async () => {
     }
     run('pnpm', ['install', '--lockfile-only', '--ignore-scripts']);
     say('Prepared. Review and commit the versions, lockfile and release code; push and wait for CI.');
-    say('Then use --pack <new-dir>. No packages have been published.');
+    say('Then use --pack to review artifacts, or --publish to build, verify and publish. No packages have been published.');
 };
 
 const pack = () => {
     clean();
-    const directory = resolve(directoryArg);
-    if (existsSync(directory)) throw new Error(`Choose a new artifact directory; preserving ${directory}`);
-    mkdirSync(directory, { recursive: true });
     const sourceCommit = head();
+    const directory = createArtifactDirectory(root, sourceCommit, directoryArg);
+    say('Building release artifacts in ' + directory);
     const source = join(directory, 'source');
     mkdirSync(source);
     run('git', ['archive', '--format=tar', '--output=' + join(directory, 'source.tar'), sourceCommit]);
@@ -133,11 +124,12 @@ const pack = () => {
     gate('smoke.pack', 'pnpm', ['smoke.pack', '--keep', '--tarballs', tarballs]);
     writeJSON(join(directory, 'release.json'), { schema: 1, sourceCommit, createdAt: new Date().toISOString(),
         node: process.version, gates, packages });
-    say(`Verified tarballs: ${directory}. Review release.json, then publish this directory explicitly.`);
+    rememberArtifacts(root, sourceCommit, directory);
+    say(`Verified tarballs: ${directory}. Run pnpm release --publish to publish these exact artifacts.`);
+    return directory;
 };
 
-const artifacts = () => {
-    const directory = resolve(directoryArg);
+const artifacts = (directory) => {
     const manifest = JSON.parse(readFileSync(join(directory, 'release.json'), 'utf8'));
     const entries = verifyArtifacts(manifest, projects, head(), (file) => readFileSync(join(directory, file)))
         .map((entry) => ({ ...entry, file: join(directory, entry.file) }));
@@ -156,17 +148,29 @@ const confirm = async (entry, required = true) => {
 
 const publish = async () => {
     clean();
-    const { manifest, entries } = artifacts();
+    const sourceCommit = head();
+    if (mode !== '--verify-registry') {
+        const ci = JSON.parse(read('gh', ['run', 'list', '--workflow', 'ci.yml', '--commit', sourceCommit,
+            '--limit', '1', '--json', 'headSha,status,conclusion']));
+        if (ci[0]?.headSha !== sourceCommit || ci[0]?.status !== 'completed' || ci[0]?.conclusion !== 'success') {
+            throw new Error('Green CI on the prepared source commit is required before publishing.');
+        }
+    }
+    let directory = directoryArg ? resolve(root, directoryArg) : rememberedArtifacts(root, sourceCommit);
+    if (!directory) {
+        if (mode === '--verify-registry') throw new Error('No verified artifacts for this commit. Run --pack first or provide their directory.');
+        say('No verified artifacts for this commit; building and verifying before publication.');
+        directory = pack();
+    }
+    const { manifest, entries } = artifacts(directory);
+    if (manifest.sourceCommit !== sourceCommit) throw new Error('Source changed during release verification. Re-run against the intended commit.');
     if (mode === '--verify-registry') {
         for (const entry of entries) await confirm(entry);
         say(`All ${entries.length} exact registry versions, integrity hashes and latest tags match.`);
         return;
     }
-    const ci = JSON.parse(read('gh', ['run', 'list', '--workflow', 'ci.yml', '--commit', manifest.sourceCommit,
-        '--limit', '1', '--json', 'headSha,status,conclusion']));
-    if (ci[0]?.headSha !== manifest.sourceCommit || ci[0]?.status !== 'completed' || ci[0]?.conclusion !== 'success') {
-        throw new Error('Green CI on the prepared source commit is required before publishing.');
-    }
+    clean();
+    rememberArtifacts(root, sourceCommit, directory);
     // Authenticate only at the explicit publishing boundary. Never log account configuration or secrets.
     run('pnpm', ['whoami'], root, { stdio: 'ignore' });
     // Check every existing artifact before the first upload: a conflicting partial round stops early.
@@ -205,6 +209,6 @@ try {
     else await publish();
 } catch (error) {
     console.error('[release] ' + error.message);
-    if (mode === '--publish') console.error('[release] Artifacts are preserved. Resume the same --publish directory after resolving the failure.');
+    if (mode === '--publish') console.error('[release] Artifacts are preserved. Re-run --publish to resume this commit, or provide the same explicit directory.');
     process.exitCode = 1;
 }
