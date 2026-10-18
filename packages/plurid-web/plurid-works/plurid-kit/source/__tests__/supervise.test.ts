@@ -73,7 +73,7 @@ describe('superviseServer() (2026-09-29)', () => {
     });
 
     afterAll(() => {
-        fs.rmSync(directory, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
     });
 
     const run = (

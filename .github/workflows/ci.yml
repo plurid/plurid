@@ -40,6 +40,9 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Release tooling regressions
+        run: pnpm test.release
+
       - name: Test
         run: pnpm test
 

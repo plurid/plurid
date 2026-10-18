@@ -53,7 +53,7 @@ export async function build(
     const bundle = config.bundle ?? {};
     const paths = resolvePaths(config);
 
-    const clean = !argv.includes('--no-clean');
+    const clean = !argv.includes('--no-clean') && process.env.PLURID_PRESERVE_ARTIFACTS !== '1';
     if (clean && fs.existsSync(paths.buildDir)) {
         fs.rmSync(paths.buildDir, { recursive: true, force: true });
     }

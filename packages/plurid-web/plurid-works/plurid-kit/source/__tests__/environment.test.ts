@@ -34,7 +34,7 @@ describe('loadEnvironment()', () => {
     });
 
     afterEach(() => {
-        fs.rmSync(directory, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         for (const key of keys) {
             delete process.env[key];
         }

@@ -53,7 +53,7 @@ describe('mainEntryFromMetafile()', () => {
             expect(await build('dist', directory)).toBe('/index.js');
             expect(await build('out/web/', directory)).toBe('/index.js');
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 

@@ -1,4 +1,28 @@
-# Migrating to the next release (unreleased, since 2026-09-29)
+# Migrating to the October 18 release (prepared, unpublished)
+
+## Click-to-scroll and package entry points
+
+The prepared coordinated release is data `0.0.0-27`, engine `0.0.0-24`, React `0.0.0-41`, server
+`0.0.0-20`, kit `0.0.0-7` and generator `0.0.0-17`, together with the utility versions in
+[the release table](./RELEASING.md). These versions are not claimed published until registry verification.
+
+Opt in with `space.gestures.wheel: 'click-to-scroll'`. Hovered planes keep camera navigation;
+a primary click on content or its header enables scrolling for that plane without swallowing the
+click's normal action. Background clicks and Escape release it. Docking activates content immediately.
+Pinch, navigation modifiers and explicit navigation modes retain their navigation behavior. A wheel
+stream retains its initial owner across planes and its momentum tail; content cannot spill into the
+camera at its boundary. See [wheel ownership](./CONTROL_SURFACE.md#click-to-scroll-a-plane) for the details.
+
+Use `usePluridPlane().scrollSelected`, `PluridPlaneChromeContext.scrollSelected` or the
+`data-plurid-scroll-selected` attribute to style the active plane. This is transient UI state,
+independent of spatial selection, and is not saved or added to history. A host overlay mounted outside
+the Plurid View, such as Space/Quick Preview, keeps its own input. Set `wheel: 'plane'` for hover-owned
+scrolling or `wheel: 'scroll-first'` for the unchanged default policy; the choice can change live.
+
+The library exports now supply `.d.mts` for `import` and `.d.ts` for `require` under separate type
+conditions. Keep both declarations and the split runtime chunks when repackaging. All public packages
+require Node 22 or newer; the packed smoke checks both NodeNext module forms and generated applications
+under TypeScript 5 and 6. The following fixes since September 29 ship in the same release.
 
 A server-rendered page now hydrates. Every kit application failed to: React threw the server's markup
 away and rendered again in the browser (`#418` in production; in development the attribute and text

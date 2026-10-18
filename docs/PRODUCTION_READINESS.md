@@ -1,5 +1,15 @@
 # Production readiness (2026-09-29)
 
+October 18 release preparation: all 13 package versions and peer minimums are prepared. Local
+preserving builds, workspace types/lint, 1,199 package tests plus 11 release-tooling tests, module
+parity, 18 size budgets, generated tables, 182 browser cases, 13 performance cases, 50 Darwin visual
+comparisons, and the 13-tarball consumer/generated-app smoke passed. The smoke checks NodeNext types
+and TypeScript 5/6, production/development servers and desktop/mobile hydration. These are local
+preparation results; final CI on the committed preparation, the clean-snapshot release manifest and
+registry publication/consumer verification remain required. See [releasing](./RELEASING.md). The
+historical sweep below retains its original scope.
+
+
 The record of the sweep that prepared the 2026-09-29 release: what was checked, what changed, the
 evidence, and what is known not to be done. What a host has to know, change by change, is in
 [`MIGRATION.md`](./MIGRATION.md) (the first section and "Production readiness").

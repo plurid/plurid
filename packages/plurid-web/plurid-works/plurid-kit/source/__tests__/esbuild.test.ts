@@ -49,7 +49,7 @@ describe('styledComponentsBrowserAlias', () => {
                 expect(target).toMatch(/styled-components\.browser\.esm\.js$/);
             }
         } finally {
-            fs.rmSync(empty, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(empty, { recursive: true, force: true });
         }
     });
 });
@@ -124,7 +124,7 @@ describe('loadPluridConfig', () => {
             const config = await loadPluridConfig(empty);
             expect(config).toEqual({});
         } finally {
-            fs.rmSync(empty, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(empty, { recursive: true, force: true });
         }
     });
 
@@ -147,7 +147,7 @@ describe('loadPluridConfig', () => {
             expect(config.serverName).toBe('fixture');
             expect(config.bundle?.clientExternals).toEqual(['geoip-lite']);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 
@@ -176,7 +176,7 @@ describe('loadPluridConfig', () => {
             expect(config.serverName).toBe('asset-fixture');
             expect((config.bundle?.loaders as any)?.['.png']).toBe('file');
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 
@@ -203,7 +203,7 @@ describe('loadPluridConfig', () => {
             // the warning names the cause and its place, not esbuild's `Build failed with 1 error:`
             expect(written.join('')).toMatch(/could not bundle plurid\.config\.ts; continuing without it: plurid\.config\.ts:1:\d+: Could not resolve "\.\/does-not-exist"/);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 });

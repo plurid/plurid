@@ -108,7 +108,7 @@ export const FLAGS: readonly FlagDefinition[] = [
     { key: 'btnWheel', type: 'enum', values: ['zoom', 'disabled'], group: 'gestures', apply: 'reload', description: 'whether the wheel zooms', exercises: '`gestures.buttonMap.wheel`' },
     { key: 'touchOne', type: 'enum', values: ['orbit', 'pan', 'disabled'], group: 'gestures', apply: 'reload', description: 'one finger on empty space', exercises: '`gestures.touchOne`' },
     { key: 'trackpad', type: 'enum', values: ['pan', 'zoom', 'orbit', 'disabled'], group: 'gestures', apply: 'reload', description: 'a two-finger trackpad scroll on empty space', exercises: '`gestures.trackpadScroll`' },
-    { key: 'wheel', type: 'enum', values: ['zoom', 'scroll-first', 'disabled'], group: 'gestures', apply: 'reload', description: 'the mouse-wheel policy', exercises: '`gestures.wheel`' },
+    { key: 'wheel', type: 'enum', values: ['zoom', 'scroll-first', 'plane', 'click-to-scroll', 'disabled'], group: 'gestures', apply: 'reload', description: 'the mouse-wheel policy', exercises: '`gestures.wheel`' },
     { key: 'dblclick', name: 'doubleClickOff', type: 'boolean', on: '0', group: 'gestures', apply: 'reload', description: 'a double-click never frames', exercises: '`gestures.doubleClickFrame: false`' },
     { key: 'gamepad', type: 'boolean', group: 'gestures', apply: 'reload', description: 'a gamepad stick orbits (tests stub navigator.getGamepads)', exercises: '`gestures.gamepad.enabled`' },
     // selection
@@ -193,7 +193,7 @@ export interface HarnessFlags {
     btnWheel?: 'zoom' | 'disabled';
     touchOne?: 'orbit' | 'pan' | 'disabled';
     trackpad?: 'pan' | 'zoom' | 'orbit' | 'disabled';
-    wheel?: 'zoom' | 'scroll-first' | 'disabled';
+    wheel?: 'zoom' | 'scroll-first' | 'plane' | 'click-to-scroll' | 'disabled';
     doubleClickOff: boolean;
     gamepad: boolean;
     resizable: boolean;

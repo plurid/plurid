@@ -9,8 +9,8 @@
  *   pnpm smoke.pack            (needs the packages built)
  *   pnpm smoke.pack --keep     keep the temporary project for inspection
  */
-import { execFileSync, execSync, spawn } from 'node:child_process';
-import { readFileSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { execFileSync, spawn } from 'node:child_process';
+import { readFileSync, existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { createServer } from 'node:net';
 import { resolve, dirname, join } from 'node:path';
@@ -19,7 +19,11 @@ import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
-const keep = process.argv.includes('--keep');
+const keep = process.argv.includes('--keep') || process.env.PLURID_PRESERVE_ARTIFACTS === '1';
+const childEnvironment = { ...process.env, ...(keep ? { PLURID_PRESERVE_ARTIFACTS: '1' } : {}) };
+const tarballsFlag = process.argv.indexOf('--tarballs');
+const suppliedTarballs = tarballsFlag >= 0 ? process.argv[tarballsFlag + 1] : undefined;
+if (tarballsFlag >= 0 && (!suppliedTarballs || suppliedTarballs.startsWith('--'))) throw new Error('--tarballs requires a directory');
 
 
 /** Peers the packages declare that live outside this repository (installed from the registry). */
@@ -192,7 +196,8 @@ const packages = listWorkspace();
 const work = mkdtempSync(join(tmpdir(), 'plurid-smoke-'));
 const tarballs = join(work, 'tarballs');
 const project = join(work, 'project');
-execSync(`mkdir -p ${JSON.stringify(tarballs)} ${JSON.stringify(project)}`);
+mkdirSync(tarballs, { recursive: true });
+mkdirSync(project, { recursive: true });
 console.log('[smoke.pack] packing ' + packages.length + ' packages into ' + tarballs);
 
 let failures = 0;
@@ -200,7 +205,9 @@ try {
 
 const tarballFiles = [];
 for (const { directory, data } of packages) {
-    const output = execFileSync('pnpm', ['pack', '--pack-destination', tarballs], { cwd: directory, stdio: ['ignore', 'pipe', 'pipe'] }).toString().trim();
+    const expected = data.name.replace('@', '').replace('/', '-') + '-' + data.version + '.tgz';
+    const output = suppliedTarballs ? join(resolve(suppliedTarballs), expected)
+        : execFileSync('pnpm', ['pack', '--config.ignore-scripts=true', '--pack-destination', tarballs], { cwd: directory, stdio: ['ignore', 'pipe', 'pipe'] }).toString().trim();
     const file = output.split('\n').pop().trim();
     const path = file.startsWith('/') ? file : join(tarballs, file);
     if (!existsSync(path)) {
@@ -216,7 +223,7 @@ for (const { directory, data } of packages) {
 
 writeFileSync(join(project, 'package.json'), JSON.stringify({ name: 'plurid-smoke', private: true, type: 'module' }, null, 2));
 console.log('[smoke.pack] installing tarballs + peers with npm (a minute)');
-execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, ...EXTERNAL_PEERS], {
+execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, ...EXTERNAL_PEERS], {
     cwd: project,
     stdio: ['ignore', 'pipe', 'pipe'],
     timeout: 600000,
@@ -267,7 +274,7 @@ for (const { data } of packages) {
                 const output = execFileSync(process.execPath, arguments_, {
                     cwd: project,
                     stdio: ['ignore', 'pipe', 'pipe'],
-                    env: { ...process.env, NODE_ENV: 'production' },
+                    env: { ...childEnvironment, NODE_ENV: 'production' },
                     timeout: 60000,
                 }).toString().trim();
                 console.log(`  ok    ${specifier} [${mode}] ${output} exports`);
@@ -346,7 +353,7 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
             cwd: work,
             stdio: ['ignore', 'pipe', 'pipe'],
             timeout: 120000,
-            env: { ...process.env, NODE_OPTIONS: [process.env.NODE_OPTIONS, '--no-experimental-require-module'].filter(Boolean).join(' ') },
+            env: { ...childEnvironment, NODE_OPTIONS: [process.env.NODE_OPTIONS, '--no-experimental-require-module'].filter(Boolean).join(' ') },
         });
         const manifest = JSON.parse(readFileSync(join(app, 'package.json'), 'utf8'));
         for (const script of ['dev', 'build', 'start', 'check']) {
@@ -355,7 +362,7 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
         if (!existsSync(join(app, '.gitignore'))) throw new Error('[smoke.pack] the generated application has no .gitignore');
         console.log('[smoke.pack] installing the generated application from the tarballs (a minute)');
         // the packed packages instead of the registry versions the manifest names; the peers from the registry
-        execFileSync('npm', ['install', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, 'react@19', 'react-dom@19', 'styled-components@6', 'typescript@5', '@types/react@19', '@types/react-dom@19'], {
+        execFileSync('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', '--loglevel=error', '--strict-peer-deps', ...tarballFiles, 'react@19', 'react-dom@19', 'styled-components@6', 'typescript@5', '@types/react@19', '@types/react-dom@19'], {
             cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 600000,
         });
         // ITS `check` RUNS (2026-09-29: only its presence was asserted), with the TypeScript it pins and
@@ -376,14 +383,14 @@ if (!process.env.SMOKE_SKIP_GENERATE && failures === 0) {
             }
         }
         console.log('[smoke.pack] plurid build');
-        execFileSync('npx', ['plurid', 'build'], { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000, env: { ...process.env, NODE_ENV: 'production' } });
+        execFileSync('npx', ['--no-install', 'plurid', 'build', ...(keep ? ['--no-clean'] : [])], { cwd: app, stdio: ['ignore', 'pipe', 'pipe'], timeout: 300000, env: { ...childEnvironment, NODE_ENV: 'production' } });
         if (!existsSync(join(app, 'build', 'index.js'))) throw new Error('[smoke.pack] plurid build wrote no build/index.js');
         // `plurid start` / `plurid dev` on $PORT, in a process group of their own: the server they spawn
         // goes with them
         const serve = async (command) => {
             const port = await freePort();
             const child = spawn(join(app, 'node_modules', '.bin', 'plurid'), [command], {
-                cwd: app, env: { ...process.env, PORT: String(port) }, stdio: ['ignore', 'pipe', 'pipe'], detached: true,
+                cwd: app, env: { ...childEnvironment, PORT: String(port) }, stdio: ['ignore', 'pipe', 'pipe'], detached: true,
             });
             let output = '';
             child.stdout.on('data', (chunk) => { output += chunk.toString(); });

@@ -199,7 +199,7 @@ describe('styles and the error pages (2026-09-29)', () => {
             await expect(createPluridServer({ routes: [], publicDir, notFound: '/missing.html' } as any))
                 .rejects.toThrow(/`notFound: '\/missing.html'` is not a readable file under the public directory/);
         } finally {
-            fs.rmSync(publicDir, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(publicDir, { recursive: true, force: true });
         }
     });
 

@@ -64,7 +64,7 @@ describe('the utilities (C12)', () => {
         ensureOwnedDirectory(fresh);
         fs.writeFileSync(path.join(fresh, 'keep.txt'), 'mine');
         expect(() => ensureOwnedDirectory(fresh)).toThrow(/not empty/);
-        fs.rmSync(base, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(base, { recursive: true, force: true });
     });
 
     it('copyDirectory is awaited: the files are there when it resolves', async () => {
@@ -75,6 +75,6 @@ describe('the utilities (C12)', () => {
         const destination = path.join(base, 'destination');
         await copyDirectory(source, destination);
         expect(fs.readFileSync(path.join(destination, 'nested', 'file.txt'), 'utf8')).toBe('content');
-        fs.rmSync(base, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(base, { recursive: true, force: true });
     });
 });

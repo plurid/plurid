@@ -69,7 +69,7 @@ describe('loadPluridConfig() writes nothing (2026-09-29)', () => {
             expect(config.buildDir).toBe('dist');
             expect(listing(directory)).toEqual(before);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 
@@ -91,7 +91,7 @@ describe('loadPluridConfig() writes nothing (2026-09-29)', () => {
             expect(config.serverName).toBe('from-the-application');
             expect(fs.existsSync(path.join(directory, 'node_modules', '.plurid-kit'))).toBe(false);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 });
@@ -115,7 +115,7 @@ describe('a present but broken plurid.config.ts (2026-09-29)', () => {
             await expect(silenced(() => loadPluridConfig(directory, { strict: true })))
                 .rejects.toThrow(/could not bundle plurid\.config\.ts: plurid\.config\.ts:1:\d+: Could not resolve "\.\/does-not-exist"/);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 
@@ -130,7 +130,7 @@ describe('a present but broken plurid.config.ts (2026-09-29)', () => {
             expect(value).toEqual({});
             expect(written).toMatch(/could not load plurid\.config\.ts: evaluation failed/);
         } finally {
-            fs.rmSync(directory, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 });

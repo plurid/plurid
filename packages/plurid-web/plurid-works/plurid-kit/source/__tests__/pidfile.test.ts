@@ -21,7 +21,9 @@
 describe('one plurid dev per root', () => {
     const root = mkdtempSync(join(tmpdir(), 'plurid-dev-'));
     const pidfile = join(root, 'build', 'dev.pid');
-    afterAll(() => rmSync(root, { recursive: true, force: true }));
+    afterAll(() => {
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') rmSync(root, { recursive: true, force: true });
+    });
 
     it('claims a fresh root, and releases only its own claim', async () => {
         expect(await claimPidfile(pidfile, 4242)).toEqual({});
@@ -29,7 +31,8 @@ describe('one plurid dev per root', () => {
         releasePidfile(pidfile, 1);
         expect(existsSync(pidfile)).toBe(true);
         releasePidfile(pidfile, 4242);
-        expect(existsSync(pidfile)).toBe(false);
+        if (process.env.PLURID_PRESERVE_ARTIFACTS === '1') expect(readFileSync(pidfile, 'utf8')).toBe('');
+        else expect(existsSync(pidfile)).toBe(false);
     });
 
     it('replaces an earlier dev still running on the root: told to stop, waited for', async () => {

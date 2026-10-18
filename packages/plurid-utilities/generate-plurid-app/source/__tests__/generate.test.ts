@@ -89,7 +89,7 @@ describe('the kit-shaped generation', () => {
         const tsconfig = JSON.parse(fs.readFileSync(path.join(directory, 'tsconfig.json'), 'utf8'));
         expect(tsconfig.compilerOptions.paths['~shared/*']).toEqual(['./source/shared/*']);
         expect(tsconfig.include).toEqual(['plurid.config.ts', 'source']);
-        fs.rmSync(base, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(base, { recursive: true, force: true });
     });
 
     it('generates end to end without installing; git when asked', async () => {
@@ -102,7 +102,7 @@ describe('the kit-shaped generation', () => {
         expect(fs.existsSync(path.join(directory, '.git'))).toBe(true);
         expect(fs.existsSync(path.join(directory, 'package.json'))).toBe(true);
         expect(fs.existsSync(path.join(directory, 'node_modules'))).toBe(false);
-        fs.rmSync(base, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(base, { recursive: true, force: true });
     });
 
     it('a failed step stops its spinner (a running spinner kept the terminal process alive after the error, 2026-09-29)', async () => {
@@ -126,7 +126,7 @@ describe('the kit-shaped generation', () => {
             });
         } finally {
             log.mockRestore();
-            fs.rmSync(base, { recursive: true, force: true });
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(base, { recursive: true, force: true });
         }
         expect(spinners.map(({ text, stopped, failed }) => ({ install: /Installing/.test(text), stopped, failed }))).toEqual([
             { install: false, stopped: true, failed: false },

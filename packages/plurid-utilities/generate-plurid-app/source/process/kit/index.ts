@@ -97,8 +97,8 @@ export const renderTemplate = (
         // the manifest: from its template, the placeholders filled, the template file gone
         const templateManifest = path.join(app.directory, 'package.template.json');
         const manifest = JSON.parse(stamp(fs.readFileSync(templateManifest, 'utf8'), values));
-        fs.writeFileSync(path.join(app.directory, 'package.json'), JSON.stringify(manifest, null, 4) + '\n');
-        fs.unlinkSync(templateManifest);
+        fs.writeFileSync(templateManifest, JSON.stringify(manifest, null, 4) + '\n');
+        fs.renameSync(templateManifest, path.join(app.directory, 'package.json'));
         fs.renameSync(path.join(app.directory, 'gitignore'), path.join(app.directory, '.gitignore'));
     });
 };

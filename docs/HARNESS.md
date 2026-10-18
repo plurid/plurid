@@ -104,7 +104,7 @@ THE URL IS THE FIXTURE. Every option of the harness (`fixtures/render-test`, `pn
 | `?btnWheel=zoom\|disabled` | - | reload | whether the wheel zooms | `gestures.buttonMap.wheel` |
 | `?touchOne=orbit\|pan\|disabled` | - | reload | one finger on empty space | `gestures.touchOne` |
 | `?trackpad=pan\|zoom\|orbit\|disabled` | - | reload | a two-finger trackpad scroll on empty space | `gestures.trackpadScroll` |
-| `?wheel=zoom\|scroll-first\|disabled` | - | reload | the mouse-wheel policy | `gestures.wheel` |
+| `?wheel=zoom\|scroll-first\|plane\|click-to-scroll\|disabled` | - | reload | the mouse-wheel policy | `gestures.wheel` |
 | `?dblclick=0` | - | reload | a double-click never frames | `gestures.doubleClickFrame: false` |
 | `?gamepad=1` | - | reload | a gamepad stick orbits (tests stub navigator.getGamepads) | `gestures.gamepad.enabled` |
 

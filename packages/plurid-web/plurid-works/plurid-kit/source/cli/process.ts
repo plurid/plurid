@@ -398,7 +398,9 @@ export const releasePidfile = (
     pid: number,
 ): void => {
     if (readPid(path) === pid) {
-        rmSync(path, { force: true });
+        // A retained qualification tree keeps an empty, unclaimed pidfile for inspection.
+        if (process.env.PLURID_PRESERVE_ARTIFACTS === '1') writeFileSync(path, '');
+        else rmSync(path, { force: true });
     }
 };
 // #endregion module

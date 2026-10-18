@@ -20,12 +20,15 @@
         "format.check": "prettier --check \"packages/**/source/**/*.{ts,tsx}\" \"fixtures/**/src/**/*.{ts,tsx}\"",
         "e2e": "pnpm --filter plurid-render-test e2e",
         "bench": "node scripts/bench.mjs",
-        "verify": "pnpm build && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm size && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
+        "verify": "pnpm build && pnpm test.release && pnpm check && pnpm test && pnpm lint && pnpm check.modules && pnpm size && pnpm docs.tables.check && pnpm --filter plurid-render-test e2e && pnpm smoke.pack",
         "docs.tables": "node scripts/generate-tables.mjs",
         "docs.tables.check": "node scripts/generate-tables.mjs --check",
         "sync": "node scripts/sync-consumer.mjs",
         "sync.check": "node scripts/sync-consumer.mjs --check",
-        "sync.status": "node scripts/sync-consumer.mjs --status"
+        "sync.status": "node scripts/sync-consumer.mjs --status",
+        "build:preserving": "node scripts/build-preserving.mjs",
+        "test.release": "node --test scripts/release.test.mjs",
+        "test:preserving": "node scripts/test-preserving.mjs"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

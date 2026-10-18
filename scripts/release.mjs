@@ -1,360 +1,210 @@
 #!/usr/bin/env node
-/**
- * THE RELEASE, IN ONE COMMAND.
- *
- * Until 2026-09-13 there was no release automation of any kind — no bump script, no changesets, no
- * tags, no changelog — and the cost showed: a whole round (2026-09-05) was bumped and then never
- * published, so the workspace integers sat one ahead of npm for eight days and nobody could tell by
- * looking. This script is the missing piece.
- *
- *   pnpm release --dry-run     say exactly what would happen, touch nothing
- *   pnpm release               bump what changed, verify, publish, tag
- *   pnpm release --skip-verify skip `pnpm verify` (only if you just ran it)
- *   pnpm release --no-bump     publish the versions as they stand
- *   pnpm release --force       publish even though CI is red or still running
- *
- * WHAT COUNTS AS CHANGED: a package's SHIPPED source — `source/**` minus `__tests__` — against the
- * last release tag (`release/<date>`). Tests do not ship, so a test-only change is not a release.
- * With no tag yet (the first run), a package is "changed" when its workspace version is already
- * ahead of the registry, which is what a hand-bump leaves behind.
- *
- * αver (`0.0.0-N`): only the trailing integer moves, and the CHANGED CHAIN goes together — a package
- * that changed is bumped, and every `>=0.0.0-N` peer range pointing at it follows.
- */
-import { execFileSync, execSync } from 'node:child_process';
-import path from 'node:path';
-import os from 'node:os';
-import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
-import { resolve, dirname, join } from 'node:path';
+/** Prepare, verify immutable tarballs, then publish explicitly. No phase removes files. */
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+    changedFiles, listWorkspace, nextVersion, packedJSON, planRelease, registryPackage, releaseOrder, verifyArtifacts,
+} from './release-plan.mjs';
 
-const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(here, '..');
-
-const dryRun = process.argv.includes('--dry-run');
-const skipVerify = process.argv.includes('--skip-verify');
-const noBump = process.argv.includes('--no-bump');
-const force = process.argv.includes('--force');
-
-const run = (command, options = {}) => execSync(command, { cwd: root, stdio: 'inherit', ...options });
-const read = (command) => execSync(command, { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
-
-const fail = (message) => {
-    console.error(`\n[release] ${message}\n`);
-    process.exit(1);
-};
-
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
 const say = (message) => console.log(`[release] ${message}`);
-
-
-// #region the workspace
-/** The public projects, from pnpm itself — private packages and fixtures are never published. */
-const listWorkspace = () => JSON.parse(
-    execFileSync('pnpm', ['-r', 'ls', '--depth', '-1', '--json'], { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString(),
-)
-    .filter((project) => project.name && !project.private && !project.path.includes('/fixtures/'))
-    .map((project) => ({
-        directory: project.path,
-        manifest: join(project.path, 'package.json'),
-        data: JSON.parse(readFileSync(join(project.path, 'package.json'), 'utf8')),
-    }))
-    .sort((a, b) => a.data.name.localeCompare(b.data.name));
-
-const registryVersion = (name, fresh = false) => {
-    try {
-        const arguments_ = ['view', name, 'version', ...(fresh ? ['--prefer-online'] : [])];
-        return execFileSync('npm', arguments_, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
-    } catch {
-        return null;                             // never published
-    }
+const run = (file, args, cwd = root, extra = {}) => execFileSync(file, args, {
+    cwd, stdio: 'inherit', env: { ...process.env, PLURID_PRESERVE_ARTIFACTS: '1', SMOKE_SKIP_GENERATE: '', SMOKE_SKIP_BROWSER: '' }, ...extra,
+});
+const read = (file, args) => run(file, args, root, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
+const hash = (bytes, algorithm, encoding) => createHash(algorithm).update(bytes).digest(encoding);
+const writeJSON = (file, value) => writeFileSync(file, JSON.stringify(value, null, 4) + '\n');
+const head = () => read('git', ['rev-parse', 'HEAD']);
+const clean = () => {
+    if (read('git', ['status', '--porcelain'])) throw new Error('Commit the final source, versions and lockfile first.');
 };
 
-const wait = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+const usage = `Usage:
+  pnpm release --dry-run [--all]    Read-only plan; no login, fetch, build or packing
+  pnpm release --prepare [--all]    Update manifests, peer minimums and workspace lockfile
+  pnpm release --pack <new-dir>     Build fresh source, run gates, test and hash tarballs
+  pnpm release --publish <dir>      Publish verified tarballs to latest; requires green CI
+  pnpm release --verify-registry <dir>  Confirm exact versions, integrity and latest tags
 
-/** `0.0.0-37` → `0.0.0-38`. αver moves the trailing integer and nothing else. */
-const nextVersion = (version) => {
-    const match = /^(\d+\.\d+\.\d+)-(\d+)$/.exec(version);
-    if (!match) {
-        fail(`'${version}' is not an αver version (0.0.0-N) — bump it by hand.`);
+Commit and push preparation before the final CI run. Publishing never bumps, builds, commits or
+cleans. Failed and successful work directories are kept. Re-run --publish to resume a partial round.`;
+
+const modes = ['--dry-run', '--prepare', '--pack', '--publish', '--verify-registry'];
+const selected = modes.filter((mode) => args.includes(mode));
+if (args.includes('--help')) {
+    console.log(usage);
+    process.exit(0);
+}
+if (selected.length > 1) throw new Error('Choose one release phase.');
+const mode = selected[0] ?? '--dry-run';
+const needsDirectory = ['--pack', '--publish', '--verify-registry'].includes(mode);
+const directoryArg = needsDirectory ? args[args.indexOf(mode) + 1] : undefined;
+if (needsDirectory && (!directoryArg || directoryArg.startsWith('--'))) throw new Error(usage);
+const flags = args.filter((arg) => arg !== directoryArg);
+for (const arg of flags) {
+    if (![...modes, '--all', '--no-bump'].includes(arg)) throw new Error(`Unknown argument ${arg}\n${usage}`);
+}
+if (needsDirectory && (args.includes('--all') || args.includes('--no-bump'))) throw new Error('--all/--no-bump apply only to planning or preparation.');
+
+const projects = listWorkspace(root);
+
+const prepare = async () => {
+    const tag = read('git', ['tag', '-l', 'release/*', '--sort=-creatordate']).split('\n')[0];
+    const published = Object.fromEntries(await Promise.all(projects.map(async ({ data }) => [
+        data.name, (await registryPackage(data.name))?.version ?? null,
+    ])));
+    const plan = planRelease({ projects, published, files: tag ? changedFiles(root, tag) : [],
+        root, all: args.includes('--all'), noBump: args.includes('--no-bump') });
+    say(`baseline: ${tag || 'none'}; all changes in the working tree are included`);
+    for (const entry of plan) {
+        say(`${entry.name}: ${entry.published ?? 'unpublished'} → ${entry.target} (${entry.why})`);
     }
-    return `${match[1]}-${Number(match[2]) + 1}`;
-};
-// #endregion the workspace
-
-
-// #region preflight
-/** A dry run changes nothing, so the git checks only warn — you want the plan BEFORE you commit. */
-const require_ = (condition, message) => {
-    if (condition) {
+    if (mode === '--dry-run') {
+        say('Read-only plan complete. Use --prepare to write versions; no publishing has run.');
         return;
     }
-    if (dryRun) {
-        say(`WARNING: ${message}`);
-    } else {
-        fail(message);
-    }
-};
-
-require_(read('git rev-parse --abbrev-ref HEAD') === 'master', 'not on master.');
-require_(read('git status --porcelain') === '',
-    'the working tree is dirty — commit first (pnpm refuses to publish from a dirty tree too).');
-run('git fetch --quiet origin master', { stdio: 'ignore' });
-require_(read('git rev-parse HEAD') === read('git rev-parse origin/master'),
-    'HEAD and origin/master differ — push first, and let CI go green before publishing.');
-
-let account;
-try {
-    account = read('pnpm whoami');
-} catch {
-    fail('not authenticated — `pnpm login` (note: `npm login` writes a different config).');
-}
-say(`authenticated as ${account}`);
-
-/**
- * CI IS A GATE, NOT A NOTE. A publish cannot be taken back, and CI is the only independent check that
- * the picture gate, the browser suite and the container run pass — so a run that is red, or still
- * going, stops the release. `--force` is the escape, and says what it is overriding.
- *
- * A run that cannot be found (no `gh`, no CI on this fork) only warns: absence of evidence is not
- * evidence of a failure, and the gate should not be unusable where CI does not exist.
- */
-let ci = null;
-try {
-    ci = JSON.parse(read('gh run list --limit 20 --json headSha,conclusion,status,displayTitle'))
-        .find((entry) => entry.headSha === read('git rev-parse HEAD')) ?? null;
-} catch {
-    say('(could not read CI status — `gh` unavailable)');
-}
-
-if (!ci) {
-    say('WARNING: no CI run found for this commit.');
-} else if (ci.status !== 'completed') {
-    const message = `CI is still running on this commit (${ci.status}) — wait for it:`
-        + '\n             gh run watch --exit-status';
-    if (force) {
-        say(`WARNING (--force): ${message}`);
-    } else if (!dryRun) {
-        fail(`${message}\n\n             …or re-run with --force to publish anyway.`);
-    } else {
-        say(`WARNING: ${message}`);
-    }
-} else if (ci.conclusion !== 'success') {
-    const message = `CI on this commit concluded '${ci.conclusion}', not success.`;
-    if (force) {
-        say(`WARNING (--force): ${message}`);
-    } else if (!dryRun) {
-        fail(`${message} Fix it, or re-run with --force to publish anyway.`);
-    } else {
-        say(`WARNING: ${message}`);
-    }
-} else {
-    say('CI is green on this commit');
-}
-// #endregion preflight
-
-
-// #region what changed
-const tags = read('git tag -l "release/*" --sort=-creatordate').split('\n').filter(Boolean);
-const baseline = tags[0] || null;
-say(baseline ? `baseline: ${baseline}` : 'baseline: none yet (first run — reading the registry instead)');
-
-const packages = listWorkspace();
-const plan = [];
-
-for (const project of packages) {
-    const { name, version } = project.data;
-    const published = registryVersion(name);
-
-    let changed;
-    let why;
-    if (baseline) {
-        const relative = project.directory.replace(root + '/', '');
-        const diff = read(`git diff --name-only ${baseline}..HEAD -- '${relative}/source' || true`)
-            .split('\n').filter((file) => file && !file.includes('__tests__'));
-        changed = diff.length > 0;
-        why = changed ? `${diff.length} shipped file(s) changed since ${baseline}` : 'no shipped change';
-    } else {
-        changed = published !== null && published !== version;
-        why = changed ? `workspace ${version} is ahead of the registry ${published}` : 'level with the registry';
-    }
-
-    const target = (changed && !noBump && published === version) ? nextVersion(version) : version;
-    plan.push({ ...project, name, version, published, target, changed, why });
-}
-
-// THE GENERATOR FOLLOWS ITS SIBLINGS. `generate-plurid-app` bakes the kit, react and server versions
-// into its `distribution/versions.json` at build time, so a release that moves any of them ships a
-// generator on the registry that still writes the OLD pins unless the generator goes too — and its
-// own source never changes for that (2026-09-17: the release of react 39 left the registry's
-// generator 0.0.0-15 writing 38). So the registry's copy is unpacked and its pins compared with the
-// workspace: stale pins make it changed, whatever its sources did.
-const GENERATOR = '@plurid/generate-plurid-app';
-const FOLLOWED = { kit: '@plurid/plurid-kit', react: '@plurid/plurid-react', server: '@plurid/plurid-react-server' };
-const registryGeneratorPins = (published) => {
-    if (!published) {
-        return null;
-    }
-    try {
-        const scratch = mkdtempSync(path.join(os.tmpdir(), 'plurid-generator-'));
-        const tarball = read(`npm pack ${GENERATOR}@${published} --pack-destination '${scratch}' --silent 2>/dev/null`).trim().split('\n').pop();
-        const json = read(`tar -xOf '${path.join(scratch, tarball)}' package/distribution/versions.json 2>/dev/null`);
-        rmSync(scratch, { recursive: true, force: true });
-        return json ? JSON.parse(json) : null;
-    } catch (error) {
-        say(`could not read the registry generator's pins (${error.message.split('\n')[0]}); judging by this run's siblings instead`);
-        return null;
-    }
-};
-const generator = plan.find((entry) => entry.name === GENERATOR);
-if (generator && !generator.changed) {
-    const pins = registryGeneratorPins(generator.published);
-    const workspace = Object.fromEntries(Object.entries(FOLLOWED).map(([key, name]) => [key, plan.find((entry) => entry.name === name)?.target]));
-    const stale = pins
-        ? Object.keys(FOLLOWED).filter((key) => workspace[key] && pins[key] !== workspace[key])
-        : Object.keys(FOLLOWED).filter((key) => plan.some((entry) => entry.name === FOLLOWED[key] && entry.target !== entry.published));
-    if (stale.length > 0) {
-        generator.changed = true;
-        generator.why = `its baked pins follow ${stale.map((key) => FOLLOWED[key]).join(', ')}`;
-        generator.target = (!noBump && generator.published === generator.version) ? nextVersion(generator.version) : generator.version;
-    }
-}
-
-const publishing = plan.filter((entry) => entry.target !== entry.published);
-const bumping = plan.filter((entry) => entry.target !== entry.version);
-
-console.log('');
-const width = Math.max(...plan.map((entry) => entry.name.length));
-for (const entry of plan) {
-    const mark = entry.target !== entry.published ? 'PUBLISH' : '       ';
-    const move = entry.target !== entry.version ? `  (bump ${entry.version} → ${entry.target})` : '';
-    console.log(`  ${mark}  ${entry.name.padEnd(width)}  registry ${String(entry.published ?? '—').padEnd(10)} → ${entry.target}${move}`);
-    if (!entry.changed && entry.target === entry.published) {
-        console.log(`           ${' '.repeat(width)}  ${entry.why}`);
-    }
-}
-console.log('');
-
-if (publishing.length === 0) {
-    say('nothing to publish — every package matches the registry.');
-    process.exit(0);
-}
-// #endregion what changed
-
-
-// #region the bump
-if (dryRun) {
-    say(`dry run: would publish ${publishing.length} package(s)${bumping.length ? `, bumping ${bumping.length}` : ''}.`);
-    run('pnpm -r publish --dry-run --no-git-checks');
-    process.exit(0);
-}
-
-if (bumping.length > 0) {
-    const moved = new Map(bumping.map((entry) => [entry.name, entry.target]));
-
-    for (const entry of bumping) {
-        const manifest = JSON.parse(readFileSync(entry.manifest, 'utf8'));
+    const moved = new Map(plan.filter((entry) => entry.target !== entry.published).map((entry) => [entry.name, entry.target]));
+    for (const entry of plan) {
+        const manifest = structuredClone(entry.data);
         manifest.version = entry.target;
-        writeFileSync(entry.manifest, JSON.stringify(manifest, null, 4) + '\n');
-        say(`${entry.name} → ${entry.target}`);
-    }
-
-    // THE CHANGED CHAIN GOES TOGETHER: a `>=0.0.0-N` peer pointing at a bumped sibling follows it,
-    // so an old sibling from the registry is refused rather than crashing at runtime.
-    for (const project of packages) {
-        const manifest = JSON.parse(readFileSync(project.manifest, 'utf8'));
-        let touched = false;
-        for (const [dependency, target] of moved) {
-            const range = manifest.peerDependencies?.[dependency];
-            if (range && range.startsWith('>=')) {
-                manifest.peerDependencies[dependency] = `>=${target}`;
-                touched = true;
-                say(`  ${project.data.name}: peer ${dependency} → >=${target}`);
-            }
+        for (const [name, target] of moved) {
+            if (manifest.peerDependencies?.[name]?.startsWith('>=')) manifest.peerDependencies[name] = `>=${target}`;
         }
-        if (touched) {
-            writeFileSync(project.manifest, JSON.stringify(manifest, null, 4) + '\n');
+        if (JSON.stringify(manifest) !== JSON.stringify(entry.data)) writeJSON(entry.manifest, manifest);
+    }
+    run('pnpm', ['install', '--lockfile-only', '--ignore-scripts']);
+    say('Prepared. Review and commit the versions, lockfile and release code; push and wait for CI.');
+    say('Then use --pack <new-dir>. No packages have been published.');
+};
+
+const pack = () => {
+    clean();
+    const directory = resolve(directoryArg);
+    if (existsSync(directory)) throw new Error(`Choose a new artifact directory; preserving ${directory}`);
+    mkdirSync(directory, { recursive: true });
+    const sourceCommit = head();
+    const source = join(directory, 'source');
+    mkdirSync(source);
+    run('git', ['archive', '--format=tar', '--output=' + join(directory, 'source.tar'), sourceCommit]);
+    run('tar', ['-xf', join(directory, 'source.tar'), '-C', source]);
+    // A new store prevents a source-overlaid consumer or an old output chunk from entering the release.
+    const logs = join(directory, 'logs');
+    mkdirSync(logs);
+    const logged = (name, file, args, cwd = source) => {
+        const log = join(logs, name + '.log');
+        say(name + ' → ' + log);
+        const fd = openSync(log, 'wx');
+        try { run(file, args, cwd, { stdio: ['ignore', fd, fd] }); }
+        finally { closeSync(fd); }
+    };
+    logged('install', 'pnpm', ['install', '--frozen-lockfile', '--ignore-scripts', '--store-dir', join(directory, 'store')]);
+    const gates = [];
+    const gate = (name, file, args) => {
+        logged(name, file, args);
+        gates.push(name);
+    };
+    gate('build', process.execPath, ['scripts/build-preserving.mjs']);
+    for (const script of ['test.release', 'check', 'test', 'lint', 'check.modules', 'size', 'docs.tables.check']) {
+        gate(script, 'pnpm', [script === 'test' ? 'test:preserving' : script]);
+    }
+    for (const project of ['chromium', 'perf', 'visual']) {
+        gate('e2e.' + project, 'pnpm', ['--filter', 'plurid-render-test', 'e2e', '--project=' + project,
+            '--output=' + join(directory, 'e2e-' + project), ...(project === 'visual' ? ['--update-snapshots=none'] : [])]);
+    }
+    const tarballs = join(directory, 'tarballs');
+    mkdirSync(tarballs);
+    const packages = [];
+    for (const project of releaseOrder(listWorkspace(source))) {
+        const output = run('pnpm', ['pack', '--config.ignore-scripts=true', '--pack-destination', tarballs], project.directory,
+            { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
+        const file = basename(output.split('\n').pop());
+        const bytes = readFileSync(join(tarballs, file));
+        const data = packedJSON(bytes);
+        if (data.name !== project.data.name || data.version !== project.data.version || JSON.stringify(data).includes('workspace:')) {
+            throw new Error(`Invalid packed manifest for ${project.data.name}`);
         }
+        packages.push({ name: data.name, version: data.version, file: 'tarballs/' + file,
+            sha256: hash(bytes, 'sha256', 'hex'), integrity: 'sha512-' + hash(bytes, 'sha512', 'base64') });
     }
-}
-// #endregion the bump
+    gate('smoke.pack', 'pnpm', ['smoke.pack', '--keep', '--tarballs', tarballs]);
+    writeJSON(join(directory, 'release.json'), { schema: 1, sourceCommit, createdAt: new Date().toISOString(),
+        node: process.version, gates, packages });
+    say(`Verified tarballs: ${directory}. Review release.json, then publish this directory explicitly.`);
+};
 
+const artifacts = () => {
+    const directory = resolve(directoryArg);
+    const manifest = JSON.parse(readFileSync(join(directory, 'release.json'), 'utf8'));
+    const entries = verifyArtifacts(manifest, projects, head(), (file) => readFileSync(join(directory, file)))
+        .map((entry) => ({ ...entry, file: join(directory, entry.file) }));
+    return { manifest, entries };
+};
 
-// #region verify, publish, tag
-if (!skipVerify) {
-    say('running the full gate (pnpm verify) — several minutes');
-    run('pnpm verify');
-} else {
-    say('skipping pnpm verify (--skip-verify)');
-}
-
-say(`publishing ${publishing.length} package(s) — pnpm walks the workspace topologically and skips what is already on the registry`);
-run('pnpm -r publish --no-git-checks');
-
-/**
- * CONFIRM IT FROM THE REGISTRY. `pnpm -r publish` does not stop the world when one package fails, and
- * a half-published round is worse than none: on 2026-09-13 `plurid-react-server@0.0.0-19` silently did
- * not land while `plurid-kit@0.0.0-5` published DECLARING a peer on it, so the kit was uninstallable
- * and the generator pinned a version that did not exist. Trusting the publisher's exit code was the
- * mistake; this asks npm.
- */
-/**
- * …PATIENTLY. npm's metadata lags its own publishes by tens of seconds, so asking once right after
- * the upload reports a package missing that is perfectly fine — which is exactly what happened on the
- * first run of this check (2026-09-13) and would have failed a healthy release. Poll with backoff,
- * and only call it missing when it has had time to appear.
- */
-say('confirming every package from the registry (npm metadata lags a publish; allowing for that)');
-let missing = publishing.slice();
-for (const delay of [0, 5000, 10000, 20000, 30000, 30000]) {
-    if (missing.length === 0) {
-        break;
+const confirm = async (entry, required = true) => {
+    const published = await registryPackage(entry.name, entry.version);
+    if (!published && !required) return false;
+    if (!published || published.dist?.integrity !== entry.integrity) {
+        throw new Error(`${entry.name}@${entry.version}: missing or different registry tarball; do not overwrite or rebuild it.`);
     }
-    if (delay > 0) {
-        say(`  ${missing.length} not visible yet — waiting ${delay / 1000}s`);
-        wait(delay);
-    }
-    missing = missing.filter((entry) => registryVersion(entry.name, true) !== entry.target);
-}
+    if ((await registryPackage(entry.name))?.version !== entry.version) throw new Error(`${entry.name}@${entry.version} is not tagged latest.`);
+    return true;
+};
 
-if (missing.length > 0) {
-    console.error('');
+const publish = async () => {
+    clean();
+    const { manifest, entries } = artifacts();
+    if (mode === '--verify-registry') {
+        for (const entry of entries) await confirm(entry);
+        say(`All ${entries.length} exact registry versions, integrity hashes and latest tags match.`);
+        return;
+    }
+    const ci = JSON.parse(read('gh', ['run', 'list', '--workflow', 'ci.yml', '--commit', manifest.sourceCommit,
+        '--limit', '1', '--json', 'headSha,status,conclusion']));
+    if (ci[0]?.headSha !== manifest.sourceCommit || ci[0]?.status !== 'completed' || ci[0]?.conclusion !== 'success') {
+        throw new Error('Green CI on the prepared source commit is required before publishing.');
+    }
+    // Authenticate only at the explicit publishing boundary. Never log account configuration or secrets.
+    run('pnpm', ['whoami'], root, { stdio: 'ignore' });
+    // Check every existing artifact before the first upload: a conflicting partial round stops early.
+    const missing = [];
+    for (const entry of entries) {
+        if (await confirm(entry, false)) continue;
+        const latest = await registryPackage(entry.name);
+        if (latest && nextVersion(latest.version) !== entry.version) {
+            throw new Error(`Registry advanced to ${entry.name}@${latest.version}; prepare a new coordinated release.`);
+        }
+        missing.push(entry);
+    }
     for (const entry of missing) {
-        console.error(`[release] ${entry.name}@${entry.target} did NOT land on the registry.`);
+        say(`Publishing ${entry.name}@${entry.version} to latest`);
+        run('pnpm', ['publish', entry.file, '--access', 'public', '--tag', 'latest', '--ignore-scripts', '--no-git-checks']);
+        let visible = false;
+        for (const delay of [0, 2000, 5000, 10000, 20000, 30000]) {
+            if (delay) await new Promise((resolveWait) => setTimeout(resolveWait, delay));
+            if (await confirm(entry, false)) { visible = true; break; }
+        }
+        if (!visible) throw new Error(`Registry confirmation pending for ${entry.name}; resume with the same artifacts.`);
     }
-    console.error('');
-    console.error('    The round is HALF PUBLISHED — a sibling may already declare a peer on what is missing.');
-    console.error('    (Check the registry by hand first — npm metadata sometimes lags longer than this waits.)');
-    console.error('    Publish the rest, from the repository root:');
-    console.error('');
-    for (const entry of missing) {
-        console.error(`        pnpm --filter ${entry.name} publish --no-git-checks`);
+    for (const entry of entries) await confirm(entry);
+    const tag = 'release/' + new Date().toISOString().slice(0, 10);
+    const existing = read('git', ['tag', '-l', tag]);
+    if (existing && read('git', ['rev-list', '-n', '1', tag]) !== manifest.sourceCommit) {
+        throw new Error(`Published successfully; ${tag} already names another commit. Choose a distinct release tag manually.`);
     }
-    console.error('');
-    fail(`${missing.length} of ${publishing.length} package(s) are not on the registry.`);
-}
-say(`all ${publishing.length} package(s) confirmed on the registry`);
+    if (!existing) run('git', ['tag', '-a', tag, manifest.sourceCommit, '-m', 'release ' + tag]);
+    say(`All ${entries.length} packages verified on latest. Tag ${tag} is local; push it after registry consumer verification.`);
+};
 
-const tag = `release/${new Date().toISOString().slice(0, 10)}`;
-const existing = read(`git tag -l ${tag}`);
-const unique = existing ? `${tag}-${Date.now().toString(36).slice(-4)}` : tag;
-
-if (bumping.length > 0) {
-    run('git add -A');
-    run(`git commit -m "release: ${publishing.map((entry) => `${entry.name}@${entry.target}`).join(', ')}"`);
+try {
+    if (mode === '--dry-run' || mode === '--prepare') await prepare();
+    else if (mode === '--pack') pack();
+    else await publish();
+} catch (error) {
+    console.error('[release] ' + error.message);
+    if (mode === '--publish') console.error('[release] Artifacts are preserved. Resume the same --publish directory after resolving the failure.');
+    process.exitCode = 1;
 }
-run(`git tag -a ${unique} -m "release ${unique}"`);
-say(`tagged ${unique} — the next run measures "changed" from here`);
-
-console.log('');
-say('published. Now prove it from the REGISTRY (smoke.pack only ever sees local tarballs):');
-console.log('');
-console.log('    cd $(mktemp -d) && npx @plurid/generate-plurid-app -d registry-check && cd registry-check');
-console.log('    npm install && npx plurid build && npx plurid start');
-console.log('    # GET / must contain data-plurid-entity="PluridView"');
-console.log('');
-if (bumping.length > 0) {
-    say('a release commit was made — `git push --follow-tags` when you are happy with it.');
-} else {
-    say('`git push --follow-tags` to publish the tag.');
-}
-// #endregion verify, publish, tag

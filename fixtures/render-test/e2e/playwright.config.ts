@@ -1,4 +1,7 @@
 import { defineConfig } from '@playwright/test';
+import { randomUUID } from 'node:crypto';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 
 /**
@@ -26,10 +29,13 @@ import { defineConfig } from '@playwright/test';
  * container brings the browser and the fonts, the host brings the build.
  */
 const BASE_URL = process.env.PLURID_E2E_BASE_URL || 'http://localhost:5273';
+const preserve = process.env.PLURID_PRESERVE_ARTIFACTS === '1';
 
 
 export default defineConfig({
     testDir: '.',
+    // Retain successful traces/videos too, and never reuse an earlier run's output directory.
+    ...(preserve ? { outputDir: join(tmpdir(), 'plurid-e2e-' + randomUUID()), preserveOutput: 'always' as const } : {}),
     testMatch: /.*\.spec\.ts/,
     timeout: 30_000,
     snapshotPathTemplate: '{testDir}/__snapshots__/{platform}/{arg}{ext}',
@@ -56,9 +62,9 @@ export default defineConfig({
             width: 1280,
             height: 800,
         },
-        trace: 'retain-on-failure',
-        screenshot: 'only-on-failure',
-        video: 'retain-on-failure',
+        trace: preserve ? 'on' : 'retain-on-failure',
+        screenshot: preserve ? 'on' : 'only-on-failure',
+        video: preserve ? 'on' : 'retain-on-failure',
     },
     webServer: {
         command: 'pnpm dev',

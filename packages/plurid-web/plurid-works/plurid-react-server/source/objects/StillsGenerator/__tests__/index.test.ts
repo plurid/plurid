@@ -66,7 +66,7 @@ describe('PluridStillsGenerator (2026-09-29)', () => {
 
     afterEach(() => {
         log.mockRestore();
-        fs.rmSync(directory, { recursive: true, force: true });
+        if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         jest.resetModules();
         jest.dontMock('puppeteer');
         delete process.env.PLURID_STILLS_TEST_SECRET;
