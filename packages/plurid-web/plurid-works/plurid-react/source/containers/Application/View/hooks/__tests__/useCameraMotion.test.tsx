@@ -252,5 +252,32 @@ describe('useCameraMotion', () => {
         expect(Math.abs(hook.camera().yaw)).toBeGreaterThan(Math.abs(afterOne));
         hook.unmount();
     });
+
+    it('a gesture holds the motion until it ends: it stops a tween where it is, and a fling takes over', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const target = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(target, { duration: 100 }); });
+        act(() => { clock.advance(40); });
+        const grabbed = hook.camera();
+
+        act(() => { hook.controller().gesture(true); });
+        act(() => { clock.advance(100); });
+        expect(hook.camera()).toEqual(grabbed);
+        expect(hook.motions()).toEqual(['tween', 'idle', 'gesture']);
+
+        // a release with velocity flings, and the fling keeps the motion past the gesture's end
+        act(() => { hook.controller().fling({ x: 1, y: 0 }, 'orbit'); });
+        act(() => { hook.controller().gesture(false); });
+        expect(hook.motions().pop()).toBe('fling');
+        act(() => { hook.controller().cancel(); });
+
+        // a release without one is rest
+        act(() => { hook.controller().gesture(true); });
+        act(() => { hook.controller().gesture(false); });
+        expect(hook.motions().slice(-2)).toEqual(['gesture', 'idle']);
+        expect(clock.pending()).toBe(0);
+        hook.unmount();
+    });
 });
 // #endregion module

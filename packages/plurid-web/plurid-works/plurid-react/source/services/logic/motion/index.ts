@@ -45,6 +45,14 @@ export interface CameraMotionController {
     cancel: () => void;
     /** Start a decaying fling from a pointer velocity (px/ms). */
     fling: (velocity: Vec2, kind: FlingKind) => void;
+    /**
+     * A pointer drag or pinch drives the camera from `gesture(true)` to `gesture(false)`, and the
+     * motion reads `gesture` in between (2026-10-19: nothing set it before), so what waits for a still
+     * camera — a re-frame, the detach tier, the measured relayout, an agent's settle — waits for the
+     * drag too, and `data-plurid-motion` styles it. Starting one stops a tween or a fling where it is;
+     * a fling started from the release takes the motion over, which ending the gesture then leaves.
+     */
+    gesture: (active: boolean) => void;
     /** Animate to a camera (interruptible; instant under reduced motion). `true` when a tween started, `false` for a jump. */
     tweenTo: (target: CameraState, options?: TweenOptions) => boolean;
     isActive: () => boolean;

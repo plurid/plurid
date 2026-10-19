@@ -10,10 +10,16 @@ export const cleanPathElement = (
 }
 
 
-/** Development unless a bundler or Node says production (a bare browser has no `process`). */
+/**
+ * Development unless the host's bundler or Node says production. Written as exactly
+ * `process.env.NODE_ENV`, the chain a bundler's `define` replaces, as the bus does since 2026-09-29
+ * (here 2026-10-19): behind a `typeof process` guard a browser build, which has no `process`, always
+ * read as development, and `process.env?.NODE_ENV` matched no `define`, so the engine's warnings
+ * printed in production. With neither (an unbundled page), development.
+ */
 export const isDevelopment = (): boolean => {
     try {
-        return typeof process === 'undefined' || process.env?.NODE_ENV !== 'production';
+        return process.env.NODE_ENV !== 'production';
     } catch {
         return true;
     }

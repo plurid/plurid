@@ -1,10 +1,30 @@
-# Migrating to the October 18 release (prepared, unpublished)
+# Changes since the October 18 release (unreleased)
+
+These ship with the next coordinated release.
+
+- **A pointer drag is a gesture.** `state.space.motion` — and with it the `space.changed` kind
+  `motion` and the view's `data-plurid-motion` — reads `gesture` from a navigation drag's or a pinch's
+  first move to its release. Nothing set it before (only tweens and flings did), so
+  `[data-plurid-motion='gesture']` styles never applied, a plane's first measurement could re-frame
+  the camera mid-drag, and an agent's settle took a drag for rest. A host that waits for
+  `motion === 'idle'` now waits for the drag too; a release that flings goes straight to `fling`. A
+  `CameraMotionController` a host implements itself needs the new `gesture(active)` method.
+- **`elements.plane.depthFade` fades.** A shown plane's opacity follows `--plurid-plane-fade`; the
+  plane rule's own `opacity` used to override it, so only the blur reached the screen.
+- **A bus selector is never handed out twice.** A subscribe after the newest subscriber left used to
+  receive that subscriber's selector, so a cleanup unsubscribing twice removed someone else's
+  callback. `unsubscribe` now returns `true` only when it removed a subscription.
+- **The engine's development warnings stay out of production browser builds.** Its development check
+  reads `process.env.NODE_ENV` exactly as a bundler replaces it, as the bus already did; behind a
+  `typeof process` guard every browser build read as development.
+
+# Migrating to the October 18 release
 
 ## Click-to-scroll and package entry points
 
-The prepared coordinated release is data `0.0.0-27`, engine `0.0.0-24`, React `0.0.0-41`, server
+The coordinated release is data `0.0.0-27`, engine `0.0.0-24`, React `0.0.0-41`, server
 `0.0.0-20`, kit `0.0.0-7` and generator `0.0.0-17`, together with the utility versions in
-[the release table](./RELEASING.md). These versions are not claimed published until registry verification.
+[the release table](./RELEASING.md). It is published on npm's `latest` tag.
 
 Opt in with `space.gestures.wheel: 'click-to-scroll'`. Hovered planes keep camera navigation;
 a primary click on content or its header enables scrolling for that plane without swallowing the

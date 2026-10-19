@@ -5,11 +5,11 @@ alone prints a read-only plan. Publishing belongs to the maintainer and always n
 `--publish` command. That command builds and verifies automatically when this commit has no verified
 artifacts yet. The script manages output directories and never commits or pushes source.
 
-## Prepared October 18 versions
+## October 18 versions
 
-These versions are prepared locally; this table does not establish that they have been published.
+All thirteen are published on npm's `latest` tag (checked 2026-10-19).
 
-| Package (`@plurid/`) | Previous | Prepared |
+| Package (`@plurid/`) | Previous | Released |
 | --- | --- | --- |
 | plurid-themes | 0.0.0-4 | 0.0.0-5 |
 | plurid-functions | 0.0.0-32 | 0.0.0-33 |

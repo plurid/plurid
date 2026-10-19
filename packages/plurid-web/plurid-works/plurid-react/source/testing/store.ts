@@ -151,6 +151,8 @@ export interface MotionStub {
     tweens: RecordedTween[];
     /** Every `fling`, in order. */
     flings: RecordedFling[];
+    /** Every `gesture` call, in order: `true` as a drag starts, `false` as it ends. */
+    gestures: boolean[];
     /** How many times an input cancelled the motion. */
     cancels: number;
     /** Make the next `tweenTo` REFUSE (a jump instead of a tween) — the branch a caller must handle. */
@@ -191,6 +193,7 @@ export const motionStub = (
     const stub: MotionStub = {
         tweens,
         flings,
+        gestures: [],
         cancels: 0,
         refuse: (refusing = true) => {
             accept = !refusing;
@@ -218,6 +221,9 @@ export const motionStub = (
         },
         fling: (velocity, kind) => {
             flings.push({ velocity: { x: velocity.x, y: velocity.y }, kind });
+        },
+        gesture: (on) => {
+            stub.gestures.push(on);
         },
         isActive: () => active,
         reducedMotion: () => options.reducedMotion ?? false,

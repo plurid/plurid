@@ -44,6 +44,13 @@ class PluridPubSub implements IPluridPubSub {
     private options: PluridPubSubOptions | undefined;
     /** The topics already warned about: once per topic. */
     private dropped: Set<string> = new Set();
+    /**
+     * The next subscription index: it only ever grows, so a selector is never handed out twice
+     * (2026-10-19). It used to be one past the largest index held, so once the newest subscriber
+     * left, the next subscribe got its selector back, and a late second `unsubscribe` of the old
+     * selector — a cleanup that runs twice — removed the new subscriber instead.
+     */
+    private nextIndex = 0;
 
 
     constructor(
@@ -82,19 +89,6 @@ class PluridPubSub implements IPluridPubSub {
         value: number,
     ) {
         return SUBSCRIPTION_PREFIX + value;
-    }
-
-    private getNextIndex(
-        subscriptions: Record<string, PluridPubSubCallback<any>>,
-    ) {
-        const index = Object.keys(subscriptions).length !== 0
-            ? Math.max(
-                ...Object.keys(subscriptions).map(
-                    (val) => parseInt(val.replace(SUBSCRIPTION_PREFIX, '')),
-                ),
-            ) + 1 : 0;
-
-        return this.composeIndex(index);
     }
 
 
@@ -174,7 +168,7 @@ class PluridPubSub implements IPluridPubSub {
         } = message;
 
         const subscriptions = this.subscriptions.get(topic) || {};
-        const index = this.getNextIndex(subscriptions);
+        const index = this.composeIndex(this.nextIndex++);
 
         subscriptions[index] = callback;
         this.subscriptions.set(
@@ -198,24 +192,14 @@ class PluridPubSub implements IPluridPubSub {
             index,
         } = parsedSelector;
 
-        let unsubscribed = false;
-
-        if (this.subscriptions.has(topic)) {
-            const subscriptions = this.subscriptions.get(topic);
-            if (!subscriptions) {
-                return unsubscribed;
-            }
-
-            delete subscriptions[index];
-            unsubscribed = true;
-
-            this.subscriptions.set(
-                topic,
-                subscriptions,
-            );
+        // True only when a subscription was removed: a selector already unsubscribed is not one.
+        const subscriptions = this.subscriptions.get(topic);
+        if (!subscriptions || !Object.hasOwn(subscriptions, index)) {
+            return false;
         }
 
-        return unsubscribed;
+        delete subscriptions[index];
+        return true;
     }
 }
 // #endregion module

@@ -41,7 +41,7 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     pointer-events: auto;
     backface-visibility: ${({ backface }) => (backface === 'hidden' ? 'hidden' : 'visible')};
     ${({ depthFade }) => (depthFade
-        ? 'opacity: var(--plurid-plane-fade, 1); filter: blur(var(--plurid-plane-blur, 0px));'
+        ? 'filter: blur(var(--plurid-plane-blur, 0px));'
         : '')}
 
     /* Culled: kept mounted (state intact), not painted, not interactive. Detached: the content
@@ -110,13 +110,16 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }) => {
         return 'var(--plurid-ink)';
     }};
+    /* The one opacity of the rule: the depth cue's fade lived in a declaration above this one, which
+       this declaration overrode, so a shown plane never faded with distance (2026-10-19). */
     opacity: ${({
         show,
+        depthFade,
     }) => {
         if (!show) {
             return '0';
         }
-        return '1';
+        return depthFade ? 'var(--plurid-plane-fade, 1)' : '1';
     }};
     user-select: ${({
         show,

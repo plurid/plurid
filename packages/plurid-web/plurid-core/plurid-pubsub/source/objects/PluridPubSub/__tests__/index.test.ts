@@ -72,6 +72,25 @@ describe('PluridPubSub', () => {
         expect(staying).toEqual([1, 2]);
     });
 
+    it('never hands out a selector twice: a stale unsubscribe cannot remove a newer subscriber', () => {
+        const bus = new PluridPubSub();
+        const newer: number[] = [];
+
+        bus.subscribe({ topic: 'space.rotateYWith', callback: () => {} });
+        const leaving = bus.subscribe({ topic: 'space.rotateYWith', callback: () => {} });
+        expect(bus.unsubscribe(leaving)).toBe(true);
+        const replacement = bus.subscribe({
+            topic: 'space.rotateYWith',
+            callback: (data) => newer.push((data as { value: number }).value),
+        });
+
+        expect(replacement).not.toBe(leaving);
+        // a cleanup that runs twice removes nothing the second time
+        expect(bus.unsubscribe(leaving)).toBe(false);
+        bus.publish({ topic: 'space.rotateYWith', data: { value: 3 } });
+        expect(newer).toEqual([3]);
+    });
+
     it('a callback that throws does not stop the bus', () => {
         const bus = new PluridPubSub();
         const after: number[] = [];

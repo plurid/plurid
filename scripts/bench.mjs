@@ -14,9 +14,11 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const directory = mkdtempSync(join(tmpdir(), 'plurid-bench-'));
 const report = join(directory, 'report.json');
-// the JSON goes to the file, the list reporter streams every `[bench]` line as it lands
+// the JSON goes to the file, the list reporter streams every `[bench]` line as it lands. The
+// measured suites are the `perf` project's since 2026-09-13: the `chromium` project ignores
+// `bench.spec.ts`, so asking it for the file ran nothing and printed "no rows" (2026-10-19).
 const run = spawnSync('npx', [
-    'playwright', 'test', '--config', 'e2e/playwright.config.ts', '--project=chromium', 'e2e/bench.spec.ts',
+    'playwright', 'test', '--config', 'e2e/playwright.config.ts', '--project=perf', 'e2e/bench.spec.ts',
     '--reporter=json,list',
 ], {
     cwd: join(root, 'fixtures', 'render-test'),

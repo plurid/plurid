@@ -240,6 +240,14 @@ export const useCameraMotion = (
                 setMotion('fling');
                 schedule();
             },
+            gesture: (active) => {
+                if (active) {
+                    stop();
+                    setMotion('gesture');
+                } else if (motionRef.current === 'gesture') {
+                    setMotion('idle');
+                }
+            },
             tweenTo: (target, options = {}) => {
                 // already on its way there: a retarget to the same pose would only restart the tween
                 if (tween.current && cameraEngine.sameCamera(tween.current.to, target, 1e-9)) {

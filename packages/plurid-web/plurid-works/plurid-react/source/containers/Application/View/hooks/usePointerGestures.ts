@@ -419,6 +419,7 @@ export const usePointerGestures = (
                 dispatch(actions.ui.setMarquee({ left: start.x, top: start.y, right: start.x, bottom: start.y }));
             } else {
                 setNavDragging(true);
+                motion.gesture(true);
                 // a selection that already exists inside the view does not ride along with the space
                 clearSelectionInside(element);
                 if (current.intent === 'orbit') {
@@ -647,6 +648,8 @@ export const usePointerGestures = (
                 const velocity = cameraEngine.estimateVelocity(current.samples, now);
                 motion.fling(velocity, current.intent);
             }
+            // rest, unless the release flung: then the fling holds the motion
+            motion.gesture(false);
         };
 
         const onPointerDown = (event: PointerEvent) => {
@@ -673,6 +676,7 @@ export const usePointerGestures = (
                     current.intent = 'pan';
                 }
                 setNavDragging(true);
+                motion.gesture(true);
                 try {
                     element.setPointerCapture(event.pointerId);
                 } catch (_) { /* capture unsupported */ }
@@ -711,6 +715,7 @@ export const usePointerGestures = (
                 pinch.pinch = twoPointers();
                 gesture.current = pinch;
                 setNavDragging(true);
+                motion.gesture(true);
                 for (const id of [firstID, event.pointerId]) {
                     try {
                         element.setPointerCapture(id);
@@ -940,6 +945,10 @@ export const usePointerGestures = (
 
         return () => {
             batcher.cancel();
+            // a View that leaves mid-drag does not leave its store moving
+            if (gesture.current) {
+                motion.gesture(false);
+            }
             element.removeEventListener('pointerdown', onPointerDown);
             element.removeEventListener('pointermove', onPointerMove);
             element.removeEventListener('pointerup', onPointerEnd);
