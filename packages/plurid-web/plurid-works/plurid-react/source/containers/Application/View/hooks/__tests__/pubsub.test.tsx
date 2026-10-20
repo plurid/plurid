@@ -785,6 +785,38 @@ describe('bus hygiene', () => {
         await rendered.unmount();
     });
 
+    it('space.command says when a command had nothing to act on: no plane in focus, nothing selected, nothing to undo', async () => {
+        const rendered = await render(['/a', '/b']);
+        const { bus } = rendered;
+        const reports: any[] = [];
+        bus.subscribe({
+            topic: PLURID_PUBSUB_TOPIC.CHANGED,
+            callback: (data: any) => {
+                if (data?.kind === 'command') {
+                    reports.push(data.value);
+                }
+            },
+        } as any);
+
+        expect(space(rendered).activePlaneID).toBe('');
+        const idle = ['closePlane', 'refreshPlane', 'focusNextRoot', 'cycleRoot', 'clearSelection', 'copy', 'frameSelection', 'undo', 'openClosedPlane'];
+        for (const id of idle) {
+            await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id });
+        }
+        expect(reports).toEqual(idle.map((id) => ({ id, ran: false, reason: 'declined' })));
+
+        // with a plane in focus the same command acts, and says so
+        const [a] = ids(rendered);
+        await publish(bus, PLURID_PUBSUB_TOPIC.NAVIGATE_TO_PLANE, { planeID: a });
+        expect(space(rendered).activePlaneID).toBe(a);
+        reports.length = 0;
+        await publish(bus, PLURID_PUBSUB_TOPIC.SPACE_COMMAND, { id: 'closePlane' });
+        expect(reports).toEqual([{ id: 'closePlane', ran: true }]);
+        expect(space(rendered).tree.find((plane: any) => plane.planeID === a)?.show).toBe(false);
+
+        await rendered.unmount();
+    });
+
     it('space.describe answers with the inspection, by token', async () => {
         const rendered = await render(['/a', '/b']);
         const { bus } = rendered;

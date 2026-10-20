@@ -220,10 +220,12 @@ export const findRootIndex = (
         if (
             plane.children
         ) {
+            // The root's index all the way down: a grandchild belongs to its root, not to the
+            // position of its parent among that parent's siblings (2026-10-20).
             const rootIndex = findRootIndex(
                 plane.children,
                 activePlaneID,
-                index,
+                currentRootIndex ?? index,
             );
 
             if (typeof rootIndex === 'number') {

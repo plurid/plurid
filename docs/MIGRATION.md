@@ -17,6 +17,24 @@ These ship with the next coordinated release.
 - **The engine's development warnings stay out of production browser builds.** Its development check
   reads `process.env.NODE_ENV` exactly as a bundler replaces it, as the bus already did; behind a
   `typeof process` guard every browser build read as development.
+- **A command run by name says when it had nothing to act on.** `space.command`, the palette and
+  `runShortcut` run a binding without its key, and with it without the key's own check: a command
+  that needs a plane in focus, a selection, a step to undo or a closed plane to reopen reported
+  `ran: true` having done nothing. It now answers `{ ran: false, reason: 'declined' }` (and
+  `runShortcut` returns `false`), as the agent's `plurid_command` already expected. Keys are
+  unchanged.
+- **Previous / next root from a deep plane.** Alt+A, Alt+D and Alt+Tab from a plane two or more
+  levels below its root stepped from the wrong root (the position of the plane's parent among its
+  siblings).
+- **`view.removePlane { planeID: '' }` removes nothing.** Every plane answers to an empty route, so
+  it removed the whole space; it warns now, as for a missing `planeID`.
+- **A plane set aside fades back in.** Revealing the space brought it back at once: a background
+  transition further down the plane rule overrode the fade's. The fade now runs both ways, and the
+  rule's opacity transition applies as written: isolating a plane and the depth cue also ease over
+  `docking.fade` instead of snapping (none under reduced motion).
+- **`elements.plane.opacity` below 1 is translucent.** Any fraction made the plane's background fully
+  transparent (the colour is the `--plurid-plane` variable, which the old decomposition could not
+  read); it is the plane colour mixed with transparency by that fraction.
 
 # Migrating to the October 18 release
 

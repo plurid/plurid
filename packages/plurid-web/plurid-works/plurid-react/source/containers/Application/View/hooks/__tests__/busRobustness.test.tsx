@@ -166,6 +166,21 @@ describe('a command without its payload does nothing, and says so', () => {
             warnings.mockRestore();
         }
     });
+
+    it('view.removePlane with an empty planeID removes nothing', async () => {
+        const warnings = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        try {
+            const rendered = await render();
+            const roots = rootIDs(rendered);
+            await publish(rendered.bus, PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE, { planeID: '' });
+            expect(rootIDs(rendered)).toEqual(roots);
+            expect(space(rendered).view).toEqual(['/a', '/b', '/c']);
+            expect(warnings.mock.calls.map((call) => String(call[0])).some((message) => message.includes('view.removePlane'))).toBe(true);
+            await rendered.unmount();
+        } finally {
+            warnings.mockRestore();
+        }
+    });
 });
 
 

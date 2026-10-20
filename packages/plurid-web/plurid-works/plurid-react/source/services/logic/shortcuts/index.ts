@@ -39,6 +39,8 @@
         focusPreviousRoot,
         focusNextRoot,
         focusRootIndex,
+        getActivePlane,
+        findRootIndex,
     } from '~services/logic/animation';
 
     import {
@@ -139,6 +141,21 @@ const toggledMode = (
     mode: string,
 ): string => (transformModeOf(state) === mode ? TRANSFORM_MODES.ALL : mode);
 
+/** Something is selected: what the selection commands act on. */
+const hasSelection = (
+    state: AppState,
+): boolean => state.space.selectedPlaneIDs.length > 0;
+
+/** The active plane is in the tree: what the plane commands act on. */
+const hasActivePlane = (
+    state: AppState,
+): boolean => !!getActivePlane(state);
+
+/** The active plane has a root to step from: what previous / next root act on. */
+const hasActiveRoot = (
+    state: AppState,
+): boolean => typeof findRootIndex(state.space.tree, state.space.activePlaneID) === 'number';
+
 /**
  * One keyboard shortcut. `match` replicates the original `if`-condition verbatim (so ORDER + the
  * loose modifier checks are preserved exactly); `code` is the default `event.code` a `keymap` entry
@@ -165,6 +182,11 @@ interface ShortcutBinding {
     code?: string;
     match: (event: KeyboardEvent, code: string | undefined, ctx: ShortcutContext) => boolean;
     run: (ctx: ShortcutContext) => boolean | void;
+    /**
+     * Run BY NAME (no key, so no `match`), whether the command has something to act on: a plane in
+     * focus, a selection, a step to undo. Without it, a command that found nothing reported that it ran.
+     */
+    ready?: (state: AppState) => boolean;
 }
 
 
@@ -208,6 +230,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // before `undo`, which matches the same code with any modifiers
         id: 'redo', code: 'KeyZ',
         match: (e, code) => (e.metaKey || e.ctrlKey) && e.shiftKey && e.code === code,
+        ready: (state) => state.space.history.canRedo,
         run: ({ dispatch, prevent }) => {
             prevent();
             dispatch(actions.space.redo());
@@ -217,6 +240,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // Cmd/Ctrl+Z = undo, +Shift = redo. The editable-target guard lets an editor keep its own undo.
         id: 'undo', code: 'KeyZ',
         match: (e, code) => (e.metaKey || e.ctrlKey) && e.code === code,
+        ready: (state) => state.space.history.canUndo,
         run: ({ dispatch, event, prevent }) => {
             prevent();
             dispatch(event?.shiftKey ? actions.space.redo() : actions.space.undo());
@@ -298,12 +322,14 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         id: 'exitGrabMode', code: 'Escape',
         match: (e, code, ctx) => e.code === code && !!ctx.state.ui?.grabMode,
+        ready: (state) => !!state.ui?.grabMode,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.ui.setUIGrabMode(false)); },
     },
     {
         // Escape leaves a rotate / move / scale mode: there was no way out but the toolbar
         id: 'exitTransformMode', code: 'Escape',
         match: (e, code, ctx) => e.code === code && ctx.noModifiers && transformModeOf(ctx.state) !== TRANSFORM_MODES.ALL,
+        ready: (state) => transformModeOf(state) !== TRANSFORM_MODES.ALL,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.configuration.setConfigurationSpaceTransformMode(TRANSFORM_MODES.ALL)); },
     },
     {
@@ -311,6 +337,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // reaches the host (help overlay, etc.) via `onUnhandledKey`.
         id: 'clearSelection', code: 'Escape',
         match: (e, code, ctx) => e.code === code && ctx.state.space.selectedPlaneIDs.length > 0,
+        ready: hasSelection,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(actions.space.clearSelection()); },
     },
     {
@@ -357,6 +384,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // element in a slot, the chrome) is not "frame the plane the pointer last crossed"
         match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e)
             && (!!focusAnchorPlaneID(e) || (fromTheView(e) && !!ctx.state.space.activePlaneID)),
+        ready: hasActivePlane,
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
             const focused = focusAnchorPlaneID(event);
@@ -381,6 +409,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         id: 'duplicateSelection', code: 'KeyD',
         match: (e, code, ctx) => e.code === code && (e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && !insidePlaneContent(e) && ctx.state.space.selectedPlaneIDs.length > 0,
+        ready: hasSelection,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(duplicateSelection() as any); },
     },
     /**
@@ -394,11 +423,13 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         id: 'copy', code: 'KeyC',
         match: () => false,
+        ready: hasSelection,
         run: ({ dispatch }) => { dispatch(copySelection() as any); },
     },
     {
         id: 'cut', code: 'KeyX',
         match: () => false,
+        ready: hasSelection,
         run: ({ dispatch }) => { dispatch(copySelection({ cut: true }) as any); },
     },
     {
@@ -410,6 +441,7 @@ export const SHORTCUTS: ShortcutBinding[] = [
         // Frame the selection: `.` (the CAD "zoom to selection").
         id: 'frameSelection', code: 'Period',
         match: (e, code, ctx) => e.code === code && ctx.noModifiers && !insidePlaneContent(e) && ctx.state.space.selectedPlaneIDs.length > 0,
+        ready: hasSelection,
         run: ({ dispatch, prevent }) => { prevent(); dispatch(frameSelection(true) as any); },
     },
     {
@@ -444,46 +476,55 @@ export const SHORTCUTS: ShortcutBinding[] = [
     {
         id: 'focusPlane', code: 'KeyF',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActivePlane,
         run: ({ dispatch, state, prevent }) => { prevent(); focusActivePlane(dispatch, state); },
     },
     {
         id: 'focusParent', code: 'KeyB',
         match: (e, code) => e.altKey && e.code === code,
+        ready: (state) => getPlaneIndex(state).has(getActivePlane(state)?.parentPlaneID ?? ''),
         run: ({ dispatch, state, prevent }) => { prevent(); focusParentActivePlane(dispatch, state); },
     },
     {
         id: 'refreshPlane', code: 'KeyR',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActivePlane,
         run: ({ state, pubsub, prevent }) => { prevent(); refreshActivePlane(state, pubsub); },
     },
     {
         id: 'isolatePlane', code: 'KeyE',
         match: (e, code) => e.altKey && e.code === code,
+        ready: (state) => !!state.space.isolatePlane || hasActivePlane(state),
         run: ({ state, pubsub, prevent }) => { prevent(); isolateActivePlane(state, pubsub); },
     },
     {
         id: 'openClosedPlane', code: 'KeyT',
         match: (e, code) => e.altKey && e.shiftKey && e.code === code,
+        ready: (state) => !!state.space.lastClosedPlane,
         run: ({ pubsub, prevent }) => { prevent(); openClosedPlane(pubsub); },
     },
     {
         id: 'closePlane', code: 'KeyW',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActivePlane,
         run: ({ state, pubsub, prevent }) => { prevent(); closeActivePlane(state, pubsub); },
     },
     {
         id: 'focusPreviousRoot', code: 'KeyA',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActiveRoot,
         run: ({ dispatch, state, prevent }) => { prevent(); focusPreviousRoot(dispatch, state); },
     },
     {
         id: 'focusNextRoot', code: 'KeyD',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActiveRoot,
         run: ({ dispatch, state, prevent }) => { prevent(); focusNextRoot(dispatch, state); },
     },
     {
         id: 'cycleRoot', code: 'Tab',
         match: (e, code) => e.altKey && e.code === code,
+        ready: hasActiveRoot,
         run: ({ dispatch, state, event, prevent }) => {
             prevent();
             if (event?.shiftKey) { focusPreviousRoot(dispatch, state); } else { focusNextRoot(dispatch, state); }
@@ -587,8 +628,9 @@ export interface RunShortcutContext {
 /**
  * Run a shortcut BY ID, without a key press — the command palette, a host's own menu. The binding's
  * own `run` is what executes, so a command has ONE implementation whatever invokes it; `false` when
- * the id has no binding, is disabled by the configuration, or needs the keydown that matched it
- * (the arrow nudge, the root-by-index jump: the key is the argument).
+ * the id has no binding, is disabled by the configuration, needs the keydown that matched it
+ * (the arrow nudge, the root-by-index jump: the key is the argument), or has nothing to act on
+ * (no plane in focus, nothing selected: the binding's `ready`).
  */
 export const runShortcut = (
     id: PluridShortcutID,
@@ -623,6 +665,11 @@ export const runShortcutReported = (
     }
     if (!options.ignoreDisabled && isShortcutDisabled(id, shortcuts)) {
         return { id, ran: false, reason: 'disabled' };
+    }
+    // BY NAME there is no key, so no `match` to ask whether the command has anything to act on: with
+    // no plane in focus or nothing selected, the command did nothing and reported that it ran (2026-10-20)
+    if (binding.ready && !binding.ready(context.state)) {
+        return { id, ran: false, reason: 'declined' };
     }
     const ran = binding.run({
         dispatch: context.dispatch,

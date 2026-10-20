@@ -7,7 +7,6 @@
 
     import {
         Theme,
-        decomposeColor,
     } from '@plurid/plurid-themes';
     // #endregion libraries
     import { chromeFocusRing } from '~services/styled/chrome';
@@ -57,11 +56,13 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }
     /* Set aside (outside the docked page's lineage): the opacity is inline (0), this is its fade —
        and once faded the plane is gone for the keyboard and the reader too (inert + visibility),
-       coming back at once when the attribute goes. None under reduced motion. */
-    transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear 0s;
+       coming back at once when the attribute goes. None under reduced motion. The background's
+       transition is in the same declaration: one of its own further down overrode this one, and a
+       plane came back from aside at once instead of fading in (2026-10-20). */
+    transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear 0s, background-color 300ms linear;
     &[data-plurid-aside] {
         visibility: hidden;
-        transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear var(--plurid-dock-fade, 240ms);
+        transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear var(--plurid-dock-fade, 240ms), background-color 300ms linear;
     }
     @media (prefers-reduced-motion: reduce) {
         & {
@@ -80,12 +81,10 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
         }
 
         if (planeOpacity !== 1) {
-            const decomposedColor = decomposeColor('var(--plurid-plane)');
-            if (decomposedColor) {
-                const color = `hsla(${decomposedColor.hue}, ${decomposedColor.saturation}%, ${decomposedColor.lightness}%, ${planeOpacity})`;
-                return color;
-            }
-            return 'transparent';
+            // The plane's colour is a variable, which `decomposeColor` cannot read: every fraction
+            // came out fully transparent (2026-10-20). The mix keeps the token and its opacity.
+            const percent = Math.round(Math.min(1, Math.max(0, planeOpacity || 0)) * 1000) / 10;
+            return `color-mix(in srgb, var(--plurid-plane) ${percent}%, transparent)`;
         }
         return 'var(--plurid-plane)';
     }};
@@ -144,7 +143,6 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
             theme,
         }: IStyledPluridPlane) => 'var(--plurid-font)'
     };
-    transition: background-color 300ms linear;
 
     display: grid;
     grid-template-columns: 1fr;

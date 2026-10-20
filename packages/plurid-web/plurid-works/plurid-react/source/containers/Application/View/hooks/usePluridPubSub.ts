@@ -709,7 +709,9 @@ export const usePluridPubSub = (
                 topic: PLURID_PUBSUB_TOPIC.VIEW_REMOVE_PLANE,
                 callback: (data) => {
                     const plane = data?.planeID;
-                    if (typeof plane !== 'string') {
+                    // An empty id names no plane: every plane answers to an empty route (`answersTo`
+                    // matches anything for a pending request), and `''` removed the whole space (2026-10-20).
+                    if (typeof plane !== 'string' || !plane) {
                         warn('view.removePlane', '`planeID` must be a plane id or a route');
                         return;
                     }

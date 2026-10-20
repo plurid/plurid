@@ -11,6 +11,9 @@
     import {
         renderPlurid,
     } from '../../../../testing';
+    import {
+        styledDeclarations,
+    } from '../../../../testing/styles';
     // #endregion external
 // #endregion imports
 
@@ -18,29 +21,6 @@
 
 // #region module
 const Content = () => <div style={{ height: 120 }}>content</div>;
-
-/**
- * The values of `property` in an element's own styled rule, in source order: the LAST is the one a
- * browser applies (jsdom cannot resolve a `var()`, so the computed style says nothing here).
- */
-const declarations = (
-    element: Element,
-    property: string,
-): string[] => {
-    const css = Array.from(document.querySelectorAll('style')).map((style) => style.textContent || '').join('');
-    const values: string[] = [];
-    for (const name of Array.from(element.classList)) {
-        for (const rule of css.matchAll(new RegExp('(?:^|})\\.' + name + '\\{([^}]*)\\}', 'g'))) {
-            for (const declaration of rule[1].split(';')) {
-                const separator = declaration.indexOf(':');
-                if (declaration.slice(0, separator).trim() === property) {
-                    values.push(declaration.slice(separator + 1).trim());
-                }
-            }
-        }
-    }
-    return values;
-};
 
 /**
  * THE DEPTH CUE IS THE PLANE'S OPACITY (2026-10-19). `elements.plane.depthFade` wrote its fade in a
@@ -55,8 +35,8 @@ describe('a plane with the depth cue', () => {
             view: ['/one'],
             configuration: configuration as any,
         });
-        const values = declarations(rendered.container.querySelector('[data-plurid-plane]')!, 'opacity');
-        rendered.unmount();
+        const values = styledDeclarations(rendered.container.querySelector('[data-plurid-plane]')!, 'opacity');
+        await rendered.unmount();
         return values.at(-1);
     };
 

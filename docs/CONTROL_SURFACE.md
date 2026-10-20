@@ -155,10 +155,11 @@ back to the layout. `space.describe { token }` answers on `space.changed` kind `
 inspection `api.inspect()` gives, for a host that holds no api; `space.blur` takes the keyboard off
 the space and kind `focus` reports it; `space.command { id }` runs a shortcut by id, ignores
 `shortcuts.disabled` (a key taken from the reader, not from the host) and answers kind `command`
-`{ id, ran, reason }`. `space.setTree` makes the view agree with the tree's roots, and it and
+`{ id, ran, reason }` (`declined` when the command had nothing to act on: no plane in focus, nothing
+selected, nothing to undo). `space.setTree` makes the view agree with the tree's roots, and it and
 `view.setPlanes` validate what they are given (a view entry is a route or `{ plane: route }`): a malformed message leaves the view or the tree as it
 was and warns, naming the first bad node, rather than throwing inside a render.
-`view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree.
+`view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree; an empty `planeID` names no plane.
 `space.isolatePlane { planeID: null }` (or `''`) clears the isolation; `space.translateXTo` / `YTo` /
 `ZTo` `{ value }` set the pan along one axis. `space.frame { planeIDs, yaw? }` frames a set of planes
 from a yaw (`'best'` by default: the yaw that reads every plane widest), `{ selection: true, yaw }` the
