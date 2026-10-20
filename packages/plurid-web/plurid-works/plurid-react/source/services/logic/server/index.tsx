@@ -93,7 +93,6 @@ export const serverComputeMetastate = async (
         const cameraLimits = interaction.camera.resolveCameraLimits(appConfiguration.space.navigation);
         const identity = interaction.camera.identityCamera(viewSize, appConfiguration.space.perspective);
         const camera = stateEngine.dockedBootCamera(identity, computedTree, appConfiguration, viewSize, cameraLimits, dockPath) ?? identity;
-        const legacy = interaction.camera.toLegacy(camera, viewSize);
 
         const state = {
             configuration: {
@@ -117,12 +116,8 @@ export const serverComputeMetastate = async (
                 loading: false,
                 resolvedLayout: false,
                 transform: interaction.camera.cameraMatrix3d(camera, viewSize),
-                scale: legacy.scale,
-                rotationX: legacy.rotationX,
-                rotationY: legacy.rotationY,
-                translationX: legacy.translationX,
-                translationY: legacy.translationY,
-                translationZ: legacy.translationZ,
+                // (no legacy scalars: the state holds the camera, they are derived on read; they rode
+                // in every server metastate after the state stopped holding them, 2026-10-20)
                 tree: computedTree,
                 activeUniverseID: '',
                 camera,

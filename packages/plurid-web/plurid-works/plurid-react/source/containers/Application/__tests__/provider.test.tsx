@@ -6,7 +6,7 @@
  *
  * `<PluridApplication …/>` takes eighteen props for customization, persistence
  * and observation. The ROUTE-DRIVEN path — which the kit generates, the getting
- * started guide teaches, and every product uses — forwarded five. So seventeen
+ * started guide teaches, and every product uses — forwarded five. So eighteen
  * documented props could not be reached from the way we tell people to build,
  * and products worked around it in the only place left to them: the stylesheet.
  *

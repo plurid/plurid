@@ -295,7 +295,7 @@ const measureLinkInPlane = (
 
 /**
  * The View's pubsub bridge: owns the `pluridPubSub` registry + `registerPubSub`, subscribes every
- * pubsub instance to the ~23 engine topics (configuration / space transforms / view add-remove /
+ * pubsub instance to every engine control topic (configuration / space transforms / view add-remove /
  * navigate / isolate / open-close / root focus), and re-publishes the current transform + config
  * (internal-flagged) so late subscribers sync. Subscriptions are made ONCE per pubsub instance and
  * read live state through a ref; plane lookups are deep (`getTreePlaneByID`), so spawned children

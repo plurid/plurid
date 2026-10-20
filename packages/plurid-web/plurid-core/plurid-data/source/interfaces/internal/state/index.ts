@@ -57,7 +57,8 @@ export interface PluridStateSpace {
     transformTime: number;
     /**
      * The camera proper — the single source of truth for where the viewer is. Every camera
-     * mutation commits through it; the six scalars below are mirrors derived from it.
+     * mutation commits through it; the six legacy scalars are derived from it on read
+     * (`pluridSelectors.space.getRotationX` …), never stored.
      */
     camera: CameraState;
     /** Pitch / zoom / dolly limits the camera is clamped to (from `space.navigation`). */

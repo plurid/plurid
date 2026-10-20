@@ -105,9 +105,8 @@ const computeFaceToFaceLayout = (
 
     const tree: TreePlane[] = [];
     const width = lengthInPx(configuration.elements.plane.width, windowInnerWidth);
-    // An unmeasured plane counts as the tallest measured one, else the view height (see column.ts).
-    // an unmeasured plane counts as the configured height, else the tallest measured plane, else
-    // the view height
+    // an unmeasured plane counts as the configured height, else the tallest measured plane, else the
+    // fallback plane height (a reading proportion of the configured width: `fallbackPlaneSize`)
     const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
     const fallbackHeight = configuredHeight
         || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))

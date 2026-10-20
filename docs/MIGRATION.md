@@ -102,6 +102,54 @@ These ship with the next coordinated release.
   request the next handler answered, usually with a 404.
 - **The kit warns about a production server without a `hostname`.** Without one, every page renders
   on its request's `Host` header, which is only as trustworthy as the proxy in front of the server.
+- **`handle.tree.set` and `space.setTree` set the tree exactly, one path.** A saved arrangement now
+  moves or unpins a plane the live space had pinned, and takes its sizes (a dimension it leaves at 0
+  keeps the measurement); unchanged nodes keep their references. The handle also checks the tree (a
+  malformed one leaves the tree as it was, with a development warning; it threw inside a render) and
+  brings the view along with the roots, as the topic did.
+- **Undo moves the view with the roots.** An undone `view.addPlane` came back at the next relayout;
+  the restore now takes the roots it removes out of the view and puts back the ones it brings.
+  `view.removePlane` given a ROOT's id takes it out of the view too (it left the tree only).
+- **A configured length with a decimal above 4 is px.** `elements.plane.width: 460.5` was 460.5 views
+  wide; a fraction is `1` or a number with a decimal up to 4 (`0.6`, `1.5`), anything else px — gaps
+  and sheaves' depth by the same rule, as a share of the plane width.
+- **A spawned child takes the first free slot.** After a close or a removal the next sibling stood
+  exactly on a shown one; the slot is the first no shown sibling stands on.
+- **The `pubsub` and `planesRegistrar` props follow their changes**, and `api.pubsub` / `handle.pubsub`
+  are the bus in use. An application inside a plane of a routed one keeps its own bus and `onReady`
+  (it took the router's: `onReady` fired twice). `PluridRouterBrowser` follows `routes`, `planes` and
+  `hostname` (a route added later is matched; a new array of the same routes remounts nothing).
+- **`usePluridPlane()` reads the requested route** — its `query`, `fragments` and `parameters` are the
+  `plurid` prop's (`/doc/1?tab=x` read `{}` from the hook).
+- **Camera.** A tween started in the tick of a jump starts where the jump landed; a page pitched past
+  the orbit's limit docks face-on (the commit clamped it at 89°) and stays docked through a pan; a
+  viewcube face levels the horizon; the restore after a hydration is no longer an undo step;
+  `easing: 'spring'` asked per call is out-quint, as configured (it was out-cubic).
+- **Configuration.** A switch from the page presentation back to the space gives the four page fields
+  still at their page defaults the space defaults again; a Theme object in `global.theme` is taken as
+  given (the name `plurid`, the default, still leaves the theme to the look: pass `themes.plurid` to ask
+  for it); `docking.fade` at its default no longer overrides a look's own `fade` token, and the view no
+  longer pins `--plurid-dock-fade` inline; a configuration without `space.bridge` spawns with the
+  default (reading) bridge.
+- **The drawers.** An unknown name in `toolbar.drawers` is skipped with a warning (opening More threw);
+  the layout picker keeps the layout's parameters; a drawer closed under `toggledDrawers: ['ALL']`
+  closes; picking a general theme keeps a named interaction theme; the culling slider reaches the
+  default 6000 and follows the configuration; an open menu no longer makes the toolbar's whole band
+  swallow clicks; the transform arrows and selection buttons are chrome controls (a host's `button`
+  rules stay out).
+- **Planes.** A `renderPlaneBridge` slot is not drawn over the engine's leash; an unregistered child's
+  children do not render; keyboard focus leaving a plane puts its controls' hover out; a resize ended
+  by an unmount closes its undo step; `usePluridDocument` survives StrictMode's remount; the minimap's
+  dot hover brightens and `minimap.transparent: false` is a solid panel; `chrome: 'none'` shows no mode
+  badge and no engine debugger HUD (a `renderDebugger` slot still renders); the dock toggle is no longer
+  `aria-pressed`. `internals.PluridPlaneDebugger` / `PluridSpaceDebugger` load their debugger on first
+  render.
+- **The bus.** A subscriber another one removes during a publish is not called; a host's `onDrop` is no
+  longer told about the topics the engine emits (`space.changed`).
+- **The browser router no longer calls a route's `resolver`** (it called it with no globals and threw
+  the result away). The server metastate no longer carries the six legacy camera scalars.
+- **`@plurid/plurid-react/testing`.** `cancelAnimationFrame` cancels the one frame (it emptied the
+  queue); the container is given no size (the view is the window's, 1024 × 768 in jsdom).
 
 # Migrating to the October 18 release
 
@@ -543,7 +591,7 @@ configuration value; a host that wants the old picture names the old value. The 
 - `view.removePlane { planeID }` takes a SPAWNED plane too: a plane a link or `space.spawnPlane` made is not in the view (the view holds the roots), so matching the view alone left it in the tree, shown, bridged and empty once its host had forgotten what it rendered. By its runtime id, or by its route (every plane at that path), the node goes with its subtree; the selection and the active plane forget it. A root still goes by its route, as before.
 - The shortcuts sheet (`?`) ends with what plurid IS: one paragraph and two links (`plurid.com`, `github.com/plurid/plurid`), under a hairline after the keys. A reader meeting a plurid application had nowhere in the chrome to learn what the space around them was. The text and the addresses are `PLURID_ABOUT`, `PLURID_SITE` and `PLURID_REPOSITORY` in plurid-data, so a product rendering its own help can name the same places; `chrome: 'none'` still draws no sheet at all.
 - `space.bridge.lean { knee, limit }`: how far a bridge follows a scrolled link. Exactly at the link up to `knee` degrees (default 12), easing toward `limit` (default 22) after that and never reaching it, with the far end always landing on the parent's face - where it used to stretch to the link's own point, turning a 100px bridge into a 500px diagonal at 78 degrees. Every scroll still moves it, by less and less. A `limit` at or under the `knee` pins it there.
-- **A bridge is a LINE.** It was a 30px band of the plane's own surface at any length, which on a wide screen is a plate across the space. It is a hairline now: `space.bridge.thickness` (default 3, the crosslink beam's own width), drawn in `--plurid-ink` like every other connector the engine draws, so a bridge, a leash and a crosslink are one object. `space.bridge.quiet` (default `true`) rests it at 0.14 and brings it to 0.45 while the camera moves or its own plane is active; `false` holds one tone. A product that wants a connector with body raises `thickness`. Where a bridge ATTACHES is unchanged (`TreePlane.bridgeOffset` still hangs the plane half a strip above the link's line), so nothing moves.
+- **A bridge is a LINE.** It was a 30px band of the plane's own surface at any length, which on a wide screen is a plate across the space. It is a hairline now: `space.bridge.thickness` (default 3, the crosslink beam's own width), drawn in `--plurid-ink` like every other connector the engine draws, so a bridge and a leash are one object (they share `thickness` and `quiet`); a crosslink beam stays 3 px, rounded, at the ambient tone. `space.bridge.quiet` (default `true`) rests it at 0.14 and brings it to 0.45 while the camera moves or its own plane is active; `false` holds one tone. A product that wants a connector with body raises `thickness`. Where a bridge ATTACHES is unchanged (`TreePlane.bridgeOffset` still hangs the plane half a strip above the link's line), so nothing moves.
 - `space.navigation.framing { fill, maxScale }`: how close a framing comes. A frame, a pair, a set and a fit all land at the largest zoom where the content still fits a margin of the view (`fill`, `0.85` by default), under a ceiling on the zoom (`maxScale`). On a wide screen those two constants leave a 460px reading card adrift in the middle, which is what the knob is for: a product that wants a plane to come closer raises them (dechat: `framing: { fill: 0.94, maxScale: 2.4 }`). Behaviour is unchanged for a space that says nothing, and a `maxScale` nobody set stays UNSET rather than becoming `1`: each framing keeps the ceiling it always had (a plane, a pair and a set are never magnified past their own size; a fit may magnify a small space up to the camera's `zoomMax`). A product that sets `maxScale` sets it for the fit too.
 - `PluridLink` takes `mode: 'toggle' | 'open'`: what a click does when the plane it opened is already open. `toggle` (the default, unchanged) puts it away; `open` goes to it, framed with its parent as `navigation.childFraming` says. Both bring a put-away plane back. A product's way back to a branch it spawned is an `open` link; the space's own links keep toggling. And `framing: 'pair' | 'plane'`: how the plane is framed when the link goes to it, with its parent from the yaw between them or alone, face-on (unset: `navigation.childFraming`).
 - `measureLinkCoordinates(linkElement, planeElement)` and `resolveLinkID(...)` are exported from `@plurid/plurid-react`: where a product's own element sits on a plane, in the plane's px, the way the engine measures it.

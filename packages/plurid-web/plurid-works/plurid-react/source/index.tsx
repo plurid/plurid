@@ -383,7 +383,7 @@ export {
     /**
      * ONE CONFIGURATION SURFACE FOR BOTH MOUNT PATHS: wrap a router with it and
      * every application the router constructs takes the host's render slots,
-     * persistence and observation — the seventeen props the route-driven path
+     * persistence and observation — the eighteen props the route-driven path
      * could not forward. An application's own prop still wins.
      */
     PluridApplicationProvider,

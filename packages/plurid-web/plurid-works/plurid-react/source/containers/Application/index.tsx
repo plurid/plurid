@@ -975,7 +975,7 @@ const PluridApplication = forwardRef<
         : (undefined as unknown as PluridApplicationHandle)), []);
 
     /**
-     * THE HOST'S DEFAULTS, for the seventeen props the route-driven path could
+     * THE HOST'S DEFAULTS, for the eighteen props the route-driven path could
      * not forward. Spread UNDER `properties`, so an application's own prop
      * always wins and a provider is a default rather than an override.
      */

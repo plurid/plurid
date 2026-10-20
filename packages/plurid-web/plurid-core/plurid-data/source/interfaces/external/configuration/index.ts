@@ -752,6 +752,7 @@ export interface PluridConfigurationSpaceNavigationMotion {
     /** Tween duration in ms for programmatic camera moves. Default `380`. */
     duration?: number;
     /** Easing curve. Default `out-cubic`. */
+    /** `spring` is an alias of `out-quint` (no spring is simulated), configured or asked per call. */
     easing?: 'linear' | 'out-cubic' | 'out-quint' | 'in-out-cubic' | 'spring';
     /**
      * `respect` (default) collapses every camera tween, momentum fling and layout transition to an

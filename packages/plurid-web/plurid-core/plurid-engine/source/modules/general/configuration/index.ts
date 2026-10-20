@@ -120,7 +120,6 @@ const applySpaceDefaults = (
 };
 
 
-/** A `docking.url.base` as the binding carries it: a leading slash, no trailing one, `''` for none. */
 /** `docking.url.base` normalised: one leading slash, no trailing one, no doubled ones; `''` for none. */
 export const normalizeDockingURLBase = (
     base: string | undefined,
@@ -453,6 +452,8 @@ const describeValue = (
  * locations, then `extend` (a normal nested partial) is layered on top, then the whole thing is
  * merged over the defaults via `merge` (which also resolves `theme`). Anything omitted keeps its
  * default. Returns a complete, ready-to-use configuration.
+ * (Publish a PARTIAL on the bus: a complete configuration published there sets every live field
+ * to its value, resetting what the reader changed since.)
  *
  * @example
  * definePluridConfiguration({ theme: 'plurid', center: true, planeWidth: 0.32, bridgeLength: 160 })

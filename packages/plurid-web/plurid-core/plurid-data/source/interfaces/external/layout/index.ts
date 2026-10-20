@@ -51,18 +51,10 @@ export interface LayoutColumns extends Layout {
     columnLength?: number;
 
     /**
-     * Distance between columns.
-     *
-     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
-     * or between `0` and `x0...0` (integers) indicating pixel values.
-     *
-     * For example:
-     * `0.5` is 50% of view width,
-     * `5` is five pixels,
-     * `1.00` is 100% of view width,
-     * `1` is one pixels,
-     * `1.35` is 135% of view width,
-     * `135` is 135 pixels.
+     * Distance between columns: a share of the plane width — `1`, or a number with a decimal up to `4`
+     * (`0.5` is half a plane, `1` a whole one, `1.35` 135 % of one) — or px, any other number (`5`,
+     * `135`, `12.5`). The rule of every configured length (`isFractionalLength`, 2026-10-20: `1` was
+     * documented as one pixel and a decimal was always a share).
      */
     gap?: number;
 }
@@ -93,18 +85,10 @@ export interface LayoutRows extends Layout {
     rowLength?: number;
 
     /**
-     * Distance between rows.
-     *
-     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
-     * or between `0` and `x0...0` (integers) indicating pixel values.
-     *
-     * For example:
-     * `0.5` is 50% of view width,
-     * `5` is five pixels,
-     * `1.00` is 100% of view width,
-     * `1` is one pixels,
-     * `1.35` is 135% of view width,
-     * `135` is 135 pixels.
+     * Distance between rows: a share of the plane width — `1`, or a number with a decimal up to `4`
+     * (`0.5` is half a plane, `1` a whole one, `1.35` 135 % of one) — or px, any other number (`5`,
+     * `135`, `12.5`). The rule of every configured length (`isFractionalLength`, 2026-10-20: `1` was
+     * documented as one pixel and a decimal was always a share).
      */
     gap?: number;
 }
@@ -129,23 +113,15 @@ export interface LayoutFaceToFace extends Layout {
      *
      * Value between `0.00` and `360.00`. Recommended between `0` and `180`.
      *
-     * Default is `90`.
+     * Default is `45`.
      */
     angle?: number;
 
     /**
-     * Distance between columns.
-     *
-     * Value between `0.00` and `x.00` (floating numbers) indicating percent of view width
-     * or between `0` and `x0...0` (integers) indicating pixel values.
-     *
-     * For example:
-     * `0.5` is 50% of view width,
-     * `5` is five pixels,
-     * `1.00` is 100% of view width,
-     * `1` is one pixels,
-     * `1.35` is 135% of view width,
-     * `135` is 135 pixels.
+     * Distance between columns: a share of the plane width — `1`, or a number with a decimal up to `4`
+     * (`0.5` is half a plane, `1` a whole one, `1.35` 135 % of one) — or px, any other number (`5`,
+     * `135`, `12.5`). The rule of every configured length (`isFractionalLength`, 2026-10-20: `1` was
+     * documented as one pixel and a decimal was always a share).
      */
     gap?: number;
 
@@ -172,23 +148,19 @@ export interface LayoutSheaves extends Layout {
     type: LAYOUT_TYPES.SHEAVES;
 
     /**
-     * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
-     *
-     * The value is based on the current width of the screen and can be negative.
+     * The step back in depth from one sheet to the next: a share of the plane width (`1`, or a number
+     * with a decimal up to `4`; default `0.3`) or px (any other number). Can be negative.
      */
     depth?: number;
 
     /**
-     * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
-     *
-     * The value is based on the current width of the screen and can be negative.
+     * The step across from one sheet to the next, px (default `0`). Can be negative. (It was
+     * documented as a share of the screen width; it is px.)
      */
     offsetX?: number;
 
     /**
-     * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
-     *
-     * The value is based on the current height of the screen and can be negative.
+     * The step down from one sheet to the next, px (default `0`). Can be negative.
      */
     offsetY?: number;
 }

@@ -68,8 +68,8 @@ const computeRowLayout = (
     // Per-column widths and per-row heights (see column.ts): mixed sizes pack without overlap,
     // unmeasured planes keep the uniform grid.
     const rowCount = Math.max(1, Math.ceil(roots.length / Math.max(1, length)));
-    // an unmeasured plane counts as the configured height, else the tallest measured plane, else
-    // the view height
+    // an unmeasured plane counts as the configured height, else the tallest measured plane, else the
+    // fallback plane height (a reading proportion of the configured width: `fallbackPlaneSize`)
     const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
     const fallbackHeight = configuredHeight
         || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))

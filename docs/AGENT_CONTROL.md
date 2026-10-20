@@ -71,7 +71,7 @@ const result = await agent.call('plurid_observe');
 | `plurid_arrange` | `move` planes by pixels; `align`, `distribute` or `duplicate` the selection. | yes |
 | `plurid_history` | `undo` or `redo`, `steps` at a time. The camera is not in the history. | yes |
 | `plurid_bookmark` | `save`, `go` to, or `remove` a named viewpoint. | yes |
-| `plurid_command` | Runs one of the keyboard commands by id (`frameActive`, `copy`, `toggleIsolate`, …), exactly as its key would. The id is an enum in the schema, so a model sees the list. | yes |
+| `plurid_command` | Runs one of the keyboard commands by id (`frameActive`, `copy`, `isolatePlane`, …), exactly as its key would. The id is an enum in the schema, so a model sees the list. | yes |
 | `plurid_configure` | Sets the `presentation` (`page` \| `space`) or the roots' `layout` (`columns` with `COLUMNS`, `rows` with `ROWS`). | yes |
 
 Every tool's `inputSchema` is a JSON Schema with `additionalProperties: false` and no numeric or

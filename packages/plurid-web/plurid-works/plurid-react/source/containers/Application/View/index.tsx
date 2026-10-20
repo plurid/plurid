@@ -613,7 +613,7 @@ const PluridView: React.FC<PluridViewProperties> = (
         layoutTransitionDuration,
     });
 
-    // The pubsub bridge — registry + `registerPubSub` + the ~23 topic subscriptions + the
+    // The pubsub bridge — registry + `registerPubSub` + every topic subscription + the
     // transform/config re-publish — lives in `usePluridPubSub`. Placed AFTER `useTreeUpdate`
     // (it needs `treeUpdate`) and BEFORE `shortcutsCallback`/`pluridContext` (they read
     // `pluridPubSub[0]` + `registerPubSub`).

@@ -101,12 +101,6 @@ const planeGeometry = (
 
 // #region targets
 /**
- * The camera that frames one plane face-on, from the current space state. In the PAGE presentation
- * framing is DOCKING: scale 1, the plane's box exactly on the view (`cameraEngine.dockPose`) — the
- * one place the presentation enters the camera logic, so every framing path (the frame control, a
- * link spawn, the back control, `onClose: 'parent'`, the arrows, the minimap, `space.frame`) docks.
- */
-/**
  * HOW CLOSE A FRAMING COMES, as the configuration says (`navigation.framing`).
  *
  * The engine frames at the largest zoom where the content still fits a margin of the view, and
@@ -133,6 +127,12 @@ export const framingOf = (
 };
 
 
+/**
+ * The camera that frames one plane face-on, from the current space state. In the PAGE presentation
+ * framing is DOCKING: scale 1, the plane's box exactly on the view (`cameraEngine.dockPose`) — the
+ * one place the presentation enters the camera logic, so every framing path (the frame control, a
+ * link spawn, the back control, `onClose: 'parent'`, the arrows, the minimap, `space.frame`) docks.
+ */
 export const frameTargetForPlane = (
     spaceState: PluridStateSpace,
     configuration: PluridConfiguration,

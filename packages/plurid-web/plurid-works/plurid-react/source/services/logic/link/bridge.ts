@@ -16,12 +16,12 @@
 /**
  * THE LEASH. A child plane is placed exactly one bridge length from its link's ANCHOR (the link's
  * position when it was measured, stored on the tree). When the link scrolls inside its plane the
- * child does not move — its world position is state — but the bridge follows: it becomes the
- * segment from the child's edge to the link's CURRENT point, tilting and stretching, resting at the
- * fold once the link is beyond it (the measurement clamps there). The two values ride on the child
- * plane element as CSS custom properties (no store churn), and the bridge's stylesheet draws the
- * segment from them as a band across an axis-aligned box - never as a rotated element, whose corners
- * would cross the parent's plane (components/structural/Plane/components/PlaneBridge/styled.ts).
+ * child does not move — its world position is state — but the bridge follows: a line from the
+ * child's edge that LEANS toward the link's CURRENT point (`leanAngle`: the tilt itself up to the
+ * knee, eased toward the limit after, 12° and 22° by default) and reaches `length / cos(lean)`,
+ * resting at the fold once the link is beyond it (the measurement clamps there). The two values ride
+ * on the child plane element as CSS custom properties (no store churn), and the bridge's stylesheet
+ * draws the line from them (components/structural/Plane/components/PlaneBridge/styled.ts).
  */
 export const BRIDGE_REACH_VARIABLE = '--plurid-bridge-reach';
 export const BRIDGE_ANGLE_VARIABLE = '--plurid-bridge-angle';

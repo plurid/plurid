@@ -69,11 +69,11 @@ const computeColumnLayout = (
 
     // Per-column widths and per-row heights: each column is as wide as its widest plane (a
     // declared or measured width; the configured width for an unmeasured one), each row as tall
-    // as its tallest (an unmeasured plane counts as the tallest measured plane, else the view
-    // height) — mixed sizes pack without overlap, and unmeasured planes keep the uniform grid.
+    // as its tallest (an unmeasured plane counts as the tallest measured plane, else the fallback
+    // plane height) — mixed sizes pack without overlap, and unmeasured planes keep the uniform grid.
     const columnCount = Math.max(1, Math.ceil(roots.length / Math.max(1, length)));
-    // an unmeasured plane counts as the configured height, else the tallest measured plane, else
-    // the view height
+    // an unmeasured plane counts as the configured height, else the tallest measured plane, else the
+    // fallback plane height (a reading proportion of the configured width: `fallbackPlaneSize`)
     const configuredHeight = configuredPlaneSize(configuration, { width: windowInnerWidth, height: windowInnerHeight }).height;
     const fallbackHeight = configuredHeight
         || Math.max(0, ...roots.map((root) => placedHeight(root, configuredHeight)))

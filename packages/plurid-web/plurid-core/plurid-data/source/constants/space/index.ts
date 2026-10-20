@@ -16,7 +16,7 @@ export const FOCUS_ANCHOR_SUFFIX = '-focus';
 
 /** The height of a plane's controls bar, px: its first row in the space presentation, hanging above the sheet on a page. */
 export const PLANE_BAR_HEIGHT = 56;
-/** The height of the bridge strip between a link and its spawned plane, px (the leash is drawn as this band). */
+/** The height the bridge strip had, px: a spawned plane still hangs half of it off its link's line (`bridgeOffset`); the bridge and the leash are lines now. */
 export const BRIDGE_STRIP_HEIGHT = 30;
 /**
  * A BRIDGE IS A LINE, px. It was a 30px band, then a band tapering to a thread, and both were

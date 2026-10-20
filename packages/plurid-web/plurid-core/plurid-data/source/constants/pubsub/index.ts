@@ -93,8 +93,8 @@ export const PLURID_PUBSUB_TOPIC = {
 
     /**
      * The single engine→host OBSERVE channel: published as `{ kind, value }` whenever a watched slice
-     * changes (`selection`/`tree`/`links`/`activePlane`/`isolate`/`layoutResolved`/`loading`). One
-     * subscription covers all of them — finer than diffing snapshots, lighter than N topics.
+     * changes, every kind of `PLURID_CHANGE_KINDS` (docs/CHANGES.md). One subscription covers all of
+     * them — finer than diffing snapshots, lighter than N topics.
      */
     CHANGED: 'space.changed',
 

@@ -15,7 +15,7 @@ Three shapes. Every piece of chrome is made of them and nothing else.
 | --- | --- | --- |
 | PILL | a control: `--plurid-control` square (32 px), `--plurid-radius`, the `--plurid-surface` fill, a 1 px `--plurid-rim`, a `--plurid-halo` ring, the `--plurid-blur` behind it, `--plurid-ink` glyphs; hover → `--plurid-surface-strong`; `data-plurid-active="true"` → the accent AS INK (the glyph or label takes the colour; a control is never filled with the accent); a two-tone focus ring (`--plurid-focus` over `--plurid-focus-halo`) | `chromePill` · `PluridPill`, `PluridIconButton` |
 | PANEL | a surface: the `--plurid-surface-solid` fill, `--plurid-radius-panel`, the rim, the halo and `--plurid-shadow`; typography from `--plurid-font` / `-font-size` / `-weight` | `chromePanel` · `PluridPanel` |
-| LINE | a beam, a guide, the bridge's film, the marquee: `--plurid-line` (or the accent for a guide) at the ambient opacity | `chromeLine` |
+| LINE | a connector: a crosslink beam, a bridge, a leash, drawn in `--plurid-ink` (a beam at the ambient opacity; a bridge and a leash at 0.14 resting, 0.45 live); a guide in the accent | the engine's own; `chromeLine` (`--plurid-line`) is the fragment for a host's lines |
 
 Plus a KEY (a keyboard key as the shortcuts dialog draws it: `chromeKey` · `PluridKey`), and two
 behaviours every piece shares: `chromeRoot` (the typography reset) and `chromeDocked` (the fade with
@@ -35,8 +35,10 @@ the docked state, `--plurid-fade`).
    that page whatever its colours: the pill keeps its rim, halo and blur in every look; a light look
    inverts the fill and the ink, it never drops the rim and the halo.
 4. **Two tiers.** Persistent affordances (the rail's pills, the `?`) sit at `--plurid-opacity-persistent`
-   (0.85); ambient ones (bridges, beams, arrows) at `--plurid-opacity-ambient` (0.55). Hover brings
-   either to 1.
+   (0.85); ambient ones (the crosslink beams) at `--plurid-opacity-ambient` (0.55). Hover brings
+   either to 1. Bridges and leashes rest quieter, at 0.14, and come up to 0.45 while the camera moves
+   or their plane is live (`space.bridge.quiet`); the viewcube's arrows rest at 0 and show with the
+   pointer or the focus.
 5. **The engine writes tokens; the host may overwrite them.** The tokens are emitted as one scoped
    stylesheet, `[data-plurid-application="<id>"] { --plurid-…: … }`, specificity (0,1,0) on purpose:
    a host rule with a more specific selector wins. Geometry and type still come from tokens the engine

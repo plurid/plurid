@@ -67,8 +67,8 @@ export type PluridDockRailProperties = PluridDockRailStateProperties & PluridDoc
 /**
  * THE RAIL of the page presentation (`elements.dockRail`, the `renderDockRail` slot): the fit
  * button (when the viewcube is on), a chevron back to the parent of a spawned page, and the corner
- * control — the door into the space while docked, the way back while revealed. Renders nothing
- * in the space presentation.
+ * control — the door into the space while docked, the way back while revealed. Renders in both
+ * presentations; `elements.dockRail.show: false` hides it.
  */
 const PluridDockRail: React.FC<PluridDockRailProperties> = (
     properties,

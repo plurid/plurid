@@ -127,8 +127,8 @@ export const name = 'space' as const;
 // #region camera commit
 /**
  * THE camera commit path. Every camera mutation ends here: the camera is clamped to the limits,
- * stored, mirrored into the six legacy scalars, and rendered into `transform`. Nothing else writes
- * `transform` or the scalars.
+ * stored, and rendered into `transform`. Nothing else writes `transform`; the six legacy scalars are
+ * derived on read (`currentLegacy`).
  */
 /**
  * THE PITCH A DOCKED PAGE MAY HOLD (2026-10-20). The engine docks a page face-on whatever its tilt

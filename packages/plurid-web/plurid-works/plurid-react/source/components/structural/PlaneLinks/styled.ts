@@ -67,8 +67,9 @@ export const StyledPluridPlaneLink = styled.div<IStyledPluridPlaneLink>`
 /**
  * A leash: the bridge drawn as a beam - from the link's point on the parent's face to the moved
  * child's edge - in the roots' frame like every beam, so it rides the camera and follows a drag
- * per commit. The SAME hairline a bridge is, so a bridge, a leash and a crosslink are one object
- * at every length (2026-09-19); square ends, since a rounded cap on a 3px line reads as a dot.
+ * per commit. The SAME line a bridge is (its thickness, its tones), so a bridge and a leash are one
+ * object at every length (2026-09-19; a crosslink beam stays 3px, rounded, ambient); square ends,
+ * since a rounded cap on a 3px line reads as a dot.
  *
  * It rests quiet and comes up while the camera moves or while the plane it holds is under the
  * pointer (`data-plurid-leash-live`), the rule its parent's bridge follows.

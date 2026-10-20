@@ -271,7 +271,10 @@ export const useCameraMotion = (
                 const from = live().space.camera;
                 const motion = configRef.current.navigation?.motion || {};
                 const duration = options.duration ?? motion.duration ?? 380;
-                const easingName = options.easing ?? (motion.easing === 'spring' ? 'out-quint' : (motion.easing ?? 'out-cubic'));
+                // `spring` is out-quint, asked per call as in the configuration (per call it fell to
+                // out-cubic, 2026-10-20); no spring is simulated
+                const asked = options.easing ?? motion.easing ?? 'out-cubic';
+                const easingName = asked === 'spring' ? 'out-quint' : asked;
 
                 if (
                     duration <= 0

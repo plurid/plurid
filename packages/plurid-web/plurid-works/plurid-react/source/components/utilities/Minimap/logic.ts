@@ -27,8 +27,8 @@
  * The minimap is a FIXED FRONT VIEW of the space: world X across, world Y down, always — the two
  * axes the layouts place roots on, so the map never re-arranges when a child spawns with depth or
  * when the camera moves. Depth is a cue on each dot (farther = smaller and dimmer), children are
- * smaller dots joined to their parent, and the ring marks the camera's look-at point (the pivot),
- * clamped into the map, with a tick toward the eye. Pure: the component only renders this.
+ * smaller dots joined to their parent, and the ring is the viewer (the camera eye, `computeMinimapRing`),
+ * clamped into the map, with a tick toward the pivot it looks at. Pure: the component only renders this.
  */
 export const DOT = 10;
 export const CHILD_DOT = 7;
@@ -227,8 +227,7 @@ export const computeMinimapLayout = (
 /**
  * The ring is the VIEWER: the camera eye projected into the map, so it moves with every orbit
  * (the eye swings around the pivot), pan and zoom; clamped to the map's edge when the eye is off
- * it. The tick points from the eye at the pivot — where the viewer looks; the pivot itself is a
- * small mark.
+ * it. The tick points from the eye at the pivot — where the viewer looks.
  */
 export const computeMinimapRing = (
     layout: MinimapLayout,

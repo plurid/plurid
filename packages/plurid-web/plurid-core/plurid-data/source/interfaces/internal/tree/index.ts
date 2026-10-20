@@ -19,8 +19,8 @@ export interface TreePlane {
     parentPlaneID?: string;
 
     /**
-     * The full route string, adequately formatted
-     * <protocol>://<host>://<path>://<space>://universe://cluster://<plane>
+     * The plane's absolute route, `plurid://<host>/<path>` (`plurid://localhost/doc/1`); the view
+     * holds the host's own path (`/doc/1`).
      */
     route: string;
 

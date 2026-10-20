@@ -69,7 +69,7 @@ export interface CameraLimits {
 
 /**
  * One camera mutation. Fields are applied in this order: `pivot` (re-parameterize, lossless),
- * `look` (rotate about the eye), `yaw`/`pitch` (orbit about the pivot), `pan`, `dolly`, `fly`,
+ * `look` (rotate about the eye), `yaw`/`pitch` (orbit about the pivot), `roll`, `pan`, `dolly`, `fly`,
  * `zoom`, then `absolute` (direct field writes, applied last). Every field is optional so an input
  * layer can batch several inputs into one delta per frame.
  */

@@ -150,8 +150,11 @@ repo (compiled clean, rendered blank):
    (e.g. `plurid-react/source/index.tsx`) makes esbuild emit a *runtime* re-export of a name with no JS
    value → `SyntaxError: does not provide an export named …`. Keep values in `export { … }`, types in
    `export type { … }`.
-2. **No unguarded `process.env` in library code.** It throws `ReferenceError: process is not defined` in
-   browser ESM. Guard with `typeof process !== 'undefined' && process.env` and default sensibly.
+2. **Read `process.env` as exactly `process.env.NODE_ENV`, inside a `try`/`catch`.** That member chain is
+   what a host bundler's `define` replaces (Vite, webpack, esbuild); a `typeof process` guard in front of
+   it is false in every browser, and `process.env?.NODE_ENV` is a chain no `define` matches. In an
+   unbundled page the read throws (`process is not defined`), so catch it and default sensibly (see
+   `plurid-react source/services/logic/development/environment.ts`).
 
 
 

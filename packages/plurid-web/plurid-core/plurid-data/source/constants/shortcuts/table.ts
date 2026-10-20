@@ -28,8 +28,9 @@ export interface PluridShortcutModifiers {
 }
 
 /**
- * One engine keyboard shortcut — THE single table the dispatcher, the help overlay and the toolbar
- * drawer are generated from, so they cannot drift. `code` is the default `event.code` a
+ * One engine keyboard shortcut — THE table the help overlay, the toolbar drawer, the palette and
+ * docs/SHORTCUTS.md are generated from, so they cannot drift; the dispatcher (plurid-react's
+ * `services/logic/shortcuts`) binds the same ids, a shared key's in this order. `code` is the default `event.code` a
  * `shortcuts.keymap` entry remaps; `keys` are the display chips when the code alone does not tell
  * the story (an `Alt+Digit` range, a key-character like `?`).
  */
@@ -50,9 +51,11 @@ export const PLURID_SHORTCUTS: PluridShortcutDefinition[] = [
     // navigate
     { id: 'grabMode', code: 'KeyG', kind: 'press', group: 'navigate', label: 'Grab once: the next drag orbits anywhere (the release ends it; G again or Esc cancels)' },
     { id: 'grabHold', code: 'Space', kind: 'hold', group: 'navigate', label: 'Hold to navigate (orbit anywhere)' },
+    // Escape's bindings in the dispatcher's order: the first whose condition holds runs (`dock` was listed
+    // after the mode exits, 2026-10-20)
+    { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'The docked plane: on a spawned page, its parent; on a plane read as a page (the space presentation), reveal the space; in the page presentation, from the space, dock the nearest page' },
     { id: 'exitGrabMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Exit grab mode', when: 'grabMode' },
     { id: 'exitTransformMode', code: 'Escape', kind: 'press', group: 'navigate', label: 'Leave the rotate, move or scale mode', when: 'transformMode' },
-    { id: 'dock', code: 'Escape', kind: 'press', group: 'navigate', label: 'The docked plane: on a spawned page, its parent; on a plane read as a page (the space presentation), reveal the space; in the page presentation, from the space, dock the nearest page' },
     { id: 'fitToView', code: 'Digit0', keys: ['0'], kind: 'press', group: 'navigate', label: 'Frame everything' },
     { id: 'home', code: 'Home', kind: 'press', group: 'navigate', label: 'Home viewpoint' },
     { id: 'navigateLeft', code: 'ArrowLeft', kind: 'press', group: 'navigate', label: 'Go to the plane on the left' },
@@ -135,8 +138,8 @@ export const PLURID_POINTER_GESTURES: { keys: string[]; label: string }[] = [
     { keys: ['Shift', 'drag'], label: 'Pan' },
     { keys: ['Alt', 'drag'], label: 'Dolly (move closer / further)' },
     { keys: ['wheel'], label: 'Zoom at the cursor (content scrolls first over a scrollable plane)' },
-    { keys: ['\u2318 / Ctrl', 'wheel'], label: 'Zoom at the cursor, always' },
-    { keys: ['double click'], label: 'Frame the plane (or everything)' },
+    { keys: ['\u2318 / Ctrl', 'wheel'], label: 'The browser\'s zoom (a trackpad pinch zooms the space)' },
+    { keys: ['double click'], label: 'Frame everything (on a plane\'s controls bar: that plane)' },
     { keys: ['pinch'], label: 'Zoom (touch / trackpad)' },
     { keys: ['two fingers', 'drag'], label: 'Pan (touch)' },
 ];

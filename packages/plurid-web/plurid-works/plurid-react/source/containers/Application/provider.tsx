@@ -29,13 +29,13 @@
  * `configuration`, `hostname`.
  *
  * `@plurid/plurid-kit` generates the route-driven shape, `GETTING_STARTED`
- * teaches it, and every product uses it. So seventeen documented props could
+ * teaches it, and every product uses it. So eighteen documented props could
  * not be reached from the way we tell people to build, and `CONTROL_SURFACE`
  * described an API the kit's own output could not call. Products worked around
  * it in the only place left to them — the stylesheet — and the workarounds were
  * the same in every product, which is what a missing API looks like.
  *
- * This is the answer, and it is deliberately NOT seventeen new fields on
+ * This is the answer, and it is deliberately NOT eighteen new fields on
  * `PluridRoute`: a host configures ONCE, outside the router, and every
  * application the router constructs reads it. That also settles multi-space
  * routes, where per-route props would have to be repeated per space.
