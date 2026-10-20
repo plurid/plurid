@@ -48,8 +48,9 @@ export const StyledPluridMoreMenuItem: any = styled.div`
 
     ${(props: any) => {
         if (props.afterline) {
+            // the item's own line: a bare `::after` is a descendant selector (2026-10-20)
             return `
-                ::after {
+                &::after {
                     position: absolute;
                     content: '';
                     left: 0;
@@ -74,7 +75,7 @@ export const StyledPluridMoreMenuScroll = styled.div`
     /* Hide Scrollbar */
     scrollbar-width: none; /* Firefox 64 */
     -ms-overflow-style: none; /* Internet Explorer 11 */
-    ::-webkit-scrollbar { /** WebKit */
+    &::-webkit-scrollbar { /** WebKit: its own, not its descendants' (2026-10-20) */
         display: none;
     }
 

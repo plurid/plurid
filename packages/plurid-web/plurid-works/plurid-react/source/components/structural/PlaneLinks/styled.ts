@@ -93,5 +93,21 @@ export const StyledPluridPlaneLeash = styled.div<IStyledPluridPlaneLeash>`
     [data-plurid-motion='fling'] & {
         opacity: ${BRIDGE_OPACITY_LIVE};
     }
+
+    /* With the plane it holds: set aside, it fades out as the plane does (after the motion rules, so
+       it wins while the camera docks); culled, it is not painted. None under reduced motion. */
+    &[data-plurid-aside] {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear var(--plurid-dock-fade, 240ms);
+    }
+    &[data-plurid-culled] {
+        visibility: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        & {
+            transition: none;
+        }
+    }
 `;
 // #endregion module

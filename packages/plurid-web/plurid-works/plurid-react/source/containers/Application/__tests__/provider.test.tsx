@@ -169,4 +169,21 @@ describe('the application provider', () => {
         // leaving the field out means
         expect(container.querySelector('[data-host-empty]')).toBeTruthy();
     });
+
+    it('an application given an explicit `undefined` keeps the provider\'s value, as a nested provider does', async () => {
+        // a host forwarding its own optional props (`renderEmpty={props.renderEmpty}`) passed
+        // `undefined`, spread over the defaults: the provider's slot was erased (2026-10-20)
+        await render(
+            <PluridApplicationProvider renderEmpty={() => <HostEmpty />}>
+                <PluridApplication
+                    planes={[{ route: '/p', component: Page }] as any}
+                    view={[]}
+                    renderEmpty={undefined}
+                />
+            </PluridApplicationProvider>,
+        );
+
+        expect(container.querySelector('[data-host-empty]')).toBeTruthy();
+        expect(container.querySelector('[data-plurid-entity="PluridEmpty"]')).toBeNull();
+    });
 });

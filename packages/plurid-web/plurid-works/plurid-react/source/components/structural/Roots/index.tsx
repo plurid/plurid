@@ -134,7 +134,9 @@ const PluridRoots: React.FC<PluridRootsProperties> = (
                 />
             ))}
 
-            {stateConfiguration.elements.planeLinks?.show !== false && (
+            {/* the link beams and the leashes, each with its own switch */}
+            {(stateConfiguration.elements.planeLinks?.show !== false
+                || stateConfiguration.elements.planeBridge?.show !== false) && (
                 <PluridPlaneLinks />
             )}
             {stateConfiguration.elements.alignmentGuides?.show !== false && (

@@ -48,7 +48,7 @@ export interface NavigatePlaneOptions {
 export const navigatePlane = (
     plane: TreePlane,
     options: NavigatePlaneOptions = {},
-): CameraThunk => (dispatch, getState) => {
+): CameraThunk => (dispatch, getState, extra) => {
     const {
         deisolate = true,
         animate = true,
@@ -67,7 +67,8 @@ export const navigatePlane = (
         awaitMeasure,
         pair,
         onSettle: () => {
-            focusPluridPlaneAnchor(plane.planeID);
+            // in this application's view, read at the landing (the view is filled while mounted)
+            focusPluridPlaneAnchor(plane.planeID, extra?.view);
         },
     }) as any);
 

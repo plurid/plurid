@@ -942,6 +942,14 @@ const PluridApplication = forwardRef<
      * always wins and a provider is a default rather than an override.
      */
     const defaults = useContext(PluridApplicationDefaultsContext);
+    // An explicit `undefined` reads as "not set here", as in the provider: a host forwarding its own
+    // optional props (`renderEmpty={props.renderEmpty}`) erased the provider's value (2026-10-20).
+    const own: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(properties)) {
+        if (value !== undefined) {
+            own[key] = value;
+        }
+    }
     // under a `PluridProvider` carrying the server's metastate: this render hydrates server HTML
     const serverRendered = useContext(PluridProviderContext) !== undefined;
     // the view is an array whatever the host passed (a missing or a string view threw from deep
@@ -955,7 +963,7 @@ const PluridApplication = forwardRef<
         <PluridApplicationShell
             ref={shell}
             {...defaults}
-            {...properties}
+            {...own}
             // the route-driven mode: the router's `onReady` and bus, unless the host gave the
             // application its own — and a provider's `onReady` sits between the two, because it
             // is the host speaking about every application rather than about this one

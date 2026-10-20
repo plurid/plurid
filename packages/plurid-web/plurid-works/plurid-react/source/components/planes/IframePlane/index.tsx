@@ -11,10 +11,6 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
-
-    import {
-        PluridRouteComponentProperty,
-    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -59,8 +55,7 @@ export type IframePlaneProperties =
     & IframePlaneDispatchProperties;
 
 const IframePlane: PluridReactFunctionalComponent<
-    IframePlaneProperties,
-    PluridRouteComponentProperty
+    IframePlaneProperties
 > = (
     properties,
 ) => {
@@ -77,7 +72,9 @@ const IframePlane: PluridReactFunctionalComponent<
         // #endregion state
     } = properties;
 
-    const route = plurid.value;
+    // Registered as a plane, the component receives the plane's property; as a route's exterior, the
+    // route's. It read the route's shape only, so as a plane the iframe had no `src` (2026-10-20).
+    const route = 'plane' in plurid ? plurid.plane.value : plurid.value;
     // #endregion properties
 
 

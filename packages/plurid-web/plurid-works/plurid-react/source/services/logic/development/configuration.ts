@@ -3,6 +3,10 @@
     import {
         LOOK_NAMES,
     } from '@plurid/plurid-themes';
+
+    import type {
+        FlatPluridConfiguration,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -23,17 +27,27 @@ const NESTED_KEYS = new Set(['global', 'elements', 'space', 'network', 'developm
  * The keys of the FLAT configuration (`FlatPluridConfiguration`): the shape
  * `definePluridConfiguration` takes. Passed straight as `configuration` they are not keys at all,
  * and the configuration was dropped without a word (`{ chrome: 'none' }` kept every piece of chrome).
+ *
+ * The compiler holds the list to the type, both ways: it was kept by hand and eight keys had gone
+ * missing (`planeBridge` passed nested was "not a key of the configuration"; 2026-10-20).
  */
-const FLAT_KEYS = new Set([
+const FLAT_KEY_LIST = [
     'look', 'theme', 'transparentUI', 'language', 'chrome',
     'layout', 'spaceDimensions', 'perspective', 'center', 'presentation', 'docking', 'firstPerson',
     'collaboration', 'undo', 'clipboard', 'viewpointURLWrite', 'viewpointURLRestore', 'viewpointURLParam',
     'viewpointURLDebounce', 'viewpointURLVersion', 'navigation', 'snap', 'culling', 'timings', 'gestures',
     'shortcuts', 'bridge', 'bridgeLength', 'bridgePlaneAngle', 'transformLocks', 'opaque', 'camera',
     'transformOrigin', 'transformMode', 'fadeInTime', 'planeWidth', 'planeHeight', 'planeMaxHeight',
-    'planeOpacity', 'planeDepthFade', 'planeBackface', 'planeResizable', 'toolbar', 'viewcube',
-    'minimap', 'extend',
-]);
+    'planeOpacity', 'planeDepthFade', 'planeBackface', 'planeResizable', 'planeControls', 'toolbar',
+    'viewcube', 'dockRail', 'minimap', 'origin', 'planeBridge', 'linkDraggable', 'shortcutsTrigger',
+    'palette', 'marquee', 'extend',
+] as const satisfies readonly (keyof FlatPluridConfiguration)[];
+
+/** A key of the flat configuration the list leaves out fails to compile here. */
+type EveryFlatKeyListed<Unlisted extends never> = Unlisted;
+export type FlatKeysListed = EveryFlatKeyListed<Exclude<keyof FlatPluridConfiguration, typeof FLAT_KEY_LIST[number]>>;
+
+const FLAT_KEYS = new Set<string>(FLAT_KEY_LIST);
 
 const CHROME_MODES = ['full', 'minimal', 'none'];
 const PRESENTATIONS = ['space', 'page'];

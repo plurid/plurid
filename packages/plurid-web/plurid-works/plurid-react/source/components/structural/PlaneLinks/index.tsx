@@ -81,6 +81,8 @@ export interface PluridPlaneLinksStateProperties {
     stateConfiguration: PluridConfiguration;
     stateViewSize: ViewSize;
     stateActivePlaneID: string;
+    stateDockedLineage: ReadonlySet<string>;
+    stateCulledSets: ReturnType<typeof selectors.space.getCulledSets>;
 }
 
 export type PluridPlaneLinksProperties = PluridPlaneLinksStateProperties;
@@ -114,8 +116,14 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
         stateConfiguration,
         stateViewSize,
         stateActivePlaneID,
+        stateDockedLineage,
+        stateCulledSets,
     } = properties;
 
+    // The beams are the links' (`elements.planeLinks`); a leash is a bridge (`elements.planeBridge`),
+    // hidden with the bands. The beams' switch hid the leashes and the bridges' left them (2026-10-20).
+    const linksShown = stateConfiguration.elements.planeLinks?.show !== false;
+    const bridgesShown = stateConfiguration.elements.planeBridge?.show !== false;
     const fallbackSize = resolvePlaneFallbackSize(stateConfiguration, stateViewSize);
     // the line's width and whether it rests quiet, the product's to set (`space.bridge`)
     const configuredThickness = stateConfiguration.space.bridge?.thickness;
@@ -126,7 +134,10 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
     // THE LEASH: a child moved by hand keeps its link — its bridge band (a stub off its own edge)
     // would point nowhere, so the beams layer draws the segment from the link's point to the
     // child's edge instead (the Plane skips the band for a `manuallyPositioned` child).
-    const leashes = useMemo(() => spaceEngine.tree.fields.collectLeashes(stateTree), [stateTree]);
+    const leashes = useMemo(
+        () => (bridgesShown ? spaceEngine.tree.fields.collectLeashes(stateTree) : []),
+        [stateTree, bridgesShown],
+    );
     // the geometry per leash is a function of the tree: memoised on it, not redone per render;
     // ABOVE the early return below, so the hooks are the same on every render
     const leashGeometry = useMemo(() => leashes.map(({ parent, child }) => ({
@@ -141,11 +152,16 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
 
 
     // #region render
-    if ((!stateLinks || stateLinks.length === 0) && leashes.length === 0) {
+    const links = linksShown ? (stateLinks ?? []) : [];
+    if (links.length === 0 && leashes.length === 0) {
         return null;
     }
 
     const leashBeams = leashGeometry.map(({ child, transform, length }) => {
+        // WITH THE PLANE IT HOLDS: the band is drawn on the child and goes with it; the leash, in the
+        // roots' frame, stayed over the docked page, held to a plane set aside or culled (2026-10-20).
+        const aside = stateDockedLineage.size > 0 && !stateDockedLineage.has(child.planeID);
+        const culled = selectors.space.planeCullingState(stateCulledSets, child.planeID);
         return (
             <StyledPluridPlaneLeash
                 key={'leash:' + child.planeID}
@@ -164,11 +180,13 @@ const PluridPlaneLinks: React.FC<PluridPlaneLinksProperties> = (
                 // layer re-renders on a hover change, which is not a frame: the memo below still
                 // bails every orbit frame, where the beams ride the camera transform with no JS.
                 data-plurid-leash-live={child.planeID === stateActivePlaneID ? 'true' : undefined}
+                data-plurid-aside={aside ? 'true' : undefined}
+                data-plurid-culled={culled === 'hidden' || culled === 'detached' ? culled : undefined}
             />
         );
     });
 
-    const beams = (stateLinks ?? []).map(link => {
+    const beams = links.map(link => {
         const source = statePlaneIndex.get(link.sourcePlaneID);
         const target = statePlaneIndex.get(link.targetPlaneID);
 
@@ -226,6 +244,8 @@ const mapStateToProperties = (
     stateConfiguration: selectors.configuration.getConfiguration(state),
     stateViewSize: selectors.space.getViewSize(state),
     stateActivePlaneID: state.space.activePlaneID || '',
+    stateDockedLineage: selectors.space.getDockedLineage(state),
+    stateCulledSets: selectors.space.getCulledSets(state),
 });
 
 

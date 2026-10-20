@@ -46,7 +46,9 @@ export const StyledPluridLink = styled.a<IStyledPluridLink>`
         }};
     }
 
-    ::after {
+    /* The link's OWN after: a bare "::after" is a descendant selector here, so a text link drew no
+       suffix and a link holding elements drew one after each (2026-10-20). */
+    &::after {
         content: "${({
             devisible,
             suffix,

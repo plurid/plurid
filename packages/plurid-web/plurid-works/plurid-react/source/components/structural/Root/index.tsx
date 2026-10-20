@@ -347,11 +347,10 @@ const PluridRoot: React.FC<PluridRootProperties> = (
     // console.log('Root planeProperties', planeProperties);
 
 
-    if (CustomPluridPlane) {
-        if (typeof CustomPluridPlane !== 'function') {
-            return (<></>);
-        }
-
+    // A root takes what a child takes: any React component, `memo` and `forwardRef` objects among
+    // them, and one that is not renderable leaves the root its own plane. A root asked for a function:
+    // an object rendered nothing, and the root's whole subtree with it (2026-10-20).
+    if (CustomPluridPlane && isReactRenderable(CustomPluridPlane)) {
         return (
             <StyledPluridRoot
                 data-plurid-entity={PLURID_ENTITY_ROOT}

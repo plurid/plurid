@@ -15,10 +15,6 @@
     import {
         Theme,
     } from '@plurid/plurid-themes';
-
-    import {
-        PluridRouteComponentProperty,
-    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -44,11 +40,25 @@
 
 
 // #region module
-const getPttpUrl = (
+const isLoopback = (
+    host: string,
+) => host === 'localhost'
+    || host.endsWith('.localhost')
+    || host === '[::1]'
+    || /^127(\.\d{1,3}){3}$/.test(host);
+
+/**
+ * The pttp endpoint of a `pttp://host[:port]/path` route. The host is the whole authority: the pattern
+ * took one dot only, so `pttp://a.example.com/path` asked `a.example` for `.com/path`. The request
+ * goes over the page's own transport, as an https page cannot fetch over http, and over http to this
+ * machine; it was http always (2026-10-20).
+ */
+export const getPttpUrl = (
     path: string,
+    pageProtocol = typeof window === 'undefined' ? 'http:' : window.location.protocol,
 ) => {
     // console.log('getPttpUrl path', path);
-    const re = /^pttp:\/\/(\w+(\.|:)\w+)\/?/;
+    const re = /^pttp:\/\/([^/?#]+)/;
     const match = path.match(re);
     // console.log('getPttpUrl match', match);
 
@@ -60,7 +70,9 @@ const getPttpUrl = (
     }
 
     const domain = match[1];
-    const protocol = 'http';
+    const protocol = pageProtocol === 'https:' && !isLoopback(domain.replace(/:\d+$/, ''))
+        ? 'https'
+        : 'http';
     const url = `${protocol}://${domain}/pttp`
     return {
         domain,
@@ -163,8 +175,7 @@ export type ExternalPlaneProperties =
 
 
 const ExternalPlane: PluridReactFunctionalComponent<
-    ExternalPlaneProperties,
-    PluridRouteComponentProperty
+    ExternalPlaneProperties
 > = (
     properties,
 ) => {
@@ -182,7 +193,9 @@ const ExternalPlane: PluridReactFunctionalComponent<
         // #endregion state
     } = properties;
 
-    const route = plurid.value;
+    // Registered as a plane, the component receives the plane's property; as a route's exterior, the
+    // route's. It read the route's shape only, so as a plane it never asked for its element (2026-10-20).
+    const route = 'plane' in plurid ? plurid.plane.value : plurid.value;
     // #endregion properties
 
 

@@ -35,6 +35,31 @@ These ship with the next coordinated release.
 - **`elements.plane.opacity` below 1 is translucent.** Any fraction made the plane's background fully
   transparent (the colour is the `--plurid-plane` variable, which the old decomposition could not
   read); it is the plane colour mixed with transparency by that fraction.
+- **`PluridIframePlane` and `PluridExternalPlane` work as planes.** Registered as planes, as the
+  fixtures and the docs register them, they read the route exterior's `plurid.value`: the iframe had
+  no `src` and the external plane never asked for its element. They read the plane's route now, and
+  a route exterior's still. An external plane's host is the whole `host[:port]` (one dot only was
+  read, so `pttp://a.example.com/x` asked `a.example`), and the request goes over the page's own
+  transport, http to a loopback host; it was http always, which an https page cannot fetch.
+- **A leash is a bridge.** `elements.planeBridge.show: false` hides a moved child's leash with the
+  bands, as documented, and `elements.planeLinks.show: false` (the link beams) no longer hides it. A
+  leash fades with its child when the child is set aside, and is not painted while the child is
+  culled; it stayed drawn over the docked page.
+- **An application's explicit `undefined` keeps the provider's value.** `renderEmpty={undefined}` (a
+  host forwarding its own optional props) erased the `PluridApplicationProvider` default; it reads
+  as "not set here", as it does between nested providers.
+- **A navigation's focus stays in its application.** The plane to focus was looked up in the whole
+  document, so with two applications holding the same routes (the same plane ids), one's navigation
+  focused the other's plane. It is looked up in the application's own view, by an escaped id.
+- **A root takes the custom planes a child takes.** A `customPlane` that is a `memo` or `forwardRef`
+  object rendered nothing at a root, the root's subtree with it; one that is not renderable leaves a
+  root its own plane, as it does a child.
+- **A link's suffix is drawn.** The `'` after a link is the link's own `::after`; written bare, it was
+  a descendant selector, so a text link drew none and a link holding elements drew one after each.
+  The toolbar menus' separators and hidden scrollbars had the same rule.
+- **Every flat configuration key passed nested is named as one.** Eight were missing from the
+  development check's list (`planeBridge`, `palette`, `marquee` …), which said they were not keys at
+  all; the compiler now holds the list to `FlatPluridConfiguration`.
 
 # Migrating to the October 18 release
 
