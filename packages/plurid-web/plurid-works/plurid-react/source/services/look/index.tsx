@@ -43,7 +43,7 @@ export const getLook = (
  * The stylesheet a look is: every token as a `--plurid-*` custom property, scoped to one
  * application by its id — specificity (0,1,0), on purpose, so a host's stylesheet overwrites any
  * token with a more specific selector or a later rule. `docking.fade` (a configuration knob) is the
- * fade when set; `--plurid-dock-fade` stays as an alias of `--plurid-fade` for one release.
+ * fade when set to other than its default; `--plurid-dock-fade` stays as an alias of `--plurid-fade`.
  */
 export const lookStylesheet = (
     look: Look,
@@ -61,7 +61,7 @@ export const lookStylesheet = (
 export interface PluridLookStyleProperties {
     look: Look;
     applicationID: string;
-    /** `space.docking.fade`, ms: the fade token when the host set it */
+    /** `space.docking.fade`, ms: the fade token when the host set it (the View passes none at the default) */
     fade?: number;
 }
 

@@ -70,6 +70,8 @@ if (name === 'pnpm' && args[0] === '-r') { console.log(fs.readFileSync(path.join
 if (name === 'pnpm' && args[0] === 'whoami') process.exit(0);
 if (name === 'pnpm' && args[0] === 'publish') {
     const packageName = path.basename(args[1], '.tgz');
+    // npm refused the upload (a one-time password, a permission): nothing reached the registry.
+    if (scenario.rejectAt === packageName) { console.error('npm ERR! code EOTP'); process.exit(1); }
     const uploads = JSON.parse(fs.readFileSync(path.join(root, 'uploads.json'), 'utf8'));
     uploads.push(packageName);
     fs.writeFileSync(path.join(root, 'uploads.json'), JSON.stringify(uploads));
@@ -100,8 +102,10 @@ globalThis.fetch = async (url) => {
     if (!entry) throw new Error('Unexpected offline registry request');
     const uploads = JSON.parse(fs.readFileSync(path.join(root, 'uploads.json'), 'utf8'));
     const existing = scenario.existing.includes(name);
+    // 'uploaded': each accepted upload becomes visible on its own, as npm shows it after its scan
     const ready = scenario.visible === 'always' || (scenario.visible === 'after-uploads'
-        && manifest.packages.every(entry => uploads.includes(entry.name) || scenario.existing.includes(entry.name)) && clock >= 10000);
+        && manifest.packages.every(entry => uploads.includes(entry.name) || scenario.existing.includes(entry.name)) && clock >= 10000)
+        || (scenario.visible === 'uploaded' && uploads.includes(name) && clock >= 10000);
     const present = existing || ready;
     let data;
     if (requested === 'latest') data = { name, version: name === 'a' && scenario.advanceAfter && clock >= scenario.advanceAfter
@@ -155,7 +159,8 @@ test('a timeout covers the whole release; retries never resubmit accepted but in
 
 test('a lost CLI response after an accepted upload never duplicates it on resume', () => {
     const f = fixture();
-    f.configure({ failAt: 'b' });
+    // npm shows the accepted upload: its dependents follow once it is there
+    f.configure({ failAt: 'b', visible: 'uploaded' });
     const first = f.run();
     assert.equal(first.status, 1);
     assert.equal(f.uploads().length, 2);
@@ -163,6 +168,22 @@ test('a lost CLI response after an accepted upload never duplicates it on resume
     const second = f.run();
     assert.equal(second.status, 0, second.stderr);
     assert.deepEqual(f.uploads().map(({ args }) => args[1].split('/').pop()), ['a.tgz', 'b.tgz', 'c.tgz']);
+});
+
+test('a rejected upload holds back its dependents, and its receipt is named to move aside', () => {
+    // The receipt of an upload npm refused marks it as submitted, so a rerun skipped it, and uploaded
+    // the packages after it to latest: they pinned a version that never arrived (2026-10-20).
+    const f = fixture();
+    f.configure({ rejectAt: 'b', visible: 'uploaded' });
+    const first = f.run();
+    assert.equal(first.status, 1);
+    assert.match(first.stderr, /EOTP/);
+    f.configure({ rejectAt: null });
+    const second = f.run(['--publish', '--wait', '0']);
+    assert.equal(second.status, 1, second.stderr);
+    assert.deepEqual(f.uploads().map(({ args }) => args[1].split('/').pop()), ['a.tgz', 'b.tgz']);
+    assert.match(second.stderr, /move its receipt aside/);
+    assert.match(second.stderr, /publication\/b@0\.0\.0-4\.jsonl/);
 });
 
 test('registry integrity conflicts stop before authentication or any upload', () => {

@@ -121,31 +121,35 @@ const PluridRouterBrowser = (
     const notFoundPath = notFoundPathProperty || '/not-found';
     const fadeIn = fadeInProperty ?? 10;
 
-    const pluridPlanes = gatherPluridPlanes(
-        routes,
-        planes,
-    );
     // #endregion properties
 
 
     // #region references
     const topContainer = useRef<HTMLDivElement>(null);
 
-    const pluridPlanesRegistrar = useRef(
-        new PluridPlanesRegistrar(
-            pluridPlanes,
+    // THE CURRENT ROUTES (2026-10-20): built from the first render's `routes`, `planes` and
+    // `hostname` (and constructed and thrown away again on every render after), the registrar and the
+    // matcher never matched a route a host added later. Built again when one of the three changes.
+    const pluridPlanesRegistrar = useMemo(
+        () => new PluridPlanesRegistrar(
+            gatherPluridPlanes(
+                routes,
+                planes,
+            ),
             hostname,
         ),
+        [routes, planes, hostname],
     );
 
-    const pluridIsoMatcher = useRef(
-        new PluridIsoMatcher(
+    const pluridIsoMatcher = useMemo(
+        () => new PluridIsoMatcher(
             {
                 routes,
                 routePlanes: planes,
             },
             hostname,
         ),
+        [routes, planes, hostname],
     );
     // #endregion references
 
@@ -166,8 +170,8 @@ const PluridRouterBrowser = (
         matchedRoute,
         setMatchedRoute,
     ] = useState<PluridRouteMatch | undefined>(
-        () => pluridIsoMatcher.current.match(matchedPath, 'route')
-            ?? pluridIsoMatcher.current.match(notFoundPath, 'route'),
+        () => pluridIsoMatcher.match(matchedPath, 'route')
+            ?? pluridIsoMatcher.match(notFoundPath, 'route'),
     );
     // console.log('matchedRoute', matchedRoute);
 
@@ -195,10 +199,10 @@ const PluridRouterBrowser = (
     ] = useState<React.FC<any>>(
         computePluridRoute(
             matchedRoute,
-            pluridPlanesRegistrar.current,
-            pluridIsoMatcher.current,
+            pluridPlanesRegistrar,
+            pluridIsoMatcher,
             staticContext && staticContext.directPlane
-                ? pluridIsoMatcher.current.match(
+                ? pluridIsoMatcher.match(
                     staticContext.directPlane,
                     'route',
                 ) : undefined,
@@ -279,12 +283,28 @@ const PluridRouterBrowser = (
     // changes: every computation is a new component type, and the first re-render after mount used
     // to recompute it for the same path (the effect was gated on a `useMounted` ref that flips
     // after the first render), remounting the application a host had just been handed.
+    //
+    // THE ROUTES CHANGED: the path is matched again, and routed again only when it now matches
+    // another route (a host's new array of the same routes, the common re-render, remounts nothing).
     const routedPath = useRef(matchedPath);
+    const routedMatcher = useRef(pluridIsoMatcher);
     useEffect(() => {
         if (routedPath.current === matchedPath) {
-            return;
+            if (routedMatcher.current === pluridIsoMatcher) {
+                return;
+            }
+            routedMatcher.current = pluridIsoMatcher;
+            const rematched = pluridIsoMatcher.match(matchedPath, 'route')
+                ?? pluridIsoMatcher.match(notFoundPath, 'route');
+            if (
+                rematched?.kind === matchedRoute?.kind
+                && rematched?.match.value === matchedRoute?.match.value
+            ) {
+                return;
+            }
         }
         routedPath.current = matchedPath;
+        routedMatcher.current = pluridIsoMatcher;
 
         if (!cleanNavigation) {
             // Compare the FULL current URL (pathname + search) against `matchedPath` — which
@@ -297,35 +317,35 @@ const PluridRouterBrowser = (
             }
         }
 
-        let matchedRoute = pluridIsoMatcher.current.match(matchedPath, 'route');
+        let nextRoute = pluridIsoMatcher.match(matchedPath, 'route');
 
         // Handle direct plane access.
         if (
-            matchedRoute
-            && matchedRoute.kind === 'RoutePlane'
+            nextRoute
+            && nextRoute.kind === 'RoutePlane'
         ) {
            const DirectPlane = renderDirectPlane(
-                matchedRoute,
-                pluridPlanesRegistrar.current,
+                nextRoute,
+                pluridPlanesRegistrar,
                 hostname,
             );
 
-            setMatchedRoute(matchedRoute);
+            setMatchedRoute(nextRoute);
             setPluridRoute(DirectPlane);
             return;
         }
 
         // Handle not found.
-        if (!matchedRoute) {
-            matchedRoute = pluridIsoMatcher.current.match(notFoundPath, 'route');
+        if (!nextRoute) {
+            nextRoute = pluridIsoMatcher.match(notFoundPath, 'route');
         }
 
-        setMatchedRoute(matchedRoute);
+        setMatchedRoute(nextRoute);
         setPluridRoute(
             computePluridRoute(
-                matchedRoute,
-                pluridPlanesRegistrar.current,
-                pluridIsoMatcher.current,
+                nextRoute,
+                pluridPlanesRegistrar,
+                pluridIsoMatcher,
                 undefined,
                 hostname,
                 routerPubSub,
@@ -333,6 +353,7 @@ const PluridRouterBrowser = (
         );
     }, [
         matchedPath,
+        pluridIsoMatcher,
     ]);
 
 

@@ -141,7 +141,7 @@ export const errorStatus = (
  * middleware that threw, a handler that rejected — answers with its status and a generic body, and is
  * logged here, under the server's `debug`. Express's own handler writes the stack, with the server's
  * absolute paths, into the response unless `NODE_ENV=production`, and this server's production switch
- * is `ENV_MODE`: a server run as `ENV_MODE=production node build` answered a malformed `POST /pttp`
+ * is also `ENV_MODE`: a server run as `ENV_MODE=production node build` answered a malformed `POST /pttp`
  * with both.
  */
 export const handleErrors = (

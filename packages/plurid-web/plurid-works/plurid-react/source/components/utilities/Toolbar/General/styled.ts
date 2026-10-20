@@ -59,14 +59,9 @@ export const StyledToolbar = styled.div<IStyledToolbar>`
         }
         return '-55px';
     }};
-    pointer-events: ${({
-        showMenu,
-    }) => {
-        if (showMenu !== MENUS.NONE) {
-            return 'all';
-        }
-        return 'none';
-    }};
+    /* the band is click-through, an open menu too: the strip and the menu take their own pointer. With
+       a menu open the band took it, 75 px across the whole view over the planes (2026-10-20). */
+    pointer-events: none;
     opacity: ${({
         fadeInTime,
     }) => {

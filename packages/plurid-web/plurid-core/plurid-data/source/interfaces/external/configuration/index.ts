@@ -46,9 +46,13 @@ export type PluridPartialConfiguration = RecursivePartial<PluridConfiguration>;
  */
 export interface FlatPluridConfiguration {
     // #region global
-    /** `global.theme` — a plurid theme name, or `{ general, interaction }`. */
     /** the look: a preset name, a base, or a preset with token overrides (`global.look`) */
     look?: PluridConfigurationLook;
+    /**
+     * `global.theme` — a plurid theme name, or `{ general, interaction }`, each a name or a Theme
+     * object (taken as given). The name `plurid` is the default value and leaves the theme to the
+     * look; `themes.plurid` (the object) asks for the plurid theme itself.
+     */
     theme?: ThemeName | PluridConfigurationTheme;
     /** `global.transparentUI` — render the engine elements transparent. */
     transparentUI?: boolean;
@@ -126,11 +130,11 @@ export interface FlatPluridConfiguration {
     // #endregion space
 
     // #region elements
-    /** `elements.plane.width` — fraction of the viewport (≤1) or absolute px (>1). */
+    /** `elements.plane.width` — a fraction of the view (1, or a number with a decimal up to 4) or px (anything else). */
     planeWidth?: number;
-    /** `elements.plane.height` — a fraction of the view height (≤ 1) or px (> 1); unset = the content's height. */
+    /** `elements.plane.height` — a fraction of the view height or px, as `planeWidth`; unset = the content's height. */
     planeHeight?: number;
-    /** `elements.plane.maxHeight` — the tallest a content-sized plane grows (a fraction ≤ 1 or px); taller content scrolls inside. */
+    /** `elements.plane.maxHeight` — the tallest a content-sized plane grows (a fraction or px, as `planeWidth`); taller content scrolls inside. */
     planeMaxHeight?: number;
     /** `elements.plane.opacity`. */
     planeOpacity?: number;
@@ -1049,11 +1053,9 @@ export interface PluridConfigurationElementsMinimap {
 
 export interface PluridConfigurationElementsPlane {
     /**
-     * Value between `0.00` and `x.00` (floating numbers) or between `0` and `x00` (integers).
-     *
-     * The value is based on the current width of the screen and cannot be negative.
-     *
-     * `1` and `1.00` are based on screen width.
+     * A fraction of the view's width — `1`, or a number with a decimal up to `4` (`0.6`, `1.5`) —
+     * or px: any other number (`460`, `460.5`). Not negative. Until 2026-10-20 every number with a
+     * decimal was a fraction, so `460.5` was 460.5 views wide.
      */
     width: number;
 
@@ -1064,14 +1066,14 @@ export interface PluridConfigurationElementsPlane {
      */
     opacity: number;
     /**
-     * The plane height, like `width`: a value up to `1` is a fraction of the view height, above `1`
-     * px. Unset (the default) leaves the height to the content. A plane with a configured height
+     * The plane height, by `width`'s rule: a fraction of the view height, or px. Unset (the default)
+     * leaves the height to the content. A plane with a configured height
      * scrolls its content inside it; a registered plane's own `height` overrides it.
      */
     height?: number;
     /**
-     * The tallest a content-sized plane grows, like `height` (a fraction of the view up to `1`,
-     * px above): taller content scrolls inside the plane and the plane's measured height is the cap.
+     * The tallest a content-sized plane grows, like `height` (a fraction of the view or px, by
+     * `width`'s rule): taller content scrolls inside the plane and the plane's measured height is the cap.
      * Unset (the default) leaves the height to the content; a declared, configured or hand-set
      * height ignores it; a registered plane's own `maxHeight` overrides it.
      */

@@ -56,5 +56,24 @@ describe('the page presentation defaults', () => {
         expect(explicit.space.opaque).toBe(false);
     });
 
+    it('a switch back to the space presentation takes the space defaults again; explicit values still win (2026-10-20)', () => {
+        // Nothing undid the page defaults: back in the space, the planes stayed view-tall, the space
+        // had no fade-in and no gradient, and the address bar was still bound.
+        const page = merge({ space: { presentation: 'page' } });
+        const back = merge({ space: { presentation: 'space' } }, page);
+        expect(back.space.presentation).toBe('space');
+        expect(back.space.fadeInTime).toBe(defaultConfiguration.space.fadeInTime);
+        expect(back.space.opaque).toBe(defaultConfiguration.space.opaque);
+        expect(back.elements.plane.height).toBe(defaultConfiguration.elements.plane.height);
+        expect(back.space.docking?.url).toBeUndefined();
+
+        const tuned = merge({ space: { presentation: 'page', fadeInTime: 300, docking: { url: { param: 'p' } } } });
+        const tunedBack = merge({ space: { presentation: 'space' } }, tuned);
+        expect(tunedBack.space.fadeInTime).toBe(300);
+        expect(tunedBack.space.docking?.url).toEqual({ param: 'p' });
+        const explicitBack = merge({ space: { presentation: 'space', opaque: false } }, page);
+        expect(explicitBack.space.opaque).toBe(false);
+    });
+
 });
 // #endregion module

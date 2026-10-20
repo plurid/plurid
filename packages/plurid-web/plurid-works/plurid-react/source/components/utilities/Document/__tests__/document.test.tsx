@@ -219,5 +219,26 @@ describe('<PluridDocument> on the client', () => {
         expect(document.body.getAttribute('class')).toBe('app');
         expect(document.head.querySelector('script[type="application/ld+json"]')?.textContent).toBe('{"@type":"Thing"}');
     });
+
+    it('keeps a declaration through StrictMode\'s simulated remount (2026-10-20)', async () => {
+        // The declaration was collected in render only, and the effect only withdrew it: the
+        // remount's cleanup took it away and nothing put it back.
+        const Titled = () => {
+            usePluridDocument({ title: 'strict' });
+            return null;
+        };
+        root = createRoot(container);
+        await act(async () => {
+            root!.render(
+                <React.StrictMode>
+                    <PluridDocumentScope>
+                        <Titled />
+                    </PluridDocumentScope>
+                </React.StrictMode>,
+            );
+        });
+        await flush();
+        expect(document.title).toBe('strict');
+    });
 });
 // #endregion module

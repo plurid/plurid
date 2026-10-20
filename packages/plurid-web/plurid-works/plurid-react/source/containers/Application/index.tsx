@@ -78,6 +78,7 @@
         toggleLinkPlane,
         closePlane,
         openPlane,
+        replaceHostTree,
     } from '~services/state/thunks/planes';
     import { warnOnce } from '~services/logic/development/warn';
     import {
@@ -229,9 +230,8 @@ class PluridApplicationShell extends Component<
     /** The planes whose content has still to hydrate before the saved state lands. */
     private hydrationWaiting: Set<string> | undefined;
     private hydrationFallback: ReturnType<typeof setTimeout> | undefined;
-    // Own the instance pubsub (use the host's if passed, else create one) so it's the SAME bus the
-    // View subscribes its topics on AND the one handed to the host via `onReady(api)`.
-    private pubsub: IPluridPubSub;
+    /** The bus of an application the host gave none (`pubsub`). */
+    private ownPubSub: IPluridPubSub | undefined;
     private storeUnubscriber: ReduxUnsubscribe | undefined;
     private persistTimeout: ReturnType<typeof setTimeout> | undefined;
     private persistDirty = false;
@@ -250,7 +250,34 @@ class PluridApplicationShell extends Component<
     private inspector = createInspector();
     private inspectorUnsubscriber: ReduxUnsubscribe | undefined;
     private storeID: string;
-    private planesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
+    /** The registrar of an application the host gave none (`planesRegistrar`). */
+    private ownPlanesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
+
+
+    /**
+     * The host's bus or the application's own: the SAME bus the View subscribes and `onReady(api)`
+     * hands out (THE READINESS CONTRACT lives in the bus: a command published before the View
+     * bridged it, or after it left, is dropped and reported there). Read from the props on every
+     * use: read once, a host's new bus dropped every command (2026-10-20).
+     */
+    private get pubsub(): IPluridPubSub {
+        return this.props.pubsub || (this.ownPubSub ??= new PluridPubSub());
+    }
+
+    /**
+     * Every application owns its registrar (the window-global registry used to be the client
+     * default, so two applications registering the same route overwrote each other); the global
+     * registry stays a READ fallback, resolved lazily, for planes a host registers globally. A
+     * host's own registrar is read from the props on every use, as the bus is.
+     */
+    private get planesRegistrar(): IPluridPlanesRegistrar<PluridReactComponent> {
+        return this.props.planesRegistrar
+            ?? (this.ownPlanesRegistrar ??= new PluridPlanesRegistrar(
+                this.props.planes,
+                this.props.hostname,
+                () => getPlanesRegistrar(undefined),
+            ));
+    }
 
 
     constructor(
@@ -259,10 +286,6 @@ class PluridApplicationShell extends Component<
         super(properties);
 
         this.storeID = properties.id || 'default';
-        // the host's bus or our own: the SAME bus the View subscribes and `onReady(api)` hands out
-        // (THE READINESS CONTRACT lives in the bus: a command published before the View bridged it,
-        // or after it left, is dropped and reported there)
-        this.pubsub = properties.pubsub || new PluridPubSub();
         // this.context = context;
         this.deferredLocalLoad = !!properties.serverRendered && !!properties.useLocalStorage;
         validateApplicationInput(properties, properties.configuration?.development?.warnings !== false);
@@ -366,6 +389,8 @@ class PluridApplicationShell extends Component<
         // state) is a no-op — previously every update rebuilt the whole store, re-registered the
         // planes, and clobbered the live `view` (planes added through `VIEW_ADD_PLANE`) with the
         // prop.
+        // (`planesRegistrar`: a host's new registrar takes the planes and resolves the tree; it was
+        // read once, at construction, 2026-10-20. A new `pubsub` needs no store: the render passed it.)
         const inputs: (keyof PluridApplicationProperties<PluridReactComponent>)[] = [
             'view',
             'planes',
@@ -375,6 +400,7 @@ class PluridApplicationShell extends Component<
             'hostname',
             'precomputedState',
             'useLocalStorage',
+            'planesRegistrar',
         ];
         const changed = inputs.some((key) => this.props[key] !== previousProperties[key]);
         if (!changed) {
@@ -481,18 +507,25 @@ class PluridApplicationShell extends Component<
                         store={this.store}
                         context={StateContext}
                     >
-                        <PluridDocumentPlanes
-                            planesRegistrar={this.planesRegistrar}
-                        />
-                        <PluridView
-                            {...this.props}
-                            onPlaneHydrated={this.deferredLocalLoad ? this.planeHydrated : undefined}
-                            applicationID={this.storeID}
-                            planesRegistrar={this.planesRegistrar}
-                            pubsub={this.pubsub}
-                            thunkExtra={this.thunkExtra}
-                            inspector={this.inspector}
-                        />
+                        {/* THE ROUTER'S CONTEXT STOPS HERE (2026-10-20): it wrapped everything the
+                            router rendered, so an application inside one of these planes took the
+                            router's bus and `onReady` too (`onReady` fired twice, and a command on
+                            the router's bus reached both spaces). This application read it above;
+                            what it renders reads none. */}
+                        <PluridRouterContext.Provider value={null}>
+                            <PluridDocumentPlanes
+                                planesRegistrar={this.planesRegistrar}
+                            />
+                            <PluridView
+                                {...this.props}
+                                onPlaneHydrated={this.deferredLocalLoad ? this.planeHydrated : undefined}
+                                applicationID={this.storeID}
+                                planesRegistrar={this.planesRegistrar}
+                                pubsub={this.pubsub}
+                                thunkExtra={this.thunkExtra}
+                                inspector={this.inspector}
+                            />
+                        </PluridRouterContext.Provider>
                     </ReduxProvider>
                 </StyleSheetManager>
             </PluridDocumentScope>
@@ -528,9 +561,12 @@ class PluridApplicationShell extends Component<
             this.hydrationFallback = undefined;
         }
         const restored = this.computeStore({ boot: true });
+        // the reader's saved state, not a change of theirs: recorded, its undo put back the server's
+        // arrangement (2026-10-20)
         this.store.dispatch({
             type: RESTORE_STATE,
             payload: restored,
+            meta: { history: 'skip' },
         });
         // the saved camera, committed for the view this page measured
         this.store.dispatch(actions.space.setCamera(restored.space.camera));
@@ -541,9 +577,13 @@ class PluridApplicationShell extends Component<
 
     /** The `onReady` api: the store, the bus, and synchronous reads. */
     public getApi(): PluridApi {
+        const bus = () => this.pubsub;
         return {
             store: this.store,
-            pubsub: this.pubsub,
+            // the bus in use now (`pubsub` follows its prop), not the one at the time of the call
+            get pubsub() {
+                return bus();
+            },
             getSnapshot: () => this.store.getState(),
             getViewpoint: (options) => this.encodeViewpoint(options?.version),
             inspect: () => buildInspection(this.store.getState(), this.inspector),
@@ -554,9 +594,14 @@ class PluridApplicationShell extends Component<
     public getHandle(): PluridApplicationHandle {
         const dispatch = (action: unknown) => this.store.dispatch(action as any);
         const getState = () => this.store.getState();
+        const bus = () => this.pubsub;
 
         return {
             ...this.getApi(),
+            // a spread copies the api's bus as it is now; the handle's follows the prop, as the api's
+            get pubsub() {
+                return bus();
+            },
             camera: {
                 get: () => getState().space.camera,
                 motion: () => getState().space.motion,
@@ -626,7 +671,11 @@ class PluridApplicationShell extends Component<
                 get: () => getState().space.tree,
                 culling: () => cullingCounts(getState().space),
                 setView: (view) => dispatch(actions.space.spaceSetView(view)),
-                set: (tree) => dispatch(actions.space.setTree(tree)),
+                // AS THE TOPIC DOES (`space.setTree`): it dispatched the tree as given, unchecked, exact
+                // only where nothing was pinned, and with the view left behind (2026-10-20)
+                set: (tree) => {
+                    dispatch(replaceHostTree(tree, 'tree.set'));
+                },
                 // AS THE TOPIC DOES (`space.spawnPlane`): it toggled (a second call put the plane away)
                 // and hung the bridge off the parent's corner
                 spawn: (route, parentPlaneID, linkCoordinates) => {
@@ -666,24 +715,13 @@ class PluridApplicationShell extends Component<
     }
 
 
-    /**
-     * Every application owns its registrar (the window-global registry used to be
-     * the client default, so two applications registering the same route overwrote each other). The
-     * global registry stays a READ fallback, resolved lazily, for planes a host registers globally.
-     */
     private prepare() {
-        this.planesRegistrar = this.props.planesRegistrar
-            ?? new PluridPlanesRegistrar(
-                this.props.planes,
-                this.props.hostname,
-                () => getPlanesRegistrar(undefined),
-            );
         // A thunk that must make a plane out of a PATH (a paste from another space) reaches this
         // application's registrar the way it reaches the motion controller — through the store's
         // thunk extra — and gets back a plane of THIS space: this host, this id shape, this
         // application's declared sizes, exactly as opening the path would.
         this.thunkExtra.resolvePlane = (path) => spaceEngine.tree.logic.resolveViewItem(
-            this.planesRegistrar!.getAll(),
+            this.planesRegistrar.getAll(),
             path,
             this.store.getState().configuration,
             this.props.hostname,

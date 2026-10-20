@@ -68,12 +68,19 @@ The gates are build, release-tooling tests, workspace types, package tests with 
 lint, ESM/CommonJS imports and rendering parity, size budgets, generated tables, browser behavior,
 performance, visual baselines, and packed consumers. The latter checks the **same tarballs** that will
 be published, including NodeNext declaration resolution, TypeScript 5/6 generated apps, production
-and development servers, and Chromium hydration. Nothing rebuilds after tarball verification.
+and development servers, and Chromium hydration. Nothing rebuilds after tarball verification. The
+browser gates start the harness from the release tree (`PLURID_E2E_OWN_SERVER=1`) and fail if a
+server is already on its port, rather than test a development server from the checkout.
 
 Per-gate logs are in `logs/`; coverage paths are recorded by the test runner. Tarballs and their
 SHA-256/SHA-512 hashes are in `tarballs/` and `release.json`, bound to the source commit. A failed gate
 leaves its source, store, logs and outputs intact but writes no verified release manifest. Fix the
-source, commit it and run `--pack` again. Each run gets a new directory. This pipeline neither deletes
+source, commit it and run `--pack` again. Each run gets a new directory, under the operating system's
+temporary directory, which the system may clear of old entries (macOS does after a few days): publish
+soon after `--pack`, or give `--pack` (and then `--publish`) a durable directory of your own. A remembered
+location that was cleared fails with "Recorded release artifacts are missing"; `--pack` again remembers
+a new one, whose receipts start empty (a version already on the registry with other contents blocks the
+round). This pipeline neither deletes
 nor trashes artifacts. Successful verification is remembered by the exact source commit, so no shell
 variable or copied path is required. `--pack /custom/new-directory` remains available when needed.
 
@@ -127,7 +134,10 @@ Per-package append-only upload receipts are retained under `publication/` beside
 They are bound to the artifact manifest and record submission before invoking pnpm, acceptance after
 pnpm succeeds, registry-observed versions, and final verification. A retry skips recorded submissions even while npm still returns
 404, preventing duplicate uploads and repeated authorization during scanning. An interrupted
-submission has an unknown outcome and is checked for availability rather than submitted again.
+submission has an unknown outcome and is checked for availability rather than submitted again, and the
+packages after it in dependency order wait for it to appear before they upload. If npm rejected the
+upload (`EOTP`, `E401`, `E403`), nothing will appear: the timeout names its receipt; move that file
+aside and run `--publish` again to submit it.
 
 If an upload, authentication, or availability check fails, keep the checkout and tarballs and rerun
 `--publish`. Existing matching versions are skipped; recorded uploads are only checked; new uploads

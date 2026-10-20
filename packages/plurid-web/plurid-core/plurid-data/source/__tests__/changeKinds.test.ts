@@ -20,13 +20,16 @@
 describe('the change kinds', () => {
     it('lists every kind of the type, each once, with a note', () => {
         const listed = PLURID_CHANGE_KINDS.map(([kind]) => kind);
-        // the type, spelled out: adding a member here without a row above is the test's point
-        const members: PluridChangeKind[] = [
-            'selection', 'tree', 'links', 'activePlane', 'isolate', 'layoutResolved', 'loading',
-            'history', 'motion', 'bookmarks', 'docked', 'culling', 'plane', 'refused', 'planeError',
-            'describe', 'command', 'focus',
-        ];
-        expect([...listed].sort()).toEqual([...members].sort());
+        // the type, spelled out as a RECORD: the compiler refuses one that misses a member of the
+        // union or names one it lacks. An array only checked that each entry was a member, so a kind
+        // added to the type and nowhere else passed (2026-10-20).
+        const members: Record<PluridChangeKind, true> = {
+            selection: true, tree: true, links: true, activePlane: true, isolate: true,
+            layoutResolved: true, loading: true, history: true, motion: true, bookmarks: true,
+            docked: true, culling: true, plane: true, refused: true, planeError: true,
+            describe: true, command: true, focus: true,
+        };
+        expect([...listed].sort()).toEqual(Object.keys(members).sort());
         expect(new Set(listed).size).toBe(listed.length);
         for (const [, note] of PLURID_CHANGE_KINDS) {
             expect(note.length).toBeGreaterThan(8);

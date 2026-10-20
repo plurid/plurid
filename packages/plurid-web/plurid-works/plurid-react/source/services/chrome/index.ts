@@ -20,7 +20,8 @@ export const chromeModeOf = (
 /** Every piece of engine chrome, and the least mode that still renders it. */
 export type ChromePiece =
     | 'origin' | 'toolbar' | 'viewcube' | 'minimap'
-    | 'dockRail' | 'shortcuts' | 'palette' | 'planeControls' | 'resizeHandles' | 'marquee' | 'alignmentGuides' | 'debugger';
+    | 'dockRail' | 'shortcuts' | 'palette' | 'planeControls' | 'resizeHandles' | 'marquee' | 'alignmentGuides' | 'debugger'
+    | 'modeBadge';
 
 const MODE_RANK: Record<ChromeMode, number> = { none: 0, minimal: 1, full: 2 };
 
@@ -37,6 +38,8 @@ const LEAST_MODE: Record<ChromePiece, ChromeMode> = {
     marquee: 'minimal',
     alignmentGuides: 'minimal',
     debugger: 'minimal',
+    // the mode and the way out, an affordance like the rail's (it showed under `none`, 2026-10-20)
+    modeBadge: 'minimal',
 };
 
 /** Whether the mode renders the piece (`full` everything; `minimal` the page's affordances and the drag feedback; `none` nothing). */

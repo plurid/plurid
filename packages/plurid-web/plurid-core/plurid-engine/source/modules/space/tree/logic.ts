@@ -3,6 +3,7 @@
     import {
         /** constants */
         PLANE_DEFAULT_ANGLE,
+        defaultConfiguration,
 
         /** enumerations */
         LAYOUT_TYPES,
@@ -49,6 +50,7 @@
 
     import {
         childLocation,
+        freeSpawnOrdinal,
         resolveSpawnAnchor,
         anchoredCoordinates,
         resolvePlaneAngle,
@@ -750,25 +752,36 @@ export const updateTreeWithNewPlane = <C>(
     // fanned by generation so nested spawns never turn back-to-front. The bridge leaves the
     // parent where the anchor says (its right edge, by default), and the i-th sibling takes a
     // longer one, so siblings stand side by side along their own width axis rather than coincide.
-    const siblings = (parentPlane.children ?? [])
-        .filter((child) => child.show !== false && !!child.linkCoordinates)
-        .length;
-    const anchored = resolveSpawnAnchor(parentPlane.width, linkCoordinates, {
-        anchor: configuration.space.bridge?.anchor ?? 'link',
-        ordinal: siblings,
+    // THE DEFAULT BRIDGE UNDER THE CONFIGURED ONE: a configuration without `space.bridge` (a direct
+    // engine host) took fallbacks of the objects geometry (`link`, `fixed`), which matched neither
+    // preset; the defaults are the reading preset (2026-10-20)
+    const bridge = { ...defaultConfiguration.space.bridge, ...configuration.space.bridge };
+    const spacing = {
         childWidth: treePlane.width || options.fallbackWidth,
-        bridgeLength: configuration.space.bridge?.length ?? DEFAULT_BRIDGE_LENGTH,
+        bridgeLength: bridge.length ?? DEFAULT_BRIDGE_LENGTH,
+    };
+    // the first slot no SHOWN sibling stands on (the count of them put C on B after A closed)
+    const ordinal = freeSpawnOrdinal(
+        (parentPlane.children ?? [])
+            .filter((child) => child.show !== false && !!child.linkCoordinates)
+            .map((child) => child.bridgeLength ?? spacing.bridgeLength),
+        spacing,
+    );
+    const anchored = resolveSpawnAnchor(parentPlane.width, linkCoordinates, {
+        anchor: bridge.anchor ?? 'link',
+        ordinal,
+        ...spacing,
     });
     const bridgeLength = options.bridgeLength ?? anchored.bridgeLength;
     const depth = planeDepth(tree, parentPlaneID) + 1;
-    const direction = configuration.space.bridge?.direction ?? 'backward';
+    const direction = bridge.direction ?? 'backward';
     const planeAngle = resolvePlaneAngle(
         depth,
-        configuration.space.bridge?.planeAngle ?? DEFAULT_PLANE_ANGLE,
-        configuration.space.bridge?.fan ?? 'fixed',
+        bridge.planeAngle ?? DEFAULT_PLANE_ANGLE,
+        bridge.fan ?? 'fixed',
         direction,
     );
-    const bridgeSide = configuration.space.bridge?.keepBehind
+    const bridgeSide = bridge.keepBehind
         ? resolveBridgeSide(planeAngle, direction)
         : 'start';
     const bridgeOffset = resolveBridgeOffset(configuration.space.presentation);
@@ -789,7 +802,7 @@ export const updateTreeWithNewPlane = <C>(
         planeAngle,
         bridgeSide,
         bridgeOffset,
-        bridgeAnchor: configuration.space.bridge?.anchor ?? 'link',
+        bridgeAnchor: bridge.anchor ?? 'link',
         bridgeKind: options.bridgeKind ?? anchored.bridgeKind,
         linkCoordinates: anchored.linkCoordinates,
         ...(options.linkID ? { spawnedByLinkID: options.linkID } : {}),

@@ -60,6 +60,48 @@ These ship with the next coordinated release.
 - **Every flat configuration key passed nested is named as one.** Eight were missing from the
   development check's list (`planeBridge`, `palette`, `marquee` …), which said they were not keys at
   all; the compiler now holds the list to `FlatPluridConfiguration`.
+- **A view route an arrangement nests is not "unregistered".** The development warning about view
+  routes with no registered plane looked among the roots only, so restoring an arrangement that hangs
+  a view item from another plane warned about a plane that was there.
+- **`plurid build` empties only a build.** It removed whatever `buildDir` named: `'.'`, `'source'`,
+  the public directory or a folder of something else went, with everything in it. It refuses a
+  `buildDir` that holds the application, its `source` or its public directory, or one that is not a
+  previous build (no `asset-manifest.json`, and no `index.js` beside `client/`); move that directory
+  aside or choose another.
+- **`plurid start` runs a production build only.** `plurid dev` writes the same directory, and
+  `start` ran its development build. `asset-manifest.json` records the build's `mode`, and `start`
+  refuses a development build ("run `plurid build` first"); a build from before this release has no
+  mode and counts as production.
+- **A service's `client` reaches its provider.** `PluridServiceConfig.client` was never read, so the
+  documented Apollo shape rendered a provider with no client. In the browser the kit calls `client()`
+  for the provider's `client` property, unless `properties` sets one.
+- **`plurid info` reads the config.** It reports the config file, the public and build directories
+  the config names, and the build's mode; it checked the conventional paths whatever the config said.
+- **PTTP answers where it can, and only to the origins it allows.** The kit turns `usePTTP` on only
+  for a config with an `elementqlEndpoint`: PTTP resolves ElementQL planes, and every function plane
+  answered 404. `usePTTP: true` still turns it on. `POST /pttp` reflected any `Origin`, with
+  credentials allowed; another site is answered now only from an origin in `pttpOrigins` (on the
+  server's configuration and the kit's), whose `OPTIONS` preflight is answered too, and every answer
+  carries `Vary: Origin`. A cross-origin `PluridExternalPlane` never worked against a stock server
+  (Express's own preflight answer carried no CORS headers): list its page's origin in `pttpOrigins`.
+  A host whose own handler answered the preflight, relying on the server to reflect the origin, lists
+  its origins there too.
+- **A `pttpHandler` gets the request and the response.** `PTTPHandler` is
+  `(path, request, response) => Promise<boolean>`: it answers on `response` and resolves `true`.
+  Handed the path only, one that resolved `true` left the request open; such a request gets a 500
+  and a warning now. A handler that ignores the new arguments compiles unchanged.
+- **Stills.** `PluridStillsGenerator` writes into the server's own `stillsDirectory` (it wrote
+  `stills/` whatever the server read), refuses a kit application's entry (`build/index.js`, its
+  default for a kit application), which starts a server when it is loaded, before loading it, and
+  forwards the forked server's error output, whose last lines are the reason when the server stops
+  before answering. The server finds its stills under an absolute `buildDirectory` (it looked under
+  the working directory) and serves a route's still whatever the query (`/?utm=x` rendered live).
+- **`NODE_ENV=production` is production for the server too.** The server's default `debug` was
+  `info` unless `ENV_MODE=production`; the kit and `plurid start` already read either.
+- **An ignored path is logged as passed on.** `options.ignore` logged `(204 No Content)` for a
+  request the next handler answered, usually with a 404.
+- **The kit warns about a production server without a `hostname`.** Without one, every page renders
+  on its request's `Host` header, which is only as trustworthy as the proxy in front of the server.
 
 # Migrating to the October 18 release
 

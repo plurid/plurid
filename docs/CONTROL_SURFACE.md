@@ -83,7 +83,7 @@ plurid.current?.history.undo(); .get().canRedo;
 plurid.current?.history.transaction(() => { … });        // several changes, one undo step
 plurid.current?.tree.spawn('/detail', parentPlaneID);    // a child plane with a bridge
 plurid.current?.tree.setView(['/a', '/b']);              // relayout (animated), children kept
-plurid.current?.tree.set(savedTree);                     // replace the whole tree (one undo step)
+plurid.current?.tree.set(savedTree);                     // replace the whole tree, exactly (one undo step)
 plurid.current?.tree.close(planeID); .open(planeID); .remove(planeID);
 plurid.current?.persist.flush();                         // write a pending save now, as pagehide does
 plurid.current?.focus();                                 // keyboard shortcuts apply
@@ -156,10 +156,11 @@ inspection `api.inspect()` gives, for a host that holds no api; `space.blur` tak
 the space and kind `focus` reports it; `space.command { id }` runs a shortcut by id, ignores
 `shortcuts.disabled` (a key taken from the reader, not from the host) and answers kind `command`
 `{ id, ran, reason }` (`declined` when the command had nothing to act on: no plane in focus, nothing
-selected, nothing to undo). `space.setTree` makes the view agree with the tree's roots, and it and
+selected, nothing to undo). `space.setTree` (and `handle.tree.set`, the same path) sets the tree
+exactly, its pins and placements over the live ones, and makes the view agree with its roots; it and
 `view.setPlanes` validate what they are given (a view entry is a route or `{ plane: route }`): a malformed message leaves the view or the tree as it
 was and warns, naming the first bad node, rather than throwing inside a render.
-`view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree; an empty `planeID` names no plane.
+`view.removePlane { planeID }` takes a SPAWNED plane too (by its id, or every plane at a route), with its subtree; a root removed by its id leaves the view too, unless another root stands for its route (it left the tree only, and the next relayout brought it back; 2026-10-20); an empty `planeID` names no plane. An undo or redo moves the view with the roots it takes away or brings back.
 `space.isolatePlane { planeID: null }` (or `''`) clears the isolation; `space.translateXTo` / `YTo` /
 `ZTo` `{ value }` set the pan along one axis. `space.frame { planeIDs, yaw? }` frames a set of planes
 from a yaw (`'best'` by default: the yaw that reads every plane widest), `{ selection: true, yaw }` the
@@ -540,9 +541,9 @@ const planes: PluridReactPlane[] = [
 
 Content taller than a declared height scrolls inside the plane (the wheel over it stays the content's). A hand resize (`planeResizable`) overrides a declaration; a declared size never enters undo or collaboration (it is not an arrangement change). From content, `usePluridPlane().width / height / sizeMode` (`measured` | `manual` | `declared`).
 
-For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = the view width) and `planeHeight` (`elements.plane.height`; ≤ 1 a fraction of the view height, > 1 px, unset = content-driven). The layouts pitch their columns and rows by these; a declared size wins for its plane.
+For EVERY undeclared plane: `planeWidth` (`elements.plane.width`, default 1 = the view width) and `planeHeight` (`elements.plane.height`; unset = content-driven). A configured length is a fraction of the view when it is 1 or a number with a decimal up to 4 (`0.6`, `1.5`), px otherwise (`460`, `460.5`: until 2026-10-20 every number with a decimal was a fraction); a layout gap or depth step follows the same rule, as a share of the plane width. The layouts pitch their columns and rows by these; a declared size wins for its plane.
 
-THE SIZING CONTRACT (2026-09-10, ARCHITECTURE §5.3.1): a plane's width is never the content's; its height is the content's unless declared, configured or hand-set; a content-sized height can be CAPPED — `planeMaxHeight` (`elements.plane.maxHeight`, ≤ 1 a fraction of the view height, > 1 px) for every content-sized plane, `planes[].maxHeight` (px) for one — and taller content scrolls inside the cap. The layouts place the roots by their CURRENT sizes (measured included), and a measured height change relays the roots once per frame, gliding, never mid-motion (`sheaves` and a configured height excepted); a dragged child stays where it was dropped, through relayouts and a host `setTree`.
+THE SIZING CONTRACT (2026-09-10, ARCHITECTURE §5.3.1): a plane's width is never the content's; its height is the content's unless declared, configured or hand-set; a content-sized height can be CAPPED — `planeMaxHeight` (`elements.plane.maxHeight`, a fraction of the view height or px, by the same rule) for every content-sized plane, `planes[].maxHeight` (px) for one — and taller content scrolls inside the cap. The layouts place the roots by their CURRENT sizes (measured included), and a measured height change relays the roots once per frame, gliding, never mid-motion (`sheaves` and a configured height excepted); a dragged child stays where it was dropped, through relayouts and a host `setTree`.
 
 ### Bridges (`space.bridge`) — where a child stands, and the line that joins it
 
@@ -577,7 +578,7 @@ definePluridConfiguration({
 - A scrolled link: the child stays where it is and the bridge LEANS toward the link, exactly up to the
   `knee`, easing toward the `limit` after it and never reaching it, its far end always on the parent's
   face. `lean: { limit }` at or under the knee pins it there.
-- `elements.planeBridge.show: false` hides every bridge; `renderPlaneBridge` replaces one.
+- `elements.planeBridge.show: false` hides every bridge; `renderPlaneBridge` replaces one — the strip of a child that hangs from its link, never the leash of a child moved by hand or of a fan's later sibling (the engine draws those; until 2026-10-20 the slot was drawn over them).
 
 ### The page presentation (`presentation: 'page'`)
 
@@ -619,7 +620,7 @@ Observe it: `useCamera().docked` / `handle.camera.docked()` (the page's id, `''`
 | `motion` | `'swing'` | `'swing'` tweens the camera to the page; `'instant'` jumps — a link, a child's back, `onClose: 'parent'`, Escape and `space.dock` switch at once, like a router rendering the new page. The reveal keeps its motion either way |
 | `chrome` | `'hidden'` | `'hidden'` keeps every piece of chrome hidden while a transition docks (the destination page counts as docked for the whole swing: the pages swing, nothing else appears); `'shown'` lets the space show during the swing |
 | `reveal` | `{ scale: 0.75, pitch: -24, yaw: 0 }` | the reveal pose: the docked page pulled back and looked down on (a negative `pitch` brings its top toward you; positive looks up at it; `yaw` turns it) |
-| `fade` | `240` | ms: the chrome's fade-in on the reveal, the aside fade, the rail — one number, `--plurid-dock-fade` on the view |
+| `fade` | `240` | ms: the chrome's fade-in on the reveal, the aside fade, the rail — one number: set to anything but its default it is the look's `fade` token (`--plurid-fade`, which `--plurid-dock-fade` aliases); at the default the look's own `fade` decides (until 2026-10-20 it was pinned on the view, over the look and any host stylesheet) |
 | `aside` | `'lineage'` | `'lineage'` sets every plane outside the docked page's lineage aside; `'none'` keeps them |
 | `focus` | `true` | the docked page's scroller takes the focus (the keys scroll it); `false` leaves the focus where it was |
 | `epsilon` | `0.5` | px: how far the page's center may sit from the view center and still count as docked |
@@ -742,7 +743,10 @@ The look is configuration (there is no `look` prop): `<PluridApplication configu
 - **At runtime**, the `configuration` topic with `{ global: { look: 'noir' } }` (or `setConfiguration`)
   re-emits the stylesheet. `useLook()` reads the look in force inside the application.
 - The legacy `theme` (the content's and the drawers' `Theme`) is derived from the look unless set; a
-  legacy theme NAME given to `look` maps to the nearest preset.
+  legacy theme NAME given to `look` maps to the nearest preset. A Theme OBJECT in `global.theme`
+  (`{ general, interaction }`, either part) is taken as given (until 2026-10-20 it was ignored); the
+  NAME `plurid` is the default value and leaves the theme to the look, so `themes.plurid` (the
+  object) is how a host asks for the plurid theme itself.
 - **The chrome mode**, `elements.chrome` (flat `chrome`): `full` (default) · `minimal` (the page's rail,
   the plane bars, the `?` and the drag feedback) · `none` (HEADLESS: a space with planes, links and
   bridges, no engine chrome at all — every key and every topic still work). Per surface: `elements.origin`

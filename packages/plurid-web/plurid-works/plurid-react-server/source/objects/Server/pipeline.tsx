@@ -134,7 +134,8 @@ export const handleGetRequest = async (
                 const requestTime = computeRequestTime(request);
 
                 console.info(
-                    `[${time.stamp()} :: ${requestID}] (204 No Content) Ignored GET ${request.path}${requestTime}`,
+                    // passed on, not answered: it logged a 204 that the next handler never sends (2026-10-20)
+                    `[${time.stamp()} :: ${requestID}] Ignored GET ${request.path}: passed to the next handler${requestTime}`,
                 );
             }
 
@@ -216,7 +217,8 @@ export const handleGetRequest = async (
 
         // HANDLE STILLS — serve a pre-generated static still (if one exists for this route) instead of
         // rendering on the fly. Stills are produced by `PluridStillsGenerator` and loaded by StillsManager.
-        const still = server.stills.get(matchingPath);
+        // A still is the route's, whatever the query: looked up with it, `/?utm=x` rendered live (2026-10-20).
+        const still = server.stills.get(matchingPath.replace(/[?#].*$/, ''));
 
         if (
             still

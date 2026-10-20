@@ -180,7 +180,8 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
     ]);
     const configuration = {
         ...defaultConfiguration,
-        space: { ...defaultConfiguration.space, bridge: { length: 120, planeAngle: 90, fan: 'alternate' as const } },
+        // from the link's own point (the default is the parent's edge)
+        space: { ...defaultConfiguration.space, bridge: { length: 120, planeAngle: 90, fan: 'alternate' as const, anchor: 'link' as const } },
     };
 
     it('spawns with the fanned angle, the stored geometry and the link id', () => {
@@ -211,6 +212,40 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         expect(mirrored.updatedTreePlane!.location.translateX).toBeCloseTo(400 - 120 - 300, 9);
     });
 
+    it('a configuration without a bridge spawns with the default bridge, the reading preset (2026-10-20)', () => {
+        // The engine's own fallbacks were the objects geometry (`link`, `fixed`, 90): a space whose
+        // configuration had no `space.bridge` hung its children unlike any preset.
+        const bare = { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: undefined } } as any;
+        const { updatedTreePlane } = updateTreeWithNewPlane('/detail', 'a', { x: 300, y: 40 }, [plane('a')], registry, bare, 'origin');
+        expect(updatedTreePlane!.bridgeAnchor).toBe(defaultConfiguration.space.bridge!.anchor);
+        expect(updatedTreePlane!.planeAngle).toBe(defaultConfiguration.space.bridge!.planeAngle);
+        expect(updatedTreePlane!.bridgeLength).toBe(defaultConfiguration.space.bridge!.length);
+    });
+
+    it('a sibling spawned after a close takes the slot the closed one left, not a shown sibling\'s (2026-10-20)', () => {
+        // The slot was the count of the shown siblings: A took 0 and B 1; with A closed or removed,
+        // C counted one sibling, took 1, and stood exactly on B.
+        const spawn = (tree: TreePlane[]) => updateTreeWithNewPlane('/detail', 'a', { x: 300, y: 40 }, tree, registry, configuration, 'origin', { fallbackWidth: 300 });
+        const first = spawn([plane('a')]);
+        const second = spawn(first.updatedTree);
+        const [a, b] = second.updatedTree[0].children!;
+        expect(b.bridgeLength).not.toBe(a.bridgeLength);
+
+        const closed = [{ ...second.updatedTree[0], children: [{ ...a, show: false }, b] }];
+        const afterClose = spawn(closed).updatedTreePlane!;
+        expect(afterClose.bridgeLength).not.toBe(b.bridgeLength);
+        expect(afterClose.bridgeLength).toBe(a.bridgeLength);
+
+        const removed = [{ ...second.updatedTree[0], children: [b] }];
+        const afterRemove = spawn(removed).updatedTreePlane!;
+        expect(afterRemove.bridgeLength).not.toBe(b.bridgeLength);
+        expect(afterRemove.bridgeLength).toBe(a.bridgeLength);
+
+        // with both slots held, the next is the third
+        const third = spawn(second.updatedTree).updatedTreePlane!;
+        expect([a.bridgeLength, b.bridgeLength]).not.toContain(third.bridgeLength);
+    });
+
     it('the fixed fan at 90 (the objects geometry): every generation turns 90° right of its parent and hangs behind its face, like the first link (the harness numbers)', () => {
         const root = plane('geometry', {}, { width: 320, height: 416 });
         // the objects geometry, explicitly: the default is 90.1, alternating, from the edge
@@ -239,7 +274,7 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
     it('a backward chain grows deeper at every generation; forward grows out of the wall toward the viewer (keepBehind mirrors the even generations)', () => {
         const root = plane('a', { translateX: 100 });
         const spawn = { fallbackWidth: 400 };
-        const configuration = { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 120, planeAngle: 90, fan: 'alternate' as const, keepBehind: true } } };
+        const configuration = { ...defaultConfiguration, space: { ...defaultConfiguration.space, bridge: { length: 120, planeAngle: 90, fan: 'alternate' as const, keepBehind: true, anchor: 'link' as const } } };
         const backward = updateTreeWithNewPlane('/detail', 'a', { x: 300, y: 40 }, [root], registry, configuration, 'origin', { linkID: 'a#/detail#0', ...spawn });
         const deeper = updateTreeWithNewPlane('/detail', backward.updatedTreePlane!.planeID, { x: 50, y: 10 }, backward.updatedTree, registry, configuration, 'origin', { linkID: 'b', ...spawn });
         expect(backward.updatedTreePlane!.bridgeSide).toBe('start');

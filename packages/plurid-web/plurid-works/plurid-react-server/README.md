@@ -84,8 +84,8 @@ merged from layers, lowest first:
 
 Exactly one `<title>` is written; `<meta>`, `<link>`, scripts and JSON-LD deduplicate by key. The client claims the
 same tags at hydration. `render: 'suspense'` renders through a buffered `renderToPipeableStream` that waits for
-every boundary (`use()` inside a plane) — one document, no streaming. The former `helmet` option is ignored with a
-warning; `react-helmet-async` is no longer a dependency.
+every boundary (`use()` inside a plane) — one document, no streaming. The former `helmet` option was removed (nothing
+warns at runtime); `react-helmet-async` is no longer a dependency.
 
 
 ## Static stills (optional, Puppeteer)

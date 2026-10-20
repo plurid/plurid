@@ -58,6 +58,7 @@ export const resolvePluridRoutePlaneData = <C>(
 }
 
 
+/** The id of the plane `element` is in, or is: the search started at its parent, skipping the plane itself (2026-10-20). */
 export const getPluridPlaneIDByData = (
     element: HTMLElement | null,
 ): string => {
@@ -65,11 +66,7 @@ export const getPluridPlaneIDByData = (
         return '';
     }
 
-    const parent = element.parentElement;
-    if (parent && parent.dataset.pluridPlane) {
-        return parent.dataset.pluridPlane;
-    }
-
-    return getPluridPlaneIDByData(parent);
+    const plane = element.closest<HTMLElement>('[data-plurid-plane]');
+    return plane?.dataset.pluridPlane || '';
 }
 // #endregion module

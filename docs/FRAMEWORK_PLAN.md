@@ -2,7 +2,7 @@
 
 Status: **published and partially adopted**; the adoption counts are of 2026-07-13, the kit and its generator re-verified 2026-09-29.
 
-`@plurid/plurid-kit` (0.0.0-6, published 2026-09-17) is the supported batteries layer over `plurid-react-server`. It replaces copied client/server orchestration and build scripts with a typed `plurid.config.ts`, thin runtime entries, and the `plurid` CLI.
+`@plurid/plurid-kit` (0.0.0-7, published 2026-10-18) is the supported batteries layer over `plurid-react-server`. It replaces copied client/server orchestration and build scripts with a typed `plurid.config.ts`, thin runtime entries, and the `plurid` CLI.
 
 ## Current adoption
 
@@ -51,7 +51,9 @@ Deployment is intentionally outside the CLI. CI builds images and applies review
 
 - Routing stays explicit because Plurid routes carry planes and per-route spatial configuration.
 - Client and server use the same provider ordering but not the same import graph.
-- Redux/client factories run once per client lifecycle and per request on the server.
+- Redux/client factories run once per client lifecycle. On the server a service's `store()` runs once per process, as a base
+  placeholder: a preserve returns `providers[name].store` for per-request state (anything dispatched into the base store
+  during a render is shared by every request).
 - Real Express handlers remain product modules referenced by config; only empty copied handlers are removed.
 - The document head has deterministic precedence: the kit's `head` < a route's / plane's `head` < in-render `<PluridDocument>` declarations < a preserve's `document` < the server `document` hook (the document model, 2026-09-05).
 - The client bundles application libraries; the server may externalize bare imports that are present in the runtime workspace skeleton.

@@ -15,6 +15,9 @@
         resolvePaths,
     } from './paths';
     import {
+        readBuildMode,
+    } from './manifest';
+    import {
         isPortFree,
         superviseServer,
     } from './process';
@@ -43,6 +46,13 @@ export async function start(
     if (!fs.existsSync(paths.serverEntry)) {
         process.stderr.write(
             `[plurid start] ${paths.serverEntry} not found - run \`plurid build\` first.\n`,
+        );
+        process.exit(1);
+    }
+    // `plurid dev` writes the same directory: its build is not a production one
+    if (readBuildMode(paths) === 'development') {
+        process.stderr.write(
+            `[plurid start] ${paths.buildDir} holds the development build \`plurid dev\` wrote - run \`plurid build\` first.\n`,
         );
         process.exit(1);
     }

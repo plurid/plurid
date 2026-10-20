@@ -205,6 +205,12 @@ export interface PluridServerConfiguration {
 
     usePTTP?: boolean;
     pttpHandler?: PTTPHandler;
+    /**
+     * The origins (`https://host[:port]`) allowed to call `POST /pttp` from another site, with
+     * credentials; none by default, so only the server's own pages call it. Any origin was reflected,
+     * with credentials allowed (2026-10-20).
+     */
+    pttpOrigins?: string[];
 
     elementqlEndpoint?: string;
 
@@ -213,8 +219,14 @@ export interface PluridServerConfiguration {
 }
 
 
+/**
+ * Take a PTTP request over: answer it on `response` and resolve `true`, or resolve `false` and the
+ * server resolves it. It was given the path only, and one that resolved `true` left the request open.
+ */
 export type PTTPHandler = (
     path: string,
+    request: express.Request,
+    response: express.Response,
 ) => Promise<boolean>;
 
 

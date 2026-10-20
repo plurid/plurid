@@ -42,7 +42,8 @@ export interface LoadPluridConfigOptions {
 }
 
 
-const CONFIG_FILES = [
+/** The config files the CLI reads, the first that exists. */
+export const CONFIG_FILES = [
     'plurid.config.ts',
     'plurid.config.js',
 ];

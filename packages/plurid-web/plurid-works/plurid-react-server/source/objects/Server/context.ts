@@ -53,6 +53,7 @@ export interface PluridServerContext {
     documentHook: PluridServerDocumentHook | undefined;
     renderMode: PluridServerRenderMode;
     pttpHandler: PTTPHandler | undefined;
+    pttpOrigins: string[];
     elementqlEndpoint: string | undefined;
     stills: PluridStillsManager;
     isoMatcher: routing.IsoMatcher<PluridReactComponent>;

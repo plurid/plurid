@@ -12,6 +12,7 @@
         SIZES,
         TRANSFORM_MODES,
         TOOLBAR_DRAWERS,
+        LAYOUT_TYPES,
 
         defaultConfiguration,
     } from '@plurid/plurid-data';
@@ -34,6 +35,16 @@
 // #region module
 export interface ConfigurationState extends PluridConfiguration {
 }
+
+
+/** The parameters each layout type takes (`LayoutColumns`, `LayoutRows`, … in plurid-data). */
+const LAYOUT_PARAMETERS: Record<string, readonly string[]> = {
+    [LAYOUT_TYPES.COLUMNS]: ['columns', 'columnLength', 'gap'],
+    [LAYOUT_TYPES.ROWS]: ['rows', 'rowLength', 'gap'],
+    [LAYOUT_TYPES.FACE_TO_FACE]: ['angle', 'gap', 'middle'],
+    [LAYOUT_TYPES.ZIG_ZAG]: ['angle'],
+    [LAYOUT_TYPES.SHEAVES]: ['depth', 'offsetX', 'offsetY'],
+};
 
 
 const initialState: ConfigurationState = {
@@ -69,11 +80,12 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<string>,
         ) => {
+            // the other part keeps the theme in force: a name is both parts (it became 'plurid', 2026-10-20)
             const updatedTheme: any = {
                 general: action.payload,
                 interaction: typeof state.global.theme === 'object'
                     ? state.global.theme.interaction
-                    : 'plurid',
+                    : (state.global.theme ?? 'plurid'),
             };
 
             state.global.theme = updatedTheme;
@@ -85,7 +97,7 @@ export const configuration = createSlice({
             const updatedTheme: any = {
                 general: typeof state.global.theme === 'object'
                     ? state.global.theme.general
-                    : 'plurid',
+                    : (state.global.theme ?? 'plurid'),
                 interaction: action.payload,
             };
 
@@ -225,6 +237,14 @@ export const configuration = createSlice({
                 toggledDrawers,
             } = state.elements.toolbar;
 
+            // ALL OPEN, ONE CLOSED: `ALL` is every drawer, so closing one leaves the others (the
+            // toggle added or removed the named drawer only, and ALL could never be closed; 2026-10-20)
+            if (toggledDrawers.includes(TOOLBAR_DRAWERS.ALL) && action.payload !== TOOLBAR_DRAWERS.ALL) {
+                state.elements.toolbar.toggledDrawers = Object.values(TOOLBAR_DRAWERS)
+                    .filter((drawer) => drawer !== TOOLBAR_DRAWERS.ALL && drawer !== action.payload);
+                return;
+            }
+
             if (toggledDrawers.includes(action.payload)) {
                 const updatedDrawers = toggledDrawers.filter(el => el !== action.payload);
                 state.elements.toolbar.toggledDrawers = [...updatedDrawers];
@@ -255,13 +275,21 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<any>,
         ) => {
-            const layout: any = {
-                type: space.layout.resolveLayoutType(action.payload).type,
-            };
+            // THE PARAMETERS STAY (2026-10-20): the picked type replaced the whole layout, so a click on
+            // Columns dropped `columns: 3`. The same type keeps them all; another keeps those it takes.
+            const type = space.layout.resolveLayoutType(action.payload).type;
+            const current = (state.space.layout || {}) as unknown as Record<string, unknown>;
+            if (current.type === type) {
+                return;
+            }
+            const layout: Record<string, unknown> = { type };
+            for (const key of LAYOUT_PARAMETERS[type] ?? []) {
+                if (current[key] !== undefined) {
+                    layout[key] = current[key];
+                }
+            }
 
-            state.space.layout = {
-                ...layout,
-            };
+            state.space.layout = layout as any;
         },
         setConfigurationSpaceCullingDistance: (
             state,

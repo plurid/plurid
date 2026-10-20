@@ -1,7 +1,7 @@
 # Production readiness (2026-09-29)
 
 October 18 release preparation: all 13 package versions and peer minimums are prepared. Local
-preserving builds, workspace types/lint, 1,199 package tests plus 11 release-tooling tests, module
+preserving builds, workspace types/lint, 1,199 package tests plus the release-tooling tests (18 in the verified release tree `c7ef464`; `pnpm test.release`), module
 parity, 18 size budgets, generated tables, 182 browser cases, 13 performance cases, 50 Darwin visual
 comparisons, and the 13-tarball consumer/generated-app smoke passed. The smoke checks NodeNext types
 and TypeScript 5/6, production/development servers and desktop/mobile hydration. These are local
@@ -85,6 +85,7 @@ The gates on the final tree (`pnpm verify` runs them in this order):
 | Gate | Result |
 | --- | --- |
 | `pnpm build` | 13 packages: ESM, CommonJS and declarations |
+| `pnpm test.release` | the release tooling's offline tests (18 in `c7ef464`) |
 | `pnpm check` | every package, the harness and the examples type-check, the tests included |
 | `pnpm test` | 1,186 tests in 13 packages, all passing: React 575 (88 suites), engine 358, functions 63, server 60, kit 60, generator 16, data 14, UI components 11, themes 9, pubsub 8, icons 5, UI state 4, functions-react 3 |
 | `pnpm lint` | clean |

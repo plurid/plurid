@@ -5,6 +5,7 @@
     // #region libraries
     import React, {
         useState,
+        useEffect,
     } from 'react';
 
     import {
@@ -100,6 +101,12 @@ const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
 
     /** state */
     const [localCullingDistance, setLocalCullingDistance] = useState(cullingDistance);
+    // the distance in force, followed: the slider kept the value it opened with (2026-10-20)
+    useEffect(() => {
+        setLocalCullingDistance(cullingDistance);
+    }, [
+        cullingDistance,
+    ]);
 
 
     /** callback */
@@ -132,13 +139,14 @@ const PluridMenuMoreTechnical: React.FC<PluridMenuMoreTechnicalProperties> = (
                     {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerTechnicalCullingDistance)}
                 </div>
 
+                {/* a scale that holds the distance in force: it ran to 5000, with a default of 1500,
+                    and the default distance is 6000 (2026-10-20) */}
                 <PluridSlider
                     theme={stateInteractionTheme}
                     value={localCullingDistance}
                     atChange={handleCullingDistance}
                     min={1_000}
-                    max={5_000}
-                    defaultValue={1_500}
+                    max={Math.max(10_000, cullingDistance)}
                 />
             </StyledPluridMoreMenuItem>
         </>

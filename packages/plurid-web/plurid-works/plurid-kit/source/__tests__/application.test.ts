@@ -40,7 +40,7 @@ describe('the application surface', () => {
         expect(typeof service.Provider).toBe('function');
     });
 
-    it('sits OUTERMOST, above the router and every application under it', () => {
+    it('is applied first (the innermost service), above the router and every application under it', () => {
         const ordered = orderedServices([
             ...applicationService({ renderEmpty: slot }),
             { name: 'redux', Provider: (() => null) as any, order: 0 },

@@ -6,6 +6,13 @@
         Theme,
     } from '@plurid/plurid-themes';
     // #endregion libraries
+
+
+    // #region external
+    import {
+        chromeControl,
+    } from '~services/styled/chrome';
+    // #endregion external
 // #endregion imports
 
 
@@ -17,12 +24,9 @@ export interface IStyledPluridTransformArrow {
 }
 
 export const StyledPluridTransformArrow = styled.button<IStyledPluridTransformArrow>`
-    border: 0;
-    margin: 0;
-    font: inherit;
-    color: inherit;
+    /* a chrome control: a host's \`button\` rules stay out (they leaked in, 2026-10-20) */
+    ${chromeControl}
     user-select: none;
-    cursor: pointer;
     border-radius: var(--plurid-radius);
     width: 25px;
     height: 25px;

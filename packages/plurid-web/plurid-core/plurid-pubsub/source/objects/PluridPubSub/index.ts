@@ -101,14 +101,19 @@ class PluridPubSub implements IPluridPubSub {
         } = message;
 
         const subscriptions = this.subscriptions.get(topic);
-        const callbacks = subscriptions ? Object.values(subscriptions) : [];
-        if (callbacks.length === 0) {
+        const entries = subscriptions ? Object.entries(subscriptions) : [];
+        if (entries.length === 0) {
             // THE READINESS CONTRACT: no subscriber, the message is dropped — never buffered
             this.guard(topic, () => this.drop(String(topic)));
             return;
         }
 
-        for (const subscription of callbacks) {
+        // the subscribers of the moment of the publish, less any one a subscriber before it removed:
+        // a copy alone still called them (2026-10-20); one added during the publish waits for the next
+        for (const [index, subscription] of entries) {
+            if (!Object.hasOwn(subscriptions!, index)) {
+                continue;
+            }
             this.guard(topic, () => subscription(data));
         }
     }
@@ -136,12 +141,17 @@ class PluridPubSub implements IPluridPubSub {
     }
 
     /**
-     * A dropped publish: the host's `onDrop` when set (`null` silences), else — in development, once
-     * per topic, never for a topic the engine emits — a warning naming the topic.
+     * A dropped publish, never for a topic the engine emits (nobody has to listen to them): the
+     * host's `onDrop` when set (`null` silences), else — in development, once per topic — a warning
+     * naming the topic. The host's report replaces the warning; it was called for the emitted
+     * topics too, every `space.changed` an application published with no listener (2026-10-20).
      */
     private drop(
         topic: string,
     ) {
+        if (PLURID_PUBSUB_EMITTED_TOPICS.includes(topic)) {
+            return;
+        }
         const onDrop = this.options?.onDrop;
         if (onDrop === null) {
             return;
@@ -150,7 +160,7 @@ class PluridPubSub implements IPluridPubSub {
             onDrop(topic);
             return;
         }
-        if (!development() || PLURID_PUBSUB_EMITTED_TOPICS.includes(topic) || this.dropped.has(topic)) {
+        if (!development() || this.dropped.has(topic)) {
             return;
         }
         this.dropped.add(topic);

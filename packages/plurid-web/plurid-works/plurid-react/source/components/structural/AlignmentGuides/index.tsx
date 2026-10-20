@@ -54,7 +54,9 @@ export interface AlignmentGuidesStateProperties {
     stateSelectedPlaneIDs: string[];
     stateGeneralTheme: Theme;
     stateSnap: PluridConfigurationSpaceSnap | undefined;
-    stateFallback: { width: number; height: number };
+    /** the fallback plane size, as numbers: an object built per mapping rendered the guides at every dispatch (2026-10-20) */
+    stateFallbackWidth: number;
+    stateFallbackHeight: number;
 }
 
 export type AlignmentGuidesProperties = AlignmentGuidesStateProperties;
@@ -74,7 +76,8 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
         stateSelectedPlaneIDs,
         stateGeneralTheme,
         stateSnap,
-        stateFallback,
+        stateFallbackWidth,
+        stateFallbackHeight,
     } = properties;
 
     // #region render
@@ -86,7 +89,10 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
     const {
         selection,
         others,
-    } = spaceEngine.snap.collectSnapBoxes(stateTree, new Set(stateSelectedPlaneIDs), stateFallback);
+    } = spaceEngine.snap.collectSnapBoxes(stateTree, new Set(stateSelectedPlaneIDs), {
+        width: stateFallbackWidth,
+        height: stateFallbackHeight,
+    });
     if (selection.length === 0) {
         return null;
     }
@@ -131,7 +137,7 @@ const AlignmentGuides: React.FC<AlignmentGuidesProperties> = (
 }
 
 
-const mapStateToProperties = (
+export const alignmentGuidesState = (
     state: AppState,
 ): AlignmentGuidesStateProperties => ({
     stateDraggingSelection: selectors.space.getDraggingSelection(state),
@@ -139,12 +145,13 @@ const mapStateToProperties = (
     stateSelectedPlaneIDs: selectors.space.getSelectedPlaneIDs(state),
     stateGeneralTheme: selectors.themes.getGeneralTheme(state),
     stateSnap: state.configuration.space.snap,
-    stateFallback: resolvePlaneFallbackSize(state.configuration, state.space.viewSize),
+    stateFallbackWidth: resolvePlaneFallbackSize(state.configuration, state.space.viewSize).width,
+    stateFallbackHeight: resolvePlaneFallbackSize(state.configuration, state.space.viewSize).height,
 });
 
 
 const ConnectedAlignmentGuides = connect(
-    mapStateToProperties,
+    alignmentGuidesState,
     null,
     null,
     {

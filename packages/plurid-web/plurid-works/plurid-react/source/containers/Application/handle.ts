@@ -103,7 +103,9 @@ export interface PluridApplicationHandle extends PluridApi {
         setView: (view: PluridApplicationView) => void;
         /**
          * Replace the whole tree, children and placements included, as the `space.setTree` topic
-         * does: a product that arranges its own space restores a saved arrangement with it.
+         * does: a product that arranges its own space restores a saved arrangement with it. The tree
+         * is set exactly (its locations, pins and sizes over the live ones), the view follows its
+         * roots, and a malformed tree leaves the tree as it was, with a development warning.
          */
         set: (tree: TreePlane[]) => void;
         /**

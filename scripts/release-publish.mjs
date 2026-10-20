@@ -41,6 +41,7 @@ const publicationJournal = (directory, manifest) => {
     };
     return {
         state,
+        receipt: path,
         start: (entry) => {
             mkdirSync(parent, { recursive: true });
             // Claim before the network operation: a crash or another release process must not re-upload it.
@@ -87,8 +88,14 @@ const waitForAvailability = async ({ entries, journal, lookup, timeoutMs, log })
         }
         const remaining = deadline - Date.now();
         if (remaining <= 0) {
+            // an upload whose outcome npm never reported may have been refused: say how to retry it
+            const submitted = [...pending.values()].filter((entry) => journal.state(entry) === 'submitting');
             throw new Error(`npm availability pending: ${[...pending.values()].map((entry) => entry.name + '@' + entry.version).join(', ')}. `
-                + 'Upload receipts are saved. Re-run --publish or --verify-registry with the same artifacts; recorded uploads will not be submitted again.');
+                + 'Upload receipts are saved. Re-run --publish or --verify-registry with the same artifacts; recorded uploads will not be submitted again.'
+                + (submitted.length
+                    ? ' If npm rejected an upload (a one-time password or a permission error), move its receipt aside and run --publish again: '
+                        + submitted.map((entry) => journal.receipt(entry)).join(', ')
+                    : ''));
         }
         await new Promise((resolve) => setTimeout(resolve, Math.min(10000, remaining)));
     }
@@ -100,16 +107,27 @@ export const publishArtifacts = async ({ directory, manifest, entries, lookup, a
     const receipts = new Map(entries.map((entry) => [entry.name, journal.state(entry)]));
     const states = await Promise.all(entries.map((entry) => inspect(entry, lookup)));
     const missing = [];
+    // Recorded uploads npm does not show yet: their outcome is unknown, and they are never sent again.
+    const unresolved = [];
     for (const { entry, present, confirmed } of states) {
         if (confirmed) journal.verify(entry);
         else if (present) journal.observe(entry);
-        else if (!present && !receipts.get(entry.name)) missing.push(entry);
+        else if (receipts.get(entry.name)) unresolved.push(entry);
+        else missing.push(entry);
     }
     if (missing.length) {
         await authenticate();
         log(`Uploading ${missing.length} packages consecutively; npm availability is checked after all uploads.`);
     }
     for (const entry of missing) {
+        // A package after an unresolved upload in dependency order waits for it: published to latest
+        // without it, it pinned a version that a refused upload would never deliver (2026-10-20).
+        const before = unresolved.filter((other) => entries.indexOf(other) < entries.indexOf(entry));
+        if (before.length) {
+            log(`Waiting for ${before.map((other) => other.name + '@' + other.version).join(', ')} before ${entry.name}.`);
+            await waitForAvailability({ entries: before, journal, lookup, timeoutMs, log });
+            unresolved.splice(0, unresolved.length, ...unresolved.filter((other) => !before.includes(other)));
+        }
         journal.start(entry);
         log(`Publishing ${entry.name}@${entry.version} to latest`);
         await upload(entry);

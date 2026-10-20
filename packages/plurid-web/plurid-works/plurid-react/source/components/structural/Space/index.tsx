@@ -37,6 +37,10 @@
         buildInspection,
     } from '~services/logic/inspector';
     import PluridProviderContext from '~containers/Provider/context';
+    import {
+        chromeModeOf,
+        showsChrome,
+    } from '~services/chrome';
     // import actions from '~services/state/actions';
     // #endregion external
 
@@ -138,12 +142,13 @@ const PluridSpace: React.FC<PluridSpaceProperties> = (
             <PluridRoots />
 
             {stateConfiguration.development?.spaceDebugger && typeof window !== 'undefined' && (
-                // never on the server: a lazy chunk would stall a streamed render
+                // never on the server: a lazy chunk would stall a streamed render. A host's slot
+                // renders whatever the chrome mode; the engine's HUD is chrome (headless drew it, 2026-10-20)
                 pluridContext?.chrome?.renderDebugger
                     ? pluridContext.chrome.renderDebugger(
                         reduxContext?.store ? buildInspection(reduxContext.store.getState() as AppState, pluridContext.inspector) : undefined,
                     ) as React.ReactNode
-                    : (
+                    : showsChrome(chromeModeOf(stateConfiguration), 'debugger') && (
                         <React.Suspense fallback={null}>
                             <PluridSpaceDebugger inspector={pluridContext?.inspector} />
                         </React.Suspense>

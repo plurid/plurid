@@ -43,8 +43,13 @@ export const PTTP_ROUTE = process.env.PLURID_SERVER_PTTP_ROUTE || '/pttp';
 
 
 
+// production by either switch, as the kit decides (`createPluridServer`): a server run as
+// `NODE_ENV=production` logged every request at info level (2026-10-20)
+const production = process.env.ENV_MODE === 'production'
+    || process.env.NODE_ENV === 'production';
+
 export const environment = {
-    production: process.env.ENV_MODE === 'production',
-    development: process.env.ENV_MODE === 'development',
+    production,
+    development: !production && process.env.ENV_MODE === 'development',
 };
 // #endregion module

@@ -110,6 +110,9 @@
     import PlaneResizeHandles from './components/PlaneResizeHandles';
     import PlaneControls from './components/PlaneControls';
     import PlaneContent from './components/PlaneContent';
+    import {
+        planeDetailsOf,
+    } from './details';
     // #endregion internal
 // #endregion imports
 
@@ -351,19 +354,18 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         });
     }
 
-    // What `usePluridPlane()` exposes about THIS plane (the `plurid` prop's `plane`, as a context):
-    // a stable object per plane instance, so consumers re-render only when the plane's identity does.
-    const planeDetails = useMemo(() => ({
-        value: plane.route.absolute,
+    // What `usePluridPlane()` exposes about THIS plane: the `plurid` prop's `plane` (`planeDetailsOf`,
+    // the requested route's query, fragments and parameters), as a context; a stable object per plane
+    // instance, so consumers re-render only when the plane's identity or its request does.
+    const planeDetails = useMemo(() => planeDetailsOf(plane, {
         planeID,
         parentPlaneID: treePlane.parentPlaneID,
-        fragments: plane.route.fragments,
-        parameters: plane.route.parameters,
-        query: plane.route.query,
+        routeDivisions: treePlane.routeDivisions,
     }), [
-        plane.route,
+        plane,
         planeID,
         treePlane.parentPlaneID,
+        treePlane.routeDivisions,
     ]);
 
     const closePlane = () => {
@@ -388,6 +390,27 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             });
         }
     }
+
+    // THE KEYBOARD'S HOVER ENDS WITH THE FOCUS: focus lit the controls as the pointer does, and
+    // nothing put them out when it left (2026-10-20). A pointer still over the plane keeps them lit.
+    const pointerInside = useRef(false);
+    const enterPlane = () => {
+        pointerInside.current = true;
+        activatePlane();
+    };
+    const leavePlane = () => {
+        pointerInside.current = false;
+        deactivatePlane();
+    };
+    const blurPlane = (
+        event: React.FocusEvent<HTMLElement>,
+    ) => {
+        const next = event.relatedTarget as Node | null;
+        if (pointerInside.current || (next && event.currentTarget.contains(next))) {
+            return;
+        }
+        setMouseOver(false);
+    };
 
     const deactivatePlane = () => {
         setMouseOver(false);
@@ -706,9 +729,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 pointerEvents: stateAside ? 'none' : isolatePointerEvents,
                 visibility: waitsForView ? 'hidden' : undefined,
             }}
-            onPointerEnter={activatePlane}
-            onPointerLeave={deactivatePlane}
+            onPointerEnter={enterPlane}
+            onPointerLeave={leavePlane}
             onFocusCapture={activatePlane}
+            onBlurCapture={blurPlane}
             onClick={handlePlaneClick}
             selected={stateIsSelected}
             transparentUI={transparentUI}
@@ -750,12 +774,13 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
 
             {treePlane.show && (
                 <>
-                    {treePlane.parentPlaneID && bridgeShown && chrome?.renderPlaneBridge && (
-                        chrome.renderPlaneBridge(planeChromeContext) as React.ReactNode
-                    )}
                     {/* a child moved by hand keeps its link on a LEASH drawn by the beams layer (the band would
                         point nowhere), and so does a later sibling of a fan (`bridgeKind: 'leash'`: its strip
-                        would cross its elders) */}
+                        would cross its elders); a host's bridge (`renderPlaneBridge`) is drawn where the strip
+                        would be, never over a leash (it was called for every child, 2026-10-20) */}
+                    {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && treePlane.bridgeKind !== 'leash' && chrome?.renderPlaneBridge && (
+                        chrome.renderPlaneBridge(planeChromeContext) as React.ReactNode
+                    )}
                     {treePlane.parentPlaneID && bridgeShown && !treePlane.manuallyPositioned && treePlane.bridgeKind !== 'leash' && !chrome?.renderPlaneBridge && (
                         <PlaneBridge
                             // THE ACTIVE PLANE, not this component's own hover: the engine's active
@@ -786,7 +811,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                                 />
                             )}
 
-                            {stateConfiguration.development?.planeDebugger && typeof window !== 'undefined' && (
+                            {stateConfiguration.development?.planeDebugger && typeof window !== 'undefined' && showsChrome(chromeMode, 'debugger') && (
                                 // never on the server: a lazy chunk would stall a streamed render
                                 <React.Suspense fallback={null}>
                                     <PlaneDebugger

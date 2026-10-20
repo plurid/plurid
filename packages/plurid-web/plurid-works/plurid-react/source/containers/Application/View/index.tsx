@@ -1,7 +1,6 @@
 // #region imports
     // #region libraries
     import React, {
-        useContext,
         useRef,
         useCallback,
         useMemo,
@@ -29,6 +28,7 @@
         /** constants */
         PLURID_ENTITY_VIEW,
         PLURID_DEFAULT_PREVENT_OVERSCROLL_TIMEOUT,
+        defaultConfiguration,
 
         /** enumerations */
         TRANSFORM_MODES,
@@ -57,7 +57,6 @@
     } from '~data/interfaces';
 
     import Context from '~services/context';
-    import PluridRouterContext from '../../RouterBrowser/context';
 
     import {
         handleGlobalShortcuts,
@@ -278,6 +277,11 @@ export interface PluridViewOwnProperties extends PluridApplicationProperties<Plu
     applicationID?: string;
     /** Hydrating with a saved state waiting: told when each plane's content has hydrated. */
     onPlaneHydrated?: (planeID: string) => void;
+    /**
+     * Rendered by a router's route (`PluridApplication` read the router's context): the pathname is
+     * the router's. A prop, because the application resets the context for what it renders.
+     */
+    routerHosted?: boolean;
 }
 
 export interface PluridViewStateProperties {
@@ -363,6 +367,7 @@ const PluridView: React.FC<PluridViewProperties> = (
             planeRenderError,
             matchedRoute,
             hostname,
+            routerHosted,
             // #endregion values
         // #endregion required
 
@@ -449,9 +454,11 @@ const PluridView: React.FC<PluridViewProperties> = (
     const [navDragging, setNavDragging] = useState(false);
 
     // The one rAF loop for programmatic motion (tweens + flings); every input cancels it.
+    const engineStore = useEngineStore();
     const motion = useCameraMotion({
         dispatch,
         stateRef,
+        getState: () => engineStore.getState() as AppState,
         spaceConfiguration: stateConfiguration.space,
     });
 
@@ -714,12 +721,6 @@ const PluridView: React.FC<PluridViewProperties> = (
 
 
     // #region callbacks
-    const engineStore = useEngineStore();
-    // the one fade of the page presentation (`space.docking.fade`), read by every stylesheet
-    const dockFadeStyle = useMemo(
-        () => ({ '--plurid-dock-fade': (stateConfiguration.space.docking?.fade ?? 240) + 'ms' } as React.CSSProperties),
-        [stateConfiguration.space.docking?.fade],
-    );
     const shortcutsCallback = useCallback((event: KeyboardEvent) => {
         const {
             transformLocks,
@@ -1141,13 +1142,15 @@ const PluridView: React.FC<PluridViewProperties> = (
                 return;
             }
             const current = engineStore.getState() as AppState;
-            const tree = selectors.space.getTree(current);
+            // every plane, not the roots only: an arrangement can hang a view item from another
+            // plane, which warned that the item had no registered plane (2026-10-20)
+            const planes = [...selectors.space.getPlaneIndex(current).values()];
             const view = selectors.space.getView(current);
-            if (tree.length >= view.length) {
+            if (planes.length >= view.length) {
                 return;
             }
             const missing = view.filter((item) => typeof item === 'string'
-                && !tree.some((root) => root.route === item || root.sourceID === item || root.route.endsWith(item)));
+                && !planes.some((plane) => plane.route === item || plane.sourceID === item || plane.route.endsWith(item)));
             if (missing.length > 0) {
                 warnOnce(
                     'view-unregistered:' + missing.join(','),
@@ -1187,10 +1190,9 @@ const PluridView: React.FC<PluridViewProperties> = (
     // them in the same commit) and the follow sees a settled page; a `?v=` restored earlier is refined
     // by the path. Inside a `PluridRouterBrowser` route the pathname is the router's and the page
     // rides a query parameter.
-    const routerContext = useContext(PluridRouterContext);
     const dockingURL = useMemo(
-        () => generalEngine.configuration.resolveDockingURL(stateConfiguration.space.docking?.url, { router: !!routerContext }),
-        [stateConfiguration.space.docking?.url, routerContext],
+        () => generalEngine.configuration.resolveDockingURL(stateConfiguration.space.docking?.url, { router: !!routerHosted }),
+        [stateConfiguration.space.docking?.url, routerHosted],
     );
     useDockingURL({
         binding: dockingURL,
@@ -1309,7 +1311,9 @@ const PluridView: React.FC<PluridViewProperties> = (
                 : (grabMode ? 'grab' : (stateConfiguration.space.transformMode !== 'ALL' ? 'transform' : undefined))}
             data-plurid-mode={modeOf(stateConfiguration.space, grabMode)}
             onPointerUpCapture={letMomentaryChromeGo}
-            style={dockFadeStyle}
+            // THE DOCK FADE IS THE LOOK'S (`--plurid-dock-fade`, an alias of `--plurid-fade`, which is
+            // `space.docking.fade` when set): pinned inline here, it beat the look's own fade and any
+            // host stylesheet (2026-10-20)
             role="application"
             aria-roledescription="3D space"
             aria-label="plurid space"
@@ -1317,7 +1321,11 @@ const PluridView: React.FC<PluridViewProperties> = (
             <PluridLookStyle
                 look={lookOf(stateConfiguration)}
                 applicationID={properties.applicationID ?? 'default'}
-                fade={stateConfiguration.space.docking?.fade}
+                // `docking.fade` at its default (240) is not a choice: as one, it overrode every look's own
+                // fade token (2026-10-20)
+                fade={stateConfiguration.space.docking?.fade !== defaultConfiguration.space.docking?.fade
+                    ? stateConfiguration.space.docking?.fade
+                    : undefined}
             />
             <Context.Provider
                 value={pluridContext}

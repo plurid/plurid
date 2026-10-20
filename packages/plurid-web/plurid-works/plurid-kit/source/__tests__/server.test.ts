@@ -81,6 +81,48 @@ describe('createPluridServer()', () => {
         expect(configuration.options.serverName).toBe('kit test');
     });
 
+    it('turns PTTP on where it can answer: an ElementQL endpoint, or when the config asks (2026-10-20)', async () => {
+        // PTTP resolves ElementQL planes only, and it was on for every app: a `/pttp` answering 404 for
+        // each of its function planes.
+        const usePTTP = async (config: object) => ((await createPluridServer({
+            serverName: 'kit test',
+            routes: [],
+            ...config,
+        } as any)) as any).configuration.usePTTP;
+        expect(await usePTTP({})).toBe(false);
+        expect(await usePTTP({ elementqlEndpoint: 'https://elements.example/elementql' })).toBe(true);
+        expect(await usePTTP({ usePTTP: true })).toBe(true);
+    });
+
+    it('warns in production when no hostname is configured: the pages would render on the request\'s Host (2026-10-20)', async () => {
+        // The type requires \`hostname\`; the configuration check accepts its absence, and nothing said so.
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const saved = process.env.ENV_MODE;
+        try {
+            await createPluridServer({ serverName: 'kit test', routes: [{ value: '/' }] } as any);
+            expect(warn.mock.calls.some(([message]) => /hostname/.test(String(message)))).toBe(false);
+
+            process.env.ENV_MODE = 'production';
+            await createPluridServer({ serverName: 'kit test', hostname: 'example.com', routes: [{ value: '/' }] } as any);
+            expect(warn.mock.calls.some(([message]) => /hostname/.test(String(message)))).toBe(false);
+            await createPluridServer({ serverName: 'kit test', routes: [{ value: '/' }] } as any);
+            expect(warn.mock.calls.some(([message]) => /no `hostname`/.test(String(message)))).toBe(true);
+        } finally {
+            if (saved === undefined) delete process.env.ENV_MODE;
+            else process.env.ENV_MODE = saved;
+            warn.mockRestore();
+        }
+    });
+
+    it('passes the PTTP origins on to the server', async () => {
+        const server: any = await createPluridServer({
+            serverName: 'kit test',
+            routes: [],
+            pttpOrigins: ['https://space.example'],
+        } as any);
+        expect(server.configuration.pttpOrigins).toEqual(['https://space.example']);
+    });
+
     it('exposes the preload keys the server template and the client agree on', () => {
         expect(PRELOADED_REDUX_STATE_KEY).toBe('__PRELOADED_REDUX_STATE__');
         expect(PRELOADED_PLURID_METASTATE_KEY).toBe('__PRELOADED_PLURID_METASTATE__');

@@ -10,6 +10,7 @@
 
     // #region internal
     import {
+        build as buildCommand,
         mainEntryFromMetafile,
     } from '../cli/build';
     import {
@@ -17,6 +18,71 @@
     } from '../cli/paths';
     // #endregion internal
 // #endregion imports
+
+
+
+// #region module
+/**
+ * A BUILD EMPTIES ONLY A BUILD (2026-10-20). `plurid build` removed whatever `buildDir` named before it
+ * built: the application's own directory, its sources, a folder of something else. `fs.rmSync` is
+ * replaced in these tests, so nothing is ever removed, whatever the code under test asks for.
+ */
+describe('build() and its output directory', () => {
+    const inApplication = async (
+        config: string,
+        prepare: (directory: string) => void,
+        removal: () => void,
+    ) => {
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-kit-build-dir-'));
+        prepare(directory);
+        fs.writeFileSync(path.join(directory, 'plurid.config.js'), 'module.exports = ' + config + ';\n');
+        const removed = jest.spyOn(fs, 'rmSync').mockImplementation(removal);
+        const written = jest.spyOn(process.stdout, 'write').mockImplementation(() => true);
+        const preserve = process.env.PLURID_PRESERVE_ARTIFACTS;
+        const cwd = process.cwd();
+        delete process.env.PLURID_PRESERVE_ARTIFACTS;
+        process.chdir(directory);
+        try {
+            const outcome = await buildCommand([]).then(() => undefined, (error: Error) => error);
+            return { outcome, removed: removed.mock.calls.length };
+        } finally {
+            process.chdir(cwd);
+            if (preserve !== undefined) process.env.PLURID_PRESERVE_ARTIFACTS = preserve;
+            removed.mockRestore();
+            written.mockRestore();
+        }
+    };
+    const refuse = () => {
+        throw new Error('this test removes nothing');
+    };
+
+    it('refuses to empty a directory that holds the application or is not a previous build', async () => {
+        const cases: [string, (directory: string) => void][] = [
+            ["{ buildDir: 'keep' }", (directory) => {
+                fs.mkdirSync(path.join(directory, 'keep'));
+                fs.writeFileSync(path.join(directory, 'keep', 'sentinel.txt'), 'mine');
+            }],
+            ["{ buildDir: '.' }", () => {}],
+            ["{ buildDir: 'source' }", (directory) => fs.mkdirSync(path.join(directory, 'source'))],
+            ["{ buildDir: 'source/public/..' }", (directory) => fs.mkdirSync(path.join(directory, 'source', 'public'), { recursive: true })],
+        ];
+        for (const [config, prepare] of cases) {
+            const { outcome, removed } = await inApplication(config, prepare, refuse);
+            expect([config, outcome?.message]).toEqual([config, expect.stringMatching(/buildDir/)]);
+            expect([config, removed]).toEqual([config, 0]);
+        }
+    });
+
+    it('empties a previous build before building', async () => {
+        const { outcome, removed } = await inApplication("{ buildDir: 'build' }", (directory) => {
+            fs.mkdirSync(path.join(directory, 'build', 'client'), { recursive: true });
+            fs.writeFileSync(path.join(directory, 'build', 'index.js'), '');
+        }, () => {});
+        expect(removed).toBe(1);
+        expect(outcome?.message ?? '').not.toMatch(/buildDir/);
+    });
+});
+// #endregion module
 
 
 

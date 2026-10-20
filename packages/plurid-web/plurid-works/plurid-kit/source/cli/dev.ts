@@ -19,6 +19,9 @@
     import {
         resolvePaths,
     } from './paths';
+    import {
+        writeBuildManifest,
+    } from './manifest';
 
     import {
         loadEnvironment,
@@ -104,6 +107,8 @@ export async function dev(
         process.stdout.write(`[plurid dev] replaced the earlier dev on this root (pid ${claim.replaced})\n`);
     }
     const release = () => releasePidfile(pidfile, process.pid);
+    // the build this writes is a development one: `plurid start` refuses to run it as production
+    writeBuildManifest(paths, { mode: 'development' });
     process.once('exit', release);
     // `exit` does not run for a death by signal: until a handler of its own takes over (the
     // supervisor's, the watch's shutdown), a signal releases the claim and ends this process as it

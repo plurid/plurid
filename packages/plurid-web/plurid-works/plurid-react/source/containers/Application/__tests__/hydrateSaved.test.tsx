@@ -97,4 +97,65 @@ describe('a server-rendered application with a saved state', () => {
         });
         container.remove();
     });
+
+    it('the saved state it applies is not an undo step (2026-10-20)', async () => {
+        // The restore was dispatched like a change of the reader's, and recorded: the first undo of a
+        // returning reader put back the server's arrangement.
+        installPointerEvents();
+        installMatchMedia();
+        window.localStorage.clear();
+
+        const bus = new PluridPubSub({ onDrop: null });
+        const visit = await renderPlurid({ id: 'hydrate-undo', planes, view, configuration, pubsub: bus, useLocalStorage: true } as any);
+        const closed = visit.api.getSnapshot().space.tree[1].planeID;
+        await act(async () => {
+            bus.publish({ topic: PLURID_PUBSUB_TOPIC.CLOSE_PLANE, data: { planeID: closed, navigate: 'stay' } } as any);
+        });
+        await visit.unmount();
+        const saved = Object.entries(window.localStorage).filter(([key]) => key.endsWith('hydrate-undo'));
+        expect(saved).toHaveLength(1);
+
+        window.localStorage.clear();
+        const html = renderToString(
+            <PluridProvider metastate={{ states: {} } as any}>
+                <PluridApplication id="hydrate-undo" planes={planes as any} view={view} configuration={configuration} useLocalStorage />
+            </PluridProvider>,
+        );
+        for (const [key, value] of saved) {
+            window.localStorage.setItem(key, value);
+        }
+
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        document.body.appendChild(container);
+        let api: any;
+        let root: Root | undefined;
+        await act(async () => {
+            root = hydrateRoot(
+                container,
+                <PluridProvider metastate={{ states: {} } as any}>
+                    <PluridApplication
+                        id="hydrate-undo"
+                        planes={planes as any}
+                        view={view}
+                        configuration={configuration}
+                        useLocalStorage
+                        onReady={(ready) => { api = ready; }}
+                    />
+                </PluridProvider>,
+                { onRecoverableError: () => undefined },
+            );
+        });
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 0));
+        });
+
+        expect(api.getSnapshot().space.tree.find((node: any) => node.planeID === closed)?.show).toBe(false);
+        expect(api.getSnapshot().space.history.canUndo).toBe(false);
+
+        await act(async () => {
+            root?.unmount();
+        });
+        container.remove();
+    });
 });

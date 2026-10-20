@@ -80,6 +80,8 @@ const PluridMenuMoreShortcuts: React.FC<PluridMenuMoreShortcutsProperties> = (
     }, [
         JSON.stringify(shortcuts?.keymap || null),
         JSON.stringify(shortcuts?.disabled ?? null),
+        // the rows are the presentation's: they kept the first one's (2026-10-20)
+        configuration.space.presentation,
     ]);
 
 

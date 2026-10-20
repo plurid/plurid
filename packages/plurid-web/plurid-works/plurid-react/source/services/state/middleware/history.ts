@@ -69,7 +69,8 @@ interface HistoryStep {
  * TRANSACTIONS: `space/historyBegin` … `space/historyEnd` (ref-counted) fold every change in between
  * into ONE entry — a drag that dispatches per frame is one undo, not sixty. `meta.history === 'skip'`
  * bypasses recording for one action. Restore re-sets tree + links atomically via `restoreArrangement`
- * (raw, exact, no reconcile). Remote collaboration mutations (`meta.remote`) are skipped — a peer's
+ * (raw, exact, no reconcile), and the view follows the roots it takes away or brings back (a relayout
+ * rebuilds the roots from the view: an undone `view.addPlane` came back at the next one). Remote collaboration mutations (`meta.remote`) are skipped — a peer's
  * change isn't in YOUR undo — AND every local snapshot is REBASED over them (2026-09-10; the interim
  * rule of 2026-09-06 cleared the stacks): `apply(remote, diff(before, snapshot))` keeps the local
  * changes on the planes they touch and the peer's work everywhere else, so an undo after a peer's

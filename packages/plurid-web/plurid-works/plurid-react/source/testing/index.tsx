@@ -121,17 +121,21 @@ export const installFrameClock = (): FrameClock => {
         return frameClock;
     }
     let now = 0;
-    let queue: FrameRequestCallback[] = [];
+    // ONE ID PER FRAME, NEVER REUSED, AND A CANCEL TAKES THAT ONE (2026-10-20): the cancel emptied the
+    // whole queue, and the ids were queue positions
+    let queue = new Map<number, FrameRequestCallback>();
+    let nextID = 1;
     const originalRequest = (window as any).requestAnimationFrame;
     const originalCancel = (window as any).cancelAnimationFrame;
     const originalNow = performance.now;
 
     (window as any).requestAnimationFrame = (callback: FrameRequestCallback) => {
-        queue.push(callback);
-        return queue.length;
+        const id = nextID++;
+        queue.set(id, callback);
+        return id;
     };
-    (window as any).cancelAnimationFrame = () => {
-        queue = [];
+    (window as any).cancelAnimationFrame = (id: number) => {
+        queue.delete(id);
     };
     performance.now = () => now;
 
@@ -139,14 +143,14 @@ export const installFrameClock = (): FrameClock => {
         /** Advance by `milliseconds` and run the frame callbacks queued so far. */
         advance: (milliseconds = 1000 / 60) => {
             now += milliseconds;
-            const callbacks = queue;
-            queue = [];
+            const callbacks = [...queue.values()];
+            queue = new Map();
             for (const callback of callbacks) {
                 callback(now);
             }
         },
         now: () => now,
-        pending: () => queue.length,
+        pending: () => queue.size,
         restore: () => {
             (window as any).requestAnimationFrame = originalRequest;
             (window as any).cancelAnimationFrame = originalCancel;
@@ -181,7 +185,10 @@ const ensureActEnvironment = () => {
 };
 
 
-/** Render a `PluridApplication` and resolve once `onReady` fired. */
+/**
+ * Render a `PluridApplication` and resolve once `onReady` fired. The view is the window's size
+ * (jsdom's 1024 × 768 unless the test sets `window.innerWidth` / `innerHeight`).
+ */
 export const renderPlurid = async (
     properties: RenderPluridProperties = {},
 ): Promise<RenderedPlurid> => {
@@ -189,9 +196,10 @@ export const renderPlurid = async (
     installPointerEvents();
     installMatchMedia();
 
+    // jsdom lays nothing out: the view measures the window (1024 × 768 unless a test sets
+    // `window.innerWidth` / `innerHeight`), whatever size the container is given, so it is given none
+    // (a 1000 × 600 style here had no effect, 2026-10-20)
     const container = document.createElement('div');
-    container.style.width = '1000px';
-    container.style.height = '600px';
     document.body.appendChild(container);
 
     let api: PluridApi | undefined;

@@ -353,7 +353,8 @@ export const extractOccurence = (
         return 0;
     }
 
-    const occurenceMatch = occurence.match(/\[(\d*)\]/);
+    // `\d+`: an empty `[]` is the first occurrence; `\d*` matched it and parseInt('') was NaN (2026-10-20)
+    const occurenceMatch = occurence.match(/\[(\d+)\]/);
     const occurenceValue = occurenceMatch
         ? parseInt(occurenceMatch[1])
         : 0;

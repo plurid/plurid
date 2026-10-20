@@ -1,5 +1,9 @@
 // #region imports
     // #region libraries
+    import React, {
+        lazy,
+        Suspense,
+    } from 'react';
     import type {
         ComponentProps,
         FunctionComponent,
@@ -124,10 +128,6 @@
     import PluridPlaneBridge from './components/structural/Plane/components/PlaneBridge';
     import PluridPlaneContent from './components/structural/Plane/components/PlaneContent';
     import PluridPlaneControls from './components/structural/Plane/components/PlaneControls';
-    import PluridPlaneDebugger from './components/structural/Plane/components/PlaneDebugger';
-
-    import PluridSpaceDebugger from './components/structural/Space/components/SpaceDebugger';
-
     import pluridStateModules from './services/state/modules';
 
     import {
@@ -232,6 +232,27 @@ import {
     namedViewpoints,
     goViewpoint,
 } from '~services/logic/viewpoints';
+
+
+// THE DEBUGGERS LOAD ON FIRST USE (2026-10-20): imported here for `internals`, they rode in the
+// main chunk although the space and the planes load them lazily. Each is a component that loads its
+// debugger when it first renders, inside its own Suspense (a host needs no boundary).
+const LazyPlaneDebugger = lazy(() => import('./components/structural/Plane/components/PlaneDebugger'));
+const LazySpaceDebugger = lazy(() => import('./components/structural/Space/components/SpaceDebugger'));
+const PluridPlaneDebugger = (
+    properties: ComponentProps<typeof LazyPlaneDebugger>,
+) => (
+    <Suspense fallback={null}>
+        <LazyPlaneDebugger {...properties} />
+    </Suspense>
+);
+const PluridSpaceDebugger = (
+    properties: ComponentProps<typeof LazySpaceDebugger>,
+) => (
+    <Suspense fallback={null}>
+        <LazySpaceDebugger {...properties} />
+    </Suspense>
+);
 
 
 const internals = {

@@ -25,11 +25,13 @@
     import {
         configuredPlaneSize,
         fallbackPlaneSize,
+        lengthInPx,
     } from './size';
     import {
         finiteNumber,
         layoutCount,
         placedHeight,
+        placedWidth,
     } from './pitch';
     // #endregion external
 // #endregion imports
@@ -102,9 +104,7 @@ const computeFaceToFaceLayout = (
         ?? (typeof window === 'undefined' ? 840 : window.innerHeight);
 
     const tree: TreePlane[] = [];
-    const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
-        ? configuration.elements.plane.width
-        : configuration.elements.plane.width * windowInnerWidth;
+    const width = lengthInPx(configuration.elements.plane.width, windowInnerWidth);
     // An unmeasured plane counts as the tallest measured one, else the view height (see column.ts).
     // an unmeasured plane counts as the configured height, else the tallest measured plane, else
     // the view height
@@ -123,12 +123,9 @@ const computeFaceToFaceLayout = (
     const columns = layoutCount(2 + middleCount, 1);
     const rows = splitIntoGroups(roots, columns);
 
-    // Use the SAME absolute-vs-unit test as column.ts/row.ts (`checkIntegerNonUnit`) instead of
-    // `Number.isInteger`, so a fractional gap like `0.04` is treated as a unit of `width`
-    // consistently across all layouts.
-    const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
-        ? gap
-        : gap * width;
+    // the SAME px-or-fraction rule as every layout (`lengthInPx`): a gap like `0.04` is a share of
+    // `width`, a gap like `12.5` is px
+    const gapValue = lengthInPx(gap, width);
 
     // Rows stack by their own tallest plane, plus the gap so gapped rows never overlap.
     const rowHeights = rows.map((row) => Math.max(0, ...row.map((page) => placedHeight(page, configuredHeight) || fallbackHeight)));
@@ -137,7 +134,9 @@ const computeFaceToFaceLayout = (
         if (rowIndex > 0) {
             translateY += rowHeights[rowIndex - 1] + gapValue;
         }
-        const widths = row.map((page) => page.width || width);
+        // by the configured width where it speaks (`placedWidth`), as the columns and rows pitch: a
+        // measured width of the previous view placed the row by it (2026-10-20)
+        const widths = row.map((page) => placedWidth(page, width) || width);
 
         for (const [index, page] of row.entries()) {
             const first = index === 0;

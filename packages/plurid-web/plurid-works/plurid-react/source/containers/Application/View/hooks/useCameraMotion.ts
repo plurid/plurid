@@ -61,6 +61,8 @@ export type {
 export interface UseCameraMotionParameters {
     dispatch: ThunkDispatch<{}, {}, AnyAction>;
     stateRef: React.MutableRefObject<AppState>;
+    /** The store as it is now (`stateRef` holds the last render's): where a tween starts. */
+    getState?: () => AppState;
     spaceConfiguration: PluridConfigurationSpace;
 }
 
@@ -80,9 +82,14 @@ export const useCameraMotion = (
     {
         dispatch,
         stateRef,
+        getState,
         spaceConfiguration,
     }: UseCameraMotionParameters,
 ): CameraMotionController => {
+    const getStateRef = useRef(getState);
+    getStateRef.current = getState;
+    /** the store now, else the last render's (a host of the hook without a store) */
+    const live = () => getStateRef.current?.() ?? stateRef.current;
     const configRef = useRef(spaceConfiguration);
     configRef.current = spaceConfiguration;
 
@@ -259,7 +266,9 @@ export const useCameraMotion = (
                 // the intent to settle survives a retarget (a re-frame after a measurement)
                 const onSettle = options.onSettle ?? tween.current?.onSettle;
                 stop();
-                const from = stateRef.current.space.camera;
+                // FROM THE STORE AS IT IS NOW (2026-10-20): the last render's camera, a jump in the same
+                // tick was not in it, and the tween started from before the jump
+                const from = live().space.camera;
                 const motion = configRef.current.navigation?.motion || {};
                 const duration = options.duration ?? motion.duration ?? 380;
                 const easingName = options.easing ?? (motion.easing === 'spring' ? 'out-quint' : (motion.easing ?? 'out-cubic'));

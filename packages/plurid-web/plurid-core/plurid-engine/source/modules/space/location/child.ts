@@ -108,7 +108,7 @@ export type BridgeKind =
 export interface SpawnAnchorOptions {
     /** the link's own point (`link`) or the parent's right edge at the link's height (`edge`) */
     anchor?: BridgeAnchor;
-    /** how many siblings the parent already has from links: the i-th takes a longer bridge */
+    /** the child's slot among the parent's linked children (`freeSpawnOrdinal`): the i-th takes a longer bridge */
     ordinal?: number;
     /** the child's width, or 0 for the fallback: what a sibling's bridge grows by */
     childWidth?: number;
@@ -155,6 +155,27 @@ export const resolveSpawnAnchor = (
         bridgeLength: length + ordinal * (width + gap),
         bridgeKind: ordinal > 0 ? 'leash' : 'strip',
     };
+};
+
+
+/**
+ * THE SLOT A SPAWNED CHILD TAKES: the smallest ordinal no shown sibling stands on. It was the count
+ * of the shown siblings, so after a close or a removal the next child stood exactly on a shown one
+ * (A at 0, B at 1; A closed; C counted one and took 1; 2026-10-20). A sibling's slot is read from
+ * where it stands, its bridge length in this child's spacing, which reads a tree saved before too.
+ */
+export const freeSpawnOrdinal = (
+    siblingBridgeLengths: number[],
+    options: SpawnAnchorOptions = {},
+): number => {
+    const length = options.bridgeLength ?? DEFAULT_BRIDGE_LENGTH;
+    const step = (options.childWidth || FALLBACK_CHILD_WIDTH) + (options.gap ?? SIBLING_GAP);
+    const held = new Set(siblingBridgeLengths.map((bridgeLength) => Math.round((bridgeLength - length) / step)));
+    let ordinal = 0;
+    while (held.has(ordinal)) {
+        ordinal += 1;
+    }
+    return ordinal;
 };
 
 

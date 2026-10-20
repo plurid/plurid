@@ -12,6 +12,7 @@ Current as of **2026-09-29**.
 | [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) | Let an AI agent operate an embedded application: the fourteen tools, the observation, the guardrails, Claude, WebMCP (`@plurid/plurid-react/agent`) |
 | [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md) | The 2026-09-29 readiness record: what was audited and fixed, the gates' evidence, the known limitations, the release order |
 | [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
+| [`CHANGES.md`](./CHANGES.md) | GENERATED — every kind a `space.changed` carries, from `PLURID_CHANGE_KINDS` (`pnpm docs.tables`) |
 | [`HARNESS.md`](./HARNESS.md) | GENERATED — every flag and fixture of the verification harness (`fixtures/render-test`) |
 | [`LOOKS.md`](./LOOKS.md) | GENERATED — the twelve looks and the 45 chrome tokens, from `@plurid/plurid-themes` (`pnpm docs.tables`) |
 | [`DESIGN.md`](./DESIGN.md) | The chrome's vocabulary and rules: pill, panel, line; the dual ground; the two tiers; adding a piece of chrome |
@@ -42,4 +43,4 @@ pnpm test
 pnpm lint
 ```
 
-Every public package exposes a `check` script (the harness too). GitHub CI runs build, test, lint, `check`, `check.modules`, `size`, `docs.tables.check` and `smoke.pack` (which hydrates a generated application in Chromium) on every change, and the browser suite in three jobs of its own: `browser` (the chromium scenarios), `perf` (the frame budgets, alone on their runner) and `visual` (the screenshot comparisons, in the pinned Playwright container against the committed `linux` baselines). `pnpm verify` runs the same chain locally; its visual comparisons use the baselines of the platform it runs on. Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.
+Every public package exposes a `check` script (the harness too). GitHub CI runs build, the release-tooling tests, test, lint, `check`, `check.modules`, `size`, `docs.tables.check` and `smoke.pack` (which hydrates a generated application in Chromium) on every change, and the browser suite in three jobs of its own: `browser` (the chromium scenarios), `perf` (the frame budgets, alone on their runner) and `visual` (the screenshot comparisons, in the pinned Playwright container against the committed `linux` baselines). `pnpm verify` runs the same chain locally; its visual comparisons use the baselines of the platform it runs on. Rendering and interaction work also requires the Vite render harness; product-motivated engine work requires product-level verification in the consuming application.

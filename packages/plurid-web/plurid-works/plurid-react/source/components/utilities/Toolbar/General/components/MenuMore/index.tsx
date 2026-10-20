@@ -43,6 +43,9 @@
     import {
         DispatchAction,
     } from '~data/interfaces';
+    import {
+        warnOnce,
+    } from '~services/logic/development/warn';
     // #endregion external
 
 
@@ -74,6 +77,15 @@ export const resolveMenus = (
 
     for (const drawer of drawers) {
         const menu = moreMenusRecord[drawer];
+        // an unknown name was an `undefined` menu, and opening More threw (2026-10-20)
+        if (!menu) {
+            warnOnce(
+                'toolbar-drawer-' + String(drawer),
+                '`elements.toolbar.drawers` names no drawer \'' + String(drawer) + '\'; the drawers are '
+                    + Object.keys(moreMenusRecord).join(', ') + ' and ALL.',
+            );
+            continue;
+        }
         resolvedMenus.push(menu);
     }
 

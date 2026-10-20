@@ -50,8 +50,9 @@ class StillsManager {
             stillsDirectory,
         } = this.options;
 
-        const stillsLocation = `${buildDirectory}/${stillsDirectory}`;
-        const stillsPath = path.join(process.cwd(), stillsLocation);
+        // `resolve`: an absolute build directory stays itself; joined, it went under the working
+        // directory (`<cwd>/abs/build/stills`) and no still was ever found (2026-10-20)
+        const stillsPath = path.resolve(process.cwd(), buildDirectory, stillsDirectory);
 
         if (!existsSync(stillsPath)) {
             return;

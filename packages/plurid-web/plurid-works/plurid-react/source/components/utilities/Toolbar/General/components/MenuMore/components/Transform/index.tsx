@@ -48,6 +48,9 @@
     import {
         DispatchAction,
     } from '~data/interfaces';
+    import {
+        chromeControl,
+    } from '~services/styled/chrome';
     // #endregion libraries
 // #endregion imports
 
@@ -61,7 +64,8 @@ const StyledSelectionActions = styled.div`
     justify-content: flex-end;
 
     button {
-        font: inherit;
+        /* a chrome control: a host's \`button\` rules stay out (they leaked in, 2026-10-20) */
+        ${chromeControl}
         font-size: 0.7rem;
         line-height: 1;
         padding: 4px 6px;

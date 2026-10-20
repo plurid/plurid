@@ -14,8 +14,10 @@ import { publishArtifacts, verifyPublication } from './release-publish.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const say = (message) => console.log(`[release] ${message}`);
+// PLURID_E2E_OWN_SERVER: the browser gates start the harness from the release tree; a development
+// server already on its port was reused, and the release tested the checkout (2026-10-20).
 const run = (file, args, cwd = root, extra = {}) => execFileSync(file, args, {
-    cwd, stdio: 'inherit', env: { ...process.env, PLURID_PRESERVE_ARTIFACTS: '1', SMOKE_SKIP_GENERATE: '', SMOKE_SKIP_BROWSER: '' }, ...extra,
+    cwd, stdio: 'inherit', env: { ...process.env, PLURID_PRESERVE_ARTIFACTS: '1', SMOKE_SKIP_GENERATE: '', SMOKE_SKIP_BROWSER: '', PLURID_E2E_OWN_SERVER: '1' }, ...extra,
 });
 const read = (file, args) => run(file, args, root, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
 const hash = (bytes, algorithm, encoding) => createHash(algorithm).update(bytes).digest(encoding);

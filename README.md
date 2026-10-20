@@ -131,7 +131,7 @@ layouts and the chrome included, is a documented knob (`docs/CONTROL_SURFACE.md`
 | [`docs/GETTING_STARTED.md`](./docs/GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint. |
 | [`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md) | Every knob and seam with a snippet, tiered from the escape hatch to the granular options. |
 | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | How it works: the packages, the render pipeline, the camera and state model, docking, the pub/sub wire, SSR. |
-| [`docs/SHORTCUTS.md`](./docs/SHORTCUTS.md) · [`docs/HARNESS.md`](./docs/HARNESS.md) · [`docs/LOOKS.md`](./docs/LOOKS.md) | Generated from the data tables: every key and gesture; every flag and fixture of the harness; every look and token. |
+| [`docs/SHORTCUTS.md`](./docs/SHORTCUTS.md) · [`docs/CHANGES.md`](./docs/CHANGES.md) · [`docs/HARNESS.md`](./docs/HARNESS.md) · [`docs/LOOKS.md`](./docs/LOOKS.md) | Generated from the data tables: every key and gesture; every kind a `space.changed` carries; every flag and fixture of the harness; every look and token. |
 | [`docs/DESIGN.md`](./docs/DESIGN.md) | The chrome's vocabulary (pill, panel, line) and its rules; what a new piece of chrome must do. |
 | [`examples/`](./examples) | Runnable references: [`minimal`](./examples/minimal), [`control-surface`](./examples/control-surface) and [`custom-chrome`](./examples/custom-chrome). |
 | [`docs/CONTRIBUTING.md`](./docs/CONTRIBUTING.md) | Work on the engine: the layout, the gates, the harness, the traps. |
@@ -173,7 +173,7 @@ A **pnpm workspace**. One command runs every gate in order:
 
 ``` bash
 pnpm install
-pnpm verify        # build → type-check → unit tests → lint → module check → docs tables → browser suite → smoke pack
+pnpm verify        # build → release-tooling tests → type-check → unit tests → lint → module check → size → docs tables → browser suite → smoke pack
 ```
 
 The gates one at a time:
@@ -184,7 +184,7 @@ pnpm check         # tsc --noEmit in every package
 pnpm test          # jest across the workspace
 pnpm lint          # one flat-config ESLint pass
 pnpm e2e           # the browser suite: Playwright against the harness, plus the visual baselines
-pnpm docs.tables   # regenerate docs/SHORTCUTS.md, docs/HARNESS.md and docs/LOOKS.md from the data tables
+pnpm docs.tables   # regenerate docs/SHORTCUTS.md, docs/CHANGES.md, docs/HARNESS.md and docs/LOOKS.md from the data tables
 ```
 
 The harness at `fixtures/render-test` is the engine running for real: a catalog of fixtures, every option a

@@ -117,14 +117,16 @@ const PluridViewcubeFace: React.FC<PluridViewcubeFaceProperties> = (
         // console.log(transform);
         setActiveZone(zoneCode);
 
-        // ONE tween to the exact face pose (both angles at once), through the motion controller —
-        // interruptible, shortest arc on yaw, one commit per frame.
+        // ONE tween to the exact face pose (both angles at once, and a level horizon: a camera tilted
+        // with `roll` stayed tilted, 2026-10-20), through the motion controller — interruptible,
+        // shortest arc on yaw, one commit per frame.
         dispatchCameraCommand({
             kind: 'delta',
             delta: {
                 absolute: {
                     pitch: transform.rotateX,
                     yaw: transform.rotateY,
+                    roll: 0,
                 },
             },
         });

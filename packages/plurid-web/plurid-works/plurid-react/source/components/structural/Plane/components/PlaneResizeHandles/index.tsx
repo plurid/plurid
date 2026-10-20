@@ -2,6 +2,7 @@
     // #region libraries
     import React, {
         useRef,
+        useEffect,
     } from 'react';
 
     import {
@@ -182,6 +183,26 @@ const PluridPlaneResizeHandles: React.FC<PluridPlaneResizeHandlesProperties> = (
         dispatch(actions.space.historyEnd());
     };
 
+    // A RESIZE THE HANDLES DO NOT SEE END still closes its undo step: the capture lost, or the handles
+    // gone (the plane deselected mid-drag). The transaction stayed open and the history recorded
+    // nothing after it (2026-10-20).
+    const onLostPointerCapture = (event: React.PointerEvent<HTMLDivElement>) => {
+        const current = drag.current;
+        if (!current || current.pointerId !== event.pointerId) {
+            return;
+        }
+        drag.current = null;
+        dispatch(actions.space.historyEnd());
+    };
+    const dispatchRef = useRef(dispatch);
+    dispatchRef.current = dispatch;
+    useEffect(() => () => {
+        if (drag.current) {
+            drag.current = null;
+            dispatchRef.current(actions.space.historyEnd());
+        }
+    }, []);
+
     const handleProperties = (kind: 'right' | 'bottom' | 'corner') => ({
         theme: stateInteractionTheme,
         kind,
@@ -189,6 +210,7 @@ const PluridPlaneResizeHandles: React.FC<PluridPlaneResizeHandlesProperties> = (
         onPointerMove,
         onPointerUp: onPointerEnd,
         onPointerCancel: onPointerEnd,
+        onLostPointerCapture,
         'data-plurid-control': 'plane-resize-' + kind,
         'data-plurid-entity': PLURID_ENTITY_PLANE_RESIZE_HANDLE,
         role: 'separator',

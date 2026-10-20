@@ -69,6 +69,7 @@
     import {
         closePlane,
         openLastClosed,
+        replaceHostTree,
         toggleLinkPlane,
     } from '~services/state/thunks/planes';
 
@@ -328,6 +329,15 @@ export const usePluridPubSub = (
             ? [pubsub]
             : [new PluridPubSub()]
     );
+    // THE APPLICATION'S BUS FOLLOWS ITS PROP (2026-10-20): the first bus of the list was the prop at
+    // mount, so a host that handed over another bus had every command on it dropped. The new bus
+    // takes the first place in the same render (the registered ones stay), and the subscriptions
+    // move to it with the list.
+    const [busProp, setBusProp] = useState(pubsub);
+    if (pubsub && pubsub !== busProp) {
+        setBusProp(pubsub);
+        setPluridPubSub((previous) => [pubsub, ...previous.slice(1).filter((bus) => bus !== pubsub)]);
+    }
 
     /**
      * RECORD A PLANE REQUEST, so the host can be told which plane it became.
@@ -753,7 +763,21 @@ export const usePluridPubSub = (
                         for (const target of targets) {
                             updated = space.tree.logic.removePlaneFromTree(updated, target.planeID);
                         }
+                        // A ROOT REMOVED BY ITS ID LEAVES THE VIEW TOO, unless another root still
+                        // stands for its route (a duplicate): it left the tree only, and the next
+                        // relayout, which builds the roots from the view, brought it back (2026-10-20)
+                        const routeOfRoot = (root: TreePlane) => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, '');
+                        const remaining = new Set(updated.map(routeOfRoot));
+                        const leaving = new Set(
+                            targets
+                                .filter((target) => tree.includes(target))
+                                .map(routeOfRoot)
+                                .filter((route) => !remaining.has(route)),
+                        );
                         dispatch(actions.space.setTree(updated));
+                        if (leaving.size > 0) {
+                            dispatchSpaceSetView(now.space.view.filter((entry) => !leaving.has(viewEntryRoute(entry) ?? '')));
+                        }
                         forgetPlanes(gone);
                         return;
                     }
@@ -1456,25 +1480,10 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.SET_TREE,
                 callback: (data) => {
-                    const tree = (data as any)?.tree;
-                    // a malformed tree leaves the tree as it was, and says what was wrong with it:
-                    // it used to throw inside a render, out of the host's reach
-                    const validation = space.tree.fields.validateTree(tree);
-                    if (!validation.ok) {
-                        warn('space.setTree', validation.reason || 'a malformed tree');
-                        return;
-                    }
-                    dispatch(actions.space.setTree(tree));
-
-                    // THE VIEW AGREES WITH THE TREE: a relayout (a resize, a configuration, a
-                    // measurement) places the VIEW's roots, so a host that set its tree over an
-                    // empty view had it emptied at the first one
-                    // the tree holds absolute routes (`plurid://<host>/a`); the view holds the host's own
-                    const roots = (tree as TreePlane[]).map((root) => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, ''));
-                    const viewRoutes = (current().space.view || []).map(viewEntryRoute);
-                    if (roots.length !== viewRoutes.length || roots.some((route, index) => route !== viewRoutes[index])) {
-                        dispatchSpaceSetView(roots);
-                    }
+                    // a malformed tree leaves the tree as it was, and says what was wrong with it (it
+                    // used to throw inside a render, out of the host's reach); a valid one is set
+                    // exactly, and the view follows its roots: the handle's `tree.set` is the same path
+                    dispatch(replaceHostTree((data as any)?.tree, 'space.setTree') as any);
                 },
             },
         ];

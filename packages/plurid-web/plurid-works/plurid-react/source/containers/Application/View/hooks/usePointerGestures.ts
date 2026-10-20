@@ -945,9 +945,14 @@ export const usePointerGestures = (
 
         return () => {
             batcher.cancel();
-            // a View that leaves mid-drag does not leave its store moving
+            // a View that leaves mid-drag does not leave its store moving, nor its undo step open
+            // (the history recorded nothing after it, 2026-10-20)
             if (gesture.current) {
                 motion.gesture(false);
+                if (gesture.current.historyOpen) {
+                    gesture.current.historyOpen = false;
+                    dispatch(actions.space.historyEnd());
+                }
             }
             element.removeEventListener('pointerdown', onPointerDown);
             element.removeEventListener('pointermove', onPointerMove);

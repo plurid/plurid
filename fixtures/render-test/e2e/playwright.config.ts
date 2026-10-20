@@ -6,7 +6,9 @@ import { join } from 'node:path';
 
 /**
  * The engine's browser suite runs against the render-test harness (the CAD scene on port 5273).
- * `reuseExistingServer` lets a developer keep `pnpm dev` running; CI starts the server itself.
+ * `reuseExistingServer` lets a developer keep `pnpm dev` running; CI and a release
+ * (`PLURID_E2E_OWN_SERVER=1`) start the server themselves, so a release never tests a server from
+ * the checkout that happened to be on the port, and fails if one is.
  *
  * THREE PROJECTS, run as three commands so none of them can spoil another:
  *  - `chromium` — every behavioural scenario;
@@ -24,9 +26,10 @@ import { join } from 'node:path';
  */
 
 /**
- * Where the harness is served. Overridable so the VISUAL project can run inside the pinned Playwright
- * container against a server already running on the host (`http://host.docker.internal:5273`): the
- * container brings the browser and the fonts, the host brings the build.
+ * Where the harness is served (`PLURID_E2E_BASE_URL` overrides it). The VISUAL project must reach it at
+ * http://localhost:5273: the origin is in every picture, and visual.spec.ts refuses any other. Inside the
+ * pinned container, serve it there or forward localhost:5273 to the host (CONTRIBUTING, the visual
+ * baseline ritual), never through host.docker.internal.
  */
 const BASE_URL = process.env.PLURID_E2E_BASE_URL || 'http://localhost:5273';
 const preserve = process.env.PLURID_PRESERVE_ARTIFACTS === '1';
@@ -69,7 +72,7 @@ export default defineConfig({
     webServer: {
         command: 'pnpm dev',
         url: BASE_URL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: !process.env.CI && process.env.PLURID_E2E_OWN_SERVER !== '1',
         cwd: '..',
         timeout: 60_000,
     },

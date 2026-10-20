@@ -4,23 +4,34 @@
  *
  *   docs/SHORTCUTS.md  from `PLURID_SHORTCUTS` / `PLURID_POINTER_GESTURES` / `PLURID_SHORTCUT_GROUP_TITLES`
  *                      in @plurid/plurid-data (the bindings the engine dispatches, the `?` overlay shows);
+ *   docs/CHANGES.md    from `PLURID_CHANGE_KINDS` in @plurid/plurid-data (every kind a `space.changed` carries);
  *   docs/HARNESS.md    from the render-test harness's FLAG REGISTRY (`fixtures/render-test/src/harness/flags.ts`)
- *   docs/LOOKS.md      from `LOOK_TOKENS` / `LOOK_BASES` / `looks` in `@plurid/plurid-themes`
  *                      and FIXTURE CATALOG (`fixtures/render-test/src/fixtures/catalog.ts`) — every `?flag=`
- *                      the harness understands and every fixture the browser suites verify.
+ *                      the harness understands and every fixture the browser suites verify;
+ *   docs/LOOKS.md      from `LOOK_TOKENS` / `LOOK_BASES` / `looks` in `@plurid/plurid-themes`.
  *
- *   pnpm docs.tables          # rewrite both (needs `pnpm --filter @plurid/plurid-data build`; Node ≥ 23.6 imports the .ts registries directly)
- *   pnpm docs.tables --check  # exit 1 when either file is stale (part of `pnpm verify`)
+ *   pnpm docs.tables          # rewrite all four (needs @plurid/plurid-data and @plurid/plurid-themes built;
+ *                             # Node ≥ 22.18 / 23.6 imports the .ts registries directly)
+ *   pnpm docs.tables --check  # exit 1 when any of them is stale (part of `pnpm verify`)
  */
 import { createRequire } from 'node:module';
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { ASSERTION_GLOBALS, expectationsText, namedGlobals, publishedGlobals, stepText, undocumentedGlobals } from './harness-tables.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..');
 const require = createRequire(import.meta.url);
 const check = process.argv.includes('--check');
+
+// The harness's registries are TypeScript, imported as they are. A Node that cannot strip types failed
+// further down with ERR_UNKNOWN_FILE_EXTENSION from flags.ts (2026-10-20).
+if (!process.features.typescript) {
+    console.error('[docs.tables] needs Node ≥ 22.18 (or ≥ 23.6), which imports .ts files directly: '
+        + process.version + ' does not strip types here.');
+    process.exit(1);
+}
 
 const emit = (relative, output, summary) => {
     const target = resolve(root, relative);
@@ -177,15 +188,27 @@ harnessLines.push('| Fixture | Title | Flags | Steps | Viewpoints | Expectations
 harnessLines.push('| --- | --- | --- | --- | --- | --- |');
 for (const fixture of FIXTURES) {
     const flags = Object.entries(fixture.query).map(([key, value]) => '`' + key + '=' + value + '`').join(' ') || '-';
-    const steps = (fixture.steps || []).map((step) => '`' + (step.kind === 'scroll' ? step.plane + ' ↓ ' + step.top : (step.kind === 'dock' ? '⌂ ' + step.plane : (step.kind === 'key' ? '⌘ ' + step.press : (step.kind === 'focus' ? '⌨ ' + step.control : (step.kind === 'move' ? '⇢ ' + step.plane + ' ' + step.deltaX + ',' + step.deltaY : step.plane + ' → ' + step.route))))) + '`').join(', ') || '-';
+    const steps = (fixture.steps || []).map((step) => '`' + stepText(step) + '`').join(', ') || '-';
     const viewpoints = fixture.viewpoints.map((viewpoint) => '`' + viewpoint.name + '`').join(', ');
-    const expectations = Object.entries(fixture.expect || {}).map(([key, value]) => key + ': ' + value).join(', ') || '-';
-    harnessLines.push(`| \`${fixture.name}\` | ${cell(fixture.title)} — ${cell(fixture.description)} | ${flags} | ${steps} | ${viewpoints} | ${cell(expectations)} |`);
+    harnessLines.push(`| \`${fixture.name}\` | ${cell(fixture.title)} — ${cell(fixture.description)} | ${flags} | ${steps} | ${viewpoints} | ${cell(expectationsText(fixture.expect))} |`);
 }
 harnessLines.push('');
 harnessLines.push('## Assertion globals');
 harnessLines.push('');
-harnessLines.push('Published on `window` once the application is ready (`src/harness/globals.ts`): `__pluridApi` (the `onReady` api), `__rtCamera()` (the live camera), `__rtTree()` (the live space tree), `__rtViewpoint2()` (the v2 viewpoint), `__rtFlags()` (the parsed flags), `__rtPlanes()` (the declared sizes by route), `__rtPerf` (dispatch / frame counters), `__rtChanges` (the changed slice keys per store notification), `__rtBench` (`?bench=1`), `__rtRootsSize()` (the roots container\'s applied size), `__rtUnhandled` (unhandled key codes), `__rtStore` (the memory adapter\'s map), `__rtViewpoint` / `__rtContent` / `__rtRestored` (the persistence callbacks), `__rtPlaneLens` / `__rtMediaImageLoaded` (`?media=1`).');
+// the sentence is written by hand: it must name every global the harness publishes, and only those
+const harnessSources = (directory) => readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const path = resolve(directory, entry.name);
+    if (entry.isDirectory()) return harnessSources(path);
+    return /\.tsx?$/.test(entry.name) ? [readFileSync(path, 'utf8')] : [];
+});
+const publishedNames = publishedGlobals(harnessSources(harness));
+const unnamed = undocumentedGlobals(ASSERTION_GLOBALS, publishedNames);
+const stale = namedGlobals(ASSERTION_GLOBALS).filter((name) => !publishedNames.includes(name));
+if (unnamed.length || stale.length) {
+    throw new Error('[docs.tables] the assertion globals in scripts/harness-tables.mjs are out of date: '
+        + [...unnamed.map((name) => 'not described: ' + name), ...stale.map((name) => 'no longer published: ' + name)].join(', '));
+}
+harnessLines.push(ASSERTION_GLOBALS);
 harnessLines.push('');
 
 emit('docs/HARNESS.md', harnessLines.join('\n'), FLAGS.length + ' flags, ' + FIXTURES.length + ' fixtures');

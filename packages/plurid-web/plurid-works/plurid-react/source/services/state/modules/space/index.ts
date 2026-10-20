@@ -130,12 +130,38 @@ export const name = 'space' as const;
  * stored, mirrored into the six legacy scalars, and rendered into `transform`. Nothing else writes
  * `transform` or the scalars.
  */
+/**
+ * THE PITCH A DOCKED PAGE MAY HOLD (2026-10-20). The engine docks a page face-on whatever its tilt
+ * (its dock pose lifts the orbit's pitch limit for a page pitched past it), and this commit clamped
+ * the pose back to the limit: the camera stopped at 89° and the page never read as docked. While a
+ * swing (or a jump's one commit) docks on such a page, the limit reaches its face; a commit that
+ * leaves the pitch as it is keeps it (a pan of the docked page). An orbit still clamps.
+ */
+const commitLimits = (
+    state: PluridStateSpace,
+    next: CameraState,
+): CameraLimits => {
+    let pitchLimit = state.cameraLimits.pitchLimit;
+    if (state.dockingPlaneID) {
+        const page = spaceEngine.tree.logic.getTreePlaneByID(state.tree, state.dockingPlaneID);
+        if (page) {
+            pitchLimit = Math.max(pitchLimit, Math.abs(page.location.rotateX));
+        }
+    }
+    if (Number.isFinite(next.pitch) && Math.abs(next.pitch - state.camera.pitch) < 1e-9) {
+        pitchLimit = Math.max(pitchLimit, Math.abs(state.camera.pitch));
+    }
+    return pitchLimit === state.cameraLimits.pitchLimit
+        ? state.cameraLimits
+        : { ...state.cameraLimits, pitchLimit };
+};
+
 const commitCamera = (
     state: PluridStateSpace,
     next: CameraState,
 ) => {
     // a field that is not finite takes the camera before the change, never the identity's
-    const camera = cameraEngine.clampCamera(next, state.cameraLimits, state.camera);
+    const camera = cameraEngine.clampCamera(next, commitLimits(state, next), state.camera);
 
     state.camera = camera;
     state.transform = cameraEngine.cameraMatrix3d(camera, state.viewSize);
@@ -170,11 +196,15 @@ const applyDelta = (
     state: PluridStateSpace,
     delta: CameraDelta,
 ) => {
+    // a pitch past the limit (a page docked face-on, `commitLimits`) is the delta's starting point,
+    // not something to clamp: a pan of that page clamped it and left the dock
     const next = cameraEngine.applyCameraDelta(
         state.camera,
         delta,
         state.viewSize,
-        state.cameraLimits,
+        Math.abs(state.camera.pitch) > state.cameraLimits.pitchLimit
+            ? { ...state.cameraLimits, pitchLimit: Math.abs(state.camera.pitch) }
+            : state.cameraLimits,
     );
     if (next === state.camera) {
         return;
@@ -236,6 +266,102 @@ const pruneStateLinks = (
     if (prunedLinks !== previousLinks) {
         state.links = prunedLinks;
     }
+};
+
+
+/** A root's route as the view holds it: the tree's is absolute (`plurid://<host>/a`). */
+const viewRouteOf = (
+    root: TreePlane,
+): string => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, '');
+
+/**
+ * THE VIEW AN UNDO LANDS ON (2026-10-20). History restores the tree and the links, while
+ * `view.addPlane` and `view.removePlane` write the view, and a relayout rebuilds the roots from the
+ * view: an undone `view.addPlane` came back at the next resize. The roots the restore takes away
+ * leave the view, the ones it brings back join it (after the restored root before them); every
+ * other entry stays as it is (a route with no plane registered yet, a duplicate's one entry).
+ * `undefined`: the view is right as it is.
+ */
+const viewAfterRestore = (
+    view: PluridApplicationView,
+    liveTree: TreePlane[],
+    restoredTree: TreePlane[],
+): PluridApplicationView | undefined => {
+    const routeOf = (entry: unknown) => spaceEngine.tree.logic.viewItemRoute(entry);
+    const live = new Set(liveTree.map(viewRouteOf));
+    const restored = restoredTree.map(viewRouteOf);
+    const kept = new Set(restored);
+
+    let next = view.filter((entry) => {
+        const route = routeOf(entry);
+        return route === undefined || kept.has(route) || !live.has(route);
+    });
+    restored.forEach((route, index) => {
+        if (live.has(route) || next.some((entry) => routeOf(entry) === route)) {
+            return;
+        }
+        let at = 0;
+        for (let before = index - 1; before >= 0; before -= 1) {
+            const position = next.findIndex((entry) => routeOf(entry) === restored[before]);
+            if (position !== -1) {
+                at = position + 1;
+                break;
+            }
+        }
+        next = [...next.slice(0, at), route, ...next.slice(at)];
+    });
+
+    const same = next.length === view.length && next.every((entry, index) => entry === view[index]);
+    return same ? undefined : next;
+};
+
+
+/**
+ * A HOST'S TREE, EXACTLY (`handle.tree.set`, `space.setTree`; 2026-10-20). The reconciliation keeps a
+ * pinned plane where it is and a hand-set size as it is, which is right for a relayout and wrong for
+ * a restore: a saved arrangement could never move a plane the live one had pinned, nor unpin it. Over
+ * the reconciled tree (which keeps every unchanged node's reference), each node takes the host's
+ * location, pin and size; a dimension the host leaves at 0 keeps the measured one.
+ */
+const exactTree = (
+    reconciled: TreePlane[],
+    wanted: TreePlane[],
+): TreePlane[] => {
+    let changed = false;
+    const settled = reconciled.map((node, index) => {
+        const target = wanted[index];
+        if (!target || node === target) {
+            return node;
+        }
+        const children = target.children && target.children.length > 0 && node.children
+            ? exactTree(node.children, target.children)
+            : node.children;
+        const width = target.width || node.width;
+        const height = target.height || node.height;
+        const location = target.location;
+        const same = children === node.children
+            && width === node.width
+            && height === node.height
+            && !!node.manuallyPositioned === !!target.manuallyPositioned
+            && node.location.translateX === location.translateX
+            && node.location.translateY === location.translateY
+            && node.location.translateZ === location.translateZ
+            && node.location.rotateX === location.rotateX
+            && node.location.rotateY === location.rotateY;
+        if (same) {
+            return node;
+        }
+        changed = true;
+        return {
+            ...node,
+            children,
+            width,
+            height,
+            location,
+            manuallyPositioned: target.manuallyPositioned,
+        };
+    });
+    return changed ? settled : reconciled;
 };
 
 
@@ -769,6 +895,19 @@ export const space = createSlice({
             state.tree = nextTree;
             pruneStateLinks(state, nextTree);
         },
+        /** The host's own tree, exactly (`exactTree`): its locations, pins and sizes win over the live ones. */
+        replaceTree: (
+            state,
+            action: PayloadAction<TreePlane[]>,
+        ) => {
+            const previousTree = original(state.tree) as TreePlane[] | undefined;
+            const nextTree = exactTree(
+                spaceEngine.tree.logic.reconcileTree(previousTree, action.payload),
+                action.payload,
+            );
+            state.tree = nextTree;
+            pruneStateLinks(state, nextTree);
+        },
         setActiveUniverse: (
             state,
             action: PayloadAction<string>,
@@ -974,6 +1113,14 @@ export const space = createSlice({
             state,
             action: PayloadAction<{ tree: TreePlane[]; links: PlaneLink[] }>,
         ) => {
+            const view = viewAfterRestore(
+                original(state.view) as PluridApplicationView,
+                original(state.tree) as TreePlane[],
+                action.payload.tree,
+            );
+            if (view) {
+                state.view = view;
+            }
             state.tree = action.payload.tree;
             state.links = spaceEngine.tree.fields.pruneLinks(
                 action.payload.links,

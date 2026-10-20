@@ -158,8 +158,9 @@ const PluridDockRail: React.FC<PluridDockRailProperties> = (
             <StyledRailButton
                 type="button"
                 theme={stateInteractionTheme}
+                // named by what it does, the name following the state: it was `aria-pressed` as well, two
+                // statements of one state (2026-10-20)
                 aria-label={docked ? 'Reveal the space' : (pagePresentation ? 'Back to the page' : 'Read the selected plane as a page')}
-                aria-pressed={!docked}
                 title={docked ? 'Reveal the space (G)' : (pagePresentation ? 'Back to the page (Esc)' : 'Read this plane as a page')}
                 data-plurid-control="dock-toggle"
                 data-plurid-rail-button=""

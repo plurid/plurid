@@ -1,6 +1,6 @@
 module.exports = {
     transform: {
-        '.(ts|tsx)': 'ts-jest',
+        '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     testEnvironment: 'node',
     testRegex: '(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$',
@@ -36,9 +36,11 @@ module.exports = {
         'node_modules',
         'source',
     ],
+    // the `~` aliases of tsconfig.json, anchored: `"utilities/(.*)"` matched any request with that
+    // segment in it, so a module of another package or a temporary directory was looked for here (2026-10-20)
     moduleNameMapper: {
-        "data/(.*)": "<rootDir>/source/data/$1",
-        "objects/(.*)": "<rootDir>/source/objects/$1",
-        "utilities/(.*)": "<rootDir>/source/utilities/$1",
+        "^~data/(.*)$": "<rootDir>/source/data/$1",
+        "^~objects/(.*)$": "<rootDir>/source/objects/$1",
+        "^~utilities/(.*)$": "<rootDir>/source/utilities/$1",
     },
 }

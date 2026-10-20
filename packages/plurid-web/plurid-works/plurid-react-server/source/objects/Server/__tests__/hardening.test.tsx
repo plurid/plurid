@@ -9,8 +9,11 @@
 // #region imports
     // #region libraries
     import React from 'react';
+    import fs from 'fs';
     import http from 'http';
     import net from 'net';
+    import os from 'os';
+    import path from 'path';
     import vm from 'vm';
     import type {
         AddressInfo,
@@ -354,6 +357,106 @@ describe('HTTP test connections', () => {
         } finally {
             if (instance) await close(instance);
             await close(decoy);
+        }
+    });
+});
+
+
+describe('stills and ignored paths', () => {
+    /** A build directory outside the working directory, holding one still for `/`. */
+    const stilled = () => {
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-stills-served-'));
+        fs.mkdirSync(path.join(directory, 'stills'));
+        fs.writeFileSync(path.join(directory, 'stills', 'metadata.json'), JSON.stringify([{ route: '/', name: 'home.json' }]));
+        fs.writeFileSync(path.join(directory, 'stills', 'home.json'), JSON.stringify({ route: '/', html: '<html>the still</html>' }));
+        return directory;
+    };
+
+    it('serves a still from an absolute build directory, and for the route\'s query too', async () => {
+        // An absolute `buildDirectory` was joined under the working directory (`<cwd>/abs/build/stills`),
+        // and a still was looked up with the query: `/?utm=x` rendered live (2026-10-20).
+        const server = new PluridServer(configuration({
+            options: { ...configuration().options, buildDirectory: stilled() },
+        }));
+        await wait(50);
+        const instance = await listen(server);
+        try {
+            expect((await request(instance, '/')).body).toContain('the still');
+            expect((await request(instance, '/?utm=x')).body).toContain('the still');
+        } finally {
+            await close(instance);
+        }
+    });
+
+    it('logs an ignored path as passed on, not as a 204 it never answers', async () => {
+        const logged: string[] = [];
+        const info = jest.spyOn(console, 'info').mockImplementation((...parts: unknown[]) => { logged.push(parts.join(' ')); });
+        const server = new PluridServer(configuration({
+            options: { ...configuration().options, quiet: false, debug: 'info', ignore: ['/api/*'] },
+        }));
+        const instance = await listen(server);
+        try {
+            expect((await request(instance, '/api/x')).status).toBe(404);
+            expect(logged.some((line) => line.includes('/api/x'))).toBe(true);
+            expect(logged.some((line) => line.includes('204'))).toBe(false);
+        } finally {
+            info.mockRestore();
+            await close(instance);
+        }
+    });
+});
+
+
+describe('PTTP', () => {
+    const body = JSON.stringify({ path: '/p' });
+    const json = { 'content-type': 'application/json' };
+
+    it('answers another site only when it is allowed, and says that the answer varies by origin', async () => {
+        // Any origin was reflected, with credentials allowed (2026-10-20).
+        const server = new PluridServer(configuration({ usePTTP: true, pttpOrigins: ['https://allowed.example'] }));
+        const instance = await listen(server);
+        try {
+            const foreign = await request(instance, '/pttp', { method: 'POST', body, headers: { ...json, origin: 'https://evil.example' } });
+            expect(foreign.headers['access-control-allow-origin']).toBeUndefined();
+            expect(foreign.headers['access-control-allow-credentials']).toBeUndefined();
+            expect(String(foreign.headers.vary)).toMatch(/Origin/);
+
+            const allowed = await request(instance, '/pttp', { method: 'POST', body, headers: { ...json, origin: 'https://allowed.example' } });
+            expect(allowed.headers['access-control-allow-origin']).toBe('https://allowed.example');
+            expect(allowed.headers['access-control-allow-credentials']).toBe('true');
+
+            const preflight = await request(instance, '/pttp', { method: 'OPTIONS', headers: { origin: 'https://allowed.example', 'access-control-request-method': 'POST' } });
+            expect(preflight.status).toBe(204);
+            expect(preflight.headers['access-control-allow-origin']).toBe('https://allowed.example');
+        } finally {
+            await close(instance);
+        }
+    });
+
+    it('answers a request a custom handler claimed without answering it', async () => {
+        // The handler was given the path only, so one that resolved `true` left the request open.
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const claimed = new PluridServer(configuration({ usePTTP: true, pttpHandler: async () => true }));
+        const answering = new PluridServer(configuration({
+            usePTTP: true,
+            pttpHandler: async (_path, _request, response) => {
+                response.json({ handled: true });
+                return true;
+            },
+        }));
+        const first = await listen(claimed);
+        const second = await listen(answering);
+        try {
+            const unanswered = await Promise.race([
+                request(first, '/pttp', { method: 'POST', body, headers: json }),
+                wait(1000).then(() => undefined),
+            ]);
+            expect(unanswered?.status).toBe(500);
+            expect(JSON.parse((await request(second, '/pttp', { method: 'POST', body, headers: json })).body)).toEqual({ handled: true });
+        } finally {
+            warn.mockRestore();
+            await close(first);
+            await close(second);
         }
     });
 });

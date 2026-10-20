@@ -175,5 +175,30 @@ describe('THE READINESS CONTRACT: a publish with no subscriber is dropped and re
         const throwing = new PluridPubSub({ onDrop: () => { throw new Error('boom'); } });
         expect(() => throwing.publish({ topic: 'space.fitToView' })).not.toThrow();
     });
+
+    it('a subscriber another one removed during the publish is not called (2026-10-20)', () => {
+        // The publish walked a copy of the subscribers taken before the first ran, so one that the
+        // first unsubscribed still received the message.
+        const pubsub = new PluridPubSub();
+        const second = jest.fn();
+        let secondSelector = '';
+        pubsub.subscribe({ topic: 'space.fitToView', callback: () => { pubsub.unsubscribe(secondSelector); } });
+        secondSelector = pubsub.subscribe({ topic: 'space.fitToView', callback: second });
+        const third = jest.fn();
+        pubsub.subscribe({ topic: 'space.fitToView', callback: third });
+        pubsub.publish({ topic: 'space.fitToView' });
+        expect(second).not.toHaveBeenCalled();
+        expect(third).toHaveBeenCalledTimes(1);
+    });
+
+    it('a host\'s onDrop is not told about the topics the engine emits, as the warning is not (2026-10-20)', () => {
+        // It replaces the warning, which skips them (nobody has to listen to them); it was called for
+        // every `space.changed` an application published with no host listening.
+        const seen: string[] = [];
+        const reported = new PluridPubSub({ onDrop: (topic) => { seen.push(topic); } });
+        reported.publish({ topic: 'space.changed', data: { kind: 'camera' } } as any);
+        reported.publish({ topic: 'space.fitToView' });
+        expect(seen).toEqual(['space.fitToView']);
+    });
 });
 // #endregion module

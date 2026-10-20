@@ -9,6 +9,8 @@
 // #region module
 export const StyledPluridMenuUniverses = styled.div`
     position: absolute;
+    /* its own pointer: the toolbar's band is click-through */
+    pointer-events: auto;
     bottom: 75px;
     max-height: 250px;
     width: 380px;
@@ -78,7 +80,8 @@ export const StyledPluridMenuUniversesScroll = styled.div`
         display: none;
     }
 
-    h5::first-child {
+    /* a pseudo-class: \`::first-child\` named no pseudo-element, and the rule was dropped (2026-10-20) */
+    h5:first-child {
         margin-top: 0;
     }
 `;

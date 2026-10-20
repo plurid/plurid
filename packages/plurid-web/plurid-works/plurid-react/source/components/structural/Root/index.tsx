@@ -25,6 +25,9 @@
 
     // #region external
     import PluridPlane from '~components/structural/Plane';
+    import {
+        planeDetailsOf,
+    } from '~components/structural/Plane/details';
 
     import Context from '~services/context';
 
@@ -56,34 +59,15 @@
 
 
 // #region module
-const hasEntries = (
-    record: Record<string, string> | undefined,
-): boolean => !!record && Object.keys(record).length > 0;
-
-/**
- * The `plurid` prop a plane's component receives. THE QUERY TRAVELS: the query, the fragment and
- * the parameters are the REQUESTED route's (the tree node's `routeDivisions.plane`, what the link
- * or the view asked for), the registered route's only when the request carried none.
- */
+/** The `plurid` prop a plane's component receives: its `plane` is `planeDetailsOf`, as `usePluridPlane()`'s is. */
 const pluridPropertyOf = (
-    registered: { route: { absolute: string; fragments: PluridPlaneComponentProperty['plane']['fragments']; parameters: Record<string, string>; query: Record<string, string> } },
+    registered: Parameters<typeof planeDetailsOf>[0],
     node: TreePlane,
     matchedRoute: PluridPlaneComponentProperty['route'] extends infer _ ? { match: { value: string; parameters?: Record<string, string>; query?: Record<string, string> } } | undefined : never,
     pubSub: PluridPlaneComponentProperty['pubSub'],
 ): PluridPlaneComponentProperty => {
-    const requested = node.routeDivisions?.plane;
-    const requestedFragments = requested?.fragments;
-    const hasFragments = !!requestedFragments
-        && ((requestedFragments.elements?.length ?? 0) > 0 || (requestedFragments.texts?.length ?? 0) > 0);
     return {
-        plane: {
-            value: registered.route.absolute,
-            planeID: node.planeID,
-            parentPlaneID: node.parentPlaneID,
-            fragments: hasFragments ? requestedFragments : registered.route.fragments,
-            parameters: hasEntries(requested?.parameters) ? requested!.parameters : registered.route.parameters,
-            query: hasEntries(requested?.query) ? requested!.query : registered.route.query,
-        },
+        plane: planeDetailsOf(registered, node),
         route: {
             value: matchedRoute?.match.value || '',
             parameters: matchedRoute?.match.parameters || {},
@@ -276,12 +260,14 @@ const PluridRoot: React.FC<PluridRootProperties> = (
                 // PARAMETER that `renderPlane` closes over.
                 const renderedPlane = renderPlane();
                 children.push(renderedPlane);
-            }
 
-            if (child.children) {
-                const childrenPlanes = computeChildrenPlanes(child);
-                if (childrenPlanes) {
-                    children.push(...childrenPlanes);
+                // its children with it: a child that renders nothing (no plane registered for it)
+                // takes its subtree along — they rendered, hanging from nothing (2026-10-20)
+                if (child.children) {
+                    const childrenPlanes = computeChildrenPlanes(child);
+                    if (childrenPlanes) {
+                        children.push(...childrenPlanes);
+                    }
                 }
             }
         });

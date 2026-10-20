@@ -10,6 +10,16 @@
         loadEnvironment,
         DEFAULT_DEV_PORT,
     } from './environment';
+    import {
+        CONFIG_FILES,
+        loadPluridConfig,
+    } from './config';
+    import {
+        resolvePaths,
+    } from './paths';
+    import {
+        readBuildMode,
+    } from './manifest';
     // #endregion internal
 // #endregion imports
 
@@ -29,6 +39,10 @@ export async function info(
     const cwd = process.cwd();
     const exists = (relative: string) => fs.existsSync(path.resolve(cwd, relative));
     const mark = (relative: string) => (exists(relative) ? 'ok ' : '-- ');
+    // the directories the config names, as `dev` and `build` read them (a broken config warns, as in
+    // `dev`): the conventional paths were checked whatever the config said (2026-10-20)
+    const paths = resolvePaths(await loadPluridConfig(cwd));
+    const configFile = CONFIG_FILES.find((file) => exists(file)) ?? CONFIG_FILES[0];
 
     const lines = [
         'plurid info',
@@ -42,9 +56,10 @@ export async function info(
         `    ${mark('source/client/index.tsx')}source/client/index.tsx`,
         '',
         '  conventions',
-        `    ${mark('plurid.config.ts')}plurid.config.ts`,
+        `    ${mark(configFile)}${configFile}`,
         `    ${mark('tsconfig.json')}tsconfig.json (esbuild reads ~ aliases)`,
-        `    ${mark('source/public')}source/public (favicons, manifest, robots; \`publicDir\` in plurid.config.ts)`,
+        `    ${mark(paths.publicDir)}${paths.publicDir} (favicons, manifest, robots; \`publicDir\`)`,
+        `    ${mark(paths.buildDir)}${paths.buildDir} (\`buildDir\`; ${exists(paths.buildDir) ? (readBuildMode(paths) ?? 'unknown') + ' build' : 'not built'})`,
         '',
     ];
 

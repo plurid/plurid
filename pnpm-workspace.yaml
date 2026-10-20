@@ -40,5 +40,7 @@ overrides:
   # the React-19 harness) leak into styled-components' shared type inference → TS2742
   # "inferred type cannot be named" in dts builds. The libs externalize react and build
   # their types against 18.3 (a subset of 19 at the type level); runtime React stays 19.
+  # The harness and the kit declare a 19 devDependency and resolve 18.3 through this override:
+  # React 19's own types are checked only by smoke.pack's generated application.
   '@types/react': ^18.3
   '@types/react-dom': ^18.3

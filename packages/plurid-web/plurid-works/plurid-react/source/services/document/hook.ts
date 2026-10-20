@@ -3,6 +3,7 @@
     import {
         useContext,
         useState,
+        useRef,
         useLayoutEffect,
         useEffect,
     } from 'react';
@@ -57,10 +58,16 @@ export const usePluridDocument = (
         registry.set(order, document);
     }
 
+    // the declaration of the latest render, for the effect to put back
+    const latest = useRef(document);
+    latest.current = document;
     useIsomorphicLayoutEffect(() => {
         if (!registry || registry.server) {
             return undefined;
         }
+        // SET HERE TOO (idempotent by value): StrictMode's simulated remount runs the cleanup and then
+        // this again, and a declaration collected in render only was withdrawn for good (2026-10-20)
+        registry.set(order, latest.current);
         return () => {
             registry.remove(order);
         };

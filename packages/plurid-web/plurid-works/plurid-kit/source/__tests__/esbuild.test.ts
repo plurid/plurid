@@ -99,6 +99,24 @@ describe('serverBuildOptions', () => {
 });
 
 
+describe('the working directory of a build (2026-10-20)', () => {
+    it('is the one the build runs in, not the one esbuild was loaded in', () => {
+        // esbuild reads process.cwd() once, when it loads: a build after a chdir resolved its entries
+        // against the old directory and wrote its output there, beside the directories the kit had
+        // resolved and emptied.
+        const cwd = process.cwd();
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-kit-cwd-'));
+        process.chdir(directory);
+        try {
+            expect(clientBuildOptions({ mode: 'production' }).absWorkingDir).toBe(process.cwd());
+            expect(serverBuildOptions({ mode: 'production' }).absWorkingDir).toBe(process.cwd());
+        } finally {
+            process.chdir(cwd);
+        }
+    });
+});
+
+
 describe('environmentMode (the deployment target vs the build mode)', () => {
     it('inlines ENV_MODE from environmentMode while NODE_ENV keeps the build mode', () => {
         const options = clientBuildOptions({ mode: 'development', environmentMode: 'local' });

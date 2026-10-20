@@ -4,6 +4,7 @@
     import http from 'http';
 
     import {
+        existsSync,
         promises as fs,
     } from 'fs'
 
@@ -53,11 +54,28 @@ const loadServerModule = (
 ) => createRequire(serverPath)(serverPath);
 
 
+/** A plurid kit application: its config beside the working directory. */
+const kitApplication = (
+    directory = process.cwd(),
+) => ['plurid.config.ts', 'plurid.config.js'].some((file) => existsSync(path.join(directory, file)));
+
+/**
+ * A kit application's entry calls `startPluridServer` and starts its server when it is loaded: loaded
+ * to read its routes, it started one inside the generator, which then refused it and stayed running on
+ * it (2026-10-20). It is read as text first and never loaded.
+ */
+const selfStartingKitEntry = async (
+    serverPath: string,
+) => kitApplication()
+    && (await fs.readFile(serverPath, 'utf8').catch(() => '')).includes('startPluridServer');
+
+
 /** Resolves once `url` answers anything; rejects when the server process exits first, or after `timeout` ms. */
 const waitForServer = (
     url: string,
     child: ChildProcess,
     timeout: number,
+    said: () => string = () => '',
 ) => new Promise<void>((resolve, reject) => {
     const deadline = Date.now() + timeout;
     let settled = false;
@@ -74,8 +92,10 @@ const waitForServer = (
         }
     };
     const onExit = (code: number | null, signal: NodeJS.Signals | null) => {
+        const reason = said().trim();
         settle(new Error(
-            `Plurid StillsGenerator: the server exited (${signal || code}) before it answered at ${url}.`,
+            `Plurid StillsGenerator: the server exited (${signal || code}) before it answered at ${url}.`
+            + (reason ? ` It said: ${reason}` : ''),
         ));
     };
     child.once('exit', onExit);
@@ -132,7 +152,8 @@ class StillsGenerator {
         options?: Partial<StillsGeneratorOptions>,
     ) {
         const stillsGeneratorOptions: StillsGeneratorOptions = {
-            server: options?.server ?? './build/server.js',
+            // a kit application's entry is `build/index.js` (which is refused, see `selfStartingKitEntry`)
+            server: options?.server ?? (kitApplication() ? './build/index.js' : './build/server.js'),
             build: options?.build ?? './build/',
         };
 
@@ -147,6 +168,13 @@ class StillsGenerator {
         // The generator reads the application routes from the BUILT server bundle — fail with an actionable
         // message (not a raw MODULE_NOT_FOUND) if it hasn't been built yet. Handle either default-exported
         // (esbuild/tsup `export default`) or directly-exported server instances.
+        if (await selfStartingKitEntry(serverPath)) {
+            throw new Error(
+                `Plurid StillsGenerator: '${serverPath}' is a kit application's entry, which starts its server when it is loaded; `
+                + 'the generator does not load it. Give the generator (`server`) a built file that exports the PluridServer '
+                + 'and starts it only when run (`if (require.main === module) server.start(port)`).',
+            );
+        }
         let serverModule: any;
         try {
             serverModule = loadServerModule(serverPath);
@@ -184,13 +212,20 @@ class StillsGenerator {
 
         // The server runs with the environment the generator was given (PATH, NODE_ENV, the secrets its
         // preserves read): it was given only PORT, and rendered without them (2026-09-29).
+        // its output is the operator's, and its last words are the reason when it stops early: piped and
+        // read by no one, a crashing server said only its exit code (2026-10-20)
         const child = fork(serverPath, [], {
-            stdio: 'pipe',
+            stdio: ['ignore', 'inherit', 'pipe', 'ipc'],
             env: {
                 ...process.env,
                 PORT: serverPort,
                 PLURID_OPEN: 'false',
             },
+        });
+        let said = '';
+        child.stderr?.on('data', (chunk: Buffer) => {
+            process.stderr.write(chunk);
+            said = (said + chunk.toString()).slice(-2000);
         });
 
         // Always stop the forked server — even if stilling throws partway — so it never outlives the run.
@@ -224,7 +259,7 @@ class StillsGenerator {
             /**
              * The server is up when it answers (it was a fixed 1.5 s sleep).
              */
-            await waitForServer(host + '/', child, stillerOptions.timeout || 30_000);
+            await waitForServer(host + '/', child, stillerOptions.timeout || 30_000, () => said);
 
             const startTime = Date.now();
             const estimatedDuration = 3 * serverInformation.routes.length;
@@ -265,7 +300,8 @@ class StillsGenerator {
              *
              * Generate a metadata.json file.
              */
-            const stillsPath = path.join(buildPath, './stills');
+            // where the server reads them: its own `stillsDirectory` (`StillsManager`), which was ignored
+            const stillsPath = path.resolve(buildPath, serverInformation.options.stillsDirectory || 'stills');
             await fs.mkdir(
                 stillsPath,
                 {

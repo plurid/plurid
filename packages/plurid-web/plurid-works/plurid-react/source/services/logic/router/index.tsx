@@ -1293,13 +1293,9 @@ export const computePluridRoute = (
         spaces,
         defaultConfiguration,
         slotted,
-        resolver,
     } = matchedRoute.data;
-
-    if (resolver) {
-        const resolved = resolver(undefined);
-    }
-    // console.log('matchedRoute', matchedRoute);
+    // (a route's `resolver` is the server's, given its globals: the browser called it with none and
+    // threw the result away, 2026-10-20)
 
 
     const pluridRouteProperty: PluridRouteComponentProperty = {

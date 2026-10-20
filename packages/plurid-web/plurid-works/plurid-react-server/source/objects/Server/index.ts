@@ -93,6 +93,7 @@
         handleGetRequest,
     } from './pipeline';
     import {
+        allowPTTPOrigin,
         handlePTTPRequest,
     } from './pttp';
     import {
@@ -128,6 +129,7 @@ class PluridServer implements PluridServerContext {
     public readonly templateDocument: PluridDocument;
     public usePTTP: boolean;
     public readonly pttpHandler: PTTPHandler | undefined;
+    public readonly pttpOrigins: string[];
     public readonly elementqlEndpoint: string | undefined;
 
     private serverApplication: Express;
@@ -160,6 +162,7 @@ class PluridServer implements PluridServerContext {
             template,
             usePTTP,
             pttpHandler,
+            pttpOrigins,
             elementqlEndpoint,
             handlers,
         } = configuration;
@@ -180,6 +183,7 @@ class PluridServer implements PluridServerContext {
         this.templateDocument = documentFromTemplate(template);
         this.usePTTP = usePTTP ?? false;
         this.pttpHandler = pttpHandler;
+        this.pttpOrigins = pttpOrigins ?? [];
         this.elementqlEndpoint = elementqlEndpoint;
 
         this.serverApplication = express();
@@ -462,6 +466,13 @@ class PluridServer implements PluridServerContext {
         );
 
         if (this.usePTTP) {
+            // the preflight another site sends first: answered for the allowed origins only
+            this.serverApplication.options(PTTP_ROUTE, (request, response) => {
+                allowPTTPOrigin(this, request, response);
+                response.setHeader('Access-Control-Allow-Methods', 'POST');
+                response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+                response.status(204).end();
+            });
             this.serverApplication.post(
                 PTTP_ROUTE,
                 express.json() as any, // body parsing is built into Express 5

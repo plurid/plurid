@@ -38,6 +38,24 @@
 
 
 // #region module
+/**
+ * CORS for the origins the server allows (`pttpOrigins`), and `Vary: Origin` for every answer: it
+ * reflected any origin, with credentials allowed (2026-10-20).
+ */
+export const allowPTTPOrigin = (
+    server: Pick<PluridServerContext, 'pttpOrigins'>,
+    request: express.Request,
+    response: express.Response,
+) => {
+    response.vary('Origin');
+    const origin = request.headers.origin;
+    if (origin && server.pttpOrigins.includes(origin)) {
+        response.setHeader('Access-Control-Allow-Origin', origin);
+        response.setHeader('Access-Control-Allow-Credentials', 'true');
+    }
+};
+
+
 /** `POST /pttp`: resolve a plane path to its element payload (a custom `pttpHandler` may take over). */
 export const handlePTTPRequest = async (
     server: PluridServerContext,
@@ -54,8 +72,7 @@ export const handlePTTPRequest = async (
         }
 
 
-        response.setHeader('Access-Control-Allow-Origin', request.headers.origin || '');
-        response.setHeader('Access-Control-Allow-Credentials', 'true');
+        allowPTTPOrigin(server, request, response);
 
 
         const data = request.body;
@@ -78,6 +95,8 @@ export const handlePTTPRequest = async (
         if (server.pttpHandler) {
             const pttpHandled = await server.pttpHandler(
                 data.path,
+                request,
+                response,
             );
 
             if (pttpHandled) {
@@ -89,6 +108,11 @@ export const handlePTTPRequest = async (
                     );
                 }
 
+                // claimed and not answered: answered, so the request is never left open
+                if (!response.headersSent) {
+                    console.warn(`[${time.stamp()} :: ${requestID}] Plurid Server: the pttpHandler claimed POST ${request.path} without answering it.`);
+                    response.status(500).end();
+                }
                 return;
             }
         }
@@ -159,7 +183,7 @@ export const handlePTTPRequest = async (
         }
 
         const elementName = elementMatch.name;
-        // given the plane match, gather the planes to which it links
+        // reserved: the planes the match links to are not gathered, so it is always empty
         const linksTo: any[] = [];
 
         const element = {

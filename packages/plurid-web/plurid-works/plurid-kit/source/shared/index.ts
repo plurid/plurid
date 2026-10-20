@@ -31,9 +31,11 @@
  * identical sequence on the server and the client, and a provider present on
  * one target and not the other is a hydration mismatch by construction.
  *
- * `order: -Infinity` puts it outermost, above the router and every application
- * the router constructs. A config that declares nothing adds no service and
- * pays no wrapper.
+ * `order: -Infinity` applies it first: the INNERMOST service, directly around
+ * `PluridProvider`, still above the router and every application the router
+ * constructs. Being nearest, its fields win over a product's own
+ * `PluridApplicationProvider` service. A config that declares nothing adds no
+ * service and pays no wrapper.
  */
 export function applicationService(
     application: Record<string, unknown> | undefined,
@@ -200,10 +202,13 @@ export const producedFunction = (
  * Both targets spread the static `properties`, then `context` (Redux), then the
  * `store` built by the factory:
  *  - SERVER: `store(undefined)` is a base placeholder; the matching preserve
- *    overrides it per request (ContentGenerator merges `providers[name]` over
- *    these properties).
+ *    overrides it per request (`buildRequestTree`, `objects/Server/render.tsx` in the
+ *    server, merges `providers[name]` over these properties). A `client` comes from the
+ *    preserve too, per request: one for the whole server would share its cache with everyone.
  *  - CLIENT: `store(preloadedState)` rebuilds the store from the serialized
- *    `window.__PRELOADED_REDUX_STATE__`.
+ *    `window.__PRELOADED_REDUX_STATE__`, and `client()` builds the client once, unless the
+ *    static properties give one. It was never read: the provider rendered without its
+ *    client (2026-10-20).
  */
 export function serviceProperties(
     service: PluridServiceConfig,
@@ -224,12 +229,16 @@ export function serviceProperties(
             : service.store(preloadedState);
     }
 
+    if (target === 'client' && service.client && properties.client === undefined) {
+        properties.client = service.client();
+    }
+
     return properties;
 }
 
 
 /**
- * Order services by an optional `order` (lower = applied first = outer wrap),
+ * Order services by an optional `order` (lower = applied first = INNER wrap),
  * falling back to array order. Stable.
  */
 export function orderedServices(

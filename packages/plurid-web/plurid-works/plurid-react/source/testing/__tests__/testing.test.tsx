@@ -368,5 +368,27 @@ describe('@plurid/plurid-react/testing', () => {
 
         await rendered.unmount();
     });
+
+    it('the frame clock cancels the one frame it is asked to (2026-10-20)', () => {
+        // `cancelAnimationFrame` emptied the whole queue: a hook that cancelled its own frame took
+        // every other pending frame with it, and the ids were positions, reused once the queue ran.
+        const clock = installFrameClock();
+        try {
+            const a = jest.fn();
+            const b = jest.fn();
+            const first = window.requestAnimationFrame(a);
+            const second = window.requestAnimationFrame(b);
+            expect(second).not.toBe(first);
+            window.cancelAnimationFrame(second);
+            expect(clock.pending()).toBe(1);
+            clock.advance();
+            expect(a).toHaveBeenCalledTimes(1);
+            expect(b).not.toHaveBeenCalled();
+            const third = window.requestAnimationFrame(b);
+            expect([first, second]).not.toContain(third);
+        } finally {
+            clock.restore();
+        }
+    });
 });
 // #endregion module

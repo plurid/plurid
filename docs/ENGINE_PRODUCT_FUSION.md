@@ -90,7 +90,7 @@ mount paths are genuinely one surface. Nested providers merge per field, and an 
 `undefined` reads as "not configured here" rather than erasing an outer value.
 
 The kit grew `application` on its config, and it reaches both targets **as a service** (`order:
--Infinity`, so it sits outermost). That is the important detail: services are the one thing the kit
+-Infinity`, so it is applied first: the innermost service, directly around `PluridProvider`). That is the important detail: services are the one thing the kit
 already composes in an identical sequence on the server and the client, so the SSR tree and the
 hydrated tree cannot disagree about the provider — a provider present on one target and not the other
 would be a hydration mismatch by construction.

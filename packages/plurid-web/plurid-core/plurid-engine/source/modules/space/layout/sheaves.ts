@@ -7,10 +7,6 @@
         defaultConfiguration,
         ViewSize,
     } from '@plurid/plurid-data';
-
-    import {
-        mathematics,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -18,6 +14,9 @@
     import {
         recomputeSubtree,
     } from '../location';
+    import {
+        lengthInPx,
+    } from './size';
     // #endregion external
 // #endregion imports
 
@@ -39,9 +38,7 @@ const computeSheavesLayout = (
 
     const tree: TreePlane[] = [];
 
-    const width = mathematics.numbers.checkIntegerNonUnit(configuration.elements.plane.width)
-        ? configuration.elements.plane.width
-        : configuration.elements.plane.width * windowInnerWidth;
+    const width = lengthInPx(configuration.elements.plane.width, windowInnerWidth);
     const height = windowInnerHeight;
 
     // Sheaves = a stack of planes receding into depth. The planes' own sizes do not enter the
@@ -50,9 +47,7 @@ const computeSheavesLayout = (
     // (a fraction of the plane width, or an explicit pixel value like the width config),
     // with optional per-sheet X/Y cascade so the stack fans out instead of fully
     // occluding. Earlier this pinned every plane to (0,0,0) — a single visible plane.
-    const depthStep = mathematics.numbers.checkIntegerNonUnit(depth)
-        ? depth
-        : depth * width;
+    const depthStep = lengthInPx(depth, width);
 
     for (const [index, page] of roots.entries()) {
         const translateX = index * offsetX;

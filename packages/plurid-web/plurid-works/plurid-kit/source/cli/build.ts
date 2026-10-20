@@ -15,11 +15,17 @@
 
     import {
         loadPluridConfig,
+        PluridCliError,
     } from './config';
 
     import {
         resolvePaths,
+        PluridPaths,
     } from './paths';
+
+    import {
+        writeBuildManifest,
+    } from './manifest';
 
     import {
         loadEnvironment,
@@ -30,6 +36,42 @@
 
 
 // #region module
+/**
+ * A build empties its `buildDir` first, so only a directory that holds a build is emptied. It was
+ * removed whatever it named: `buildDir: '.'`, `'source'`, the public directory or a folder of
+ * something else went with everything in it (2026-10-20). A previous build is told by its own files:
+ * `asset-manifest.json`, or the server entry beside the client directory.
+ */
+export const assertBuildOutput = (
+    paths: PluridPaths,
+    root = process.cwd(),
+): void => {
+    const target = path.resolve(root, paths.buildDir);
+    const contains = (outer: string, inner: string) => inner === outer || inner.startsWith(outer + path.sep);
+    for (const kept of [path.resolve(root), path.resolve(root, 'source'), path.resolve(root, paths.publicDir)]) {
+        if (contains(target, kept)) {
+            throw new PluridCliError(
+                `buildDir '${paths.buildDir}' holds ${path.relative(root, kept) || 'the application'}: `
+                + 'a build empties its buildDir first, so give it a directory of its own (the default is `build`).',
+            );
+        }
+    }
+    if (!fs.statSync(target).isDirectory()) {
+        throw new PluridCliError(`buildDir '${paths.buildDir}' is not a directory.`);
+    }
+    const entries = fs.readdirSync(target);
+    const previous = entries.length === 0
+        || entries.includes('asset-manifest.json')
+        || (entries.includes('index.js') && entries.includes('client'));
+    if (!previous) {
+        throw new PluridCliError(
+            `buildDir '${paths.buildDir}' is not a previous build (no asset-manifest.json): a build empties `
+            + 'its buildDir first. Move that directory aside, or choose another buildDir.',
+        );
+    }
+};
+
+
 /**
  * `plurid build` - the production esbuild pass. Replaces the legacy webpack /
  * rollup `scripts/workings/`.
@@ -55,6 +97,7 @@ export async function build(
 
     const clean = !argv.includes('--no-clean') && process.env.PLURID_PRESERVE_ARTIFACTS !== '1';
     if (clean && fs.existsSync(paths.buildDir)) {
+        assertBuildOutput(paths);
         fs.rmSync(paths.buildDir, { recursive: true, force: true });
     }
 
@@ -86,12 +129,11 @@ export async function build(
 
     // derive the real client entry path from the metafile -> asset manifest
     const mainScriptSource = mainEntryFromMetafile(clientResult.metafile, paths.clientDir);
-    if (mainScriptSource) {
-        fs.writeFileSync(
-            paths.assetManifest,
-            JSON.stringify({ main: mainScriptSource }, null, 2),
-        );
-    }
+    // and the build's mode, which `plurid start` reads
+    writeBuildManifest(paths, {
+        mode,
+        ...(mainScriptSource ? { main: mainScriptSource } : {}),
+    });
 
     process.stdout.write(
         `[plurid build] built -> ${paths.buildDir}/{index.js, client/**, public/**}`

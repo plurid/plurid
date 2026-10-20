@@ -1,6 +1,7 @@
 // #region imports
     import {
         defaultConfiguration,
+        defaultTreePlane,
         LAYOUT_TYPES,
         PluridConfiguration,
         ROOTS_GAP,
@@ -19,6 +20,7 @@
         configuredPlaneExtent,
         fallbackPlaneSize,
     } from '../size';
+    import computeColumnLayout from '../column';
     import {
         placedWidth,
         placedHeight,
@@ -139,6 +141,32 @@ describe('a configured dimension without a view', () => {
             }, view).width;
             expect(resolved).toBe(!extent ? 0 : 'px' in extent ? extent.px : extent.fraction * view.width);
         }
+    });
+
+    it('reads a length with a decimal as px, and a fraction only up to a few views (2026-10-20)', () => {
+        // Every non-integer was a fraction: 460.5 (a measured width passed on) was 460.5 views wide.
+        expect(configuredPlaneExtent(460.5)).toEqual({ px: 460.5 });
+        expect(configuredPlaneExtent(2.5)).toEqual({ fraction: 2.5 });
+
+        const layout = (configured: Partial<PluridConfiguration['elements']['plane']>, gap?: number) => computeColumnLayout(
+            [
+                { ...defaultTreePlane, sourceID: 'a', route: '/a', planeID: 'a', show: true },
+                { ...defaultTreePlane, sourceID: 'b', route: '/b', planeID: 'b', show: true },
+            ],
+            2,
+            undefined,
+            gap,
+            {
+                ...defaultConfiguration,
+                elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, ...configured } },
+            },
+            view,
+        );
+        const [first, second] = layout({ width: 460.5 });
+        expect(second.location.translateX - first.location.translateX).toBeLessThan(1000);
+        // a gap in px with a decimal is px too, not that many plane widths
+        const [left, right] = layout({ width: 400 }, 12.5);
+        expect(right.location.translateX - left.location.translateX).toBe(412.5);
     });
 });
 // #endregion module

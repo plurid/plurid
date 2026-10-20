@@ -176,11 +176,15 @@ export const copySelection = (
 
     const copied = state.space.selectedPlaneIDs;
     dispatch(actions.space.historyBegin());
-    for (const planeID of copied) {
-        dispatch(closePlane(planeID, { navigate: 'stay' }) as any);
+    // `finally`: a close that throws still closes the undo step (it stayed open, 2026-10-20)
+    try {
+        for (const planeID of copied) {
+            dispatch(closePlane(planeID, { navigate: 'stay' }) as any);
+        }
+        dispatch(actions.space.clearSelection());
+    } finally {
+        dispatch(actions.space.historyEnd());
     }
-    dispatch(actions.space.clearSelection());
-    dispatch(actions.space.historyEnd());
 };
 
 

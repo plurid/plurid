@@ -55,6 +55,24 @@ describe('the view\'s routes', () => {
         await rendered.unmount();
     });
 
+    it('does not warn for a view route an arrangement placed under another plane', async () => {
+        // The check looked among the roots only: a host restoring an arrangement that hangs a view
+        // item from another plane (Viewer's linked folders) was told the plane was not registered.
+        const rendered = await renderPlurid({ planes, view: ['/folders/a', '/folders/b'] } as any);
+        const store = rendered.api.store;
+        const [a, b] = store.getState().space.tree;
+        await act(async () => {
+            store.dispatch({
+                type: 'space/restoreArrangement',
+                payload: { tree: [{ ...a, children: [{ ...b, parentPlaneID: a.planeID }] }], links: [] },
+            });
+        });
+        await act(async () => {});
+
+        expect(unregistered(warn)).toEqual([]);
+        await rendered.unmount();
+    });
+
     it('still warns for a route no plane answers', async () => {
         const rendered = await renderPlurid({ planes, view: ['/folders/a', '/elsewhere'] } as any);
         await act(async () => {});

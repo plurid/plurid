@@ -138,8 +138,9 @@ describe('the live configuration', () => {
         const rows = after(actions.setConfigurationSpaceLayout('ROWS' as never));
         expect(rows.space.layout).toEqual({ type: LAYOUT_TYPES.ROWS });
 
-        // a type the engine does not lay out is stored as the one it lays out (META emptied the space)
-        expect(after(actions.setConfigurationSpaceLayout('META' as never)).space.layout).toEqual({ type: LAYOUT_TYPES.COLUMNS });
+        // a type the engine does not lay out is stored as the one it lays out (META emptied the space);
+        // that is the default's own type, so the default's parameters stay
+        expect(after(actions.setConfigurationSpaceLayout('META' as never)).space.layout).toEqual({ type: LAYOUT_TYPES.COLUMNS, columns: 2 });
         expect(after(actions.setConfigurationSpaceLayout('face to face' as never)).space.layout).toEqual({ type: LAYOUT_TYPES.FACE_TO_FACE });
 
         const culled = after(actions.setConfigurationSpaceCullingDistance(4200));
@@ -170,6 +171,46 @@ describe('the live configuration', () => {
         for (const language of ['english', 'ukrainian', 'arabic', 'norwegian', 'japanese'] as const) {
             expect(after(actions.setConfigurationLanguage(language)).global.language).toBe(language);
         }
+    });
+
+    it('the layout picker keeps the layout\'s parameters: all of them for the same type, the shared ones for another (2026-10-20)', () => {
+        // The picked type replaced the whole layout: `columns: 3` was gone at a click on Columns.
+        const configured = after(
+            actions.setConfiguration({
+                ...defaultConfiguration,
+                space: { ...defaultConfiguration.space, layout: { type: LAYOUT_TYPES.COLUMNS, columns: 3, gap: 0.2 } as any },
+            }),
+        );
+        const same = reducer(configured, actions.setConfigurationSpaceLayout(LAYOUT_TYPES.COLUMNS));
+        expect(same.space.layout).toEqual({ type: LAYOUT_TYPES.COLUMNS, columns: 3, gap: 0.2 });
+        const other = reducer(configured, actions.setConfigurationSpaceLayout(LAYOUT_TYPES.ROWS));
+        expect(other.space.layout).toEqual({ type: LAYOUT_TYPES.ROWS, gap: 0.2 });
+    });
+
+    it('a drawer toggled closed under ALL closes, the others stay open (2026-10-20)', () => {
+        // The toggle added or removed the named drawer only, and ALL kept every drawer open.
+        const open = after(
+            actions.toggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.ALL),
+            actions.toggleConfigurationToolbarToggleDrawer(TOOLBAR_DRAWERS.GLOBAL),
+        );
+        const drawers = open.elements.toolbar.toggledDrawers;
+        expect(drawers).not.toContain(TOOLBAR_DRAWERS.ALL);
+        expect(drawers).not.toContain(TOOLBAR_DRAWERS.GLOBAL);
+        expect(drawers).toContain(TOOLBAR_DRAWERS.SPACE);
+    });
+
+    it('a general theme picked keeps the interaction theme in force, a name as an object (2026-10-20)', () => {
+        // A named theme (`'night'`, both parts) read as no interaction theme: it became 'plurid'.
+        const named = after(
+            actions.setConfiguration({ ...defaultConfiguration, global: { ...defaultConfiguration.global, theme: 'night' as any } }),
+            actions.setConfigurationThemeGeneral('dusk'),
+        );
+        expect(named.global.theme).toEqual({ general: 'dusk', interaction: 'night' });
+        const interaction = after(
+            actions.setConfiguration({ ...defaultConfiguration, global: { ...defaultConfiguration.global, theme: 'night' as any } }),
+            actions.setConfigurationThemeInteraction('dusk'),
+        );
+        expect(interaction.global.theme).toEqual({ general: 'night', interaction: 'dusk' });
     });
 });
 // #endregion module

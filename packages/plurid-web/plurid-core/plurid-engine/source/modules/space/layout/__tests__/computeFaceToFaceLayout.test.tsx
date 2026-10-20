@@ -3,6 +3,7 @@
     import {
         /** constants */
         defaultTreePlane,
+        defaultConfiguration,
 
         /** interfaces */
         TreePlane,
@@ -109,6 +110,21 @@ describe('computeFaceToFaceLayout', () => {
             1,
         );
         expect(rows[3].location.translateY).toBeCloseTo(410, 6);
+    });
+
+    it('pitches by the configured width, not a measurement of it, as the columns do (2026-10-20)', () => {
+        // The pitch read a measured width wherever one was known: a configured width of 400 measured
+        // at 800 (the previous view's) placed the row twice as wide, and it jumped when measured again.
+        const configuration = {
+            ...defaultConfiguration,
+            elements: { ...defaultConfiguration.elements, plane: { ...defaultConfiguration.elements.plane, width: 400 } },
+        };
+        const measured = (id: string): TreePlane => ({ ...makePlane(id, '/' + id), planeID: id, width: 800, height: 300 });
+        const unmeasured = (id: string): TreePlane => ({ ...makePlane(id, '/' + id), planeID: id, width: 0, height: 0 });
+        const placedMeasured = computeFaceToFaceLayout([measured('a'), measured('b')], DEFAULT_ANGLE, 0, 0, configuration, { width: 1200, height: 800 });
+        const placedUnmeasured = computeFaceToFaceLayout([unmeasured('a'), unmeasured('b')], DEFAULT_ANGLE, 0, 0, configuration, { width: 1200, height: 800 });
+        expect(placedMeasured.map((plane) => plane.location.translateX)).toEqual(placedUnmeasured.map((plane) => plane.location.translateX));
+        expect(placedMeasured.map((plane) => plane.location.translateZ)).toEqual(placedUnmeasured.map((plane) => plane.location.translateZ));
     });
 
 });

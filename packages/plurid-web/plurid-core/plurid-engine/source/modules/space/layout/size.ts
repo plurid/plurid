@@ -4,9 +4,6 @@
         PluridConfiguration,
         ViewSize,
     } from '@plurid/plurid-data';
-    import {
-        mathematics,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 // #endregion imports
 
@@ -23,8 +20,28 @@ export interface ConfiguredPlaneSize {
 
 
 /**
- * The size an UNDECLARED plane renders at, from `elements.plane.width` / `height`: a value up to 1
- * is a fraction of the view, above 1 px (`checkIntegerNonUnit`). The one place both readers agree.
+ * THE ONE RULE FOR A CONFIGURED LENGTH: a fraction (of the view for a plane's size, of the plane's
+ * width for a gap or a depth step) is 1, or a number with a decimal of at most `FRACTION_LIMIT`;
+ * anything else is px. Every number with a decimal was a fraction (`checkIntegerNonUnit`), so a px
+ * size with one (460.5, a measured width passed on) was 460.5 views wide, and a 12.5 px gap twelve
+ * and a half planes (2026-10-20).
+ */
+export const FRACTION_LIMIT = 4;
+
+export const isFractionalLength = (
+    value: number,
+): boolean => value === 1 || (!Number.isInteger(value) && Math.abs(value) <= FRACTION_LIMIT);
+
+/** A configured length in px: a fraction of `extent` (`isFractionalLength`), else the value itself. */
+export const lengthInPx = (
+    value: number,
+    extent: number,
+): number => isFractionalLength(value) ? value * extent : value;
+
+
+/**
+ * The size an UNDECLARED plane renders at, from `elements.plane.width` / `height`: a fraction of the
+ * view, or px (`isFractionalLength`). The one place both readers agree.
  */
 export const configuredPlaneSize = (
     configuration: PluridConfiguration,
@@ -43,9 +60,9 @@ export type PlaneExtent =
     | { px: number };
 
 /**
- * A configured dimension WITHOUT a view: unset or ≤ 0 → `undefined` (content-driven); an integer
- * above 1 → px; else a fraction of the view. What a render that has no measured view yet (the
- * server's, and the hydrating client's first) can state exactly, where a px size would be a guess.
+ * A configured dimension WITHOUT a view: unset or ≤ 0 → `undefined` (content-driven); a fraction of
+ * the view, or px (`isFractionalLength`). What a render that has no measured view yet (the server's,
+ * and the hydrating client's first) can state exactly, where a px size would be a guess.
  */
 export const configuredPlaneExtent = (
     configured: number | undefined,
@@ -53,10 +70,10 @@ export const configuredPlaneExtent = (
     if (configured === undefined || configured <= 0) {
         return undefined;
     }
-    if (mathematics.numbers.checkIntegerNonUnit(configured)) {
-        return { px: configured };
+    if (isFractionalLength(configured)) {
+        return { fraction: configured };
     }
-    return { fraction: configured };
+    return { px: configured };
 };
 
 /** A configured dimension against the view's: 0 where it is left to the content. */

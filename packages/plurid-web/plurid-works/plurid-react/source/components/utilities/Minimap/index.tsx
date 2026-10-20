@@ -97,6 +97,12 @@ const StyledMinimap = styled.div<StyledMinimapProperties>`
     border: 1px solid ${({ theme }) => 'var(--plurid-surface-solid)'};
     box-shadow: none;
     transition: opacity 200ms ease, background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+    /* \`transparent: false\`: the solid panel at rest too (the knob was passed here and never read, 2026-10-20) */
+    ${({ transparent }) => (transparent ? '' : `
+        opacity: 1;
+        background-color: var(--plurid-surface-solid);
+        border-color: var(--plurid-surface-strong);
+    `)}
 
     &:hover {
         opacity: 1;
@@ -113,6 +119,8 @@ interface StyledMinimapDotProperties extends ThemedProperties {
 
 const StyledMinimapDot = styled.div<StyledMinimapDotProperties>`
     border-radius: 50%;
+    /* the depth opacity as a property, so the hit's hover rule can brighten it: inline, it won (2026-10-20) */
+    opacity: var(--plurid-minimap-dot-opacity, 1);
     background-color: ${({ theme }) => 'var(--plurid-ink)'};
     box-shadow: ${({ active, theme }) =>
         active ? `0 0 0 3px ${'var(--plurid-surface-strong)'}` : 'none'};
@@ -353,8 +361,8 @@ const PluridMinimap: React.FC<PluridMinimapProperties> = (
                             style={{
                                 width: size,
                                 height: size,
-                                opacity: active ? 1 : dot.opacity,
-                            }}
+                                '--plurid-minimap-dot-opacity': active ? 1 : dot.opacity,
+                            } as React.CSSProperties}
                         />
                     </StyledMinimapHit>
                 );

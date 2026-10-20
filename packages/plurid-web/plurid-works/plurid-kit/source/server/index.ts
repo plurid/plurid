@@ -307,8 +307,13 @@ export async function createPluridServer(
     if (Array.isArray(config.routes) && config.routes.length === 0 && !config.planes?.length) {
         warnOnce('[plurid-kit] the configuration has no routes: every page answers 404.');
     }
+    // the type requires it and the check accepts its absence: without it, a page renders on the request's
+    // `Host`, which is only as trustworthy as the proxy in front of the server (2026-10-20)
+    if (isProduction && !config.hostname && !config.options?.hostname) {
+        warnOnce('[plurid-kit] no `hostname` in production: every page renders on its request\'s Host header. Set `hostname` to the site\'s public host.');
+    }
 
-    // Custom Express routes (deon/defile/decart/status and PTTP CORS): `handlers(server)` runs INSIDE
+    // Custom Express routes (deon/defile/decart/status): `handlers(server)` runs INSIDE
     // the construction, before the page's catch-all `GET` — after it, its `GET /status` never
     // answered (2026-09-29).
     let handled: unknown;
@@ -326,7 +331,10 @@ export async function createPluridServer(
         services,
         options,
         template,
-        usePTTP: config.usePTTP ?? true,
+        // on where it can answer: PTTP resolves ElementQL planes only, and it was on for every app,
+        // a `/pttp` answering 404 for each function plane (2026-10-20)
+        usePTTP: config.usePTTP ?? !!config.elementqlEndpoint,
+        ...(config.pttpOrigins ? { pttpOrigins: config.pttpOrigins } : {}),
         elementqlEndpoint: config.elementqlEndpoint,
         handlers: handlers
             ? (host) => {

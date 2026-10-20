@@ -8,10 +8,6 @@
         ROOTS_GAP,
         defaultConfiguration,
     } from '@plurid/plurid-data';
-
-    import {
-        mathematics,
-    } from '@plurid/plurid-functions';
     // #endregion libraries
 
 
@@ -22,6 +18,7 @@
     import {
         configuredPlaneSize,
         fallbackPlaneSize,
+        lengthInPx,
     } from './size';
     import {
         finiteNumber,
@@ -52,12 +49,8 @@ const computeRowLayout = (
 
     const tree: TreePlane[] = [];
     const configurationWidth = configuration.elements.plane.width;
-    const width = mathematics.numbers.checkIntegerNonUnit(configurationWidth)
-        ? configurationWidth
-        : configurationWidth * windowInnerWidth;
-    const gapValue = mathematics.numbers.checkIntegerNonUnit(gap)
-        ? gap
-        : gap * width;
+    const width = lengthInPx(configurationWidth, windowInnerWidth);
+    const gapValue = lengthInPx(gap, width);
 
     // Guard against `rows === 0` (→ `Math.ceil(n/0) === Infinity`, collapsing every plane into
     // one row) and a non-finite one; `rowLength` is a whole count of at least 1, at most the roots

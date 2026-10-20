@@ -417,7 +417,15 @@ export const commitCameraTarget = (
 
     // a jump: whatever was driving the camera stops, or its next frame would overwrite the jump
     controller?.cancel();
+    // a jump that docks names its page for its one commit, as a swing does for its frames: a page
+    // pitched past the orbit's limit is reached face-on (the commit clamped it, 2026-10-20)
+    if (landing) {
+        dispatch(actions.space.setDockingPlaneID(landing));
+    }
     dispatch(actions.space.setCamera(target));
+    if (landing) {
+        dispatch(actions.space.setDockingPlaneID(''));
+    }
     onSettle?.();
 };
 
@@ -513,11 +521,14 @@ export const resolveCameraTarget = (
                 : undefined;
         }
         case 'delta':
+            // as the store's own delta: a pitch past the limit (a page docked face-on) is kept
             return cameraEngine.applyCameraDelta(
                 spaceState.camera,
                 command.delta,
                 spaceState.viewSize,
-                spaceState.cameraLimits,
+                Math.abs(spaceState.camera.pitch) > spaceState.cameraLimits.pitchLimit
+                    ? { ...spaceState.cameraLimits, pitchLimit: Math.abs(spaceState.camera.pitch) }
+                    : spaceState.cameraLimits,
             );
         default:
             return undefined;

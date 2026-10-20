@@ -94,6 +94,32 @@ const applyPageDefaults = (
 };
 
 
+/**
+ * THE WAY BACK (2026-10-20): leaving the page presentation, each of the four fields still at its page
+ * default takes the space default again (`docking.url` its unset). Nothing undid them: back in the
+ * space, the planes stayed view-tall, with no fade-in, no gradient and the address bar still bound.
+ * A value other than the page default is a choice, and stays.
+ */
+const applySpaceDefaults = (
+    configuration: PluridConfiguration,
+) => {
+    if (configuration.space.fadeInTime === pagePresentationDefaults.space!.fadeInTime) {
+        configuration.space.fadeInTime = defaultConfiguration.space.fadeInTime;
+    }
+    if (configuration.space.opaque === pagePresentationDefaults.space!.opaque) {
+        configuration.space.opaque = defaultConfiguration.space.opaque;
+    }
+    if (configuration.elements.plane.height === pagePresentationDefaults.elements!.plane!.height) {
+        configuration.elements.plane.height = defaultConfiguration.elements.plane.height;
+    }
+    if (configuration.space.docking?.url === pagePresentationDefaults.space!.docking!.url) {
+        const docking = { ...configuration.space.docking };
+        delete docking.url;
+        configuration.space.docking = docking;
+    }
+};
+
+
 /** A `docking.url.base` as the binding carries it: a leading slash, no trailing one, `''` for none. */
 /** `docking.url.base` normalised: one leading slash, no trailing one, no doubled ones; `''` for none. */
 export const normalizeDockingURLBase = (
@@ -141,8 +167,9 @@ export const merge = (
     configuration?: PluridPartialConfiguration,
     target?: PluridConfiguration,
 ): PluridConfiguration => {
-    // The page presentation changes three DEFAULTS (no fade-in, no gradient, view-sized planes);
-    // they are layered under the target and the partial, so a host's own values still win.
+    // The page presentation changes four DEFAULTS (no fade-in, no gradient, view-sized planes, the
+    // address bar bound); they are layered under the target and the partial, so a host's own values
+    // still win.
     const presentation = configuration?.space?.presentation ?? target?.space?.presentation;
     const page = presentation === 'page';
     const base: PluridConfiguration = page
@@ -155,8 +182,11 @@ export const merge = (
     );
     if (page) {
         // A full target (a live reconfiguration carries the whole current configuration) holds the
-        // SPACE defaults for the three page fields; a value still at that default is not a choice.
+        // SPACE defaults for the page fields; a value still at that default is not a choice.
         applyPageDefaults(targetConfiguration);
+    } else if (target?.space?.presentation === 'page') {
+        // and the way back: the page defaults a page target holds are not choices either
+        applySpaceDefaults(targetConfiguration);
     }
 
     if (!configuration) {

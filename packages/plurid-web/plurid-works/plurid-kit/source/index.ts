@@ -103,7 +103,7 @@ export type PluridFaviconSet = Exclude<PluridFavicon, string>;
  *  - `properties` are static props passed on both targets.
  *  - On the SERVER, per-request props come from the matching preserve
  *    (`preserve.providers[name]`) and are merged OVER `properties`
- *    (see plurid-react-server `ContentGenerator`).
+ *    (see plurid-react-server `buildRequestTree`, `objects/Server/render.tsx`).
  *  - On the CLIENT, `store`/`client` rebuild the per-request instances from the
  *    serialized window state (`__PRELOADED_REDUX_STATE__`, ...).
  */
@@ -256,8 +256,16 @@ export interface PluridConfig {
     publicDir?: string;
     /** Build output directory. Default `'build'`. -> `options.buildDirectory`. */
     buildDir?: string;
-    /** Toggle PTTP. Default `true`. */
+    /**
+     * Toggle PTTP (`POST /pttp`, which lets another plurid space load this app's planes). It resolves
+     * ElementQL planes only, so the default is on with an `elementqlEndpoint` and off without one.
+     */
     usePTTP?: boolean;
+    /**
+     * The origins (`https://host[:port]`) whose plurid spaces may load this app's planes over PTTP,
+     * with credentials. None by default: only the app's own pages. -> the server's `pttpOrigins`.
+     */
+    pttpOrigins?: string[];
     elementqlEndpoint?: string;
     bundle?: PluridBundleConfig;
 

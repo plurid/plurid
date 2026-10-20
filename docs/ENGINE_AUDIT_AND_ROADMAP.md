@@ -21,7 +21,7 @@ The 2026-09-29 production-readiness sweep (four audits and an inventory, every f
 - state persistence hardening and spawned-plane reload recovery;
 - pointer-event navigation in place of HammerJS in the engine;
 - viewpoint, links, selection, movement, snapping, undo/redo, minimap, persistence, collaboration, and developer-control seams;
-- `@plurid/plurid-kit` published (0.0.0-6, 2026-09-17) and consumed by applications.
+- `@plurid/plurid-kit` published (0.0.0-7, 2026-10-18) and consumed by applications.
 
 ## P0: Make the gates mean product quality
 

@@ -121,5 +121,58 @@ describe('PluridStillsGenerator (2026-09-29)', () => {
             .rejects.toThrow(/'puppeteer' dependency is not installed/);
         expect(fs.existsSync(path.join(directory, 'forked'))).toBe(false);
     });
+
+    it('never loads a kit application\'s entry, which starts its server when it is loaded (2026-10-20)', async () => {
+        // Loaded to read its routes, the entry started a server inside the generator, which refused it and
+        // stayed running on it. The kit's entry is also the default for a kit application.
+        jest.doMock('puppeteer', () => fetchingPuppeteer);
+        const { default: StillsGenerator } = require('../');
+
+        fs.writeFileSync(path.join(directory, 'plurid.config.js'), 'module.exports = {};');
+        fs.mkdirSync(path.join(directory, 'build'));
+        const started = path.join(directory, 'started');
+        fs.writeFileSync(path.join(directory, 'build', 'index.js'), [
+            `require('fs').writeFileSync(${JSON.stringify(started)}, 'yes');`,
+            'const startPluridServer = () => {};',
+            'startPluridServer({});',
+        ].join('\n'));
+        const cwd = process.cwd();
+        process.chdir(directory);
+        try {
+            await expect(new StillsGenerator().initialize()).rejects.toThrow(/kit application's entry/);
+            await expect(new StillsGenerator({ server: './build/index.js' }).initialize()).rejects.toThrow(/kit application's entry/);
+        } finally {
+            process.chdir(cwd);
+        }
+        expect(fs.existsSync(started)).toBe(false);
+    });
+
+    it('writes the stills where the server reads them, its own `stillsDirectory` (2026-10-20)', async () => {
+        jest.doMock('puppeteer', () => fetchingPuppeteer);
+        const { default: StillsGenerator } = require('../');
+
+        const server = path.join(directory, 'server.js');
+        fs.writeFileSync(server, SERVER.replace("options: { stiller:", "options: { stillsDirectory: 'pre', stiller:"));
+
+        await new StillsGenerator({ server, build: path.join(directory, 'build') }).initialize();
+        expect(fs.existsSync(path.join(directory, 'build', 'pre', 'metadata.json'))).toBe(true);
+    });
+
+    it('says why the server it forked stopped: its error output was read by no one (2026-10-20)', async () => {
+        jest.doMock('puppeteer', () => fetchingPuppeteer);
+        const { default: StillsGenerator } = require('../');
+
+        const server = path.join(directory, 'server.js');
+        fs.writeFileSync(server, SERVER.replace(
+            "if (require.main === module) {",
+            "if (require.main === module) {\n    console.error('boom-reason');\n    process.exit(3);",
+        ));
+        const stderr = jest.spyOn(process.stderr, 'write').mockImplementation(() => true);
+        try {
+            await expect(new StillsGenerator({ server, build: directory }).initialize()).rejects.toThrow(/boom-reason/);
+        } finally {
+            stderr.mockRestore();
+        }
+    });
 });
 // #endregion module

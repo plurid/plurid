@@ -1,4 +1,5 @@
 import './release-publish.test.mjs';
+import './harness-tables.test.mjs';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { gzipSync } from 'node:zlib';
@@ -17,6 +18,18 @@ const project = (name, dependencies = {}, extra = {}) => ({
 });
 const plan = (projects, files = [], extra = {}) => planRelease({
     projects, files, root: '/repo', published: Object.fromEntries(projects.map((p) => [p.data.name, p.data.version])), ...extra,
+});
+
+test('the verify gate runs each browser project alone, as CI and release --pack do (2026-10-20)', () => {
+    // `pnpm --filter plurid-render-test e2e` ran chromium, perf and visual in one Playwright invocation,
+    // so the frame budgets were measured beside 160 other tests.
+    const { scripts } = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+    const expand = (command) => command.split('&&').map((part) => part.trim())
+        .flatMap((part) => /^pnpm [\w.:]+$/.test(part) && scripts[part.slice(5)] ? expand(scripts[part.slice(5)]) : [part]);
+    const browser = expand(scripts.verify).filter((part) => /plurid-render-test (e2e|exec playwright)/.test(part));
+    assert.ok(browser.length > 0);
+    for (const part of browser) assert.match(part, /--project=\w+/, part);
+    assert.deepEqual(browser.map((part) => part.match(/--project=(\w+)/)[1]), ['chromium', 'perf', 'visual']);
 });
 
 test('shipped manifests, assets and build inputs count; tests and retained outputs do not', () => {
@@ -172,7 +185,7 @@ const path = require('node:path');
 const root = process.env.PLURID_RELEASE_TEST_ROOT;
 const name = path.basename(process.argv[1]);
 const args = process.argv.slice(2);
-fs.appendFileSync(path.join(root, 'calls.jsonl'), JSON.stringify({ name, args }) + '\\n');
+fs.appendFileSync(path.join(root, 'calls.jsonl'), JSON.stringify({ name, args, server: process.env.PLURID_E2E_OWN_SERVER }) + '\\n');
 if (name === 'git' && args[0] === 'status') process.exit(0);
 if (name === 'git' && args[0] === 'rev-parse') { console.log('${commit}'); process.exit(0); }
 if (name === 'git' && args[0] === 'archive') { console.error('test build boundary'); process.exit(7); }
@@ -218,6 +231,34 @@ test('bare --publish builds automatically when this commit has no verified artif
     assert.equal(fixture.calls().some(({ name, args }) => name === 'git' && args[0] === 'archive'), true);
     assert.equal(fixture.calls().some(({ args }) => args[0] === 'whoami' || args[0] === 'publish'), false);
     assert.equal(rememberedArtifacts(fixture.root, fixture.commit), null);
+});
+
+test('a release\'s browser gates start their own harness server, never a development one already running', async () => {
+    // The gates run in the archived release tree, but Playwright reused any server on the harness's
+    // port: a `pnpm dev` from the checkout was what the release's browser gates tested (2026-10-20).
+    const fixture = releaseCLIFixture();
+    fixture.run();
+    const archive = fixture.calls().find(({ name, args }) => name === 'git' && args[0] === 'archive');
+    assert.equal(archive?.server, '1', 'every command a release runs carries the switch');
+    const configuration = new URL('../fixtures/render-test/e2e/playwright.config.ts', import.meta.url);
+    let load = 0;
+    const reuses = async (environment) => {
+        const saved = Object.fromEntries(Object.keys(environment).map((key) => [key, process.env[key]]));
+        const apply = (values) => {
+            for (const [key, value] of Object.entries(values)) {
+                if (value === undefined) delete process.env[key];
+                else process.env[key] = value;
+            }
+        };
+        apply(environment);
+        try {
+            return (await import(configuration.href + '?load=' + ++load)).default.webServer.reuseExistingServer;
+        } finally {
+            apply(saved);
+        }
+    };
+    assert.equal(await reuses({ CI: undefined, PLURID_E2E_OWN_SERVER: undefined }), true, 'a developer keeps pnpm dev');
+    assert.equal(await reuses({ CI: undefined, PLURID_E2E_OWN_SERVER: '1' }), false, 'a release starts its own');
 });
 
 test('bare --publish reuses remembered verified tarballs and never rebuilds on retry', () => {

@@ -32,6 +32,10 @@
         MODE_LABEL,
         MODE_HINT,
     } from '~services/logic/modes';
+    import {
+        chromeModeOf,
+        showsChrome,
+    } from '~services/chrome';
     // #endregion external
 // #endregion imports
 
@@ -102,7 +106,10 @@ const PluridModeBadge: React.FC<PluridModeBadgeProperties> = (
 const mapStateToProperties = (
     state: AppState,
 ): PluridModeBadgeStateProperties => ({
-    stateMode: modeOf(state.configuration.space, state.ui.grabMode || state.ui.grabHold),
+    // headless (`chrome: 'none'`) shows no mode: the badge showed whatever the chrome mode (2026-10-20)
+    stateMode: showsChrome(chromeModeOf(state.configuration), 'modeBadge')
+        ? modeOf(state.configuration.space, state.ui.grabMode || state.ui.grabHold)
+        : undefined,
 });
 
 

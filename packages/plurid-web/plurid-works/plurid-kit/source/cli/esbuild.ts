@@ -175,6 +175,9 @@ export function clientBuildOptions(
 
     return {
         ...commonBuild,
+        // the directory the build runs in: esbuild reads process.cwd() once, when it loads, so a build
+        // after a chdir resolved and wrote against the old directory (2026-10-20)
+        absWorkingDir: process.cwd(),
         entryPoints: ['source/client/index.tsx'],
         outdir: options.outdir ?? 'build/client',
         platform: 'browser',
@@ -228,6 +231,7 @@ export function serverBuildOptions(
 
     return {
         ...commonBuild,
+        absWorkingDir: process.cwd(),
         entryPoints: ['source/server/index.ts'],
         outdir: options.outdir ?? 'build',
         platform: 'node',

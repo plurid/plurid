@@ -8,6 +8,7 @@
     import {
         LinkCoordinates,
         RegisteredPluridPlane,
+        TreePlane,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -20,6 +21,9 @@
     import actions from '~services/state/actions';
     import { AppState } from '~services/state/store';
     import { warnOnce } from '~services/logic/development/warn';
+    import {
+        isDevelopment,
+    } from '~services/logic/development/environment';
     import {
         getDockedPlaneID,
     } from '~services/state/modules/space/selectors';
@@ -292,6 +296,38 @@ export const openPlane = (
     if (options.navigate && updatedPlane) {
         navigateToPluridPlane(dispatch, updatedPlane, undefined, true, { awaitMeasure: true });
     }
+};
+
+
+/**
+ * A HOST'S TREE, ONE PATH (2026-10-20): `handle.tree.set` dispatched the tree as given, where the
+ * `space.setTree` topic checked it and brought the view along, so a malformed tree threw inside a
+ * render, and roots the view did not hold went at the next relayout. Both run this. A malformed tree
+ * leaves the tree as it was (`false`, the reason said in development, under the caller's `name`); a
+ * valid one is set exactly (`replaceTree`), and the view follows its roots.
+ */
+export const replaceHostTree = (
+    tree: unknown,
+    name: string,
+) => (dispatch: Dispatch, getState: GetState): boolean => {
+    const validation = spaceEngine.tree.fields.validateTree(tree);
+    if (!validation.ok) {
+        if (typeof console !== 'undefined' && isDevelopment()) {
+            console.warn('[plurid] \'' + name + '\' was ignored: ' + (validation.reason || 'a malformed tree'));
+        }
+        return false;
+    }
+    dispatch(actions.space.replaceTree(tree as TreePlane[]));
+
+    // THE VIEW AGREES WITH THE TREE: a relayout (a resize, a configuration, a measurement) places the
+    // VIEW's roots, so a tree set over an empty view was emptied at the first one. The tree holds
+    // absolute routes (`plurid://<host>/a`); the view holds the host's own.
+    const roots = (tree as TreePlane[]).map((root) => root.route.replace(/^[a-z][a-z0-9+.-]*:\/\/[^/]*/i, ''));
+    const viewRoutes = (getState().space.view || []).map((entry) => spaceEngine.tree.logic.viewItemRoute(entry));
+    if (roots.length !== viewRoutes.length || roots.some((route, index) => route !== viewRoutes[index])) {
+        dispatch(actions.space.spaceSetView(roots));
+    }
+    return true;
 };
 
 
