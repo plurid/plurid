@@ -22,6 +22,7 @@ export interface RecordedFrame {
     docked: string | null;
     toolbar: string;
     motion: string;
+    /** the planes set aside */
     aside: number;
 }
 
@@ -558,7 +559,8 @@ export const recordFrames = async (page: Page) => {
                 docked: document.querySelector('[data-plurid-entity="PluridView"]')!.getAttribute('data-plurid-docked'),
                 toolbar: toolbar ? getComputedStyle(toolbar).visibility : 'none',
                 motion: w.__pluridApi.getSnapshot().space.motion,
-                aside: document.querySelectorAll('[data-plurid-aside]').length,
+                // planes only: a leash set aside with its child carries the attribute too (2026-10-20)
+                aside: document.querySelectorAll('[data-plurid-plane][data-plurid-aside]').length,
             });
             if (w.__rtRecording && frames.length < 900) requestAnimationFrame(tick);
         };
