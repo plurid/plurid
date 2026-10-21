@@ -117,6 +117,20 @@ describe('a configuration or view prop rebuilt with the same content', () => {
         await rendered.unmount();
     });
 
+    it('reads an edit made in place under a new object as a change (2026-10-22)', async () => {
+        // The diff compared with the host's own object, whose nested parts the new one shared: an edit
+        // made in place, then passed as `{ ...configuration }`, read as no change. (A view the store
+        // holds is frozen: it cannot be edited in place.)
+        const configuration: any = settings(800);
+        const rendered = await renderPlurid({ planes, view: ['/a'], configuration });
+        await flush();
+        configuration.elements.plane.width = 900;
+        await rendered.rerender({ configuration: { ...configuration } });
+        await flush();
+        expect(rendered.api.getSnapshot().configuration.elements.plane.width).toBe(900);
+        await rendered.unmount();
+    });
+
     it('still replaces the view with a view prop whose content changed', async () => {
         const rendered = await renderPlurid({ planes, view: ['/a'], configuration: settings(800) as any });
         await flush();

@@ -51,9 +51,9 @@ Deployment is intentionally outside the CLI. CI builds images and applies review
 
 - Routing stays explicit because Plurid routes carry planes and per-route spatial configuration.
 - Client and server use the same provider ordering but not the same import graph.
-- Redux/client factories run once per client lifecycle. On the server a service's `store()` runs once per process, as a base
-  placeholder: a preserve returns `providers[name].store` for per-request state (anything dispatched into the base store
-  during a render is shared by every request).
+- Redux/client factories run once per client lifecycle. On the server a service's `store()` runs once per REQUEST (2026-10-21;
+  it ran once per process, and every request rendered into that one store): the state the render leaves in it is the page's
+  `__PRELOADED_REDUX_STATE__` when one service has a store, and a preserve's `providers[name].store` or its own global wins.
 - Real Express handlers remain product modules referenced by config; only empty copied handlers are removed.
 - The document head has deterministic precedence: the kit's `head` < a route's / plane's `head` < in-render `<PluridDocument>` declarations < a preserve's `document` < the server `document` hook (the document model, 2026-09-05).
 - The client bundles application libraries; the server may externalize bare imports that are present in the runtime workspace skeleton.

@@ -158,6 +158,18 @@ describe('PluridStillsGenerator (2026-09-29)', () => {
         expect(fs.existsSync(path.join(directory, 'build', 'pre', 'metadata.json'))).toBe(true);
     });
 
+    it('writes the stills under the server\'s own build directory, unless told another (2026-10-22)', async () => {
+        // They went to the generator's `./build/` whatever the server's `buildDirectory`, which the server reads them under.
+        jest.doMock('puppeteer', () => fetchingPuppeteer);
+        const { default: StillsGenerator } = require('../');
+
+        const server = path.join(directory, 'server.js');
+        fs.writeFileSync(server, SERVER.replace("options: { stiller:", "options: { buildDirectory: " + JSON.stringify(path.join(directory, 'dist')) + ", stiller:"));
+
+        await new StillsGenerator({ server }).initialize();
+        expect(fs.existsSync(path.join(directory, 'dist', 'stills', 'metadata.json'))).toBe(true);
+    });
+
     it('says why the server it forked stopped: its error output was read by no one (2026-10-20)', async () => {
         jest.doMock('puppeteer', () => fetchingPuppeteer);
         const { default: StillsGenerator } = require('../');

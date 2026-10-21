@@ -195,7 +195,7 @@ import {
 } from '@plurid/plurid-react';
 
 const configuration = definePluridConfiguration({
-    theme: 'plurid',
+    theme: 'look',              // the default: the theme follows the look; 'plurid' sets the plurid theme
     layout: { type: SPACE_LAYOUT.COLUMNS, columns: 3, gap: 0.06 },
 
     // opt out of always-on behavior

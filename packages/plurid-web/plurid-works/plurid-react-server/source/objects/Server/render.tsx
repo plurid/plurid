@@ -43,6 +43,7 @@ export const buildRequestTree = (
     const {
         services,
         preserveResult,
+        stores,
         pluridMetastate,
         documentRegistry,
         pathname,
@@ -75,12 +76,16 @@ export const buildRequestTree = (
         </PluridProvider>
     );
 
-    const layers = services.map((service) => ({
+    // by position, and a preserve's by own name only: looked up by name with `in`, two services of one
+    // name shared a store and one named `constructor` was handed Object (2026-10-22)
+    const providers = preserveResult?.providers as Record<string, Record<string, unknown>> | undefined;
+    const layers = services.map((service, index) => ({
         name: service.name,
         Provider: service.Provider,
         properties: {
             ...service.properties,
-            ...preserveResult?.providers?.[service.name],
+            ...(stores?.[index] !== undefined ? { store: stores[index] } : {}),
+            ...(providers && Object.hasOwn(providers, service.name) ? providers[service.name] : {}),
         },
     }));
 

@@ -101,9 +101,11 @@ export type PluridFaviconSet = Exclude<PluridFavicon, string>;
  *
  * Lifecycle:
  *  - `properties` are static props passed on both targets.
- *  - On the SERVER, per-request props come from the matching preserve
- *    (`preserve.providers[name]`) and are merged OVER `properties`
- *    (see plurid-react-server `buildRequestTree`, `objects/Server/render.tsx`).
+ *  - On the SERVER, `store` is called once per request, and the state the
+ *    render leaves in it is written into the page for the client; per-request
+ *    props from the matching preserve (`preserve.providers[name]`) are merged
+ *    OVER `properties` and that store (see plurid-react-server
+ *    `buildRequestTree`, `objects/Server/render.tsx`).
  *  - On the CLIENT, `store`/`client` rebuild the per-request instances from the
  *    serialized window state (`__PRELOADED_REDUX_STATE__`, ...).
  */
@@ -126,7 +128,11 @@ export interface PluridServiceConfig<
     properties?: Properties;
     /** One-time client factory (e.g. the Apollo client) built once on the client for hydration. */
     client?: () => ClientInstance;
-    /** Store factory built from preheated state - server: from the preserve; client: from the serialized window state. */
+    /**
+     * Store factory - server: once per request (`undefined` state), its state after the render
+     * written into the page when it is the one service with a store (a preserve's store wins);
+     * client: from that serialized window state.
+     */
     store?: (preloadedState?: any) => StoreInstance;
     /** Optional provider context object (e.g. a custom `ReactReduxContext`). */
     context?: unknown;

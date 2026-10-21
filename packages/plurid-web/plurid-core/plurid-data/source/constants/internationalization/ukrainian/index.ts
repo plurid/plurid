@@ -22,8 +22,9 @@ const ukrainian: Internationalization = {
     toolbarTransformTranslate: 'переміщення',
 
     toolbarDrawerGlobalTitle: 'загальне',
-    toolbarDrawerGlobalGeneralTheme: 'загальна тема',
-    toolbarDrawerGlobalInteractionTheme: 'тема взаємодії',
+    toolbarDrawerGlobalLook: 'вигляд',
+    toolbarDrawerGlobalGeneralTheme: 'тема вмісту',
+    toolbarDrawerGlobalInteractionTheme: 'тема взаємодії вмісту',
     toolbarDrawerGlobalLanguage: 'мова',
 
     toolbarDrawerTransformTitle: 'перетворення',

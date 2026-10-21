@@ -1,22 +1,33 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { after, test } from 'node:test';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { REQUIRED_GATES, rememberArtifacts } from './release-plan.mjs';
 import { publishArtifacts } from './release-publish.mjs';
+/** A test's temporary directory: removed after the file's tests unless PLURID_PRESERVE_ARTIFACTS=1, the repository's convention. */
+const temporaryDirectories = [];
+const temporaryDirectory = (prefix) => {
+    const directory = mkdtempSync(join(tmpdir(), prefix));
+    temporaryDirectories.push(directory);
+    return directory;
+};
+after(() => {
+    if (process.env.PLURID_PRESERVE_ARTIFACTS === '1') return;
+    for (const directory of temporaryDirectories) rmSync(directory, { recursive: true, force: true });
+});
 
 /** Every executable and registry request is replaced locally. These tests cannot publish. */
 const fixture = () => {
-    const root = mkdtempSync(join(tmpdir(), 'plurid-publish-batch-'));
+    const root = temporaryDirectory('plurid-publish-batch-');
     const commit = 'a'.repeat(40);
     const directory = join(root, 'artifacts');
     for (const path of ['scripts', 'bin', 'artifacts/tarballs']) mkdirSync(join(root, path), { recursive: true });
     writeFileSync(join(root, 'package.json'), '{"private":true}');
-    for (const file of ['release.mjs', 'release-plan.mjs', 'release-publish.mjs']) {
+    for (const file of ['release.mjs', 'release-pack.mjs', 'release-plan.mjs', 'release-publish.mjs']) {
         if (existsSync(new URL(file, import.meta.url))) cpSync(new URL(file, import.meta.url), join(root, 'scripts', file));
     }
     const projects = ['a', 'b', 'c'].map((name, index) => {
@@ -118,7 +129,8 @@ globalThis.fetch = async (url) => {
     const calls = () => readFileSync(join(root, 'calls.jsonl'), 'utf8').trim().split('\n').map(JSON.parse);
     const run = (args = ['--publish']) => spawnSync(process.execPath, ['--import', join(root, 'offline.mjs'), join(root, 'scripts/release.mjs'), ...args], {
         cwd: root, encoding: 'utf8', timeout: 20000,
-        env: { ...process.env, PATH: join(root, 'bin') + delimiter + process.env.PATH, PLURID_PUBLISH_TEST_ROOT: root },
+        // the release's automatic artifact directory goes in the fixture, not the system's temporary one
+        env: { ...process.env, PATH: join(root, 'bin') + delimiter + process.env.PATH, TMPDIR: root, TEMP: root, TMP: root, PLURID_PUBLISH_TEST_ROOT: root },
     });
     const uploads = () => calls().filter(({ name, args }) => name === 'pnpm' && args[0] === 'publish');
     return { root, commit, directory, configure, run, calls, uploads };
@@ -224,6 +236,15 @@ test('a runtime change cannot reuse stale artifacts even with an explicit direct
     assert.match(result.stderr, /build or runtime inputs/);
     assert.equal(f.uploads().length, 0);
     assert.equal(f.calls().some(({ name, args }) => name === 'pnpm' && args[0] === 'whoami'), false);
+});
+
+test('a change to how artifacts are built and verified cannot reuse them (2026-10-22)', () => {
+    const f = fixture();
+    f.configure({ head: 'b'.repeat(40), files: ['scripts/release-pack.mjs'] });
+    const result = f.run(['--publish', f.directory]);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /build or runtime inputs/);
+    assert.equal(f.uploads().length, 0);
 });
 
 test('public registry verification does not authenticate, upload, or create a release tag', () => {

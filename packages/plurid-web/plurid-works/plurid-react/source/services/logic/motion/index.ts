@@ -31,6 +31,11 @@ export interface TweenOptions {
      * input interrupts it. A retarget carries a pending `onSettle` over to the new tween.
      */
     onSettle?: () => void;
+    /**
+     * The page the camera docks on: a controller that jumps commits with it named, as a jump does, so
+     * a page pitched past the orbit's limit is reached face-on (the commit clamped it, 2026-10-22).
+     */
+    docking?: string;
 }
 
 

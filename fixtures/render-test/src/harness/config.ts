@@ -12,7 +12,8 @@ export const buildConfiguration = (
 ) => {
     const stress = !!flags.planes;
     const flat: Record<string, any> = {
-        theme: 'plurid',
+        // the theme follows the look, as the name `plurid` did until 2026-10-21
+        theme: 'look',
         center: true,
         layout: layoutByKey(flags.layout, stress),
         planeWidth: stress ? 0.16 : 0.32,

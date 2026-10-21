@@ -282,7 +282,14 @@ export const useCameraMotion = (
                     || typeof requestAnimationFrame !== 'function'
                     || cameraEngine.sameCamera(from, target, 1e-9)
                 ) {
+                    // a jump that docks names its page for its one commit, as the jump of a dock does
+                    if (options.docking) {
+                        dispatch(actions.space.setDockingPlaneID(options.docking));
+                    }
                     dispatch(actions.space.setCamera(target));
+                    if (options.docking) {
+                        dispatch(actions.space.setDockingPlaneID(''));
+                    }
                     onSettle?.();
                     return false;
                 }

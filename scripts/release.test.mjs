@@ -1,16 +1,33 @@
 import './release-publish.test.mjs';
 import './harness-tables.test.mjs';
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
+import { after, test } from 'node:test';
 import { gzipSync } from 'node:zlib';
 import { createHash } from 'node:crypto';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { delimiter, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
-import { affectsPackage, nextVersion, packedJSON, planRelease, releaseOrder, REQUIRED_GATES, verifyArtifacts, parseReleaseArguments, createArtifactDirectory, rememberedArtifacts, rememberArtifacts } from './release-plan.mjs';
+import { affectsPackage, nextVersion, packedJSON, planRelease, releaseOrder, REQUIRED_GATES, verifyArtifacts, parseReleaseArguments, createArtifactDirectory, rememberedArtifacts, rememberArtifacts, PUBLISHER_FILES } from './release-plan.mjs';
+
+/** A test's temporary directory: removed after the file's tests unless PLURID_PRESERVE_ARTIFACTS=1, the repository's convention. */
+const temporaryDirectories = [];
+const temporaryDirectory = (prefix) => {
+    const directory = mkdtempSync(join(tmpdir(), prefix));
+    temporaryDirectories.push(directory);
+    return directory;
+};
+/** A release's automatic artifact directory, made in the system's temporary directory: removed with the rest. */
+const temporaryArtifacts = (directory) => {
+    temporaryDirectories.push(directory);
+    return directory;
+};
+after(() => {
+    if (process.env.PLURID_PRESERVE_ARTIFACTS === '1') return;
+    for (const directory of temporaryDirectories) rmSync(directory, { recursive: true, force: true });
+});
 
 const project = (name, dependencies = {}, extra = {}) => ({
     directory: '/repo/packages/' + name,
@@ -132,11 +149,11 @@ test('release commands manage paths by default while preserving explicit directo
 });
 
 test('automatic artifact directories are unique, retained, and remembered per exact commit', () => {
-    const root = mkdtempSync(join(tmpdir(), 'plurid-release-artifacts-'));
+    const root = temporaryDirectory('plurid-release-artifacts-');
     const commit = 'a'.repeat(40);
     assert.equal(rememberedArtifacts(root, commit), null);
-    const first = createArtifactDirectory(root, commit);
-    const second = createArtifactDirectory(root, commit);
+    const first = temporaryArtifacts(createArtifactDirectory(root, commit));
+    const second = temporaryArtifacts(createArtifactDirectory(root, commit));
     assert.notEqual(first, second);
     assert.equal(first.startsWith(root + '/'), false, 'fresh source must not inherit checkout node_modules');
     assert.equal(existsSync(first), true);
@@ -155,9 +172,9 @@ test('automatic artifact directories are unique, retained, and remembered per ex
 });
 
 test('stale or missing recorded artifacts stop rather than silently rebuilding a partial round', () => {
-    const root = mkdtempSync(join(tmpdir(), 'plurid-release-record-'));
+    const root = temporaryDirectory('plurid-release-record-');
     const commit = 'a'.repeat(40);
-    const directory = createArtifactDirectory(root, commit);
+    const directory = temporaryArtifacts(createArtifactDirectory(root, commit));
     writeFileSync(join(directory, 'release.json'), JSON.stringify({ sourceCommit: 'b'.repeat(40) }));
     assert.throws(() => rememberArtifacts(root, commit, directory), /another commit/);
     const pointer = join(root, '.out', 'releases', commit + '.json');
@@ -169,14 +186,14 @@ test('stale or missing recorded artifacts stop rather than silently rebuilding a
 
 /** Exercise the actual CLI with offline tool shims; publication and network access are impossible. */
 const releaseCLIFixture = (ci = 'success') => {
-    const root = mkdtempSync(join(tmpdir(), 'plurid-release-cli-'));
+    const root = temporaryDirectory('plurid-release-cli-');
     const commit = 'a'.repeat(40);
     mkdirSync(join(root, 'scripts'));
     mkdirSync(join(root, 'bin'));
     mkdirSync(join(root, 'project'));
     writeFileSync(join(root, 'package.json'), JSON.stringify({ private: true, type: 'commonjs' }));
     writeFileSync(join(root, 'project', 'package.json'), JSON.stringify({ name: 'a', version: '0.0.0-4' }));
-    for (const file of ['release.mjs', 'release-plan.mjs', 'release-publish.mjs']) {
+    for (const file of ['release.mjs', 'release-pack.mjs', 'release-plan.mjs', 'release-publish.mjs']) {
         if (existsSync(new URL(file, import.meta.url))) cpSync(new URL(file, import.meta.url), join(root, 'scripts', file));
     }
     const shim = `#!${process.execPath}
@@ -207,12 +224,22 @@ process.exit(55);
         root, commit,
         run: () => spawnSync(process.execPath, ['--import', join(root, 'offline.mjs'), join(root, 'scripts', 'release.mjs'), '--publish'], {
             cwd: root, encoding: 'utf8', timeout: 10000,
-            env: { ...process.env, PATH: join(root, 'bin') + delimiter + process.env.PATH,
+            // the release's automatic artifact directory goes in the fixture, not the system's temporary one
+            env: { ...process.env, PATH: join(root, 'bin') + delimiter + process.env.PATH, TMPDIR: root, TEMP: root, TMP: root,
                 PLURID_RELEASE_TEST_ROOT: root, PLURID_RELEASE_TEST_CI: ci },
         }),
         calls: () => readFileSync(join(root, 'calls.jsonl'), 'utf8').trim().split('\n').map((line) => JSON.parse(line)),
     };
 };
+
+test('a publisher-only file builds and verifies nothing (2026-10-22)', () => {
+    // `release.mjs` ran the gates and `pnpm pack`: a fix to how they ran resumed artifacts verified the old way.
+    for (const file of PUBLISHER_FILES) {
+        if (!file.endsWith('.mjs') || file.endsWith('.test.mjs')) continue;
+        const source = readFileSync(fileURLToPath(new URL('../' + file, import.meta.url)), 'utf8');
+        assert.doesNotMatch(source, /'pack', '--config\.ignore-scripts|build-preserving\.mjs|test:preserving|git', \['archive'/, file);
+    }
+});
 
 test('bare --publish refuses failed CI before creating artifacts or authenticating', () => {
     const fixture = releaseCLIFixture('failure');
@@ -263,7 +290,7 @@ test('a release\'s browser gates start their own harness server, never a develop
 
 test('bare --publish reuses remembered verified tarballs and never rebuilds on retry', () => {
     const fixture = releaseCLIFixture();
-    const directory = createArtifactDirectory(fixture.root, fixture.commit);
+    const directory = temporaryArtifacts(createArtifactDirectory(fixture.root, fixture.commit));
     const body = Buffer.from(JSON.stringify({ name: 'a', version: '0.0.0-4' }));
     const header = Buffer.alloc(512);
     header.write('package/package.json');
@@ -291,7 +318,7 @@ test('bare --publish reuses remembered verified tarballs and never rebuilds on r
 
 
 test('themes test discovery stays inside library source in an isolated release', () => {
-    const directory = realpathSync(mkdtempSync(join(tmpdir(), 'plurid-release-discovery-')));
+    const directory = realpathSync(temporaryDirectory('plurid-release-discovery-'));
     // The release workspace's parent is named source, which also matches Jest's CLI path filter.
     const root = join(directory, 'source', 'themes');
     const library = join(root, 'source', 'library.test.ts');

@@ -17,9 +17,9 @@ export interface PluridRouterContextValue {
     path: string;
     /** Navigate the router to a path (dispatches the router's location-changed event). */
     navigate: (path: string) => void;
-    /** THE READINESS CONTRACT in the route-driven mode: the application rendered for the matched route fires it. A stable function, whatever the host passes. */
-    onReady: (api: PluridApi) => void;
-    /** The router's bus, shared by every route's application. */
+    /** THE READINESS CONTRACT in the route-driven mode: the application rendered for the matched route fires it. A stable function, whatever the host passes. Absent inside that application's planes: one nested there is not the route's. */
+    onReady?: (api: PluridApi) => void;
+    /** The router's bus, shared by every route's application; absent inside its planes, as `onReady` is. */
     pubsub?: PluridPubSub;
 }
 

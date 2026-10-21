@@ -25,9 +25,10 @@ describe('plurid-data default configuration', () => {
     it('defaultConfigurationGlobal has the expected theme + flags', () => {
         // `theme` is a `string | PluridConfigurationTheme` union — assert the whole object
         // form rather than narrowing to `.general`/`.interaction`.
+        // `look` follows the look; the name `plurid` is the plurid theme (2026-10-21)
         expect(defaultConfigurationGlobal.theme).toEqual({
-            general: 'plurid',
-            interaction: 'plurid',
+            general: 'look',
+            interaction: 'look',
         });
         expect(defaultConfigurationGlobal.transparentUI).toBe(false);
     });

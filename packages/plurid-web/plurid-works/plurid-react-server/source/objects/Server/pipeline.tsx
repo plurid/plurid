@@ -34,6 +34,9 @@
         NOT_FOUND_ROUTE,
         DEFAULT_SERVER_OPTIONS_HOSTNAME,
     } from '~data/constants';
+    import {
+        PRELOADED_REDUX_STATE_KEY,
+    } from '~data/constants/preload';
 
     import {
         NOT_FOUND_TEMPLATE,
@@ -217,8 +220,8 @@ export const handleGetRequest = async (
 
         // HANDLE STILLS — serve a pre-generated static still (if one exists for this route) instead of
         // rendering on the fly. Stills are produced by `PluridStillsGenerator` and loaded by StillsManager.
-        // A still is the route's, whatever the query: looked up with it, `/?utm=x` rendered live (2026-10-20).
-        const still = server.stills.get(matchingPath.replace(/[?#].*$/, ''));
+        const stillRoute = stillPath(matchingPath);
+        const still = stillRoute === undefined ? undefined : server.stills.get(stillRoute);
 
         if (
             still
@@ -398,6 +401,80 @@ export const renderHostname = (
 );
 
 
+/** Query parameters no page is rendered by: campaign and click identifiers. */
+const TRACKING_PARAMETER = /^(?:utm_[a-z0-9_]+|gclid|gbraid|wbraid|dclid|fbclid|msclkid|mc_cid|mc_eid|_ga|_gl)$/i;
+
+/**
+ * The route a still answers this request with, or `undefined` for a live render. A still is the
+ * route's rendering without a query: it answers a request whose query holds only tracking parameters
+ * (`/?utm_source=x`), and any other query renders live, since a page may read it (a head from the query,
+ * a search). Looked up with the query, `/?utm=x` rendered live (2026-10-20); without it, `/?lang=fr` got
+ * the still rendered for `/` (2026-10-22).
+ */
+const stillPath = (
+    url: string,
+): string | undefined => {
+    const hash = url.indexOf('#');
+    const withoutHash = hash === -1 ? url : url.slice(0, hash);
+    const mark = withoutHash.indexOf('?');
+    if (mark === -1) {
+        return withoutHash;
+    }
+    for (const key of new URLSearchParams(withoutHash.slice(mark + 1)).keys()) {
+        if (!TRACKING_PARAMETER.test(key)) {
+            return undefined;
+        }
+    }
+    return withoutHash.slice(0, mark);
+};
+
+
+/** Servers already told that two services' stores are not written into the page. */
+const warnedStores = new WeakSet<object>();
+
+/**
+ * THE PAGE CARRIES THE REQUEST'S STORE (2026-10-21): the state the render left in the request's own
+ * store, when one service has one, is the page's `__PRELOADED_REDUX_STATE__`, which the kit's client
+ * builds its store from; it was empty unless a preserve serialized it. A static `properties.store`
+ * is every request's and is not written; two stores have no one global to share. A preserve's own
+ * global wins, and its `globals` are never written into: the page's are a new object.
+ */
+const pageGlobals = (
+    server: PluridServerContext,
+    stores: unknown[],
+    globals: Record<string, string> | undefined,
+): Record<string, string> | undefined => {
+    const owned = server.services
+        .map((service, index) => [service.name, stores[index]] as const)
+        .filter(([, store]) => store !== undefined);
+    if (owned.length === 0 || (globals && Object.hasOwn(globals, PRELOADED_REDUX_STATE_KEY))) {
+        return globals;
+    }
+    if (owned.length > 1) {
+        if (!warnedStores.has(server) && debugAllows(server.options, 'warn')) {
+            warnedStores.add(server);
+            console.warn(
+                `[${server.options.serverName}] ${owned.map(([name]) => name).join(', ')} each have a store per request; the page carries one state (${PRELOADED_REDUX_STATE_KEY}): a preserve sets it.`,
+            );
+        }
+        return globals;
+    }
+
+    const [[name, store]] = owned;
+    let source: string | undefined;
+    try {
+        source = JSON.stringify((store as { getState?: () => unknown } | undefined)?.getState?.());
+    } catch (error) {
+        throw new Error(
+            `[${server.options.serverName}] the state of the ${name} store cannot be written into the page: ${error instanceof Error ? error.message : String(error)}`,
+        );
+    }
+    return source === undefined
+        ? globals
+        : { ...globals, [PRELOADED_REDUX_STATE_KEY]: source };
+};
+
+
 /**
  * One request's render: the metastate, a per-request document registry (the route's head before
  * the render, the planes' heads and the in-render declarations during it), the React tree through
@@ -431,8 +508,19 @@ export const renderApplication = async (
     const documentRegistry = createDocumentRegistry({ server: true });
     documentRegistry.setBase('route', await resolveRouteDocument(isoMatch));
 
+    // EACH REQUEST ITS OWN STORE (2026-10-21): a service's factory is called for every request (the kit
+    // built one store at startup, which every request rendered into); a preserve's store wins
+    const providers = preserveResult?.providers as Record<string, { store?: unknown }> | undefined;
+    const stores = server.services.map((service) => {
+        const preserved = providers && Object.hasOwn(providers, service.name)
+            ? providers[service.name]?.store
+            : undefined;
+        return preserved ?? service.store?.();
+    });
+
     const tree = buildRequestTree({
         services: server.services,
+        stores,
         exterior: server.exterior,
         shell: server.shell,
         routerProperties: server.routerProperties,
@@ -451,6 +539,8 @@ export const renderApplication = async (
     const rendered = await renderContent(tree, {
         mode: server.renderMode,
     });
+    // the route resolvers in the hook's metastate keep reading the preserve's own globals
+    const injectedGlobals = pageGlobals(server, stores, globals);
 
     // React 19 emits a hoistable rendered anywhere in the tree (a raw `<title>` in a plane) as
     // a prefix of a fragment render: move it into the head rather than leave it in the body.
@@ -549,7 +639,7 @@ export const renderApplication = async (
         content,
         defaultPreloadedPluridMetastate: server.template?.defaultPreloadedPluridMetastate,
         pluridMetastate: JSON.stringify(pluridMetastate),
-        globals,
+        globals: injectedGlobals,
         minify: server.template?.minify,
     });
 

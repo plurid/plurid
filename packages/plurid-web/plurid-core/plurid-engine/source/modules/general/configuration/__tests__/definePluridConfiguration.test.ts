@@ -24,8 +24,8 @@ describe('definePluridConfiguration', () => {
         expect(configuration.space.perspective).toBe(2000);
         expect(configuration.elements.plane.width).toBe(1);
         expect(configuration.global.theme).toEqual({
-            general: 'plurid',
-            interaction: 'plurid',
+            general: 'look',
+            interaction: 'look',
         });
     });
 

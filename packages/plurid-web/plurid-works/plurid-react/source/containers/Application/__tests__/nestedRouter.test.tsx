@@ -73,4 +73,44 @@ describe('an application inside a plane, under a router', () => {
         });
         container.remove();
     });
+
+    it('leaves the pathname to the router: an inner address bar rides the query (2026-10-22)', async () => {
+        // The reset took the router's hold on the pathname away with its bus: an inner application in
+        // the page presentation bound the address bar in path mode and wrote its page over the route.
+        installPointerEvents();
+        installMatchMedia();
+        window.history.replaceState({}, '', '/outer');
+        const Paged: React.FC = () => (
+            <div style={{ width: 400, height: 300 }}>
+                <PluridApplication
+                    planes={[{ route: '/inner', component: Inner }] as any}
+                    view={['/inner']}
+                    configuration={{ space: { presentation: 'page' } } as any}
+                />
+            </div>
+        );
+        const container = document.createElement('div');
+        document.body.appendChild(container);
+        const root = createRoot(container);
+        await act(async () => {
+            root.render(
+                <PluridRouterContext.Provider value={{ path: '/outer', navigate: () => {}, onReady: () => {} }}>
+                    <PluridApplication
+                        planes={[{ route: '/outer', component: Paged }] as any}
+                        view={['/outer']}
+                    />
+                </PluridRouterContext.Provider>,
+            );
+        });
+        await act(async () => {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        });
+        expect(container.querySelector('[data-inner]')).not.toBeNull();
+        expect(window.location.pathname).toBe('/outer');
+
+        await act(async () => {
+            root.unmount();
+        });
+        container.remove();
+    });
 });

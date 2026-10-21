@@ -124,6 +124,8 @@ export const installFrameClock = (): FrameClock => {
     // ONE ID PER FRAME, NEVER REUSED, AND A CANCEL TAKES THAT ONE (2026-10-20): the cancel emptied the
     // whole queue, and the ids were queue positions
     let queue = new Map<number, FrameRequestCallback>();
+    // the frames `advance` is running: a cancel from one of them takes a later one of the batch too
+    let batch: Map<number, FrameRequestCallback> | undefined;
     let nextID = 1;
     const originalRequest = (window as any).requestAnimationFrame;
     const originalCancel = (window as any).cancelAnimationFrame;
@@ -136,6 +138,7 @@ export const installFrameClock = (): FrameClock => {
     };
     (window as any).cancelAnimationFrame = (id: number) => {
         queue.delete(id);
+        batch?.delete(id);
     };
     performance.now = () => now;
 
@@ -143,10 +146,20 @@ export const installFrameClock = (): FrameClock => {
         /** Advance by `milliseconds` and run the frame callbacks queued so far. */
         advance: (milliseconds = 1000 / 60) => {
             now += milliseconds;
-            const callbacks = [...queue.values()];
+            // the frames queued so far, each unless one before it cancelled it, as a browser runs them
+            // (2026-10-22: the batch was copied first); one requested now waits for the next advance
+            const running = queue;
             queue = new Map();
-            for (const callback of callbacks) {
-                callback(now);
+            batch = running;
+            try {
+                for (const [id, callback] of [...running]) {
+                    if (!running.delete(id)) {
+                        continue;
+                    }
+                    callback(now);
+                }
+            } finally {
+                batch = undefined;
             }
         },
         now: () => now,

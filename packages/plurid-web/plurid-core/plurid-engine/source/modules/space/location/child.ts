@@ -168,14 +168,23 @@ export const freeSpawnOrdinal = (
     siblingBridgeLengths: number[],
     options: SpawnAnchorOptions = {},
 ): number => {
-    const length = options.bridgeLength ?? DEFAULT_BRIDGE_LENGTH;
-    const step = (options.childWidth || FALLBACK_CHILD_WIDTH) + (options.gap ?? SIBLING_GAP);
-    const held = new Set(siblingBridgeLengths.map((bridgeLength) => Math.round((bridgeLength - length) / step)));
+    const held = new Set(siblingBridgeLengths.map((bridgeLength) => spawnOrdinalOf(bridgeLength, options)));
     let ordinal = 0;
     while (held.has(ordinal)) {
         ordinal += 1;
     }
     return ordinal;
+};
+
+
+/** The slot a child of this bridge length stands on, in a child's spacing (`resolveSpawnAnchor`). */
+export const spawnOrdinalOf = (
+    bridgeLength: number,
+    options: SpawnAnchorOptions = {},
+): number => {
+    const length = options.bridgeLength ?? DEFAULT_BRIDGE_LENGTH;
+    const step = (options.childWidth || FALLBACK_CHILD_WIDTH) + (options.gap ?? SIBLING_GAP);
+    return Math.round((bridgeLength - length) / step);
 };
 
 

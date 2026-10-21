@@ -390,5 +390,23 @@ describe('@plurid/plurid-react/testing', () => {
             clock.restore();
         }
     });
+
+    it('a frame cancelled by an earlier one in the same batch does not run, as in a browser (2026-10-22)', () => {
+        // The batch was copied before it ran, so a cancel from inside it came too late.
+        const clock = installFrameClock();
+        try {
+            const second = jest.fn();
+            let secondID = 0;
+            window.requestAnimationFrame(() => {
+                window.cancelAnimationFrame(secondID);
+            });
+            secondID = window.requestAnimationFrame(second);
+            clock.advance();
+            expect(second).not.toHaveBeenCalled();
+            expect(clock.pending()).toBe(0);
+        } finally {
+            clock.restore();
+        }
+    });
 });
 // #endregion module

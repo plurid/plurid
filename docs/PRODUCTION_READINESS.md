@@ -1,13 +1,13 @@
 # Production readiness (2026-09-29)
 
-October 18 release preparation: all 13 package versions and peer minimums are prepared. Local
-preserving builds, workspace types/lint, 1,199 package tests plus the release-tooling tests (18 in the verified release tree `c7ef464`; `pnpm test.release`), module
+The October 18 release published all 13 packages (`release/2026-10-18`, `c7ef464`), verified locally by
+preserving builds, workspace types/lint, 1,199 package tests plus the release-tooling tests, module
 parity, 18 size budgets, generated tables, 182 browser cases, 13 performance cases, 50 Darwin visual
-comparisons, and the 13-tarball consumer/generated-app smoke passed. The smoke checks NodeNext types
-and TypeScript 5/6, production/development servers and desktop/mobile hydration. These are local
-preparation results; final CI on the committed preparation, the clean-snapshot release manifest and
-registry publication/consumer verification remain required. See [releasing](./RELEASING.md). The
-historical sweep below retains its original scope.
+comparisons and the 13-tarball consumer/generated-app smoke (NodeNext types, TypeScript 5/6,
+production/development servers, desktop/mobile hydration). The next release, the unreleased section of
+[MIGRATION.md](./MIGRATION.md), changes 7 packages: data, pubsub, engine, react, react-server, kit and
+the generator; the other six are republished only when their sources change. Its gates are
+[releasing](./RELEASING.md)'s. The historical sweep below retains its original scope.
 
 
 The record of the sweep that prepared the 2026-09-29 release: what was checked, what changed, the
@@ -113,7 +113,7 @@ middle plane); it is fixed and tested (`layout/__tests__/numerics.test.ts`).
 - **`space.changed` stays permissive by default** (`value: any`) so existing subscribers compile;
   `PluridChange` is the strict, narrowing union.
 - **A server without `hostname` renders on the request's `Host` header.** Configure `hostname` in
-  production (the kit requires it).
+  production (the kit warns without one).
 - **A preserve global must be JSON**, or keep `<` inside string literals: values are escaped for the
   inline script.
 - **Visual baselines are per platform.** CI compares the Linux ones in the pinned Playwright
@@ -122,8 +122,9 @@ middle plane); it is fixed and tested (`layout/__tests__/numerics.test.ts`).
 
 ## Releasing
 
-Nothing reaches an application until it is published. Every package's manifest changed (the
-`exports` maps), so all thirteen are released, in dependency order:
+Nothing reaches an application until it is published. A release publishes the packages whose sources
+changed since the last one (`pnpm release --dry-run` lists them; the October 18 release changed every
+manifest's `exports` map, so it published all thirteen), in dependency order:
 
 1. `@plurid/plurid-themes`, `@plurid/plurid-functions`, `@plurid/plurid-functions-react`
 2. `@plurid/plurid-data`
@@ -132,5 +133,5 @@ Nothing reaches an application until it is published. Every package's manifest c
 5. `@plurid/plurid-react`
 6. `@plurid/plurid-react-server`
 7. `@plurid/plurid-kit`
-8. `@plurid/generate-plurid-app` (last: it stamps the versions of the kit, the server and the engine
+8. `@plurid/generate-plurid-app` (last: it stamps the versions of the kit, plurid-react and the server
    into the applications it generates)

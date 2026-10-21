@@ -44,6 +44,7 @@ export const resolveServerOptions = (
         stiller: partialOptions?.stiller || defaultStillerOptions,
         attachSignalHandlers: partialOptions?.attachSignalHandlers ?? true,
         stopTimeout: partialOptions?.stopTimeout ?? DEFAULT_SERVER_OPTIONS.STOP_TIMEOUT,
+        pttpAnswerTimeout: partialOptions?.pttpAnswerTimeout ?? DEFAULT_SERVER_OPTIONS.PTTP_ANSWER_TIMEOUT,
     };
     return options;
 };

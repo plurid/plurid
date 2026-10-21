@@ -17,10 +17,14 @@
 describe('module resolution in the tests', () => {
     it('resolves a module outside the source to itself, whatever its path\'s segments', () => {
         const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'plurid-server-modules-'));
-        for (const segment of ['utilities', 'data', 'objects']) {
-            fs.mkdirSync(path.join(directory, segment));
-            fs.writeFileSync(path.join(directory, segment, 'probe.js'), `module.exports = '${segment} fixture';\n`);
-            expect(require(path.join(directory, segment, 'probe.js'))).toBe(segment + ' fixture');
+        try {
+            for (const segment of ['utilities', 'data', 'objects']) {
+                fs.mkdirSync(path.join(directory, segment));
+                fs.writeFileSync(path.join(directory, segment, 'probe.js'), `module.exports = '${segment} fixture';\n`);
+                expect(require(path.join(directory, segment, 'probe.js'))).toBe(segment + ' fixture');
+            }
+        } finally {
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 });

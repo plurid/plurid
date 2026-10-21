@@ -80,7 +80,8 @@ export interface StilledMetadataEntry {
 
 export interface StillsGeneratorOptions {
     server: string;
-    build: string;
+    /** The build directory the stills go under; the server's own `buildDirectory` when not given. */
+    build?: string;
 }
 
 
@@ -93,6 +94,8 @@ export interface PluridRequestTreeData {
     planes: PluridRoutePlane<PluridReactComponent>[];
     pluridMetastate: any;
     preserveResult: PluridPreserveResponse | undefined;
+    /** The request's own stores, one per service by position: each Provider's `store`, under the preserve's. */
+    stores?: unknown[];
     /** The request's document registry (route / planes / in-render layers). */
     documentRegistry: PluridDocumentRegistry;
     pathname: string;

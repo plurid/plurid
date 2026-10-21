@@ -129,6 +129,13 @@ export interface PluridServerOptions {
      * container runtime gives before it kills.
      */
     stopTimeout: number;
+
+    /**
+     * How long a `pttpHandler` that resolved `true` may take to start its answer (a `sendFile`, a
+     * stream, a reply after a lookup) before the server answers `500` itself, in milliseconds.
+     * Default `10000`.
+     */
+    pttpAnswerTimeout: number;
 }
 
 
@@ -139,6 +146,14 @@ export interface PluridServerService<P = any, PP = any> {
     name: string;
     Provider: P;
     properties?: PP;
+    /**
+     * Each request's own store (2026-10-21): called once per request and handed to the Provider as
+     * `store`; when this is the one service with a store, the state the render left in it is written
+     * into the page as `window.__PRELOADED_REDUX_STATE__`, which the kit's client builds its store
+     * from. A preserve's `providers[name].store`, and a preserve's own `__PRELOADED_REDUX_STATE__`
+     * global, win. A `properties.store` is one store for every request, and is not written.
+     */
+    store?: () => unknown;
 }
 
 

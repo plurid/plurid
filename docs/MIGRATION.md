@@ -71,7 +71,8 @@ These ship with the next coordinated release.
 - **`plurid start` runs a production build only.** `plurid dev` writes the same directory, and
   `start` ran its development build. `asset-manifest.json` records the build's `mode`, and `start`
   refuses a development build ("run `plurid build` first"); a build from before this release has no
-  mode and counts as production.
+  mode and counts as production. `plurid dev` records its mode only once it will build: refused on a
+  busy port, it leaves the build it found as it was.
 - **A service's `client` reaches its provider.** `PluridServiceConfig.client` was never read, so the
   documented Apollo shape rendered a provider with no client. In the browser the kit calls `client()`
   for the provider's `client` property, unless `properties` sets one.
@@ -85,17 +86,24 @@ These ship with the next coordinated release.
   carries `Vary: Origin`. A cross-origin `PluridExternalPlane` never worked against a stock server
   (Express's own preflight answer carried no CORS headers): list its page's origin in `pttpOrigins`.
   A host whose own handler answered the preflight, relying on the server to reflect the origin, lists
-  its origins there too.
+  its origins there too. An origin is compared whole: the kit refuses a `pttpOrigins` that is not a list
+  of strings, and the server reads a single string as one origin (as a string it was a substring test,
+  so a look-alike origin was allowed, credentials and all).
 - **A `pttpHandler` gets the request and the response.** `PTTPHandler` is
   `(path, request, response) => Promise<boolean>`: it answers on `response` and resolves `true`.
-  Handed the path only, one that resolved `true` left the request open; such a request gets a 500
-  and a warning now. A handler that ignores the new arguments compiles unchanged.
+  Handed the path only, one that resolved `true` left the request open; one that has not started its
+  answer after `options.pttpAnswerTimeout` (10 s) gets a 500 and a warning now, so an answer that
+  starts later (a `sendFile`, a stream) is kept. A handler that ignores the new arguments compiles
+  unchanged.
 - **Stills.** `PluridStillsGenerator` writes into the server's own `stillsDirectory` (it wrote
   `stills/` whatever the server read), refuses a kit application's entry (`build/index.js`, its
   default for a kit application), which starts a server when it is loaded, before loading it, and
   forwards the forked server's error output, whose last lines are the reason when the server stops
-  before answering. The server finds its stills under an absolute `buildDirectory` (it looked under
-  the working directory) and serves a route's still whatever the query (`/?utm=x` rendered live).
+  before answering, and writes under the server's own `buildDirectory` unless given `build` (it wrote
+  `./build/` whatever the server read). The server finds its stills under an absolute `buildDirectory`
+  (it looked under the working directory), and serves a route's still for a query of tracking
+  parameters only (`utm_*`, `gclid`, `fbclid` and their like: `/?utm_source=x` rendered live); any
+  other query renders live, since a page may read it.
 - **`NODE_ENV=production` is production for the server too.** The server's default `debug` was
   `info` unless `ENV_MODE=production`; the kit and `plurid start` already read either.
 - **An ignored path is logged as passed on.** `options.ignore` logged `(204 No Content)` for a
@@ -106,29 +114,36 @@ These ship with the next coordinated release.
   moves or unpins a plane the live space had pinned, and takes its sizes (a dimension it leaves at 0
   keeps the measurement); unchanged nodes keep their references. The handle also checks the tree (a
   malformed one leaves the tree as it was, with a development warning; it threw inside a render) and
-  brings the view along with the roots, as the topic did.
+  brings the view along with the roots, as the topic did. Both set it through the new `space` action
+  `replaceTree`.
 - **Undo moves the view with the roots.** An undone `view.addPlane` came back at the next relayout;
   the restore now takes the roots it removes out of the view and puts back the ones it brings.
   `view.removePlane` given a ROOT's id takes it out of the view too (it left the tree only).
 - **A configured length with a decimal above 4 is px.** `elements.plane.width: 460.5` was 460.5 views
   wide; a fraction is `1` or a number with a decimal up to 4 (`0.6`, `1.5`), anything else px — gaps
-  and sheaves' depth by the same rule, as a share of the plane width.
+  and sheaves' depth by the same rule, as a share of the plane width. A length given as a string (read
+  from JSON) is its number.
 - **A spawned child takes the first free slot.** After a close or a removal the next sibling stood
   exactly on a shown one; the slot is the first no shown sibling stands on.
 - **The `pubsub` and `planesRegistrar` props follow their changes**, and `api.pubsub` / `handle.pubsub`
   are the bus in use. An application inside a plane of a routed one keeps its own bus and `onReady`
-  (it took the router's: `onReady` fired twice). `PluridRouterBrowser` follows `routes`, `planes` and
+  (it took the router's: `onReady` fired twice), and still leaves the pathname to the router: its
+  address bar rides the query (`PluridRouterContextValue.onReady` and `pubsub` are optional now). `PluridRouterBrowser` follows `routes`, `planes` and
   `hostname` (a route added later is matched; a new array of the same routes remounts nothing).
 - **`usePluridPlane()` reads the requested route** — its `query`, `fragments` and `parameters` are the
   `plurid` prop's (`/doc/1?tab=x` read `{}` from the hook).
 - **Camera.** A tween started in the tick of a jump starts where the jump landed; a page pitched past
-  the orbit's limit docks face-on (the commit clamped it at 89°) and stays docked through a pan; a
+  the orbit's limit docks face-on (the commit clamped it at 89°), under reduced motion and a zero
+  duration too (the controller's jump commits with the new `TweenOptions.docking`, which a host's own
+  motion controller may honour), and stays docked through a pan; a
   viewcube face levels the horizon; the restore after a hydration is no longer an undo step;
   `easing: 'spring'` asked per call is out-quint, as configured (it was out-cubic).
 - **Configuration.** A switch from the page presentation back to the space gives the four page fields
   still at their page defaults the space defaults again; a Theme object in `global.theme` is taken as
   given (the name `plurid`, the default, still leaves the theme to the look: pass `themes.plurid` to ask
-  for it); `docking.fade` at its default no longer overrides a look's own `fade` token, and the view no
+  for it); a Theme object that gives only some colours takes the rest from the look's theme;
+  `space.presentation: null` is the default presentation (it kept the page's defaults);
+  `docking.fade` at its default no longer overrides a look's own `fade` token, and the view no
   longer pins `--plurid-dock-fade` inline; a configuration without `space.bridge` spawns with the
   default (reading) bridge.
 - **The drawers.** An unknown name in `toolbar.drawers` is skipped with a warning (opening More threw);
@@ -136,20 +151,79 @@ These ship with the next coordinated release.
   closes; picking a general theme keeps a named interaction theme; the culling slider reaches the
   default 6000 and follows the configuration; an open menu no longer makes the toolbar's whole band
   swallow clicks; the transform arrows and selection buttons are chrome controls (a host's `button`
-  rules stay out).
+  rules stay out); the Shortcuts drawer's rows follow the presentation (they kept the first one's).
+- **The help sheet.** Escape's rows are listed in the order the keys run them (`dock` first, then
+  the mode exits), and two pointer rows say what they do: ⌘/Ctrl + wheel is the browser's zoom (a
+  trackpad pinch zooms the space), and a double click frames everything (on a plane's controls bar,
+  that plane). The table feeds the palette and `docs/SHORTCUTS.md` too.
 - **Planes.** A `renderPlaneBridge` slot is not drawn over the engine's leash; an unregistered child's
   children do not render; keyboard focus leaving a plane puts its controls' hover out; a resize ended
   by an unmount closes its undo step; `usePluridDocument` survives StrictMode's remount; the minimap's
   dot hover brightens and `minimap.transparent: false` is a solid panel; `chrome: 'none'` shows no mode
   badge and no engine debugger HUD (a `renderDebugger` slot still renders); the dock toggle is no longer
   `aria-pressed`. `internals.PluridPlaneDebugger` / `PluridSpaceDebugger` load their debugger on first
-  render.
+  render. A cut whose close throws still closes its undo step. The engine's
+  `getPluridPlaneIDByData(element)` answers for a plane's own element too (the search started at its
+  parent). The face-to-face layout places each row by the configured plane width, as columns and
+  rows do (a measured width of the previous view placed it).
 - **The bus.** A subscriber another one removes during a publish is not called; a host's `onDrop` is no
   longer told about the topics the engine emits (`space.changed`).
 - **The browser router no longer calls a route's `resolver`** (it called it with no globals and threw
   the result away). The server metastate no longer carries the six legacy camera scalars.
 - **`@plurid/plurid-react/testing`.** `cancelAnimationFrame` cancels the one frame (it emptied the
-  queue); the container is given no size (the view is the window's, 1024 × 768 in jsdom).
+  queue), and a frame cancelled by an earlier one of the same batch does not run; the container is
+  given no size (the view is the window's, 1024 × 768 in jsdom); `motionStub()` records each
+  `gesture(on)` call in `gestures`.
+- **A fragment's empty occurrence `[]` is the first.** A text or element directive
+  (`#:~:text=start,end,[]`) read it as `NaN`, which matched no occurrence; it is the first, as a
+  missing one is.
+- **The kit builds in the project's directory.** esbuild keeps the working directory the process had
+  when it loaded, so after a `chdir` (a script driving several projects, a test runner) `plurid dev` and
+  `plurid build` resolved and wrote against the old one; the kit passes the project's
+  (`absWorkingDir`).
+- **A rebuilt `configuration` or `view` prop changes only what it changed.** A new configuration
+  object was laid whole over the live configuration, so a host that rebuilt it (on a resize, say)
+  undid every runtime change: a layout or toolbar picked through the bus, the drawers' picks. Now
+  only the values that differ from the previous prop are applied (`global.look`, `global.theme` and
+  `space.bridge` each as a whole); a value the new prop leaves out stays as it is, as before. A
+  rebuilt callback is taken into the store without a recompute. The `view` prop goes back over the
+  live view only when its content changed: an equal view, or a new `planes` array, no longer drops
+  the planes a reader added. A host that relied on re-passing an equal configuration to reset the
+  runtime changes sets those values on the bus instead. An edit made in place, then passed under a new
+  object, is a change (what was applied is a copy). A change of `space.presentation` lays the whole
+  prop, as before: it moves the defaults under the page fields. The engine's `state.compute` takes the
+  changed part as `configurationChanges`; `configurationAuthoritative` still lays all of it.
+- **A reopened child takes a free slot.** Reopening a closed child (its link, `openPlane`,
+  `openLastClosed`, `handle.tree.open`, `space.setPlaneShow`) showed it where it closed, on the
+  sibling spawned meanwhile in its place. It takes the first free slot now, a longer bridge drawn
+  as a leash, and its subtree follows, and so do the children the reopen shows again; a plane that
+  was already shown, a child placed by hand, and a spawn that names its `bridgeLength` or
+  `bridgeKind` keep their place. The
+  engine's `space.tree.logic.reslotShownChild` does it; the `setPlaneShow` action itself still only
+  shows or hides.
+- **`global.theme` defaults to `look`, and the name `plurid` is the plurid theme.** The default was
+  `{ general: 'plurid', interaction: 'plurid' }`, and the name `plurid` followed the look, so the
+  plurid theme could be asked for only by its object. `look` (the new default, a name or either
+  part) follows the look; every theme name sets its theme, `plurid` too. A configuration that a host
+  saved with the old default and passes back now sets the plurid theme for plane content and the
+  drawers' inputs (development says so once): pass `look`, or leave `global.theme` out. Nothing the
+  engine persists holds a theme. The server metastate's themes are resolved as the browser's are
+  (they were the plurid theme always).
+- **The Global drawer picks the look.** More → Global starts with the look (`global.look`, for the
+  session, through the new `setConfigurationLook` action); its two theme pickers are the content
+  themes, relabelled in every language, with `look` as their first choice, and a pick resolves the
+  themes as the store does. A new `toolbarDrawerGlobalLook` field is in every language.
+- **A kit service's `store` is each request's.** The kit called `store(undefined)` once, at
+  startup, and every request rendered into that one store: what one request put in it was in the
+  next reader's page. The server calls the factory for every request now (`PluridServerService`
+  takes a `store` factory), and when exactly one service has a store, the state the render left in
+  it is the page's `window.__PRELOADED_REDUX_STATE__`, which the kit's client already built its
+  store from. A preserve's `providers[name].store`, or its own `__PRELOADED_REDUX_STATE__` global,
+  still wins, and the preserve's `globals` object is left as it is. A static `properties.store` is
+  still one store for every request, and is not written. A state `JSON.stringify` cannot write
+  fails the request, naming the service. Each service has its own store, two of one name included.
+  This kit needs this react-server: `@plurid/plurid-kit`
+  0.0.0-8 takes `@plurid/plurid-react-server` 0.0.0-21 or later.
 
 # Migrating to the October 18 release
 

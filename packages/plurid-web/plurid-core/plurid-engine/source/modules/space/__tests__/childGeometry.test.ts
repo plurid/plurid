@@ -23,6 +23,8 @@
         updateLinkCoordinates,
         reconcileTree,
         getTreePlaneByID,
+        togglePlaneFromTree,
+        reslotShownChild,
     } from '../tree/logic';
 
     import {
@@ -244,6 +246,58 @@ describe('updateTreeWithNewPlane() / updateLinkCoordinates()', () => {
         // with both slots held, the next is the third
         const third = spawn(second.updatedTree).updatedTreePlane!;
         expect([a.bridgeLength, b.bridgeLength]).not.toContain(third.bridgeLength);
+    });
+
+    it('a child reopened on the slot a sibling took meanwhile takes a free one, its subtree with it (2026-10-21)', () => {
+        // Reopening only showed the plane where it closed: A at 0 and B at 1; A closed; C took 0;
+        // A came back on C.
+        const spawn = (tree: TreePlane[], parent = 'a') => updateTreeWithNewPlane('/detail', parent, { x: 300, y: 40 }, tree, registry, configuration, 'origin', { fallbackWidth: 300 });
+        const second = spawn(spawn([plane('a')]).updatedTree);
+        const [a, b] = second.updatedTree[0].children!;
+        const withGrandchild = spawn(second.updatedTree, a.planeID);
+        const grandchild = withGrandchild.updatedTreePlane!;
+        const closed = togglePlaneFromTree(withGrandchild.updatedTree, a.planeID, false).updatedTree;
+        const c = spawn(closed);
+        expect(c.updatedTreePlane!.bridgeLength).toBe(a.bridgeLength);
+        const reopened = togglePlaneFromTree(c.updatedTree, a.planeID, true).updatedTree;
+
+        const tree = reslotShownChild(reopened, a.planeID, configuration, { fallbackWidth: 300 });
+        const moved = getTreePlaneByID(tree, a.planeID)!;
+        expect([b.bridgeLength, c.updatedTreePlane!.bridgeLength]).not.toContain(moved.bridgeLength);
+        expect(moved.bridgeKind).toBe('leash');
+        expect(moved.location).not.toEqual(c.updatedTreePlane!.location);
+        expect(moved.children![0].location).not.toEqual(grandchild.location);
+        expect(getTreePlaneByID(tree, c.updatedTreePlane!.planeID)!.location).toEqual(c.updatedTreePlane!.location);
+
+        // its own slot free, placed by hand, hidden, or a root over children that stand apart: nothing moves
+        expect(reslotShownChild(second.updatedTree, a.planeID, configuration, { fallbackWidth: 300 })).toBe(second.updatedTree);
+        const pinned = reopened.map((root) => ({
+            ...root,
+            children: root.children!.map((child) => child.planeID === a.planeID ? { ...child, manuallyPositioned: true } : child),
+        }));
+        expect(reslotShownChild(pinned, a.planeID, configuration)).toBe(pinned);
+        expect(reslotShownChild(closed, a.planeID, configuration)).toBe(closed);
+        expect(reslotShownChild(second.updatedTree, 'a', configuration, { fallbackWidth: 300 })).toBe(second.updatedTree);
+    });
+
+    it('a reopen re-slots the children it shows again, too (2026-10-22)', () => {
+        // Reopening a plane shows its whole subtree: a child closed on its own before its parent closed
+        // came back on the slot a later sibling had taken, and only the reopened plane was re-slotted.
+        const spawn = (tree: TreePlane[], parent: string) => updateTreeWithNewPlane('/detail', parent, { x: 300, y: 40 }, tree, registry, configuration, 'origin', { fallbackWidth: 300 });
+        const withA = spawn([plane('a')], 'a');
+        const parent = withA.updatedTreePlane!.planeID;
+        const one = spawn(withA.updatedTree, parent);
+        const two = spawn(one.updatedTree, parent);
+        const firstClosed = togglePlaneFromTree(two.updatedTree, one.updatedTreePlane!.planeID, false).updatedTree;
+        const three = spawn(firstClosed, parent);
+        expect(three.updatedTreePlane!.bridgeLength).toBe(one.updatedTreePlane!.bridgeLength);
+        const parentClosed = togglePlaneFromTree(three.updatedTree, parent, false).updatedTree;
+        const reopened = togglePlaneFromTree(parentClosed, parent, true).updatedTree;
+
+        const tree = reslotShownChild(reopened, parent, configuration, { fallbackWidth: 300 });
+        const lengths = getTreePlaneByID(tree, parent)!.children!.filter((child) => child.show).map((child) => child.bridgeLength);
+        expect(lengths).toHaveLength(3);
+        expect(new Set(lengths).size).toBe(3);
     });
 
     it('the fixed fan at 90 (the objects geometry): every generation turns 90° right of its parent and hangs behind its face, like the first link (the harness numbers)', () => {

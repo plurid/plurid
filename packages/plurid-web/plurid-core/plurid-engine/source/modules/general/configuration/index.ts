@@ -35,12 +35,13 @@
 
 
 // #region module
+/** A theme part as configured; one not given follows the look (`look`). */
 const resolveTheme = (
     theme: string | number | symbol | RecursivePartial<PluridConfigurationTheme> | undefined,
     type: 'general' | 'interaction',
 ) => {
     if (!theme) {
-        return 'plurid';
+        return 'look';
     }
 
     if (typeof theme === 'string') {
@@ -48,7 +49,7 @@ const resolveTheme = (
     }
 
     if (typeof theme !== 'object') {
-        return 'plurid';
+        return 'look';
     }
 
     const {
@@ -64,7 +65,7 @@ const resolveTheme = (
         return interaction;
     }
 
-    return 'plurid';
+    return 'look';
 }
 
 
@@ -169,7 +170,11 @@ export const merge = (
     // The page presentation changes four DEFAULTS (no fade-in, no gradient, view-sized planes, the
     // address bar bound); they are layered under the target and the partial, so a host's own values
     // still win.
-    const presentation = configuration?.space?.presentation ?? target?.space?.presentation;
+    // `null` is the default presentation: read as not given, the way back from the page kept its defaults (2026-10-22)
+    const givenPresentation = configuration?.space?.presentation;
+    const presentation = givenPresentation === null
+        ? defaultConfiguration.space.presentation
+        : (givenPresentation ?? target?.space?.presentation);
     const page = presentation === 'page';
     const base: PluridConfiguration = page
         ? objects.merge(objects.clone(defaultConfiguration), objects.clone(pagePresentationDefaults)) as PluridConfiguration
@@ -190,6 +195,22 @@ export const merge = (
 
     if (!configuration) {
         return targetConfiguration;
+    }
+
+    // THE NAME `plurid` CHANGED MEANING (2026-10-21): it was the default value and followed the look, and
+    // is the plurid theme now. Said once, as a fact: a host may have chosen it, and the merge's own form
+    // of the name (both parts) comes back through every later merge.
+    const given = configuration.global?.theme;
+    const namesPlurid = given === 'plurid' || (
+        !!given && typeof given === 'object'
+        && ((given as PluridConfigurationTheme).general === 'plurid' || (given as PluridConfigurationTheme).interaction === 'plurid')
+    );
+    if (namesPlurid) {
+        warnDevelopment(
+            'configuration:global.theme:plurid',
+            'the configuration\'s `global.theme` names `plurid`: since 2026-10-21 that is the plurid theme itself (the name was the default until then, and followed the look); `look`, the default now, follows the look.',
+            configuration.development?.warnings !== false,
+        );
     }
 
     const mergedConfiguration = objects.merge(

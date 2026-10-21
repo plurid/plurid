@@ -85,8 +85,14 @@ const compute = <C>(
     // state's configuration (which otherwise wins, so runtime changes made through the pubsub
     // survive unrelated store recomputes). Without this a host could never change the
     // configuration at runtime — a layout switch, a theme change — except by remounting.
-    const authoritative = options.configurationChanges
-        ?? (options.configurationAuthoritative ? configuration : undefined);
+    // A PRESENTATION SWITCH lays the whole configuration: it changes the defaults under the page fields,
+    // and the host's own values there, unchanged, are not among the changes (2026-10-22: an unchanged
+    // `docking.url: true` went with the page defaults).
+    const changes = options.configurationChanges;
+    const presentationChanged = !!changes?.space && 'presentation' in changes.space;
+    const authoritative = changes && !presentationChanged
+        ? changes
+        : (presentationChanged || options.configurationAuthoritative ? configuration : undefined);
     if (authoritative) {
         stateConfiguration = generalEngine.configuration.merge(authoritative, stateConfiguration);
     }

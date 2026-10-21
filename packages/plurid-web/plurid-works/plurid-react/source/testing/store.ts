@@ -211,7 +211,13 @@ export const motionStub = (
                 // controller commits the camera itself before saying so (`useCameraMotion`), which is
                 // why `commitCameraTarget` returns without committing. A stub that refused WITHOUT
                 // committing would make its callers look broken.
+                if (tweenOptions?.docking) {
+                    store.dispatch(actions.space.setDockingPlaneID(tweenOptions.docking));
+                }
                 store.dispatch(actions.space.setCamera(target));
+                if (tweenOptions?.docking) {
+                    store.dispatch(actions.space.setDockingPlaneID(''));
+                }
                 tweenOptions?.onSettle?.();
             }
             return accept;

@@ -1,7 +1,5 @@
 // #region imports
     // #region libraries
-    import themes from '@plurid/plurid-themes';
-
     import {
         PluridMetastate,
         PluridRoute,
@@ -101,10 +99,8 @@ export const serverComputeMetastate = async (
             shortcuts: {
                 global: true,
             },
-            themes: {
-                general: themes.plurid,
-                interaction: themes.plurid,
-            },
+            // the themes the store resolves: the look's, unless the host set some (it was plurid always)
+            themes: stateEngine.resolveThemes(appConfiguration, undefined),
             ui: {
                 toolbarScrollPosition: 50,
                 scrollPlaneID: '',

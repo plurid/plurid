@@ -56,6 +56,7 @@ describe('plurid start', () => {
             process.chdir(cwd);
             exit.mockRestore();
             stderr.mockRestore();
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     };
 

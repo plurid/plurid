@@ -22,8 +22,9 @@ const arabic: Internationalization = {
     toolbarTransformTranslate: 'إزاحة',
 
     toolbarDrawerGlobalTitle: 'عام',
-    toolbarDrawerGlobalGeneralTheme: 'السمة العامة',
-    toolbarDrawerGlobalInteractionTheme: 'سمة التفاعل',
+    toolbarDrawerGlobalLook: 'المظهر',
+    toolbarDrawerGlobalGeneralTheme: 'سمة المحتوى',
+    toolbarDrawerGlobalInteractionTheme: 'سمة تفاعل المحتوى',
     toolbarDrawerGlobalLanguage: 'اللغة',
 
     toolbarDrawerTransformTitle: 'التحويل',

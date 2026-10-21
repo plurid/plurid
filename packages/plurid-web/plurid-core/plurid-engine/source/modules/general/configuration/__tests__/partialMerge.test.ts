@@ -39,6 +39,15 @@ describe('merge(partial, live)', () => {
         warn.mockRestore();
     });
 
+    it('`presentation: null` is the default presentation, the way back from the page (2026-10-22)', () => {
+        // `??` read `null` as not given: the page defaults stayed under a space presentation.
+        const page = merge({ space: { presentation: 'page' } });
+        const back = merge({ space: { presentation: null } } as any, page);
+        expect(back.space.presentation).toBe('space');
+        expect(back.space.fadeInTime).toBe(defaultConfiguration.space.fadeInTime);
+        expect(back.space.docking?.url).toBe(defaultConfiguration.space.docking?.url);
+    });
+
     it('keeps the theme in force when the partial names none', () => {
         const live = merge({ global: { theme: 'night' } });
         expect(live.global.theme).toEqual({ general: 'night', interaction: 'night' });

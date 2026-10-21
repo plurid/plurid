@@ -80,12 +80,13 @@ export const configuration = createSlice({
             state,
             action: PayloadAction<string>,
         ) => {
-            // the other part keeps the theme in force: a name is both parts (it became 'plurid', 2026-10-20)
+            // the other part keeps the theme in force: a name is both parts (it became 'plurid', 2026-10-20);
+            // no theme follows the look
             const updatedTheme: any = {
                 general: action.payload,
                 interaction: typeof state.global.theme === 'object'
                     ? state.global.theme.interaction
-                    : (state.global.theme ?? 'plurid'),
+                    : (state.global.theme ?? 'look'),
             };
 
             state.global.theme = updatedTheme;
@@ -97,11 +98,18 @@ export const configuration = createSlice({
             const updatedTheme: any = {
                 general: typeof state.global.theme === 'object'
                     ? state.global.theme.general
-                    : (state.global.theme ?? 'plurid'),
+                    : (state.global.theme ?? 'look'),
                 interaction: action.payload,
             };
 
             state.global.theme = updatedTheme;
+        },
+        /** The look, taken whole (a name, a base, or a preset with tokens), as the merge takes it. */
+        setConfigurationLook: (
+            state,
+            action: PayloadAction<PluridConfiguration['global']['look']>,
+        ) => {
+            state.global.look = action.payload as any;
         },
         setConfigurationLanguage: (
             state,

@@ -22,8 +22,9 @@ const norwegian: Internationalization = {
     toolbarTransformTranslate: 'forskyvning',
 
     toolbarDrawerGlobalTitle: 'generelt',
-    toolbarDrawerGlobalGeneralTheme: 'generelt tema',
-    toolbarDrawerGlobalInteractionTheme: 'samhandlingstema',
+    toolbarDrawerGlobalLook: 'utseende',
+    toolbarDrawerGlobalGeneralTheme: 'innholdstema',
+    toolbarDrawerGlobalInteractionTheme: 'samhandlingstema for innhold',
     toolbarDrawerGlobalLanguage: 'språk',
 
     toolbarDrawerTransformTitle: 'transformasjon',

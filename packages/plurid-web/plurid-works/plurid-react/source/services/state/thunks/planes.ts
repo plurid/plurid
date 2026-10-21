@@ -58,6 +58,47 @@ const sameCoordinates = (
 ) => !!a && !!b && a.x === b.x && a.y === b.y;
 
 
+/**
+ * Show a plane again. A child takes a free slot when a sibling spawned while it was closed stands on
+ * its own: reopening only showed it there, on that sibling (2026-10-21).
+ */
+const showPlane = (
+    state: AppState,
+    planeID: string,
+    /** the call gave the plane's geometry (a spawn's `bridgeLength` / `bridgeKind`): it keeps it */
+    keepGeometry = false,
+) => {
+    // only what this show brings back takes a free slot: the plane if it was hidden, and its hidden
+    // descendants; a plane already shown stays where it is (2026-10-22: a show of a shown plane moved it)
+    const brought = new Set<string>();
+    const collect = (node: TreePlane, root: boolean) => {
+        if (node.show === false && !(root && keepGeometry)) {
+            brought.add(node.planeID);
+        }
+        for (const child of node.children ?? []) {
+            collect(child, false);
+        }
+    };
+    const plane = spaceEngine.tree.logic.getTreePlaneByID(state.space.tree, planeID);
+    if (plane) {
+        collect(plane, true);
+    }
+    const shown = spaceEngine.tree.logic.togglePlaneFromTree(state.space.tree, planeID, true);
+    const updatedTree = brought.size === 0
+        ? shown.updatedTree
+        : spaceEngine.tree.logic.reslotShownChild(shown.updatedTree, planeID, state.configuration, {
+            fallbackWidth: resolvePlaneFallbackSize(state.configuration, state.space.viewSize).width,
+            only: brought,
+        });
+    return {
+        updatedTree,
+        updatedPlane: updatedTree === shown.updatedTree
+            ? shown.updatedPlane
+            : spaceEngine.tree.logic.getTreePlaneByID(updatedTree, planeID),
+    };
+};
+
+
 export interface ToggleLinkPlaneParameters {
     parentPlaneID: string;
     linkID: string;
@@ -183,7 +224,9 @@ export const toggleLinkPlane = (
     const {
         updatedTree,
         updatedPlane,
-    } = spaceEngine.tree.logic.togglePlaneFromTree(getState().space.tree, existing.planeID, show);
+    } = show
+        ? showPlane(getState(), existing.planeID, bridgeLength !== undefined || bridgeKind !== undefined)
+        : spaceEngine.tree.logic.togglePlaneFromTree(getState().space.tree, existing.planeID, false);
 
     dispatch(actions.space.setTree(updatedTree));
 
@@ -281,8 +324,8 @@ export const openPlane = (
     planeID: string,
     options: OpenPlaneOptions = {},
 ): PlaneThunk => (dispatch, getState) => {
-    const tree = getState().space.tree;
-    const plane = spaceEngine.tree.logic.getTreePlaneByID(tree, planeID);
+    const state = getState();
+    const plane = spaceEngine.tree.logic.getTreePlaneByID(state.space.tree, planeID);
     if (!plane) {
         return;
     }
@@ -290,7 +333,7 @@ export const openPlane = (
     const {
         updatedTree,
         updatedPlane,
-    } = spaceEngine.tree.logic.togglePlaneFromTree(tree, planeID, true);
+    } = showPlane(state, planeID);
     dispatch(actions.space.setTree(updatedTree));
 
     if (options.navigate && updatedPlane) {

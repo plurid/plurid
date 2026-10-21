@@ -102,6 +102,38 @@ export const configurationChanges = (
 };
 
 
+/**
+ * A copy of the plain data a prop holds, functions and other objects by reference: what was applied,
+ * kept apart from the host's object, so an edit made in place to it (then passed under a new object)
+ * still reads as a change (2026-10-22).
+ */
+export const snapshot = <T>(
+    value: T,
+    seen = new Map<object, unknown>(),
+): T => {
+    if (!Array.isArray(value) && !isPlain(value)) {
+        return value;
+    }
+    if (seen.has(value as object)) {
+        return seen.get(value as object) as T;
+    }
+    if (Array.isArray(value)) {
+        const copy: unknown[] = [];
+        seen.set(value, copy);
+        for (const item of value) {
+            copy.push(snapshot(item, seen));
+        }
+        return copy as T;
+    }
+    const copy: Record<string, unknown> = {};
+    seen.set(value as object, copy);
+    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+        copy[key] = snapshot(item, seen);
+    }
+    return copy as T;
+};
+
+
 /** Whether every change is a rebuilt callback, which the store takes without a recompute. */
 export const onlyCallbacks = (
     changes: Record<string, unknown>,

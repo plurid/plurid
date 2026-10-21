@@ -199,12 +199,12 @@ export const producedFunction = (
 /**
  * Compute the provider props for one service on a given target.
  *
- * Both targets spread the static `properties`, then `context` (Redux), then the
- * `store` built by the factory:
- *  - SERVER: `store(undefined)` is a base placeholder; the matching preserve
- *    overrides it per request (`buildRequestTree`, `objects/Server/render.tsx` in the
- *    server, merges `providers[name]` over these properties). A `client` comes from the
- *    preserve too, per request: one for the whole server would share its cache with everyone.
+ * Both targets spread the static `properties`, then `context` (Redux):
+ *  - SERVER: no store here. The server calls the factory for every request (`createPluridServer`
+ *    hands it on as the service's `store`), writes the state the render left in it into the page,
+ *    and a preserve's `providers[name]` still wins (`buildRequestTree`). One `store(undefined)`
+ *    here was the store every request rendered into (2026-10-21). A `client` comes from the
+ *    preserve, per request: one for the whole server would share its cache with everyone.
  *  - CLIENT: `store(preloadedState)` rebuilds the store from the serialized
  *    `window.__PRELOADED_REDUX_STATE__`, and `client()` builds the client once, unless the
  *    static properties give one. It was never read: the provider rendered without its
@@ -223,10 +223,8 @@ export function serviceProperties(
         properties.context = service.context;
     }
 
-    if (service.store) {
-        properties.store = target === 'server'
-            ? service.store(undefined)
-            : service.store(preloadedState);
+    if (service.store && target === 'client') {
+        properties.store = service.store(preloadedState);
     }
 
     if (target === 'client' && service.client && properties.client === undefined) {

@@ -49,11 +49,11 @@ export interface FlatPluridConfiguration {
     /** the look: a preset name, a base, or a preset with token overrides (`global.look`) */
     look?: PluridConfigurationLook;
     /**
-     * `global.theme` — a plurid theme name, or `{ general, interaction }`, each a name or a Theme
-     * object (taken as given). The name `plurid` is the default value and leaves the theme to the
-     * look; `themes.plurid` (the object) asks for the plurid theme itself.
+     * `global.theme` — `look`, a plurid theme name, or `{ general, interaction }`, each of those or a
+     * Theme object (taken as given). `look`, the default, leaves the theme to the look; a name, the
+     * name `plurid` too, sets it (2026-10-21: `plurid` was the default, so it followed the look).
      */
-    theme?: ThemeName | PluridConfigurationTheme;
+    theme?: 'look' | ThemeName | PluridConfigurationTheme;
     /** `global.transparentUI` — render the engine elements transparent. */
     transparentUI?: boolean;
     /** `global.language` — UI language. */
@@ -193,9 +193,9 @@ export interface PluridConfigurationGlobal {
     /**
      * The legacy Theme (plurid themes, https://meta.plurid.com/themes) that plane content and the
      * toolbar drawers' inputs still read: a name, or names/objects for `general` and `interaction`.
-     * Derived from the look unless set here.
+     * Derived from the look unless set here: `look` (the default) follows it.
      */
-    theme: ThemeName | PluridConfigurationTheme;
+    theme: 'look' | ThemeName | PluridConfigurationTheme;
 
     /**
      * Supported languages:
@@ -234,9 +234,10 @@ export type PluridConfigurationLook =
         tokens?: Partial<LookTokens>;
     };
 
+/** Each part `look` (follow the look), a theme name, or a Theme object. */
 export interface PluridConfigurationTheme {
-    general: ThemeName | Theme;
-    interaction: ThemeName | Theme;
+    general: 'look' | ThemeName | Theme;
+    interaction: 'look' | ThemeName | Theme;
 }
 
 

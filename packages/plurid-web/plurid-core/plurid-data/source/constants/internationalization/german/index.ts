@@ -22,8 +22,9 @@ const german: Internationalization = {
     toolbarTransformTranslate: 'verschiebung',
 
     toolbarDrawerGlobalTitle: 'allgemein',
-    toolbarDrawerGlobalGeneralTheme: 'allgemeines design',
-    toolbarDrawerGlobalInteractionTheme: 'interaktionsdesign',
+    toolbarDrawerGlobalLook: 'erscheinungsbild',
+    toolbarDrawerGlobalGeneralTheme: 'inhaltsdesign',
+    toolbarDrawerGlobalInteractionTheme: 'interaktionsdesign des inhalts',
     toolbarDrawerGlobalLanguage: 'sprache',
 
     toolbarDrawerTransformTitle: 'transformation',

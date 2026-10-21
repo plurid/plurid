@@ -22,8 +22,9 @@ const romanian: Internationalization = {
     toolbarTransformTranslate: 'translație',
 
     toolbarDrawerGlobalTitle: 'general',
-    toolbarDrawerGlobalGeneralTheme: 'temă generală',
-    toolbarDrawerGlobalInteractionTheme: 'temă interacțiune',
+    toolbarDrawerGlobalLook: 'aspect',
+    toolbarDrawerGlobalGeneralTheme: 'temă conținut',
+    toolbarDrawerGlobalInteractionTheme: 'temă interacțiune conținut',
     toolbarDrawerGlobalLanguage: 'limbă',
 
     toolbarDrawerTransformTitle: 'transformare',

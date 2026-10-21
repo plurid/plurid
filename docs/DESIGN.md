@@ -5,7 +5,8 @@ page's rail, the `?` and its dialog, the origin, the guides, the marquee, the br
 state, the debuggers — is drawn from ONE vocabulary on ONE set of tokens, the LOOK. This document is
 the vocabulary and its rules; the token table and the presets are generated into
 [LOOKS.md](./LOOKS.md); the knob, the slots and the primitives are in
-[CONTROL_SURFACE.md](./CONTROL_SURFACE.md#the-look).
+[CONTROL_SURFACE.md](./CONTROL_SURFACE.md#the-look). A host sets the look with `global.look`; a reader
+can switch it for the session from the toolbar's Global drawer (More → Global → look, 2026-10-21).
 
 ## The vocabulary
 

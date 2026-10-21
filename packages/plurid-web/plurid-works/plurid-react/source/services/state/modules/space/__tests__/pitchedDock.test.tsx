@@ -64,4 +64,31 @@ describe('a page pitched past the orbit\'s limit', () => {
             clock.restore();
         }
     });
+
+    it('docks face-on when the swing is a jump: reduced motion or no duration (2026-10-22)', async () => {
+        // The controller jumped before the dock named its page, and the commit clamped the pitch.
+        const rendered = await renderPlurid({
+            planes: [{ route: '/a', component: Page }, { route: '/b', component: Page }],
+            view: ['/a', '/b'],
+            configuration: { space: { navigation: { motion: { duration: 0 } } } },
+        } as any);
+        const tree = rendered.handle.tree.get();
+        const tilted = tree.map((node: any, index: number) => (index === 1
+            ? { ...node, manuallyPositioned: true, location: { ...node.location, rotateX: 120 } }
+            : node));
+        await act(async () => {
+            rendered.handle.tree.set(tilted as any);
+        });
+        const page = tilted[1].planeID;
+        await act(async () => {
+            rendered.handle.camera.dock(tilted[0].planeID, { animate: false });
+        });
+        await act(async () => {
+            rendered.handle.camera.dock(page, { animate: true });
+        });
+        expect(rendered.handle.camera.get().pitch).toBeCloseTo(-120, 6);
+        expect(rendered.handle.camera.docked()).toBe(page);
+        await rendered.unmount();
+    });
 });
+

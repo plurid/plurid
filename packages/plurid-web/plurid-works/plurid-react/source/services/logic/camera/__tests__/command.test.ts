@@ -273,8 +273,11 @@ describe('the page presentation: framing docks', () => {
         expect(store.tweens).toHaveLength(1);
         expect(store.cameraCommits()).toHaveLength(1);
         expect(store.space().camera.pivot.y).toBeCloseTo(view.height + 50 + view.height / 2, 6);
-        // `setDockingPlaneID` records the destination of a SWING; a jump is docked by its camera alone
-        expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type)).toHaveLength(0);
+        // `setDockingPlaneID` records the destination of a SWING; a jump names its page for its one commit
+        // only (a page pitched past the limit is reached face-on, 2026-10-22), and none is left recorded
+        expect(store.dispatched.filter((action) => action.type === actions.setDockingPlaneID.type).map((action) => action.payload))
+            .toEqual(['p2', '']);
+        expect(store.space().dockingPlaneID).toBe('');
     });
 
     it('a jump cancels a running motion before it commits (a tween frame never overwrites it)', () => {

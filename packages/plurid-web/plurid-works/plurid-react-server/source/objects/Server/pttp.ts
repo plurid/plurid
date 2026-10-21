@@ -108,10 +108,19 @@ export const handlePTTPRequest = async (
                     );
                 }
 
-                // claimed and not answered: answered, so the request is never left open
+                // CLAIMED, NOT YET ANSWERED: a `sendFile` or a stream starts its answer later, so the
+                // handler is given `pttpAnswerTimeout` before the server answers 500 for it, and the request
+                // is never left open. It answered at once, over every answer that starts later (2026-10-22).
                 if (!response.headersSent) {
-                    console.warn(`[${time.stamp()} :: ${requestID}] Plurid Server: the pttpHandler claimed POST ${request.path} without answering it.`);
-                    response.status(500).end();
+                    const timer = setTimeout(() => {
+                        if (response.headersSent || response.writableEnded) {
+                            return;
+                        }
+                        console.warn(`[${time.stamp()} :: ${requestID}] Plurid Server: the pttpHandler claimed POST ${request.path} without answering it.`);
+                        response.status(500).end();
+                    }, server.options.pttpAnswerTimeout);
+                    timer.unref?.();
+                    response.once('close', () => clearTimeout(timer));
                 }
                 return;
             }

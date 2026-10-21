@@ -43,6 +43,7 @@
         toggleLinkPlane,
         closePlane,
         openLastClosed,
+        openPlane,
         navigateToParent,
     } from '../planes';
     // #endregion internal
@@ -148,6 +149,55 @@ describe('toggleLinkPlane()', () => {
         store.dispatch(openLastClosed());
         expect(child(store).show).toBe(true);
         expect(store.space().lastClosedPlane).toBe('');
+    });
+
+    it('a child reopened on the slot a sibling took meanwhile takes a free one (2026-10-21)', () => {
+        // Reopening only showed it where it closed: A at 0 and B at 1; A closed; C took 0; A came
+        // back on C. The link, `openLastClosed` and `openPlane` reopen alike.
+        const store = makeStore();
+        const link = (index: number) => parameters({ linkID: 'a#/detail#' + index });
+        const lengths = () => store.tree()[0].children!.filter((node) => node.show).map((node) => node.bridgeLength);
+        store.dispatch(toggleLinkPlane(link(0)));
+        store.dispatch(toggleLinkPlane(link(1)));
+        store.dispatch(toggleLinkPlane(link(0)));
+        store.dispatch(toggleLinkPlane(link(2)));
+        store.dispatch(toggleLinkPlane(link(0)));
+        expect(lengths()).toHaveLength(3);
+        expect(new Set(lengths()).size).toBe(3);
+
+        const b = store.tree()[0].children![1];
+        store.dispatch(closePlane(b.planeID));
+        store.dispatch(toggleLinkPlane(link(3)));
+        store.dispatch(openLastClosed());
+        expect(lengths()).toHaveLength(4);
+        expect(new Set(lengths()).size).toBe(4);
+    });
+
+    it('a reopen keeps the geometry the call asks for, and a plane already shown stays where it is (2026-10-22)', () => {
+        // A spawn's own `bridgeLength` was overridden by the free slot; and a show of a plane already
+        // shown (two siblings on one slot, from a tree saved by the old count) moved it.
+        const store = makeStore();
+        const link = (index: number, overrides: Partial<LinkParameters> = {}) => parameters({ linkID: 'a#/detail#' + index, ...overrides });
+        store.dispatch(toggleLinkPlane(link(0)));
+        const b = store.tree()[0].children![0];
+        store.dispatch(toggleLinkPlane(link(0)));
+        store.dispatch(toggleLinkPlane(link(1)));
+        store.dispatch(toggleLinkPlane(link(0, { bridgeLength: b.bridgeLength, mode: 'open' })));
+        const reopened = store.tree()[0].children!.find((node) => node.planeID === b.planeID)!;
+        expect(reopened.show).toBe(true);
+        expect(reopened.bridgeLength).toBe(b.bridgeLength);
+
+        const shared = makeSpaceStore(defaultConfiguration, [treePlane('a', {
+            location: { translateX: 100 },
+            children: [
+                treePlane('one', { parentPlaneID: 'a', linkCoordinates: { x: 400, y: 40 }, bridgeLength: 100 }),
+                treePlane('two', { parentPlaneID: 'a', linkCoordinates: { x: 400, y: 40 }, bridgeLength: 100 }),
+            ],
+        })]);
+        const before = shared.tree();
+        shared.dispatch(openPlane('two'));
+        expect(shared.tree()[0].children![1].bridgeLength).toBe(100);
+        expect(shared.tree()).toBe(before);
     });
 
     it('does nothing for an unregistered route', () => {

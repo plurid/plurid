@@ -41,9 +41,10 @@
 // #region module
 export const defaultConfigurationGlobal: PluridConfigurationGlobal = {
     look: 'graphite',
+    // the theme follows the look; the name `plurid` asks for the plurid theme (2026-10-21)
     theme: {
-        general: 'plurid',
-        interaction: 'plurid',
+        general: 'look',
+        interaction: 'look',
     },
     language: 'english',
     transparentUI: false,

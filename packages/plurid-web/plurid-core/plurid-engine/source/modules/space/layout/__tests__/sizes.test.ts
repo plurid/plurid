@@ -30,6 +30,15 @@
 
 
 // #region module
+describe('a configured length read from JSON (2026-10-22)', () => {
+    it('a px gap given as a string is a number: the columns were placed by concatenation', () => {
+        const roots = [{ ...defaultTreePlane, planeID: 'a', sourceID: 'a' }, { ...defaultTreePlane, planeID: 'b', sourceID: 'b' }] as any;
+        const placed = computeColumnLayout(roots, 2, undefined, '50' as any, defaultConfiguration, { width: 1000, height: 600 });
+        expect(typeof placed[1].location.translateX).toBe('number');
+        expect(Number.isFinite(placed[1].location.translateX)).toBe(true);
+    });
+});
+
 const component = () => null;
 const view = { width: 1000, height: 600 };
 const registrar = () => new Registrar<any>([

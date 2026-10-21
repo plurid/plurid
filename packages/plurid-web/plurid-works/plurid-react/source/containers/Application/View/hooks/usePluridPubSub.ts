@@ -69,6 +69,7 @@
     import {
         closePlane,
         openLastClosed,
+        openPlane,
         replaceHostTree,
         toggleLinkPlane,
     } from '~services/state/thunks/planes';
@@ -1235,7 +1236,10 @@ export const usePluridPubSub = (
                     if (typeof planeID !== 'string' || typeof show !== 'boolean') {
                         return;
                     }
-                    dispatch(actions.space.setPlaneShow({ planeID, show }));
+                    // shown as a reopen is: a child takes a free slot if a sibling took its own
+                    dispatch(show
+                        ? openPlane(planeID) as any
+                        : actions.space.setPlaneShow({ planeID, show }));
                 },
             },
             {

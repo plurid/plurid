@@ -36,7 +36,12 @@ export const isFractionalLength = (
 export const lengthInPx = (
     value: number,
     extent: number,
-): number => isFractionalLength(value) ? value * extent : value;
+): number => {
+    // a length read from JSON may be a string (`"50"`): a px one went on as one, and the layouts placed
+    // their planes by concatenation (2026-10-22)
+    const length = Number(value);
+    return isFractionalLength(length) ? length * extent : length;
+};
 
 
 /**

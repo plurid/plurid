@@ -93,6 +93,7 @@
         configurationChanges,
         onlyCallbacks,
         sameContent,
+        snapshot,
     } from './changes';
     import StateContext from '~services/state/context';
 
@@ -133,6 +134,7 @@
 
     import PluridRouterContext, {
         locationOf,
+        PluridRouterContextValue,
     } from '../RouterBrowser/context';
     // #endregion internal
     import {
@@ -154,6 +156,8 @@ const planeIdentity = (
 interface PluridApplicationShellExtras {
     /** Rendered inside a `PluridRouterBrowser` route: the router owns the pathname (the address bar's query mode). */
     routerHosted?: boolean;
+    /** What an application nested in this one's planes reads of the router: the pathname is still the router's. */
+    routerBelow?: PluridRouterContextValue | null;
     /** The router's location (the request's on the server): where the address bar reads a deep link without a window. */
     routerLocation?: { pathname: string; search: string };
     /**
@@ -418,7 +422,7 @@ class PluridApplicationShell extends Component<
         const othersChanged = inputs.some((key) => key !== 'view' && key !== 'configuration'
             && this.props[key] !== previousProperties[key]);
         if (!othersChanged && !viewChanged && (!changes || onlyCallbacks(changes))) {
-            this.appliedConfiguration = this.props.configuration;
+            this.appliedConfiguration = snapshot(this.props.configuration);
             if (changes) {
                 this.store.dispatch({
                     type: 'SET_STATE',
@@ -536,12 +540,13 @@ class PluridApplicationShell extends Component<
                         store={this.store}
                         context={StateContext}
                     >
-                        {/* THE ROUTER'S CONTEXT STOPS HERE (2026-10-20): it wrapped everything the
-                            router rendered, so an application inside one of these planes took the
+                        {/* THE ROUTER'S BUS AND READINESS STOP HERE (2026-10-20): they wrapped everything
+                            the router rendered, so an application inside one of these planes took the
                             router's bus and `onReady` too (`onReady` fired twice, and a command on
-                            the router's bus reached both spaces). This application read it above;
-                            what it renders reads none. */}
-                        <PluridRouterContext.Provider value={null}>
+                            the router's bus reached both spaces). What it renders still reads that the
+                            router owns the pathname: without it a nested page presentation bound the
+                            address bar in path mode and wrote its page over the route (2026-10-22). */}
+                        <PluridRouterContext.Provider value={this.props.routerBelow ?? null}>
                             <PluridDocumentPlanes
                                 planesRegistrar={this.planesRegistrar}
                             />
@@ -816,7 +821,7 @@ class PluridApplicationShell extends Component<
         const changes = this.store && !options.boot
             ? configurationChanges(this.appliedConfiguration, configuration)
             : undefined;
-        this.appliedConfiguration = configuration;
+        this.appliedConfiguration = snapshot(configuration);
 
         const store = state.compute(
             view,
@@ -1000,6 +1005,11 @@ const PluridApplication = forwardRef<
     const routerHosted = !!routerContext;
     const routerPath = routerContext?.path;
     const routerLocation = useMemo(() => (routerPath === undefined ? undefined : locationOf(routerPath)), [routerPath]);
+    const routerNavigate = routerContext?.navigate;
+    const routerBelow = useMemo(
+        () => (routerPath === undefined || !routerNavigate ? null : { path: routerPath, navigate: routerNavigate }),
+        [routerPath, routerNavigate],
+    );
 
     useImperativeHandle(reference, () => (shell.current
         ? shell.current.getHandle()
@@ -1040,6 +1050,7 @@ const PluridApplication = forwardRef<
             pubsub={properties.pubsub ?? routerContext?.pubsub}
             routerHosted={routerHosted}
             routerLocation={routerLocation}
+            routerBelow={routerBelow}
             serverRendered={serverRendered}
             view={view}
         />

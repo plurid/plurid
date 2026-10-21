@@ -214,14 +214,13 @@ test.describe('an emptied space is an empty space', () => {
     test('one plane of several closed leaves the space dressed', async ({ page }) => {
         await openHarness(page, '?reducedMotion=1');
 
+        // the default harness has several roots: a skip on fewer hid the test whenever it had one
         const roots = await tree(page);
-        test.skip(roots.length < 2, 'needs a fixture with more than one root');
+        expect(roots.length).toBeGreaterThan(1);
 
         await publish(page, 'space.setPlaneShow', { planeID: roots[0].planeID, show: false });
-        await page.waitForFunction(
-            (planeID) => !document.querySelector(`[data-plurid-plane="${planeID}"] [data-plurid-entity="PluridPlane"]`),
-            roots[0].planeID,
-        ).catch(() => {});
+        // the root is hidden in the tree (a DOM wait that timed out was swallowed, and the test ran on)
+        await expect.poll(async () => (await tree(page)).find((root: any) => root.planeID === roots[0].planeID)?.show).toBe(false);
 
         const still = await chromePresent(page);
         expect(still.toolbar).toBe(true);

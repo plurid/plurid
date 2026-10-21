@@ -46,7 +46,7 @@ const sessionAdapter: PluridStorageAdapter = {
 
 // Built with the flat preset — every knob reachable without the nested config object.
 const configuration = definePluridConfiguration({
-    theme: 'plurid',
+    theme: 'look',
     layout: { type: SPACE_LAYOUT.COLUMNS, columns: 3, gap: 0.06 },
 
     // Tier 2 — tune the debounces (undo is intentionally left ON / default).

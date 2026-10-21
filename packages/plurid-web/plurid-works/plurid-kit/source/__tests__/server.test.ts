@@ -59,7 +59,7 @@ describe('createPluridServer()', () => {
             document: serverOnly(() => Promise.resolve({ default: hook })),
             render: 'suspense',
             services: [
-                { name: 'B', Provider: () => null, order: 2 },
+                { name: 'B', Provider: () => null, order: 2, store: (state: unknown) => ({ state, made: Symbol('store') }) },
                 { name: 'A', Provider: () => null, order: 1 },
             ],
         } as any);
@@ -78,6 +78,12 @@ describe('createPluridServer()', () => {
         expect('customPlane' in configuration).toBe(false);
         // services keep their order (lower = inner) for the client to mirror
         expect(configuration.services.map((service: any) => service.name)).toEqual(['A', 'B']);
+        // a store per request: the factory goes to the server, which calls it for every one (2026-10-21)
+        const [a, b] = configuration.services;
+        expect(a.store).toBeUndefined();
+        expect(b.properties.store).toBeUndefined();
+        expect(b.store().state).toBeUndefined();
+        expect(b.store().made).not.toBe(b.store().made);
         expect(configuration.options.serverName).toBe('kit test');
     });
 
@@ -138,6 +144,14 @@ describe('the configuration, checked (2026-09-29)', () => {
             .rejects.toThrow(/`routes` must be an array of routes.*it is an object/s);
         await expect(createPluridServer({ routes: [{ path: '/' }] } as any))
             .rejects.toThrow(/`routes\[0\]` must be a route with a path `value`/);
+    });
+
+    it('refuses allowed origins that are not a list of strings (2026-10-22)', async () => {
+        // A string made the server's check a substring test: a look-alike origin was allowed, credentials and all.
+        await expect(createPluridServer({ routes: [], pttpOrigins: 'https://space.example.com' } as any))
+            .rejects.toThrow(/`pttpOrigins` must be an array of origins.*it is a string/s);
+        await expect(createPluridServer({ routes: [], pttpOrigins: [42] } as any))
+            .rejects.toThrow(/`pttpOrigins\[0\]` must be origins/);
     });
 
     it('lists every problem at once', async () => {

@@ -51,6 +51,7 @@
     import {
         childLocation,
         freeSpawnOrdinal,
+        spawnOrdinalOf,
         resolveSpawnAnchor,
         anchoredCoordinates,
         resolvePlaneAngle,
@@ -987,6 +988,94 @@ export const togglePlaneFromTree = (
         updatedPlane,
     };
 }
+
+
+/**
+ * A REOPENED CHILD TAKES A FREE SLOT (2026-10-21). Reopening only showed the plane at the slot it
+ * held when it closed, which a sibling spawned meanwhile may stand on (A at 0 and B at 1; A closed;
+ * C took 0; A came back on C). A shown child whose slot a shown sibling holds takes the first free
+ * one, as a spawn does (`freeSpawnOrdinal`, in the same spacing), and its subtree follows; a child
+ * placed by hand stays where it was dropped. The same tree when nothing moves.
+ */
+export interface ReslotOptions extends Pick<UpdateTreeWithNewPlaneOptions, 'fallbackWidth'> {
+    /** Only these planes may move (the ones the reopen showed): one already shown stays where it is. */
+    only?: ReadonlySet<string>;
+}
+
+export const reslotShownChild = (
+    tree: TreePlane[],
+    planeID: string,
+    configuration: PluridConfiguration,
+    options: ReslotOptions = {},
+): TreePlane[] => {
+    // A reopen shows the plane's subtree too: a child closed on its own before its parent closed comes
+    // back with it, on the slot a later sibling may hold (2026-10-22). Each shown child, in order, takes
+    // a free slot when its own is held.
+    const may = (id: string) => !options.only || options.only.has(id);
+    let next = may(planeID) ? reslotPlane(tree, planeID, configuration, options) : tree;
+    const visit = (id: string) => {
+        for (const child of getTreePlaneByPlaneID(next, id)?.children ?? []) {
+            if (child.show === false) {
+                continue;
+            }
+            if (may(child.planeID)) {
+                next = reslotPlane(next, child.planeID, configuration, options);
+            }
+            visit(child.planeID);
+        }
+    };
+    visit(planeID);
+    return next;
+};
+
+const reslotPlane = (
+    tree: TreePlane[],
+    planeID: string,
+    configuration: PluridConfiguration,
+    options: Pick<UpdateTreeWithNewPlaneOptions, 'fallbackWidth'>,
+): TreePlane[] => {
+    const plane = getTreePlaneByPlaneID(tree, planeID);
+    const parent = plane?.parentPlaneID
+        ? getTreePlaneByPlaneID(tree, plane.parentPlaneID)
+        : undefined;
+    if (!plane || !parent || plane.show === false || !plane.linkCoordinates || plane.manuallyPositioned) {
+        return tree;
+    }
+
+    const bridge = { ...defaultConfiguration.space.bridge, ...configuration.space.bridge };
+    const spacing = {
+        childWidth: plane.width || options.fallbackWidth,
+        bridgeLength: bridge.length ?? DEFAULT_BRIDGE_LENGTH,
+    };
+    const siblings = (parent.children ?? [])
+        .filter((child) => child.planeID !== planeID && child.show !== false && !!child.linkCoordinates)
+        .map((child) => child.bridgeLength ?? spacing.bridgeLength);
+    const own = spawnOrdinalOf(plane.bridgeLength ?? spacing.bridgeLength, spacing);
+    if (!siblings.some((length) => spawnOrdinalOf(length, spacing) === own)) {
+        return tree;
+    }
+
+    const anchored = resolveSpawnAnchor(parent.width, plane.linkCoordinates, {
+        anchor: plane.bridgeAnchor ?? 'link',
+        ordinal: freeSpawnOrdinal(siblings, spacing),
+        ...spacing,
+    });
+    return updateTreePlane(tree, recomputeSubtree({
+        ...plane,
+        bridgeLength: anchored.bridgeLength,
+        bridgeKind: anchored.bridgeKind,
+        linkCoordinates: anchored.linkCoordinates,
+        location: childLocation(
+            parent.location,
+            anchored.linkCoordinates,
+            anchored.bridgeLength,
+            plane.planeAngle ?? DEFAULT_PLANE_ANGLE,
+            plane.bridgeSide ?? 'start',
+            plane.width || options.fallbackWidth,
+            plane.bridgeOffset ?? 0,
+        ),
+    }));
+};
 
 
 export const getTreePlaneByID = (

@@ -22,8 +22,9 @@ const italian: Internationalization = {
     toolbarTransformTranslate: 'traslazione',
 
     toolbarDrawerGlobalTitle: 'generale',
-    toolbarDrawerGlobalGeneralTheme: 'tema generale',
-    toolbarDrawerGlobalInteractionTheme: 'tema interazione',
+    toolbarDrawerGlobalLook: 'aspetto',
+    toolbarDrawerGlobalGeneralTheme: 'tema del contenuto',
+    toolbarDrawerGlobalInteractionTheme: 'tema interazione del contenuto',
     toolbarDrawerGlobalLanguage: 'lingua',
 
     toolbarDrawerTransformTitle: 'trasformazione',

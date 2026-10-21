@@ -27,6 +27,14 @@ describe('serviceProperties()', () => {
         expect(client).toHaveBeenCalledTimes(1);
     });
 
+    it('builds no store on the server: each request\'s comes from the factory (2026-10-21)', () => {
+        // One `store(undefined)` at startup was the store every request rendered into.
+        const store = jest.fn((state?: unknown) => ({ state }));
+        expect(serviceProperties({ name: 'redux', Provider, store }, 'server').store).toBeUndefined();
+        expect(store).not.toHaveBeenCalled();
+        expect(serviceProperties({ name: 'redux', Provider, store }, 'client', { count: 1 }).store).toEqual({ state: { count: 1 } });
+    });
+
     it('keeps a client the static properties already give', () => {
         const given = { given: true };
         const client = jest.fn(() => ({}));

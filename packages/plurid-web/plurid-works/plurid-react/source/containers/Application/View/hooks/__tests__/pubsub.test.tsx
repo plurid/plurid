@@ -943,3 +943,30 @@ describe('bus hygiene', () => {
     });
 });
 
+
+describe('space.setPlaneShow reopens as a reopen does (2026-10-21)', () => {
+    it('a child shown again on the slot a sibling took meanwhile takes a free one', async () => {
+        const Page: React.FC = () => <div>page</div>;
+        const rendered = await renderPlurid({
+            planes: ['/a', '/b', '/c', '/d'].map((route) => ({ route, component: Page })),
+            view: ['/a'],
+        } as any);
+        const { api } = rendered;
+        const root = api.getSnapshot().space.tree[0].planeID;
+        const publish = (topic: string, data: unknown) => act(async () => {
+            api.pubsub.publish({ topic, data } as any);
+        });
+        const children = () => api.getSnapshot().space.tree[0].children ?? [];
+        await publish('space.spawnPlane', { route: '/b', parentPlaneID: root, framing: 'none' });
+        await publish('space.spawnPlane', { route: '/c', parentPlaneID: root, framing: 'none' });
+        const b = children()[0].planeID;
+        await publish('space.setPlaneShow', { planeID: b, show: false });
+        await publish('space.spawnPlane', { route: '/d', parentPlaneID: root, framing: 'none' });
+        await publish('space.setPlaneShow', { planeID: b, show: true });
+        const lengths = children().filter((node) => node.show).map((node) => node.bridgeLength);
+        expect(lengths).toHaveLength(3);
+        expect(new Set(lengths).size).toBe(3);
+        await rendered.unmount();
+    });
+});
+

@@ -33,5 +33,22 @@ describe('only the parts of the configuration that changed (2026-10-21)', () => 
         });
         expect(whole.configuration.space.layout).toMatchObject({ columns: 2 });
     });
+
+    it('a presentation switch lays the whole configuration: the host\'s unchanged values are kept over the new defaults (2026-10-22)', () => {
+        // The switch changes the defaults under the page fields, and a field the host left unchanged was
+        // not among the changes: `docking.url: true`, unchanged, was dropped with the page defaults.
+        const page = { space: { presentation: 'page', docking: { url: true } } } as any;
+        const space = { space: { presentation: 'space', docking: { url: true } } } as any;
+        const booted = compute(['/a'], page, registrar(), undefined, undefined, undefined, undefined);
+        const switched = compute(['/a'], space, registrar(), booted as any, undefined, undefined, undefined, 'origin', {
+            configurationChanges: { space: { presentation: 'space' } } as any,
+        });
+        expect(switched.configuration.space.presentation).toBe('space');
+        expect(switched.configuration.space.docking?.url).toBe(true);
+        const back = compute(['/a'], { space: { presentation: 'page', opaque: true } } as any, registrar(), switched as any, undefined, undefined, undefined, 'origin', {
+            configurationChanges: { space: { presentation: 'page', opaque: true } } as any,
+        });
+        expect(back.configuration.space.opaque).toBe(true);
+    });
 });
 // #endregion module

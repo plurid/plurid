@@ -155,6 +155,12 @@ repo (compiled clean, rendered blank):
    it is false in every browser, and `process.env?.NODE_ENV` is a chain no `define` matches. In an
    unbundled page the read throws (`process is not defined`), so catch it and default sensibly (see
    `plurid-react source/services/logic/development/environment.ts`).
+3. **React's types are 18.3 in the workspace.** `pnpm-workspace.yaml` overrides `@types/react` and
+   `@types/react-dom` to `^18.3`, so the libraries' declaration builds infer no React-19-only types
+   (TS2742 in styled-components' inference). The harness and the kit declare a 19 devDependency and
+   still resolve 18.3 through the override: React 19's own types are checked only by `smoke.pack`'s
+   generated application. (Editing `pnpm-workspace.yaml` or `pnpm-lock.yaml` marks every package
+   changed for the release, so notes like this one live here.)
 
 
 

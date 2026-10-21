@@ -22,8 +22,9 @@ const hindi: Internationalization = {
     toolbarTransformTranslate: 'स्थानांतरण',
 
     toolbarDrawerGlobalTitle: 'सामान्य',
-    toolbarDrawerGlobalGeneralTheme: 'सामान्य थीम',
-    toolbarDrawerGlobalInteractionTheme: 'इंटरैक्शन थीम',
+    toolbarDrawerGlobalLook: 'रूप',
+    toolbarDrawerGlobalGeneralTheme: 'सामग्री थीम',
+    toolbarDrawerGlobalInteractionTheme: 'सामग्री इंटरैक्शन थीम',
     toolbarDrawerGlobalLanguage: 'भाषा',
 
     toolbarDrawerTransformTitle: 'रूपांतरण',

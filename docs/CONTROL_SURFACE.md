@@ -745,12 +745,12 @@ The look is configuration (there is no `look` prop): `<PluridApplication configu
 - **At runtime**, the `configuration` topic with `{ global: { look: 'noir' } }` (or `setConfiguration`)
   re-emits the stylesheet. `useLook()` reads the look in force inside the application.
 - The legacy `theme` (the content's and the drawers' `Theme`) is derived from the look unless set; a
-  legacy theme NAME given to `look` maps to the nearest preset. A Theme OBJECT in `global.theme`
-  (`{ general, interaction }`, either part) is taken as given (until 2026-10-20 it was ignored); the
-  NAME `plurid` is the default value and leaves the theme to the look, so `themes.plurid` (the
-  object) is how a host asks for the plurid theme itself. The Global drawer's two theme pickers set
-  that legacy theme (plane content's and the drawers' inputs): the chrome follows the look, which
-  no drawer picks yet.
+  legacy theme NAME given to `look` maps to the nearest preset. `global.theme` is `look` (the
+  default: follow the look), a theme name, the name `plurid` included, or `{ general, interaction }`
+  of those or Theme OBJECTS, which are taken as given (until 2026-10-20 an object was ignored; until
+  2026-10-21 the name `plurid` was the default and followed the look). The Global drawer picks the
+  look first, then the two content themes (plane content's and the drawers' inputs), `look` the
+  first choice of each. A pick lasts for the session: it is not saved.
 - **The chrome mode**, `elements.chrome` (flat `chrome`): `full` (default) · `minimal` (the page's rail,
   the plane bars, the `?` and the drag feedback) · `none` (HEADLESS: a space with planes, links and
   bridges, no engine chrome at all — every key and every topic still work). Per surface: `elements.origin`

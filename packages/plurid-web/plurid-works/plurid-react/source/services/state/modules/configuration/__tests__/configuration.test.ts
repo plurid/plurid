@@ -57,8 +57,9 @@ describe('the live configuration', () => {
     });
 
     it('the two halves of the theme are set independently, and neither loses the other', () => {
+        // the default follows the look in both parts (2026-10-21)
         const general = after(actions.setConfigurationThemeGeneral('plurid-dark'));
-        expect(general.global.theme).toEqual({ general: 'plurid-dark', interaction: 'plurid' });
+        expect(general.global.theme).toEqual({ general: 'plurid-dark', interaction: 'look' });
 
         const both = reducer(general, actions.setConfigurationThemeInteraction('plurid-light'));
         expect(both.global.theme).toEqual({ general: 'plurid-dark', interaction: 'plurid-light' });
@@ -197,6 +198,19 @@ describe('the live configuration', () => {
         expect(drawers).not.toContain(TOOLBAR_DRAWERS.ALL);
         expect(drawers).not.toContain(TOOLBAR_DRAWERS.GLOBAL);
         expect(drawers).toContain(TOOLBAR_DRAWERS.SPACE);
+    });
+
+    it('a theme part picked over no theme keeps the other following the look; a look is set whole (2026-10-21)', () => {
+        const bare = after(
+            actions.setConfiguration({ ...defaultConfiguration, global: { ...defaultConfiguration.global, theme: undefined as any } }),
+            actions.setConfigurationThemeInteraction('dusk'),
+        );
+        expect(bare.global.theme).toEqual({ general: 'look', interaction: 'dusk' });
+        const custom = after(
+            actions.setConfiguration({ ...defaultConfiguration, global: { ...defaultConfiguration.global, look: { preset: 'ember', tokens: { radius: '4px' } } } }),
+            actions.setConfigurationLook('paper'),
+        );
+        expect(custom.global.look).toBe('paper');
     });
 
     it('a general theme picked keeps the interaction theme in force, a name as an object (2026-10-20)', () => {

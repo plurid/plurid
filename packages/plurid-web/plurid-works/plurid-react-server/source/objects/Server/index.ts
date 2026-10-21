@@ -183,7 +183,10 @@ class PluridServer implements PluridServerContext {
         this.templateDocument = documentFromTemplate(template);
         this.usePTTP = usePTTP ?? false;
         this.pttpHandler = pttpHandler;
-        this.pttpOrigins = pttpOrigins ?? [];
+        // compared whole: a single string (a JavaScript config) made `includes` a substring test, so a
+        // look-alike origin passed (2026-10-22)
+        this.pttpOrigins = (typeof pttpOrigins === 'string' ? [pttpOrigins] : Array.isArray(pttpOrigins) ? pttpOrigins : [])
+            .filter((origin): origin is string => typeof origin === 'string');
         this.elementqlEndpoint = elementqlEndpoint;
 
         this.serverApplication = express();

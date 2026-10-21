@@ -23,17 +23,24 @@
 
 
 // #region module
-/** A theme part as configured: a name (checked) or a Theme object, which is the host's own. */
+/**
+ * A theme part as configured: a Theme object (the host's own; the colours a partial one leaves out are
+ * the look's, 2026-10-22: they were undefined) or a theme name; `look`, none.
+ */
 const themeOf = (
     configured: unknown,
-): { theme: Theme | undefined; own: boolean } => {
+    fromLook: Theme,
+): Theme | undefined => {
     if (configured && typeof configured === 'object') {
-        return { theme: configured as Theme, own: true };
+        const own = configured as Partial<Theme>;
+        return Object.keys(fromLook).every((key) => key in own)
+            ? own as Theme
+            : { ...fromLook, ...own };
     }
     if (typeof configured === 'string' && Object.keys(THEME_NAMES).includes(configured)) {
-        return { theme: (themes as any)[configured], own: false };
+        return (themes as any)[configured];
     }
-    return { theme: undefined, own: false };
+    return undefined;
 };
 
 const resolveThemes = (
@@ -44,18 +51,16 @@ const resolveThemes = (
     const parts = configured && typeof configured === 'object'
         ? configured as { general?: unknown; interaction?: unknown }
         : { general: configured, interaction: configured };
-    const general = themeOf(parts.general);
-    const interaction = themeOf(parts.interaction);
 
-    // THE LOOK DECIDES: unless the host set a theme of its own, the legacy Theme that plane content
-    // and the drawers' inputs still read is derived from the look, so it matches. A Theme OBJECT is
-    // the host's own and is taken as given (2026-10-20: only names were read, so an object was the
-    // look's theme); the NAME `plurid` is the default value, so it leaves the theme to the look — the
-    // plurid theme's object (`themes.plurid`) is how a host asks for it.
+    // THE LOOK DECIDES: unless the host set a theme, the legacy Theme that plane content and the
+    // drawers' inputs still read is derived from the look, so it matches. `look` (the default) and
+    // any other value that names no theme follow it; a name sets that theme, the name `plurid` too
+    // (2026-10-21: `plurid` was the default value, so it followed the look); a Theme OBJECT is the
+    // host's own and is taken as given (2026-10-20: only names were read).
     const fromLook = themeFromLook(resolveLook(configuration.global.look));
-    const explicit = (part: { theme: Theme | undefined; own: boolean }) => (
-        part.theme && (part.own || part.theme !== themes.plurid) ? part.theme : fromLook
-    );
+    const general = themeOf(parts.general, fromLook);
+    const interaction = themeOf(parts.interaction, fromLook);
+    const explicit = (theme: Theme | undefined) => theme ?? fromLook;
     const stateThemes: PluridStateThemes = {
         general: explicit(general),
         interaction: explicit(interaction),

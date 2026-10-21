@@ -22,8 +22,9 @@ const chinese: Internationalization = {
     toolbarTransformTranslate: '平移',
 
     toolbarDrawerGlobalTitle: '全局',
-    toolbarDrawerGlobalGeneralTheme: '通用主题',
-    toolbarDrawerGlobalInteractionTheme: '交互主题',
+    toolbarDrawerGlobalLook: '外观',
+    toolbarDrawerGlobalGeneralTheme: '内容主题',
+    toolbarDrawerGlobalInteractionTheme: '内容交互主题',
     toolbarDrawerGlobalLanguage: '语言',
 
     toolbarDrawerTransformTitle: '变换',

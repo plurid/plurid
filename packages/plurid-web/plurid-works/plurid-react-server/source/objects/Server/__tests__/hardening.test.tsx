@@ -375,16 +375,21 @@ describe('stills and ignored paths', () => {
     it('serves a still from an absolute build directory, and for the route\'s query too', async () => {
         // An absolute `buildDirectory` was joined under the working directory (`<cwd>/abs/build/stills`),
         // and a still was looked up with the query: `/?utm=x` rendered live (2026-10-20).
+        const directory = stilled();
         const server = new PluridServer(configuration({
-            options: { ...configuration().options, buildDirectory: stilled() },
+            options: { ...configuration().options, buildDirectory: directory },
         }));
         await wait(50);
         const instance = await listen(server);
         try {
             expect((await request(instance, '/')).body).toContain('the still');
-            expect((await request(instance, '/?utm=x')).body).toContain('the still');
+            expect((await request(instance, '/?utm_source=x&gclid=y')).body).toContain('the still');
+            // a query the page may read renders live: every query was dropped, and `/?lang=fr` got the
+            // still rendered for `/` (2026-10-22)
+            expect((await request(instance, '/?lang=fr')).body).not.toContain('the still');
         } finally {
             await close(instance);
+            if (process.env.PLURID_PRESERVE_ARTIFACTS !== '1') fs.rmSync(directory, { recursive: true, force: true });
         }
     });
 
@@ -433,10 +438,48 @@ describe('PTTP', () => {
         }
     });
 
+    it('compares the allowed origins whole, a single string too (2026-10-22)', async () => {
+        // A string (a JavaScript config) made the check a substring test: `https://allowed.exampl` passed.
+        const server = new PluridServer(configuration({ usePTTP: true, pttpOrigins: 'https://allowed.example' as any }));
+        const instance = await listen(server);
+        try {
+            const near = await request(instance, '/pttp', { method: 'POST', body, headers: { ...json, origin: 'https://allowed.exampl' } });
+            expect(near.headers['access-control-allow-origin']).toBeUndefined();
+            const allowed = await request(instance, '/pttp', { method: 'POST', body, headers: { ...json, origin: 'https://allowed.example' } });
+            expect(allowed.headers['access-control-allow-origin']).toBe('https://allowed.example');
+        } finally {
+            await close(instance);
+        }
+    });
+
+    it('waits for a custom handler\'s answer that starts later, a file or a stream (2026-10-22)', async () => {
+        // `headersSent` is false until `sendFile` has read the file: the server answered 500 over it.
+        const server = new PluridServer(configuration({
+            usePTTP: true,
+            options: { ...configuration().options, pttpAnswerTimeout: 400 } as any,
+            pttpHandler: async (_path, _request, response) => {
+                setTimeout(() => response.json({ late: true }), 50);
+                return true;
+            },
+        }));
+        const instance = await listen(server);
+        try {
+            const answer = await request(instance, '/pttp', { method: 'POST', body, headers: json });
+            expect(answer.status).toBe(200);
+            expect(JSON.parse(answer.body)).toEqual({ late: true });
+        } finally {
+            await close(instance);
+        }
+    });
+
     it('answers a request a custom handler claimed without answering it', async () => {
         // The handler was given the path only, so one that resolved `true` left the request open.
         const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-        const claimed = new PluridServer(configuration({ usePTTP: true, pttpHandler: async () => true }));
+        const claimed = new PluridServer(configuration({
+            usePTTP: true,
+            options: { ...configuration().options, pttpAnswerTimeout: 200 } as any,
+            pttpHandler: async () => true,
+        }));
         const answering = new PluridServer(configuration({
             usePTTP: true,
             pttpHandler: async (_path, _request, response) => {

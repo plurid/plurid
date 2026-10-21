@@ -205,9 +205,9 @@ export async function createPluridServer(
 ): Promise<PluridServer> {
     validateConfig(config);
 
-    // Services: project each PluridServiceConfig to a PluridServerService with a
-    // base store (the preserve overrides it per request). Order is preserved so
-    // the client can wrap providers in the identical sequence.
+    // Services: project each PluridServiceConfig to a PluridServerService, its store factory
+    // called by the server for every request (a preserve's store still wins). Order is preserved
+    // so the client can wrap providers in the identical sequence.
     const services: PluridServerService[] = orderedServices([
         ...applicationService(config.application as any),
         ...(config.services || []),
@@ -216,6 +216,7 @@ export async function createPluridServer(
             name: service.name,
             Provider: service.Provider,
             properties: serviceProperties(service, 'server'),
+            ...(service.store ? { store: () => service.store!(undefined) } : {}),
         }),
     );
 

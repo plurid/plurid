@@ -154,7 +154,8 @@ class StillsGenerator {
         const stillsGeneratorOptions: StillsGeneratorOptions = {
             // a kit application's entry is `build/index.js` (which is refused, see `selfStartingKitEntry`)
             server: options?.server ?? (kitApplication() ? './build/index.js' : './build/server.js'),
-            build: options?.build ?? './build/',
+            // the server's own `buildDirectory` unless given: `./build/` whatever the server read (2026-10-22)
+            build: options?.build,
         };
 
         return stillsGeneratorOptions;
@@ -163,7 +164,6 @@ class StillsGenerator {
     async initialize() {
         // `resolve`, not `join`: an absolute path stays itself
         const serverPath = path.resolve(process.cwd(), this.options.server);
-        const buildPath = path.resolve(process.cwd(), this.options.build);
 
         // The generator reads the application routes from the BUILT server bundle — fail with an actionable
         // message (not a raw MODULE_NOT_FOUND) if it hasn't been built yet. Handle either default-exported
@@ -301,6 +301,10 @@ class StillsGenerator {
              * Generate a metadata.json file.
              */
             // where the server reads them: its own `stillsDirectory` (`StillsManager`), which was ignored
+            const buildPath = path.resolve(
+                process.cwd(),
+                this.options.build ?? serverInformation.options.buildDirectory ?? './build/',
+            );
             const stillsPath = path.resolve(buildPath, serverInformation.options.stillsDirectory || 'stills');
             await fs.mkdir(
                 stillsPath,

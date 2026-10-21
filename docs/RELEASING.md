@@ -110,7 +110,10 @@ allowlisted publisher scripts, their tests, and this guide (`PUBLISHER_FILES` in
 `scripts/release-plan.mjs`). Any change to build inputs, runtime source, manifests, lockfiles or other
 tests requires fresh verification. Artifact hashes and versions are always checked against the
 complete current package graph. The release tag still identifies the original tested source commit.
-This lets a publisher fix resume a partial release without repacking versions already uploaded.
+This lets a publisher fix resume a partial release without repacking versions already uploaded. The
+build and its gates live in `scripts/release-pack.mjs`, which is not on that list: a change to how
+artifacts are built or verified verifies them anew (2026-10-22: they lived in `release.mjs`, a publisher
+file, so a gate fix resumed artifacts verified the old way).
 
 All tarballs are uploaded consecutively in dependency order to `latest`, with `--ignore-scripts` so
 `prepublishOnly` cannot rebuild them. There is **no availability wait between uploads**. On the first

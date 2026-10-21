@@ -1,9 +1,6 @@
 // #region imports
     // #region libraries
-    import React, {
-        useState,
-        useEffect,
-    } from 'react';
+    import React from 'react';
 
     import {
         AnyAction,
@@ -13,6 +10,8 @@
 
 
     import themes, {
+        LOOK_NAMES,
+        LookName,
         Theme,
     } from '@plurid/plurid-themes';
 
@@ -43,6 +42,13 @@
     import selectors from '~services/state/selectors';
     import actions from '~services/state/actions';
     import {
+        pickLook,
+        pickTheme,
+    } from '~services/state/thunks/look';
+    import {
+        lookOf,
+    } from '~services/look';
+    import {
         DispatchAction,
     } from '~data/interfaces';
     // #endregion external
@@ -57,6 +63,9 @@ const {
     },
 } = universal;
 
+/** The theme choices: `look` (follow the look), then every theme by name. */
+const THEME_CHOICES = ['look', ...Object.keys(themes)];
+
 export interface PluridMenuMoreGlobalOwnProperties {
 }
 
@@ -67,11 +76,8 @@ export interface PluridMenuMoreGlobalStateProperties {
 }
 
 export interface PluridMenuMoreGlobalDispatchProperties {
-    dispatchSetGeneralTheme: DispatchAction<typeof actions.themes.setGeneralTheme>;
-    dispatchSetInteractionTheme: DispatchAction<typeof actions.themes.setInteractionTheme>;
-
-    dispatchSetConfigurationThemeGeneralAction: DispatchAction<typeof actions.configuration.setConfigurationThemeGeneral>;
-    dispatchSetConfigurationThemeInteractionAction: DispatchAction<typeof actions.configuration.setConfigurationThemeInteraction>;
+    dispatchPickLook: (look: LookName) => void;
+    dispatchPickTheme: (part: 'general' | 'interaction', name: string) => void;
     dispatchSetConfigurationLanguage: DispatchAction<typeof actions.configuration.setConfigurationLanguage>;
 }
 
@@ -80,6 +86,11 @@ export type PluridMenuMoreGlobalProperties = PluridMenuMoreGlobalOwnProperties
     & PluridMenuMoreGlobalDispatchProperties;
 
 
+/**
+ * THE LOOK, THEN THE THEMES PLANE CONTENT READS (2026-10-21). The drawer offered only the two legacy
+ * themes and the language, so the look the chrome and the planes are drawn in could not be changed
+ * from the space. A pick is the reader's, for this session: nothing here is saved.
+ */
 const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
     properties,
 ) => {
@@ -91,72 +102,54 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
         configuration,
 
         /** dispatch */
-        dispatchSetGeneralTheme,
-        dispatchSetInteractionTheme,
-        dispatchSetConfigurationThemeGeneralAction,
-        dispatchSetConfigurationThemeInteractionAction,
+        dispatchPickLook,
+        dispatchPickTheme,
         dispatchSetConfigurationLanguage,
     } = properties;
 
     const selectedTheme = configuration.global.theme;
-
-    const [generalThemeName, setGeneralThemeName] = useState(
-        typeof selectedTheme === 'object'
-            ? selectedTheme.general
-            : selectedTheme
-    );
-    const [interactionThemeName, setInteractionThemeName] = useState(
-        typeof selectedTheme === 'object'
-            ? selectedTheme.interaction
-            : selectedTheme
+    // a Theme object is the host's own: no name to show
+    const themeName = (part: 'general' | 'interaction') => {
+        const value = typeof selectedTheme === 'object' ? selectedTheme[part] : selectedTheme;
+        return typeof value === 'string' ? value : '';
+    };
+    const chosen = (selection: unknown) => (
+        typeof selection === 'string' ? selection : (selection as { id: string }).id
     );
 
-    const setGeneralTheme = (selectedTheme: any) => {
-        dispatchSetGeneralTheme((themes as any)[selectedTheme]);
-        dispatchSetConfigurationThemeGeneralAction(selectedTheme);
-    }
-
-    const setInteractionTheme = (selectedTheme: any) => {
-        dispatchSetInteractionTheme((themes as any)[selectedTheme]);
-        dispatchSetConfigurationThemeInteractionAction(selectedTheme);
-    }
-
-    const setLanguage = (
-        selectedLanguage: any,
-    ) => {
-        dispatchSetConfigurationLanguage(selectedLanguage);
-    }
-
-    useEffect(() => {
-        if (typeof selectedTheme === 'object') {
-            setGeneralThemeName(selectedTheme.general);
-            setInteractionThemeName(selectedTheme.interaction);
-        } else {
-            setGeneralThemeName(selectedTheme);
-            setInteractionThemeName(selectedTheme);
-        }
-    }, [
-        selectedTheme,
-    ]);
+    const dropdown = {
+        theme: interactionTheme,
+        heightItems: 3,
+        width: 90,
+        style: {
+            fontSize: '0.8rem',
+        },
+    };
 
 
     /** render */
     return (
         <>
             <StyledPluridMoreMenuItem>
+                {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalLook)}
+
+                <PluridDropdown
+                    {...dropdown}
+                    selectables={LOOK_NAMES}
+                    selected={lookOf(configuration).name}
+                    atSelect={(selection) => dispatchPickLook(chosen(selection) as LookName)}
+                />
+            </StyledPluridMoreMenuItem>
+
+            <StyledPluridMoreMenuItem>
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalGeneralTheme)}
 
                 <PluridDropdown
-                    selectables={Object.keys(themes)}
-                    selected={typeof generalThemeName === 'string' ? generalThemeName : ''}
-                    atSelect={(selection) => setGeneralTheme(selection)}
-                    theme={interactionTheme}
+                    {...dropdown}
+                    selectables={THEME_CHOICES}
+                    selected={themeName('general')}
+                    atSelect={(selection) => dispatchPickTheme('general', chosen(selection))}
                     filterable={true}
-                    heightItems={3}
-                    width={90}
-                    style={{
-                        fontSize: '0.8rem',
-                    }}
                 />
             </StyledPluridMoreMenuItem>
 
@@ -164,16 +157,11 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalInteractionTheme)}
 
                 <PluridDropdown
-                    selectables={Object.keys(themes)}
-                    selected={typeof interactionThemeName === 'string' ? interactionThemeName : ''}
-                    atSelect={(selection) => setInteractionTheme(selection)}
-                    theme={interactionTheme}
-                    heightItems={3}
+                    {...dropdown}
+                    selectables={THEME_CHOICES}
+                    selected={themeName('interaction')}
+                    atSelect={(selection) => dispatchPickTheme('interaction', chosen(selection))}
                     filterable={true}
-                    width={90}
-                    style={{
-                        fontSize: '0.8rem',
-                    }}
                 />
             </StyledPluridMoreMenuItem>
 
@@ -183,15 +171,10 @@ const PluridMenuMoreGlobal: React.FC<PluridMenuMoreGlobalProperties> = (
                 {internatiolate(stateLanguage, internationalization.fields.toolbarDrawerGlobalLanguage)}
 
                 <PluridDropdown
+                    {...dropdown}
                     selectables={internationalization.languages}
                     selected={stateLanguage}
-                    atSelect={(selection) => setLanguage(selection)}
-                    theme={interactionTheme}
-                    heightItems={3}
-                    width={90}
-                    style={{
-                        fontSize: '0.8rem',
-                    }}
+                    atSelect={(selection) => dispatchSetConfigurationLanguage(chosen(selection) as InternationalizationLanguageType)}
                 />
             </StyledPluridMoreMenuItem>
         </>
@@ -211,23 +194,12 @@ const mapStateToProps = (
 const mapDispatchToProps = (
     dispatch: ThunkDispatch<{}, {}, AnyAction>
 ): PluridMenuMoreGlobalDispatchProperties => ({
-    dispatchSetConfigurationThemeGeneralAction: (theme: string) => dispatch(
-        actions.configuration.setConfigurationThemeGeneral(theme)
-    ),
-    dispatchSetConfigurationThemeInteractionAction: (theme: string) => dispatch(
-        actions.configuration.setConfigurationThemeInteraction(theme)
-    ),
+    dispatchPickLook: (look) => dispatch(pickLook(look) as any),
+    dispatchPickTheme: (part, name) => dispatch(pickTheme(part, name) as any),
     dispatchSetConfigurationLanguage: (
         language,
     ) => dispatch(
         actions.configuration.setConfigurationLanguage(language)
-    ),
-
-    dispatchSetGeneralTheme: (theme: Theme) => dispatch(
-        actions.themes.setGeneralTheme(theme)
-    ),
-    dispatchSetInteractionTheme: (theme: Theme) => dispatch(
-        actions.themes.setInteractionTheme(theme)
     ),
 });
 

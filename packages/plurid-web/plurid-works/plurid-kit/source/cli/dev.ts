@@ -107,8 +107,6 @@ export async function dev(
         process.stdout.write(`[plurid dev] replaced the earlier dev on this root (pid ${claim.replaced})\n`);
     }
     const release = () => releasePidfile(pidfile, process.pid);
-    // the build this writes is a development one: `plurid start` refuses to run it as production
-    writeBuildManifest(paths, { mode: 'development' });
     process.once('exit', release);
     // `exit` does not run for a death by signal: until a handler of its own takes over (the
     // supervisor's, the watch's shutdown), a signal releases the claim and ends this process as it
@@ -131,6 +129,11 @@ export async function dev(
         process.stderr.write(`[plurid dev] port ${port} is already in use — stop the other server or pass --port <n>\n`);
         process.exit(1);
     }
+
+    // the build this writes is a development one: `plurid start` refuses to run it as production. Only
+    // once this dev will build: refused on a busy port, it had already marked a production build its own
+    // (2026-10-22).
+    writeBuildManifest(paths, { mode: 'development' });
 
     const serverEnvironment = {
         ...process.env,

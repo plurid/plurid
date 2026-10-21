@@ -105,6 +105,8 @@ export const validateConfig = (
     );
     optionalArrayOf('middleware', (middleware) => typeof middleware === 'function', 'middleware functions');
     optionalArrayOf('styles', (style) => typeof style === 'string', 'stylesheet hrefs');
+    // a single string made the server's check a substring test, a look-alike origin allowed (2026-10-22)
+    optionalArrayOf('pttpOrigins', (origin) => typeof origin === 'string', 'origins (\'https://space.example.com\')');
 
     for (const field of ['notFound', 'errorPage'] as const) {
         const value = config[field];

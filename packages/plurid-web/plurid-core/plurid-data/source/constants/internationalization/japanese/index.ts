@@ -22,8 +22,9 @@ const japanese: Internationalization = {
     toolbarTransformTranslate: '平行移動',
 
     toolbarDrawerGlobalTitle: '全般',
-    toolbarDrawerGlobalGeneralTheme: '全般テーマ',
-    toolbarDrawerGlobalInteractionTheme: 'インタラクションテーマ',
+    toolbarDrawerGlobalLook: '外観',
+    toolbarDrawerGlobalGeneralTheme: 'コンテンツテーマ',
+    toolbarDrawerGlobalInteractionTheme: 'コンテンツのインタラクションテーマ',
     toolbarDrawerGlobalLanguage: '言語',
 
     toolbarDrawerTransformTitle: '変換',

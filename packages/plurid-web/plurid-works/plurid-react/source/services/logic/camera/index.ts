@@ -406,6 +406,7 @@ export const commitCameraTarget = (
             duration,
             easing,
             onSettle,
+            ...(landing ? { docking: landing } : {}),
         });
         // after `tweenTo` (it stops a running tween first, which resets the motion and the field),
         // and only for a tween: a jump is docked, or not, by its camera alone

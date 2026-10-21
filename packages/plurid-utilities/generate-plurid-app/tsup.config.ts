@@ -23,7 +23,7 @@ export default defineConfig({
     shims: true,
     async onSuccess() {
         await cp('./templates', './distribution/templates', { recursive: true });
-        // the versions the generated manifest asks for: the workspace's siblings (the kit, the engine, the server)
+        // the versions the generated manifest asks for: the workspace's siblings (the kit, plurid-react, the server) and its own
         const version = async (relative: string) => JSON.parse(await readFile(resolve(relative), 'utf8')).version;
         await writeFile('./distribution/versions.json', JSON.stringify({
             kit: await version('../../plurid-web/plurid-works/plurid-kit/package.json'),
