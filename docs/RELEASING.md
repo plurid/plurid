@@ -132,6 +132,12 @@ build and its gates live in `scripts/release-pack.mjs`, which is not on that lis
 artifacts are built or verified verifies them anew (2026-10-22: they lived in `release.mjs`, a publisher
 file, so a gate fix resumed artifacts verified the old way).
 
+Before `pnpm pack`, the release tree's manifests take concrete versions for their `workspace:`
+specifiers, in their own order. pnpm writes the specifiers it resolves in the order its lookups finish,
+so a package with no change could pack to other bytes than the version already published, which the
+publisher's registry check refuses (`plurid-ui-components-react@0.0.0-37` did, 2026-10-22). The gates
+run on the manifests as committed.
+
 All tarballs are uploaded consecutively in dependency order to `latest`, with `--ignore-scripts` so
 `prepublishOnly` cannot rebuild them. There is **no availability wait between uploads**. On the first
 npm browser approval, select **Remember me for 5 minutes** when offered. npm can then reuse that

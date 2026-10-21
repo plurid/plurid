@@ -13,6 +13,31 @@ import { createArtifactDirectory, listWorkspace, packedJSON, releaseOrder, remem
 const hash = (bytes, algorithm, encoding) => createHash(algorithm).update(bytes).digest(encoding);
 const writeJSON = (file, value) => writeFileSync(file, JSON.stringify(value, null, 4) + '\n');
 
+/**
+ * THE PACKED MANIFEST IS DETERMINISTIC (2026-10-22). pnpm writes the `workspace:` specifiers it resolves
+ * into the packed manifest in the order their lookups finish, so a package with no change packed to other
+ * bytes than its version already published (`plurid-ui-components-react@0.0.0-37`, two dependencies
+ * swapped), which the publisher's registry check refuses. The release tree's manifests take the concrete
+ * specifiers before packing, in their own order: `workspace:*` the version, `workspace:^` / `workspace:~`
+ * the version under that operator, `workspace:<range>` the range.
+ */
+export const concreteWorkspaceSpecifiers = (manifest, versions) => {
+    let changed = false;
+    const next = { ...manifest };
+    for (const field of ['dependencies', 'devDependencies', 'optionalDependencies', 'peerDependencies']) {
+        if (!manifest[field]) continue;
+        next[field] = Object.fromEntries(Object.entries(manifest[field]).map(([name, specifier]) => {
+            if (typeof specifier !== 'string' || !specifier.startsWith('workspace:')) return [name, specifier];
+            const version = versions.get(name);
+            if (!version) throw new Error(`${manifest.name}: ${name} (${specifier}) names no package of the workspace`);
+            const range = specifier.slice('workspace:'.length);
+            changed = true;
+            return [name, range === '*' ? version : range === '^' || range === '~' ? range + version : range];
+        }));
+    }
+    return changed ? next : manifest;
+};
+
 /** Verified tarballs of `sourceCommit` in a new artifact directory (or `directoryArg`), remembered for it. */
 export const packRelease = ({ root, sourceCommit, directoryArg, say }) => {
     // PLURID_E2E_OWN_SERVER: the browser gates start the harness from the release tree; a development
@@ -53,7 +78,12 @@ export const packRelease = ({ root, sourceCommit, directoryArg, say }) => {
     const tarballs = join(directory, 'tarballs');
     mkdirSync(tarballs);
     const packages = [];
-    for (const project of releaseOrder(listWorkspace(source))) {
+    const workspace = listWorkspace(source);
+    const versions = new Map(workspace.map((project) => [project.data.name, project.data.version]));
+    for (const project of releaseOrder(workspace)) {
+        // after every gate, which ran on the manifests as committed: only what is packed is concrete
+        const concrete = concreteWorkspaceSpecifiers(project.data, versions);
+        if (concrete !== project.data) writeJSON(project.manifest, concrete);
         const output = run('pnpm', ['pack', '--config.ignore-scripts=true', '--pack-destination', tarballs], project.directory,
             { encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit'] }).trim();
         const file = basename(output.split('\n').pop());

@@ -10,6 +10,7 @@ import { delimiter, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { concreteWorkspaceSpecifiers } from './release-pack.mjs';
 import { affectsPackage, nextVersion, packedJSON, planRelease, releaseOrder, REQUIRED_GATES, verifyArtifacts, parseReleaseArguments, createArtifactDirectory, rememberedArtifacts, rememberArtifacts, PUBLISHER_FILES } from './release-plan.mjs';
 
 /** A test's temporary directory: removed after the file's tests unless PLURID_PRESERVE_ARTIFACTS=1, the repository's convention. */
@@ -231,6 +232,25 @@ process.exit(55);
         calls: () => readFileSync(join(root, 'calls.jsonl'), 'utf8').trim().split('\n').map((line) => JSON.parse(line)),
     };
 };
+
+test('the release tree packs concrete workspace specifiers, in their own order (2026-10-22)', () => {
+    // pnpm writes the workspace specifiers it resolves in the order their lookups finish: a package with no
+    // change packed to other bytes than the version already published, which the registry check refuses.
+    const versions = new Map([['@plurid/a', '0.0.0-3'], ['@plurid/b', '0.0.0-7'], ['@plurid/c', '0.0.0-1']]);
+    const manifest = {
+        name: '@plurid/x',
+        dependencies: { 'left-pad': '^1.0.0', '@plurid/b': 'workspace:^', '@plurid/a': 'workspace:*', '@plurid/c': 'workspace:~' },
+        devDependencies: { '@plurid/a': 'workspace:^' },
+    };
+    const concrete = concreteWorkspaceSpecifiers(manifest, versions);
+    assert.deepEqual(Object.entries(concrete.dependencies), [
+        ['left-pad', '^1.0.0'], ['@plurid/b', '^0.0.0-7'], ['@plurid/a', '0.0.0-3'], ['@plurid/c', '~0.0.0-1'],
+    ]);
+    assert.deepEqual(concrete.devDependencies, { '@plurid/a': '^0.0.0-3' });
+    const plain = { name: '@plurid/y', dependencies: { 'left-pad': '^1.0.0' } };
+    assert.equal(concreteWorkspaceSpecifiers(plain, versions), plain);
+    assert.throws(() => concreteWorkspaceSpecifiers({ name: '@plurid/z', dependencies: { '@plurid/q': 'workspace:^' } }, versions), /@plurid\/q/);
+});
 
 test('a publisher-only file builds and verifies nothing (2026-10-22)', () => {
     // `release.mjs` ran the gates and `pnpm pack`: a fix to how they ran resumed artifacts verified the old way.
