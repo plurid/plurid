@@ -25,7 +25,7 @@ client/server bootstraps over
 boilerplate (~145 lines), the provider-nesting `Client.tsx` (~85 lines), and the
 webpack/rollup `scripts/workings/` build machinery.
 
-Status: implemented (config contract, CLI, bootstraps) and published as a pre-release (`0.0.0-7`, published 2026-10-18); adoption is in progress. Plan of record:
+Status: implemented (config contract, CLI, bootstraps) and published as a pre-release (`0.0.0-8`, which needs `@plurid/plurid-react-server` `0.0.0-21` or later); adoption is in progress. Plan of record:
 [`docs/FRAMEWORK_PLAN.md`](https://github.com/plurid/plurid/blob/master/docs/FRAMEWORK_PLAN.md).
 
 

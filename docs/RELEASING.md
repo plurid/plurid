@@ -5,6 +5,23 @@ alone prints a read-only plan. Publishing belongs to the maintainer and always n
 `--publish` command. That command builds and verifies automatically when this commit has no verified
 artifacts yet. The script manages output directories and never commits or pushes source.
 
+## Versions prepared 2026-10-22
+
+Seven packages changed since the October 18 release; the other six keep their October 18 versions.
+
+| Package (`@plurid/`) | Previous | Next |
+| --- | --- | --- |
+| plurid-data | 0.0.0-27 | 0.0.0-28 |
+| plurid-pubsub | 0.0.0-13 | 0.0.0-14 |
+| plurid-engine | 0.0.0-24 | 0.0.0-25 |
+| plurid-react | 0.0.0-41 | 0.0.0-42 |
+| plurid-react-server | 0.0.0-20 | 0.0.0-21 |
+| plurid-kit | 0.0.0-7 | 0.0.0-8 |
+| generate-plurid-app | 0.0.0-17 | 0.0.0-18 |
+
+The kit needs this react-server (`0.0.0-21` or later: it hands each service's `store` factory to the
+server, which calls it per request). See [migration](./MIGRATION.md) for every change.
+
 ## October 18 versions
 
 All thirteen are published on npm's `latest` tag (checked 2026-10-19).

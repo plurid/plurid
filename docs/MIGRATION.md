@@ -1,6 +1,8 @@
-# Changes since the October 18 release (unreleased)
+# Migrating to the release prepared 2026-10-22
 
-These ship with the next coordinated release.
+`@plurid/plurid-data` `0.0.0-28`, `plurid-pubsub` `0.0.0-14`, `plurid-engine` `0.0.0-25`,
+`plurid-react` `0.0.0-42`, `plurid-react-server` `0.0.0-21`, `plurid-kit` `0.0.0-8` and
+`generate-plurid-app` `0.0.0-18`; the other six packages keep their October 18 versions.
 
 - **A pointer drag is a gesture.** `state.space.motion` — and with it the `space.changed` kind
   `motion` and the view's `data-plurid-motion` — reads `gesture` from a navigation drag's or a pinch's

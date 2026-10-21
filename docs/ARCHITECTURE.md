@@ -36,7 +36,7 @@ What runs where:
 
 - `@plurid/plurid-react` - the browser adapter (also renders under SSR via `react-dom/server`).
 - `@plurid/plurid-react-server` - the Express 5 SSR server: route matching, per-request data (preserves), HTML template, static stills.
-- `@plurid/plurid-kit` - the framework layer, published as a pre-release (`0.0.0-7`, published 2026-10-18): `plurid.config.ts` + the `plurid` CLI (`dev/build/start/info`) + `createPluridServer`/`createPluridClient` bootstraps.
+- `@plurid/plurid-kit` - the framework layer, published as a pre-release (`0.0.0-8`, prepared 2026-10-22): `plurid.config.ts` + the `plurid` CLI (`dev/build/start/info`) + `createPluridServer`/`createPluridClient` bootstraps.
 
 Dependency layers (imports point downward only):
 
@@ -61,23 +61,23 @@ L0  plurid-themes        plurid-functions     plurid-functions-react
 
 ## 2. Package layers
 
-The workspace (`pnpm-workspace.yaml`) globs `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, and `fixtures/render-test`. Layer rule: a package imports only from layers below it (verified against each `package.json`'s `@plurid/*` dependencies, 2026-07-13). Versions are the WORKSPACE's, refreshed 2026-10-21: the October 18 release, as published.
+The workspace (`pnpm-workspace.yaml`) globs `packages/plurid-web/plurid-core/*`, `packages/plurid-web/plurid-works/*`, `packages/plurid-utilities/*`, and `fixtures/render-test`. Layer rule: a package imports only from layers below it (verified against each `package.json`'s `@plurid/*` dependencies, 2026-07-13). Versions are the WORKSPACE's, refreshed 2026-10-22: the release prepared that day moves data, pubsub, engine, react, react-server, the kit and the generator; the other six are the October 18 release's.
 
 | Layer | Package | Version | Directory | Role |
 | --- | --- | --- | --- | --- |
 | L0 | `@plurid/plurid-themes` | 0.0.0-5 | plurid-utilities/plurid-themes | theme objects (no @plurid deps) |
 | L0 | `@plurid/plurid-functions` | 0.0.0-33 | plurid-utilities/plurid-functions | pure utilities (`objects.merge`/`clone`, mathematics, ...) |
 | L0 | `@plurid/plurid-functions-react` | 0.0.0-8 | plurid-utilities/plurid-functions-react | React utility hooks (`useDebouncedCallback`, ...) |
-| L1 | `@plurid/plurid-data` | 0.0.0-27 | plurid-core/plurid-data | ALL shared types, constants, enums, defaults, pubsub topics |
+| L1 | `@plurid/plurid-data` | 0.0.0-28 | plurid-core/plurid-data | ALL shared types, constants, enums, defaults, pubsub topics |
 | L1 | `@plurid/plurid-icons-react` | 0.0.0-13 | plurid-utilities/plurid-icons-react | icon set |
 | L1 | `@plurid/plurid-ui-state-react` | 0.0.0-16 | plurid-utilities/plurid-ui-state-react | host-app UI state slices + `composePluridUIState` |
-| L2 | `@plurid/plurid-pubsub` | 0.0.0-13 | plurid-core/plurid-pubsub | the event bus class |
-| L2 | `@plurid/plurid-engine` | 0.0.0-24 | plurid-core/plurid-engine | plane tree, layout, routing, matrix math, state compute/persist (framework-agnostic) |
+| L2 | `@plurid/plurid-pubsub` | 0.0.0-14 | plurid-core/plurid-pubsub | the event bus class |
+| L2 | `@plurid/plurid-engine` | 0.0.0-25 | plurid-core/plurid-engine | plane tree, layout, routing, matrix math, state compute/persist (framework-agnostic) |
 | L2 | `@plurid/plurid-ui-components-react` | 0.0.0-37 | plurid-utilities/plurid-ui-components-react | UI component library (48 styled files on the shared filtered `styled` factory) |
-| L3 | `@plurid/plurid-react` | 0.0.0-41 | plurid-works/plurid-react | the render adapter: `PluridApplication`, routers, links, hooks |
-| L4 | `@plurid/plurid-react-server` | 0.0.0-20 | plurid-works/plurid-react-server | SSR server (Express 5), stills, template |
-| L5 | `@plurid/plurid-kit` | 0.0.0-7 | plurid-works/plurid-kit | framework pre-release: config contract + CLI + bootstraps |
-| L5 | `@plurid/generate-plurid-app` | 0.0.0-17 | plurid-utilities/generate-plurid-app | scaffolding CLI; emits the plurid-kit shape (TypeScript, one template, the workspace's versions stamped at build; 2026-09-10) — `pnpm smoke.pack` generates, installs from the tarballs, builds and serves it |
+| L3 | `@plurid/plurid-react` | 0.0.0-42 | plurid-works/plurid-react | the render adapter: `PluridApplication`, routers, links, hooks |
+| L4 | `@plurid/plurid-react-server` | 0.0.0-21 | plurid-works/plurid-react-server | SSR server (Express 5), stills, template |
+| L5 | `@plurid/plurid-kit` | 0.0.0-8 | plurid-works/plurid-kit | framework pre-release: config contract + CLI + bootstraps |
+| L5 | `@plurid/generate-plurid-app` | 0.0.0-18 | plurid-utilities/generate-plurid-app | scaffolding CLI; emits the plurid-kit shape (TypeScript, one template, the workspace's versions stamped at build; 2026-09-10) — `pnpm smoke.pack` generates, installs from the tarballs, builds and serves it |
 | L5 | `fixtures/render-test` | private | fixtures/render-test | the CAD verification harness (Vite, port 5273) |
 
 Where things live, by rule:
@@ -558,7 +558,7 @@ Escape hatches and the rest of the object:
 
 ## 10. plurid-kit, the framework layer
 
-`plurid-works/plurid-kit` - the Next.js-shaped layer over plurid-react-server: one `plurid.config.ts` replaces each app's hand-written `server/index.ts`, `client/index.tsx`, and `scripts/` directory. STATUS: published (0.0.0-7, 2026-10-18), built, jest-tested, documented, and consumed by 29 applications (counted 2026-07-13); the adoption plan of record is [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md).
+`plurid-works/plurid-kit` - the Next.js-shaped layer over plurid-react-server: one `plurid.config.ts` replaces each app's hand-written `server/index.ts`, `client/index.tsx`, and `scripts/` directory. STATUS: published (0.0.0-8, prepared 2026-10-22), built, jest-tested, documented, and consumed by 29 applications (counted 2026-07-13); the adoption plan of record is [`FRAMEWORK_PLAN.md`](./FRAMEWORK_PLAN.md).
 
 THE CONTRACT (`source/index.ts`): `defineConfig(config: PluridConfig)` - an identity function for editor types. `PluridConfig` groups: identity (`serverName`, `hostname`, `root`); the product surface (`routes`, `planes`, `shell`, `exterior`, `routerProperties`); the SHARED service stack (`services: PluridServiceConfig[]` - `{ name, Provider, properties, client, store, context, order }`, `client()` building the provider's `client` in the browser (it was never read until 2026-10-20), used identically on both targets so provider order can never drift; lower `order` = inner); server-only data loading (`preserves`, `load` sugar); the document (`head: PluridDocument` as the lowest layer, `favicon`, `manifest`, `styles`, the server-only `document` hook, `render` mode); error pages; static + build (`publicDir`, `buildDir`, `usePTTP` (default on with an `elementqlEndpoint`), `pttpOrigins`, `elementqlEndpoint`, `bundle: PluridBundleConfig`); Express extension (`middleware`, `handlers`); and the raw passthrough escape hatches (`options`, `template`).
 

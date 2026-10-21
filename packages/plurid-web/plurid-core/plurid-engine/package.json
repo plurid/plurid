@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-engine",
-    "version": "0.0.0-24",
+    "version": "0.0.0-25",
     "sideEffects": false,
     "description": "Plurid Engine and Utility Functions",
     "keywords": [
