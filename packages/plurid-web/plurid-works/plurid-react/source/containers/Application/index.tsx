@@ -89,6 +89,11 @@
     import {
         PluridApplicationHandle,
     } from './handle';
+    import {
+        configurationChanges,
+        onlyCallbacks,
+        sameContent,
+    } from './changes';
     import StateContext from '~services/state/context';
 
     import {
@@ -406,6 +411,27 @@ class PluridApplicationShell extends Component<
         if (!changed) {
             return;
         }
+        // A `view` or `configuration` rebuilt with the same content changes nothing; a rebuilt callback
+        // goes into the store alone (2026-10-21).
+        const changes = configurationChanges(this.appliedConfiguration, this.props.configuration);
+        const viewChanged = !sameContent(this.props.view, previousProperties.view);
+        const othersChanged = inputs.some((key) => key !== 'view' && key !== 'configuration'
+            && this.props[key] !== previousProperties[key]);
+        if (!othersChanged && !viewChanged && (!changes || onlyCallbacks(changes))) {
+            this.appliedConfiguration = this.props.configuration;
+            if (changes) {
+                this.store.dispatch({
+                    type: 'SET_STATE',
+                    payload: {
+                        configuration: generalEngine.configuration.merge(
+                            changes,
+                            this.store.getState().configuration,
+                        ),
+                    },
+                });
+            }
+            return;
+        }
         validateApplicationInput(this.props, this.props.configuration?.development?.warnings !== false);
 
         // A `planes` array rebuilt on every host render (same routes, new identity) recomputes the
@@ -444,7 +470,10 @@ class PluridApplicationShell extends Component<
 
         this.store.dispatch({
             type: 'SET_STATE',
-            payload: updatedStore,
+            // the live view keeps the planes the reader added, unless the host's view changed
+            payload: viewChanged
+                ? updatedStore
+                : { ...updatedStore, space: { ...updatedStore.space, view: this.store.getState().space.view } },
         });
 
         // A changed `space.perspective` re-derives the camera matrix.
@@ -782,9 +811,11 @@ class PluridApplicationShell extends Component<
         //     contextState,
         // });
 
-        // A changed `configuration` prop overrides the store's (the host's authority); an unchanged
-        // one leaves runtime configuration changes (pubsub `configuration` topic) in place.
-        const configurationAuthoritative = !!this.store && !options.boot && configuration !== this.appliedConfiguration;
+        // What the `configuration` prop changed overrides the store's (the host's authority); the rest
+        // of it leaves runtime configuration changes (pubsub `configuration` topic) in place.
+        const changes = this.store && !options.boot
+            ? configurationChanges(this.appliedConfiguration, configuration)
+            : undefined;
         this.appliedConfiguration = configuration;
 
         const store = state.compute(
@@ -797,7 +828,7 @@ class PluridApplicationShell extends Component<
             contextState,
             hostname,
             {
-                configurationAuthoritative,
+                configurationChanges: changes,
                 // THE ADDRESS BAR IS THE PAGE at store time: a root deep link boots docked from the first
                 // frame (the binding read against the MERGED configuration, the page defaults applied)
                 dockPath: (merged) => {

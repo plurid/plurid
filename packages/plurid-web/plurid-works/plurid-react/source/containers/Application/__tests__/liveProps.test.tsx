@@ -63,3 +63,71 @@ describe('props read after the mount', () => {
         await rendered.unmount();
     });
 });
+
+
+/**
+ * A REBUILT PROP IS NOT A CHANGE (2026-10-21). A new `configuration` object laid the whole prop over
+ * the live configuration, and every recompute put the prop's `view` back: a host that rebuilt its
+ * configuration on a resize lost the planes the reader added and the layout set at runtime.
+ */
+describe('a configuration or view prop rebuilt with the same content', () => {
+    const planes = [{ route: '/a', component: Page }, { route: '/b', component: Page }];
+    const settings = (width: number) => ({
+        space: { layout: { type: 'COLUMNS', columns: 2 }, navigation: { motion: { duration: 0 } } },
+        elements: { plane: { width } },
+    });
+    const roots = (api: any) => api.getSnapshot().space.tree
+        .map((node: any) => node.route.replace(/^[a-z]+:\/\/[^/]*/, ''));
+
+    it('keeps an added plane and a layout set at runtime when only the plane width changes', async () => {
+        const rendered = await renderPlurid({ planes, view: ['/a'], configuration: settings(800) as any });
+        await flush();
+        const { api } = rendered;
+        await act(async () => {
+            api.pubsub.publish({ topic: 'view.addPlane', data: { planeID: '/b' } } as any);
+        });
+        await act(async () => {
+            api.pubsub.publish({
+                topic: 'configuration',
+                data: { space: { layout: { type: 'COLUMNS', columns: 3 } } },
+            } as any);
+        });
+        await flush();
+        expect(roots(api)).toEqual(['/a', '/b']);
+
+        await rendered.rerender({ view: ['/a'], configuration: settings(900) as any });
+        await flush();
+        expect(roots(api)).toEqual(['/a', '/b']);
+        expect(api.getSnapshot().configuration.space.layout).toMatchObject({ columns: 3 });
+        expect(api.getSnapshot().configuration.elements.plane.width).toBe(900);
+        await rendered.unmount();
+    });
+
+    it('takes a rebuilt callback into the store', async () => {
+        const first = jest.fn();
+        const second = jest.fn();
+        const rendered = await renderPlurid({
+            planes,
+            view: ['/a'],
+            configuration: { space: { shortcuts: { onUnhandledKey: first } } } as any,
+        });
+        await rendered.rerender({ configuration: { space: { shortcuts: { onUnhandledKey: second } } } as any });
+        await flush();
+        expect(rendered.api.getSnapshot().configuration.space.shortcuts?.onUnhandledKey).toBe(second);
+        await rendered.unmount();
+    });
+
+    it('still replaces the view with a view prop whose content changed', async () => {
+        const rendered = await renderPlurid({ planes, view: ['/a'], configuration: settings(800) as any });
+        await flush();
+        const { api } = rendered;
+        await act(async () => {
+            api.pubsub.publish({ topic: 'view.addPlane', data: { planeID: '/b' } } as any);
+        });
+        await flush();
+        await rendered.rerender({ view: ['/b'] });
+        await flush();
+        expect(roots(api)).toEqual(['/b']);
+        await rendered.unmount();
+    });
+});

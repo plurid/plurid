@@ -35,6 +35,12 @@ export interface ComputeOptions {
     /** The `configuration` argument changed since the last compute: it overrides the current state's. */
     configurationAuthoritative?: boolean;
     /**
+     * Only these parts of the `configuration` argument changed since the last compute: they override
+     * the current state's, and the rest of it does not. A host that rebuilt its configuration on a
+     * resize laid all of it over the runtime changes (2026-10-21).
+     */
+    configurationChanges?: RecursivePartial<PluridConfiguration>;
+    /**
      * THE ADDRESS BAR IS THE PAGE at store time: the page path the location names, read against the
      * MERGED configuration's `docking.url` (the page defaults apply there), so a root deep link boots
      * docked from the first frame. Ignored when a store already runs.
@@ -79,8 +85,10 @@ const compute = <C>(
     // state's configuration (which otherwise wins, so runtime changes made through the pubsub
     // survive unrelated store recomputes). Without this a host could never change the
     // configuration at runtime — a layout switch, a theme change — except by remounting.
-    if (options.configurationAuthoritative && configuration) {
-        stateConfiguration = generalEngine.configuration.merge(configuration, stateConfiguration);
+    const authoritative = options.configurationChanges
+        ?? (options.configurationAuthoritative ? configuration : undefined);
+    if (authoritative) {
+        stateConfiguration = generalEngine.configuration.merge(authoritative, stateConfiguration);
     }
 
     const stateSpace = resolveSpace(
