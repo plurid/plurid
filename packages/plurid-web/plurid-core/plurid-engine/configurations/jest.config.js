@@ -37,10 +37,12 @@ module.exports = {
         'node_modules',
         'source',
     ],
+    // the `~` aliases of tsconfig.json, ANCHORED as plurid-react's are: unanchored, "utilities/(.*)"
+    // matched any request with that segment in it (2026-10-20)
     moduleNameMapper: {
-        "modules/(.*)": "<rootDir>/source/modules/$1",
-        "interaction/(.*)": "<rootDir>/source/modules/interaction/$1",
-        "setup/(.*)": "<rootDir>/source/modules/setup/$1",
-        "utilities/(.*)": "<rootDir>/source/modules/utilities/$1",
+        "^~modules/(.*)$": "<rootDir>/source/modules/$1",
+        "^~interaction/(.*)$": "<rootDir>/source/modules/interaction/$1",
+        "^~setup/(.*)$": "<rootDir>/source/modules/setup/$1",
+        "^~utilities/(.*)$": "<rootDir>/source/modules/utilities/$1",
     },
 }
