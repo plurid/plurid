@@ -14,6 +14,7 @@
         chromePill,
         CHROME_PILL_SIZE,
         CHROME_PILL_MARGIN,
+        hiddenBelow,
     } from '~services/styled/chrome';
     import { Z_INDEX } from '~data/constants/zIndex';
     // #endregion external
@@ -72,8 +73,10 @@ export const StyledDockRail = styled.div`
 `;
 
 /** A rail button: the persistent pill (`chromePill`), nothing more. */
-export const StyledRailButton = styled.button<{ theme: Theme }>`
+export const StyledRailButton = styled.button<{ theme: Theme; $hideBelow?: number }>`
     ${chromeControl}
     ${chromePill}
+
+    ${({ $hideBelow }) => hiddenBelow($hideBelow)}
 `;
 // #endregion module

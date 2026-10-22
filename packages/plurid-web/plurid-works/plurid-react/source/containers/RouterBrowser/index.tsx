@@ -409,7 +409,8 @@ const PluridRouterBrowser = (
         navigate: pluridRouterNavigate,
         onReady: routerOnReady,
         pubsub: routerPubSub,
-    }), [matchedPath, routerOnReady, routerPubSub]);
+        hostname,
+    }), [matchedPath, routerOnReady, routerPubSub, hostname]);
 
     return (
         <PluridRouterContext.Provider value={routerContextValue}>

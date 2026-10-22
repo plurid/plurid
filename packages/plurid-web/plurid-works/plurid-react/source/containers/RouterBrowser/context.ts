@@ -21,6 +21,14 @@ export interface PluridRouterContextValue {
     onReady?: (api: PluridApi) => void;
     /** The router's bus, shared by every route's application; absent inside its planes, as `onReady` is. */
     pubsub?: PluridPubSub;
+    /**
+     * The host the router's planes are registered under: its `hostname` (on the server, the request's
+     * when the host configured none). An application rendered inside a route without a `hostname` of
+     * its own takes it, inside the route's planes too: on the server it had none and wrote
+     * `plurid://origin/…` where the browser wrote `location.host`, and the page did not hydrate
+     * (2026-10-22). Undefined in a browser router without one: the application reads `location.host`.
+     */
+    hostname?: string;
 }
 
 /** A matched path split the way `window.location` is: the pathname and the query (`''` for none). */

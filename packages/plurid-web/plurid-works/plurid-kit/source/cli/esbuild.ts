@@ -9,6 +9,17 @@
         Plugin,
     } from 'esbuild';
     // #endregion libraries
+
+
+    // #region internal
+    import {
+        dedupePlugin,
+        linkedPackages,
+        linkedWatchFiles,
+        resolveDedupe,
+        serverDedupeBanner,
+    } from './dedupe';
+    // #endregion internal
 // #endregion imports
 
 
@@ -53,6 +64,7 @@ export const commonBuild: BuildOptions = {
  */
 export function externalizeBare(
     forceBundle: Array<string | ((dependency: string) => string | undefined)> = [],
+    linked: ReadonlyMap<string, string> = new Map(),
 ): Plugin {
     const matchesForceBundle = (id: string): boolean => {
         for (const rule of forceBundle) {
@@ -66,6 +78,8 @@ export function externalizeBare(
         }
         return false;
     };
+
+    const watched = new Map<string, string[]>();
 
     return {
         name: 'externalize-bare',
@@ -87,12 +101,32 @@ export function externalizeBare(
                     return undefined;
                 }
 
-                // every other bare import -> runtime require
+                // every other bare import -> runtime require; a LINKED package's built files are
+                // watched, so `plurid dev --watch` restarts the server when that package rebuilds
+                const name = packageName(id);
+                const directory = linked.get(name);
+                if (directory) {
+                    let files = watched.get(name);
+                    if (!files) {
+                        files = linkedWatchFiles(directory);
+                        watched.set(name, files);
+                    }
+                    return { path: id, external: true, watchFiles: files };
+                }
                 return { path: id, external: true };
             });
         },
     };
 }
+
+
+/** The package an import path names: `react` of `react/jsx-runtime`, `@scope/name` of `@scope/name/sub`. */
+const packageName = (
+    id: string,
+): string => {
+    const parts = id.split('/');
+    return id.startsWith('@') ? parts.slice(0, 2).join('/') : parts[0];
+};
 
 
 /**
@@ -174,15 +208,24 @@ export function clientBuildOptions(
         environment?: string[];
         /** The client bundle's directory (`resolvePaths(config).clientDir`); default `build/client`. */
         outdir?: string;
+        /** `bundle.dedupe`: the packages resolved from the application's root ({@link DEFAULT_DEDUPE}). */
+        dedupe?: string[];
     },
 ): BuildOptions {
     const development = options.mode === 'development';
+    const root = process.cwd();
+    const dedupe = resolveDedupe(options.dedupe);
 
     return {
         ...commonBuild,
         // the directory the build runs in: esbuild reads process.cwd() once, when it loads, so a build
         // after a chdir resolved and wrote against the old directory (2026-10-20)
-        absWorkingDir: process.cwd(),
+        absWorkingDir: root,
+        // one React, one styled-components, one store, whoever imports them: a package linked from
+        // another checkout imported its own, and the page ran two (2026-10-22)
+        plugins: dedupe.length > 0
+            ? [dedupePlugin({ packages: dedupe, root })]
+            : [],
         entryPoints: ['source/client/index.tsx'],
         outdir: options.outdir ?? 'build/client',
         platform: 'browser',
@@ -230,18 +273,27 @@ export function serverBuildOptions(
         loaders?: Record<string, string>;
         /** The server bundle's directory (`resolvePaths(config).buildDir`); default `build`. */
         outdir?: string;
+        /** `bundle.dedupe`: the packages Node resolves from the application ({@link DEFAULT_DEDUPE}). */
+        dedupe?: string[];
     },
 ): BuildOptions {
     const development = options.mode === 'development';
+    const root = process.cwd();
+    const banner = serverDedupeBanner(resolveDedupe(options.dedupe));
 
     return {
         ...commonBuild,
-        absWorkingDir: process.cwd(),
+        absWorkingDir: root,
         entryPoints: ['source/server/index.ts'],
         outdir: options.outdir ?? 'build',
         platform: 'node',
         format: 'cjs',
-        plugins: [externalizeBare(options.forceBundle)],
+        // The bare imports stay external, so the server's duplicates come from Node's resolution: a
+        // linked package required `react` from its own checkout. The banner resolves the dedupe list
+        // from the application at run time, for every importer - the libraries Node loads included,
+        // which a bundled copy of the linked package would have doubled instead (2026-10-22).
+        ...(banner ? { banner: { js: banner } } : {}),
+        plugins: [externalizeBare(options.forceBundle, linkedPackages(root))],
         minify: !development,
         sourcemap: development,
         metafile: options.metafile ?? false,

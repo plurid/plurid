@@ -20,6 +20,10 @@
         resolvePaths,
     } from './paths';
     import {
+        describeLinked,
+        linkedPackages,
+    } from './dedupe';
+    import {
         writeBuildManifest,
     } from './manifest';
 
@@ -79,6 +83,11 @@ export async function dev(
     const paths = resolvePaths(config);
     const bundle = config.bundle ?? {};
 
+    const linked = describeLinked(linkedPackages(process.cwd()), process.cwd());
+    if (linked) {
+        process.stdout.write(`[plurid dev] ${linked}\n`);
+    }
+
     const clientOptions = clientBuildOptions({
         mode,
         environmentMode,
@@ -87,6 +96,7 @@ export async function dev(
         loaders: bundle.loaders,
         environment: bundle.environment,
         outdir: paths.clientDir,
+        dedupe: bundle.dedupe,
     });
     const serverOptions = serverBuildOptions({
         mode,
@@ -95,6 +105,7 @@ export async function dev(
         define: bundle.define,
         loaders: bundle.loaders,
         outdir: paths.buildDir,
+        dedupe: bundle.dedupe,
     });
 
     const link = `http://localhost:${port}`;

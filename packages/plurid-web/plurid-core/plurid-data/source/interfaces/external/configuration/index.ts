@@ -1043,6 +1043,15 @@ export interface PluridConfigurationElementsViewcube {
      * Show the rotation arrow buttons, and the other buttons for translation, scale, and fit view.
      */
     buttons: boolean;
+
+    /**
+     * Below this viewport width, in px, the viewcube is not shown, nor the rail's fit button that goes
+     * with it: `800` keeps them off a phone. A media query hides them, so the server's page and the
+     * browser's are the same markup. Hosts read `window.innerWidth` into `show` for this, which the
+     * server cannot: it rendered the cube, the phone did not, and the page did not hydrate
+     * (2026-10-22). Unset: shown at every width.
+     */
+    hideBelow?: number;
 }
 
 

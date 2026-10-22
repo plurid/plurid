@@ -135,6 +135,7 @@ const PluridDockRail: React.FC<PluridDockRailProperties> = (
                     title="Fit · ⌘ home · ⇧ reset · ⌥ set home"
                     data-plurid-control="viewcube-fit"
                     data-plurid-rail-button=""
+                    $hideBelow={elements.viewcube.hideBelow}
                     onClick={handleFitView}
                 >
                     <PluridIconGlobal />

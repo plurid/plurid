@@ -32,6 +32,16 @@
     "main": "distribution/index.js",
     "module": "distribution/index.mjs",
     "types": "distribution/index.d.ts",
+    "typesVersions": {
+        "*": {
+            "server": [
+                "./distribution/server.d.ts"
+            ],
+            "client": [
+                "./distribution/client.d.ts"
+            ]
+        }
+    },
     "sideEffects": false,
     "bin": {
         "plurid": "./distribution/cli/index.js"

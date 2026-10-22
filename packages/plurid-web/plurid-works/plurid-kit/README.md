@@ -170,10 +170,35 @@ bundle: {
     define: { 'process.env.FLAG': '"on"' },
     loaders: { '.glb': 'file' },
     environment: ['PUBLIC_API_URL'],
+    // the packages the application runs one copy of (default DEFAULT_DEDUPE)
+    dedupe: [...DEFAULT_DEDUPE, 'my-context-library'],
 },
 ```
 
 These replace the per-application `scripts/custom.js`.
+
+
+## Linked packages: one React
+
+A package linked from another checkout (`link:` overrides, `pnpm link`, a symlinked `file:`)
+resolves its own imports from where it really is: that checkout and its `node_modules`. Left
+alone, the application would run two Reacts (hooks throw, the server renders with one and the
+browser hydrates with the other), two styled-components (no theme) and two react-reduxes (no
+store). The kit resolves `bundle.dedupe` from the application's root instead, whoever imports it:
+
+- **client:** a resolve plugin bundles the application's copy of each listed package, subpaths
+  included (`react/jsx-runtime`, `react-dom/client`);
+- **server:** the bundle keeps its bare imports external, and its first lines have Node resolve the
+  listed packages from the application at run time, for `require` and `import`, so the libraries
+  Node loads (a workspace library that imports the linked package, a published one) share them.
+  A linked package is not bundled into the server: a library loading it at run time would get a
+  second copy of it;
+- a listed package the application does not have resolves from its importer, as without the list.
+
+The defaults (`DEFAULT_DEDUPE`, exported) are React, react-dom, scheduler, styled-components, the
+Redux stack, react-helmet-async, Apollo, graphql and `@plurid/*`. `plurid dev`, `build` and `info`
+name the linked packages they build against, and `plurid dev --watch` restarts the server when one
+of them is rebuilt (`tsup --watch` in the other checkout), as the client bundle already rebuilds.
 
 
 ## Migrating a legacy application

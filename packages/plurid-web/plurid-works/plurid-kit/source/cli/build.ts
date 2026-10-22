@@ -30,6 +30,11 @@
     import {
         loadEnvironment,
     } from './environment';
+
+    import {
+        describeLinked,
+        linkedPackages,
+    } from './dedupe';
     // #endregion internal
 // #endregion imports
 
@@ -111,6 +116,7 @@ export async function build(
             loaders: bundle.loaders,
             environment: bundle.environment,
             outdir: paths.clientDir,
+            dedupe: bundle.dedupe,
         }),
     );
     await esbuild.build(
@@ -121,6 +127,7 @@ export async function build(
             define: bundle.define,
             loaders: bundle.loaders,
             outdir: paths.buildDir,
+            dedupe: bundle.dedupe,
         }),
     );
 
@@ -140,6 +147,11 @@ export async function build(
         + (mainScriptSource ? ` (main ${mainScriptSource})` : '')
         + '\n',
     );
+    // a build against another checkout's code is this machine's: say so where the build is reported
+    const linked = describeLinked(linkedPackages(process.cwd()), process.cwd());
+    if (linked) {
+        process.stdout.write(`[plurid build] built with ${linked} - not the registry's code\n`);
+    }
 }
 
 

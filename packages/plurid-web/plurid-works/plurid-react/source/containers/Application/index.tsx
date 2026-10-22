@@ -1006,21 +1006,29 @@ const PluridApplication = forwardRef<
     const routerPath = routerContext?.path;
     const routerLocation = useMemo(() => (routerPath === undefined ? undefined : locationOf(routerPath)), [routerPath]);
     const routerNavigate = routerContext?.navigate;
+    /**
+     * THE HOST, from the router when the application names none (2026-10-22): an application in a
+     * route's exterior or shell is not the route's, so the router never handed it its `hostname`, and
+     * on the server its planes were on `origin` while the browser put them on `location.host`.
+     */
+    const defaults = useContext(PluridApplicationDefaultsContext);
+    const hostname = properties.hostname ?? routerContext?.hostname;
     const routerBelow = useMemo(
-        () => (routerPath === undefined || !routerNavigate ? null : { path: routerPath, navigate: routerNavigate }),
-        [routerPath, routerNavigate],
+        () => (routerPath === undefined || !routerNavigate
+            ? null
+            : { path: routerPath, navigate: routerNavigate, hostname }),
+        [routerPath, routerNavigate, hostname],
     );
 
     useImperativeHandle(reference, () => (shell.current
         ? shell.current.getHandle()
         : (undefined as unknown as PluridApplicationHandle)), []);
 
-    /**
-     * THE HOST'S DEFAULTS, for the eighteen props the route-driven path could
+    /*
+     * THE HOST'S DEFAULTS (`defaults`, above), for the eighteen props the route-driven path could
      * not forward. Spread UNDER `properties`, so an application's own prop
      * always wins and a provider is a default rather than an override.
      */
-    const defaults = useContext(PluridApplicationDefaultsContext);
     // An explicit `undefined` reads as "not set here", as in the provider: a host forwarding its own
     // optional props (`renderEmpty={props.renderEmpty}`) erased the provider's value (2026-10-20).
     const own: Record<string, unknown> = {};
@@ -1053,6 +1061,7 @@ const PluridApplication = forwardRef<
             routerBelow={routerBelow}
             serverRendered={serverRendered}
             view={view}
+            hostname={hostname}
         />
     );
 });

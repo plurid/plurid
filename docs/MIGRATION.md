@@ -183,6 +183,30 @@
   when it loaded, so after a `chdir` (a script driving several projects, a test runner) `plurid dev` and
   `plurid build` resolved and wrote against the old one; the kit passes the project's
   (`absWorkingDir`).
+- **`@plurid/plurid-kit/server` and `/client` have types under `moduleResolution: "node"`.** That
+  resolution reads no `exports`, so an application on it (most plurid applications) had no types for
+  the two subpaths; `typesVersions` names them.
+- **An application inside a route is on the router's host.** Only the route's own application was
+  handed the router's `hostname`; one a product renders in the route's exterior or shell, or inside a
+  route's plane, had none, so on the server its planes were `plurid://origin/…` while the browser put
+  them on `location.host`, and the page did not hydrate. It now takes the router's (`PluridRouterContextValue.hostname`)
+  unless it names its own.
+- **New, additive: `elements.viewcube.hideBelow`.** Below that viewport width, in px, the viewcube and
+  the rail's fit button are not shown, through a media query: the markup is the same at every width.
+  Applications kept the cube off phones with `show: window.innerWidth >= 800`, which the server cannot
+  read: it rendered the cube, the phone's first render did not, and the page did not hydrate.
+- **The kit runs one copy of React, whoever imports it.** A package linked from another checkout
+  resolved `react`, styled-components and react-redux from that checkout, and the application ran
+  two of each (hooks threw, the server rendered with one React and the browser hydrated with the
+  other). `bundle.dedupe` (default `DEFAULT_DEDUPE`: React, react-dom, scheduler,
+  styled-components, the Redux stack, react-helmet-async, Apollo, graphql and `@plurid/*`) resolves
+  from the application's root: in the client bundle through a resolve plugin, and in the server
+  through the bundle's first lines, which have Node resolve them from the application for every
+  `require` and `import`. A listed package the application does not have resolves from its
+  importer. A published package that brought its own copy of a listed one (an older `@plurid`
+  package) now gets the application's; `bundle.dedupe: []` turns it off. `plurid dev`, `build` and
+  `info` name the linked packages, and `plurid dev --watch` restarts the server when one of them is
+  rebuilt.
 - **A rebuilt `configuration` or `view` prop changes only what it changed.** A new configuration
   object was laid whole over the live configuration, so a host that rebuilt it (on a resize, say)
   undid every runtime change: a layout or toolbar picked through the bus, the drawers' picks. Now

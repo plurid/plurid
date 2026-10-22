@@ -20,6 +20,10 @@
     import {
         readBuildMode,
     } from './manifest';
+    import {
+        describeLinked,
+        linkedPackages,
+    } from './dedupe';
     // #endregion internal
 // #endregion imports
 
@@ -60,6 +64,9 @@ export async function info(
         `    ${mark('tsconfig.json')}tsconfig.json (esbuild reads ~ aliases)`,
         `    ${mark(paths.publicDir)}${paths.publicDir} (favicons, manifest, robots; \`publicDir\`)`,
         `    ${mark(paths.buildDir)}${paths.buildDir} (\`buildDir\`; ${exists(paths.buildDir) ? (readBuildMode(paths) ?? 'unknown') + ' build' : 'not built'})`,
+        '',
+        '  dependencies',
+        `    ${describeLinked(linkedPackages(cwd), cwd) || 'none linked (all from the registry)'}`,
         '',
     ];
 

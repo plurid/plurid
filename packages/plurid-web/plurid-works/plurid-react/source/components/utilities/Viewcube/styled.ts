@@ -6,6 +6,7 @@
         chromeControl,
         chromeRoot,
         chromeDocked,
+        hiddenBelow,
     } from '~services/styled/chrome';
 
     import {
@@ -36,6 +37,8 @@ export interface IStyledPluridViewcube {
     fadeInTime: number;
     /** The page presentation: the box sits above the rail's band. */
     $page?: boolean;
+    /** `elements.viewcube.hideBelow`: the viewport width below which the cube is not shown. */
+    $hideBelow?: number;
 }
 
 export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
@@ -127,6 +130,8 @@ export const StyledPluridViewcube = styled.div<IStyledPluridViewcube>`
     &:hover {
         opacity: 1;
     }
+
+    ${({ $hideBelow }) => hiddenBelow($hideBelow)}
 `;
 
 

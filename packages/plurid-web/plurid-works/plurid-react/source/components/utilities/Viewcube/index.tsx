@@ -161,6 +161,7 @@ const PluridViewcube: React.FC<PluridViewcubeProperties> = (
             mouseOver={mouseOver}
             isMounted={isMounted}
             fadeInTime={fadeInTime}
+            $hideBelow={viewcube.hideBelow}
             data-plurid-entity={PLURID_ENTITY_VIEWCUBE}
             data-plurid-overlay="viewcube"
             data-plurid-control="viewcube"

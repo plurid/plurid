@@ -161,7 +161,37 @@ export interface PluridBundleConfig {
     loaders?: Record<string, string>;
     /** Extra `process.env.*` keys to inline into the client bundle. */
     environment?: string[];
+    /**
+     * The packages the application runs ONE copy of, its own: whoever imports one of them (a
+     * package linked from another checkout, a workspace library, a published package), it resolves
+     * from the application's root - in the client bundle, and in Node for the server. A name covers
+     * its subpaths (`react` covers `react/jsx-runtime`); `@scope/*` covers a scope. A package the
+     * application does not have resolves from its importer, as without the list. Replaces the
+     * defaults: extend them with `[...DEFAULT_DEDUPE, 'my-context-library']`, or turn it off with
+     * `[]`. Default {@link DEFAULT_DEDUPE}.
+     */
+    dedupe?: string[];
 }
+
+
+/**
+ * The packages that break when two copies run: React and its scheduler (hooks, the server render),
+ * styled-components (the theme), the Redux stack (the store), the head manager, Apollo and graphql
+ * (the client, the schema's realm), and the `@plurid` packages themselves (their contexts).
+ */
+export const DEFAULT_DEDUPE: readonly string[] = [
+    'react',
+    'react-dom',
+    'scheduler',
+    'styled-components',
+    'react-redux',
+    'redux',
+    '@reduxjs/toolkit',
+    'react-helmet-async',
+    '@apollo/client',
+    'graphql',
+    '@plurid/*',
+];
 
 
 /**

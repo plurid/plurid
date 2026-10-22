@@ -226,4 +226,17 @@ export const chromeLine = css`
     background: var(--plurid-line);
     opacity: var(--plurid-opacity-ambient);
 `;
+/**
+ * A chrome element that is not shown below a viewport width (`elements.viewcube.hideBelow`), as a media
+ * query: the markup is the same at every width, so a page the server rendered hydrates on a phone. The
+ * width read from `window` in the configuration rendered the element on the server and not in the
+ * browser (2026-10-22).
+ */
+export const hiddenBelow = (
+    width: number | undefined,
+): string => (
+    typeof width === 'number' && width > 0
+        ? `@media (max-width: ${width - 0.02}px) { display: none !important; }`
+        : ''
+);
 // #endregion module
