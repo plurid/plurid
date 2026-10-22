@@ -67,15 +67,18 @@ test.describe('click-to-scroll wheel ownership', () => {
         await openHarness(page, query);
         await scroller(page).click();
         const before = await camera(page);
-        await page.mouse.wheel(0, 12.5);
-        await expect.poll(() => scrollTop(page)).toBeGreaterThan(0);
+        // Where the stream goes is measured before it starts: one stream is wheel events less than
+        // \`WHEEL_STREAM_MS\` (300 ms) apart, and a wait between them (a poll) let a slow runner end it,
+        // so the wheel over the background began a stream of its own, the camera's (2026-10-22).
         const empty = await background(page);
+        const box = (await scroller(page).boundingBox())!;
+        await page.mouse.wheel(0, 12.5);
         await page.mouse.move(empty.x, empty.y);
         await page.mouse.wheel(0, 12.5);
-        await afterFrames(page, 4);
-        await hoverScroller(page);
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
         await page.mouse.wheel(0, 12.5);
         await afterFrames(page, 4);
+        await expect.poll(() => scrollTop(page)).toBeGreaterThan(0);
         expect(await camera(page)).toEqual(before);
     });
 
