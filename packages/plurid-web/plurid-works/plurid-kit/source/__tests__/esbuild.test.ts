@@ -83,6 +83,14 @@ describe('clientBuildOptions', () => {
 });
 
 
+describe('asset URLs (2026-10-22)', () => {
+    it('are absolute, so pages on nested routes load them', () => {
+        expect(clientBuildOptions({ mode: 'production' }).publicPath).toBe('/');
+        expect(serverBuildOptions({ mode: 'production' }).publicPath).toBe('/');
+    });
+});
+
+
 describe('serverBuildOptions', () => {
     it('externalizes bare imports via the plugin and honors define/loaders', () => {
         const options = serverBuildOptions({

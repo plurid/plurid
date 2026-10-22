@@ -18,10 +18,15 @@
  * The shared esbuild base: bundle the app's OWN source, name assets under
  * `assets/`, and load binary/font assets as files. Mirrors denote's proven
  * `scripts/workings/live/common.js`.
+ *
+ * An imported asset resolves to `/assets/<name>`, where the server serves it.
+ * Without the public path it is `./assets/<name>`, which a page on a nested
+ * route (`/reset/<token>`) resolves under that route, and the asset 404s.
  */
 export const commonBuild: BuildOptions = {
     bundle: true,
     assetNames: 'assets/[name]',
+    publicPath: '/',
     loader: {
         '.ttf': 'file',
         '.png': 'file',
