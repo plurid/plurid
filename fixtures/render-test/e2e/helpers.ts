@@ -59,6 +59,8 @@ export interface HarnessWindow {
     __rtChanges: string[][];
     /** every `space.changed` kind reported, in order */
     __rtChanged: string[];
+    /** every motion the space passed through, with the camera at that moment */
+    __rtMotions: { sequence: number; motion: string; yaw: number; pitch: number }[];
     __rtBench?: BenchResult;
     __rtRootsSize: () => { width: string; height: string } | undefined;
     __rtStore?: Map<string, string>;
@@ -254,7 +256,12 @@ export const flick = (
     for (let step = 1; step <= steps; step += 1) {
         const t = step / steps;
         at('pointermove', from.x + (to.x - from.x) * t, from.y + (to.y - from.y) * t, 1);
-        await frame();
+        // A throw lifts the finger with its last move: waiting a frame after it would age that
+        // sample past the staleness window on a slow runner (a 60+ ms frame), and turn the throw
+        // into a pause.
+        if (step < steps) {
+            await frame();
+        }
     }
     if (pause) {
         // THE FINGER CAME TO REST before lifting, and "at rest" is defined by the engine: a sample
@@ -268,6 +275,45 @@ export const flick = (
     }
     at('pointerup', to.x, to.y, 0);
 }, { from, to, steps: options.steps ?? 6, pause: !!options.pauseBeforeRelease });
+
+
+/** The last recorded motion change, to read only what happens after it. */
+export const motionMark = (page: Page) => page.evaluate(() => {
+    const motions = (window as unknown as HarnessWindow).__rtMotions;
+    return motions.length ? motions[motions.length - 1]!.sequence : 0;
+});
+
+/**
+ * A FLING AFTER `mark`, FROM START TO REST: waits until the space started a fling and left it, then
+ * returns how far `axis` turned between the two. Read from the motion record, not by polling, so a
+ * slow machine whose fling starts and ends between two frames is measured all the same.
+ */
+export const flingTravel = async (
+    page: Page,
+    mark: number,
+    what: string,
+    axis: 'yaw' | 'pitch' = 'yaw',
+) => {
+    try {
+        await page.waitForFunction(
+            (after) => {
+                const motions = (window as unknown as HarnessWindow).__rtMotions.filter((entry) => entry.sequence > after);
+                const start = motions.findIndex((entry) => entry.motion === 'fling');
+                return start >= 0 && motions.slice(start + 1).some((entry) => entry.motion !== 'fling');
+            },
+            mark,
+            { timeout: 10_000 },
+        );
+    } catch (error) {
+        throw new Error('waiting for: ' + what + ' — it never happened (' + String(error).split('\n')[0] + ')');
+    }
+    return page.evaluate(({ after, axis }) => {
+        const motions = (window as unknown as HarnessWindow).__rtMotions.filter((entry) => entry.sequence > after);
+        const start = motions.findIndex((entry) => entry.motion === 'fling');
+        const end = motions.slice(start + 1).find((entry) => entry.motion !== 'fling')!;
+        return Math.abs(((end[axis] - motions[start]![axis] + 540) % 360) - 180);
+    }, { after: mark, axis });
+};
 
 
 /**

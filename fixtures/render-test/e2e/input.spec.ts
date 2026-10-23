@@ -16,7 +16,9 @@ import {
     waitQuiet,
     afterFrames,
     flick,
-    travelUntilIdle,
+    flingTravel,
+    motionMark,
+    type HarnessWindow,
 } from './helpers';
 
 
@@ -126,9 +128,9 @@ test.describe('input layer', () => {
         // THE RELEASE CARRIES VELOCITY: the camera keeps turning after the pointer is up, and the
         // turning decays to rest on its own. How FAR it gets is the machine's business; that it
         // travelled and then stopped is the engine's.
+        const throwMark = await motionMark(page);
         await flick(page, start, { x: start.x + 250, y: start.y });
-        await waitForState(page, (state) => state.space.motion === 'fling', 'the release to start a fling');
-        const travelled = await travelUntilIdle(page, 'yaw');
+        const travelled = await flingTravel(page, throwMark, 'the release to fling and come to rest');
         expect(travelled).toBeGreaterThan(0.5);
 
         // and rest means rest
@@ -144,8 +146,13 @@ test.describe('input layer', () => {
         expect((await camera(page)).yaw).toBeCloseTo(paused.yaw, 6);
 
         // A WHEEL DURING A FLING STOPS IT
+        const secondMark = await motionMark(page);
         await flick(page, start, { x: start.x + 250, y: start.y });
-        await waitForState(page, (state) => state.space.motion === 'fling', 'the second release to fling');
+        await page.waitForFunction(
+            (after) => (window as unknown as HarnessWindow).__rtMotions
+                .some((entry) => entry.sequence > after && entry.motion === 'fling'),
+            secondMark,
+        );
         await page.keyboard.down('Control');
         await page.mouse.wheel(0, -50);
         await page.keyboard.up('Control');

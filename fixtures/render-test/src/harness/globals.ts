@@ -49,10 +49,24 @@ export const installHarnessGlobals = (
     const perf = (w.__rtPerf = { dispatches: 0, frames: 0 });
     // Which top-level slice keys changed on each notification (a no-op dispatch logs `[]`).
     const changes: string[][] = (w.__rtChanges = []);
+    // Every motion the space passes through, with the camera at that moment: a fling that starts and
+    // ends between two of the test's frames is still on record.
+    const motions: { sequence: number; motion: string; yaw: number; pitch: number }[] = (w.__rtMotions = []);
+    let motionSequence = 0;
     let previous = api.store.getState();
     api.store.subscribe(() => {
         perf.dispatches += 1;
         const next = api.store.getState();
+        if (next.space?.motion !== previous.space?.motion) {
+            motionSequence += 1;
+            motions.push({
+                sequence: motionSequence,
+                motion: String(next.space?.motion),
+                yaw: next.space?.camera?.yaw ?? 0,
+                pitch: next.space?.camera?.pitch ?? 0,
+            });
+            if (motions.length > 200) motions.shift();
+        }
         const changed: string[] = [];
         for (const slice of Object.keys(next)) {
             if (next[slice] !== previous[slice]) {
