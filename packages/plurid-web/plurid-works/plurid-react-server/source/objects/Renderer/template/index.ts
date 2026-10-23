@@ -22,6 +22,14 @@
  */
 export const DEFAULT_VIEWPORT_META = '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">';
 
+/**
+ * Where the application's markup goes once the document around it is minified. React hydrates that
+ * markup as it rendered it: collapsing its whitespace (the text of an inline `<style>`, two spaces in
+ * a paragraph) made the server's page differ from the browser's first render, a hydration error
+ * (React #418, 2026-10-23).
+ */
+const CONTENT_SLOT = '<!--plurid-content-->';
+
 const template = async (
     data: RendererTemplateData,
 ) => {
@@ -70,7 +78,7 @@ const template = async (
         <script defer src="${mainScriptSource}"></script>
     </head>
     <body ${bodyAttributes}>
-        <div id="${root}">${content}</div>
+        <div id="${root}">${minify ? CONTENT_SLOT : content}</div>
 
         <script>
             ${injectedGlobals}
@@ -86,7 +94,8 @@ const template = async (
         return templateString;
     }
 
-    return cleanTemplate(templateString);
+    // a function, so a `$` in the markup is never read as a replacement pattern
+    return (await cleanTemplate(templateString)).replace(CONTENT_SLOT, () => content);
 }
 // #endregion module
 

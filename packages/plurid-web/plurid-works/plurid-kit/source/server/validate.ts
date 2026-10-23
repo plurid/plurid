@@ -35,11 +35,60 @@ export const isComponent = (
 
 
 /**
+ * Every field the kit reads. Typed against `PluridConfig`, so a field added to the interface and not
+ * here fails the build instead of being reported as unknown.
+ */
+const CONFIG_FIELDS: Record<keyof PluridConfig, true> = {
+    serverName: true,
+    hostname: true,
+    root: true,
+    routes: true,
+    planes: true,
+    shell: true,
+    exterior: true,
+    routerProperties: true,
+    application: true,
+    services: true,
+    document: true,
+    render: true,
+    preserves: true,
+    load: true,
+    head: true,
+    favicon: true,
+    manifest: true,
+    styles: true,
+    notFound: true,
+    errorPage: true,
+    publicDir: true,
+    buildDir: true,
+    usePTTP: true,
+    pttpOrigins: true,
+    elementqlEndpoint: true,
+    bundle: true,
+    middleware: true,
+    handlers: true,
+    options: true,
+    template: true,
+};
+
+
+/**
+ * The configuration's fields the kit does not read: a removed option (`helmet`, replaced by `head`)
+ * or a misspelling, which does nothing at all.
+ */
+export const unknownFields = (
+    config: PluridConfig,
+): string[] => Object.keys(config)
+    .filter((field) => !Object.hasOwn(CONFIG_FIELDS, field))
+    .sort();
+
+
+/**
  * THE CONFIG, CHECKED WHERE THE SERVER IS MADE (2026-09-29). `defineConfig` is an identity function
  * and the build is esbuild, so nothing type-checks `plurid.config.ts` on its way to production:
  * without `routes` the server booted and every page answered 404; `routes` as an object threw
  * "routes is not iterable" from inside the engine. Every problem found is listed, each with the
- * shape expected.
+ * shape expected. A field the kit does not read is said, not fatal (2026-10-23).
  */
 export const validateConfig = (
     config: PluridConfig,
@@ -48,6 +97,11 @@ export const validateConfig = (
         throw new Error(
             '[plurid-kit] the configuration must be an object: export default defineConfig({ serverName, hostname, routes })',
         );
+    }
+
+    const unknown = unknownFields(config);
+    if (unknown.length > 0) {
+        console.warn(`[plurid-kit] the configuration has fields the kit does not read, so they do nothing: ${unknown.join(', ')}`);
     }
 
     const problems: string[] = [];

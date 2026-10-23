@@ -34,6 +34,20 @@ describe('PluridRenderer — SSR HTML assembly', () => {
         expect(html).toContain('<script defer src="/main.js">');
     });
 
+    it('minifies the document around the application, never the markup React hydrates (2026-10-23)', async () => {
+        const content = '<style>.a  {  color: red;  }\n  .b { margin: 0 }</style><p>two  spaces,\n  a newline and $& kept</p>';
+        const html = await new PluridRenderer({
+            ...baseConfig(),
+            content,
+            minify: true,
+        }).html();
+
+        expect(html).toContain(`<div id="plurid-root">${content}</div>`);
+        // the document itself is still minified
+        expect(html).not.toMatch(/<head>\s{2,}/);
+        expect(html).not.toContain('plurid-content');
+    });
+
     it('escapes a `</script>` payload in the metastate so it cannot break out of the inline script', async () => {
         const html = await new PluridRenderer({
             ...baseConfig(),

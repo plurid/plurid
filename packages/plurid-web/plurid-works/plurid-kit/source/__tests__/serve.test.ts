@@ -68,12 +68,19 @@ describe('a kit server (2026-09-29)', () => {
                 host.instance().get('/status', (_request, response) => {
                     response.send('ok');
                 });
+                // the kit's own /health is registered first: an application's cannot shadow it
+                host.handle().get('/health', (_request, response) => {
+                    response.send('the application\'s');
+                });
             },
         });
         const listening = await server.start(0);
         const port = (listening.address() as AddressInfo).port;
         try {
             expect(await get(port, '/status')).toEqual({ status: 200, body: 'ok' });
+
+            // every kit server answers the probe without rendering, ahead of the application's routes
+            expect(await get(port, '/health')).toEqual({ status: 200, body: '{"status":"ok"}' });
 
             const page = await get(port, '/');
             expect(page.status).toBe(200);

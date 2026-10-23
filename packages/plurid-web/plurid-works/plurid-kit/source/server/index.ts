@@ -77,6 +77,10 @@ function readAssetManifest(
 }
 
 
+/** Answered by every kit server, ahead of the application's routes: `{ "status": "ok" }`. */
+export const HEALTH_PATH = '/health';
+
+
 const warned = new Set<string>();
 
 /** One warning per message per process. */
@@ -337,11 +341,18 @@ export async function createPluridServer(
         usePTTP: config.usePTTP ?? !!config.elementqlEndpoint,
         ...(config.pttpOrigins ? { pttpOrigins: config.pttpOrigins } : {}),
         elementqlEndpoint: config.elementqlEndpoint,
-        handlers: handlers
-            ? (host) => {
+        handlers: (host) => {
+            // `GET /health`, what a readiness probe asks, answered ahead of the application's routes and
+            // its pages without rendering one: probes that rendered a page made every check a page
+            // render, and made readiness depend on the API behind it (2026-10-23)
+            host.handle().get(HEALTH_PATH, (_request, response) => {
+                response.setHeader('Cache-Control', 'no-store');
+                response.json({ status: 'ok' });
+            });
+            if (handlers) {
                 handled = handlers(host);
             }
-            : undefined,
+        },
     });
 
     // `handlers: () => import('./handlers')`, written before `serverOnly`: called as the handlers, it

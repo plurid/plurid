@@ -37,6 +37,11 @@ jest.mock('@plurid/plurid-react-server', () => ({
             this.started.push(port);
             return (this.constructor as any).startResult ?? Promise.resolve({ port });
         });
+        // the express application the kit registers its own routes on (`/health`)
+        this.routes = [];
+        this.handle = jest.fn(() => ({
+            get: (route: string) => this.routes.push(route),
+        }));
         // the real server runs `handlers` during its construction
         configuration.handlers?.(this);
     }),
@@ -201,6 +206,8 @@ describe('the document hook and the handlers, without counting parameters (2026-
         const seen: unknown[] = [];
         const server: any = await createPluridServer({ routes: [], handlers: (host: unknown) => { seen.push(host); } } as any);
         expect(seen).toEqual([server]);
+        // the kit's own route first, so an application's handlers cannot shadow it
+        expect(server.routes).toEqual(['/health']);
     });
 
     it('an unmarked lazy handlers import still runs, after the construction, with a note', async () => {
