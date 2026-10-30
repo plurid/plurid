@@ -56,6 +56,19 @@ export const isEditableTarget = (
 };
 
 
+/** The keys that are a modifier on their own: half a shortcut, not an input. */
+const MODIFIER_KEYS: ReadonlySet<string> = new Set(['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Fn', 'AltGraph', 'OS', 'Hyper', 'Super']);
+
+/**
+ * A key pressed alone that only modifies the next one (Shift, Control, Alt, Meta …). It neither
+ * stops the camera nor pauses a tour (2026-10-30): a reader reaching for Shift + a key, or holding
+ * Shift to drag, has not touched anything yet.
+ */
+export const isModifierKey = (
+    event: Pick<KeyboardEvent, 'key'> | null | undefined,
+): boolean => !!event && MODIFIER_KEYS.has(event.key);
+
+
 /** The field an event target types into (its editable root), or nothing. */
 export const editableRootOf = (
     target: EventTarget | null | undefined,

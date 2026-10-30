@@ -5,6 +5,22 @@ alone prints a read-only plan. Publishing belongs to the maintainer and always n
 `--publish` command. That command builds and verifies automatically when this commit has no verified
 artifacts yet. The script manages output directories and never commits or pushes source.
 
+## Versions prepared 2026-10-30
+
+Tours and anchors ([migration](./MIGRATION.md)). Seven packages move; the other six keep their
+versions. Prepared with `pnpm release --prepare`, the changed packages only (`--all` would move all
+thirteen).
+
+| Package (`@plurid/`) | Previous | Next |
+| --- | --- | --- |
+| plurid-data | 0.0.0-28 | 0.0.0-29 |
+| plurid-pubsub | 0.0.0-14 | 0.0.0-15 |
+| plurid-engine | 0.0.0-25 | 0.0.0-26 |
+| plurid-react | 0.0.0-42 | 0.0.0-43 |
+| plurid-react-server | 0.0.0-21 | 0.0.0-22 |
+| plurid-kit | 0.0.0-8 | 0.0.0-9 |
+| generate-plurid-app | 0.0.0-18 | 0.0.0-19 |
+
 ## Versions prepared 2026-10-22
 
 Seven packages changed since the October 18 release; the other six keep their October 18 versions.

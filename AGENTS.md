@@ -70,7 +70,7 @@ Run a single jest file from a package directory:
 ## Using the library from an agent
 
 - **Embed plurid and let an AI agent operate it:** `@plurid/plurid-react/agent`
-  ([`docs/AGENT_CONTROL.md`](./docs/AGENT_CONTROL.md)). It provides fourteen tools with JSON Schemas,
+  ([`docs/AGENT_CONTROL.md`](./docs/AGENT_CONTROL.md)). It provides fifteen tools with JSON Schemas,
   an observation of the space, WebMCP registration, a `window` global, and a Claude loop example.
 - **Drive an application programmatically without an agent:** the bus and the handle
   ([`docs/CONTROL_SURFACE.md`](./docs/CONTROL_SURFACE.md)).

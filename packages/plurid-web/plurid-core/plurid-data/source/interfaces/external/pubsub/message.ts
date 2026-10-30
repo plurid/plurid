@@ -6,7 +6,13 @@
 
     import {
         PluridPartialConfiguration,
+        PluridMotionEasing,
     } from '~interfaces/external/configuration';
+
+    import type {
+        PluridTour,
+        PluridTourObservation,
+    } from '~interfaces/external/tour';
 
     import {
         PlaneLink,
@@ -429,7 +435,22 @@ export interface PluridPubSubSubscribeMessageApplyRemoteMutation {
 }
 
 
-export interface PluridPubSubMessageSetViewpoint {
+/**
+ * HOW A CAMERA COMMAND MOVES (2026-10-30), on every topic that moves the camera somewhere: tween or
+ * jump, and the tween's length and curve. `duration` and `easing` reach the motion controller as
+ * the handle's options do; before, a topic tweened at the configured motion whatever it asked.
+ */
+export interface PluridPubSubMotion {
+    /** Tween instead of jumping. The default is the topic's own. */
+    animate?: boolean;
+    /** The tween's length, ms. Default `navigation.motion.duration`. */
+    duration?: number;
+    /** The tween's curve. Default `navigation.motion.easing`. */
+    easing?: PluridMotionEasing;
+}
+
+
+export interface PluridPubSubMessageSetViewpoint extends PluridPubSubMotion {
     /** An encoded viewpoint: the v1 `rotationX,rotationY,tX,tY,tZ,scale` tuple or a `v2|…` camera string. */
     viewpoint: string;
     /** Smoothly animate the camera to it (vs jump instantly). Default `false`. */
@@ -445,7 +466,7 @@ export interface PluridPubSubSubscribeMessageSetViewpoint {
 }
 
 
-export interface PluridPubSubMessageFitToView {
+export interface PluridPubSubMessageFitToView extends PluridPubSubMotion {
     /** tween (default) or jump */
     animate?: boolean;
     /** face the planes (default) or keep the current angles */
@@ -509,7 +530,7 @@ export interface PluridPubSubSubscribeMessageSetTree {
     callback: PluridPubSubCallback<PluridPubSubMessageSetTree>;
 }
 
-export interface PluridPubSubMessageCameraDelta extends CameraDelta {
+export interface PluridPubSubMessageCameraDelta extends CameraDelta, PluridPubSubMotion {
     /** Tween to the result instead of jumping. Default `false`. */
     animate?: boolean;
 }
@@ -522,7 +543,7 @@ export interface PluridPubSubSubscribeMessageCameraDelta {
     callback: PluridPubSubCallback<PluridPubSubMessageCameraDelta>;
 }
 
-export interface PluridPubSubMessageFrame {
+export interface PluridPubSubMessageFrame extends PluridPubSubMotion {
     /** Frame this plane; omit (and `selection` false) to frame everything. */
     planeID?: string;
     /** Frame the current selection. */
@@ -548,7 +569,7 @@ export interface PluridPubSubSubscribeMessageFrame {
 }
 
 /** Dock the camera on a page (the page presentation): face-on, scale 1, the page filling the view. */
-export interface PluridPubSubMessageDock {
+export interface PluridPubSubMessageDock extends PluridPubSubMotion {
     /** This plane; omit for the page nearest the view center. */
     planeID?: string;
     /** Tween instead of jumping. Default `true`. */
@@ -564,7 +585,7 @@ export interface PluridPubSubSubscribeMessageDock {
 }
 
 /** Reveal the space from a docked page: pull the camera back and tilt it (the page presentation). */
-export interface PluridPubSubMessageReveal {
+export interface PluridPubSubMessageReveal extends PluridPubSubMotion {
     /** Tween instead of jumping. Default `true`. */
     animate?: boolean;
 }
@@ -577,7 +598,7 @@ export interface PluridPubSubSubscribeMessageReveal {
     callback: PluridPubSubCallback<PluridPubSubMessageReveal | undefined>;
 }
 
-export interface PluridPubSubMessageHome {
+export interface PluridPubSubMessageHome extends PluridPubSubMotion {
     /** Tween to the home viewpoint instead of jumping. Default `true`. */
     animate?: boolean;
 }
@@ -603,7 +624,7 @@ export interface PluridPubSubSubscribeMessageSetHome {
     callback: PluridPubSubCallback<PluridPubSubMessageSetHome | undefined>;
 }
 
-export interface PluridPubSubMessagePreset {
+export interface PluridPubSubMessagePreset extends PluridPubSubMotion {
     /** A key of `space.navigation.presets`. */
     name: string;
     /** Tween instead of jumping. Default `true`. */
@@ -623,7 +644,7 @@ export type PluridBookmarkAction =
     | 'save'
     | 'remove'
     | 'rename';
-export interface PluridPubSubMessageBookmark {
+export interface PluridPubSubMessageBookmark extends PluridPubSubMotion {
     name: string;
     /**
      * `go` (default) moves the camera to the bookmark; `save` stores the current camera under the
@@ -643,6 +664,32 @@ export interface PluridPubSubPublishMessageBookmark {
 export interface PluridPubSubSubscribeMessageBookmark {
     topic: typeof PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK;
     callback: PluridPubSubCallback<PluridPubSubMessageBookmark>;
+}
+
+/** What `space.tour` asks of the tour player. */
+export type PluridTourAction =
+    | 'play'
+    | 'pause'
+    | 'resume'
+    | 'next'
+    | 'previous'
+    | 'seek'
+    | 'stop'
+    | 'state';
+export interface PluridPubSubMessageTour {
+    action: PluridTourAction;
+    /** `play`: the tour. A tour played from the bus skips a missing step (the callbacks are the handle's). */
+    tour?: PluridTour;
+    /** `play`: the step to start at; `seek`: the step to go to. By index or id. */
+    step?: number | string;
+}
+export interface PluridPubSubPublishMessageTour {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TOUR;
+    data: PluridPubSubMessageTour;
+}
+export interface PluridPubSubSubscribeMessageTour {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_TOUR;
+    callback: PluridPubSubCallback<PluridPubSubMessageTour>;
 }
 
 export type PluridAlignEdge =
@@ -783,7 +830,9 @@ export type PluridChangeKind =
     /** what a `space.command` did: `PluridCommandObservation` */
     | 'command'
     /** whether the keyboard focus is inside the space */
-    | 'focus';
+    | 'focus'
+    /** the tour player: `PluridTourObservation` */
+    | 'tour';
 
 /** What a `space.changed` of kind `describe` carries: the inspection `api.inspect()` gives, for a host without the api. */
 export interface PluridDescribeObservation {
@@ -869,6 +918,7 @@ export interface PluridChangeValues {
     focus: boolean;
     refused: PluridRefusedObservation;
     planeError: PluridPlaneErrorObservation;
+    tour: PluridTourObservation;
 }
 
 /**
@@ -1238,6 +1288,7 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessageSetHome
     | PluridPubSubPublishMessagePreset
     | PluridPubSubPublishMessageBookmark
+    | PluridPubSubPublishMessageTour
     | PluridPubSubPublishMessageAlign
     | PluridPubSubPublishMessageDistribute
     | PluridPubSubPublishMessageDuplicate
@@ -1313,6 +1364,7 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessageSetHome
     | PluridPubSubSubscribeMessagePreset
     | PluridPubSubSubscribeMessageBookmark
+    | PluridPubSubSubscribeMessageTour
     | PluridPubSubSubscribeMessageAlign
     | PluridPubSubSubscribeMessageDistribute
     | PluridPubSubSubscribeMessageDuplicate

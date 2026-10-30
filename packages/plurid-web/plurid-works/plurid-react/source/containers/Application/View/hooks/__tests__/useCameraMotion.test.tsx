@@ -280,4 +280,202 @@ describe('useCameraMotion', () => {
         hook.unmount();
     });
 });
+
+
+describe('useCameraMotion: exclusive tweens (2026-10-30)', () => {
+    afterEach(() => {
+        installFrameClock().restore();
+    });
+
+    it('A NON-EXCLUSIVE TWEEN IS UNCHANGED: its onSettle rides another caller\'s retarget and fires at that landing', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const settled: string[] = [];
+        const first = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(first, { duration: 100, onSettle: () => settled.push('first') }); });
+        act(() => { clock.advance(40); });
+        const second = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -30 }, view);
+        act(() => { hook.controller().tweenTo(second, { duration: 100 }); });
+        act(() => { clock.advance(120); });
+        expect(settled).toEqual(['first']);
+        expect(hook.camera().yaw).toBeCloseTo(second.yaw, 9);
+        hook.unmount();
+    });
+
+    it('another caller\'s tween interrupts an exclusive one: it is told once, its onSettle never fires, nothing is carried', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        const stop = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => {
+            hook.controller().tweenTo(stop, {
+                duration: 100,
+                onSettle: () => told.push('arrived'),
+                onInterrupt: () => told.push('interrupted'),
+            });
+        });
+        act(() => { clock.advance(40); });
+        const elsewhere = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -90 }, view);
+        let activeWhenTold: boolean | undefined;
+        act(() => {
+            hook.controller().tweenTo(elsewhere, {
+                duration: 100,
+                onSettle: () => told.push('other landed'),
+            });
+            activeWhenTold = hook.controller().isActive();
+        });
+        expect(told).toEqual(['interrupted']);
+        // told once the new tween was in place, never halfway through the retarget
+        expect(activeWhenTold).toBe(true);
+        act(() => { clock.advance(120); });
+        expect(told).toEqual(['interrupted', 'other landed']);
+        hook.unmount();
+    });
+
+    it('a cancel, a gesture, a fling and a jump interrupt it; a landing does not', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        const exclusive = (label: string) => ({
+            duration: 100,
+            onSettle: () => told.push(label + ' landed'),
+            onInterrupt: () => told.push(label + ' interrupted'),
+        });
+        const away = (yaw: number) => cameraEngine.applyCameraDelta(hook.camera(), { yaw }, view);
+
+        act(() => { hook.controller().tweenTo(away(30), exclusive('cancel')); });
+        act(() => { clock.advance(20); });
+        act(() => { hook.controller().cancel(); });
+
+        act(() => { hook.controller().tweenTo(away(30), exclusive('gesture')); });
+        act(() => { clock.advance(20); });
+        act(() => { hook.controller().gesture(true); });
+        act(() => { hook.controller().gesture(false); });
+
+        act(() => { hook.controller().tweenTo(away(30), exclusive('fling')); });
+        act(() => { clock.advance(20); });
+        act(() => { hook.controller().fling({ x: 2, y: 0 }, 'orbit'); });
+        act(() => { hook.controller().cancel(); });
+
+        act(() => { hook.controller().tweenTo(away(30), exclusive('jump')); });
+        act(() => { clock.advance(20); });
+        act(() => { hook.controller().tweenTo(away(10), { duration: 0 }); });
+
+        act(() => { hook.controller().tweenTo(away(30), exclusive('lands')); });
+        act(() => { clock.advance(120); });
+
+        expect(told).toEqual([
+            'cancel interrupted',
+            'gesture interrupted',
+            'fling interrupted',
+            'jump interrupted',
+            'lands landed',
+        ]);
+        hook.unmount();
+    });
+
+    it('a retarget that CONTINUES it keeps both callbacks: the landing of the re-aimed tween is the arrival', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        const stop = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => {
+            hook.controller().tweenTo(stop, {
+                duration: 100,
+                onSettle: () => told.push('arrived'),
+                onInterrupt: () => told.push('interrupted'),
+            });
+        });
+        act(() => { clock.advance(40); });
+        // the plane moved: the engine re-aims the tween at where its stop is now
+        const moved = cameraEngine.applyCameraDelta(stop, { pan: { x: 120, y: 0 } }, view);
+        act(() => { hook.controller().tweenTo(moved, { duration: 100, continues: true }); });
+        expect(told).toEqual([]);
+        act(() => { clock.advance(120); });
+        expect(told).toEqual(['arrived']);
+        expect(hook.camera().offset.x).toBeCloseTo(moved.offset.x, 9);
+
+        // and a continued tween is still exclusive: a cancel tells it
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 20 }, view), { duration: 100, onInterrupt: () => told.push('again') }); });
+        act(() => { clock.advance(20); });
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 5 }, view), { duration: 100, continues: true }); });
+        act(() => { hook.controller().cancel(); });
+        expect(told).toEqual(['arrived', 'again']);
+        hook.unmount();
+    });
+
+    it('another caller asking for the very pose it is going to joins it: both are told when it lands', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        const stop = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view);
+        act(() => { hook.controller().tweenTo(stop, { duration: 100, onSettle: () => told.push('tour'), onInterrupt: () => told.push('tour interrupted') }); });
+        act(() => { clock.advance(40); });
+        act(() => { hook.controller().tweenTo(stop, { duration: 100, onSettle: () => told.push('host') }); });
+        act(() => { clock.advance(80); });
+        expect(told).toEqual(['tour', 'host']);
+        hook.unmount();
+    });
+
+    it('A STOP JOINING A HOST\'S TWEEN: the host\'s non-exclusive settle and the stop\'s callbacks are all kept', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        const pose = cameraEngine.applyCameraDelta(hook.camera(), { yaw: 50 }, view);
+        act(() => { hook.controller().tweenTo(pose, { duration: 100, onSettle: () => told.push('host landed') }); });
+        act(() => { clock.advance(30); });
+        act(() => { hook.controller().tweenTo(pose, { duration: 100, onSettle: () => told.push('stop landed'), onInterrupt: () => told.push('stop interrupted') }); });
+        act(() => { clock.advance(100); });
+        expect(told).toEqual(['host landed', 'stop landed']);
+
+        // joined, then cancelled: the exclusive caller is told, the host (no `onInterrupt`) is not
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 20 }, view), { duration: 100, onSettle: () => told.push('host 2') }); });
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 20 }, view), { duration: 100, onInterrupt: () => told.push('stop 2 interrupted') }); });
+        act(() => { hook.controller().cancel(); });
+        expect(told).toEqual(['host landed', 'stop landed', 'stop 2 interrupted']);
+        hook.unmount();
+    });
+
+    it('WHAT THE REPLACED CALLER HEARS: a non-exclusive settle rides the replacing tween, whatever it brings; a cancel drops it', () => {
+        const clock = installFrameClock();
+        const hook = mountHook();
+        const told: string[] = [];
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 60 }, view), { duration: 100, onSettle: () => told.push('host') }); });
+        act(() => { clock.advance(30); });
+        // a tour's stop elsewhere, with callbacks of its own: the host's settle is not dropped
+        const stop = cameraEngine.applyCameraDelta(hook.camera(), { yaw: -40 }, view);
+        act(() => { hook.controller().tweenTo(stop, { duration: 100, onSettle: () => told.push('stop'), onInterrupt: () => told.push('stop interrupted') }); });
+        expect(told).toEqual([]);
+        act(() => { clock.advance(30); });
+        // and it rides on through a third caller, while the exclusive stop is told it did not land
+        const third = cameraEngine.applyCameraDelta(hook.camera(), { pitch: -10 }, view);
+        act(() => { hook.controller().tweenTo(third, { duration: 100, onSettle: () => told.push('third') }); });
+        expect(told).toEqual(['stop interrupted']);
+        act(() => { clock.advance(120); });
+        expect(told).toEqual(['stop interrupted', 'host', 'third']);
+
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 10 }, view), { duration: 100, onSettle: () => told.push('dropped') }); });
+        act(() => { hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 30 }, view), { duration: 100 }); });
+        act(() => { hook.controller().cancel(); });
+        act(() => { clock.advance(200); });
+        expect(told).toEqual(['stop interrupted', 'host', 'third']);
+        hook.unmount();
+    });
+
+    it('under reduced motion it jumps and settles at once, and the tween it replaced is told first', () => {
+        installFrameClock();
+        const hook = mountHook(true);
+        const told: string[] = [];
+        act(() => {
+            hook.controller().tweenTo(cameraEngine.applyCameraDelta(hook.camera(), { yaw: 45 }, view), {
+                duration: 300,
+                onSettle: () => told.push('landed'),
+                onInterrupt: () => told.push('interrupted'),
+            });
+        });
+        expect(told).toEqual(['landed']);
+        expect(hook.controller().isActive()).toBe(false);
+        hook.unmount();
+    });
+});
 // #endregion module

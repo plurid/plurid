@@ -9,7 +9,7 @@ Current as of **2026-09-29**.
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Source-verified description of the live package graph, render pipeline, state, SSR, kit, and public APIs |
 | [`CONTROL_SURFACE.md`](./CONTROL_SURFACE.md) | Canonical guide to configuration, callbacks, pubsub, storage, gestures, shortcuts, slots, and escape hatches |
 | [`GETTING_STARTED.md`](./GETTING_STARTED.md) | Use the engine: a site first, a space, planes, links, configuration, persistence, the viewpoint |
-| [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) | Let an AI agent operate an embedded application: the fourteen tools, the observation, the guardrails, Claude, WebMCP (`@plurid/plurid-react/agent`) |
+| [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) | Let an AI agent operate an embedded application: the fifteen tools, the observation, the guardrails, Claude, WebMCP (`@plurid/plurid-react/agent`) |
 | [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md) | The 2026-09-29 readiness record: what was audited and fixed, the gates' evidence, the known limitations, the release order |
 | [`SHORTCUTS.md`](./SHORTCUTS.md) | GENERATED — every keyboard shortcut and pointer gesture, from the data tables (`pnpm docs.tables`) |
 | [`CHANGES.md`](./CHANGES.md) | GENERATED — every kind a `space.changed` carries, from `PLURID_CHANGE_KINDS` (`pnpm docs.tables`) |

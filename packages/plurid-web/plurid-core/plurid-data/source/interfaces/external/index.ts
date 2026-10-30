@@ -15,6 +15,7 @@ export * from './pubsub';
 export * from './registrar';
 export * from './router';
 export * from './routing';
+export * from './tour';
 export * from './universe';
 export * from './view';
 export * from './window';

@@ -605,6 +605,60 @@ export {
     resolveCameraTarget,
     landingDockPlaneID,
 } from './services/logic/camera';
+/**
+ * TOURS AND ANCHORS (2026-10-30): a camera named by a plane, and stops through them. The player is
+ * the handle's (`handle.tour`) and the bus's (`space.tour`); these are the pure pieces a host reads a
+ * saved tour, names a stop or checks one with: `anchorOf(api.getSnapshot())` is where the camera is,
+ * `resolveAnchor(state, anchor)` where an anchor lands now.
+ */
+export {
+    anchorOf,
+    resolveAnchor,
+    sameAnchor,
+    parseTour,
+    serializeTour,
+    PLURID_TOUR_FORMAT,
+    PLURID_TOUR_MAX_STEPS,
+    PLURID_TOUR_MAX_DWELL,
+} from './services/logic/tour';
+export type {
+    PluridTourParse,
+} from './services/logic/tour';
+export {
+    whenAtRest,
+} from './services/logic/rest';
+export type {
+    PluridRestOptions,
+} from './services/logic/rest';
+export type {
+    PluridAnchorPose,
+    PluridAnchorPoseMode,
+    PluridPlaneAnchor,
+    PluridAnchorMissing,
+    PluridAnchorResolution,
+    PluridTour,
+    PluridTourStep,
+    PluridTourState,
+    PluridTourStatus,
+    PluridTourEvent,
+    PluridTourEnd,
+    PluridTourEndReason,
+    PluridTourPauseReason,
+    PluridTourSkipReason,
+    PluridTourPlayOptions,
+    PluridTourStepContext,
+    PluridTourMissingContext,
+    PluridTourStepAction,
+    PluridTourMissingAction,
+    PluridTourRecordOptions,
+    PluridTourRecorder,
+    PluridTourControls,
+    PluridTourObservation,
+    PluridTourAction,
+    PluridPubSubMessageTour,
+    PluridPubSubMotion,
+    PluridMotionEasing,
+} from '@plurid/plurid-data';
 export {
     pagePresentationDefaults,
     PLURID_ATTRIBUTE_ENTITY,

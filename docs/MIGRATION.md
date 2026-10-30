@@ -1,3 +1,66 @@
+# Migrating to the release prepared 2026-10-30
+
+`@plurid/plurid-data` `0.0.0-29`, `plurid-pubsub` `0.0.0-15`, `plurid-engine` `0.0.0-26`,
+`plurid-react` `0.0.0-43`, `plurid-react-server` `0.0.0-22`, `plurid-kit` `0.0.0-9` and
+`generate-plurid-app` `0.0.0-19`; the other six packages keep their versions. Everything here is
+additive except the four behaviours under **Changed**.
+
+**New: tours and anchors** ([control surface](./CONTROL_SURFACE.md#tours-and-anchors)).
+
+- **A camera named by a plane.** `PluridPlaneAnchor { path, occurrence?, pose? }` names a stop by the
+  plane's path (as an arrangement fragment does), which plane at that path, and a pose in the plane's
+  own frame (`PluridAnchorPose`), or `'dock'` / `'frame'`. It resolves against the space as it is
+  when it is reached, so a stop lands on its plane after a relayout, a re-measured link or a reload.
+  `handle.camera.anchor(anchor, options)` goes there and answers where (`PluridAnchorResolution`);
+  `anchorOf(state)` and `resolveAnchor(state, anchor)` are exported; `CameraCommand` has the kind
+  `anchor`.
+- **The tour player.** `handle.tour.play(tour, { onStep, onMissing, start, pauseOnInput })`, `pause`,
+  `resume`, `next`, `previous`, `seek`, `stop`, `state`, `subscribe` and `record`. A tour is a
+  document (`PluridTour`, `parseTour`, `serializeTour`); the engine reads its anchors and timings and
+  carries each step's `payload`. The engine draws no tour UI: the host renders its own bar from
+  `subscribe`.
+- **The bus.** The topic `space.tour { action, tour?, step? }` and the `space.changed` kind `tour`
+  (`{ state, event? }`). Eighty command topics and nineteen kinds now.
+- **The rest.** `handle.whenAtRest({ timeout, frames })` and `whenAtRest(store)`: the moment the
+  camera is still and no relayout glides, for a host drawing over what the camera came to.
+- **The camera handle** also has `cancel()` and `reducedMotion()`.
+- **The agent** has a fifteenth tool, `plurid_tour`: a model plays a tour through planes by id.
+- **The testing kit.** `motionStub(store).land()` lands the running tween (its target committed, its
+  `onSettle` called); the stub's `cancel()` and a replacing tween tell an exclusive tween
+  (`onInterrupt`), as the real controller does. `makeSpaceStore(...)` has `subscribe`.
+
+**Changed.**
+
+- **The camera topics carry their motion.** `duration` and `easing` (`PluridPubSubMotion`) on
+  `space.frame`, `space.fitToView`, `space.cameraDelta`, `space.setViewpoint`, `space.home`,
+  `space.dock`, `space.reveal`, `space.preset`, `space.bookmark` and `space.resetTransform` reach the
+  tween; they were ignored, and on `space.cameraDelta` they were spread into the delta.
+- **An exclusive tween.** `TweenOptions` and `CameraMotionOptions` have `onInterrupt` and
+  `continues`. A tween given `onInterrupt` is told when it stops without landing, and its
+  `onSettle` is never handed to another caller's tween. A CALLER ASKING FOR THE POSE A TWEEN IS
+  GOING TO JOINS IT: every caller's `onSettle` is called when it lands, every `onInterrupt` if it
+  does not (a second caller's `onSettle` replaced the first's). A NON-EXCLUSIVE TWEEN ANOTHER CALLER
+  REPLACES has its `onSettle` carried to the replacing tween and called when that lands, whatever
+  the replacing caller brings (it was dropped when the replacing caller had an `onSettle` of its
+  own); an input, a cancel or a jump still drops it. A `CameraMotionController` a host implements
+  itself should call `onInterrupt` from `cancel()`, from a gesture or a fling that stops a tween,
+  and from a tween that replaces it without `continues`, and keep these two rules.
+- **The engine's own retargets continue.** The followed docked page and the re-frame after a plane's
+  first measurement pass `continues`, so an exclusive tween keeps its callbacks through them. An
+  `anchor` move drops a re-frame that was still pending.
+- **Rest means the camera did not change.** The agent's settle (and `whenAtRest`) count a frame in
+  which the camera changed as moving, whatever `state.space.motion` says: a wheel's smoothed tail and
+  the arrow keys move the camera with the motion `idle`. An agent call made during one answers once
+  it has stopped. A `timeout` that is not a number from 0, or a `frames` that is not a whole number
+  from 1, is the default (4000 ms, 3): a `NaN` timeout never ran out, and `0` frames answered before
+  a command's motion had started.
+- **A lone modifier stops nothing.** Shift, Control, Alt or Meta pressed alone on the view no longer
+  cancels a running tween or fling (`isModifierKey`); with a key, it is the shortcut's as before.
+- **`animate` on the camera topics** is read as it always was: missing or `null` is the topic's
+  default, anything else by its truth (`animate: 0` jumps).
+
+
+
 # Migrating to the release prepared 2026-10-22
 
 `@plurid/plurid-data` `0.0.0-28`, `plurid-pubsub` `0.0.0-14`, `plurid-engine` `0.0.0-25`,

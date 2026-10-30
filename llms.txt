@@ -8,7 +8,7 @@ Install `@plurid/plurid-react react react-dom styled-components`. Configure with
 
 - [Getting started](https://github.com/plurid/plurid/blob/master/docs/GETTING_STARTED.md): a site first, a space, planes, links, configuration, persistence, the viewpoint
 - [Control surface](https://github.com/plurid/plurid/blob/master/docs/CONTROL_SURFACE.md): every configuration knob, the bus topics and `space.changed` kinds, the handle, the hooks, slots, the DOM contract
-- [Agent control](https://github.com/plurid/plurid/blob/master/docs/AGENT_CONTROL.md): `@plurid/plurid-react/agent`, the fourteen tools, the observation, error codes, guardrails, a Claude tool-use loop, WebMCP
+- [Agent control](https://github.com/plurid/plurid/blob/master/docs/AGENT_CONTROL.md): `@plurid/plurid-react/agent`, the fifteen tools (a tour among them), the observation, error codes, guardrails, a Claude tool-use loop, WebMCP
 - [Architecture](https://github.com/plurid/plurid/blob/master/docs/ARCHITECTURE.md): the package graph, the render pipeline, state, server rendering, the kit
 
 ## Reference

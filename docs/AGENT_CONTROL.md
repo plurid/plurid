@@ -1,8 +1,8 @@
 # Agent control — `@plurid/plurid-react/agent`
 
 An AI agent can operate a plurid application embedded in a page. It reads the space as a reader
-would: the planes, their text and links, the docked page, the selection. It acts through fourteen
-tools that open, follow, close, frame, arrange and configure. Each tool is described for a model and
+would: the planes, their text and links, the docked page, the selection. It acts through fifteen
+tools that open, follow, close, frame, arrange, configure and show the reader around. Each tool is described for a model and
 validated before it runs. Each answers once the space has come to rest, and the answer carries the
 space as it is then.
 
@@ -73,6 +73,7 @@ const result = await agent.call('plurid_observe');
 | `plurid_bookmark` | `save`, `go` to, or `remove` a named viewpoint. | yes |
 | `plurid_command` | Runs one of the keyboard commands by id (`frameActive`, `copy`, `isolatePlane`, …), exactly as its key would. The id is an enum in the schema, so a model sees the list. | yes |
 | `plurid_configure` | Sets the `presentation` (`page` \| `space`) or the roots' `layout` (`columns` with `COLUMNS`, `rows` with `ROWS`). | yes |
+| `plurid_tour` | Shows the reader around: `play` a tour through `stops` (at most 100 planes by id, each `frame`d or `dock`ed, each held `dwell` ms, at most 2 147 483 647, or until `next`), then `pause`, `resume`, `next`, `previous`, `stop`, or read its `state`. The stops become anchors (the plane's path), so they hold through the relayouts the tour causes; the reader's input, or another move of the camera, pauses it. `play` answers once the first stop is reached (or the tour pauses or ends first). `no_effect` steers a tour that is not playing. | yes |
 
 Every tool's `inputSchema` is a JSON Schema with `additionalProperties: false` and no numeric or
 string-length constraints. The same schemas therefore work as MCP tools, as WebMCP tools, and as
@@ -275,10 +276,12 @@ const result = await page.evaluate(() => window.__PLURID_AGENT__.call('plurid_fo
   should say so in its text (`alt`, captions).
 - **The camera is not in the history.** `plurid_history` undoes the arrangement (planes opened,
   closed, removed, moved), not the view.
-- **Timing.** A call answers once the camera is idle and the layout has stopped moving for three
-  frames, or after `settleTimeout`. An application that animates forever answers `settled: false`.
+- **Timing.** A call answers once the camera is idle, has not changed, and the layout has stopped
+  moving for three frames, or after `settleTimeout` (`whenAtRest`, the same rest the handle offers).
+  An application that animates forever answers `settled: false`. A `plurid_tour` `play` answers once
+  the first stop is reached; the tour goes on after the answer.
 
 Tests: `source/agent/__tests__/agent.test.tsx` (jsdom) covers the catalog, validation, each tool, the
-guardrails, serialization and WebMCP. `fixtures/render-test/e2e/agent.spec.ts` (Chromium,
+guardrails, serialization and WebMCP; `agentTour.test.tsx` the tour tool. `fixtures/render-test/e2e/agent.spec.ts` (Chromium,
 `?agent=1`) runs an agent through the real harness: a link followed in a space, a plane closed,
 reopened and undone, the page presentation's pages and the address bar, and a WebMCP context.

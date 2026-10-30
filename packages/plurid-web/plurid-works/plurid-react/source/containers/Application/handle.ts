@@ -11,6 +11,9 @@
         PluridNamedViewpoint,
         PluridStateHistory,
         LinkCoordinates,
+        PluridPlaneAnchor,
+        PluridAnchorResolution,
+        PluridTourControls,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -23,6 +26,9 @@
     import type {
         ClosePlaneOptions,
     } from '~services/state/thunks/planes';
+    import type {
+        PluridRestOptions,
+    } from '~services/logic/rest';
 // #endregion imports
 
 
@@ -52,7 +58,27 @@ export interface PluridApplicationHandle extends PluridApi {
         dock: (planeID?: string, options?: CameraMotionOptions) => void;
         /** Reveal the space from the docked page. */
         reveal: (options?: CameraMotionOptions) => void;
+        /**
+         * Go to a camera named by a plane (2026-10-30): its path, which plane at that path, and the
+         * pose in its frame, resolved against the space as it is now. The answer says where it went
+         * (the plane, the camera), or why it did not move (`absent`, `hidden`).
+         */
+        anchor: (anchor: PluridPlaneAnchor, options?: CameraMotionOptions) => PluridAnchorResolution;
+        /** Stop whatever moves the camera (a tween, a fling) where it is. An exclusive tween is told (`onInterrupt`). */
+        cancel: () => void;
+        /** Whether camera moves jump: the reader prefers reduced motion and `navigation.motion.reducedMotion` respects it. */
+        reducedMotion: () => boolean;
     };
+    /**
+     * TOURS (2026-10-30): play a sequence of anchored stops, pause, resume, step, seek, stop, observe
+     * every event, and record a tour from where the reader comes to rest.
+     */
+    tour: PluridTourControls;
+    /**
+     * Resolve `true` once the camera is still and no relayout glides, for `frames` frames in a row
+     * (3), or `false` after `timeout` ms (4000): the moment a host draws over what the camera came to.
+     */
+    whenAtRest: (options?: PluridRestOptions) => Promise<boolean>;
     selection: {
         get: () => string[];
         set: (planeIDs: string[]) => void;

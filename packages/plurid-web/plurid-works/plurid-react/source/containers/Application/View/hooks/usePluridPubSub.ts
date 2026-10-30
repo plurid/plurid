@@ -98,17 +98,14 @@
     } from '~services/logic/animation';
 
     import {
-        setViewpoint,
-        resetCamera,
-        goHome,
-        goPreset,
-        bookmarkCommand,
+        cameraCommand,
+        motionOf,
         setHome,
-        fitToView,
         frameCommand,
-        dockCommand,
-        revealCommand,
         applyCameraDeltaCommand,
+    } from '~services/logic/camera';
+    import type {
+        CameraThunk,
     } from '~services/logic/camera';
 
     import {
@@ -988,17 +985,14 @@ export const usePluridPubSub = (
                         warn('space.setViewpoint', 'give `{ viewpoint }`, the encoded string (`api.getViewpoint()`)');
                         return;
                     }
-                    dispatch(setViewpoint(encoded, !!(data as any)?.animate) as any);
+                    dispatch(cameraCommand({ kind: 'viewpoint', viewpoint: encoded }, motionOf(data, false)) as any);
                 },
             },
             {
                 // High-value declarative control. The niche actions stay on the `onReady` api.
                 topic: PLURID_PUBSUB_TOPIC.FIT_TO_VIEW,
                 callback: (data) => {
-                    dispatch(fitToView({
-                        animate: (data as any)?.animate ?? true,
-                        faceOn: (data as any)?.faceOn,
-                    }) as any);
+                    dispatch(cameraCommand({ kind: 'fit', faceOn: (data as any)?.faceOn }, motionOf(data, true)) as any);
                 },
             },
             {
@@ -1007,11 +1001,17 @@ export const usePluridPubSub = (
                     if (!data || typeof data !== 'object') {
                         return;
                     }
+                    // the motion is the message's, never a field of the delta
                     const {
                         animate,
+                        duration,
+                        easing,
                         ...delta
                     } = data as any;
-                    dispatch(applyCameraDeltaCommand(delta, !!animate) as any);
+                    const motion = motionOf({ animate, duration, easing }, false);
+                    dispatch((motion.animate
+                        ? cameraCommand({ kind: 'delta', delta }, motion)
+                        : applyCameraDeltaCommand(delta, false)) as any);
                 },
             },
             {
@@ -1023,19 +1023,19 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_HOME,
                 callback: (data) => {
-                    dispatch(goHome((data as any)?.animate ?? true) as any);
+                    dispatch(cameraCommand({ kind: 'home' }, motionOf(data, true)) as any);
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_DOCK,
                 callback: (data) => {
-                    dispatch(dockCommand((data as any)?.planeID, (data as any)?.animate ?? true) as any);
+                    dispatch(cameraCommand({ kind: 'dock', planeID: (data as any)?.planeID }, motionOf(data, true)) as any);
                 },
             },
             {
                 topic: PLURID_PUBSUB_TOPIC.SPACE_REVEAL,
                 callback: (data) => {
-                    dispatch(revealCommand((data as any)?.animate ?? true) as any);
+                    dispatch(cameraCommand({ kind: 'reveal' }, motionOf(data, true)) as any);
                 },
             },
             {
@@ -1052,7 +1052,7 @@ export const usePluridPubSub = (
                     if (typeof name !== 'string') {
                         return;
                     }
-                    dispatch(goPreset(name, (data as any)?.animate ?? true) as any);
+                    dispatch(cameraCommand({ kind: 'preset', name }, motionOf(data, true)) as any);
                 },
             },
             {
@@ -1062,12 +1062,27 @@ export const usePluridPubSub = (
                     if (typeof name !== 'string') {
                         return;
                     }
-                    dispatch(bookmarkCommand({
+                    dispatch(cameraCommand({
+                        kind: 'bookmark',
                         name,
-                        action: (data as any)?.action,
+                        action: (data as any)?.action ?? 'go',
                         to: (data as any)?.to,
-                        animate: (data as any)?.animate ?? true,
-                    }) as any);
+                    }, motionOf(data, true)) as any);
+                },
+            },
+            {
+                // TOURS (2026-10-30): the application's player, reached as a thunk reaches the motion
+                // controller (the thunk extra); every action is answered on `space.changed` kind `tour`
+                topic: PLURID_PUBSUB_TOPIC.SPACE_TOUR,
+                callback: (data) => {
+                    const tourThunk: CameraThunk = (_dispatch, _getState, extra) => {
+                        if (!extra?.tour) {
+                            warn('space.tour', 'this application has no tour player');
+                            return;
+                        }
+                        extra.tour.command(data as any);
+                    };
+                    dispatch(tourThunk as any);
                 },
             },
             {
@@ -1457,7 +1472,7 @@ export const usePluridPubSub = (
             {
                 topic: PLURID_PUBSUB_TOPIC.RESET_TRANSFORM,
                 callback: (data) => {
-                    dispatch(resetCamera((data as any)?.animate ?? true) as any);
+                    dispatch(cameraCommand({ kind: 'reset' }, motionOf(data, true)) as any);
                 },
             },
             {

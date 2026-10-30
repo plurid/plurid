@@ -78,6 +78,7 @@
 
     import {
         isEditableTarget,
+        isModifierKey,
         planeElementOf,
         isScrollableAlong,
         isFocusedEditable,
@@ -729,7 +730,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         // A key on the space is an input: it interrupts any tween / fling in flight — BEFORE the
         // shortcut runs, so a shortcut that itself starts a tween (frame the active plane, a root
         // by index, home, the arrows) keeps its motion instead of losing it on the same keystroke.
-        if (!isEditableTarget(event.target)) {
+        // a modifier pressed alone is not one (2026-10-30): it stopped a tour's travel on its way
+        if (!isEditableTarget(event.target) && !isModifierKey(event)) {
             motion.cancel();
         }
 
@@ -1072,9 +1074,14 @@ const PluridView: React.FC<PluridViewProperties> = (
             if (interaction.camera.isDocked(spaceState.camera, geometry, view, stateConfiguration.space.docking?.epsilon, undefined, spaceState.cameraLimits, stateConfiguration.space.docking?.scale)) {
                 return;
             }
+            // a swing docking on this page is re-aimed, not replaced: it CONTINUES, and an exclusive
+            // tween (a tour's stop) keeps its callbacks; a tween going elsewhere is interrupted
             dispatch(cameraCommand(
                 { kind: 'dock', planeID: followed },
-                { animate: spaceState.motion === 'tween' },
+                {
+                    animate: spaceState.motion === 'tween',
+                    continues: spaceState.dockingPlaneID === followed,
+                },
             ) as any);
         }, [
             stateTree,

@@ -1,6 +1,6 @@
 {
     "name": "@plurid/plurid-react-server",
-    "version": "0.0.0-21",
+    "version": "0.0.0-22",
     "description": "React implementation of Plurid to view and explore the web in three dimensions with server-side rendering",
     "keywords": [
         "plurid",
@@ -47,7 +47,7 @@
         "prepublishOnly": "pnpm build"
     },
     "peerDependencies": {
-        "@plurid/plurid-react": ">=0.0.0-42",
+        "@plurid/plurid-react": ">=0.0.0-43",
         "puppeteer": ">=22",
         "react": ">=19",
         "react-dom": ">=19",

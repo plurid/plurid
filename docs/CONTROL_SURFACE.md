@@ -87,6 +87,9 @@ plurid.current?.tree.set(savedTree);                     // replace the whole tr
 plurid.current?.tree.close(planeID); .open(planeID); .remove(planeID);
 plurid.current?.persist.flush();                         // write a pending save now, as pagehide does
 plurid.current?.focus();                                 // keyboard shortcuts apply
+plurid.current?.camera.anchor({ path: '/report' });      // a camera named by a plane; answers where it went
+plurid.current?.tour.play(tour, { onStep, onMissing });  // a tour of anchored stops (below)
+await plurid.current?.whenAtRest();                      // the camera still, no relayout gliding
 ```
 
 ## Hooks — for anything rendered under the application
@@ -120,7 +123,7 @@ hook gave the registered route's), `parentPlaneID` — the application's `pubsub
 The instance **pubsub** bus (the same one `onReady` hands back) is the stable, decoupled control + observe surface.
 
 **TOTAL CONTROL (2026-09-13).** The bus reaches everything the engine's own chrome, keyboard and
-imperative handle reach — 81 topics (79 commands and the 2 the engine emits), and **every command has a subscriber** (a test asserts it, so a
+imperative handle reach — 82 topics (80 commands and the 2 the engine emits), and **every command has a subscriber** (a test asserts it, so a
 typed-but-inert topic cannot ship; eleven of them were exactly that until this release). Three layers, by
 how much you want to say:
 
@@ -221,7 +224,8 @@ plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_HOME });               
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_SET_HOME });                   // make the current camera home ({ viewpoint } to set one)
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_PRESET, data: { name: 'overview' } });
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_BOOKMARK, data: { name: 'desk', action: 'save' } }); // then { name: 'desk' } to go, 'remove' to drop
-// Every one of these is an interruptible tween (`navigation.motion`); pass `animate: false` to jump.
+// Every one of these is an interruptible tween (`navigation.motion`); pass `animate: false` to jump,
+// `duration` (ms) and `easing` to shape it (`PluridPubSubMotion`, 2026-10-30).
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_ALIGN, data: { edge: 'left' } });        // …'right' | 'top' | 'bottom' | 'centerX' | 'centerY'
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_DISTRIBUTE, data: { axis: 'x' } });    // equal gaps (3+ selected)
 plurid.pubsub.publish({ topic: PLURID_PUBSUB_TOPIC.SPACE_DUPLICATE, data: { offset: 40 } });   // copies of the selected roots
@@ -241,7 +245,7 @@ plurid.pubsub.subscribe({
     callback: ({ kind, value }) => {
         // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved'
         //     | 'loading' | 'history' | 'motion' | 'bookmarks' | 'docked' | 'culling'
-        //     | 'plane' | 'refused' | 'planeError' | 'describe' | 'command' | 'focus'
+        //     | 'plane' | 'refused' | 'planeError' | 'describe' | 'command' | 'focus' | 'tour'
         // every kind, with its value, in docs/CHANGES.md (generated from PLURID_CHANGE_KINDS)
         if (kind === 'selection') highlightInSidebar(value);
     },
@@ -501,6 +505,93 @@ plurid.current?.bookmarks.get();               // the same list from the imperat
 ```
 
 Through the bus: `space.bookmark { name, action: 'go' | 'save' | 'remove' | 'rename', to?, animate? }`, `space.setHome`, `space.home`, `space.preset`. `space.changed` kind `bookmarks` carries the record after every edit.
+
+### Tours and anchors
+
+A **tour** (2026-10-30) is a sequence of stops, each a camera named by a plane, an **anchor**, so a
+stop finds its plane wherever the plane is when the stop is reached. The engine owns the anchors,
+the sequence, the timing and the readiness; the host owns what a stop shows (a caption, a file, a
+region) and the bar the reader steers it with. The engine draws no tour UI.
+
+```tsx
+const anchor = { path: '/files/report', pose: 'frame' };       // or 'dock', or a pose in the plane's frame
+plurid.current?.camera.anchor(anchor);                        // { ok: true, planeID, camera } | { ok: false, reason: 'absent' | 'hidden' }
+
+const end = await plurid.current?.tour.play(tour, {
+    onStep: async (step, { signal }) => { await open(step.payload, signal); },   // awaited; return 'skip' or 'stop' to say so
+    onMissing: (step, { reason, attempt }) => (attempt < 3 ? 'retry' : 'skip'),  // the plane is absent or hidden
+});                                                           // resolves with the end: { type: 'end', index, reason, error? }
+plurid.current?.tour.subscribe((event, state) => caption(event, state));      // travel · arrive · skip · pause · resume · end
+plurid.current?.tour.pause(); .resume(); .next(); .previous(); .seek('drawing'); .stop(); .state();
+
+const recorder = plurid.current?.tour.record({ dwell: 4000 }); // a stop each time the camera comes to rest somewhere new
+recorder.capture();                                            // and one by hand (the first view)
+const recorded = recorder.stop();                              // a PluridTour
+```
+
+- **The anchor** (`PluridPlaneAnchor`). `path` is the plane's path with its query, as an arrangement
+  fragment holds it (a full `plurid://` address reads as its path); `occurrence` is which plane at
+  that path (default 0), counted in tree order depth first (a root, every plane hanging from it,
+  then the next root) with closed planes included, so an anchor names one plane: a closed one
+  answers `hidden` even when a later plane at the path is shown. `pose` defaults to `frame`. `dock`
+  reads the plane as a page, `frame` frames it whole (a dock in the page presentation): both are
+  computed from the plane's geometry when the anchor resolves, so they follow a resize. A pose
+  (`PluridAnchorPose`: `yaw`, `pitch`, `roll?`, `scale`, `pivot`, `offset?`) is the camera in the
+  plane's own frame: its angles relative to the plane (`0, 0, 0` face-on), its pivot in px on the
+  plane from the top-left corner (`z` 0 when left out), its offset where the pivot sits relative to
+  the view centre. A pose is ABSOLUTE: a resized plane is shown at the same point and the same zoom,
+  not refitted. A recorded pose pivots on the point under the view centre, so its offset is
+  `{ x: 0, y: 0, z }`. `anchorOf(state)` names where the camera is: the docked page, else the plane
+  nearest the eye under the view centre, else the first selected plane, else the nearest; never the
+  active plane, which follows the pointer. `resolveAnchor(state, anchor)` is where an anchor lands
+  now.
+- **The tour** (`PluridTour`): `{ plurid: 'plurid/tour', version: 1, id?, title?, dwell?, steps }`, a step
+  `{ id, anchor, duration?, easing?, dwell?, payload? }`. `dwell` is ms at the stop, at most
+  `PLURID_TOUR_MAX_DWELL` (2 147 483 647, a timer's longest delay); `null` waits for `next()`, and is
+  the default. A tour holds at most `PLURID_TOUR_MAX_STEPS` (1000) steps. The engine carries
+  `payload` and never reads it. `parseTour(textOrValue)` answers `{ ok: true, tour }` or
+  `{ ok: false, error }` naming the field (`step 3 ('drawing').anchor.path: …`); `serializeTour(tour)`
+  writes it back, four spaces deep.
+- **Playing.** `play` reads the tour, and finds its `start`, before it touches the tour playing: one
+  that is not a tour resolves at once with `{ reason: 'error', index: -1, error }` and leaves the
+  playing tour alone. A valid one replaces it (`replaced`); a `play` called from a listener of that
+  `replaced` end is the newer call and plays, and the outer one resolves `replaced` without starting.
+- **Readiness first.** A step waits for the space to boot, then for the host's `onStep` (awaited; its
+  `signal` aborts when the tour moves on first), then resolves against the space that leaves.
+  Nothing is buffered or replayed.
+- **A missing plane** asks `onMissing` with the reason (`absent`, `hidden`) and the attempt: `skip`
+  (the default), `retry` (resolve again once the space is at rest) or `stop`. So does a plane
+  closed or taken away under a step that travels or dwells. A skip yields a microtask before the
+  next step.
+- **The stop follows its plane.** While a step travels or dwells, a relayout, a measurement or a
+  resize resolves it again: the travel is re-aimed, or the camera follows at the stop (a resize
+  re-derives the camera, and the stop is put back).
+- **Input pauses it, never destroys it.** A press, a wheel or a key on the view (an editable field and
+  a lone modifier aside) pauses the tour (`paused: 'input'`). So does any other move taking the
+  camera (`paused: 'interrupted'`): a travel's tween stopped by a drag, a key, a host's or an
+  agent's move; and at a stop, the camera leaving the stop without the tour moving it, which a dwell
+  never takes back. A paused tour prepares nothing: a step it skips to waits for resume before its
+  `onStep` runs. `resume()` resolves the step again: back to the stop with its whole dwell if the
+  camera left it, else the dwell goes on with what it had left, and the `resume` event carries that
+  state. `next`, `previous` and `seek` go on from a pause, with a `resume` event; a step left while
+  it travelled stops its tween where it is. `pauseOnInput: false` keeps the tour going while the
+  reader reads, clicks, scrolls and presses keys at a stop; whatever stops or takes the camera still
+  pauses it.
+- **Reduced motion** makes every travel a jump; the dwell stays, since the dwell is the reading.
+- **The bus.** `space.tour { action: 'play' | 'pause' | 'resume' | 'next' | 'previous' | 'seek' |
+  'stop' | 'state', tour?, step? }`, answered on `space.changed` kind `tour` with
+  `{ state, event?, error? }`: a `state` query answers with the state alone, a refused `play` with
+  the state and the `error`. A tour played from the bus skips a missing step: the callbacks are the
+  handle's.
+- **The motion under it.** A tour's moves are EXCLUSIVE tweens: `CameraMotionOptions.onInterrupt` is
+  told when a move stops without landing, and its `onSettle` is never handed to another caller's
+  tween. A caller asking for the pose a tween is already going to joins it: every caller's
+  `onSettle` is called when it lands, every `onInterrupt` if it does not. A non-exclusive tween
+  another caller replaces has its `onSettle` carried to the replacing tween, called when that lands.
+  `handle.whenAtRest({ timeout, frames })` resolves `true` once the camera is still and no relayout
+  glides (`frames`, a whole number from 1, default 3; `false` after `timeout` ms, default 4000; a
+  value that is neither is the default), the moment to draw over a stop. `handle.camera.cancel()`
+  stops the camera where it is; `handle.camera.reducedMotion()` says whether moves jump.
 
 ### Copy, cut and paste of planes (`space.clipboard`)
 
@@ -870,7 +961,7 @@ space.tree.fields.linkIndexOf(tree);                            // every spawned
 
 ## Agent control — `@plurid/plurid-react/agent`
 
-An AI agent operates the application through this same surface: `createPluridAgent(api)` (or `usePluridAgent(api, { webmcp, global })`) turns the bus and the store into fourteen tools. Each tool has a JSON Schema, validates its input, answers once the space is at rest, and carries the space as a model reads it: the planes with their text and links, the docked page, the selection, the history. Hand them to a model loop (`anthropicTools({ strict: true })`, `tools()` for MCP), register them with a WebMCP context (`exposeToWebMCP()`), or put them on `window` for a browser-automation agent (`exposeGlobal()`). `tools`, `readOnly` and `onCall` decide what a model may do. [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) has the catalog, the error codes, a Claude loop and the limits.
+An AI agent operates the application through this same surface: `createPluridAgent(api)` (or `usePluridAgent(api, { webmcp, global })`) turns the bus and the store into fifteen tools. Each tool has a JSON Schema, validates its input, answers once the space is at rest, and carries the space as a model reads it: the planes with their text and links, the docked page, the selection, the history. Hand them to a model loop (`anthropicTools({ strict: true })`, `tools()` for MCP), register them with a WebMCP context (`exposeToWebMCP()`), or put them on `window` for a browser-automation agent (`exposeGlobal()`). `tools`, `readOnly` and `onCall` decide what a model may do. [`AGENT_CONTROL.md`](./AGENT_CONTROL.md) has the catalog, the error codes, a Claude loop and the limits.
 
 ## Testing your integration — `@plurid/plurid-react/testing`
 
@@ -900,6 +991,7 @@ import { treePlane, viewSizedSheet, pageConfiguration, configurationWith, makeSp
 
 const store = makeSpaceStore(pageConfiguration({ space: { docking: { motion: 'instant' } } }), [viewSizedSheet('p1'), viewSizedSheet('p2', { location: { translateY: 650 } })]);
 const tweens = motionSpy(store);                         // a View's motion controller, as a spy
+// motionStub(store).land() lands the running tween (target committed, onSettle called): what a tour waits for
 store.dispatch(cameraCommand({ kind: 'frame', planeID: 'p2' }));
 expect(tweens).toHaveLength(0);                          // instant: a jump
 expect(store.cameraCommits()).toHaveLength(1);
@@ -919,6 +1011,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Give one plane its own size / every plane a size | `planes[].width` / `height` (px): declared sizes render as-is and the layouts space by them; `usePluridPlane().width / height / sizeMode` · `planeWidth` / `planeHeight` for every undeclared plane · `planes[].maxHeight` / `planeMaxHeight` cap a content-sized height (the content scrolls inside) |
 | Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` / `PluridField` · `useLook()` |
 | Present the space as a site (a page first, the space one move away) | `{ presentation: 'page', docking: { motion, chrome, reveal, fade, aside, focus, epsilon, url } }` · the address bar is the page (`docking.url`, Back / Forward, deep links) · `space.dock` / `space.reveal` · `useCamera().dock / reveal / docked` · `space.changed` kind `docked` · `[data-plurid-docked]` on the view · `renderDockRail` / `dockRail: { show }` · Escape docks (a spawned page: its parent), G / the rail / a pinch reveal |
+| Play a tour of anchored stops, record one, name a camera by its plane | `handle.tour.play(tour, { onStep, onMissing })` · `pause` / `resume` / `next` / `previous` / `seek` / `stop` / `subscribe` / `record` · `handle.camera.anchor(anchor)` · `anchorOf` / `resolveAnchor` / `parseTour` / `serializeTour` · `space.tour` · `space.changed` kind `tour` · `handle.whenAtRest()` |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (`go` / `save` / `remove` / `rename`) (+ `navigation.home` / `presets`) · `usePluridBookmarks()` · `handle.bookmarks` · the toolbar's Bookmarks drawer |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
@@ -929,7 +1022,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Read undo/redo availability | `pluridSelectors.space.getHistory` · `space.changed` kind `history` |
 | Stop painting far / off-screen planes, fade with depth | `{ culling: { enabled: true } }` · `{ planeDepthFade: { enabled: true } }` · `usePluridPlane().culled` |
 | Virtualize the content of hidden planes (retain the state, or free the DOM) | `{ culling: { enabled: true, detach: 'retain' \| 'unmount' \| { mode, delay, distance, max } } }` · `usePluridPlane().detached` · `handle.tree.culling()` |
-| Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `focus`) |
+| Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `tour` / `whenAtRest` / `focus`) |
 | Read or drive the engine from a component under it | `useCamera` · `useSelection` · `usePluridHistory` · `usePluridPubSub` · `usePluridApi` |
 | Test the integration in jsdom | `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `flushFrames`, `expectCamera`) |
 | Mute the development warnings | `extend.development.warnings: false` |

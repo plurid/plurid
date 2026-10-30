@@ -18,6 +18,9 @@
         CameraDelta,
         CameraState,
         ViewSize,
+        PluridPlaneAnchor,
+        PluridAnchorPose,
+        PluridAnchorResolution,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -44,6 +47,13 @@
     import {
         EasingName,
     } from '~services/logic/motion';
+
+    import {
+        planesAtPath,
+    } from '~services/logic/tour/path';
+    import {
+        warnOnce,
+    } from '~services/logic/development/warn';
     // #endregion external
 // #endregion imports
 
@@ -71,6 +81,14 @@ export interface CameraMotionOptions {
     easing?: EasingName;
     /** Called once the camera has landed (at once for a jump; never for an interrupted tween). */
     onSettle?: () => void;
+    /**
+     * Called when the tween stops without landing (an input, a jump, another caller's move). Giving
+     * it makes the tween EXCLUSIVE: its `onSettle` is never handed to another caller's tween
+     * (`TweenOptions.onInterrupt`).
+     */
+    onInterrupt?: () => void;
+    /** This move re-aims a running tween at the place it was going (the engine's own retargets). */
+    continues?: boolean;
 }
 
 
@@ -89,7 +107,8 @@ export const resolvePlaneFallbackSize = (
 };
 
 
-const planeGeometry = (
+/** A plane's box for the framing math: its measured size, else the size it renders at unmeasured. */
+export const planeGeometry = (
     plane: TreePlane,
     fallback: { width: number; height: number },
 ) => ({
@@ -352,6 +371,91 @@ export const bookmarkTarget = (
     spaceState: PluridStateSpace,
     name: string,
 ): CameraState | undefined => decodeTarget(spaceState, spaceState.bookmarks?.[name]);
+
+
+/** A pose an untyped caller (the bus, a saved file) can hand in: the numbers a camera needs, finite. */
+const isAnchorPose = (
+    pose: unknown,
+): pose is PluridAnchorPose => {
+    const value = pose as PluridAnchorPose | undefined;
+    const finite = (number: unknown) => typeof number === 'number' && Number.isFinite(number);
+    return !!value
+        && typeof value === 'object'
+        && finite(value.yaw)
+        && finite(value.pitch)
+        && finite(value.scale)
+        && value.scale > 0
+        && !!value.pivot
+        && finite(value.pivot.x)
+        && finite(value.pivot.y)
+        && (value.pivot.z === undefined || finite(value.pivot.z))
+        && (value.roll === undefined || finite(value.roll))
+        && (value.offset === undefined || (!!value.offset && finite(value.offset.x) && finite(value.offset.y) && finite(value.offset.z)));
+};
+
+/**
+ * WHERE AN ANCHOR IS NOW (2026-10-30): the plane at its path (the `occurrence`-th in tree order) and
+ * the camera of its pose against that plane's geometry as the store holds it this moment, or why
+ * not: no plane at the path (`absent`), or the plane or a plane it hangs from is closed
+ * (`hidden`). Pure, and read at the moment of the move, so a stop lands where its plane is when the
+ * stop is reached, not where it was when the tour was made.
+ */
+export const resolveAnchor = (
+    state: AppState,
+    anchor: PluridPlaneAnchor,
+): PluridAnchorResolution => {
+    if (!anchor || typeof anchor !== 'object' || typeof anchor.path !== 'string' || !anchor.path) {
+        return { ok: false, reason: 'absent' };
+    }
+    const spaceState = state.space;
+    const configuration = state.configuration;
+    const occurrence = Number.isInteger(anchor.occurrence) && (anchor.occurrence as number) >= 0
+        ? anchor.occurrence as number
+        : 0;
+    const found = planesAtPath(spaceState.tree, anchor.path)[occurrence];
+    if (!found) {
+        return { ok: false, reason: 'absent' };
+    }
+    const plane = found.plane;
+    if (found.hidden) {
+        return { ok: false, reason: 'hidden', planeID: plane.planeID };
+    }
+
+    let pose = anchor.pose ?? 'frame';
+    if (pose !== 'dock' && pose !== 'frame' && !isAnchorPose(pose)) {
+        warnOnce(
+            'anchor-pose',
+            `an anchor's pose is 'dock', 'frame' or { yaw, pitch, scale, pivot } with finite numbers; ${JSON.stringify(pose)} is none of them, and the plane is framed.`,
+            configuration.development?.warnings !== false,
+        );
+        pose = 'frame';
+    }
+
+    const camera = pose === 'dock'
+        ? cameraEngine.dockPose(
+            spaceState.camera,
+            dockGeometry(plane, configuration, spaceState.viewSize),
+            spaceState.viewSize,
+            spaceState.cameraLimits,
+            configuration.space.docking?.scale,
+        )
+        : pose === 'frame'
+            ? frameTargetForPlane(spaceState, configuration, plane)
+            : cameraEngine.cameraFromPose(
+                // a pivot written without `z` is on the plane's surface, as `parseTour` reads it: a
+                // missing `z` took the camera's own pivot through the finite gate (2026-10-30)
+                { ...pose, pivot: { x: pose.pivot.x, y: pose.pivot.y, z: pose.pivot.z ?? 0 } },
+                planeGeometry(plane, resolvePlaneFallbackSize(configuration, spaceState.viewSize)),
+                spaceState.camera,
+                spaceState.cameraLimits,
+            );
+
+    return {
+        ok: true,
+        planeID: plane.planeID,
+        camera,
+    };
+};
 // #endregion targets
 
 
@@ -385,6 +489,8 @@ export const commitCameraTarget = (
         duration,
         easing,
         onSettle,
+        onInterrupt,
+        continues,
     } = options;
 
     const landing = landingDockPlaneID(state, target);
@@ -406,6 +512,8 @@ export const commitCameraTarget = (
             duration,
             easing,
             onSettle,
+            ...(onInterrupt ? { onInterrupt } : {}),
+            ...(continues ? { continues } : {}),
             ...(landing ? { docking: landing } : {}),
         });
         // after `tweenTo` (it stops a running tween first, which resets the motion and the field),
@@ -447,7 +555,9 @@ export type CameraCommand =
     /** Dock on a page (the page presentation): this plane, else the docked one, else the nearest. */
     | { kind: 'dock'; planeID?: string }
     /** Reveal the space from a docked page: pull back and tilt (the page presentation). */
-    | { kind: 'reveal' };
+    | { kind: 'reveal' }
+    /** Go to a camera named by a plane: its path, which plane at it, the pose in its frame (`resolveAnchor`). */
+    | { kind: 'anchor'; anchor: PluridPlaneAnchor };
 
 
 /** The camera a command resolves to (pure), or `undefined` when there is nothing to go to. */
@@ -521,6 +631,10 @@ export const resolveCameraTarget = (
                 )
                 : undefined;
         }
+        case 'anchor': {
+            const resolution = resolveAnchor(state, command.anchor);
+            return resolution.ok ? resolution.camera : undefined;
+        }
         case 'delta':
             // as the store's own delta: a pitch past the limit (a page docked face-on) is kept
             return cameraEngine.applyCameraDelta(
@@ -571,13 +685,17 @@ export const cameraCommand = (
         return;
     }
 
+    // a stop of a tour (or a host's anchored move) supersedes a re-frame a plane's measurement was
+    // still to bring: it would retarget the stop's travel to the plane a link had opened
+    if (command.kind === 'anchor' && extra) {
+        extra.pendingFrame = undefined;
+    }
     commitCameraTarget(dispatch, extra, target, options, state);
 };
 
 
-/** Whether the view center looks at the plane: the ray through the view center hits inside it. */
 /** two cameras that render the same picture, to a hair */
-const sameCamera = (
+export const sameCamera = (
     a: CameraState,
     b: CameraState,
 ): boolean => Math.abs(a.scale - b.scale) < 1e-3
@@ -701,9 +819,10 @@ export const reportPlaneSizes = (
         return;
     }
 
+    // the re-frame CONTINUES the framing it was waiting on: an exclusive tween keeps its callbacks
     dispatch((pending.pair
-        ? cameraCommand({ kind: 'pair', planeID: pending.planeID }, { animate: pending.animate })
-        : framePlaneByID(pending.planeID, pending.animate)) as any);
+        ? cameraCommand({ kind: 'pair', planeID: pending.planeID }, { animate: pending.animate, continues: true })
+        : cameraCommand({ kind: 'frame', planeID: pending.planeID }, { animate: pending.animate, continues: true })) as any);
 };
 
 /** One plane's measurement: a batch of one (a host, a test). */
@@ -811,26 +930,50 @@ export const setHome = (
 };
 
 
+const EASING_NAMES: ReadonlySet<string> = new Set(['linear', 'out-cubic', 'out-quint', 'in-out-cubic', 'spring']);
+
+/**
+ * A camera topic's motion, as the motion controller takes it (2026-10-30): `animate` (else the
+ * topic's own default), and `duration` and `easing` when they are ones the controller can run. Every
+ * camera topic read `animate` alone, so a host's `duration` reached nothing. `animate` is read as
+ * the topics always read it: missing (or `null`) is the topic's default, anything else by its truth,
+ * so `animate: 0` jumps.
+ */
+export const motionOf = (
+    message: unknown,
+    animateDefault: boolean,
+): CameraMotionOptions => {
+    const record = (message && typeof message === 'object' ? message : {}) as Record<string, unknown>;
+    const duration = record.duration;
+    const easing = record.easing;
+    return {
+        animate: record.animate === undefined || record.animate === null ? animateDefault : !!record.animate,
+        ...(typeof duration === 'number' && Number.isFinite(duration) && duration >= 0 ? { duration } : {}),
+        ...(typeof easing === 'string' && EASING_NAMES.has(easing) ? { easing: easing as EasingName } : {}),
+    };
+};
+
+
 /** The `space.frame` topic: a plane, the selection, or everything. */
 export const frameCommand = (
     message: PluridPubSubMessageFrame | undefined,
 ): CameraThunk => {
-    const animate = message?.animate ?? true;
+    const motion = motionOf(message, true);
 
     // a set of planes from a yaw: a fan of fins behind a parent reads from the yaw between them,
     // never from the camera's own
     if (message?.planeIDs && message.planeIDs.length > 0) {
-        return cameraCommand({ kind: 'planes', planeIDs: message.planeIDs, yaw: message.yaw ?? 'best' }, { animate });
+        return cameraCommand({ kind: 'planes', planeIDs: message.planeIDs, yaw: message.yaw ?? 'best' }, motion);
     }
     if (message?.planeID) {
-        return cameraCommand({ kind: 'frame', planeID: message.planeID }, { animate });
+        return cameraCommand({ kind: 'frame', planeID: message.planeID }, motion);
     }
     if (message?.selection) {
         return message.yaw !== undefined
-            ? cameraCommand({ kind: 'planes', yaw: message.yaw }, { animate })
-            : cameraCommand({ kind: 'frame', selection: true }, { animate });
+            ? cameraCommand({ kind: 'planes', yaw: message.yaw }, motion)
+            : cameraCommand({ kind: 'frame', selection: true }, motion);
     }
-    return cameraCommand({ kind: 'fit' }, { animate });
+    return cameraCommand({ kind: 'fit' }, motion);
 };
 
 

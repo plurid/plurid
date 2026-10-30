@@ -73,7 +73,7 @@ an unknown URL could take the server process down; every unknown URL of a fresh 
 - **Developer experience.** Configuration mistakes are warned about in development, including under
   Vite (the check read a `process` global Vite does not have); every documented example compiles and
   is type-checked by `pnpm check`; render slots are typed to return a React node.
-- **Agents.** `@plurid/plurid-react/agent` lets an AI agent operate an embedded application: fourteen
+- **Agents.** `@plurid/plurid-react/agent` lets an AI agent operate an embedded application: fifteen
   tools with JSON Schemas, an observation of the space, WebMCP registration, a `window` global and a
   Claude tool-use loop ([`AGENT_CONTROL.md`](./AGENT_CONTROL.md)). [`AGENTS.md`](../AGENTS.md) and
   [`llms.txt`](../llms.txt) describe the repository and the library to coding agents.

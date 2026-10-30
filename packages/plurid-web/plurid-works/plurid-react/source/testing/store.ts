@@ -13,6 +13,10 @@
         PluridConfiguration,
         defaultConfiguration,
     } from '@plurid/plurid-data';
+
+    import {
+        interaction,
+    } from '@plurid/plurid-engine';
     // #endregion libraries
 
 
@@ -55,6 +59,8 @@ export type HeadlessDispatch = ThunkDispatch<AppState, PluridThunkExtra, AnyActi
 export interface HeadlessStore {
     getState: () => AppState;
     dispatch: HeadlessDispatch;
+    /** Told after every action, as the application's store tells its subscribers. Returns the unsubscribe. */
+    subscribe: (listener: () => void) => () => void;
     /** every plain action that reached the reducer, in order */
     dispatched: AnyAction[];
     /** the thunk extra: mount a motion controller on it with `motionSpy` */
@@ -127,6 +133,7 @@ export const makeSpaceStore = (
     return {
         getState,
         dispatch: store.dispatch as unknown as HeadlessDispatch,
+        subscribe: (listener) => store.subscribe(listener),
         dispatched,
         extra,
         cameraCommits: () => dispatched.filter((action) => action.type === actions.space.setCamera.type),
@@ -159,6 +166,13 @@ export interface MotionStub {
     refuse: (refusing?: boolean) => void;
     /** Say a motion is running, so a caller's "is something moving?" branch can be driven. */
     setActive: (active: boolean) => void;
+    /**
+     * LAND the running tween, as its last frame does: its target is committed and its `onSettle`
+     * called. `false` when no accepted tween is running (none started, or it landed, was cancelled
+     * or was replaced). The stub moves nothing by itself, so a caller waiting for a landing (a tour
+     * stop) is driven by this.
+     */
+    land: () => boolean;
 }
 
 export interface MotionStubOptions {
@@ -189,6 +203,20 @@ export const motionStub = (
     const flings: RecordedFling[] = [];
     let accept = options.accept ?? true;
     let active = options.active ?? false;
+    // the accepted tween that has not landed, with the callbacks it carries as the real controller's
+    // would (an exclusive tween's are its own; a retarget that `continues` it keeps them; a
+    // non-exclusive tween's settle rides the tween that replaces it; a caller asking for the same
+    // pose joins it)
+    let running: {
+        target: CameraState;
+        onSettle?: () => void;
+        onInterrupt?: () => void;
+        riders: (() => void)[];
+    } | undefined;
+    const both = (
+        first: (() => void) | undefined,
+        second: (() => void) | undefined,
+    ) => (first && second ? () => { first(); second(); } : (first ?? second));
 
     const stub: MotionStub = {
         tweens,
@@ -201,11 +229,51 @@ export const motionStub = (
         setActive: (next) => {
             active = next;
         },
+        land: () => {
+            const landing = running;
+            if (!landing) {
+                return false;
+            }
+            running = undefined;
+            store.dispatch(actions.space.setCamera(landing.target));
+            for (const rider of landing.riders) {
+                rider();
+            }
+            landing.onSettle?.();
+            return true;
+        },
     };
 
     store.extra.motion = {
         tweenTo: (target, tweenOptions) => {
             tweens.push({ target, options: tweenOptions });
+            const previous = running;
+            // the same pose: joined, as the controller joins it (an accepted tween only)
+            if (accept && previous && interaction.camera.sameCamera(previous.target, target, 1e-9)) {
+                if (tweenOptions?.continues) {
+                    previous.onSettle = tweenOptions.onSettle ?? previous.onSettle;
+                    previous.onInterrupt = tweenOptions.onInterrupt ?? previous.onInterrupt;
+                } else {
+                    previous.onSettle = both(previous.onSettle, tweenOptions?.onSettle);
+                    previous.onInterrupt = both(previous.onInterrupt, tweenOptions?.onInterrupt);
+                }
+                return true;
+            }
+            let onSettle = tweenOptions?.onSettle;
+            let onInterrupt = tweenOptions?.onInterrupt;
+            let riders: (() => void)[] = [];
+            let replaced: (() => void) | undefined;
+            if (previous && tweenOptions?.continues) {
+                onSettle = tweenOptions.onSettle ?? previous.onSettle;
+                onInterrupt = tweenOptions.onInterrupt ?? previous.onInterrupt;
+                riders = previous.riders;
+            } else if (previous) {
+                riders = previous.onInterrupt || !previous.onSettle
+                    ? previous.riders
+                    : [...previous.riders, previous.onSettle];
+                replaced = previous.onInterrupt;
+            }
+            running = undefined;
             if (!accept) {
                 // THE CONTRACT OF A REFUSAL: `false` means "I did not tween — I jumped", and the real
                 // controller commits the camera itself before saying so (`useCameraMotion`), which is
@@ -218,12 +286,22 @@ export const motionStub = (
                 if (tweenOptions?.docking) {
                     store.dispatch(actions.space.setDockingPlaneID(''));
                 }
-                tweenOptions?.onSettle?.();
+                replaced?.();
+                for (const rider of riders) {
+                    rider();
+                }
+                onSettle?.();
+                return false;
             }
-            return accept;
+            running = { target, onSettle, onInterrupt, riders };
+            replaced?.();
+            return true;
         },
         cancel: () => {
             stub.cancels += 1;
+            const stopped = running;
+            running = undefined;
+            stopped?.onInterrupt?.();
         },
         fling: (velocity, kind) => {
             flings.push({ velocity: { x: velocity.x, y: velocity.y }, kind });

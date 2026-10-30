@@ -30,7 +30,7 @@
     } from './schema';
     import {
         waitForRest,
-    } from './settle';
+    } from '~services/logic/rest';
     import {
         observeSpace,
     } from './observe';

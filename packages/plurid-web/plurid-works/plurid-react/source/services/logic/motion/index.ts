@@ -28,9 +28,28 @@ export interface TweenOptions {
     /**
      * Called once the camera has LANDED on the target — at once when the controller jumps (reduced
      * motion, a zero duration, already there), at the tween's last frame otherwise; never when an
-     * input interrupts it. A retarget carries a pending `onSettle` over to the new tween.
+     * input interrupts it. When another caller's tween replaces a non-exclusive tween, this RIDES the
+     * replacing tween and is called when the camera lands (2026-10-30: it was dropped whenever the
+     * replacing caller brought an `onSettle` of its own); an exclusive tween's is not carried.
      */
     onSettle?: () => void;
+    /**
+     * AN EXCLUSIVE TWEEN (2026-10-30): its callbacks belong to its caller, so the caller learns
+     * whether the camera landed where it asked (`onSettle`) or did not (`onInterrupt`). Called once,
+     * when the tween stops without landing: an input, a jump, another caller's tween, after the
+     * motion that replaced it is in place. Its `onSettle` is never carried to another caller's
+     * tween, which would tell a tour it arrived at a stop the camera never reached; only a retarget
+     * that `continues` it keeps both. A caller asking for the very pose a tween is going to JOINS
+     * it, whichever kind either is: every caller's `onSettle` is called when it lands, and every
+     * `onInterrupt` if it does not.
+     */
+    onInterrupt?: () => void;
+    /**
+     * This retarget re-aims the running tween at the place it was going, moved (the docked page
+     * followed through a relayout, a plane framed again once it is measured): an exclusive tween
+     * keeps its callbacks through it, and is not interrupted.
+     */
+    continues?: boolean;
     /**
      * The page the camera docks on: a controller that jumps commits with it named, as a jump does, so
      * a page pitched past the orbit's limit is reached face-on (the commit clamped it, 2026-10-22).

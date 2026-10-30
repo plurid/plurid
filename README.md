@@ -118,7 +118,8 @@ layouts and the chrome included, is a documented knob (`docs/CONTROL_SURFACE.md`
 | **View** | The routes shown at the start; the layout arranges them. |
 | **Link** | A connection between planes; following it spawns the target behind its parent, joined by a bridge. |
 | **Camera** | One value: yaw, pitch, scale, pivot, offset. Docked on a page or free in the space. |
-| **Viewpoint** | The camera encoded as a short string, for share links, saved views and tours. |
+| **Viewpoint** | The camera encoded as a short string, for share links and saved views. |
+| **Anchor · Tour** | A camera named by a plane (its path and a pose in its frame), so it moves with the plane; a tour plays anchored stops, pauses on the reader's input and resumes where the plane is now. |
 | **Universe · Cluster** | Higher groupings of spaces, for multi-space arrangements. |
 | **Look** | The chrome's design tokens: twelve presets derived from a few colours, overridable from CSS, replaceable piece by piece. |
 

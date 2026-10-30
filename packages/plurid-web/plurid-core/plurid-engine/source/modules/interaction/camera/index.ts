@@ -16,5 +16,6 @@ export * from './legacy';
 export * from './project';
 export * from './frame';
 export * from './dock';
+export * from './anchor';
 export * from './motion';
 // #endregion exports

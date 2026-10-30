@@ -7,6 +7,9 @@
     } from '@plurid/plurid-data';
     import type {
         TreePlane,
+        PluridTour,
+        PluridTourStep,
+        PluridTourObservation,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -15,6 +18,12 @@
     import type {
         AppState,
     } from '~services/state/store';
+    import {
+        planeIdentity,
+    } from '~services/logic/tour/path';
+    import {
+        PLURID_TOUR_MAX_DWELL,
+    } from '~services/logic/tour/format';
     // #endregion external
 
 
@@ -47,7 +56,8 @@ export type PluridAgentToolName =
     | 'plurid_history'
     | 'plurid_bookmark'
     | 'plurid_command'
-    | 'plurid_configure';
+    | 'plurid_configure'
+    | 'plurid_tour';
 
 export type PluridAgentErrorCode =
     | 'unknown_tool'
@@ -726,6 +736,138 @@ const TOOLS: PluridAgentTool[] = [
         },
     },
 ];
+
+
+/** The tour's state, as a sentence: where it is and why. */
+const describeTour = (
+    observation: PluridTourObservation,
+): string => {
+    const { state } = observation;
+    const at = state.index >= 0 ? `stop ${state.index + 1} of ${state.count}${state.planeID ? ` (${state.planeID})` : ''}` : `${state.count} stop(s)`;
+    switch (state.status) {
+        case 'idle':
+            return 'no tour has played here';
+        case 'ended':
+            return `the tour ended (${state.ended ?? 'stopped'}) at ${at}`;
+        case 'paused':
+            return `the tour is paused (${state.paused ?? 'host'}) at ${at}`;
+        default:
+            return `the tour is ${state.status} at ${at}`;
+    }
+};
+
+const TOUR_STEERING = ['pause', 'resume', 'next', 'previous', 'stop'];
+
+/**
+ * The most stops a model's tour holds (2026-10-30): a reader follows a tour stop by stop, and a model
+ * that names more planes than this is listing the space, not showing it. The format holds up to
+ * `PLURID_TOUR_MAX_STEPS`.
+ */
+export const AGENT_TOUR_MAX_STOPS = 100;
+
+/**
+ * THE TOUR TOOL (2026-10-30): a model shows the reader around. The stops are planes by id, turned
+ * into anchors (the path, which plane at it, framed or docked), so the tour survives the relayouts
+ * its own steps cause; the player and its rules are the application's (`space.tour`).
+ */
+const tourTool: PluridAgentTool = {
+    name: 'plurid_tour',
+    description: 'Show the reader around the space: `play` a tour through `stops` (planes by id, each `framed` whole or `docked` as a page, each held `dwell` ms, or until `next`), then `pause`, `resume`, `next`, `previous` or `stop` it, or read its `state`. A press, a wheel or a key from the reader pauses it; `resume` goes back to the stop.',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            action: { type: 'string', enum: ['play', 'pause', 'resume', 'next', 'previous', 'stop', 'state'], description: 'What to do with the tour.' },
+            stops: {
+                type: 'array',
+                description: '`play`: the stops, in order.',
+                items: {
+                    type: 'object',
+                    properties: {
+                        planeID: planeIDProperty,
+                        view: { type: 'string', enum: ['frame', 'dock'], description: 'Frame the plane whole (default), or dock on it as a page.' },
+                        dwell: { type: 'number', description: 'ms at the stop before the next; omit to wait for `next`.' },
+                    },
+                    required: ['planeID'],
+                    additionalProperties: false,
+                },
+            },
+        },
+        required: ['action'],
+        additionalProperties: false,
+    },
+    readOnly: false,
+    destructive: false,
+    run: async (input, runtime) => {
+        const action = input.action as string;
+        let tour: PluridTour | undefined;
+        if (action === 'play') {
+            const stops = Array.isArray(input.stops) ? input.stops : [];
+            if (stops.length === 0) {
+                throw new PluridAgentError('invalid_input', '`play` needs `stops`: one or more plane ids, in order (plurid_observe lists them)');
+            }
+            if (stops.length > AGENT_TOUR_MAX_STOPS) {
+                throw new PluridAgentError('invalid_input', `a tour holds at most ${AGENT_TOUR_MAX_STOPS} stops; ${stops.length} were given: show the reader the ones that matter`);
+            }
+            const state = runtime.getState();
+            const steps: PluridTourStep[] = stops.map((stop: { planeID: string; view?: 'frame' | 'dock'; dwell?: number }, index: number) => {
+                const plane = requirePlane(state, stop.planeID);
+                if (stop.dwell !== undefined && !(stop.dwell >= 0 && stop.dwell <= PLURID_TOUR_MAX_DWELL)) {
+                    throw new PluridAgentError('invalid_input', `input.stops[${index}].dwell must be from 0 to ${PLURID_TOUR_MAX_DWELL} ms; omit it to wait for \`next\``);
+                }
+                const identity = planeIdentity(state.space.tree, plane.planeID);
+                return {
+                    id: 'stop-' + (index + 1),
+                    anchor: {
+                        path: identity?.path ?? plane.route,
+                        ...(identity && identity.occurrence > 0 ? { occurrence: identity.occurrence } : {}),
+                        pose: stop.view ?? 'frame',
+                    },
+                    ...(stop.dwell !== undefined ? { dwell: stop.dwell } : {}),
+                };
+            });
+            tour = { plurid: 'plurid/tour', version: 1, id: token(), steps };
+        } else if (TOUR_STEERING.includes(action)) {
+            const status = await askTour(runtime);
+            if (!status || status.state.status === 'idle' || status.state.status === 'ended') {
+                throw new PluridAgentError('no_effect', `no tour is playing (${status ? describeTour(status) : 'the space did not answer'}); \`play\` one first`);
+            }
+        }
+
+        if (tour) {
+            // THE ANSWER WAITS FOR THE FIRST STOP (2026-10-30): the arrival, else the tour pausing (the
+            // reader took the camera) or ending, of THIS tour (the one it replaces ends first), or
+            // its refusal; it answered while the camera was still on its way
+            const id = tour.id;
+            const first = runtime.listen((kind, value) => kind === 'tour' && !!value && (
+                (value.state?.tourID === id && ['arrive', 'pause', 'end'].includes(value.event?.type))
+                || (!!value.error && !value.event)
+            ), runtime.settleTimeout);
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_TOUR, { action, tour });
+            const reached = await first.answer as PluridTourObservation | undefined;
+            if (reached?.error) {
+                throw new PluridAgentError('invalid_input', 'the tour was not played: ' + reached.error);
+            }
+        } else if (action !== 'state') {
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_TOUR, { action });
+        }
+        const after = await askTour(runtime);
+        if (!after) {
+            throw new PluridAgentError('unavailable', 'the space did not answer about its tour');
+        }
+        return describeTour(after);
+    },
+};
+
+/** The tour's state now: `space.tour { action: 'state' }`, answered on the bus in the same tick. */
+const askTour = async (
+    runtime: PluridAgentRuntime,
+): Promise<PluridTourObservation | undefined> => {
+    const answer = runtime.listen((kind, value) => kind === 'tour' && !!value && !value.event, runtime.settleTimeout);
+    runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_TOUR, { action: 'state' });
+    return answer.answer;
+};
+
+TOOLS.push(tourTool);
 
 
 /** The catalog, in its order. */

@@ -100,7 +100,15 @@ export const useCameraMotion = (
         start: number;
         duration: number;
         easing: Easing;
+        /** the caller's: told when it lands */
         onSettle?: () => void;
+        /** set: the tween is EXCLUSIVE, and this is told when it stops without landing */
+        onInterrupt?: () => void;
+        /**
+         * The settles of the non-exclusive tweens this one replaced: each rides on, through every
+         * retarget, and is told when the camera lands (never when an input stops it).
+         */
+        riders: (() => void)[];
     } | null>(null);
     const fling = useRef<{
         velocity: Vec2;
@@ -128,18 +136,42 @@ export const useCameraMotion = (
             }
         };
 
-        const stop = () => {
+        /**
+         * Stop the motion, and hand back what an exclusive tween asked to be told when it stops
+         * without landing: the caller calls it once the motion it replaces this one with (none, a
+         * jump, a tween) is in place, so a caller that reacts by moving the camera finds the
+         * controller settled, not halfway through a retarget.
+         */
+        const stop = (): (() => void) | undefined => {
             if (frame.current !== null) {
                 cancelAnimationFrame(frame.current);
                 frame.current = null;
             }
+            const interrupted = tween.current?.onInterrupt;
             const wasActive = tween.current !== null || fling.current !== null;
             tween.current = null;
             fling.current = null;
             if (wasActive) {
                 setMotion('idle');
             }
+            return interrupted;
         };
+
+        /** Stop whatever drives the camera, and tell an exclusive tween it did not land. */
+        const halt = () => {
+            stop()?.();
+        };
+
+        /** one callback, then the other: two callers waiting on one landing */
+        const both = (
+            first: (() => void) | undefined,
+            second: (() => void) | undefined,
+        ) => (first && second
+            ? () => {
+                first();
+                second();
+            }
+            : (first ?? second));
 
         const reducedMotion = () => {
             const policy = configRef.current.navigation?.motion?.reducedMotion ?? 'respect';
@@ -161,9 +193,15 @@ export const useCameraMotion = (
                 );
                 dispatch(actions.space.setCamera(camera));
                 if (progress >= 1) {
-                    const onSettle = activeTween.onSettle;
+                    const {
+                        onSettle,
+                        riders,
+                    } = activeTween;
                     tween.current = null;
                     setMotion('idle');
+                    for (const rider of riders) {
+                        rider();
+                    }
                     onSettle?.();
                     return;
                 }
@@ -217,7 +255,7 @@ export const useCameraMotion = (
         };
 
         return {
-            cancel: stop,
+            cancel: halt,
             isActive: () => tween.current !== null || fling.current !== null,
             reducedMotion,
             fling: (velocity, kind) => {
@@ -238,7 +276,7 @@ export const useCameraMotion = (
                 if (Math.abs(velocity.x) < minimum && Math.abs(velocity.y) < minimum) {
                     return;
                 }
-                stop();
+                halt();
                 fling.current = {
                     velocity: { x: velocity.x, y: velocity.y },
                     kind,
@@ -249,22 +287,49 @@ export const useCameraMotion = (
             },
             gesture: (active) => {
                 if (active) {
-                    stop();
+                    halt();
                     setMotion('gesture');
                 } else if (motionRef.current === 'gesture') {
                     setMotion('idle');
                 }
             },
             tweenTo: (target, options = {}) => {
-                // already on its way there: a retarget to the same pose would only restart the tween
-                if (tween.current && cameraEngine.sameCamera(tween.current.to, target, 1e-9)) {
-                    if (options.onSettle) {
-                        tween.current.onSettle = options.onSettle;
+                const running = tween.current;
+                // already on its way there: a retarget to the same pose would only restart the tween.
+                // Another caller asking for it JOINS it: the camera lands where both asked, so both
+                // are told, whichever kind each is; a retarget that continues it re-aims its owner's
+                // callbacks (2026-10-30)
+                if (running && cameraEngine.sameCamera(running.to, target, 1e-9)) {
+                    if (options.continues) {
+                        running.onSettle = options.onSettle ?? running.onSettle;
+                        running.onInterrupt = options.onInterrupt ?? running.onInterrupt;
+                    } else {
+                        running.onSettle = both(running.onSettle, options.onSettle);
+                        running.onInterrupt = both(running.onInterrupt, options.onInterrupt);
                     }
                     return true;
                 }
-                // the intent to settle survives a retarget (a re-frame after a measurement)
-                const onSettle = options.onSettle ?? tween.current?.onSettle;
+                // WHAT THE REPLACED CALLER HEARS (2026-10-30). A retarget that continues the running
+                // tween keeps its callbacks. Another caller's tween replaces it: an EXCLUSIVE one is
+                // told `onInterrupt` (it did not land where it asked) and its `onSettle` goes no
+                // further; a non-exclusive one gave no `onInterrupt`, and its `onSettle` RIDES the
+                // replacing tween, told when the camera lands, as a re-frame always carried the
+                // focus grab after a link. It was dropped, in silence, whenever the replacing caller
+                // brought an `onSettle` of its own.
+                let onSettle = options.onSettle;
+                let onInterrupt = options.onInterrupt;
+                let riders: (() => void)[] = [];
+                let replaced: (() => void) | undefined;
+                if (running && options.continues) {
+                    onSettle = options.onSettle ?? running.onSettle;
+                    onInterrupt = options.onInterrupt ?? running.onInterrupt;
+                    riders = running.riders;
+                } else if (running) {
+                    riders = running.onInterrupt || !running.onSettle
+                        ? running.riders
+                        : [...running.riders, running.onSettle];
+                    replaced = running.onInterrupt;
+                }
                 stop();
                 // FROM THE STORE AS IT IS NOW (2026-10-20): the last render's camera, a jump in the same
                 // tick was not in it, and the tween started from before the jump
@@ -290,6 +355,10 @@ export const useCameraMotion = (
                     if (options.docking) {
                         dispatch(actions.space.setDockingPlaneID(''));
                     }
+                    replaced?.();
+                    for (const rider of riders) {
+                        rider();
+                    }
                     onSettle?.();
                     return false;
                 }
@@ -301,9 +370,12 @@ export const useCameraMotion = (
                     duration,
                     easing: (cameraEngine.EASINGS as Record<string, Easing>)[easingName] || cameraEngine.EASINGS['out-cubic'],
                     onSettle,
+                    onInterrupt,
+                    riders,
                 };
                 setMotion('tween');
                 schedule();
+                replaced?.();
                 return true;
             },
         };

@@ -13,6 +13,9 @@
     import type {
         PlaneMeasurer,
     } from '~services/logic/size';
+    import type {
+        PluridTourPlayer,
+    } from '~services/logic/tour/player';
     // #endregion external
 // #endregion imports
 
@@ -50,6 +53,8 @@ export interface PluridThunkExtra {
      * (`materializeFragment`). The store never depends on the engine's registrar class.
      */
     resolvePlane?: (path: string) => TreePlane | undefined;
+    /** The application's tour player (`handle.tour`), which the `space.tour` topic drives too. */
+    tour?: PluridTourPlayer;
 }
 
 

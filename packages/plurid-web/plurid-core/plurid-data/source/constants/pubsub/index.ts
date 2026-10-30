@@ -75,6 +75,12 @@ export const PLURID_PUBSUB_TOPIC = {
     SPACE_PRESET: 'space.preset',
     /** Bookmarks: data `{ name, action?: 'go' | 'save' | 'remove', animate? }` (default `go`). */
     SPACE_BOOKMARK: 'space.bookmark',
+    /**
+     * Tours (2026-10-30): data `{ action, tour?, step? }`: `play` a tour (from `step`), `pause`,
+     * `resume`, `next`, `previous`, `seek` a step, `stop`, or ask for the `state`; answered on
+     * `space.changed` kind `tour`. A host with the handle has the callbacks too (`handle.tour`).
+     */
+    SPACE_TOUR: 'space.tour',
 
     // Selection editing (Phase 5): all act on `selectedPlaneIDs`.
     /** Line the selection up on an edge: data `{ edge: 'left' | 'right' | 'top' | 'bottom' | 'centerX' | 'centerY' }`. */
@@ -199,4 +205,5 @@ export const PLURID_CHANGE_KINDS = [
     ['command', 'what a `space.command` did: `{ id, ran, reason }` (`unknown`, `disabled`, `needsKey`, `declined`)'],
     ['focus', 'whether the keyboard focus is inside the space, `boolean`'],
     ['planeError', 'a plane threw while rendering and its boundary caught it: `{ planeID, route, message }` (the plane shows its error card; the rest of the space goes on)'],
+    ['tour', 'the tour player: `{ state, event?, error? }`, the state (`status`, `index`, `stepID`, `count`, `planeID`, `paused`, `ended`) after each event (`travel`, `arrive`, `skip`, `pause`, `resume`, `end`), alone as the answer to `space.tour { action: \'state\' }`, and with `error` for a `play` refused (the tour playing goes on)'],
 ] as const;

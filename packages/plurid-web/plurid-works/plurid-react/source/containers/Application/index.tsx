@@ -34,6 +34,7 @@
         PluridApi,
         PluridPubSub as IPluridPubSub,
         PluridPlanesRegistrar as IPluridPlanesRegistrar,
+        PLURID_PUBSUB_TOPIC,
     } from '@plurid/plurid-data';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
@@ -62,7 +63,20 @@
         cameraCommand,
         applyCameraDeltaCommand,
         setHome,
+        resolveAnchor,
     } from '~services/logic/camera';
+    import {
+        createTourPlayer,
+    } from '~services/logic/tour/player';
+    import type {
+        PluridTourPlayer,
+    } from '~services/logic/tour/player';
+    import {
+        whenAtRest,
+    } from '~services/logic/rest';
+    import type {
+        AppState,
+    } from '~services/state/store';
     import {
         namedViewpoints,
         goViewpoint,
@@ -146,6 +160,15 @@
 
 
 // #region module
+/** The reader's reduced-motion preference, as the motion controller reads it, for a space with no View mounted. */
+const prefersReducedMotion = (
+    policy: 'respect' | 'ignore' | undefined,
+): boolean => (policy ?? 'respect') === 'respect'
+    && typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
 /** A registered plane's identity for the stability check (route, else id). */
 const planeIdentity = (
     plane: any,
@@ -261,6 +284,8 @@ class PluridApplicationShell extends Component<
     private storeID: string;
     /** The registrar of an application the host gave none (`planesRegistrar`). */
     private ownPlanesRegistrar: IPluridPlanesRegistrar<PluridReactComponent> | undefined;
+    /** The application's tour player (`handle.tour`, the `space.tour` topic). */
+    private tourPlayer: PluridTourPlayer;
 
 
     /**
@@ -326,6 +351,22 @@ class PluridApplicationShell extends Component<
             history: historyEnabled,
             extra: this.thunkExtra,
         });
+
+        // ONE PLAYER PER APPLICATION, on the store and the thunk extra like a thunk: it reaches the
+        // View's motion controller and element while one is mounted, and tells the bus what it does
+        this.tourPlayer = createTourPlayer({
+            getState: () => this.store.getState() as unknown as AppState,
+            dispatch: (action) => this.store.dispatch(action),
+            subscribe: (listener) => this.store.subscribe(listener),
+            extra: this.thunkExtra,
+            observe: (observation) => {
+                this.pubsub.publish({
+                    topic: PLURID_PUBSUB_TOPIC.CHANGED,
+                    data: { kind: 'tour', value: observation, application: this.storeID },
+                });
+            },
+        });
+        this.thunkExtra.tour = this.tourPlayer;
 
         // Resolve the tunable debounce windows once (default 300 / 250 if unset).
         const timings = resolvedSpace?.timings;
@@ -489,6 +530,8 @@ class PluridApplicationShell extends Component<
 
     public componentWillUnmount() {
         releaseApplicationID(this.storeID);
+        // a tour does not outlive its space
+        this.tourPlayer.dispose();
         if (this.hydrationFallback) {
             clearTimeout(this.hydrationFallback);
             this.hydrationFallback = undefined;
@@ -660,7 +703,31 @@ class PluridApplicationShell extends Component<
                 setHome: (viewpoint) => dispatch(setHome(viewpoint)),
                 preset: (name, options = {}) => dispatch(cameraCommand({ kind: 'preset', name }, { animate: true, ...options })),
                 bookmark: (name, action = 'go', options = {}) => dispatch(cameraCommand({ kind: 'bookmark', name, action }, { animate: true, ...options })),
+                // the resolution is the answer: where the move went, or why there was none
+                anchor: (anchor, options = {}) => {
+                    const resolution = resolveAnchor(getState() as unknown as AppState, anchor);
+                    if (resolution.ok) {
+                        dispatch(cameraCommand({ kind: 'anchor', anchor }, { animate: true, ...options }));
+                    }
+                    return resolution;
+                },
+                cancel: () => this.thunkExtra.motion?.cancel(),
+                reducedMotion: () => this.thunkExtra.motion?.reducedMotion()
+                    ?? prefersReducedMotion(getState().configuration?.space?.navigation?.motion?.reducedMotion),
             },
+            tour: {
+                play: (tour, options) => this.tourPlayer.play(tour, options),
+                pause: () => this.tourPlayer.pause(),
+                resume: () => this.tourPlayer.resume(),
+                next: () => this.tourPlayer.next(),
+                previous: () => this.tourPlayer.previous(),
+                seek: (step) => this.tourPlayer.seek(step),
+                stop: () => this.tourPlayer.stop(),
+                state: () => this.tourPlayer.state(),
+                subscribe: (listener) => this.tourPlayer.subscribe(listener),
+                record: (options) => this.tourPlayer.record(options),
+            },
+            whenAtRest: (options) => whenAtRest(this.store, options),
             selection: {
                 get: () => getState().space.selectedPlaneIDs,
                 set: (planeIDs) => dispatch(actions.space.setSelection(planeIDs)),
