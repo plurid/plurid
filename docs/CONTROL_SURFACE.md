@@ -618,7 +618,7 @@ plurid.current?.planes.raise(planeID);                         // to the front o
 const result = await plurid.current?.planes.place(planeID);    // 'placed' | 'interrupted' | 'refused'
 plurid.current?.planes.place(planeID, { parentPlaneID: other }); // hung under another plane ('' : a root)
 plurid.current?.planes.pinned();                               // [{ planeID, route, rect, collapsed, order, frame }], back first
-plurid.current?.planes.pinnable(planeID);                      // false for a plane registered `pinnable: false`
+plurid.current?.planes.pinnable(planeID);                      // shown, with a registration/predicate that permits pinning
 
 const stackID = plurid.current?.planes.stack([front, middle, back], { step: { x: 24, y: 72, z: 80 }, facing: 'camera' });
 plurid.current?.planes.unstack(stackID);                       // or .unstack([planeID, …]); .stacks()
@@ -638,7 +638,13 @@ plurid.current?.planes.unstack(stackID);                       // or .unstack([p
   that had it. What a DOM move cannot keep: an `<iframe>` (and Electron's `<webview>`) loads again
   when it moves, a custom element runs its disconnected and connected callbacks, and a text selection
   is lost. A plane whose content cannot move is registered `pinnable: false` (`planes[].pinnable`):
-  `pin` refuses it, with a development warning. An application rendered in a `PluridProvider` (a
+  `pin` and opening pinned refuse it, with a development warning. A synchronous predicate can
+  distinguish instances sharing a route: `pinnable: ({ parameters }) => isNote(parameters.id)`.
+  It receives `PluridPlanePinContext` (`planeID`, `route`, `parameters`), reads current host state,
+  and returns a boolean. An exception refuses pinning. Policies are checked before pin state is
+  committed, including saved trees and undo; a refused pin returns to its existing world shell.
+  Update the registered `planes` prop when changing a policy without another engine action.
+  An application rendered in a `PluridProvider` (a
   server render, and the client render that hydrates it) renders its content in place, as the
   server did, since a portal does not hydrate; such a plane mounts its content once more at its
   first pin, and moves it from then on.
@@ -672,10 +678,15 @@ plurid.current?.planes.unstack(stackID);                       // or .unstack([p
   plane, sized by hand to its frame (`sizeMode: 'manual'`, `manuallyPositioned`): a root stays a
   root, FREE (`TreePlane.free`: the layout gives it no slot, so placing it moves no other root), a
   child its parent's child, on a leash, and `parentPlaneID` hangs it under another plane. A place is
-  one step of the history; undoing it pins the plane again. A pin is not a step: it changes no
-  arrangement.
+  one step of the history; undoing it pins the plane again. Pinning, moving a pin's frame and
+  collapsing it are also arrangement history steps.
 - **Pinning** a plane flies its frame from where the plane was drawn to its rect (a transform
   animation of the frame, under 320 ms, none under reduced motion).
+- **History and persistence.** Stack membership, return placements and plane geometry are restored
+  together. Undo removes a new stack; redo restores it. Removed and pinned members leave a stack;
+  closed members remain so reopening preserves the group. Saved stacks can still be unstacked after
+  restart. `restoreArrangement({ tree, links, stacks })` restores all three atomically; omit `stacks`
+  to retain valid current membership, or pass `{}` to clear it.
 - **The stack.** The planes (front first) are set one behind another along the camera's view axis,
   each a step `{ x, y, z }` from the one in front of it: the plane behind is up and to the left of it,
   and deeper, so every title bar shows; the stack's middle is on the view's centre. The step defaults
@@ -688,8 +699,7 @@ plurid.current?.planes.unstack(stackID);                       // or .unstack([p
   a relayout leaves it there; what each plane had before is kept on the stack (`state.space.stacks`,
   persisted), and `unstack` writes it back exactly, its location and whether it was placed by hand. A
   plane stacked again keeps the placement it had before its first stack. A stack and an unstack are
-  each one step of the history; an undone stack stays listed (an `unstack` of it then moves nothing
-  and forgets it), and a redo stacks the planes under it again. Fewer than 2 or more than 12 planes,
+  each one step of the history; undo and redo restore their geometry and membership together. Fewer than 2 or more than 12 planes,
   or a plane that is absent, closed or pinned, make no stack (`undefined`, a development warning).
 - **The bus.** `space.pinned { action: 'open' | 'pin' | 'place' | 'collapse' | 'expand' | 'raise',
   planeID?, route?, rect?, collapsed?, parentPlaneID?, token?, animate?, duration?, easing? }`: an

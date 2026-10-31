@@ -1,4 +1,5 @@
 // #region imports
+    import type { PluridPlanePinnable } from '../../pinned';
     // #region external
     import {
         PluridPartialConfiguration,
@@ -190,7 +191,7 @@ export interface PluridRoutePlaneOptions {
     /** The plane's own `maxHeight` (px), see `PluridPlaneOptions.maxHeight`. */
     maxHeight?: number;
     /** May be pinned to the screen (`PluridPlaneOptions.pinnable`). Default `true`. */
-    pinnable?: boolean;
+    pinnable?: PluridPlanePinnable;
 
 
     /**

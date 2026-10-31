@@ -10,6 +10,10 @@
 
     // #region external
     import modules from '~services/state/modules';
+    import type { PluridThunkExtra } from '~services/state/extra';
+    import { allowsPin, clearRefusedPins } from '~services/logic/pinned/policy';
+    import { pruneStacks } from '~services/logic/arrangement/stacks';
+    import type { TreePlane } from '@plurid/plurid-data';
     // #endregion external
 // #endregion imports
 
@@ -108,7 +112,7 @@ const restoreState = (
 
 // The preloaded state may be partial (the store factories accept `AppState | {}`); `combined`
 // fills the slices in on the first action, so `SET_STATE` only ever sees a full state.
-const reducer: Reducer<AppState, UnknownAction, Partial<AppState> | {}> = (
+const baseReducer: Reducer<AppState, UnknownAction, Partial<AppState> | {}> = (
     state,
     action,
 ) => {
@@ -120,6 +124,43 @@ const reducer: Reducer<AppState, UnknownAction, Partial<AppState> | {}> = (
     }
     return combined(state as AppState | undefined, action);
 };
+/**
+ * Pin policies and stack references are invariants of the committed tree, including restored
+ * snapshots. Validate before subscribers render it, not through a second corrective dispatch.
+ * Cache the pinned instances by tree identity so camera-only changes visit no unrelated planes.
+ */
+export const createReducer = (extra?: PluridThunkExtra): typeof baseReducer => {
+    let seen: TreePlane[] | undefined;
+    let pinned: TreePlane[] = [];
+    return (state, action) => {
+        let next = baseReducer(state, action);
+        if (next.space.tree !== seen) {
+            seen = next.space.tree;
+            pinned = [];
+            const visit = (nodes: TreePlane[]) => {
+                for (const node of nodes) {
+                    if (node.pinned) pinned.push(node);
+                    visit(node.children || []);
+                }
+            };
+            visit(seen);
+        }
+        const refused = new Set(pinned.filter((plane) => !allowsPin(plane, extra?.registeredPlane)).map((plane) => plane.planeID));
+        if (refused.size) {
+            next = { ...next, space: { ...next.space, tree: clearRefusedPins(next.space.tree, refused) } };
+            seen = next.space.tree;
+            pinned = pinned.filter((plane) => !refused.has(plane.planeID));
+        }
+        const before = state as Partial<AppState> | undefined;
+        if (next.space.tree !== before?.space?.tree || next.space.stacks !== before?.space?.stacks) {
+            const stacks = pruneStacks(next.space.stacks, next.space.tree);
+            if (stacks !== next.space.stacks) next = { ...next, space: { ...next.space, stacks } };
+        }
+        return next;
+    };
+};
+
+const reducer = createReducer();
 // #endregion module
 
 

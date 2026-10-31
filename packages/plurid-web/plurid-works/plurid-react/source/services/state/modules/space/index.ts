@@ -1233,7 +1233,7 @@ export const space = createSlice({
         // which is what keeps the collaboration echo guard + the undo restore atomic.
         restoreArrangement: (
             state,
-            action: PayloadAction<{ tree: TreePlane[]; links: PlaneLink[] }>,
+            action: PayloadAction<{ tree: TreePlane[]; links: PlaneLink[]; stacks?: Record<string, PluridStack> }>,
         ) => {
             const view = viewAfterRestore(
                 original(state.view) as PluridApplicationView,
@@ -1244,6 +1244,7 @@ export const space = createSlice({
                 state.view = view;
             }
             state.tree = action.payload.tree;
+            if (action.payload.stacks !== undefined) state.stacks = action.payload.stacks;
             state.links = spaceEngine.tree.fields.pruneLinks(
                 action.payload.links,
                 spaceEngine.tree.fields.collectPlaneIDs(action.payload.tree),

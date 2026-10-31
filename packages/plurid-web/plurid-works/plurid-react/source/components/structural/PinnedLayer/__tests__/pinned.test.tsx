@@ -108,6 +108,42 @@ const click = async (
 
 
 describe('a pinned plane', () => {
+    it('checks a parameterized policy for query, open, restore and live revocation without remounting', async () => {
+        mounts = 0;
+        unmounts = 0;
+        let allowed = true;
+        const rendered = await renderPlurid({
+            planes: [{ route: '/items/:id', component: Counter, pinnable: ({ parameters }) => allowed && parameters.id === 'note' }],
+            view: ['/items/note', '/items/browser'],
+            configuration: { space: { navigation: { motion: { duration: 0 } } } } as any,
+        });
+        const { handle, container } = rendered;
+        const [note, browser] = handle.tree.get();
+        expect(handle.planes.pinnable(note.planeID)).toBe(true);
+        expect(handle.planes.pinnable(browser.planeID)).toBe(false);
+        expect(handle.planes.open('/items/browser')).toBeUndefined();
+        const counter = container.querySelector(`[data-plurid-plane="${note.planeID}"] [data-counter]`)!;
+        await click(counter);
+        await act(async () => { expect(handle.planes.pin(note.planeID)).toBe(true); });
+        const saved = handle.tree.get();
+        expect(pinned.frame(container, note.planeID)?.contains(counter)).toBe(true);
+        const count = mounts;
+        allowed = false;
+        await act(async () => {
+            rendered.api.store.dispatch({ type: 'space/restoreArrangement', payload: { tree: saved, links: [] } });
+        });
+        expect(handle.planes.pinnable(note.planeID)).toBe(false);
+        expect(pinned.frame(container, note.planeID)).toBeNull();
+        expect(container.querySelector(`[data-plurid-plane="${note.planeID}"] [data-counter]`)).toBe(counter);
+        expect(counter.textContent).toBe('1');
+        expect(mounts).toBe(count);
+        expect(unmounts).toBe(0);
+        allowed = true;
+        await act(async () => { handle.tree.close(note.planeID); });
+        expect(handle.planes.pinnable(note.planeID)).toBe(false);
+        await rendered.unmount();
+    });
+
     it('PIN AND PLACE KEEP THE CONTENT: the same DOM nodes, the same React state, no remount', async () => {
         const rendered = await render();
         const { container, handle, a } = rendered;

@@ -8,7 +8,8 @@
 
 
     // #region external
-    import reducer, {
+    import {
+        createReducer,
         AppState,
     } from '../reducer';
 
@@ -35,7 +36,7 @@ const store: (
     options?: PluridStoreOptions,
 ) => configureStore({
     preloadedState,
-    reducer,
+    reducer: createReducer(options?.extra),
     devTools: true,
     // `history` defaults to true; an explicit `false` drops the middleware entirely (no per-action
     // signature cost, no snapshot memory) — for hosts owning their own undo or never mutating the

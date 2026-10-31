@@ -132,6 +132,46 @@ describe('pinning a plane', () => {
         expect(store.dispatch(pinPlane('nowhere'))).toBe(false);
     });
 
+    it('uses current instance policy for pin, opening pinned and restored tree state', () => {
+        const a = treePlane('a');
+        a.routeDivisions.plane.parameters.id = 'a';
+        const store = storeWith([a]);
+        let allowed = true;
+        const policy = jest.fn(({ parameters }) => allowed && parameters.id === 'a');
+        store.extra.registeredPlane = () => ({ pinnable: policy });
+        store.extra.resolvePlane = () => a;
+        expect(store.dispatch(pinPlane('a'))).toBe(true);
+        expect(policy).toHaveBeenCalledWith({ planeID: 'a', route: '/a', parameters: { id: 'a' } });
+        const pinned = store.tree();
+        allowed = false;
+        const observed: boolean[] = [];
+        const stop = store.subscribe(() => observed.push(!!node(store, 'a').pinned));
+        store.dispatch({ type: 'space/restoreArrangement', payload: { tree: pinned, links: [] } });
+        stop();
+        expect(observed.every((value) => value === false)).toBe(true);
+        expect(node(store, 'a').pinned).toBeUndefined();
+        expect(store.dispatch(pinPlane('a'))).toBe(false);
+        expect(store.dispatch(openPinnedPlane('/a'))).toBeUndefined();
+        expect(store.tree()).toHaveLength(1);
+        store.extra.registeredPlane = () => ({ pinnable: () => { throw new Error('unavailable'); } });
+        expect(store.dispatch(pinPlane('a'))).toBe(false);
+    });
+
+    it('pin state, collapse and frame positions are undoable independently of world geometry', () => {
+        const store = storeWith();
+        const original = node(store, 'a');
+        store.dispatch(pinPlane('a', { x: 10, y: 20, width: 320, height: 240 }));
+        store.dispatch(collapsePinnedPlane('a', true));
+        store.dispatch({ type: 'space/undo' });
+        expect(node(store, 'a').pinned?.collapsed).toBeUndefined();
+        store.dispatch({ type: 'space/undo' });
+        expect(node(store, 'a')).toEqual(original);
+        store.dispatch({ type: 'space/redo' });
+        expect(node(store, 'a').pinned?.rect.x).toBe(10);
+        store.dispatch({ type: 'space/redo' });
+        expect(node(store, 'a').pinned?.collapsed).toBe(true);
+    });
+
     it('collapses to the title bar and back, the bars lined up along the bottom edge', () => {
         const store = storeWith();
         store.dispatch(pinPlane('a'));
@@ -174,6 +214,12 @@ describe('opening a route pinned', () => {
         expect(store.space().view).toEqual(['/a', '/b', '/c', '/x']);
         expect(store.tree().slice(0, 3).map((plane) => plane.location)).toEqual(before);
         expect(pinnedPlanesOf(store.getState())[0]).toMatchObject({ planeID: 'opened-x', frame: { left: 8, top: 8, width: 320, height: 240 } });
+    });
+
+    it('cannot open a route whose registration refuses pinning', () => {
+        const store = storeWith();
+        expect(store.dispatch(openPinnedPlane('/fixed'))).toBeUndefined();
+        expect(store.tree()).toHaveLength(3);
     });
 
     it('answers `undefined` for a route nothing is registered at', () => {

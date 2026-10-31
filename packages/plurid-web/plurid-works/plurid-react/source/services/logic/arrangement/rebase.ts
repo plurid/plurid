@@ -3,6 +3,9 @@
     import {
         TreePlane,
         PlaneLink,
+        PluridStack,
+        PluridPinnedState,
+        TreePlaneLocation,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -11,6 +14,7 @@
     import {
         space as spaceEngine,
     } from '~services/engine';
+    import { pruneStacks } from './stacks';
     // #endregion external
 // #endregion imports
 
@@ -24,7 +28,10 @@
 export interface ArrangementEntry {
     show: boolean;
     /** The pinned location (`manuallyPositioned`). */
-    location?: { x: number; y: number; z: number };
+    location?: { x: number; y: number; z: number; rotateX?: number; rotateY?: number };
+    pinned?: PluridPinnedState;
+    /** Kept for restoring a manual placement to layout ownership, excluded from equality. */
+    automaticLocation?: TreePlaneLocation;
     /** The hand-set size (`sizeMode: 'manual'`). */
     size?: { width: number; height: number };
 }
@@ -32,6 +39,7 @@ export interface ArrangementEntry {
 export interface Arrangement {
     tree: TreePlane[];
     links: PlaneLink[];
+    stacks?: Record<string, PluridStack>;
 }
 
 export interface ArrangementDiff {
@@ -41,6 +49,7 @@ export interface ArrangementDiff {
         added: PlaneLink[];
         removed: string[];
     };
+    stacks?: Map<string, PluridStack | null>;
     empty: boolean;
 }
 
@@ -52,8 +61,10 @@ const entryOf = (
     node: TreePlane,
 ): ArrangementEntry => ({
     show: node.show !== false,
+    ...(node.pinned ? { pinned: node.pinned } : {}),
+    ...(!node.manuallyPositioned && node.location ? { automaticLocation: node.location } : {}),
     ...(node.manuallyPositioned && node.location
-        ? { location: { x: node.location.translateX, y: node.location.translateY, z: node.location.translateZ } }
+        ? { location: { x: node.location.translateX, y: node.location.translateY, z: node.location.translateZ, rotateX: node.location.rotateX, rotateY: node.location.rotateY } }
         : {}),
     ...(node.sizeMode === 'manual'
         ? { size: { width: node.width, height: node.height } }
@@ -69,7 +80,10 @@ const sameEntry = (
         Math.round(a.location.x) === Math.round(b.location.x)
         && Math.round(a.location.y) === Math.round(b.location.y)
         && Math.round(a.location.z) === Math.round(b.location.z)
+        && (a.location.rotateX ?? 0) === (b.location.rotateX ?? 0)
+        && (a.location.rotateY ?? 0) === (b.location.rotateY ?? 0)
     ))
+    && JSON.stringify(a.pinned) === JSON.stringify(b.pinned)
     && (!!a.size === !!b.size)
     && (!a.size || !b.size || (
         Math.round(a.size.width) === Math.round(b.size.width)
@@ -130,10 +144,16 @@ export const diffArrangement = (
             removed.push(key);
         }
     }
+    const stacks = new Map<string, PluridStack | null>();
+    for (const id of new Set([...Object.keys(from.stacks || {}), ...Object.keys(to.stacks || {})])) {
+        const previous = from.stacks?.[id], next = to.stacks?.[id];
+        if (JSON.stringify(previous) !== JSON.stringify(next)) stacks.set(id, next ?? null);
+    }
     return {
         planes,
         links: { added, removed },
-        empty: planes.size === 0 && added.length === 0 && removed.length === 0,
+        stacks,
+        empty: planes.size === 0 && added.length === 0 && removed.length === 0 && stacks.size === 0,
     };
 };
 
@@ -158,8 +178,14 @@ export const applyArrangementDiff = (
             tree = spaceEngine.tree.logic.removePlaneFromTree(tree, id);
             continue;
         }
+        if (sameEntry(entryOf(current), entry)) {
+            continue;
+        }
         const patch: Partial<TreePlane> = {
             show: entry.show,
+            pinned: entry.pinned,
+            manuallyPositioned: !!entry.location,
+            ...(!entry.location && entry.automaticLocation ? { location: entry.automaticLocation } : {}),
             ...(entry.location
                 ? {
                     manuallyPositioned: true,
@@ -168,6 +194,8 @@ export const applyArrangementDiff = (
                         translateX: entry.location.x,
                         translateY: entry.location.y,
                         translateZ: entry.location.z,
+                        rotateX: entry.location.rotateX ?? 0,
+                        rotateY: entry.location.rotateY ?? 0,
                     },
                 }
                 : {}),
@@ -190,7 +218,16 @@ export const applyArrangementDiff = (
             links = base.links;
         }
     }
-    return tree === base.tree && links === base.links ? base : { tree, links };
+    let stacks = base.stacks;
+    if (diff.stacks?.size) {
+        const local = Object.fromEntries([...diff.stacks].filter((entry): entry is [string, PluridStack] => entry[1] !== null));
+        const untouched = Object.fromEntries(Object.entries(base.stacks || {}).filter(([id]) => !diff.stacks!.has(id)));
+        // Local stack membership wins on the members it changes; unrelated peer stacks survive.
+        stacks = { ...local, ...untouched };
+    }
+    if (stacks && (tree !== base.tree || stacks !== base.stacks)) stacks = pruneStacks(stacks, tree);
+    return tree === base.tree && links === base.links && stacks === base.stacks
+        ? base : { tree, links, ...(stacks ? { stacks } : {}) };
 };
 
 /**

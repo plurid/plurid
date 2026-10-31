@@ -37,14 +37,9 @@ const HISTORY_LIMIT = 100;
 interface ArrangementSnapshot {
     tree: unknown;
     links: unknown;
+    stacks?: Arrangement['stacks'];
 }
 
-/** A stack entry: the arrangement to restore, and what the step that made it was called. */
-interface HistoryStep {
-    snapshot: ArrangementSnapshot;
-    label: string;
-    at: number;
-}
 
 /** A stack entry: the arrangement to restore, and what the step that made it was called. */
 interface HistoryStep {
@@ -91,6 +86,7 @@ export const createHistoryMiddleware = (): Middleware => {
     const snapshotOf = (state: any): ArrangementSnapshot => ({
         tree: state.space.tree,
         links: state.space.links,
+        stacks: state.space.stacks,
     });
 
     const entriesOf = (stack: HistoryStep[]) => stack.map(({ label, at }) => ({ label, at }));
@@ -115,11 +111,11 @@ export const createHistoryMiddleware = (): Middleware => {
     };
 
     const record = (store: any, before: ArrangementSnapshot, after: ArrangementSnapshot) => {
-        if (before.tree === after.tree && before.links === after.links) {
+        if (before.tree === after.tree && before.links === after.links && before.stacks === after.stacks) {
             return;
         }
-        const previousSignature = arrangementSignature(before.tree as any, before.links as any);
-        const nextSignature = arrangementSignature(after.tree as any, after.links as any);
+        const previousSignature = arrangementSignature(before.tree as any, before.links as any, before.stacks);
+        const nextSignature = arrangementSignature(after.tree as any, after.links as any, after.stacks);
         if (previousSignature === nextSignature) {
             return;
         }
@@ -139,7 +135,7 @@ export const createHistoryMiddleware = (): Middleware => {
         applying = true;
         dispatch({
             type: 'space/restoreArrangement',
-            payload: { tree: snapshot.tree, links: snapshot.links },
+            payload: { tree: snapshot.tree, links: snapshot.links, stacks: snapshot.stacks ?? {} },
         });
         applying = false;
     };

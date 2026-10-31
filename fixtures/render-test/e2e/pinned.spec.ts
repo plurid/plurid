@@ -66,6 +66,33 @@ const expectNear = (actual: Rect, expected: Rect, within = 1.5) => {
 
 
 test.describe('pinned planes', () => {
+    test('instance policy gates pin, pinned open and restoration while preserving the content node', async ({ page }) => {
+        await openHarness(page);
+        await settle(page);
+        const before = (await tree(page)).length;
+        await publish(page, 'space.pinned', { action: 'open', route: '/pin-policy/browser' });
+        expect((await tree(page)).length).toBe(before);
+        await publish(page, 'space.pinned', { action: 'open', route: '/pin-policy/note' });
+        await waitForState(page, (state) => state.space.tree.some((node) => !!node.pinned), 'the allowed note to open pinned');
+        await framesLanded(page);
+        const id = (await pinnedIDs(page))[0];
+        await page.locator(`[data-plurid-pinned="${id}"] [data-rt-pin-policy]`).fill('written');
+        await page.evaluate((planeID) => {
+            const w = window as any;
+            const input = document.querySelector(`[data-plurid-pinned="${planeID}"] [data-rt-pin-policy]`) as any;
+            input.__keptNode = true;
+            w.__rtPinDisabled = true;
+            const state = w.__pluridApi.store.getState();
+            w.__pluridApi.store.dispatch({ type: 'space/restoreArrangement', payload: { tree: state.space.tree, links: state.space.links, stacks: state.space.stacks } });
+        }, id);
+        await waitForState(page, (state) => state.space.tree.every((node) => !node.pinned), 'refused restored pin removed');
+        expect(await frameRect(page, id)).toBeNull();
+        const input = page.locator(`[data-plurid-plane="${id}"] [data-rt-pin-policy]`);
+        await expect(input).toHaveValue('written');
+        expect(await input.evaluate((node) => (node as any).__keptNode)).toBe(true);
+        await publish(page, 'space.pinned', { action: 'pin', planeID: id });
+        expect(await pinnedIDs(page)).toEqual([]);
+    });
     test('PIN AND PLACE KEEP THE CONTENT, and the placed plane is drawn where its frame was', async ({ page }) => {
         const errors = collectConsoleErrors(page);
         await openHarness(page, '?sizes=content');
@@ -191,6 +218,30 @@ test.describe('pinned planes', () => {
 
 
 test.describe('stacked planes', () => {
+    test('stack membership follows undo, redo, persistence and unstack after reload', async ({ page }) => {
+        await openHarness(page, '?persist=1&persistMs=0');
+        await settle(page);
+        const roots = await tree(page);
+        const ids = ['/geometry', '/material'].map((route) => rootByRoute(roots, route).planeID);
+        const before = ids.map((id) => findPlane(roots, id).location);
+        await publish(page, 'space.stack', { action: 'stack', planeIDs: ids, animate: false });
+        await waitForState(page, (state) => Object.keys(state.space.stacks).length === 1, 'stack membership');
+        await page.evaluate(() => (window as any).__pluridApi.store.dispatch({ type: 'space/undo' }));
+        await waitForState(page, (state) => Object.keys(state.space.stacks).length === 0, 'undo removes membership');
+        const undone = await tree(page);
+        expect(ids.map((id) => findPlane(undone, id).location)).toEqual(before);
+        await page.evaluate(() => (window as any).__pluridApi.store.dispatch({ type: 'space/redo' }));
+        await waitForState(page, (state) => Object.keys(state.space.stacks).length === 1, 'redo restores membership');
+        await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
+        await page.reload();
+        await page.waitForFunction(() => !!(window as any).__pluridApi);
+        await settle(page);
+        await waitForState(page, (state) => Object.keys(state.space.stacks).length === 1, 'saved stack');
+        await publish(page, 'space.stack', { action: 'unstack', stackID: 'stack-1', animate: false });
+        await waitForState(page, (state) => Object.keys(state.space.stacks).length === 0, 'unstack after reopening');
+        const restored = await tree(page);
+        expect(ids.map((id) => findPlane(restored, id).location)).toEqual(before);
+    });
     test('a stack sets planes one behind another, every title showing; an unstack puts each back exactly', async ({ page }) => {
         await openHarness(page);
         await settle(page);

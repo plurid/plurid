@@ -85,6 +85,7 @@
         raisePinnedPlane,
         pinnedPlanesOf,
     } from '~services/logic/pinned';
+    import { allowsPin, shownPinCandidate } from '~services/logic/pinned/policy';
     import {
         stackPlanes,
         unstackPlanes,
@@ -828,8 +829,8 @@ class PluridApplicationShell extends Component<
                 raise: (planeID) => dispatch(raisePinnedPlane(planeID)) as unknown as boolean,
                 pinned: () => pinnedPlanesOf(getState() as unknown as AppState),
                 pinnable: (planeID) => {
-                    const plane = spaceEngine.tree.logic.getTreePlaneByID(getState().space.tree, planeID);
-                    return !!plane && this.thunkExtra.registeredPlane?.(plane.sourceID)?.pinnable !== false;
+                    const plane = shownPinCandidate(getState().space.tree, planeID);
+                    return !!plane && allowsPin(plane, this.thunkExtra.registeredPlane);
                 },
                 stack: (planeIDs, options = {}) => dispatch(stackPlanes(planeIDs, options)) as unknown as string | undefined,
                 unstack: (reference, options = {}) => dispatch(unstackPlanes(reference, options)) as unknown as boolean,
@@ -866,8 +867,7 @@ class PluridApplicationShell extends Component<
             this.props.hostname,
         );
         // what a pin reads off the plane's registration (`pinnable`, its declared title)
-        this.thunkExtra.registeredPlane = (sourceID) => this.planesRegistrar.getAll().get(sourceID) as
-            { pinnable?: boolean; head?: unknown } | undefined;
+        this.thunkExtra.registeredPlane = (sourceID) => this.planesRegistrar.get(sourceID);
     }
 
     private computeStore(

@@ -163,13 +163,13 @@ export interface PluridApplicationHandle extends PluridApi {
     planes: {
         /**
          * Open a registered route as a NEW pinned plane (a root), at `rect`, else at a free slot on
-         * the right edge; no other root moves. Its id, `undefined` for a route nothing is registered at.
+         * the right edge; no other root moves. Its id, `undefined` for an unregistered or pin-ineligible route.
          */
         open: (route: string, options?: { rect?: PluridPinnedRect; collapsed?: boolean }) => string | undefined;
         /**
          * Pin a plane of the space to the screen, at `rect`, else at a free slot on the right edge;
          * a pinned plane takes the new rect and comes to the front. `false` for a plane not in the
-         * tree, or one registered `pinnable: false`.
+         * shown tree, or one whose registration/predicate refuses pinning.
          */
         pin: (planeID: string, rect?: PluridPinnedRect) => boolean;
         /**
@@ -185,7 +185,7 @@ export interface PluridApplicationHandle extends PluridApi {
         raise: (planeID: string) => boolean;
         /** The pinned planes, back first, each with its frame in view px. */
         pinned: () => PluridPinnedPlane[];
-        /** Whether a plane may be pinned: in the tree and not registered `pinnable: false`. */
+        /** Whether a shown plane may be pinned according to its registration/predicate. */
         pinnable: (planeID: string) => boolean;
         /**
          * Stack 2 to 12 planes, the first in front: each a step down-right of and nearer than the

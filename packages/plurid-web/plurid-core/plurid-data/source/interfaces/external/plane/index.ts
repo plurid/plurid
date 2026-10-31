@@ -1,4 +1,5 @@
 // #region imports
+    import type { PluridPlanePinnable } from '../pinned';
     // #region external
     import {
         PluridRouteParameter,
@@ -46,9 +47,12 @@ export interface PluridPlaneOptions {
     /**
      * The plane may be pinned to the screen (2026-10-31). Default `true`. A pin moves the plane's
      * content element to the screen layer, which a browser cannot do to everything: an `<iframe>`
-     * or a `<webview>` reloads when it is moved. `false` keeps such a plane in the space.
+     * or a `<webview>` reloads when it is moved. `false` keeps such a plane in the space. A
+     * synchronous predicate receives the instance's route and parameters, so safe content can
+     * share a route with content that cannot move. Read current host state; do not cause effects.
+     * Changing the registered policy also rechecks restored and already pinned instances.
      */
-    pinnable?: boolean;
+    pinnable?: PluridPlanePinnable;
 }
 
 
@@ -165,6 +169,6 @@ export interface RegisteredPluridPlane<C> {
     /** The plane's declared `maxHeight` (px), carried through registration. */
     maxHeight?: number;
     /** The plane's `pinnable` option, carried through registration. */
-    pinnable?: boolean;
+    pinnable?: PluridPlanePinnable;
 }
 // #endregion module

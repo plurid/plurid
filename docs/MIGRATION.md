@@ -13,7 +13,12 @@ additive except the behaviours under **Changed**.
   (`'placed' | 'interrupted' | 'refused'`), `collapse(planeID, collapsed?)`, `raise`, `pinned()`,
   `pinnable()`. The content never remounts: it is rendered once into a host element that moves
   between the space and the frame. `planes[].pinnable: false` keeps a plane whose content cannot
-  move (an `<iframe>`, a `<webview>`) in the space.
+  move (an `<iframe>`, a `<webview>`) in the space. A synchronous predicate receives
+  `{ planeID, route, parameters }` for routes that mix safe and unsafe content; false or a thrown
+  error refuses pinning. Restored pins obey the same policy before rendering.
+- **Arrangement history.** Pin state and stack metadata now undo and redo with plane geometry.
+  `restoreArrangement` accepts optional `stacks`; missing keeps valid current membership.
+  Existing saved workspaces need no migration; invalid, removed or pinned stack members are pruned.
 - **Stacked planes.** `handle.planes.stack(planeIDs, { step, facing, animate })` sets 2 to 12 planes
   one behind another, facing the camera, every title showing; `unstack(stackID | planeIDs)` puts
   each back exactly; `stacks()`.

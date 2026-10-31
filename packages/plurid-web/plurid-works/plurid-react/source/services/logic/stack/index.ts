@@ -50,8 +50,8 @@
  * first stack. The planes glide there with the relayout's glide (the plane transforms' transition,
  * for `navigation.motion.duration`), instant under reduced motion; a later placement retargets the
  * glide from wherever the planes are. The stack and the unstack are each one step of the history;
- * the stacks themselves are not the history's: an undone stack puts the planes back and stays
- * listed (an `unstack` of it then moves nothing and forgets it), and a redo stacks them under it again.
+ * membership and return placements travel with geometry, so undo, redo and restart describe the
+ * same arrangement the reader sees. Removed or pinned members leave their stack; closed ones stay.
  */
 
 type Dispatch = ThunkDispatch<AppState, PluridThunkExtra | undefined, AnyAction>;

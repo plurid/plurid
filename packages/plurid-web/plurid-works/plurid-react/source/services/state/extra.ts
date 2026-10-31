@@ -2,6 +2,7 @@
     // #region libraries
     import type {
         TreePlane,
+        PluridPlanePinnable,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -56,7 +57,7 @@ export interface PluridThunkExtra {
     /** The application's tour player (`handle.tour`), which the `space.tour` topic drives too. */
     tour?: PluridTourPlayer;
     /** The registered plane a tree node renders (its `sourceID`): what a pin reads `pinnable` from. */
-    registeredPlane?: (sourceID: string) => { pinnable?: boolean; head?: unknown } | undefined;
+    registeredPlane?: (sourceID: string) => { pinnable?: PluridPlanePinnable; head?: unknown } | undefined;
     /**
      * Where a plane was drawn when it was pinned, by id: the pinned frame flies from there to its rect
      * when it mounts, and takes it (a plane opened pinned has no such flight).

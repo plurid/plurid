@@ -53,7 +53,8 @@ const changeOf = (
     if (before.show !== after.show) {
         return after.show ? 'opened' : 'closed';
     }
-    if (JSON.stringify(before.location) !== JSON.stringify(after.location)) {
+    if (JSON.stringify(before.location) !== JSON.stringify(after.location)
+        || JSON.stringify(before.pinned) !== JSON.stringify(after.pinned)) {
         return 'moved';
     }
     if (JSON.stringify(before.size) !== JSON.stringify(after.size)) {
@@ -82,6 +83,10 @@ export const describeArrangementChange = (
     before: Arrangement,
     after: Arrangement,
 ): string => {
+    if (JSON.stringify(before.stacks || {}) !== JSON.stringify(after.stacks || {})) {
+        const added = Object.keys(after.stacks || {}).some((id) => !before.stacks?.[id]);
+        return added ? 'stacked planes' : 'unstacked planes';
+    }
     const from = arrangementEntries(before);
     const to = arrangementEntries(after);
 

@@ -259,6 +259,11 @@ export const buildPlanes = (
     const planes: PluridReactPlane[] = [
         ...roots,
         detailPlane,
+        {
+            route: '/pin-policy/:id',
+            component: () => <input data-rt-pin-policy aria-label="Pinned note" defaultValue="kept" />,
+            pinnable: ({ parameters }) => parameters.id === 'note' && !(window as any).__rtPinDisabled,
+        },
         ...nestedDetailPlanes,
         ...chainPlanes,
         ...(flags.media ? [{ route: '/media', component: MediaPlane }] : []),

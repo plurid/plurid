@@ -144,6 +144,67 @@ describe('stacking planes', () => {
         expect(jump.space().layoutTransition).toBe(0);
     });
 
+    it('prunes removed and pinned members, retains closed members, and restores membership on undo', () => {
+        const store = storeWith();
+        store.dispatch(stackPlanes(['a', 'b', 'c', 'd']));
+        store.dispatch({ type: 'space/patchPlanes', payload: [{ planeID: 'b', patch: { show: false } }] });
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['a', 'b', 'c', 'd']);
+        store.dispatch({ type: 'space/removePlane', payload: 'c' });
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['a', 'b']);
+        store.dispatch({ type: 'space/undo' });
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['a', 'b', 'c', 'd']);
+        store.dispatch(pinPlane('a'));
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['b', 'c', 'd']);
+        store.dispatch({ type: 'space/undo' });
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['a', 'b', 'c', 'd']);
+    });
+
+    it('restores a serialized stack and can unstack it after restart', () => {
+        const first = storeWith();
+        const before = placements(first, ['a', 'b']);
+        const id = first.dispatch(stackPlanes(['a', 'b']))!;
+        const serialized = JSON.parse(JSON.stringify({ tree: first.tree(), links: [], stacks: first.space().stacks }));
+        const reopened = storeWith();
+        reopened.dispatch({ type: 'space/restoreArrangement', payload: serialized });
+        expect(stacksOf(reopened.getState())[0].stackID).toBe(id);
+        reopened.dispatch(unstackPlanes(id));
+        expect(placements(reopened, ['a', 'b'])).toEqual(before);
+        expect(stacksOf(reopened.getState())).toEqual([]);
+    });
+
+    it('undo over an unrelated peer edit restores both stack metadata and original auto placements', () => {
+        const store = storeWith();
+        const before = placements(store, ['a', 'b']);
+        store.dispatch(stackPlanes(['a', 'b']));
+        const remote = store.tree().map((plane) => plane.planeID === 'c'
+            ? { ...plane, manuallyPositioned: true, location: { ...plane.location, translateX: 3000 } }
+            : plane);
+        store.dispatch({ type: 'space/restoreArrangement', payload: { tree: remote, links: [] }, meta: { remote: true } });
+        store.dispatch({ type: 'space/undo' });
+        expect(placements(store, ['a', 'b']).map((value) => value.location)).toEqual(before.map((value) => value.location));
+        expect(node(store, 'a').manuallyPositioned).toBe(false);
+        expect(node(store, 'c').location.translateX).toBe(3000);
+        expect(stacksOf(store.getState())).toEqual([]);
+        store.dispatch({ type: 'space/redo' });
+        expect(stacksOf(store.getState())[0].planeIDs).toEqual(['a', 'b']);
+        expect(node(store, 'c').location.translateX).toBe(3000);
+    });
+
+    it('a nested layout transaction restores stack metadata and geometry in one undo', () => {
+        const store = storeWith();
+        const id = store.dispatch(stackPlanes(['a', 'b']))!;
+        const stacked = placements(store, ['a', 'b']);
+        store.dispatch({ type: 'space/historyBegin' });
+        store.dispatch(unstackPlanes(id));
+        store.dispatch({ type: 'space/historyBegin' });
+        store.dispatch({ type: 'space/patchPlanes', payload: [{ planeID: 'a', patch: { location: { ...node(store, 'a').location, translateX: 900 }, manuallyPositioned: true } }] });
+        store.dispatch({ type: 'space/historyEnd' });
+        store.dispatch({ type: 'space/historyEnd' });
+        store.dispatch({ type: 'space/undo' });
+        expect(placements(store, ['a', 'b'])).toEqual(stacked);
+        expect(stacksOf(store.getState())[0].stackID).toBe(id);
+    });
+
     it('a stack and an unstack are each one step of the history', () => {
         const store = storeWith();
         const before = placements(store, ['a', 'b', 'c']);
@@ -151,11 +212,18 @@ describe('stacking planes', () => {
         const stacked = placements(store, ['a', 'b', 'c']);
         store.dispatch({ type: 'space/undo' });
         expect(placements(store, ['a', 'b', 'c'])).toEqual(before);
+        expect(stacksOf(store.getState())).toEqual([]);
         store.dispatch({ type: 'space/redo' });
         expect(placements(store, ['a', 'b', 'c'])).toEqual(stacked);
+        expect(stacksOf(store.getState())[0].stackID).toBe(stackID);
         store.dispatch(unstackPlanes(stackID));
+        expect(stacksOf(store.getState())).toEqual([]);
         store.dispatch({ type: 'space/undo' });
         expect(placements(store, ['a', 'b', 'c'])).toEqual(stacked);
+        expect(stacksOf(store.getState())[0].stackID).toBe(stackID);
+        store.dispatch({ type: 'space/redo' });
+        expect(stacksOf(store.getState())).toEqual([]);
+        expect(placements(store, ['a', 'b', 'c'])).toEqual(before);
     });
 });
 // #endregion module

@@ -14,6 +14,16 @@
 
 // #region module
 // #region pinned
+/** The current instance a registered plane's pin policy decides for. */
+export interface PluridPlanePinContext {
+    planeID: string;
+    route: string;
+    parameters: Readonly<Record<string, string>>;
+}
+
+/** A synchronous host policy; absent permits pinning, a false answer or an exception refuses it. */
+export type PluridPlanePinnable = boolean | ((context: PluridPlanePinContext) => boolean);
+
 /** The corner a pinned rect is measured from. */
 export type PluridPinnedAnchor =
     | 'top-left'

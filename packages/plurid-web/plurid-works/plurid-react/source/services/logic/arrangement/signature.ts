@@ -3,6 +3,7 @@
     import {
         TreePlane,
         PlaneLink,
+        PluridStack,
     } from '@plurid/plurid-data';
     // #endregion libraries
 // #endregion imports
@@ -16,6 +17,8 @@
  *   - structure: each plane's `planeID:show<parentPlaneID` (the parent is authored: a reparent is a change)
  *   - manual positions: a `manuallyPositioned` plane's rounded location
  *   - manual sizes: a hand-resized (`sizeMode: 'manual'`) plane's rounded size
+ *   - screen pins: their rect, collapsed state and order
+ *   - stacks: ordered members and their return placements
  *   - the link graph: each link's `id:source>target:kind`
  *
  * It DELIBERATELY excludes auto-layout positions. That single choice powers two features:
@@ -26,6 +29,7 @@
 export const arrangementSignature = (
     tree: TreePlane[],
     links: PlaneLink[],
+    stacks: Record<string, PluridStack> = {},
 ): string => {
     const parts: string[] = [];
     const walk = (nodes: TreePlane[]) => {
@@ -37,12 +41,14 @@ export const arrangementSignature = (
                 if (node.manuallyPositioned) {
                     entry += ':' + Math.round(node.location.translateX)
                         + ',' + Math.round(node.location.translateY)
-                        + ',' + Math.round(node.location.translateZ);
+                        + ',' + Math.round(node.location.translateZ)
+                        + ',' + node.location.rotateX + ',' + node.location.rotateY;
                 }
                 // A hand-resized plane's size is part of the arrangement too (undoable).
                 if (node.sizeMode === 'manual') {
                     entry += ':' + Math.round(node.width) + 'x' + Math.round(node.height);
                 }
+                if (node.pinned) entry += ':pin:' + JSON.stringify(node.pinned);
                 parts.push(entry);
             }
             if (node.children) {
@@ -58,6 +64,8 @@ export const arrangementSignature = (
         .sort()
         .join('|');
 
-    return parts.join('|') + '#' + linkSig;
+    const stackSig = Object.keys(stacks).sort().map((id) => [id, stacks[id].planeIDs,
+        stacks[id].planeIDs.map((planeID) => [planeID, stacks[id].previous[planeID]])]);
+    return parts.join('|') + '#' + linkSig + '#' + JSON.stringify(stackSig);
 }
 // #endregion module

@@ -21,7 +21,8 @@
 
 
     // #region external
-    import reducer, {
+    import {
+        createReducer,
         AppState,
     } from '../services/state/store/reducer';
     import {
@@ -96,6 +97,7 @@ export const makeSpaceStore = (
     options: HeadlessStoreOptions = {},
 ): HeadlessStore => {
     const extra = createThunkExtra();
+    const reducer = createReducer(extra);
     const dispatched: AnyAction[] = [];
 
     const record: Middleware = () => (next) => (action) => {

@@ -39,6 +39,7 @@
     import {
         warnOnce,
     } from '~services/logic/development/warn';
+    import { allowsPin, shownPinCandidate } from './policy';
     // #endregion external
 // #endregion imports
 
@@ -98,26 +99,6 @@ const pinnedNodes = (
     return found.length > 1
         ? found.sort((a, b) => (a.pinned!.order - b.pinned!.order) || a.planeID.localeCompare(b.planeID))
         : found;
-};
-
-/** The plane, when it and every plane it hangs from are shown. */
-const shownPlane = (
-    tree: TreePlane[],
-    planeID: string,
-): TreePlane | undefined => {
-    for (const node of tree || []) {
-        if (node.show === false) {
-            continue;
-        }
-        if (node.planeID === planeID) {
-            return node;
-        }
-        const found = shownPlane(node.children || [], planeID);
-        if (found) {
-            return found;
-        }
-    }
-    return undefined;
 };
 
 const nextOrder = (
@@ -193,6 +174,10 @@ export const openPinnedPlane = (
         warn(state, 'pinned-open:' + route, `no plane is registered at '${route}': nothing was pinned.`);
         return undefined;
     }
+    if (!allowsPin(made, extra?.registeredPlane)) {
+        warn(state, 'pinned-open-refused:' + made.sourceID, `the plane at '${route}' does not permit pinning.`);
+        return undefined;
+    }
     const plane: TreePlane = {
         ...made,
         pinned: {
@@ -222,12 +207,12 @@ export const pinPlane = (
     extra?: PluridThunkExtra,
 ): boolean => {
     const state = getState();
-    const plane = planeID ? shownPlane(state.space.tree, planeID) : undefined;
+    const plane = planeID ? shownPinCandidate(state.space.tree, planeID) : undefined;
     if (!plane) {
         return false;
     }
-    if (extra?.registeredPlane?.(plane.sourceID)?.pinnable === false) {
-        warn(state, 'pinned-refused:' + plane.sourceID, `the plane at '${plane.route}' is registered \`pinnable: false\`: it stays in the space.`);
+    if (!allowsPin(plane, extra?.registeredPlane)) {
+        warn(state, 'pinned-refused:' + plane.sourceID, `the plane at '${plane.route}' refuses pinning (pinnable: false or its policy): it stays in the space.`);
         return false;
     }
     const order = nextOrder(state.space.tree);
