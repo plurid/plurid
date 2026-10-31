@@ -55,6 +55,13 @@ export interface PluridThunkExtra {
     resolvePlane?: (path: string) => TreePlane | undefined;
     /** The application's tour player (`handle.tour`), which the `space.tour` topic drives too. */
     tour?: PluridTourPlayer;
+    /** The registered plane a tree node renders (its `sourceID`): what a pin reads `pinnable` from. */
+    registeredPlane?: (sourceID: string) => { pinnable?: boolean; head?: unknown } | undefined;
+    /**
+     * Where a plane was drawn when it was pinned, by id: the pinned frame flies from there to its rect
+     * when it mounts, and takes it (a plane opened pinned has no such flight).
+     */
+    pinFlights?: Map<string, { left: number; top: number; width: number; height: number }>;
 }
 
 

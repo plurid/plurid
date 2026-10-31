@@ -505,6 +505,7 @@ export const definePluridConfiguration = (
     if (flat.collaboration !== undefined) { space.collaboration = flat.collaboration; }
     if (flat.undo !== undefined) { space.undo = flat.undo; }
     if (flat.clipboard !== undefined) { space.clipboard = flat.clipboard; }
+    if (flat.occlusion !== undefined) { space.occlusion = flat.occlusion; }
     if (flat.viewpointURLWrite !== undefined) { space.viewpointURLWrite = flat.viewpointURLWrite; }
     if (flat.viewpointURLRestore !== undefined) { space.viewpointURLRestore = flat.viewpointURLRestore; }
     if (flat.viewpointURLParam !== undefined) { space.viewpointURLParam = flat.viewpointURLParam; }

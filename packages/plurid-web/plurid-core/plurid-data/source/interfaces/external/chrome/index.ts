@@ -18,6 +18,11 @@
         PluridStateHistory,
     } from '../../internal/state';
     // #endregion external
+    import type {
+        PluridScreenRect,
+        PluridPlaceOptions,
+        PluridPlaceResult,
+    } from '../pinned';
 // #endregion imports
 
 
@@ -61,5 +66,25 @@ export interface PluridPlaneChromeContext extends Omit<PluridChromeContext, 'sel
     mouseOver: boolean;
     /** Ordinary wheel input belongs to this plane under `click-to-scroll`, independent of spatial selection. */
     scrollSelected: boolean;
+}
+
+/**
+ * A pinned plane's bar (`renderPinnedControls`, 2026-10-31): the plane, where its frame stands, and
+ * the commands a host's pin bar needs; the content of the plane is the plane's.
+ */
+export interface PluridPinnedChromeContext extends Omit<PluridChromeContext, 'selection' | 'history'> {
+    planeID: string;
+    route: string;
+    /** The plane's declared document title, else its path. */
+    title: string;
+    collapsed: boolean;
+    /** The frame in view px. */
+    frame: PluridScreenRect;
+    /** Put the plane back into the space where its frame is. */
+    place: (options?: PluridPlaceOptions) => Promise<PluridPlaceResult>;
+    /** Collapse to the title bar, or expand (`false`); a toggle without an argument. */
+    collapse: (collapsed?: boolean) => void;
+    /** Bring the frame to the front of the pinned planes. */
+    raise: () => void;
 }
 // #endregion module

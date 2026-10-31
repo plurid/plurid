@@ -3,6 +3,9 @@
     import {
         PluridRouteFragments,
     } from '../../external/router';
+    import type {
+        PluridPinnedState,
+    } from '../../external/pinned';
     // #endregion external
 // #endregion imports
 
@@ -77,6 +80,19 @@ export interface TreePlane {
      * tree through this id instead of keeping local state.
      */
     spawnedByLinkID?: string;
+    /**
+     * PINNED (2026-10-31): the plane is lifted onto the screen-space layer above the space, at this
+     * rect (`PluridPinnedState`); the camera does not move it, the layout gives a pinned root no
+     * slot, and its world placement waits for `place`. Carried through relayouts, as a manual
+     * position is.
+     */
+    pinned?: PluridPinnedState;
+    /**
+     * A FREE root (2026-10-31): the layout leaves it where it is and gives it no slot, so it never
+     * moves the other roots and they never move it. A placed root is free; a host sets it to put a
+     * root of its own where it wants without the layout reflowing the others.
+     */
+    free?: boolean;
 }
 
 

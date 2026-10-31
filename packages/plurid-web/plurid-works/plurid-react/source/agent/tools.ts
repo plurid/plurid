@@ -35,6 +35,7 @@
         observeSpace,
         linkRoute,
         readableText,
+        planeContentElement,
     } from './observe';
     // #endregion internal
 // #endregion imports
@@ -57,7 +58,9 @@ export type PluridAgentToolName =
     | 'plurid_bookmark'
     | 'plurid_command'
     | 'plurid_configure'
-    | 'plurid_tour';
+    | 'plurid_tour'
+    | 'plurid_pin'
+    | 'plurid_stack';
 
 export type PluridAgentErrorCode =
     | 'unknown_tool'
@@ -110,10 +113,6 @@ export interface PluridAgentTool {
 
 const token = () => 'agent-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
 
-const cssString = (
-    value: string,
-) => value.replace(/["\\]/g, '\\$&');
-
 const collapse = (
     text: string,
 ) => text.replace(/\s+/g, ' ').trim();
@@ -158,10 +157,11 @@ const requirePlanes = (
     }
 };
 
+/** A plane's content: in its pinned frame while it is pinned, else in the space. */
 const planeElement = (
     runtime: PluridAgentRuntime,
     planeID: string,
-): HTMLElement | null => runtime.root()?.querySelector<HTMLElement>(`[data-plurid-plane="${cssString(planeID)}"]`) ?? null;
+): HTMLElement | null => planeContentElement(runtime.root(), planeID);
 
 /** The layouts a model may pick: `META` composes other layouts and is set by the host, not picked. */
 const AGENT_LAYOUTS = (Object.values(LAYOUT_TYPES) as string[]).filter((type) => type !== LAYOUT_TYPES.META);
@@ -868,6 +868,164 @@ const askTour = async (
 };
 
 TOOLS.push(tourTool);
+
+
+/** A rect a model gives, in px of the view (`x`, `y` from the corner named, top-left by default). */
+const rectProperty: PluridAgentSchema = {
+    type: 'object',
+    description: 'Where the pinned plane stands on the screen, in px of the view; leave out for a free slot on the right edge.',
+    properties: {
+        x: { type: 'number', description: 'px from the corner\'s side edge.' },
+        y: { type: 'number', description: 'px from the corner\'s top or bottom edge.' },
+        width: { type: 'number', description: 'The frame\'s width, px.' },
+        height: { type: 'number', description: 'The frame\'s height, px.' },
+        anchor: { type: 'string', enum: ['top-left', 'top-right', 'bottom-left', 'bottom-right'], description: 'The corner `x` and `y` count from (top-left).' },
+    },
+    required: ['x', 'y', 'width', 'height'],
+    additionalProperties: false,
+};
+
+const pinnedNode = (
+    state: AppState,
+    planeID: string,
+) => flatten(state.space.tree).find((node) => node.planeID === planeID);
+
+/**
+ * THE PIN TOOL (2026-10-31): lift a plane onto the screen, above the space (`pin`), put it back where
+ * its frame is (`place`), fold it to its title bar and back, or open a route straight onto the
+ * screen (`open`). A pinned plane stays in view wherever the camera goes.
+ */
+const pinTool: PluridAgentTool = {
+    name: 'plurid_pin',
+    description: 'Pin a plane to the screen, above the space, where it stays whatever the camera does (`pin`, at `rect` or a free slot on the right edge); put a pinned plane back into the space where its frame is (`place`); `collapse` it to its title bar or `expand` it; or `open` a `route` as a new pinned plane. plurid_observe marks the pinned planes.',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            action: { type: 'string', enum: ['pin', 'place', 'collapse', 'expand', 'open'], description: 'What to do.' },
+            planeID: { ...planeIDProperty, description: '`pin`, `place`, `collapse`, `expand`: the plane.' },
+            route: { type: 'string', description: '`open`: the route to open pinned, as the application registers it.' },
+            rect: rectProperty,
+        },
+        required: ['action'],
+        additionalProperties: false,
+    },
+    readOnly: false,
+    destructive: false,
+    run: async (input, runtime) => {
+        const action = input.action as string;
+        if (action === 'open') {
+            if (typeof input.route !== 'string' || !input.route) {
+                throw new PluridAgentError('invalid_input', '`open` needs `route`');
+            }
+            const request = token();
+            const answer = runtime.listen((kind, value) => (kind === 'plane' || kind === 'refused') && value?.token === request, runtime.settleTimeout);
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_PINNED, { action: 'open', route: input.route, ...(input.rect ? { rect: input.rect } : {}), token: request });
+            const opened = await answer.answer;
+            if (!opened || opened.reason === 'unregistered') {
+                throw new PluridAgentError('not_found', `no plane is registered at the route "${input.route}": open one of the routes the planes in plurid_observe link to`);
+            }
+            return `opened the route ${input.route} pinned to the screen as the plane ${opened.planeID}`;
+        }
+        if (!['pin', 'place', 'collapse', 'expand'].includes(action)) {
+            throw new PluridAgentError('invalid_input', `unknown action "${action}"`);
+        }
+        const plane = requirePlane(runtime.getState(), input.planeID);
+        if (action === 'pin') {
+            if (plane.show === false) {
+                throw new PluridAgentError('unavailable', `the plane ${plane.planeID} is closed; bring it back with plurid_go_to_plane first`);
+            }
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_PINNED, { action: 'pin', planeID: plane.planeID, ...(input.rect ? { rect: input.rect } : {}) });
+            if (!pinnedNode(runtime.getState(), plane.planeID)?.pinned) {
+                throw new PluridAgentError('not_allowed', `the plane ${plane.planeID} cannot be pinned (its application keeps it in the space)`);
+            }
+            return `pinned the plane ${plane.planeID} to the screen`;
+        }
+        if (!plane.pinned) {
+            throw new PluridAgentError('no_effect', `the plane ${plane.planeID} is not pinned; \`pin\` it first`);
+        }
+        if (action === 'place') {
+            // placed at once, or after the camera levels (a tween): the answer waits for the frame to go
+            const placed = runtime.listen((kind, value) => kind === 'pinned' && Array.isArray(value)
+                && !value.some((entry: { planeID: string }) => entry.planeID === plane.planeID), runtime.settleTimeout);
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_PINNED, { action: 'place', planeID: plane.planeID });
+            if (!pinnedNode(runtime.getState(), plane.planeID)?.pinned) {
+                placed.cancel();
+            } else {
+                await placed.answer;
+            }
+            if (pinnedNode(runtime.getState(), plane.planeID)?.pinned) {
+                throw new PluridAgentError('no_effect', `the plane ${plane.planeID} is still pinned: the camera was taken before it could level; try again`);
+            }
+            return `placed the plane ${plane.planeID} in the space, where its frame was`;
+        }
+        runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_PINNED, { action, planeID: plane.planeID });
+        return action === 'collapse'
+            ? `collapsed the pinned plane ${plane.planeID} to its title bar`
+            : `expanded the pinned plane ${plane.planeID}`;
+    },
+};
+
+TOOLS.push(pinTool);
+
+
+/**
+ * THE STACK TOOL (2026-10-31): planes one behind another, facing the reader, each title showing;
+ * `unstack` puts each back exactly where it was.
+ */
+const stackTool: PluridAgentTool = {
+    name: 'plurid_stack',
+    description: 'Stack 2 to 12 planes one behind another, facing the reader, the first in front, each title showing (`stack`, the `planeIDs`, else the selection); or put the planes of a stack back exactly where they were (`unstack`, its `stackID`, or `planeIDs`). plurid_observe lists the stacks.',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            action: { type: 'string', enum: ['stack', 'unstack'], description: 'Stack the planes, or put a stack\'s planes back.' },
+            planeIDs: { type: 'array', items: { type: 'string', description: 'A plane id.' }, description: 'The planes, front first (`stack`: default the selection).' },
+            stackID: { type: 'string', description: '`unstack`: the stack, as plurid_observe lists it (`stacks[].id`).' },
+        },
+        required: ['action'],
+        additionalProperties: false,
+    },
+    readOnly: false,
+    destructive: false,
+    run: async (input, runtime) => {
+        const state = runtime.getState();
+        if (input.action === 'stack') {
+            const planeIDs: string[] = Array.isArray(input.planeIDs) ? input.planeIDs : state.space.selectedPlaneIDs;
+            if (planeIDs.length < 2 || planeIDs.length > 12) {
+                throw new PluridAgentError('invalid_input', `a stack holds 2 to 12 planes; ${planeIDs.length} ${Array.isArray(input.planeIDs) ? 'were given' : 'are selected'}`);
+            }
+            for (const planeID of planeIDs) {
+                const plane = requirePlane(state, planeID);
+                if (plane.show === false || plane.pinned) {
+                    throw new PluridAgentError('unavailable', `the plane ${planeID} is ${plane.pinned ? 'pinned to the screen (place it first)' : 'closed'}: only planes in the space stack`);
+                }
+            }
+            const before = new Set(Object.keys(state.space.stacks ?? {}));
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_STACK, { action: 'stack', planeIDs });
+            const made = Object.keys(runtime.getState().space.stacks ?? {}).find((stackID) => !before.has(stackID));
+            if (!made) {
+                throw new PluridAgentError('failed', 'the planes did not stack');
+            }
+            return `stacked ${planeIDs.join(', ')} as ${made}, ${planeIDs[0]} in front`;
+        }
+        if (input.action === 'unstack') {
+            const stacks = state.space.stacks ?? {};
+            if (typeof input.stackID === 'string') {
+                if (!stacks[input.stackID]) {
+                    const known = Object.keys(stacks);
+                    throw new PluridAgentError('not_found', `no stack "${input.stackID}"${known.length ? '; the stacks are ' + known.join(', ') : '; nothing is stacked'}`);
+                }
+            } else if (!Array.isArray(input.planeIDs) || !input.planeIDs.some((planeID: string) => Object.values(stacks).some((stack) => stack.planeIDs.includes(planeID)))) {
+                throw new PluridAgentError('no_effect', 'give a `stackID`, or `planeIDs` of stacked planes (plurid_observe lists the stacks)');
+            }
+            runtime.publish(PLURID_PUBSUB_TOPIC.SPACE_STACK, { action: 'unstack', ...(typeof input.stackID === 'string' ? { stackID: input.stackID } : { planeIDs: input.planeIDs }) });
+            return `put ${typeof input.stackID === 'string' ? 'the planes of ' + input.stackID : input.planeIDs.join(', ')} back where they were`;
+        }
+        throw new PluridAgentError('invalid_input', `unknown action "${input.action}"`);
+    },
+};
+
+TOOLS.push(stackTool);
 
 
 /** The catalog, in its order. */

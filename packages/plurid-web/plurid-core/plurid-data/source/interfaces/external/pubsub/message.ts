@@ -14,6 +14,16 @@
         PluridTourObservation,
     } from '~interfaces/external/tour';
 
+    import type {
+        PluridPinnedRect,
+        PluridPinnedPlane,
+        PluridStack,
+        PluridStackStep,
+        PluridStackFacing,
+        PluridOccluded,
+        PluridOcclusionMode,
+    } from '~interfaces/external/pinned';
+
     import {
         PlaneLink,
         TreePlane,
@@ -447,6 +457,11 @@ export interface PluridPubSubMotion {
     duration?: number;
     /** The tween's curve. Default `navigation.motion.easing`. */
     easing?: PluridMotionEasing;
+    /**
+     * `'none'`: the planes in front of the plane this move comes to rest on are not faded
+     * (`space.occlusion`, 2026-10-31). Default: the configuration's.
+     */
+    occlusion?: PluridOcclusionMode;
 }
 
 
@@ -692,6 +707,57 @@ export interface PluridPubSubSubscribeMessageTour {
     callback: PluridPubSubCallback<PluridPubSubMessageTour>;
 }
 
+/** What `space.pinned` asks: open a pinned plane, pin one, place one back, collapse, expand, raise. */
+export type PluridPinnedAction =
+    | 'open'
+    | 'pin'
+    | 'place'
+    | 'collapse'
+    | 'expand'
+    | 'raise';
+export interface PluridPubSubMessagePinned {
+    action: PluridPinnedAction;
+    /** `pin`, `place`, `collapse`, `expand`, `raise`: the plane. */
+    planeID?: string;
+    /** `open`: the route of the new pinned plane. */
+    route?: string;
+    /** `open`, `pin`: where on the screen; default a free slot along the right edge. */
+    rect?: PluridPinnedRect;
+    /** `open`: start collapsed. */
+    collapsed?: boolean;
+    /** `place`: the plane a child is placed under. */
+    parentPlaneID?: string;
+    /** `open`: answered on `space.changed` kind `plane`, as `view.addPlane`'s token is. */
+    token?: string;
+}
+export interface PluridPubSubPublishMessagePinned {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PINNED;
+    data: PluridPubSubMessagePinned;
+}
+export interface PluridPubSubSubscribeMessagePinned {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_PINNED;
+    callback: PluridPubSubCallback<PluridPubSubMessagePinned>;
+}
+
+export interface PluridPubSubMessageStack {
+    action: 'stack' | 'unstack';
+    /** `stack`: 2 to 12 planes, front first. `unstack`: the stacked planes to put back. */
+    planeIDs?: string[];
+    /** `unstack`: the stack. */
+    stackID?: string;
+    step?: Partial<PluridStackStep>;
+    facing?: PluridStackFacing;
+    animate?: boolean;
+}
+export interface PluridPubSubPublishMessageStack {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_STACK;
+    data: PluridPubSubMessageStack;
+}
+export interface PluridPubSubSubscribeMessageStack {
+    topic: typeof PLURID_PUBSUB_TOPIC.SPACE_STACK;
+    callback: PluridPubSubCallback<PluridPubSubMessageStack>;
+}
+
 export type PluridAlignEdge =
     | 'left'
     | 'right'
@@ -832,7 +898,12 @@ export type PluridChangeKind =
     /** whether the keyboard focus is inside the space */
     | 'focus'
     /** the tour player: `PluridTourObservation` */
-    | 'tour';
+    | 'tour'
+    /** the pinned planes: `PluridPinnedPlane[]` */
+    | 'pinned'
+    /** the stacked planes: `PluridStack[]` */
+    | 'stacks'
+    | 'occluded';
 
 /** What a `space.changed` of kind `describe` carries: the inspection `api.inspect()` gives, for a host without the api. */
 export interface PluridDescribeObservation {
@@ -919,6 +990,9 @@ export interface PluridChangeValues {
     refused: PluridRefusedObservation;
     planeError: PluridPlaneErrorObservation;
     tour: PluridTourObservation;
+    pinned: PluridPinnedPlane[];
+    stacks: PluridStack[];
+    occluded: PluridOccluded;
 }
 
 /**
@@ -1289,6 +1363,8 @@ export type PluridPubSubPublishMessage =
     | PluridPubSubPublishMessagePreset
     | PluridPubSubPublishMessageBookmark
     | PluridPubSubPublishMessageTour
+    | PluridPubSubPublishMessagePinned
+    | PluridPubSubPublishMessageStack
     | PluridPubSubPublishMessageAlign
     | PluridPubSubPublishMessageDistribute
     | PluridPubSubPublishMessageDuplicate
@@ -1365,6 +1441,8 @@ export type PluridPubSubSubscribeMessage =
     | PluridPubSubSubscribeMessagePreset
     | PluridPubSubSubscribeMessageBookmark
     | PluridPubSubSubscribeMessageTour
+    | PluridPubSubSubscribeMessagePinned
+    | PluridPubSubSubscribeMessageStack
     | PluridPubSubSubscribeMessageAlign
     | PluridPubSubSubscribeMessageDistribute
     | PluridPubSubSubscribeMessageDuplicate

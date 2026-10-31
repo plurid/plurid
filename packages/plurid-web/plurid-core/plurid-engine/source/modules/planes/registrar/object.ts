@@ -114,6 +114,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 width: match.data.width,
                 height: match.data.height,
                 maxHeight: match.data.maxHeight,
+                ...(match.data.pinnable !== undefined ? { pinnable: match.data.pinnable } : {}),
             };
 
             return registeredPlane;
@@ -147,6 +148,7 @@ class PluridPlanesRegistrar<C> implements IPluridPlanesRegistrar<C> {
                 width: plane.data.width,
                 height: plane.data.height,
                 maxHeight: plane.data.maxHeight,
+                ...(plane.data.pinnable !== undefined ? { pinnable: plane.data.pinnable } : {}),
             };
 
             all.set(

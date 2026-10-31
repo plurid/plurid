@@ -14,6 +14,13 @@
         PluridPlaneAnchor,
         PluridAnchorResolution,
         PluridTourControls,
+        PluridPinnedRect,
+        PluridPinnedPlane,
+        PluridPlaceOptions,
+        PluridPlaceResult,
+        PluridStack,
+        PluridStackOptions,
+        PluridOccluded,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -146,6 +153,54 @@ export interface PluridApplicationHandle extends PluridApi {
         open: (planeID: string) => void;
         /** Remove a plane and its subtree; the selection, the active plane and the isolation forget them. */
         remove: (planeID: string) => void;
+    };
+    /**
+     * PINNED AND STACKED PLANES (2026-10-31). A pinned plane is a plane of the space lifted onto the
+     * screen at a fixed rect, above the space, unmoved by the camera: the same route, id and
+     * content, which neither a pin nor a place remounts. A stack sets 2 to 12 planes one behind
+     * another, facing the camera.
+     */
+    planes: {
+        /**
+         * Open a registered route as a NEW pinned plane (a root), at `rect`, else at a free slot on
+         * the right edge; no other root moves. Its id, `undefined` for a route nothing is registered at.
+         */
+        open: (route: string, options?: { rect?: PluridPinnedRect; collapsed?: boolean }) => string | undefined;
+        /**
+         * Pin a plane of the space to the screen, at `rect`, else at a free slot on the right edge;
+         * a pinned plane takes the new rect and comes to the front. `false` for a plane not in the
+         * tree, or one registered `pinnable: false`.
+         */
+        pin: (planeID: string, rect?: PluridPinnedRect) => boolean;
+        /**
+         * Put a pinned plane into the space where its frame is, face-on, at the frame's size: it
+         * becomes a regular plane, a root (free: no other root moves) or a child of the plane it
+         * hangs from, or of `parentPlaneID`. A camera turned both ways is levelled first, a tween
+         * through the motion controller; `interrupted` when an input takes the camera first.
+         */
+        place: (planeID: string, options?: PluridPlaceOptions) => Promise<PluridPlaceResult>;
+        /** Collapse a pinned plane to its title bar, or expand it (`false`); toggles without `collapsed`. */
+        collapse: (planeID: string, collapsed?: boolean) => boolean;
+        /** Bring a pinned plane to the front of the pinned planes. */
+        raise: (planeID: string) => boolean;
+        /** The pinned planes, back first, each with its frame in view px. */
+        pinned: () => PluridPinnedPlane[];
+        /** Whether a plane may be pinned: in the tree and not registered `pinnable: false`. */
+        pinnable: (planeID: string) => boolean;
+        /**
+         * Stack 2 to 12 planes, the first in front: each a step down-right of and nearer than the
+         * one behind it, facing the camera, the stack's middle on the view's centre. The stack's id,
+         * `undefined` when the planes cannot stack (too few or many, absent, closed, pinned).
+         */
+        stack: (planeIDs: string[], options?: PluridStackOptions) => string | undefined;
+        /** Put each plane of a stack (its id), or the planes named, back exactly where it was. */
+        unstack: (reference: string | string[], options?: { animate?: boolean }) => boolean;
+        stacks: () => PluridStack[];
+        /**
+         * The planes faded in front of the plane the camera rests on (`space.occlusion`): the target
+         * and the faded planes, the most covering first; empty while the camera moves.
+         */
+        occluded: () => PluridOccluded;
     };
     /** The persisted state (`useLocalStorage`, a `storageAdapter`). */
     persist: {

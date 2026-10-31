@@ -42,6 +42,7 @@
     import {
         isEditableTarget,
         isModifierKey,
+        pinnedFrameOf,
     } from '~services/logic/input/guard';
     import {
         isDevelopment,
@@ -713,7 +714,8 @@ export const createTourPlayer = (
         if (!active() || options.pauseOnInput === false) {
             return;
         }
-        if (isEditableTarget(event.target)) {
+        // a field's keys are the field's, and a pinned plane's input is its own: neither moves the camera
+        if (isEditableTarget(event.target) || pinnedFrameOf(event.target)) {
             return;
         }
         if (event.type === 'keydown' && isModifierKey(event as KeyboardEvent)) {

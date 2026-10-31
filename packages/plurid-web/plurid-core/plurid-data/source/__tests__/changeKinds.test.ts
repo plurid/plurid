@@ -28,6 +28,7 @@ describe('the change kinds', () => {
             layoutResolved: true, loading: true, history: true, motion: true, bookmarks: true,
             docked: true, culling: true, plane: true, refused: true, planeError: true,
             describe: true, command: true, focus: true, tour: true,
+            pinned: true, stacks: true, occluded: true,
         };
         expect([...listed].sort()).toEqual(Object.keys(members).sort());
         expect(new Set(listed).size).toBe(listed.length);

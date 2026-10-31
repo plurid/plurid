@@ -91,5 +91,9 @@ describe('the measured relayout', () => {
         // a 0.4px settle relays nothing; a whole pixel does
         expect(measuredSizesSignature([root({ width: 10.4, height: 19.6 })])).toBe(measuredSizesSignature([root({})]));
         expect(measuredSizesSignature([root({ height: 21 })])).not.toBe(measuredSizesSignature([root({})]));
+        // a root opened pinned, or placed free, takes no slot: opening one relays nothing (2026-10-31)
+        const two = measuredSizesSignature([root({}), root({ height: 30 })]);
+        expect(measuredSizesSignature([root({}), root({ height: 30 }), root({ pinned: { rect: { x: 0, y: 0, width: 1, height: 1 }, order: 1 } } as any)])).toBe(two);
+        expect(measuredSizesSignature([root({}), root({ free: true } as any), root({ height: 30 })])).toBe(two);
     });
 });

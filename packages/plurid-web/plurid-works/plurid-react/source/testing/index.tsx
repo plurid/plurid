@@ -407,6 +407,45 @@ export const gestures = {
 };
 
 
+/**
+ * PINNED PLANES IN THE DOM (2026-10-31): a pinned plane's frame on the pinned layer, the element its
+ * content stands in (the frame's while pinned, else the plane's in the space), and its content host,
+ * the one element that moves between the two (a test of continuity holds it before a pin and
+ * compares after a place).
+ */
+const quoted = (
+    value: string,
+) => value.replace(/["\\]/g, '\\$&');
+
+export const pinned = {
+    frame: (
+        root: ParentNode,
+        planeID: string,
+    ): HTMLElement | null => root.querySelector<HTMLElement>(`[data-plurid-pinned="${quoted(planeID)}"]`),
+    frames: (
+        root: ParentNode,
+    ): HTMLElement[] => Array.from(root.querySelectorAll<HTMLElement>('[data-plurid-pinned]')),
+    host: (
+        root: ParentNode,
+        planeID: string,
+    ): HTMLElement | null => root.querySelector<HTMLElement>(`[data-plurid-content-host="${quoted(planeID)}"]`),
+    /** Where the content host stands now: `pinned` in a frame, `space` in the plane, `none`. */
+    where: (
+        root: ParentNode,
+        planeID: string,
+    ): 'pinned' | 'space' | 'none' => {
+        const host = root.querySelector(`[data-plurid-content-host="${quoted(planeID)}"]`);
+        if (!host) {
+            return 'none';
+        }
+        if (host.closest('[data-plurid-pinned]')) {
+            return 'pinned';
+        }
+        return host.closest('[data-plurid-plane]') ? 'space' : 'none';
+    },
+};
+
+
 /** Camera assertions with a tolerance, throwing a readable error. */
 export const expectCamera = (
     camera: CameraState,

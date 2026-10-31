@@ -3,6 +3,7 @@
     import {
         MutableRefObject,
         useEffect,
+        useMemo,
     } from 'react';
 
     import {
@@ -24,6 +25,12 @@
         PendingPlane,
         resolvePending,
     } from '~services/logic/correlation';
+    import {
+        pinnedPlanesFrom,
+    } from '~services/logic/pinned';
+    import {
+        stacksOf,
+    } from '~services/logic/stack';
     // #endregion libraries
 // #endregion imports
 
@@ -143,6 +150,24 @@ export const useEngineEvents = (
     useEffect(() => {
         emit('culling', cullingCounts(space));
     }, [pubsub, culled]);
+
+    // the pinned planes (2026-10-31), told when one is pinned, placed, moved, collapsed or raised,
+    // and when a resize moves a frame: not on every tree change (a drag writes the tree per frame)
+    const pinned = useMemo(() => pinnedPlanesFrom(space.tree, space.viewSize), [space.tree, space.viewSize]);
+    const pinnedKey = JSON.stringify(pinned);
+    useEffect(() => {
+        emit('pinned', pinned);
+    }, [pubsub, pinnedKey]);
+
+    useEffect(() => {
+        emit('stacks', stacksOf(state));
+    }, [pubsub, space.stacks]);
+
+    // the planes faded in front of the plane the camera rests on: the reducer keeps the reference
+    // while the set and its target are the same
+    useEffect(() => {
+        emit('occluded', space.occluded ?? { target: '', planeIDs: [] });
+    }, [pubsub, space.occluded]);
 }
 // #endregion module
 

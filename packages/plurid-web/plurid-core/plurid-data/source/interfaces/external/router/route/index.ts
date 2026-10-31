@@ -189,6 +189,8 @@ export interface PluridRoutePlaneOptions {
     height?: number;
     /** The plane's own `maxHeight` (px), see `PluridPlaneOptions.maxHeight`. */
     maxHeight?: number;
+    /** May be pinned to the screen (`PluridPlaneOptions.pinnable`). Default `true`. */
+    pinnable?: boolean;
 
 
     /**

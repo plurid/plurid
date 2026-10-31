@@ -17,6 +17,8 @@ export const Z_INDEX = {
     MINIMAP: 41,
     /** the page presentation's rail: above the cube and the minimap, under the toolbar */
     DOCK: 45,
+    /** The pinned planes' layer (2026-10-31): above the space and its rail, under the toolbar and the dialogs. */
+    PINNED: 48,
     TOOLBAR: 50,
     /** The shortcuts `?` trigger. */
     SHORTCUTS_TRIGGER: 60,

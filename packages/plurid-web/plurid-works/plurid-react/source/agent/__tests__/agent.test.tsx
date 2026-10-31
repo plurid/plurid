@@ -151,6 +151,8 @@ describe('the agent\'s catalog', () => {
             'plurid_command',
             'plurid_configure',
             'plurid_tour',
+            'plurid_pin',
+            'plurid_stack',
         ]);
         for (const tool of tools) {
             expect(tool.name).toMatch(/^[a-z_]{1,64}$/);

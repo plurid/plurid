@@ -17,5 +17,7 @@ export * from './project';
 export * from './frame';
 export * from './dock';
 export * from './anchor';
+export * from './placement';
+export * from './occlusion';
 export * from './motion';
 // #endregion exports

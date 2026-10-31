@@ -65,4 +65,16 @@ export const PLURID_ATTRIBUTE_PLANE_ANCHOR = 'data-plurid-plane-anchor';
 export const PLURID_ATTRIBUTE_FOCUS = 'data-plurid-focus';
 /** The badge naming the mode the space is in. */
 export const PLURID_ENTITY_MODE_BADGE = 'PluridModeBadge';
+/** The screen-space layer above the space that holds the pinned planes (2026-10-31). */
+export const PLURID_ENTITY_PINNED_LAYER = 'PluridPinnedLayer';
+/** A pinned plane's frame on that layer. */
+export const PLURID_ENTITY_PINNED_PLANE = 'PluridPinnedPlane';
+/** On a pinned plane's frame: the plane's id (its world shell keeps `data-plurid-plane`). */
+export const PLURID_ATTRIBUTE_PINNED = 'data-plurid-pinned';
+/** On a pinned plane's frame while only its title bar shows: `true`. */
+export const PLURID_ATTRIBUTE_COLLAPSED = 'data-plurid-collapsed';
+/** On a plane's world shell while the plane is pinned: `true` (the shell is not painted). */
+export const PLURID_ATTRIBUTE_LIFTED = 'data-plurid-lifted';
+/** On a plane faded because it stands between the camera and the plane the camera rests on (2026-10-31). */
+export const PLURID_ATTRIBUTE_OCCLUDING = 'data-plurid-occluding';
 // #endregion module

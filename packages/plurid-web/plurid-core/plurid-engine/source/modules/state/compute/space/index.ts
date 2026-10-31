@@ -164,6 +164,8 @@ const resolveSpace = <C>(
         tree: computedTree,
         links: [],
         bookmarks: {},
+        stacks: {},
+        occluded: { target: '', planeIDs: [] },
         layoutTransition: 0,
 
         ...precomputedState?.space,

@@ -659,6 +659,49 @@ export type {
     PluridPubSubMotion,
     PluridMotionEasing,
 } from '@plurid/plurid-data';
+/**
+ * PINNED AND STACKED PLANES (2026-10-31): the commands are the handle's (`handle.planes`), the plane
+ * lens's (`usePluridPlane().pin / place / collapse`) and the bus's (`space.pinned`, `space.stack`);
+ * these are the pure pieces: the pinned planes and the stacks of a state, as the bus lists them.
+ */
+export {
+    pinnedPlanesOf,
+} from './services/logic/pinned';
+export {
+    stacksOf,
+    STACK_MINIMUM,
+    STACK_MAXIMUM,
+} from './services/logic/stack';
+export type {
+    PluridPinnedAnchor,
+    PluridPinnedRect,
+    PluridPinnedState,
+    PluridPinnedPlane,
+    PluridScreenRect,
+    PluridPlaceOptions,
+    PluridPlaceResult,
+    PluridStack,
+    PluridStackStep,
+    PluridStackFacing,
+    PluridStackOptions,
+    PluridStackPlacement,
+    PluridPinnedAction,
+    PluridPubSubMessagePinned,
+    PluridPubSubMessageStack,
+    PluridPinnedChromeContext,
+    PluridOccluded,
+    PluridOcclusionMode,
+} from '@plurid/plurid-data';
+/**
+ * OCCLUDED PLANES FADE (2026-10-31): the state's `occluded`, the kind `occluded`, and the pure pass a
+ * host can run on a snapshot.
+ */
+export {
+    occludedFor,
+    OCCLUDED_OPACITY,
+    OCCLUSION_FADE_MS,
+    OCCLUSION_QUIET_MS,
+} from './services/logic/occlusion';
 export {
     pagePresentationDefaults,
     PLURID_ATTRIBUTE_ENTITY,
@@ -675,6 +718,12 @@ export {
     PLURID_ATTRIBUTE_OVERLAY,
     PLURID_ATTRIBUTE_RAIL,
     PLURID_ATTRIBUTE_RAIL_BUTTON,
+    PLURID_ATTRIBUTE_PINNED,
+    PLURID_ATTRIBUTE_COLLAPSED,
+    PLURID_ATTRIBUTE_LIFTED,
+    PLURID_ATTRIBUTE_OCCLUDING,
+    PLURID_ENTITY_PINNED_LAYER,
+    PLURID_ENTITY_PINNED_PLANE,
 } from '@plurid/plurid-data';
 export type {
     ChromeMode,

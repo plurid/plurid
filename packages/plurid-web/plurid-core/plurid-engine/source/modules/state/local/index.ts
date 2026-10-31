@@ -54,6 +54,7 @@ const PERSISTED_SPACE_FIELDS = [
     'links',
     'bookmarks',
     'home',
+    'stacks',
 ] as const;
 
 interface PersistedSnapshot {

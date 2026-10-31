@@ -112,6 +112,18 @@ export const isEngineControl = (
 };
 
 
+/**
+ * The pinned plane a target sits in (2026-10-31): its frame on the pinned layer. Its content is not
+ * inside the plane's world element while it is pinned, so `planeElementOf` does not find it there.
+ */
+export const pinnedFrameOf = (
+    target: EventTarget | null | undefined,
+): Element | null => {
+    const element = asElement(target);
+    return element ? element.closest('[data-plurid-pinned]') : null;
+};
+
+
 /** The engine overlay (a dialog, the palette, a menu, the minimap, the rail, a HUD) a target sits in. */
 export const overlayOf = (
     target: EventTarget | null | undefined,

@@ -120,6 +120,8 @@ layouts and the chrome included, is a documented knob (`docs/CONTROL_SURFACE.md`
 | **Camera** | One value: yaw, pitch, scale, pivot, offset. Docked on a page or free in the space. |
 | **Viewpoint** | The camera encoded as a short string, for share links and saved views. |
 | **Anchor · Tour** | A camera named by a plane (its path and a pose in its frame), so it moves with the plane; a tour plays anchored stops, pauses on the reader's input and resumes where the plane is now. |
+| **Pinned plane · Stack** | A plane lifted onto the screen above the space, still while the camera moves, and put back into the space where its frame is, its content never remounted; a stack sets planes one behind another, facing the reader, every title showing, and puts each back exactly. |
+| **Occlusion** | When the camera rests on a plane, the planes standing in front of it fade and let the pointer through, until the camera moves again. |
 | **Universe · Cluster** | Higher groupings of spaces, for multi-space arrangements. |
 | **Look** | The chrome's design tokens: twelve presets derived from a few colours, overridable from CSS, replaceable piece by piece. |
 

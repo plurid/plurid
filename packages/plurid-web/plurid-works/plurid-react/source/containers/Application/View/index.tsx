@@ -125,6 +125,10 @@
     import useCameraMotion from './hooks/useCameraMotion';
     import useGamepad from './hooks/useGamepad';
     import PluridEmpty from '~components/structural/Empty';
+    import PluridPinnedLayer from '~components/structural/PinnedLayer';
+    import {
+        createContentHosts,
+    } from '~services/logic/pinned/hosts';
 
     import {
         PendingPlane,
@@ -134,6 +138,7 @@
     import PluridModeBadge from '~components/utilities/ModeBadge';
     import { modeOf } from '~services/logic/modes';
     import useCulling from './hooks/useCulling';
+    import useOcclusion from './hooks/useOcclusion';
     import { warnOnce } from '~services/logic/development/warn';
     import {
         resolvePlaneFallbackSize,
@@ -283,6 +288,8 @@ export interface PluridViewOwnProperties extends PluridApplicationProperties<Plu
      * the router's. A prop, because the application resets the context for what it renders.
      */
     routerHosted?: boolean;
+    /** Rendered inside a `PluridProvider` (a server render, or the client render that hydrates it). */
+    serverRendered?: boolean;
 }
 
 export interface PluridViewStateProperties {
@@ -524,6 +531,14 @@ const PluridView: React.FC<PluridViewProperties> = (
         tree: stateTree,
         viewElement,
         eligibility: cullingEligibility,
+    });
+
+    // the planes in front of the plane the camera rests on fade, at rest (`space.occlusion`)
+    useOcclusion({
+        dispatch,
+        stateRef,
+        state,
+        viewElement,
     });
 
     // Animated relayouts glide for the configured motion duration, instant under reduced motion.
@@ -1249,6 +1264,11 @@ const PluridView: React.FC<PluridViewProperties> = (
     // each render would re-render EVERY `useContext(Context)` consumer — i.e. every plane — no
     // matter how well `React.memo` + structural sharing gate their props. Stable here ⇒ planes
     // only re-render when their own data actually changes.
+    // the planes' content hosts, for the life of the View (a pin and a place move them, never remount)
+    const contentHosts = useMemo(() => (
+        typeof document !== 'undefined' ? createContentHosts() : undefined
+    ), []);
+
     const pluridContext = useMemo<PluridContext<PluridReactComponent>>(() => ({
         planesRegistrar,
         planeContext,
@@ -1264,6 +1284,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         inspector: properties.inspector,
         planeHydrated: properties.onPlaneHydrated,
         applicationID: properties.applicationID,
+        contentHosts,
+        contentHostsEager: !properties.serverRendered,
 
         chrome: {
             mode: chromeMode,
@@ -1295,6 +1317,8 @@ const PluridView: React.FC<PluridViewProperties> = (
         properties.renderDebugger,
         properties.onPlaneHydrated,
         properties.applicationID,
+        contentHosts,
+        properties.serverRendered,
     ]);
 
     return (
@@ -1342,6 +1366,7 @@ const PluridView: React.FC<PluridViewProperties> = (
                 <PluridModeBadge />
 
                 {spaceHasPlanes(stateTree, stateSpaceView) ? (
+                    <>
                     <PluridViewContainer
                         mode={chromeMode}
                         context={chromeContext}
@@ -1353,6 +1378,11 @@ const PluridView: React.FC<PluridViewProperties> = (
                         renderShortcuts={properties.renderShortcuts as any}
                         renderPalette={properties.renderPalette as any}
                     />
+                    <PluridPinnedLayer
+                        thunkExtra={properties.thunkExtra}
+                        renderPinnedControls={properties.renderPinnedControls as any}
+                    />
+                    </>
                 ) : (
                     stateResolvedLayout
                         ? (properties.renderEmpty

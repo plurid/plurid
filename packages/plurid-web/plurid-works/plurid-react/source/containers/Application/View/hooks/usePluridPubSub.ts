@@ -53,6 +53,17 @@
     } from '~services/logic/inspector';
 
     import { AppState } from '~services/state/store';
+    import {
+        openPinnedPlane,
+        pinPlane,
+        placePinnedPlane,
+        collapsePinnedPlane,
+        raisePinnedPlane,
+    } from '~services/logic/pinned';
+    import {
+        stackPlanes,
+        unstackPlanes,
+    } from '~services/logic/stack';
     import actions from '~services/state/actions';
     import selectors from '~services/state/selectors';
     import type {
@@ -268,7 +279,9 @@ const measureLinkInPlane = (
         return undefined;
     }
     // this application's view, not the document: two applications can hold the same plane id
-    const planeElement = (scope ?? document).querySelector(`[data-plurid-plane="${cssString(parentPlaneID)}"]`) as HTMLElement | null;
+    // a pinned plane's content is in its frame, the first match by id its world shell
+    const planeElement = ((scope ?? document).querySelector(`[data-plurid-pinned-content="${cssString(parentPlaneID)}"]`)
+        ?? (scope ?? document).querySelector(`[data-plurid-plane="${cssString(parentPlaneID)}"]`)) as HTMLElement | null;
     let linkElement: HTMLElement | null = null;
     try {
         linkElement = planeElement?.querySelector(selector) as HTMLElement | null;
@@ -1083,6 +1096,73 @@ export const usePluridPubSub = (
                         extra.tour.command(data as any);
                     };
                     dispatch(tourThunk as any);
+                },
+            },
+            {
+                // PINNED PLANES (2026-10-31): open a route pinned, pin, place, collapse, expand, raise;
+                // `space.changed` kind `pinned` lists the pinned planes after every change, and an
+                // `open` with a `token` is answered with its plane (`plane`), or `refused`
+                topic: PLURID_PUBSUB_TOPIC.SPACE_PINNED,
+                callback: (data) => {
+                    const message = (data || {}) as any;
+                    const planeID = typeof message.planeID === 'string' ? message.planeID : '';
+                    switch (message.action) {
+                        case 'open': {
+                            if (typeof message.route !== 'string' || !message.route) {
+                                warn('space.pinned', '`open` takes the `route` to open pinned');
+                                return;
+                            }
+                            const opened = dispatch(openPinnedPlane(message.route, {
+                                rect: message.rect,
+                                collapsed: message.collapsed === true,
+                            }) as any) as unknown as string | undefined;
+                            if (opened) {
+                                answer(pubsub, message.token, 'plane', { route: message.route, planeID: opened });
+                            } else {
+                                answer(pubsub, message.token, 'refused', { route: message.route, reason: 'unregistered' });
+                            }
+                            return;
+                        }
+                        case 'pin':
+                            dispatch(pinPlane(planeID, message.rect) as any);
+                            return;
+                        case 'place':
+                            dispatch(placePinnedPlane(planeID, {
+                                ...(typeof message.parentPlaneID === 'string' ? { parentPlaneID: message.parentPlaneID } : {}),
+                                ...motionOf(message, true),
+                            }) as any);
+                            return;
+                        case 'collapse':
+                        case 'expand':
+                            dispatch(collapsePinnedPlane(planeID, typeof message.collapsed === 'boolean' ? message.collapsed : message.action === 'collapse') as any);
+                            return;
+                        case 'raise':
+                            dispatch(raisePinnedPlane(planeID) as any);
+                            return;
+                        default:
+                            warn('space.pinned', '`action` is one of open, pin, place, collapse, expand, raise');
+                    }
+                },
+            },
+            {
+                // STACKED PLANES (2026-10-31): `space.changed` kind `stacks` lists the stacks after each
+                topic: PLURID_PUBSUB_TOPIC.SPACE_STACK,
+                callback: (data) => {
+                    const message = (data || {}) as any;
+                    if (message.action === 'stack') {
+                        dispatch(stackPlanes(Array.isArray(message.planeIDs) ? message.planeIDs : current().space.selectedPlaneIDs, {
+                            ...(message.step ? { step: message.step } : {}),
+                            ...(message.facing ? { facing: message.facing } : {}),
+                            ...(typeof message.animate === 'boolean' ? { animate: message.animate } : {}),
+                        }) as any);
+                        return;
+                    }
+                    if (message.action === 'unstack') {
+                        const reference = typeof message.stackID === 'string' ? message.stackID : message.planeIDs;
+                        dispatch(unstackPlanes(reference, typeof message.animate === 'boolean' ? { animate: message.animate } : {}) as any);
+                        return;
+                    }
+                    warn('space.stack', '`action` is `stack` (the `planeIDs`, else the selection) or `unstack` (a `stackID` or the `planeIDs`)');
                 },
             },
             {

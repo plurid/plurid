@@ -59,7 +59,7 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
        coming back at once when the attribute goes. None under reduced motion. The background's
        transition is in the same declaration: one of its own further down overrode this one, and a
        plane came back from aside at once instead of fading in (2026-10-20). */
-    transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear 0s, background-color 300ms linear;
+    transition: opacity var(--plurid-plane-fade, var(--plurid-dock-fade, 240ms)) ease, visibility 0s linear 0s, background-color 300ms linear;
     &[data-plurid-aside] {
         visibility: hidden;
         transition: opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear var(--plurid-dock-fade, 240ms), background-color 300ms linear;

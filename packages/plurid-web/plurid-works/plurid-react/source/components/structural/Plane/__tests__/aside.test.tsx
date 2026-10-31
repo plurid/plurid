@@ -37,7 +37,8 @@ describe('a plane set aside', () => {
         const plane = rendered.container.querySelector('[data-plurid-plane]')!;
 
         const shown = styledDeclarations(plane, 'transition').at(-1) ?? '';
-        expect(shown).toContain('opacity var(--plurid-dock-fade, 240ms) ease');
+        // the dock's fade, unless a plane fading in front of the plane the camera rests on sets its own
+        expect(shown).toContain('opacity var(--plurid-plane-fade, var(--plurid-dock-fade, 240ms)) ease');
         expect(shown).toContain('visibility 0s linear 0s');
         expect(shown).toContain('background-color 300ms linear');
 

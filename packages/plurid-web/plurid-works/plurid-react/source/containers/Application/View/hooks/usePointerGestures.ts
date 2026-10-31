@@ -48,6 +48,7 @@
         isEngineControl,
         isDragHandle,
         planeElementOf,
+        pinnedFrameOf,
     } from '~services/logic/input/guard';
 
     import {
@@ -653,6 +654,11 @@ export const usePointerGestures = (
         };
 
         const onPointerDown = (event: PointerEvent) => {
+            // A PRESS ON A PINNED PLANE IS THE PLANE'S (2026-10-31): its content, its bar, its
+            // buttons; the camera neither starts a gesture nor stops a glide for it
+            if (pinnedFrameOf(event.target)) {
+                return;
+            }
             const current = gesture.current;
 
             // A second pointer during a gesture → pinch (zoom at the midpoint + two-finger pan).
@@ -910,7 +916,7 @@ export const usePointerGestures = (
             if (!gx().doubleClickFrame) {
                 return;
             }
-            if (isEditableTarget(event.target) || isEngineControl(event.target)) {
+            if (isEditableTarget(event.target) || isEngineControl(event.target) || pinnedFrameOf(event.target)) {
                 return;
             }
             const planeElement = planeElementOf(event.target);

@@ -36,6 +36,9 @@
         PluridPlanesRegistrar as IPluridPlanesRegistrar,
         PLURID_PUBSUB_TOPIC,
     } from '@plurid/plurid-data';
+    import type {
+        PluridPlaceResult,
+    } from '@plurid/plurid-data';
 
     import PluridPubSub from '@plurid/plurid-pubsub';
     // #endregion libraries
@@ -74,6 +77,19 @@
     import {
         whenAtRest,
     } from '~services/logic/rest';
+    import {
+        openPinnedPlane,
+        pinPlane,
+        placePinnedPlane,
+        collapsePinnedPlane,
+        raisePinnedPlane,
+        pinnedPlanesOf,
+    } from '~services/logic/pinned';
+    import {
+        stackPlanes,
+        unstackPlanes,
+        stacksOf,
+    } from '~services/logic/stack';
     import type {
         AppState,
     } from '~services/state/store';
@@ -706,7 +722,10 @@ class PluridApplicationShell extends Component<
                 // the resolution is the answer: where the move went, or why there was none
                 anchor: (anchor, options = {}) => {
                     const resolution = resolveAnchor(getState() as unknown as AppState, anchor);
-                    if (resolution.ok) {
+                    // a pinned plane is in view wherever the camera is: nothing to move to
+                    if (resolution.ok && resolution.pinned) {
+                        options.onSettle?.();
+                    } else if (resolution.ok) {
                         dispatch(cameraCommand({ kind: 'anchor', anchor }, { animate: true, ...options }));
                     }
                     return resolution;
@@ -801,6 +820,25 @@ class PluridApplicationShell extends Component<
                 open: (planeID) => dispatch(openPlane(planeID)),
                 remove: (planeID) => dispatch(actions.space.removePlane(planeID)),
             },
+            planes: {
+                open: (route, options = {}) => dispatch(openPinnedPlane(route, options)) as unknown as string | undefined,
+                pin: (planeID, rect) => dispatch(pinPlane(planeID, rect)) as unknown as boolean,
+                place: (planeID, options = {}) => dispatch(placePinnedPlane(planeID, options)) as unknown as Promise<PluridPlaceResult>,
+                collapse: (planeID, collapsed) => dispatch(collapsePinnedPlane(planeID, collapsed)) as unknown as boolean,
+                raise: (planeID) => dispatch(raisePinnedPlane(planeID)) as unknown as boolean,
+                pinned: () => pinnedPlanesOf(getState() as unknown as AppState),
+                pinnable: (planeID) => {
+                    const plane = spaceEngine.tree.logic.getTreePlaneByID(getState().space.tree, planeID);
+                    return !!plane && this.thunkExtra.registeredPlane?.(plane.sourceID)?.pinnable !== false;
+                },
+                stack: (planeIDs, options = {}) => dispatch(stackPlanes(planeIDs, options)) as unknown as string | undefined,
+                unstack: (reference, options = {}) => dispatch(unstackPlanes(reference, options)) as unknown as boolean,
+                stacks: () => stacksOf(getState() as unknown as AppState),
+                occluded: () => {
+                    const occluded = getState().space.occluded ?? { target: '', planeIDs: [] };
+                    return { target: occluded.target, planeIDs: [...occluded.planeIDs] };
+                },
+            },
             // Hosts dispatched a synthetic `pagehide` to reach this flush, which also ran every
             // other `pagehide` listener on the page (2026-10-15).
             persist: {
@@ -827,6 +865,9 @@ class PluridApplicationShell extends Component<
             this.store.getState().configuration,
             this.props.hostname,
         );
+        // what a pin reads off the plane's registration (`pinnable`, its declared title)
+        this.thunkExtra.registeredPlane = (sourceID) => this.planesRegistrar.getAll().get(sourceID) as
+            { pinnable?: boolean; head?: unknown } | undefined;
     }
 
     private computeStore(

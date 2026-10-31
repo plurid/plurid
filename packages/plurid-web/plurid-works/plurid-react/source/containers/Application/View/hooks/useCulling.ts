@@ -150,6 +150,16 @@ export const useCulling = (
                 // the docked page, its ancestors and its descendants stay whole (Escape to the parent is instant)
                 ...getDockedLineage(state),
             ].filter(Boolean));
+            // a pinned plane is on the screen whatever the camera sees: its world shell is never culled
+            const keepPinned = (nodes: typeof spaceState.tree | undefined) => {
+                for (const node of nodes || []) {
+                    if (node.pinned) {
+                        exceptions.add(node.planeID);
+                    }
+                    keepPinned(node.children);
+                }
+            };
+            keepPinned(spaceState.tree);
             const focused = typeof document !== 'undefined'
                 ? document.activeElement?.closest?.('[data-plurid-plane]')?.getAttribute('data-plurid-plane')
                 : undefined;

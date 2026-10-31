@@ -1,3 +1,70 @@
+# Migrating to the release prepared 2026-10-31
+
+`@plurid/plurid-data` `0.0.0-30`, `plurid-pubsub` `0.0.0-16`, `plurid-engine` `0.0.0-27`,
+`plurid-react` `0.0.0-44`, `plurid-react-server` `0.0.0-23`, `plurid-kit` `0.0.0-10` and
+`generate-plurid-app` `0.0.0-20`; the other six packages keep their versions. Everything here is
+additive except the behaviours under **Changed**.
+
+**New: pinned planes and stacked planes** ([control surface](./CONTROL_SURFACE.md#pinned-planes-and-stacked-planes)).
+
+- **Pinned planes.** A plane of the space lifted onto a screen-space layer above it, at a rect the
+  camera does not move, and put back into the space where its frame is: `handle.planes.open(route,
+  { rect })`, `pin(planeID, rect?)`, `place(planeID, { parentPlaneID?, animate?, duration?, easing? })`
+  (`'placed' | 'interrupted' | 'refused'`), `collapse(planeID, collapsed?)`, `raise`, `pinned()`,
+  `pinnable()`. The content never remounts: it is rendered once into a host element that moves
+  between the space and the frame. `planes[].pinnable: false` keeps a plane whose content cannot
+  move (an `<iframe>`, a `<webview>`) in the space.
+- **Stacked planes.** `handle.planes.stack(planeIDs, { step, facing, animate })` sets 2 to 12 planes
+  one behind another, facing the camera, every title showing; `unstack(stackID | planeIDs)` puts
+  each back exactly; `stacks()`.
+- **The tree node** has `pinned?: { rect, collapsed?, order }` and `free?: boolean` (a root the layout
+  gives no slot); the space state has `stacks` (persisted).
+- **The plane lens.** `usePluridPlane()` has `pinned`, `collapsed`, `pin`, `place` and `collapse`.
+- **The bar of a pinned plane** is the host's with `renderPinnedControls(context)`
+  (`PluridPinnedChromeContext`: the plane, its title and frame, `place`, `collapse`, `raise`).
+- **The bus.** The topics `space.pinned` and `space.stack`, the `space.changed` kinds `pinned` and
+  `stacks`, and `occluded` (below). Eighty-two command topics and twenty-two kinds now.
+- **Anchors.** `camera.anchor` on a pinned plane answers `{ ok: true, planeID, camera, pinned: true }`
+  and moves nothing (`PluridAnchorResolution` has `pinned?`).
+- **The agent** has `plurid_pin` and `plurid_stack`, seventeen tools; `plurid_observe` gives each plane
+  `pinned`, `collapsed` and `stack`, and the observation `stacks`.
+- **The engine.** `interaction.camera.placementForRect`, `projectedBounds`, `facesCameraExactly`,
+  `levelCamera`, `stackLocations`, `defaultStackStep`; `space.pinned` (`resolvePinnedRect`,
+  `freePinnedRect`, `collapsedSlots`).
+- **The testing kit.** `pinned.frame / frames / host / where` read the pinned planes from the DOM.
+- **Occluded planes fade** ([control surface](./CONTROL_SURFACE.md#occluded-planes-fade-spaceocclusion)).
+  When the camera rests on a plane (a frame, a dock, an anchor, a tour's stop, a focus), the planes
+  whose part in front of it covers more than 8 % of it fade to 0.1 and let the pointer through;
+  they come back the moment the camera moves. `space.occlusion: 'fade' | 'none'`,
+  `{ occlusion: 'none' }` on a camera move or topic, `state.space.occluded { target, planeIDs }`,
+  kind `occluded`, `handle.planes.occluded()`, `usePluridPlane().occluding`, `occludedFor(state)`,
+  `[data-plurid-occluding]`; the engine's `occludedShare` / `occludingPlanes`.
+- **A root where the host wants it.** `planes.open` then `planes.place`, or a `free` root in
+  `tree.set`, adds a root that moves no other ([the `columns` reflow](./CONTROL_SURFACE.md#a-new-root-where-the-host-wants-it-and-the-columns-reflow)).
+
+**Changed.**
+
+- **Occluded planes fade by default.** A plane that stands in front of the plane a frame, a dock, an
+  anchor or a tour's stop comes to rest on now fades, and the pointer goes through it, until the
+  camera moves. `space.occlusion: 'none'` keeps the space as it was; a move opts out with
+  `occlusion: 'none'`. A test that hit-tests the point a plane covers now reaches the plane behind.
+- **The plane stylesheet's opacity transition** is `opacity var(--plurid-plane-fade, var(--plurid-dock-fade, 240ms))`:
+  unchanged unless a plane is fading in front of the target.
+- **A plane's content is one element deeper, twice.** In a client render the content stands in a
+  `display: contents` slot (`data-plurid-content-slot`) and, inside it, its host
+  (`data-plurid-content-host`), between the plane's element and its `PluridPlaneContent`. The boxes
+  are unchanged (the two have no box), as are descendant selectors; a host selector with a child
+  combinator from the plane to its content (`[data-plurid-plane] > [data-plurid-entity="PluridPlaneContent"]`)
+  no longer matches: use a descendant selector. A render inside a `PluridProvider` (a server render
+  and its hydration) keeps the content where it was.
+- **`space.changed` says three more kinds at mount**, `pinned` (`[]`), `stacks` (`[]`) and
+  `occluded` (`{ target: '', planeIDs: [] }`), as every watched slice does.
+- **A kept root is matched by its occurrence.** The relayout keeps a closed (now also pinned or free)
+  root where it is by its identity AND its occurrence among the roots at its path: with two roots
+  at `/b`, the second one's state stays the second one's. It went to the first root at the path.
+- **Opening or placing a pinned or free root relays nothing**: such roots are not in the measured
+  relayout's signature.
+
 # Migrating to the release prepared 2026-10-30
 
 `@plurid/plurid-data` `0.0.0-29`, `plurid-pubsub` `0.0.0-15`, `plurid-engine` `0.0.0-26`,

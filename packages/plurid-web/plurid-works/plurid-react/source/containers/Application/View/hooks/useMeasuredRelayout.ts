@@ -31,11 +31,14 @@ export interface UseMeasuredRelayoutParameters {
 /**
  * What a relayout depends on: the sizes of the roots the layout places (a pinned or hand-sized root
  * is left alone), to the whole pixel: a measurement that moves by a fraction (a font's subpixel
- * settle, a zoomed browser) used to relay the roots for nothing.
+ * settle, a zoomed browser) used to relay the roots for nothing. A root on the screen layer or placed
+ * free (2026-10-31) takes no slot, so it is not in the signature at all: opening one, or placing one
+ * in the space, relays nothing.
  */
 export const measuredSizesSignature = (
     tree: TreePlane[],
 ): string => tree
+    .filter((root) => !root.pinned && !root.free)
     .map((root) => (
         root.show === false || root.manuallyPositioned || root.sizeMode === 'manual'
             ? '-'

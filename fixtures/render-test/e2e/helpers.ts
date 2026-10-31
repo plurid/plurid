@@ -791,8 +791,9 @@ export const movePlane = async (
     // A HAND TAKES HOLD OF WHAT IT CAN SEE: a child is framed WITH its parent from the yaw between
     // them (`childFraming: 'pair'`), which puts a fin at 45° and behind a neighbour's face; a
     // reader frames the plane before dragging it, and so does this (a camera move, never a step
-    // of the arrangement history)
-    await publish(page, 'space.frame', { planeID, animate: false });
+    // of the arrangement history). The frame is the hand's, not the scenario's: it fades nothing in
+    // front of the plane (`occlusion: 'none'`), so a fixture pictures the arrangement it is about
+    await publish(page, 'space.frame', { planeID, animate: false, occlusion: 'none' });
     await settle(page);
     // the controls bar is the plane's handle: a press on its CONTENT would be the page's
     const bar = page.locator(`${plane} [data-plurid-entity="PluridPlaneControls"]`).first();

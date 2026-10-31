@@ -417,16 +417,25 @@ export const computeSpaceTree = <C>(
         palette, the camera, culling, docking, the inspector, and the
         measured-relayout signature all skip `show === false`. This was the one
         place that forgot, and it is the one place that decides where things go.
+
+        A PINNED root (on the screen layer) and a FREE one (placed by hand or by a host, 2026-10-31)
+        keep their place the same way: they are not in the packing, so lifting a plane out of the
+        space, or putting one back where it is wanted, moves no other root.
     */
-    const hiddenIdentities = new Map<string, TreePlane[]>();
+    // matched by identity AND occurrence (the second root at `/b` is the second root at `/b`): a
+    // pinned duplicate opened after an open one handed its pin to the first (2026-10-31)
+    const hiddenIdentities = new Map<string, Map<number, TreePlane>>();
+    const previousOccurrences = new Map<string, number>();
     for (const root of previousTree || []) {
-        if (root.show === false) {
-            const identity = rootIdentity(root);
+        const identity = rootIdentity(root);
+        const occurrence = previousOccurrences.get(identity) ?? 0;
+        previousOccurrences.set(identity, occurrence + 1);
+        if (root.show === false || root.pinned || root.free) {
             const bucket = hiddenIdentities.get(identity);
             if (bucket) {
-                bucket.push(root);
+                bucket.set(occurrence, root);
             } else {
-                hiddenIdentities.set(identity, [root]);
+                hiddenIdentities.set(identity, new Map([[occurrence, root]]));
             }
         }
     }
@@ -434,16 +443,22 @@ export const computeSpaceTree = <C>(
     if (hiddenIdentities.size > 0) {
         const laidOut: TreePlane[] = [];
         const kept = new Map<number, TreePlane>();
+        const occurrences = new Map<string, number>();
 
         treePlanes.forEach((plane, index) => {
-            const bucket = hiddenIdentities.get(rootIdentity(plane));
-            const hidden = bucket && bucket.length > 0 ? bucket.shift() : undefined;
+            const identity = rootIdentity(plane);
+            const occurrence = occurrences.get(identity) ?? 0;
+            occurrences.set(identity, occurrence + 1);
+            const hidden = hiddenIdentities.get(identity)?.get(occurrence);
 
             if (hidden) {
                 kept.set(index, {
                     ...plane,
-                    show: false,
+                    show: hidden.show,
                     location: hidden.location,
+                    ...(hidden.pinned ? { pinned: hidden.pinned } : {}),
+                    ...(hidden.free ? { free: true, manuallyPositioned: hidden.manuallyPositioned } : {}),
+                    ...(hidden.sizeMode === 'manual' ? { sizeMode: 'manual' as const, width: hidden.width, height: hidden.height } : {}),
                 });
                 return;
             }
@@ -1207,6 +1222,8 @@ const CARRIED_FIELDS = new Set<string>([
     'width',
     'height',
     'manuallyPositioned',
+    'pinned',
+    'free',
 ]);
 
 /**
@@ -1305,6 +1322,11 @@ function reconcileNode(
     const pinned = previous.manuallyPositioned === true;
     const location = pinned ? previous.location : next.location;
     const manuallyPositioned = pinned ? true : next.manuallyPositioned;
+    // the screen pin and the free placement are runtime state a relayout's fresh node does not
+    // know, carried as the manual position is (2026-10-31); the reducers that change them write the
+    // tree directly
+    const screenPin = next.pinned ?? previous.pinned;
+    const free = next.free ?? previous.free;
 
     const ownUnchanged = pinned
         ? sameNodeOwnFieldsExceptLocation(previous, next)
@@ -1315,7 +1337,9 @@ function reconcileNode(
         && children === previous.children
         && width === previous.width
         && height === previous.height
-        && manuallyPositioned === previous.manuallyPositioned;
+        && manuallyPositioned === previous.manuallyPositioned
+        && screenPin === previous.pinned
+        && free === previous.free;
 
     if (unchanged) {
         return previous;
@@ -1329,6 +1353,8 @@ function reconcileNode(
         || height !== next.height
         || location !== next.location
         || manuallyPositioned !== next.manuallyPositioned
+        || screenPin !== next.pinned
+        || free !== next.free
     ) {
         return {
             ...next,
@@ -1337,6 +1363,8 @@ function reconcileNode(
             children,
             location,
             manuallyPositioned,
+            ...(screenPin ? { pinned: screenPin } : {}),
+            ...(free !== undefined ? { free } : {}),
         };
     }
 

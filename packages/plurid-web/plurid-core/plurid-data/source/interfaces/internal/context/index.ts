@@ -94,6 +94,23 @@ export interface PluridContext<C> {
     /** The application's id, carried by what it reports on the bus (`space.changed` `application`). */
     applicationID?: string;
 
+    /**
+     * Where each plane's content host goes (2026-10-31): the world shell, or the pinned frame. The
+     * React adapter's registry (`createContentHosts`); `undefined` on a server.
+     */
+    contentHosts?: {
+        host: (planeID: string, host: HTMLElement | null) => void;
+        world: (planeID: string, slot: HTMLElement | null) => void;
+        pinned: (planeID: string, slot: HTMLElement | null) => void;
+        hostOf: (planeID: string) => HTMLElement | undefined;
+    };
+    /**
+     * Every plane renders its content into its host from the first render (a client render). A
+     * render that hydrates server HTML renders it in place, as the server did, and moves it to a
+     * host when the plane is first pinned.
+     */
+    contentHostsEager?: boolean;
+
     defaultPubSub: PluridPubSub,
     /** Bridge another bus to the space (once per bus); the function returned takes it off again. */
     registerPubSub: (

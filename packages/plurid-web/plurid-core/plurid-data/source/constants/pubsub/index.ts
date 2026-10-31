@@ -81,6 +81,19 @@ export const PLURID_PUBSUB_TOPIC = {
      * `space.changed` kind `tour`. A host with the handle has the callbacks too (`handle.tour`).
      */
     SPACE_TOUR: 'space.tour',
+    /**
+     * Pinned planes (2026-10-31): data `{ action, planeID?, route?, rect?, collapsed?, parentPlaneID?,
+     * token? }` — `open` a route as a new pinned plane (no relayout), `pin` a plane to the screen,
+     * `place` it back into the space, `collapse` / `expand` it, `raise` it to the front. Observed on
+     * `space.changed` kind `pinned`.
+     */
+    SPACE_PINNED: 'space.pinned',
+    /**
+     * Stacked planes (2026-10-31): data `{ action: 'stack' | 'unstack', planeIDs?, stackID?, step?,
+     * facing?, animate? }` — 2 to 12 planes set one behind another in depth facing the camera, and
+     * back where each was. Observed on `space.changed` kind `stacks`.
+     */
+    SPACE_STACK: 'space.stack',
 
     // Selection editing (Phase 5): all act on `selectedPlaneIDs`.
     /** Line the selection up on an edge: data `{ edge: 'left' | 'right' | 'top' | 'bottom' | 'centerX' | 'centerY' }`. */
@@ -205,5 +218,8 @@ export const PLURID_CHANGE_KINDS = [
     ['command', 'what a `space.command` did: `{ id, ran, reason }` (`unknown`, `disabled`, `needsKey`, `declined`)'],
     ['focus', 'whether the keyboard focus is inside the space, `boolean`'],
     ['planeError', 'a plane threw while rendering and its boundary caught it: `{ planeID, route, message }` (the plane shows its error card; the rest of the space goes on)'],
+    ['pinned', 'the pinned planes, front last: `{ planeID, route, rect, collapsed, order, frame }[]` (`frame`: where it stands now, in view px)'],
+    ['stacks', 'the stacked planes: `{ stackID, planeIDs, previous }[]`, each plane\'s placement before it was stacked in `previous`'],
+    ['occluded', 'the planes faded in front of the plane the camera rests on: `{ target, planeIDs }` (the most covering first; empty while the camera moves; `space.occlusion`)'],
     ['tour', 'the tour player: `{ state, event?, error? }`, the state (`status`, `index`, `stepID`, `count`, `planeID`, `paused`, `ended`) after each event (`travel`, `arrive`, `skip`, `pause`, `resume`, `end`), alone as the answer to `space.tour { action: \'state\' }`, and with `error` for a `play` refused (the tour playing goes on)'],
 ] as const;

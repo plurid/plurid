@@ -81,6 +81,8 @@ export interface FlatPluridConfiguration {
     undo?: boolean;
     /** `space.clipboard` — copy / cut / paste planes through the system clipboard. ON by default. */
     clipboard?: boolean;
+    /** `space.occlusion`: fade the planes in front of the plane the camera rests on (`'fade'`, the default) or leave them (`'none'`). */
+    occlusion?: 'fade' | 'none';
     /** `space.viewpointURLWrite` — reflect the camera into the URL query param. */
     viewpointURLWrite?: boolean;
     /** `space.viewpointURLRestore` — restore the camera from the URL query param on load. */
@@ -415,6 +417,17 @@ export interface PluridConfigurationSpace {
      * text is selected; otherwise the press stays the page's. Default `true`.
      */
     clipboard?: boolean;
+
+    /**
+     * OCCLUDED PLANES FADE (2026-10-31). When the camera comes to rest on a plane (a frame, a dock, an
+     * anchor, a tour's stop, a plane taking the focus), every plane whose part NEARER the camera covers
+     * more than 8 % of that plane's drawn area fades (to 0.1) and lets the pointer through, in 180 ms
+     * (at once under reduced motion); they come back the moment the camera moves, and whenever the
+     * plane changes. Nothing fades while the camera moves. A pinned plane never fades, nor fades
+     * another. `'none'` turns it off; a camera move opts out with `occlusion: 'none'`.
+     * Default `'fade'`.
+     */
+    occlusion?: 'fade' | 'none';
 
     /**
      * Reflect the camera viewpoint into the URL query string on every change (so a view is

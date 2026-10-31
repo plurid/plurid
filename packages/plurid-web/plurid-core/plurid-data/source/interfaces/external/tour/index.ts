@@ -89,6 +89,11 @@ export type PluridAnchorResolution =
         ok: true;
         planeID: string;
         camera: CameraState;
+        /**
+         * The plane is pinned to the screen (2026-10-31): it is in view wherever the camera is, so
+         * the camera stays (`camera` is the camera now) and nothing moves.
+         */
+        pinned?: true;
     }
     | {
         ok: false;

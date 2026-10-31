@@ -89,6 +89,11 @@ export interface CameraMotionOptions {
     onInterrupt?: () => void;
     /** This move re-aims a running tween at the place it was going (the engine's own retargets). */
     continues?: boolean;
+    /**
+     * `'none'`: the planes in front of the plane this move comes to rest on are not faded
+     * (`space.occlusion`, 2026-10-31). Default: the configuration's.
+     */
+    occlusion?: 'fade' | 'none';
 }
 
 
@@ -420,6 +425,10 @@ export const resolveAnchor = (
     if (found.hidden) {
         return { ok: false, reason: 'hidden', planeID: plane.planeID };
     }
+    // a pinned plane is on the screen wherever the camera is: the camera stays
+    if (plane.pinned) {
+        return { ok: true, planeID: plane.planeID, camera: spaceState.camera, pinned: true };
+    }
 
     let pose = anchor.pose ?? 'frame';
     if (pose !== 'dock' && pose !== 'frame' && !isAnchorPose(pose)) {
@@ -690,7 +699,60 @@ export const cameraCommand = (
     if (command.kind === 'anchor' && extra) {
         extra.pendingFrame = undefined;
     }
+    aimOcclusion(dispatch, state, occlusionTargetOf(command, state, target), options);
     commitCameraTarget(dispatch, extra, target, options, state);
+};
+
+
+/**
+ * THE PLANE A MOVE COMES TO REST ON, for the occlusion pass (2026-10-31): the plane a command names
+ * (a frame of one plane, a dock, an anchor), `''` for a move that shows several planes or the space
+ * (a pair, a fit, home, a preset, a bookmark, a viewpoint, a reveal), `undefined` for one that keeps
+ * the target it had (a delta: ordinary navigation).
+ */
+const occlusionTargetOf = (
+    command: CameraCommand,
+    state: AppState,
+    target: CameraState,
+): string | undefined => {
+    switch (command.kind) {
+        case 'frame': {
+            if (command.planeID) {
+                return command.planeID;
+            }
+            const selection = state.space.selectedPlaneIDs;
+            return command.selection && selection.length === 1 ? selection[0] : '';
+        }
+        // a pair shows two planes (a child with the plane it came from): neither fades for the other
+        case 'pair':
+            return '';
+        case 'dock':
+            return landingDockPlaneID(state, target) || command.planeID || '';
+        case 'anchor': {
+            const resolution = resolveAnchor(state, command.anchor);
+            return resolution.ok && !resolution.pinned ? resolution.planeID : '';
+        }
+        case 'delta':
+            return undefined;
+        default:
+            return '';
+    }
+};
+
+/** Name the plane the camera is going to rest on (`''` under a move's `occlusion: 'none'`). */
+export const aimOcclusion = (
+    dispatch: Dispatch,
+    state: AppState,
+    planeID: string | undefined,
+    options: Pick<CameraMotionOptions, 'occlusion'> = {},
+) => {
+    if (planeID === undefined && options.occlusion !== 'none') {
+        return;
+    }
+    const next = options.occlusion === 'none' ? '' : (planeID ?? '');
+    if ((state.space.occluded?.target ?? '') !== next) {
+        dispatch(actions.space.setOcclusionTarget(next));
+    }
 };
 
 
@@ -765,6 +827,8 @@ export const framePlaneNode = (
     options: FramePlaneNodeOptions = {},
 ): CameraThunk => (dispatch, getState, extra) => {
     const state = getState();
+    // a pair shows the plane and the one it came from: neither fades for the other
+    aimOcclusion(dispatch, state, options.pair ? '' : plane.planeID);
     commitCameraTarget(
         dispatch,
         extra,
@@ -950,6 +1014,7 @@ export const motionOf = (
         animate: record.animate === undefined || record.animate === null ? animateDefault : !!record.animate,
         ...(typeof duration === 'number' && Number.isFinite(duration) && duration >= 0 ? { duration } : {}),
         ...(typeof easing === 'string' && EASING_NAMES.has(easing) ? { easing: easing as EasingName } : {}),
+        ...(record.occlusion === 'none' || record.occlusion === 'fade' ? { occlusion: record.occlusion } : {}),
     };
 };
 

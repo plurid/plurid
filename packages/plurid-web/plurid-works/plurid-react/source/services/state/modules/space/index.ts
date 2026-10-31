@@ -28,6 +28,7 @@
         CameraLimits,
         CameraMotion,
         PluridStateHistory,
+        PluridStack,
     } from '@plurid/plurid-data';
     // #endregion libraries
 
@@ -102,6 +103,8 @@ const initialState: PluridStateSpace = {
     isolatePlane: '',
     lastClosedPlane: '',
     bookmarks: {},
+    stacks: {},
+    occluded: { target: '', planeIDs: [] },
     layoutTransition: 0,
     culled: {
         hidden: [],
@@ -359,6 +362,9 @@ const exactTree = (
             height,
             location,
             manuallyPositioned: target.manuallyPositioned,
+            // the host's pin and free placement, as its manual position: theirs, exactly
+            pinned: target.pinned,
+            free: target.free,
         };
     });
     return changed ? settled : reconciled;
@@ -1051,6 +1057,122 @@ export const space = createSlice({
             }
             if (state.isolatePlane && !remaining.has(state.isolatePlane)) {
                 state.isolatePlane = '';
+            }
+        },
+        /**
+         * PLANES PATCHED IN ONE TREE WRITE (2026-10-31): a pin, a placement, a stack's poses. The
+         * relayout's reconcile carries these fields over a fresh node; the deliberate change is
+         * written here, directly, as a drag's move is.
+         */
+        patchPlanes: (
+            state,
+            action: PayloadAction<{ planeID: string; patch: Partial<TreePlane> }[]>,
+        ) => {
+            const previousTree = original(state.tree) as TreePlane[];
+            let tree = previousTree;
+            for (const entry of action.payload || []) {
+                if (entry && entry.planeID && entry.patch) {
+                    tree = spaceEngine.tree.fields.updateTreePlaneFields(tree, entry.planeID, entry.patch);
+                }
+            }
+            if (tree !== previousTree) {
+                state.tree = tree;
+            }
+        },
+        /**
+         * THE PLANE THE CAMERA COMES TO REST ON (2026-10-31): the planes in front of it fade at rest.
+         * A new target clears the faded set; the next rest computes it for the new one.
+         */
+        setOcclusionTarget: (
+            state,
+            action: PayloadAction<string>,
+        ) => {
+            const target = action.payload || '';
+            const current = state.occluded || { target: '', planeIDs: [] };
+            if (current.target === target) {
+                return;
+            }
+            state.occluded = { target, planeIDs: [] };
+        },
+        /** The planes faded in front of the target, as the occlusion pass found them at rest. */
+        setOccluded: (
+            state,
+            action: PayloadAction<{ target: string; planeIDs: string[] }>,
+        ) => {
+            const next = action.payload;
+            const current = original(state.occluded) as { target: string; planeIDs: string[] } | undefined;
+            if (
+                current
+                && current.target === next.target
+                && current.planeIDs.length === next.planeIDs.length
+                && current.planeIDs.every((planeID, index) => planeID === next.planeIDs[index])
+            ) {
+                return;
+            }
+            state.occluded = { target: next.target, planeIDs: [...next.planeIDs] };
+        },
+        setStacks: (
+            state,
+            action: PayloadAction<Record<string, PluridStack>>,
+        ) => {
+            state.stacks = action.payload || {};
+        },
+        /**
+         * A ROOT ALREADY WHERE IT IS WANTED (a pinned plane, a free one): its node and its view entry
+         * in one write, so the roots match the view and nothing relays them out (2026-10-31).
+         */
+        addRootPlane: (
+            state,
+            action: PayloadAction<{ plane: TreePlane; path: string }>,
+        ) => {
+            const { plane, path } = action.payload;
+            if (!plane || !plane.planeID || !path) {
+                return;
+            }
+            state.tree = [...(original(state.tree) as TreePlane[]), plane];
+            state.view = [...(original(state.view) as PluridApplicationView), path];
+        },
+        /**
+         * HANG A PLANE UNDER ANOTHER, with its subtree (`parentPlaneID`), or make it a root (`''`):
+         * a root leaves the view, a new root joins it at the end, in the same write, so nothing
+         * relays the roots; the plane keeps its id and its placement. A plane is never hung under
+         * itself or under a plane that hangs from it.
+         */
+        moveUnder: (
+            state,
+            action: PayloadAction<{ planeID: string; parentPlaneID: string; path: string }>,
+        ) => {
+            const { planeID, parentPlaneID, path } = action.payload;
+            const tree = original(state.tree) as TreePlane[];
+            const node = spaceEngine.tree.logic.getTreePlaneByID(tree, planeID);
+            if (!node || (node.parentPlaneID || '') === parentPlaneID) {
+                return;
+            }
+            const parent = parentPlaneID ? spaceEngine.tree.logic.getTreePlaneByID(tree, parentPlaneID) : undefined;
+            if (parentPlaneID && (!parent || parent.planeID === planeID || spaceEngine.tree.logic.getTreePlaneByID(node.children || [], parentPlaneID))) {
+                return;
+            }
+            const rootIndex = tree.findIndex((root) => root.planeID === planeID);
+            let next = spaceEngine.tree.logic.removePlaneFromTree(tree, planeID);
+            const moved: TreePlane = {
+                ...node,
+                parentPlaneID: parentPlaneID || undefined,
+                spawnedByLinkID: undefined,
+            };
+            if (parent) {
+                const current = spaceEngine.tree.logic.getTreePlaneByID(next, parentPlaneID);
+                next = spaceEngine.tree.fields.updateTreePlaneFields(next, parentPlaneID, {
+                    children: [...(current?.children || []), moved],
+                });
+            } else {
+                next = [...next, moved];
+            }
+            state.tree = next;
+            const view = original(state.view) as PluridApplicationView;
+            if (rootIndex >= 0) {
+                state.view = view.filter((_item, index) => index !== rootIndex);
+            } else if (!parentPlaneID && path) {
+                state.view = [...view, path];
             }
         },
 

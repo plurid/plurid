@@ -34,7 +34,7 @@ const NESTED_KEYS = new Set(['global', 'elements', 'space', 'network', 'developm
 const FLAT_KEY_LIST = [
     'look', 'theme', 'transparentUI', 'language', 'chrome',
     'layout', 'spaceDimensions', 'perspective', 'center', 'presentation', 'docking', 'firstPerson',
-    'collaboration', 'undo', 'clipboard', 'viewpointURLWrite', 'viewpointURLRestore', 'viewpointURLParam',
+    'collaboration', 'undo', 'clipboard', 'occlusion', 'viewpointURLWrite', 'viewpointURLRestore', 'viewpointURLParam',
     'viewpointURLDebounce', 'viewpointURLVersion', 'navigation', 'snap', 'culling', 'timings', 'gestures',
     'shortcuts', 'bridge', 'bridgeLength', 'bridgePlaneAngle', 'transformLocks', 'opaque', 'camera',
     'transformOrigin', 'transformMode', 'fadeInTime', 'planeWidth', 'planeHeight', 'planeMaxHeight',

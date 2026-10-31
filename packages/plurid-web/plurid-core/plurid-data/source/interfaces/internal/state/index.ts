@@ -30,6 +30,11 @@
         CameraLimits,
         CameraMotion,
     } from '../camera';
+
+    import type {
+        PluridStack,
+        PluridOccluded,
+    } from '../../external/pinned';
     // #endregion external
 // #endregion imports
 
@@ -102,6 +107,16 @@ export interface PluridStateSpace {
      * the View clears it once the transition has run.
      */
     layoutTransition: number;
+    /**
+     * STACKED PLANES (2026-10-31): every stack by its id, with each plane's placement before it was
+     * stacked, so `unstack` puts it back exactly. Persisted with the space.
+     */
+    stacks: Record<string, PluridStack>;
+    /**
+     * OCCLUSION (2026-10-31): the plane the camera rests on and the planes faded in front of it
+     * (`PluridOccluded`). Never persisted.
+     */
+    occluded: PluridOccluded;
     /** The culling pass's result: planes that stop painting, planes that are contained (both kept mounted), planes whose content is DETACHED (`culling.detach`; the shell stays). Never persisted. */
     culled: {
         hidden: string[];

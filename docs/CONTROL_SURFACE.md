@@ -90,6 +90,10 @@ plurid.current?.focus();                                 // keyboard shortcuts a
 plurid.current?.camera.anchor({ path: '/report' });      // a camera named by a plane; answers where it went
 plurid.current?.tour.play(tour, { onStep, onMissing });  // a tour of anchored stops (below)
 await plurid.current?.whenAtRest();                      // the camera still, no relayout gliding
+plurid.current?.planes.pin(planeID);                     // lift a plane onto the screen, above the space (below)
+await plurid.current?.planes.place(planeID);             // and put it back where its frame is
+plurid.current?.planes.stack([a, b, c]); .unstack('stack-1'); // planes one behind another, and back
+plurid.current?.planes.occluded();                       // the planes faded in front of the plane the camera rests on
 ```
 
 ## Hooks — for anything rendered under the application
@@ -246,6 +250,7 @@ plurid.pubsub.subscribe({
         // kind: 'selection' | 'tree' | 'links' | 'activePlane' | 'isolate' | 'layoutResolved'
         //     | 'loading' | 'history' | 'motion' | 'bookmarks' | 'docked' | 'culling'
         //     | 'plane' | 'refused' | 'planeError' | 'describe' | 'command' | 'focus' | 'tour'
+        //     | 'pinned' | 'stacks' | 'occluded'
         // every kind, with its value, in docs/CHANGES.md (generated from PLURID_CHANGE_KINDS)
         if (kind === 'selection') highlightInSidebar(value);
     },
@@ -593,6 +598,163 @@ const recorded = recorder.stop();                              // a PluridTour
   value that is neither is the default), the moment to draw over a stop. `handle.camera.cancel()`
   stops the camera where it is; `handle.camera.reducedMotion()` says whether moves jump.
 
+### Pinned planes and stacked planes
+
+A **pinned plane** (2026-10-31) is a plane of the space lifted onto a screen-space layer above it, at
+a fixed rect the camera does not move: the same plane, with its route, its id and its content. One
+call puts it back into the space, where its frame is; one lifts it out again. A **stack** sets 2 to
+12 planes one behind another, facing the camera, every title showing; one call puts each back
+exactly where it was.
+
+```tsx
+const id = plurid.current?.planes.open('/check', { rect: { x: 16, y: 16, width: 420, height: 560, anchor: 'top-right' } });
+plurid.current?.planes.pin(planeID);                           // a plane of the space, to a free slot on the right edge
+plurid.current?.planes.pin(planeID, { x: 0.6, y: 0.05, width: 0.35, height: 0.6, unit: 'fraction' });
+plurid.current?.planes.collapse(planeID);                      // its title bar alone, along the bottom edge; again to expand
+plurid.current?.planes.raise(planeID);                         // to the front of the pinned planes
+const result = await plurid.current?.planes.place(planeID);    // 'placed' | 'interrupted' | 'refused'
+plurid.current?.planes.place(planeID, { parentPlaneID: other }); // hung under another plane ('' : a root)
+plurid.current?.planes.pinned();                               // [{ planeID, route, rect, collapsed, order, frame }], back first
+plurid.current?.planes.pinnable(planeID);                      // false for a plane registered `pinnable: false`
+
+const stackID = plurid.current?.planes.stack([front, middle, back], { step: { x: 24, y: 72, z: 80 }, facing: 'camera' });
+plurid.current?.planes.unstack(stackID);                       // or .unstack([planeID, …]); .stacks()
+```
+
+- **The rect** (`PluridPinnedRect`): `x`, `y`, `width`, `height` in px of the view, or fractions of it
+  with `unit: 'fraction'`; `x` and `y` count from the corner `anchor` names (`top-left` by default),
+  so a rect anchored `top-right` stays against the right edge through a resize. Without a rect a pin
+  takes a free slot on the right edge, sized as the plane is drawn now (320 to 560 px wide), below
+  the frames already there, then in the column to their left; where every column is full the frames
+  cascade. The rect is the plane's tree node's (`TreePlane.pinned { rect, collapsed?, order }`): it is
+  saved with the tree, carried through every relayout, and kind `pinned` lists it.
+- **The content does not remount.** Each plane renders its content once, through a React portal, into
+  a host element of its own, and the engine moves that element between the plane's place in the space
+  and its pinned frame. React never sees the move: the content keeps its state, its effects, its DOM
+  nodes, the values of its fields and its scroll offsets, and the focus comes back to the element
+  that had it. What a DOM move cannot keep: an `<iframe>` (and Electron's `<webview>`) loads again
+  when it moves, a custom element runs its disconnected and connected callbacks, and a text selection
+  is lost. A plane whose content cannot move is registered `pinnable: false` (`planes[].pinnable`):
+  `pin` refuses it, with a development warning. An application rendered in a `PluridProvider` (a
+  server render, and the client render that hydrates it) renders its content in place, as the
+  server did, since a portal does not hydrate; such a plane mounts its content once more at its
+  first pin, and moves it from then on.
+- **The plane while pinned.** Its element in the space stays, unpainted and inert
+  (`data-plurid-lifted`), out of the layout: a pinned root takes no slot, so opening one moves no
+  other root, and pinning one lets the others close up at the next relayout, as closing it does. The
+  culling never hides it. Its content is in the frame (`[data-plurid-pinned="<planeID>"]`), whose
+  content row carries `data-plurid-plane` too, so a link in it opens from its plane; a lookup by id,
+  `[data-plurid-plane="<planeID>"]`, finds the element in the space first. `camera.anchor` on a
+  pinned plane answers `{ ok: true, pinned: true }` and moves nothing: it is in view wherever the
+  camera is.
+- **Input.** The layer passes through where no frame is: the space keeps every press, wheel and key
+  there. On a frame, input is the plane's: a press, a drag, a wheel or a key moves no camera, and a
+  tour does not pause for it. A press or a focus in a frame brings it to the front. `usePluridPlane()`
+  from its content reads `pinned` and `collapsed`, and has `pin`, `place` and `collapse`.
+- **The bar.** The default frame shows the plane's title (its declared document title, else its path),
+  a collapse button (`data-plurid-control="pinned-collapse"`) and a place button
+  (`pinned-place`). `renderPinnedControls(context)` replaces the bar's content with the host's: the
+  context (`PluridPinnedChromeContext`) has the plane's `planeID`, `route`, `title`, `collapsed` and
+  `frame`, and `place`, `collapse`, `raise`. A pin or place button on a plane in the space is the
+  host's: `renderPlaneControls` with `usePluridPlane().pin` or `handle.planes.pin`.
+- **Collapsed**, a pinned plane is its title bar (56 px high), lined up along the bottom edge from the
+  right corner, then a row up, none over another; its content stays mounted underneath, hidden.
+- **Placing** sets the plane in the world face-on, at its frame's size, at the depth where one of its
+  px is one screen px, under the frame's corner: the picture does not move when the frame gives way
+  to the plane, and the content, laid out at the same size, does not reflow. A face-on plane needs a
+  level camera (a plane's turn has two angles): a camera turned both ways is levelled first (its
+  pitch and roll to 0, its yaw, zoom and pivot kept), a tween through the motion controller with
+  `onInterrupt` (`animate`, `duration`, `easing`); reduced motion makes it a jump. An input that takes
+  the camera first leaves the plane pinned and answers `interrupted`. The plane becomes a regular
+  plane, sized by hand to its frame (`sizeMode: 'manual'`, `manuallyPositioned`): a root stays a
+  root, FREE (`TreePlane.free`: the layout gives it no slot, so placing it moves no other root), a
+  child its parent's child, on a leash, and `parentPlaneID` hangs it under another plane. A place is
+  one step of the history; undoing it pins the plane again. A pin is not a step: it changes no
+  arrangement.
+- **Pinning** a plane flies its frame from where the plane was drawn to its rect (a transform
+  animation of the frame, under 320 ms, none under reduced motion).
+- **The stack.** The planes (front first) are set one behind another along the camera's view axis,
+  each a step `{ x, y, z }` from the one in front of it: the plane behind is up and to the left of it,
+  and deeper, so every title bar shows; the stack's middle is on the view's centre. The step defaults
+  to the front plane's size: `x` 5 % of its width (at least 24 px), `y` a title bar plus 3 % of its
+  height (at least 8 px), `z` 15 % of its width (at least 60 px). `facing` is `camera` (the default:
+  each plane faces the camera, exactly for a level camera), `front` (the world's front, unturned) or
+  `keep` (each plane keeps its own turn). The planes glide there with the relayout's glide (for
+  `navigation.motion.duration`; `animate: false` or reduced motion: at once). A stack is the engine's
+  own per-plane placement: each plane gets a location and `manuallyPositioned`, as a drag gives it, so
+  a relayout leaves it there; what each plane had before is kept on the stack (`state.space.stacks`,
+  persisted), and `unstack` writes it back exactly, its location and whether it was placed by hand. A
+  plane stacked again keeps the placement it had before its first stack. A stack and an unstack are
+  each one step of the history; an undone stack stays listed (an `unstack` of it then moves nothing
+  and forgets it), and a redo stacks the planes under it again. Fewer than 2 or more than 12 planes,
+  or a plane that is absent, closed or pinned, make no stack (`undefined`, a development warning).
+- **The bus.** `space.pinned { action: 'open' | 'pin' | 'place' | 'collapse' | 'expand' | 'raise',
+  planeID?, route?, rect?, collapsed?, parentPlaneID?, token?, animate?, duration?, easing? }`: an
+  `open` with a `token` is answered with kind `plane` `{ token, route, planeID }`, or `refused`.
+  `space.stack { action: 'stack' | 'unstack', planeIDs?, stackID?, step?, facing?, animate? }`: a
+  `stack` without `planeIDs` stacks the selection. `space.changed` kind `pinned` lists the pinned
+  planes (`PluridPinnedPlane[]`, back first, each with its `frame` in view px) after each pin, place,
+  collapse, raise and resize; kind `stacks` lists the stacks (`PluridStack[]`).
+- **The agent** has `plurid_pin` (pin, place, collapse, expand, open) and `plurid_stack` (stack,
+  unstack); `plurid_observe` marks each plane `pinned`, `collapsed` and its `stack`, and lists the
+  `stacks` ([AGENT_CONTROL.md](./AGENT_CONTROL.md)).
+
+#### A new root where the host wants it, and the `columns` reflow
+
+`COLUMNS` places root `i` in column `floor(i / length)`, row `i % length`, where `length` is the
+layout's `columnLength`, or, without one, `ceil(roots / columns)`. Without a `columnLength`, adding a
+root that makes `ceil(roots / columns)` one larger lengthens every column, so every root after the
+first column moves (two columns of 4 roots become two columns of 5 at the 9th root). With a
+`columnLength` the grid is fixed: a new root is the next cell. Either way the columns are as wide as
+their widest plane and the rows as tall as their tallest, so a new root wider than its column or
+taller than its row moves the columns or rows after it. This is the layout's behaviour, unchanged.
+A host that places a new root itself, with nothing else moving:
+
+- `handle.planes.open(route, { rect })` and then `await handle.planes.place(id, { animate: false })`:
+  a free root standing where the rect is on the screen now, face-on;
+- or `handle.tree.set(tree)` with the new root carrying its `location`, `manuallyPositioned: true` and
+  `free: true` (a host's tree is set exactly; a free root takes no slot in any later relayout);
+- or a `columnLength` that leaves room for the roots to come.
+
+### Occluded planes fade (`space.occlusion`)
+
+When the camera comes to rest on a plane (2026-10-31), the planes standing between the camera and it
+fade, so the plane it rests on is the one in view: a folder plane framed behind the drawings that
+hang from it, a tour's stop behind the planes in front of it.
+
+```tsx
+<PluridApplication configuration={{ space: { occlusion: 'fade' } }} … />        // the default; 'none' turns it off
+plurid.current?.camera.frame({ planeID }, { occlusion: 'none' });               // one move that fades nothing
+plurid.current?.planes.occluded();                                              // { target, planeIDs }: the faded planes, the most covering first
+```
+
+- **The plane the camera rests on** (the TARGET) is the plane a move names: a frame of one plane
+  (`camera.frame({ planeID })`, a host's focus command through it, a navigation to a plane), a dock,
+  an anchor, a tour's stop; and a plane that takes the focus (a click into its content, a tab to
+  it). A move that shows several planes or the space (a pair, as a link's spawn frames the child
+  with its parent, a fit, home, a preset, a bookmark, a viewpoint, a reveal, a frame of several
+  planes) names none; a delta (a nudge, an orbit) keeps the one there is.
+  A move with `occlusion: 'none'` (the handle's camera options, the camera topics) names none.
+- **Which planes fade:** each plane whose part NEARER the camera than the target covers more than
+  8 % of the target's drawn area: a depth test over the overlap of the two pictures, so a plane
+  tilted through the target fades by the part of it in front, and a plane behind the target, or
+  beside it, or in the same plane, does not. A pinned plane never fades and never makes another
+  fade; a plane set aside by a docked page, a closed plane and the target do not fade; nothing
+  fades while a plane is isolated.
+- **What happens to them:** they fade to 0.1 in 180 ms (at once under reduced motion) and let the
+  pointer through to what is behind them (`pointer-events: none`), with `data-plurid-occluding` on
+  the element; `usePluridPlane().occluding` says so from the content.
+- **When:** at rest only. The moment the camera moves (a gesture, a fling, a tween, a jump, a wheel's
+  tail) or the roots glide, every faded plane comes back; once the camera has been still for 120 ms
+  the pass runs again against the camera then, so a plane that still stands in front fades again and
+  one that no longer does stays. A new target, a tree change, a resize or a configuration change at
+  rest runs it too. Nothing fades during travel, so a move stays readable, and the pass costs
+  nothing per frame.
+- **The state and the bus:** `state.space.occluded { target, planeIDs }` (never persisted),
+  `space.changed` kind `occluded` with the same value after each change (a host can say "2 planes
+  faded in front of Job 1042"), `handle.planes.occluded()`, and the pure pass `occludedFor(state)`;
+  the agent's observation marks each plane `occluding`.
+
 ### Copy, cut and paste of planes (`space.clipboard`)
 
 ⌘/Ctrl+C, X and V over the space put the selected planes on the SYSTEM clipboard and bring them back — in this space, in another tab, in another window, on another site running plurid. What travels is an ARRANGEMENT FRAGMENT: JSON text with a marker and a version, holding each copied plane's PATH, where it sat, how big it was, and how a child hung off its parent.
@@ -882,7 +1044,7 @@ and the shortcuts dialog's historical `shortcuts-overlay` (all exported as `PLUR
 `data-plurid-control="<name>"` on every engine control (`plane-back|plane-focus|plane-close|plane-isolate|plane-refresh|plane-retry|plane-resize-*|
 toolbar-button|toolbar-more|toolbar-menu|transform-arrow|selection-*|viewcube|viewcube-fit|minimap|minimap-plane|shortcuts|shortcuts-overlay|shortcuts-close|shortcuts-site|shortcuts-repository|palette-input|palette-row|history-undo|history-redo|history-entry|history-present|bookmark-go|bookmark-save|bookmark-remove|bookmark-rename|bookmark-rename-input|bookmark-name|bookmark-home-set|dock-toggle|dock-back`),
 `data-plurid-docked="<planeID>"` on the view while the camera is docked on a page (the page presentation; the chrome fades by it), `data-plurid-page="docked"` on that page's element, `data-plurid-aside` on every plane outside the docked page's lineage (faded, inert), `data-plurid-presentation="page"` on the view in the page presentation, `data-plurid-motion="gesture|fling|tween"` on the view while the camera moves, `data-plurid-navigating="grab|fly|transform"` on the view while a navigation mode is on (a page's text is not selectable then), `data-plurid-rail` / `-rail-button` and `data-plurid-docked-state="docked|revealed"` on the page presentation's rail, `data-plurid-bridge-side="start|end"` on a bridge, `data-plurid-document="<key>"` on the head elements the document layer manages, `data-plurid-control="selection-<action>"` on the Transform drawer's selection buttons,
-`data-plurid-overlay`, `data-plurid-culled`, a plane's `role="group"` + `aria-roledescription="plane"` + `aria-label` (the declared document title, else the route path; 2026-09-10), `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
+`data-plurid-overlay`, `data-plurid-culled`, since 2026-10-31 `data-plurid-entity="PluridPinnedLayer"` (`data-plurid-overlay="pinned"`) and `PluridPinnedPlane` with `data-plurid-pinned="<planeID>"` (+ `data-plurid-collapsed="true"`) on a pinned plane's frame, `data-plurid-pinned-content` / `data-plurid-plane` on its content row, `data-plurid-lifted="true"` on the plane's element in the space while it is pinned, `data-plurid-content-host="<planeID>"` on the element that holds a plane's content and moves between the two, `data-plurid-occluding="true"` on a plane faded in front of the plane the camera rests on, `data-plurid-control="pinned-collapse|pinned-place"` on the frame's buttons, a plane's `role="group"` + `aria-roledescription="plane"` + `aria-label` (the declared document title, else the route path; 2026-09-10), `data-plurid-minimap` / `-minimap-eye` (the viewer: the camera eye; + `-minimap-clamped` when it is off the map) / `-minimap-plane="<planeID>"` / `-minimap-depth` / `-minimap-child` on every dot / `-minimap-link` (a child's join) / `-minimap-heading` (the ring's tick), `data-plurid-hover`,
 `data-plurid-guide` / `-guide-edge`, `data-plurid-iframe-overlay`, `data-plurid-leash-for="<planeID>"` / `-leash-live` on a leash and `data-plurid-bridge-live` on a bridge while its plane is the live one; a `PluridLink` renders an anchor WITH an `href` (the plane's `plurid://` address — a plain click is the engine's; a ⌘/Ctrl-click opens nothing and is left to the host's `atClick`), every plane outside the docked page is `inert` while a page is docked (the reading scope), the settings drawers are native `button[aria-expanded][aria-controls]`s, the shortcuts dialog has a `shortcuts-close` control; `data-plurid-application="<id>"` and `data-plurid-look="<name>"` on the view (the scope of the look's tokens and the look in force), `data-plurid-overlay="<name>"` on every chrome surface (a host slot that sets it is treated as chrome). Since 2026-09-16: `data-plurid-mode="rotate|translate|scale|grab|fly"` on the view while a mode is on (a badge at the top left names it, with `esc to leave`), `data-plurid-focus` on a plane while its focus anchor has the keyboard (`:focus-visible` only, so a mouse selection draws no ring), `data-plurid-plane-anchor="<planeID>"` on that anchor, `data-plurid-drag-handle` on anything a host marks as a selected plane's handle (`gestures.dragHandle: 'chrome'`), `data-plurid-pill` on a `PluridPill` (momentary chrome: a pointer click hands the focus back to the view), and, since 2026-09-29, `data-plurid-cover` on the router's first-frame cover (a client-only application's; a server-rendered page has none). A plane's element `id` is a digest, `plurid-<hash>` (`domID(planeID)`), its focus anchor's the same plus `-focus`: a plane id is no selector, so address a plane by `[data-plurid-plane="<id>"]`. The attribute names the engine reads back are exported too (`PLURID_ATTRIBUTE_ENTITY` / `_PLANE` / `_CONTROL` / `_DOCKED` / `_ASIDE` / `_APPLICATION` / `_LOOK` / `_PRESENTATION` / `_PAGE` / `_MOTION` / `_NAVIGATING` / `_OVERLAY` / `_RAIL` / `_RAIL_BUTTON`; `_MODE` / `_DRAG_HANDLE` / `_PLANE_ANCHOR` / `_FOCUS` from `@plurid/plurid-data`). CSS custom properties the engine writes, for a host's own stylesheet: the look's `--plurid-*` tokens on the view ([LOOKS.md](./LOOKS.md)), `--plurid-dock-fade` on the view (an alias of `--plurid-fade`, kept one release), `--plurid-bridge-reach` / `--plurid-bridge-angle` on a spawned page's element (the leash), `--plurid-plane-depth` / `-fade` / `-blur` on every plane under `elements.plane.depthFade`.
 
 The chrome (toolbar, viewcube, minimap, plane controls, shortcuts, handles, overlays) does NOT inherit the
@@ -998,6 +1160,8 @@ expect(store.cameraCommits()).toHaveLength(1);
 expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreState, no cast
 ```
 
+`pinned.frame(root, planeID)`, `pinned.frames(root)`, `pinned.host(root, planeID)` and `pinned.where(root, planeID)` (`'pinned' | 'space' | 'none'`) read the pinned planes from the DOM: hold `pinned.host` before a pin and compare it after a place to check that the content never remounted.
+
 `treePlane(id, overrides)` is a measured, shown node (a root, or with `parentPlaneID` a spawned child); `viewSizedSheet` a page; `pageConfiguration(partial)` the page presentation with its three defaults applied through the engine's own `merge`; `makeSpaceStore(configuration, tree)` runs the application's ROOT reducer with a thunk-aware `dispatch`, keeping every plain action (`dispatched`, `cameraCommits()`).
 
 ## Quick reference
@@ -1012,6 +1176,10 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Pick a look, restyle or replace the chrome | `look: 'paper'` · `look: { preset, tokens }` · `look: { scheme, space, surface, ink, accent }` · CSS `[data-plurid-application] { --plurid-accent: … }` · `chrome: 'minimal' \| 'none'` · `render*(context)` slots · `PluridPill` / `PluridPanel` / `PluridKey` / `PluridField` · `useLook()` |
 | Present the space as a site (a page first, the space one move away) | `{ presentation: 'page', docking: { motion, chrome, reveal, fade, aside, focus, epsilon, url } }` · the address bar is the page (`docking.url`, Back / Forward, deep links) · `space.dock` / `space.reveal` · `useCamera().dock / reveal / docked` · `space.changed` kind `docked` · `[data-plurid-docked]` on the view · `renderDockRail` / `dockRail: { show }` · Escape docks (a spawned page: its parent), G / the rail / a pinch reveal |
 | Play a tour of anchored stops, record one, name a camera by its plane | `handle.tour.play(tour, { onStep, onMissing })` · `pause` / `resume` / `next` / `previous` / `seek` / `stop` / `subscribe` / `record` · `handle.camera.anchor(anchor)` · `anchorOf` / `resolveAnchor` / `parseTour` / `serializeTour` · `space.tour` · `space.changed` kind `tour` · `handle.whenAtRest()` |
+| Lift a plane onto the screen (a panel, a pop-up) and put it back into the space | `handle.planes.open(route, { rect })` · `pin(planeID, rect?)` · `place(planeID, { parentPlaneID?, animate? })` · `collapse` · `raise` · `pinned()` · `pinnable()` · `planes[].pinnable: false` · `usePluridPlane().pinned / pin / place / collapse` · `renderPinnedControls` · `space.pinned` · `space.changed` kind `pinned` |
+| Stack planes one behind another, and back | `handle.planes.stack(planeIDs, { step, facing })` · `unstack(stackID \| planeIDs)` · `stacks()` · `space.stack` · `space.changed` kind `stacks` |
+| See the plane the camera rests on through the planes in front of it | `space.occlusion: 'fade' \| 'none'` (default `fade`) · `{ occlusion: 'none' }` on a camera move · `handle.planes.occluded()` · `state.space.occluded` · `space.changed` kind `occluded` · `usePluridPlane().occluding` · `[data-plurid-occluding]` |
+| Add a root without the others moving | `planes.open` then `planes.place`, or `tree.set` with a `free` root, or a `columnLength` (the `columns` reflow, above) |
 | Home / named presets / runtime bookmarks | `SPACE_HOME` · `SPACE_SET_HOME` · `SPACE_PRESET` · `SPACE_BOOKMARK` (`go` / `save` / `remove` / `rename`) (+ `navigation.home` / `presets`) · `usePluridBookmarks()` · `handle.bookmarks` · the toolbar's Bookmarks drawer |
 | Switch the layout on a live space (animated relayout) | change `layout` in the `configuration` prop — children stay attached, planes glide |
 | Steer with a gamepad | `{ gestures: { gamepad: { enabled: true } } }` |
@@ -1022,7 +1190,7 @@ expect(store.getState().space.camera.scale).toBe(1);     // typed: PluridStoreSt
 | Read undo/redo availability | `pluridSelectors.space.getHistory` · `space.changed` kind `history` |
 | Stop painting far / off-screen planes, fade with depth | `{ culling: { enabled: true } }` · `{ planeDepthFade: { enabled: true } }` · `usePluridPlane().culled` |
 | Virtualize the content of hidden planes (retain the state, or free the DOM) | `{ culling: { enabled: true, detach: 'retain' \| 'unmount' \| { mode, delay, distance, max } } }` · `usePluridPlane().detached` · `handle.tree.culling()` |
-| Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `tour` / `whenAtRest` / `focus`) |
+| Drive the engine from the host's own code | `ref` → `PluridApplicationHandle` (`camera` / `selection` / `history` / `tree` / `planes` / `tour` / `whenAtRest` / `focus`) |
 | Read or drive the engine from a component under it | `useCamera` · `useSelection` · `usePluridHistory` · `usePluridPubSub` · `usePluridApi` |
 | Test the integration in jsdom | `@plurid/plurid-react/testing` (`renderPlurid`, `gestures`, `flushFrames`, `expectCamera`) |
 | Mute the development warnings | `extend.development.warnings: false` |

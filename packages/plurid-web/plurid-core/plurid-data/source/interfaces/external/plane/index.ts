@@ -43,6 +43,12 @@ export interface PluridPlaneOptions {
      * `elements.plane.maxHeight`.
      */
     maxHeight?: number;
+    /**
+     * The plane may be pinned to the screen (2026-10-31). Default `true`. A pin moves the plane's
+     * content element to the screen layer, which a browser cannot do to everything: an `<iframe>`
+     * or a `<webview>` reloads when it is moved. `false` keeps such a plane in the space.
+     */
+    pinnable?: boolean;
 }
 
 
@@ -158,5 +164,7 @@ export interface RegisteredPluridPlane<C> {
     height?: number;
     /** The plane's declared `maxHeight` (px), carried through registration. */
     maxHeight?: number;
+    /** The plane's `pinnable` option, carried through registration. */
+    pinnable?: boolean;
 }
 // #endregion module

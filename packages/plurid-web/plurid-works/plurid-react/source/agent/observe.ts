@@ -52,6 +52,14 @@ export interface PluridAgentPlane {
     text: string;
     /** the links inside it */
     links: PluridAgentLink[];
+    /** pinned to the screen, above the space, wherever the camera is (2026-10-31) */
+    pinned: boolean;
+    /** pinned and collapsed to its title bar */
+    collapsed: boolean;
+    /** the stack it is in (`plurid_stack`), `null` for none */
+    stack: string | null;
+    /** faded: it stands between the camera and the plane the camera rests on */
+    occluding: boolean;
 }
 
 /** The space, as a model reads it: what is there, what is in view, what can be done next. */
@@ -71,6 +79,8 @@ export interface PluridAgentObservation {
     selection: string[];
     history: { canUndo: boolean; canRedo: boolean };
     bookmarks: string[];
+    /** the stacks: each one's id and its planes, front first */
+    stacks: { id: string; planes: string[] }[];
 }
 
 
@@ -116,6 +126,21 @@ const planeElement = (
         return null;
     }
     return root.querySelector<HTMLElement>(`[data-plurid-plane="${cssString(planeID)}"]`);
+};
+
+/**
+ * Where a plane's content is: its pinned frame's content while it is pinned (2026-10-31), else the
+ * plane's element in the space.
+ */
+export const planeContentElement = (
+    root: ParentNode | null | undefined,
+    planeID: string,
+): HTMLElement | null => {
+    if (!root) {
+        return null;
+    }
+    return root.querySelector<HTMLElement>(`[data-plurid-pinned-content="${cssString(planeID)}"]`)
+        ?? planeElement(root, planeID);
 };
 
 /** Elements whose text is not read: code, styles, and what is never shown. */
@@ -238,16 +263,25 @@ export const observeSpace = (
         ? (root as ParentNode).querySelector('[data-plurid-entity="PluridView"]') ?? (root instanceof Element && root.matches('[data-plurid-entity="PluridView"]') ? root : null)
         : null;
     const textLength = options.planeID ? Number.POSITIVE_INFINITY : (options.textLength ?? 600);
+    const faded = new Set(space.occluded?.planeIDs ?? []);
+    const stackOf = new Map<string, string>();
+    for (const stack of Object.values(space.stacks ?? {})) {
+        for (const planeID of stack.planeIDs) {
+            stackOf.set(planeID, stack.stackID);
+        }
+    }
 
     const planes = flatten(space.tree)
         .filter((node) => !options.planeID || node.planeID === options.planeID)
         .map((node): PluridAgentPlane => {
-            const element = planeElement(root, node.planeID);
+            const shell = planeElement(root, node.planeID);
+            // a pinned plane's content, its text and its links are in its frame
+            const element = node.pinned ? planeContentElement(root, node.planeID) : shell;
             const route = planeAddressPath(node.route) ?? node.route;
             return {
                 id: node.planeID,
                 route,
-                title: element?.getAttribute('aria-label') || route,
+                title: shell?.getAttribute('aria-label') || route,
                 parent: node.parentPlaneID || null,
                 children: (node.children ?? []).map((child) => child.planeID),
                 shown: node.show !== false,
@@ -256,6 +290,10 @@ export const observeSpace = (
                 onScreen: node.show !== false && onScreen(element, space.viewSize, viewElement),
                 text: excerpt(textOf(element), textLength),
                 links: linksOf(element),
+                pinned: !!node.pinned,
+                collapsed: !!node.pinned?.collapsed,
+                stack: stackOf.get(node.planeID) ?? null,
+                occluding: faded.has(node.planeID),
             };
         });
 
@@ -275,6 +313,7 @@ export const observeSpace = (
         selection: [...space.selectedPlaneIDs],
         history: { canUndo: !!space.history?.canUndo, canRedo: !!space.history?.canRedo },
         bookmarks: Object.keys(space.bookmarks ?? {}),
+        stacks: Object.values(space.stacks ?? {}).map((stack) => ({ id: stack.stackID, planes: [...stack.planeIDs] })),
     };
 };
 // #endregion module

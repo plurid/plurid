@@ -14,6 +14,11 @@
         TreePlaneLocation,
         PluridPubSub as IPluridPubSub,
     } from '@plurid/plurid-data';
+    import type {
+        PluridPinnedRect,
+        PluridPlaceOptions,
+        PluridPlaceResult,
+    } from '@plurid/plurid-data';
     // #endregion libraries
 
 
@@ -58,6 +63,11 @@
     import {
         cameraCommand,
     } from '~services/logic/camera';
+    import {
+        pinPlane,
+        placePinnedPlane,
+        collapsePinnedPlane,
+    } from '~services/logic/pinned';
 // #endregion imports
 
 
@@ -165,6 +175,18 @@ export interface PluridPlaneLens {
     dock: () => void;
     /** Reveal the space from this plane (the page presentation). */
     reveal: () => void;
+    /** This plane is pinned to the screen (2026-10-31), above the space. */
+    pinned: boolean;
+    /** Pinned and collapsed to its title bar. */
+    collapsed: boolean;
+    /** Faded: it stands between the camera and the plane the camera rests on (`space.occlusion`). */
+    occluding: boolean;
+    /** Pin this plane to the screen, at `rect`, else a free slot on the right edge (`handle.planes.pin`). */
+    pin: (rect?: PluridPinnedRect) => boolean;
+    /** Put this pinned plane into the space where its frame is (`handle.planes.place`). */
+    place: (options?: PluridPlaceOptions) => Promise<PluridPlaceResult>;
+    /** Collapse this pinned plane to its title bar, or expand it (`false`); toggles without an argument. */
+    collapse: (collapsed?: boolean) => boolean;
 }
 
 
@@ -264,6 +286,15 @@ export const usePluridPlane = (): PluridPlaneLens => {
     const culled = useEngineSelector(
         (state: AppState): 'visible' | 'hidden' | 'frozen' | 'detached' => planeCullingState(getCulledSets(state), planeID),
     );
+    const pinned = useEngineSelector(
+        (state: AppState) => planeID !== undefined && !!getTreePlane(state, planeID)?.pinned,
+    );
+    const collapsed = useEngineSelector(
+        (state: AppState) => planeID !== undefined && !!getTreePlane(state, planeID)?.pinned?.collapsed,
+    );
+    const occluding = useEngineSelector(
+        (state: AppState) => planeID !== undefined && (state.space.occluded?.planeIDs ?? []).includes(planeID),
+    );
 
     const commands = useMemo(() => ({
         close: (options?: ClosePlaneOptions) => {
@@ -289,6 +320,15 @@ export const usePluridPlane = (): PluridPlaneLens => {
         reveal: () => {
             dispatch(cameraCommand({ kind: 'reveal' }, { animate: true }) as any);
         },
+        pin: (rect?: PluridPinnedRect) => (planeID !== undefined
+            ? dispatch(pinPlane(planeID, rect) as any) as unknown as boolean
+            : false),
+        place: (options?: PluridPlaceOptions) => (planeID !== undefined
+            ? dispatch(placePinnedPlane(planeID, options) as any) as unknown as Promise<PluridPlaceResult>
+            : Promise.resolve<PluridPlaceResult>('refused')),
+        collapse: (next?: boolean) => (planeID !== undefined
+            ? dispatch(collapsePinnedPlane(planeID, next) as any) as unknown as boolean
+            : false),
     }), [
         dispatch,
         planeID,
@@ -313,6 +353,9 @@ export const usePluridPlane = (): PluridPlaneLens => {
         culled,
         frozen: culled === 'frozen',
         detached: culled === 'detached',
+        pinned,
+        collapsed,
+        occluding,
         route: details?.value,
         parameters: details?.parameters ?? EMPTY_RECORD,
         query: details?.query ?? EMPTY_RECORD,

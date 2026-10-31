@@ -40,6 +40,7 @@
     import {
         PluridChromeContext,
         PluridPlaneChromeContext,
+        PluridPinnedChromeContext,
     } from '../chrome';
 
     import {
@@ -314,6 +315,8 @@ export interface PluridApplication<C> {
     renderPlaneControls?: PluridRenderSlot<PluridPlaneChromeContext>;
     /** A spawned plane's bridge to its link; called with the plane's chrome context. */
     renderPlaneBridge?: PluridRenderSlot<PluridPlaneChromeContext>;
+    /** A pinned plane's bar (its title, collapse, place); called with the pinned plane's chrome context. */
+    renderPinnedControls?: PluridRenderSlot<PluridPinnedChromeContext>;
     /** The transform-origin dot. */
     renderOrigin?: PluridRenderSlot;
     /** The space debugger (rendered when `development.spaceDebugger` is on). */

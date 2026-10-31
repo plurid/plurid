@@ -10,6 +10,7 @@ export * from './keys';
 export * from './layout';
 export * from './link';
 export * from './metastate';
+export * from './pinned';
 export * from './plane';
 export * from './pubsub';
 export * from './registrar';

@@ -1,8 +1,8 @@
 # Agent control — `@plurid/plurid-react/agent`
 
 An AI agent can operate a plurid application embedded in a page. It reads the space as a reader
-would: the planes, their text and links, the docked page, the selection. It acts through fifteen
-tools that open, follow, close, frame, arrange, configure and show the reader around. Each tool is described for a model and
+would: the planes, their text and links, the docked page, the selection. It acts through seventeen
+tools that open, follow, close, frame, arrange, configure, pin, stack and show the reader around. Each tool is described for a model and
 validated before it runs. Each answers once the space has come to rest, and the answer carries the
 space as it is then.
 
@@ -59,7 +59,7 @@ const result = await agent.call('plurid_observe');
 
 | Tool | What it does | Changes the space |
 | --- | --- | --- |
-| `plurid_observe` | Reads the space: every plane's id, route, title, text excerpt, links, and whether it is shown, docked, on screen and selected; plus the camera, the selection and the history. `planeID` reads one plane's whole text. | no |
+| `plurid_observe` | Reads the space: every plane's id, route, title, text excerpt, links, and whether it is shown, docked, on screen, selected, pinned (and collapsed) and in a stack; plus the camera, the selection, the history and the stacks. `planeID` reads one plane's whole text. | no |
 | `plurid_follow_link` | Clicks a link inside a plane, as a reader would. In the page presentation it goes to the linked page; in a space it opens the linked plane beside its parent, or closes it if already open. Matches the link's text or its route. | yes |
 | `plurid_open_plane` | Opens a route as a new plane: a child of `parentPlaneID`, or a new root. | yes |
 | `plurid_go_to_plane` | Brings a plane into view: docks on it (page presentation) or frames it (`framing: 'plane' \| 'pair'`). Reopens a closed plane first. | yes |
@@ -74,6 +74,8 @@ const result = await agent.call('plurid_observe');
 | `plurid_command` | Runs one of the keyboard commands by id (`frameActive`, `copy`, `isolatePlane`, …), exactly as its key would. The id is an enum in the schema, so a model sees the list. | yes |
 | `plurid_configure` | Sets the `presentation` (`page` \| `space`) or the roots' `layout` (`columns` with `COLUMNS`, `rows` with `ROWS`). | yes |
 | `plurid_tour` | Shows the reader around: `play` a tour through `stops` (at most 100 planes by id, each `frame`d or `dock`ed, each held `dwell` ms, at most 2 147 483 647, or until `next`), then `pause`, `resume`, `next`, `previous`, `stop`, or read its `state`. The stops become anchors (the plane's path), so they hold through the relayouts the tour causes; the reader's input, or another move of the camera, pauses it. `play` answers once the first stop is reached (or the tour pauses or ends first). `no_effect` steers a tour that is not playing. | yes |
+| `plurid_pin` | Pins a plane to the screen, above the space, where it stays whatever the camera does (`pin`, at `rect` in px of the view from the corner `anchor` names, else a free slot on the right edge); puts a pinned plane back into the space where its frame is (`place`: answers once the frame is gone, after the camera levels when it was turned both ways); `collapse`s it to its title bar or `expand`s it; or `open`s a `route` as a new pinned plane. `not_allowed` for a plane its application keeps in the space (`pinnable: false`), `no_effect` for one that is not pinned. | yes |
+| `plurid_stack` | Stacks 2 to 12 planes one behind another, facing the reader, the first in front, each title showing (`stack`, the `planeIDs`, else the selection); puts the planes of a stack back exactly where they were (`unstack`, its `stackID`, or `planeIDs`). `unavailable` for a pinned or closed plane. | yes |
 
 Every tool's `inputSchema` is a JSON Schema with `additionalProperties: false` and no numeric or
 string-length constraints. The same schemas therefore work as MCP tools, as WebMCP tools, and as
@@ -103,12 +105,17 @@ Claude tools in strict mode.
       "selected": false,
       "onScreen": true,
       "text": "GEOMETRY G-01 vertices 2 046 faces 4 092 … open detail →",
-      "links": [{ "text": "open detail →", "route": "/geometry/detail", "open": true }]
+      "links": [{ "text": "open detail →", "route": "/geometry/detail", "open": true }],
+      "pinned": false,
+      "collapsed": false,
+      "stack": null,
+      "occluding": false
     }
   ],
   "selection": [],
   "history": { "canUndo": true, "canRedo": false },
-  "bookmarks": []
+  "bookmarks": [],
+  "stacks": []
 }
 ```
 
@@ -118,6 +125,11 @@ Claude tools in strict mode.
   (600 by default; `…` marks a cut). `plurid_observe { planeID }` reads the whole text.
 - **The title** is the plane's declared document title (`planes[].head.title`), else its path.
 - **`onScreen`** intersects the plane's box with the view's, as laid out by the browser.
+- **A pinned plane** (`pinned: true`) is read in its frame on the screen, where its content is: its
+  text and links are there, and it is in view wherever the camera goes. `stack` names the stack a
+  plane is in (`stacks[].id`, its `planes` front first). `occluding` marks a plane faded because it
+  stands between the camera and the plane the camera rests on (`space.occlusion`): the reader sees
+  through it.
 - **Nothing is in pixels or matrices.** The tools take ids, link text and routes, so a model never
   needs a coordinate.
 

@@ -21,3 +21,4 @@ export {
 // #endregion exports
 
 export * as snap from './snap';
+export * as pinned from './pinned';

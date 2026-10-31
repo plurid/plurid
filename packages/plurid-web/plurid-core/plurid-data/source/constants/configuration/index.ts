@@ -159,6 +159,7 @@ export const defaultConfigurationSpace: PluridConfigurationSpace = {
     firstPerson: false,
     collaboration: false,
     undo: true,
+    occlusion: 'fade',
     viewpointURLWrite: false,
     viewpointURLRestore: false,
     viewpointURLParam: 'v',

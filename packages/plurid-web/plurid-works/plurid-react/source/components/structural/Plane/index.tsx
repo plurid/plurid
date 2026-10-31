@@ -12,8 +12,12 @@
         useRef,
         useState,
         useEffect,
+        useLayoutEffect,
         useCallback,
     } from 'react';
+    import {
+        createPortal,
+    } from 'react-dom';
 
     import {
         AnyAction,
@@ -36,6 +40,8 @@
         PLURID_ATTRIBUTE_PLANE_ANCHOR,
         PLURID_ATTRIBUTE_FOCUS,
         PLURID_ENTITY_PLANE,
+        PLURID_ATTRIBUTE_LIFTED,
+        PLURID_ATTRIBUTE_OCCLUDING,
 
         RegisteredPluridPlane,
         TreePlane,
@@ -97,6 +103,13 @@
         space as spaceEngine,
     } from '~services/engine';
     import { domID } from '~services/logic/dom';
+    import {
+        createContentHost,
+    } from '~services/logic/pinned/hosts';
+    import {
+        OCCLUDED_OPACITY,
+        OCCLUSION_FADE_MS,
+    } from '~services/logic/occlusion';
     // #endregion external
 
 
@@ -168,7 +181,8 @@ const readingScopeAttributes = (
     docked: boolean,
     somePageDocked: boolean,
     isolatedOut: boolean,
-): Record<string, unknown> => (aside || (somePageDocked && !docked) || isolatedOut ? { inert: true } : {});
+    lifted = false,
+): Record<string, unknown> => (aside || (somePageDocked && !docked) || isolatedOut || lifted ? { inert: true } : {});
 
 export interface PluridPlaneOwnProperties {
     // #region required
@@ -203,6 +217,8 @@ export interface PluridPlaneStateProperties {
     stateIsolatePlane: string;
     /** ms of an animated relayout in flight (0 = none): the placement transition. */
     stateLayoutTransition: number;
+    /** Faded: it stands between the camera and the plane the camera rests on (2026-10-31). */
+    stateOccluding: boolean;
     /** The culling pass's verdict for this plane. */
     stateCulled: PlaneCullingState;
     // A per-instance DERIVED boolean (this plane is in `selectedPlaneIDs`), same memoization
@@ -262,6 +278,7 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         stateAside,
         stateUnmeasuredPageID,
         stateLayoutTransition,
+        stateOccluding,
         stateCulled,
         stateIsolatePlane,
         stateIsSelected,
@@ -325,6 +342,88 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         mouseOver,
         setMouseOver,
     ] = useState(false);
+
+    /**
+     * THE CONTENT'S HOST (2026-10-31): the element the content is rendered into through a portal,
+     * once, for the plane's life; the registry moves it between the world shell and the pinned
+     * frame, so a pin and a place never remount it (`services/logic/pinned/hosts`). In a client
+     * render every plane has one from the start; a render hydrating server HTML keeps the content
+     * where the server put it (a portal does not hydrate) and makes the host at the first pin, the
+     * one time that plane's content mounts again.
+     */
+    const contentHosts = context?.contentHosts;
+    const lifted = !!treePlane.pinned;
+    // the commit that places a pinned plane puts it where its frame was at once: a relayout gliding
+    // at that moment would fly it there from where it stood before its pin
+    const liftedBefore = useRef(lifted);
+    const justPlaced = liftedBefore.current && !lifted;
+    useEffect(() => {
+        liftedBefore.current = lifted;
+    });
+
+    // FADED IN FRONT OF THE PLANE THE CAMERA RESTS ON (2026-10-31): the fade, and the way back, take
+    // the occlusion's own length (`--plurid-plane-fade`), held for the fade back's length after
+    const [
+        fadeHeld,
+        setFadeHeld,
+    ] = useState(false);
+    useEffect(() => {
+        if (stateOccluding) {
+            setFadeHeld(true);
+            return;
+        }
+        if (!fadeHeld) {
+            return;
+        }
+        const timer = setTimeout(() => setFadeHeld(false), OCCLUSION_FADE_MS + 60);
+        return () => clearTimeout(timer);
+    }, [
+        stateOccluding,
+    ]);
+    const [
+        contentHost,
+        setContentHost,
+    ] = useState<HTMLElement | null>(() => (
+        contentHosts && context?.contentHostsEager && typeof document !== 'undefined'
+            ? createContentHost(planeID)
+            : null
+    ));
+    useEffect(() => {
+        if (lifted && contentHosts && !contentHost && typeof document !== 'undefined') {
+            setContentHost(createContentHost(planeID));
+        }
+    }, [
+        lifted,
+        contentHosts,
+        contentHost,
+    ]);
+    // the world shell's slot, where the content host stands while the plane is in the space: a
+    // callback ref, so a slot that goes (a detached plane's content) and comes back is told each time.
+    // The slot comes before the portal, so its ref runs before the content's layout effects: the host
+    // is registered here too, and is in the document when the content first measures itself.
+    const worldSlot = useCallback((slot: HTMLDivElement | null) => {
+        if (slot && contentHost) {
+            contentHosts?.host(planeID, contentHost);
+        }
+        contentHosts?.world(planeID, slot);
+    }, [
+        contentHosts,
+        contentHost,
+        planeID,
+    ]);
+    useLayoutEffect(() => {
+        if (!contentHosts || !contentHost) {
+            return;
+        }
+        contentHosts.host(planeID, contentHost);
+        return () => {
+            contentHosts.host(planeID, null);
+        };
+    }, [
+        contentHosts,
+        contentHost,
+        planeID,
+    ]);
 
     // based on camera location and world position compute transform matrix
     // #endregion state
@@ -425,6 +524,10 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const handlePlaneClick = (
         event: React.MouseEvent,
     ) => {
+        // a pinned plane's clicks reach its world shell through the portal: they select nothing
+        if (lifted) {
+            return;
+        }
         // Shift+click toggles this plane's membership in the multi-selection. Plain clicks pass
         // through untouched so the host's plane content stays fully interactive; `preventDefault`
         // suppresses the stray text-selection a shift+click would otherwise start.
@@ -476,8 +579,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
      * that is not painted are left alone.
      */
     useEffect(() => {
+        // a lifted shell holds no content: its size would be the bar's, a measurement of nothing
         const element = planeRef.current;
-        if (!element || treePlane.sizeMode === 'manual' || stateCulled !== 'visible') {
+        if (!element || treePlane.sizeMode === 'manual' || stateCulled !== 'visible' || lifted) {
             return;
         }
         return dispatchObservePlaneSize(element, planeID);
@@ -486,7 +590,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         remountKey,
         treePlane.sizeMode,
         stateCulled,
+        lifted,
     ]);
+
 
     /**
      * Docked on this page: give the content scroller the focus (without scrolling) so PageDown,
@@ -659,7 +765,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const shellHeight = detached && !renderHeight
         ? (treePlane.height > 0 ? treePlane.height : resolvePlaneFallbackSize(stateConfiguration, stateViewSize).height) + 'px'
         : renderHeight;
-    const fixedHeight = !!shellHeight || cappedHeight > 0;
+    // pinned, the content scrolls inside its frame: the same scroller as in a hand-sized plane, so a
+    // pin and a place keep its offset
+    const fixedHeight = !!shellHeight || cappedHeight > 0 || lifted;
     // The page presentation: the controls bar overlays the top of the sheet (faded out while
     // docked) instead of taking a row, so the docked page is edge to edge and never jumps.
     const pagePresentation = stateConfiguration.space.presentation === 'page';
@@ -701,6 +809,35 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
         detached,
     };
 
+    const contentTree = planeRenderError ? (
+        <ErrorBoundary
+            renderError={typeof planeRenderError !== 'boolean'
+                ? planeRenderError : undefined
+            }
+            onError={reportRenderError}
+        >
+            <PlaneContent
+                {...planeContentProperties}
+            >
+                <PluridPlaneDetailsContext.Provider
+                    value={planeDetails}
+                >
+                    {children}
+                </PluridPlaneDetailsContext.Provider>
+            </PlaneContent>
+        </ErrorBoundary>
+    ) : (
+        <PlaneContent
+            {...planeContentProperties}
+        >
+            <PluridPlaneDetailsContext.Provider
+                value={planeDetails}
+            >
+                {children}
+            </PluridPlaneDetailsContext.Provider>
+        </PlaneContent>
+    );
+
     return (
         <StyledPluridPlane
             key={key}
@@ -722,12 +859,15 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                 // Animated relayout (FLIP): planes glide to their new placements only while the
                 // View holds the transition window open — never during a spawn or a drag.
                 // Animated relayout only: the aside fade is the stylesheet's (`[data-plurid-aside]`).
-                transition: stateLayoutTransition > 0
+                transition: stateLayoutTransition > 0 && !justPlaced
                     ? `transform ${stateLayoutTransition}ms cubic-bezier(0.22, 1, 0.36, 1), opacity var(--plurid-dock-fade, 240ms) ease, visibility 0s linear ${stateAside ? 'var(--plurid-dock-fade, 240ms)' : '0s'}`
                     : undefined,
-                opacity: stateAside ? 0 : isolatePlaneOpacity,
-                pointerEvents: stateAside ? 'none' : isolatePointerEvents,
-                visibility: waitsForView ? 'hidden' : undefined,
+                opacity: stateAside ? 0 : (stateOccluding ? OCCLUDED_OPACITY : isolatePlaneOpacity),
+                // faded in front of the target, the pointer goes through to it
+                pointerEvents: stateAside || lifted || stateOccluding ? 'none' : isolatePointerEvents,
+                ...(stateOccluding || fadeHeld ? { '--plurid-plane-fade': OCCLUSION_FADE_MS + 'ms' } as React.CSSProperties : {}),
+                // lifted onto the pinned layer: the shell stays (its state, its portal) unpainted
+                visibility: waitsForView || lifted ? 'hidden' : undefined,
             }}
             onPointerEnter={enterPlane}
             onPointerLeave={leavePlane}
@@ -748,7 +888,9 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
             data-plurid-aside={stateAside ? 'true' : undefined}
             data-plurid-page={stateIsDocked ? 'docked' : undefined}
             {...{ [PLURID_ATTRIBUTE_FOCUS]: anchorFocused ? 'true' : undefined }}
-            {...readingScopeAttributes(stateAside, stateIsDocked, stateSomePageDocked, isolatedOut)}
+            {...{ [PLURID_ATTRIBUTE_LIFTED]: lifted ? 'true' : undefined }}
+            {...{ [PLURID_ATTRIBUTE_OCCLUDING]: stateOccluding ? 'true' : undefined }}
+            {...readingScopeAttributes(stateAside, stateIsDocked, stateSomePageDocked, isolatedOut, lifted)}
             backface={stateConfiguration.elements.plane.backface}
             depthFade={!!stateConfiguration.elements.plane.depthFade?.enabled}
         >
@@ -839,34 +981,16 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
                                 />
                             )}
 
-                            {planeRenderError ? (
-                                <ErrorBoundary
-                                    renderError={typeof planeRenderError !== 'boolean'
-                                        ? planeRenderError : undefined
-                                    }
-                                    onError={reportRenderError}
-                                >
-                                    <PlaneContent
-                                        {...planeContentProperties}
-                                    >
-                                        <PluridPlaneDetailsContext.Provider
-                                            value={planeDetails}
-                                        >
-                                            {children}
-                                        </PluridPlaneDetailsContext.Provider>
-                                    </PlaneContent>
-                                </ErrorBoundary>
-                            ) : (
-                                <PlaneContent
-                                    {...planeContentProperties}
-                                >
-                                    <PluridPlaneDetailsContext.Provider
-                                        value={planeDetails}
-                                    >
-                                        {children}
-                                    </PluridPlaneDetailsContext.Provider>
-                                </PlaneContent>
-                            )}
+                            {contentHost ? (
+                                <>
+                                    <div
+                                        ref={worldSlot}
+                                        data-plurid-content-slot={planeID}
+                                        style={{ display: 'contents' }}
+                                    />
+                                    {createPortal(contentTree, contentHost)}
+                                </>
+                            ) : contentTree}
                         </ActivityOrFragment>
                     )}
                 </>
@@ -899,6 +1023,7 @@ const makeMapStateToProps = () => {
         stateAside: getIsAside(state, ownProps.planeID),
         stateUnmeasuredPageID: selectors.space.getUnmeasuredPageID(state),
         stateLayoutTransition: state.space.layoutTransition || 0,
+        stateOccluding: !!ownProps.planeID && (state.space.occluded?.planeIDs ?? []).includes(ownProps.planeID),
         stateCulled: getPlaneCulling(state, ownProps.planeID),
         stateIsolatePlane: selectors.space.getIsolatePlane(state),
         stateIsSelected: getIsSelected(state, ownProps.planeID),
