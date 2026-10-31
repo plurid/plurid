@@ -89,7 +89,8 @@ PRECEDENCE: the dispatcher walks its table in order and the first binding whose 
 | `drag` | Orbit (on empty space; anywhere in grab mode) |
 | `right` + `drag` | Pan |
 | `middle` + `drag` | Pan |
-| `Shift` + `drag` | Pan |
+| `Shift` + `drag` | Pan on empty space or plane chrome (content keeps range selection) |
+| `Shift / ⌘ / Ctrl` + `click` | Toggle plane selection on its title bar (gestures.selection configures or disables it) |
 | `Alt` + `drag` | Dolly (move closer / further) |
 | `wheel` | Zoom at the cursor (content scrolls first over a scrollable plane) |
 | `⌘ / Ctrl` + `wheel` | The browser's zoom (a trackpad pinch zooms the space) |

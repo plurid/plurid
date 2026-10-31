@@ -44,6 +44,19 @@ additive except the behaviours under **Changed**.
 
 **Changed.**
 
+- **Modifier clicks select from title bars by default.** Content keeps its Shift range selection
+  and Ctrl/Meta links. Mark custom selection chrome with `data-plurid-selection-handle` independently
+  of `data-plurid-drag-handle`. `space.gestures.selection.target: 'plane'` opts into whole-plane
+  selection, `'none'` disables the gesture, and `modifiers` chooses from `shift`, `ctrl`, `meta`.
+  Inputs, controls, consumed clicks and nested or portaled planes keep their events in every mode.
+  Keyboard shortcuts still use `space.shortcuts.disabled` and `keymap`.
+- **Shift-drag over content keeps native selection** in normal mode. Empty space, title chrome,
+  explicit navigation modes and a configured button mapping retain camera navigation.
+- **Custom title bars determine their content row.** The built-in bar remains 56 px; a custom
+  40 px bar no longer leaves 16 px of empty space below it. Remove host grid-row overrides.
+- **Camera transform memoization is bounded.** Hosts no longer need a distribution transform
+  to bound the camera selector cache.
+
 - **Occluded planes fade by default.** A plane that stands in front of the plane a frame, a dock, an
   anchor or a tour's stop comes to rest on now fades, and the pointer goes through it, until the
   camera moves. `space.occlusion: 'none'` keeps the space as it was; a move opts out with

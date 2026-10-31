@@ -226,7 +226,11 @@ describe('resolveGestureIntent', () => {
         expect(resolveGestureIntent(mouse({ button: 2, buttons: 2, onPlane: true }))).toBe('none');
         expect(resolveGestureIntent(mouse({ button: 2, buttons: 2, onPlane: true, grabMode: true }))).toBe('pan');
         expect(resolveGestureIntent(mouse({ button: 1, buttons: 4, onPlane: true }))).toBe('pan');
-        expect(resolveGestureIntent(mouse({ shift: true, onPlane: true }))).toBe('pan');
+        expect(resolveGestureIntent(mouse({ shift: true, onPlane: true }))).toBe('none');
+        expect(resolveGestureIntent(mouse({ shift: true }))).toBe('pan');
+        expect(resolveGestureIntent(mouse({ shift: true, onPlane: true, grabMode: true }))).toBe('pan');
+        expect(resolveGestureIntent(mouse({ shift: true, onPlane: true, buttonMap: { left: 'pan' } }))).toBe('pan');
+        expect(resolveGestureIntent(mouse({ meta: true, onPlane: true, onSelectedPlane: true, onDragHandle: true }))).toBe('none');
         expect(resolveGestureIntent(mouse({ alt: true }))).toBe('dolly');
         expect(resolveGestureIntent(mouse({ onEditable: true, grabMode: true }))).toBe('none');
         expect(resolveGestureIntent(mouse({ onControl: true, button: 2 }))).toBe('none');

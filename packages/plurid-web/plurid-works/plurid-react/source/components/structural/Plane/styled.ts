@@ -1,8 +1,5 @@
 // #region imports
     // #region libraries
-    import {
-        PLANE_BAR_HEIGHT,
-    } from '@plurid/plurid-data';
     import styled from 'styled-components';
 
     import {
@@ -153,7 +150,7 @@ export const StyledPluridPlane = styled.div<IStyledPluridPlane>`
     }) => {
         const content = fixedHeight ? 'minmax(0, 1fr)' : 'auto';
         if (planeControls && controlsRow !== false) {
-            return PLANE_BAR_HEIGHT + 'px ' + content;
+            return 'auto ' + content;
         }
         return content;
     }};

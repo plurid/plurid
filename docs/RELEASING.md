@@ -7,8 +7,9 @@ artifacts yet. The script manages output directories and never commits or pushes
 
 ## Versions prepared 2026-10-31
 
-Pinned planes, stacked planes and occluded planes fading ([migration](./MIGRATION.md)). Seven
-packages move; the other six keep their versions. Prepared with `pnpm release --prepare`, the
+Pinned planes, stacked planes, occluded planes fading, configurable title-bar selection, native
+Shift selection, custom title-bar sizing and bounded camera caching ([migration](./MIGRATION.md)).
+Seven packages move; the other six keep their versions. Prepared with `pnpm release --prepare`, the
 changed packages only.
 
 | Package (`@plurid/`) | Previous | Next |

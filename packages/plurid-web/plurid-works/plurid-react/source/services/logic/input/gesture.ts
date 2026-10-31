@@ -126,6 +126,8 @@ export const resolveGestureIntent = (
         && inHand
         && !ctx.shift
         && !ctx.alt
+        && !ctx.ctrl
+        && !ctx.meta
         && !ctx.grabMode
         && ctx.pointerType !== 'touch'
     ) {
@@ -180,8 +182,9 @@ export const resolveGestureIntent = (
         return 'none';
     }
 
+    // Native range selection on content must not also pan the camera.
     if (ctx.shift) {
-        return 'pan';
+        return ctx.onPlane && !ctx.onDragHandle && !ctx.grabMode ? 'none' : 'pan';
     }
     if (ctx.alt) {
         return 'dolly';

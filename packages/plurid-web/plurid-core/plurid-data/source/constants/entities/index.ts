@@ -57,6 +57,9 @@ export const PLURID_ATTRIBUTE_RAIL = 'data-plurid-rail';
 export const PLURID_ATTRIBUTE_RAIL_BUTTON = 'data-plurid-rail-button';
 /** On the view while a mode is on: `rotate` | `translate` | `scale` | `grab` | `fly`; the badge that names it carries the same. */
 export const PLURID_ATTRIBUTE_MODE = 'data-plurid-mode';
+/** A custom controls surface that accepts modifier-click plane selection independently of dragging. */
+export const PLURID_ATTRIBUTE_SELECTION_HANDLE = 'data-plurid-selection-handle';
+
 /** On an element a host renders as the handle a selected plane is dragged by (`gestures.dragHandle: 'chrome'`). */
 export const PLURID_ATTRIBUTE_DRAG_HANDLE = 'data-plurid-drag-handle';
 /** On a plane's focus anchor (the tab stop that reaches it): the plane's id. The DOM id itself is a digest. */

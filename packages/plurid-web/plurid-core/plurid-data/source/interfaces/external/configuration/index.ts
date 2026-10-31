@@ -973,6 +973,17 @@ export interface PluridConfigurationSpaceGestures {
      * on it, which takes the text selection with it.
      */
     dragHandle?: 'chrome' | 'plane';
+    /**
+     * Modifier-click plane selection. By default only the controls bar or a host's
+     * `data-plurid-selection-handle` selects; content keeps its native selection and links.
+     * `plane` opts into whole-plane selection; `none` disables this pointer gesture only.
+     * Keyboard and marquee selection remain independently available.
+     */
+    selection?: {
+        target?: 'chrome' | 'plane' | 'none';
+        /** Enabled modifiers; omitted enables all three, an empty list disables the gesture. */
+        modifiers?: ('shift' | 'ctrl' | 'meta')[];
+    };
     /** Fly-mode sprint multiplier while Shift is held. Default `2.5`. */
     flySprintMultiplier?: number;
     /** Gamepad navigation (opt-in): sticks orbit/pan (fly in first person), triggers zoom/dolly, buttons frame/home/undo. */

@@ -2,6 +2,7 @@
     // #region libraries
     import {
         createSelector,
+        lruMemoize,
     } from '@reduxjs/toolkit';
 
     import {
@@ -84,6 +85,12 @@ export const getTransform = createSelector(
         translationZ,
         scale,
     } as SpaceTransform),
+    {
+        memoize: lruMemoize,
+        memoizeOptions: { maxSize: 16 },
+        argsMemoize: lruMemoize,
+        argsMemoizeOptions: { maxSize: 16 },
+    },
 )
 export const getActiveUniverseID = (state: AppState) => state.space.activeUniverseID;
 

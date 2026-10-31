@@ -72,6 +72,7 @@ export const StyledPluridPlaneControls = styled.div<IStyledPluridPlaneControls>`
     }};
 
     width: 100%;
+    height: ${PLANE_BAR_HEIGHT}px;
     /* the page presentation: the bar hangs ABOVE the sheet (outside its box), never over the page,
        and moves with the sheet — it is the plane's top, clipped with the plane when that top leaves
        the view, never sliding (the user's rule, 2026-09-06) */

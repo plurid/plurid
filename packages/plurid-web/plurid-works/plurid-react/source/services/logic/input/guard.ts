@@ -3,6 +3,8 @@
     import {
         PLURID_ATTRIBUTE_ENTITY,
         PLURID_ATTRIBUTE_DRAG_HANDLE,
+        PLURID_ATTRIBUTE_SELECTION_HANDLE,
+        PluridConfigurationSpaceGestures,
         PLURID_ATTRIBUTE_PLANE_ANCHOR,
         PLURID_ENTITY_PLANE_CONTROLS,
     } from '@plurid/plurid-data';
@@ -176,6 +178,31 @@ export const isDragHandle = (
         return false;
     }
     return !!element.closest(DRAG_HANDLE_SELECTOR);
+};
+
+
+/** Only the owning plane may claim a modifier click; portals and nested planes keep theirs. */
+export const shouldSelectPlane = (
+    event: Pick<MouseEvent, 'target' | 'button' | 'defaultPrevented' | 'shiftKey' | 'ctrlKey' | 'metaKey'>,
+    plane: Element,
+    selection?: PluridConfigurationSpaceGestures['selection'],
+): boolean => {
+    const target = asElement(event.target);
+    const surface = selection?.target ?? 'chrome';
+    if (!target || event.button !== 0 || event.defaultPrevented || surface === 'none'
+        || planeElementOf(target) !== plane || isEditableTarget(target) || isEngineControl(target)
+        || overlayOf(target) || pinnedFrameOf(target)) {
+        return false;
+    }
+    const modifiers = selection?.modifiers ?? ['shift', 'ctrl', 'meta'];
+    if (!modifiers.some((modifier) => event[`${modifier}Key`])) {
+        return false;
+    }
+    if (surface === 'plane') {
+        return true;
+    }
+    const handle = target.closest(`[${PLURID_ATTRIBUTE_SELECTION_HANDLE}], [${PLURID_ATTRIBUTE_ENTITY}="${PLURID_ENTITY_PLANE_CONTROLS}"]`);
+    return !!handle && plane.contains(handle);
 };
 
 

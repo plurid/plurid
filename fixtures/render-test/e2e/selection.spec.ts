@@ -161,7 +161,9 @@ test.describe('selection and editing', () => {
 
         // ⌘/Ctrl+click toggles one plane out; a plain modifier click on empty space clears
         await page.keyboard.down(modifier);
-        await page.mouse.click(second.box.x + second.box.width / 2, second.box.y + second.box.height / 2);
+        const bar = page.locator(`[data-plurid-plane="${second.plane.planeID}"] [data-plurid-entity="PluridPlaneControls"]`);
+        const barBox = (await bar.boundingBox())!;
+        await page.mouse.click(barBox.x + barBox.width / 2, barBox.y + barBox.height / 2);
         await page.keyboard.up(modifier);
         expect(await selection(page)).toEqual([first.plane.planeID]);
     });
@@ -256,4 +258,58 @@ test.describe('selection and editing', () => {
         expect(after.children).toHaveLength(1);
         expect(after.children[0].parentPlaneID).toBe(geometry.planeID);
     });
+});
+
+
+test('Shift range selection on content neither selects its plane nor pans the camera', async ({ page }) => {
+    await openHarness(page, '?momentum=0&reducedMotion=1');
+    const roots = await tree(page);
+    await publish(page, 'space.frame', { planeID: roots[0].planeID, animate: false });
+    await settle(page);
+    await page.locator(`[data-plurid-plane="${roots[0].planeID}"] [data-plurid-entity="PluridPlaneContent"]`).first().evaluate((content) => {
+        const text = document.createElement('p');
+        text.dataset.selectionProbe = '';
+        text.textContent = 'Select these words while holding Shift without moving the workspace.';
+        text.style.cssText = 'font: 16px/24px sans-serif; padding: 0; margin: 0; user-select: text;';
+        content.prepend(text);
+    });
+    const paragraph = page.locator('[data-selection-probe]');
+    const box = (await paragraph.boundingBox())!;
+    const before = await camera(page);
+    await page.mouse.click(box.x + 2, box.y + 12);
+    await page.keyboard.down('Shift');
+    await page.mouse.move(box.x + 2, box.y + 12);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 120, box.y + 12, { steps: 8 });
+    await page.mouse.up();
+    await page.keyboard.up('Shift');
+    expect(await selection(page)).toEqual([]);
+    expect(await camera(page)).toEqual(before);
+    expect(await page.evaluate(() => window.getSelection()?.toString().length ?? 0)).toBeGreaterThan(0);
+});
+
+test('a custom title bar sizes its own row and selects independently of its drag handle', async ({ page }) => {
+    await openHarness(page, '?momentum=0&reducedMotion=1&slotPlaneControls=1');
+    const roots = await tree(page);
+    const plane = page.locator(`[data-plurid-plane="${roots[0].planeID}"]`);
+    const bar = plane.locator('[data-plurid-control="rt-plane-bar"]');
+    await bar.evaluate((element) => {
+        element.removeAttribute('data-plurid-control');
+        element.setAttribute('data-plurid-selection-handle', '');
+        element.setAttribute('data-sizing-probe', '');
+        (element as HTMLElement).style.position = 'relative';
+        (element as HTMLElement).style.top = '0';
+        (element as HTMLElement).style.height = '40px';
+    });
+    await publish(page, 'space.frame', { planeID: roots[0].planeID, animate: false });
+    await settle(page);
+    const custom = plane.locator('[data-sizing-probe]');
+    const gap = await plane.evaluate((element) => {
+        const header = element.querySelector('[data-sizing-probe]')!.getBoundingClientRect();
+        const content = element.querySelector('[data-plurid-entity="PluridPlaneContent"]')!.getBoundingClientRect();
+        return content.top - header.bottom;
+    });
+    expect(Math.abs(gap)).toBeLessThan(1);
+    await custom.click({ modifiers: ['Shift'] });
+    expect(await selection(page)).toEqual([roots[0].planeID]);
 });

@@ -284,9 +284,10 @@ test.describe('input layer', () => {
         const plane = page.locator('[data-plurid-plane]').first();
         const box = (await plane.boundingBox())!;
         const inside = { x: box.x + box.width / 2, y: box.y + box.height - 40 };
-        // `page.mouse.click` has no modifiers option — hold Shift on the keyboard around it
+        // Selection belongs to title chrome; content keeps native range selection.
+        const titleBox = (await plane.locator('[data-plurid-entity="PluridPlaneControls"]').first().boundingBox())!;
         await page.keyboard.down('Shift');
-        await page.mouse.click(inside.x, inside.y);
+        await page.mouse.click(titleBox.x + titleBox.width / 2, titleBox.y + titleBox.height / 2);
         await page.keyboard.up('Shift');
         expect(await spaceState(page).then((s) => s.selectedPlaneIDs.length)).toBe(1);
 

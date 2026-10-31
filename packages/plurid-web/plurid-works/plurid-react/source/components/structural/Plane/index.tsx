@@ -103,6 +103,7 @@
         space as spaceEngine,
     } from '~services/engine';
     import { domID } from '~services/logic/dom';
+    import { shouldSelectPlane } from '~services/logic/input/guard';
     import {
         createContentHost,
     } from '~services/logic/pinned/hosts';
@@ -524,23 +525,14 @@ const PluridPlane: React.FC<React.PropsWithChildren<PluridPlaneProperties>> = (
     const handlePlaneClick = (
         event: React.MouseEvent,
     ) => {
-        // a pinned plane's clicks reach its world shell through the portal: they select nothing
-        if (lifted) {
+        if (lifted || !shouldSelectPlane(event, event.currentTarget, stateConfiguration.space.gestures?.selection)) {
             return;
         }
-        // Shift+click toggles this plane's membership in the multi-selection. Plain clicks pass
-        // through untouched so the host's plane content stays fully interactive; `preventDefault`
-        // suppresses the stray text-selection a shift+click would otherwise start.
+        // Only a claimed chrome gesture suppresses native range selection.
         if (event.shiftKey) {
             event.preventDefault();
-            dispatchToggleSelection(planeID);
-            return;
         }
-        // ⌘/Ctrl+click toggles too (the selection modifier; ⌘/Ctrl-drag on empty space is the
-        // marquee). The default is kept so a host's ⌘-click behaviors (open in a new tab) run.
-        if (event.ctrlKey || event.metaKey) {
-            dispatchToggleSelection(planeID);
-        }
+        dispatchToggleSelection(planeID);
     }
 
     const computeIsolatePlaneOpacity = () => {
